@@ -74,7 +74,7 @@
                                     <?php
                                 }
                                 ?>
-                                <?php if($current_user->role_id == 9) {
+                                <?php if($current_user->role_id == 9 || $current_user->role_id == 10) {
                                     ?>
                                     <li role="presentation"><a href="<?php echo base_url('/ishop/physical_stock') ?>">PHYSICAL STOCK</a></li>
                                     <?php
@@ -107,7 +107,7 @@
                                 ?>
                                 <?php if($current_user->role_id == 9) {
                                     ?>
-                                    <li role="presentation"><a href="#">INVOICE RECEIVED CONFIRMATION</a></li>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/invoice_received_confirmation') ?>">INVOICE RECEIVED CONFIRMATION</a></li>
                                     <?php
                                 }
                                 ?>

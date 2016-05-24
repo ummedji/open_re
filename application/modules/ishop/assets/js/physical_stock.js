@@ -10,13 +10,13 @@ var login_customer_type = $("input#login_customer_role").val();
 
 //alert(login_customer_type);
 
-if(login_customer_type == 9){
+/*if(login_customer_type == 9){
 
     var customer_selected = $("input#login_customer_id").val();
-    get_distributors(customer_selected);
+    //get_distributors(customer_selected);
 
-}
-else if(login_customer_type == 8){
+}else*/
+ if(login_customer_type == 8){
 
     var customer_selected = $("input#login_customer_id").val();
 
@@ -152,12 +152,14 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
     var login_user_countryid = $("input#login_customer_countryid").val();
     var login_customer_type = $("input#login_customer_role" ).val();
 
+    var url_seg = $("input.page_function" ).val();
+
    // alert(customer_selected+"==="+login_user_countryid+"==="+login_customer_type+"==="+customer_type_selected);
 
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_geo_fo_userdata",
-        data: {user_id:customer_selected,user_country : login_user_countryid,login_customer_type :login_customer_type,customer_type_selected:customer_type_selected },
+        data: {user_id:customer_selected,user_country : login_user_countryid,login_customer_type :login_customer_type,customer_type_selected:customer_type_selected,urlsegment:url_seg },
         dataType : 'json',
         success: function(resp){
             console.log(resp);
@@ -297,7 +299,7 @@ $("#add_physical_stock").on("submit",function(){
 
     var param = $("#add_physical_stock").serializeArray();
       //  console.log(param);
-    //return false;
+
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/add_physical_stock_details",
@@ -309,4 +311,5 @@ $("#add_physical_stock").on("submit",function(){
             }
         }
     });
+    //return false;
 });

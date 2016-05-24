@@ -33,6 +33,7 @@ class Ishop extends Front_Controller
 		Assets::add_module_js('ishop', 'secondary_sales.js');
 		Assets::add_module_js('ishop', 'secondary_sales_view.js');
 		Assets::add_module_js('ishop', 'physical_stock.js');
+		Assets::add_module_js('ishop', 'invoice_confirmation.js');
 		Assets::add_module_js('ishop', 'primary_sales_view.js');
 		Assets::add_module_js('ishop', 'rol.js');
 
@@ -170,6 +171,13 @@ class Ishop extends Front_Controller
 		redirect('ishop/set_rol');
 	}
 
+	/**
+	 * @ Function Name        : secondary_sales_details
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
+
 	public function secondary_sales_details()
 	{
 		$user = $this->auth->user();
@@ -182,6 +190,13 @@ class Ishop extends Front_Controller
 		Template::render();
 	}
 
+	/**
+	 * @ Function Name        : add_secondary_sales_details
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
+
 	public function add_secondary_sales_details()
 	{
 		$user_id = $this->session->userdata('user_id');
@@ -189,6 +204,13 @@ class Ishop extends Front_Controller
 		Template::set_message('Insert Data successful', 'success');
 		redirect('ishop/secondary_sales_details');
 	}
+
+	/**
+	 * @ Function Name        : secondary_sales_details_view
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
 
 	public function secondary_sales_details_view()
 	{
@@ -198,6 +220,13 @@ class Ishop extends Front_Controller
 		Template::set_view('ishop/secondary_sales_view');
 		Template::render();
 	}
+
+	/**
+	 * @ Function Name        : secondary_sales_view_details
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
 
 	public function secondary_sales_view_details()
 	{
@@ -214,6 +243,13 @@ class Ishop extends Front_Controller
 		Template::render();
 	}
 
+	/**
+	 * @ Function Name        : secondary_sales_product_details_view
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
+
 	public function secondary_sales_product_details_view()
 	{
 		$secondary_sales_id = (isset($_POST['id']) ? $_POST['id'] : '');
@@ -225,6 +261,13 @@ class Ishop extends Front_Controller
 		Template::render();
 	}
 
+	/**
+	 * @ Function Name        : physical_stock
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
+
 
 	public function physical_stock()
 	{
@@ -232,8 +275,11 @@ class Ishop extends Front_Controller
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
 
 		$default_retailer_role = 10;
-		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$default_retailer_role);
 
+		$action_data = $this->uri->segment(2);
+
+		//$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$default_retailer_role);
+		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,null,null,$default_retailer_role,$action_data);
 
 		//testdata($retailer_geo_data);
 
@@ -244,6 +290,13 @@ class Ishop extends Front_Controller
 		Template::render();
 	}
 
+	/**
+	 * @ Function Name        : add_physical_stock_details
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
+
 	public function add_physical_stock_details()
 	{
 		$user_id = $this->session->userdata('user_id');
@@ -252,6 +305,30 @@ class Ishop extends Front_Controller
 		Template::set_message('Insert Data successful', 'success');
 		redirect('ishop/physical_stock');
 	}
+
+
+	/**
+	 * @ Function Name        : ishop_sales
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
+
+	public function invoice_received_confirmation()
+	{
+		Template::set_view('ishop/invoice_received_confirmation');
+		Template::render();
+	}
+
+
+
+	/**
+	 * @ Function Name        : ishop_sales
+	 * @ Function Params    :
+	 * @ Function Purpose    :
+	 * @ Function Return    :
+	 * */
+
 
 	public function ishop_sales()
 	{
@@ -308,7 +385,9 @@ class Ishop extends Front_Controller
             
             $default_farmer_type = 11;
             
-            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$default_farmer_type);
+            $action_data = $this->uri->segment(2);
+            
+            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_farmer_type,$action_data);
             
             
             
@@ -418,23 +497,25 @@ class Ishop extends Front_Controller
             $login_customer_type = $_POST['login_customer_type']; //FO or HO or DISTRIBUTOR or RETAILER
             $customer_type_selected = $_POST['customer_type_selected']; // SELECTED CHECKBOX Retailer, Farmer, Distributor
             
+            $url_data = $_POST['urlsegment'];
+            
             if($customer_type_selected == "farmer"){
                 
-                $default_farmer_type = 11;
+                $default_type = 11;
                 
             }
             else if($customer_type_selected == "retailer"){
                 
-                 $default_farmer_type = 10;
+                 $default_type = 10;
                 
             }
             else if($customer_type_selected == "distributor"){
                 
-                 $default_farmer_type = 9;
+                 $default_type = 9;
                 
             }
             
-            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$default_farmer_type);
+            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,null,$default_type,$url_data);
           //  var_dump($get_geo_level_data);die;
             echo json_encode($get_geo_level_data);
             
@@ -449,9 +530,33 @@ class Ishop extends Front_Controller
             $login_customer_type = $_POST['login_customer_type']; //FO or HO or DISTRIBUTOR or RETAILER
             $parent_geo_id = $_POST['parent_geo_id']; // SELECTED CHECKBOX Retailer, Farmer, Distributor
             $checkedtype = $_POST['checkedtype']; 
+            
+            
+            if($checkedtype == "farmer"){
+                
+                $default_type = 11;
+                
+            }
+            else if($checkedtype == "retailer"){
+                
+                 $default_type = 10;
+                
+            }
+            else if($checkedtype == "distributor"){
+                
+                 $default_type = 9;
+                
+            }
+            
+            
+            $url_data = $_POST['urlsegment'];
+            $radio_selected_data = $_POST['checkedtype']; 
+            
+           // echo $url_data;
+            
             //echo $selected_user_id."===".$user_country."===".$login_customer_type."===".$parent_geo_id;
             
-            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,$parent_geo_id,$checkedtype);
+            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,$parent_geo_id,$default_type,$url_data);
             
             echo json_encode($get_geo_level_data);
             

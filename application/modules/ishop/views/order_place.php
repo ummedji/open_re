@@ -321,6 +321,9 @@ echo form_open('',$attributes); ?>
             <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $login_customer_type; ?>" /> 
             <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $login_customer_id; ?>" /> 
             <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $login_customer_countryid; ?>" /> 
+            
+            <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" /> 
+            
         </div>
     </div>
     <div class="clearfix"></div>
@@ -382,13 +385,15 @@ echo form_open('',$attributes); ?>
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
-        <div id="no-more-tables">
-            <div class="zoom_space">
+        
+         <div class="zoom_space">
                 <ul>
                     <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
                     <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
                 </ul>
             </div>
+        
+        <div id="no-more-tables">
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
                 <tr>

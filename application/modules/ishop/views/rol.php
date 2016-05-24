@@ -173,13 +173,13 @@ echo form_open('',$attributes); ?>
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
+        <div class="zoom_space">
+            <ul>
+                <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+            </ul>
+        </div>
         <div id="no-more-tables">
-            <div class="zoom_space">
-                <ul>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
-                </ul>
-            </div>
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
                 <tr>

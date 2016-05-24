@@ -465,15 +465,15 @@ class Ishop_model extends BF_Model
         $quantity = $this->input->post("quantity");
 
 
-        echo "<pre>";
+      /*  echo "<pre>";
         print_r($_POST);
-     //   die;
+        die;*/
         foreach($product_sku_id as $key=>$prd_sku)
         {
             $physical_stock_data = array(
 
-              //  'customer_id'=>$customers_id,
-              //  'stock_month'=>$stock_month.'-01',
+                'customer_id'=>$customers_id,
+                'stock_month'=>$stock_month.'-01',
                 'product_sku_id'=>$prd_sku,
                 'quantity'=>$quantity[$key],
                 'created_by_user' => $user_id,
@@ -619,6 +619,10 @@ class Ishop_model extends BF_Model
     
     public function add_order_place_details($user_id) {
         
+        echo "<pre>";
+        print_r($_POST);
+        
+        
         if($this->input->post("login_customer_type") == 9){
             
             /*
@@ -660,13 +664,37 @@ class Ishop_model extends BF_Model
             /*
              * IF LOGIN USER IS FEILD OFFICER
              */
+            if($this->input->post("radio1") == "farmer"){
+                
+                $farmer_id = $this->input->post("farmer_data");
+                $retailer_id = $this->input->post("retailer_data");
+
+                $customer_id_from = $farmer_id;
+                $customer_id_to = $retailer_id;
+                $order_taken_by_id = $user_id;
             
-            $farmer_id = $this->input->post("farmer_data");
-            $retailer_id = $this->input->post("retailer_data");
+            }
+            elseif($this->input->post("radio1") == "retailer"){
+                
+                $distributor_id = $this->input->post("distributor_data");
+                $retailer_id = $this->input->post("retailer_data");
+
+                $customer_id_from = $retailer_id;
+                $customer_id_to = $distributor_id;
+                $order_taken_by_id = $user_id;
+                
+            }
+            elseif($this->input->post("radio1") == "distributor"){
+                
+                $distributor_id = $this->input->post("distributor_data");
+                
+                $customer_id_from = $distributor_id;
+                $customer_id_to = 0;
+                $order_taken_by_id = $user_id;
+                
+            }
             
-            $customer_id_from = $farmer_id;
-            $customer_id_to = $retailer_id;
-            $order_taken_by_id = $user_id;
+            
             
             $order_status = 0;
             
@@ -750,16 +778,21 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
     
-    public function get_employee_geo_data($user_id,$country_id,$customer_type,$parent_geo_id=null,$radio_checked=null){
+    public function get_employee_geo_data($user_id,$country_id,$customer_type,$parent_geo_id=null,$radio_checked=null,$action_data=null){
 
         $main_query_start = "";
         $main_query_end = "";
         $select_data = " * ";
         $sub_query = "";
+        
+        
 
-       $action_data =  $this->uri->segment(2);
+       //$action_data =  $this->uri->segment(2);
+       
+     //  echo $user_id."===".$country_id."===".$customer_type."===".$parent_geo_id."===".$radio_checked."===".$action_data;
+       
       //  testdata($action_data);
-        if($customer_type == 10 && $action_data == "order_place" ){
+        if($radio_checked == 10 && $action_data == "order_place" && $parent_geo_id == null){
             $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
 `bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
  where `political_geo_id` IN ( ";
@@ -768,17 +801,15 @@ class Ishop_model extends BF_Model
             $main_query_end .= " )";
         
             $select_data = " bmpgd.parent_geo_id ";
-        
+            
         } 
         
-        if($radio_checked == "retailer" && $action_data == "order_place"){
-
-            $customer_type = 10;
+        if($parent_geo_id != null){
             
+            $customer_type = 10;
             $sub_query = " AND bmpgd.parent_geo_id = $parent_geo_id ";
-
-         }
-        
+            
+        }
         
         $query1 = $main_query_start." SELECT  ".$select_data." FROM (`bf_master_employe_to_customer` as etc) 
 
@@ -790,7 +821,7 @@ JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_
 WHERE `etc`.`employee_id` = $user_id 
 
 AND YEAR(etc.year) = '".date("Y")."' 
-AND `bu`.`role_id` = ".$customer_type." 
+AND `bu`.`role_id` = ".$radio_checked." 
 AND `bu`.`type` = 'Customer' 
 AND `bu`.`deleted` = '0' 
 AND `bu`.`country_id` = '".$country_id."' ".$sub_query." 
@@ -802,7 +833,7 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
 
         $geo_loc_data =  $query->result_array();
         
-   //   echo  $this->db->last_query();
+  //    echo  $this->db->last_query();
        
      // echo "<pre>";
       //print_r($geo_loc_data);

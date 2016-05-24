@@ -180,12 +180,12 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
     var customer_selected = $("input#login_customer_id").val();
     
      var checked_type = $('input[name=radio1]:checked').val();
-    
+    var url_seg = $("input.page_function" ).val();
     
      $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_lowergeo_from_uppergeo_data",
-        data: {checkedtype:checked_type, user_id:customer_selected,user_country : login_user_countryid,login_customer_type :login_customer_type,parent_geo_id:selected_geo_id },
+        data: {checkedtype:checked_type, user_id:customer_selected,user_country : login_user_countryid,login_customer_type :login_customer_type,parent_geo_id:selected_geo_id,urlsegment:url_seg },
         dataType : 'json',
         success: function(resp){
             console.log(resp);
@@ -220,12 +220,14 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
     var login_user_countryid = $("input#login_customer_countryid").val();
     var login_customer_type = $("input#login_customer_type" ).val();
     
+    var url_seg = $("input.page_function" ).val();
+    var checked_type = $('input[name=radio1]:checked').val();
     //alert(customer_selected+"==="+login_user_countryid+"==="+login_customer_type+"==="+customer_type_selected);
     
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_geo_fo_userdata",
-        data: {user_id:customer_selected,user_country : login_user_countryid,login_customer_type :login_customer_type,customer_type_selected:customer_type_selected },
+        data: {user_id:customer_selected,user_country : login_user_countryid,login_customer_type :login_customer_type,customer_type_selected:customer_type_selected,urlsegment:url_seg,checkedtype:checked_type },
         dataType : 'json',
         success: function(resp){
             console.log(resp);

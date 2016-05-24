@@ -1,7 +1,7 @@
 <?php
 $attributes = array('class' => '', 'id' => 'primary_sales','name'=>'primary_sales');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open(site_url('ishop/primary_sales_details'),$attributes); ?>
+echo form_open('',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
 <div class="col-md-12">
     <div class="top_form">
@@ -105,13 +105,13 @@ echo form_open(site_url('ishop/primary_sales_details'),$attributes); ?>
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
+        <div class="zoom_space">
+            <ul>
+                <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+            </ul>
+        </div>
         <div id="no-more-tables">
-            <div class="zoom_space">
-                <ul>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
-                </ul>
-            </div>
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
                 <tr>

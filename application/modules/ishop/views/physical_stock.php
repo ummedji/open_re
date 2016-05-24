@@ -1,9 +1,9 @@
 <?php
 $attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open(site_url(''),$attributes); ?>
+echo form_open('',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
-<div class="col-md-12">
+<div class="col-md-12 od_approval">
     <div class="top_form">
          <div class="row">
             <?php
@@ -32,12 +32,18 @@ echo form_open(site_url(''),$attributes); ?>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-8 col-md-offset-2 distributore_form">
+                <div class="col-md-8 col-md-offset-2 distributore_form od_approval">
                     <div class="row">
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label>Month</label>
                                 <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
+                                <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                    <a href="#">
+                                        <i class="fa fa-calendar" aria-hidden="true">
+                                        </i>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <div class="retailer_checked" id="retailer_checked" >
@@ -99,10 +105,16 @@ echo form_open(site_url(''),$attributes); ?>
             else{
                 ?>
 
-                    <div class="col-md-2 col-md-offset-4 text-center tp_form">
+                    <!--<div class="col-md-2 col-md-offset-4 text-center tp_form">-->
+                    <div class="col-md-4 col-md-offset-4 tp_form text-center_form" >
                         <div class="form-group">
                             <label>Month</label>
                             <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
+                            <div class="cal_icon">
+                                <a href="#">
+                                    <i class="fa fa-calendar" aria-hidden="true"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
@@ -115,6 +127,8 @@ echo form_open(site_url(''),$attributes); ?>
     <input class="login_customer_role" type="hidden" name="login_customer_role" id="login_customer_role" value="<?php echo $current_user->role_id; ?>" />
     <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $current_user->id; ?>" />
     <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $current_user->country_id; ?>" />
+
+    <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" />
 
     <div class="clearfix"></div>
 </div>
@@ -168,13 +182,13 @@ echo form_open(site_url(''),$attributes); ?>
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
+        <div class="zoom_space">
+            <ul>
+                <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+            </ul>
+        </div>
         <div id="no-more-tables">
-            <div class="zoom_space">
-                <ul>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
-                </ul>
-            </div>
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
                 <tr>
