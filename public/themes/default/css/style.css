@@ -1274,6 +1274,11 @@ input[readonly] {
     border: solid 1px #ccc;
 }
 
+.input_remove_border{
+    
+    border:none;
+}
+
 @media screen and (max-width: 767px){
     .filter_btn {
         left: 48%;

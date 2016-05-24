@@ -652,7 +652,7 @@ class Ishop_model extends BF_Model
             $customer_id_to = 0;
             $order_taken_by_id = $user_id;
             
-            $order_status = 0;
+            $order_status = 4;
             
             $po_no = NULL;
             
@@ -696,7 +696,7 @@ class Ishop_model extends BF_Model
             
             
             
-            $order_status = 0;
+            $order_status = 4;
             
             $po_no = NULL;
             
