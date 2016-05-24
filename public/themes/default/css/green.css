@@ -1,0 +1,108 @@
+#sidebar {  background-color: #65ac1e;}
+.logo_space {
+    border-bottom: solid 1px #00793a;
+    border-right: solid 1px #00793a;
+}
+.sid_button li { border-bottom: solid 1px rgba(0, 120, 58, 0.2);}
+.sid_button li:hover, .sid_button li.active{
+    background-color: #00793a;
+}
+.sid_button li a:hover{
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+    -o-transition: 0.5s all;
+}
+.sid_button li a .ecp_icon {
+    background: url(../images/menu_icon.png) no-repeat 0 3px;
+}
+.sid_button li a:hover .ecp_icon, .sid_button li.active a .ecp_icon {
+    background: url(../images/white_menu_icon.png) no-repeat 0 3px;
+}
+.sid_button li a .i_shop_icon {
+    background: url(../images/menu_icon.png) no-repeat 0px -50px;
+}
+.sid_button li a:hover .i_shop_icon, .sid_button li.active a .i_shop_icon {
+    background: url(../images/white_menu_icon.png) no-repeat 0px -50px;
+}
+.sid_button li a .esp_icon {
+    background: url(../images/menu_icon.png) no-repeat 0px -103px;
+}
+.sid_button li a:hover .esp_icon, .sid_button li.active a .esp_icon {
+    background: url(../images/white_menu_icon.png) no-repeat 0px -103px;
+}
+.sid_button li a .reports_icon {
+    background: url(../images/menu_icon.png) no-repeat 0px -153px;
+}
+.sid_button li a:hover .reports_icon, .sid_button li.active a .reports_icon {
+    background: url(../images/white_menu_icon.png) no-repeat 0px -153px;
+}
+.sid_button li a .e_assassments_icon {
+    background: url(../images/menu_icon.png) no-repeat 0px -203px;
+}
+.sid_button li a:hover .e_assassments_icon, .sid_button li.active a .e_assassments_icon {
+    background: url(../images/white_menu_icon.png) no-repeat 0px -203px;
+}
+.sid_button li a .e_learning_icon {
+    background: url(../images/menu_icon.png) no-repeat 0px -257px;
+}
+.sid_button li a:hover .e_learning_icon, .sid_button li.active a .e_learning_icon {
+    background: url(../images/white_menu_icon.png) no-repeat 0px -257px;
+}
+
+.header { background-color: #65ac1e;}
+.top_setting { background-color: #00793a;}
+.top_nv li { border-left: solid 1px #65ac1e;}
+.top_nv li.nav_space { background-color: #33932c;}
+ul.listslider li{
+    border-left: solid 1px #65ac1e;
+}
+.side_menu_space {
+    background-color: #65ac1e;
+}
+.inner_contain {
+    background-color: #65ac1e;
+}
+/*scrollbar*/
+.mCSB_scrollTools .mCSB_draggerRail{
+    background-color: #cccccc; background-color: rgba(204,204,204,1);
+    filter: "alpha(opacity=40)"; -ms-filter: "alpha(opacity=40)";
+}
+
+.mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+    background-color: #00793a; background-color: rgba(0,121,58,1);
+    filter: "alpha(opacity=75)"; -ms-filter: "alpha(opacity=75)";
+}
+
+.mCSB_scrollTools .mCSB_dragger:hover .mCSB_dragger_bar{
+    background-color: #00793a; background-color: rgba(0,121,58,1);
+    filter: "alpha(opacity=85)"; -ms-filter: "alpha(opacity=85)";
+}
+.mCSB_scrollTools .mCSB_dragger:active .mCSB_dragger_bar,
+.mCSB_scrollTools .mCSB_dragger.mCSB_dragger_onDrag .mCSB_dragger_bar{
+    background-color: #00793a; background-color: rgba(0,121,58,1);
+    filter: "alpha(opacity=90)"; -ms-filter: "alpha(opacity=90)";
+}
+.listslider-arrow.listslider-right{ background-color: #33932c;}
+.listslider-arrow.listslider-left{ background-color: #33932c;}
+.footer { background-color: #00793a;}
+.pr_footer { background-color: #00793a;}
+@media (max-width: 991px) {
+    .left_contain { background-color: #65ac1e;}
+}
+.middle_form { background-color: #65ac1e;}
+.plus_btn a { color: #00793a;}
+.big_breadcrumb { background-color: #00793a;}
+#no-more-tables tr td .edit_i a {color: #00793a;}
+.upload_file_space .input-group-btn .btn-primary { background-color: #65ac1e;}
+.save_btn button { background-color: #00793a;}
+.save_btn button:hover { background-color: #00612f;}
+/*end scrollbar*/
+
+/*Budget Distributor*/
+.copy_btn a { background-color: #65ac1e;}
+.copy_btn a:hover { background-color: #4c8e0a;}
+.inn_sub_nave ul li:hover:after, .inn_sub_nave ul li.active:after { background-color: #00793a;}
+.radio label::after { background-color: #65ac1e;}
+/*css Budget Distributor*/
