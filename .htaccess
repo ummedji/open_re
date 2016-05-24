@@ -2,5 +2,5 @@
 Options -Indexes
 # Do not change this line.
 RewriteEngine on
-RewriteCond %{HTTP_HOST} ^(www.)?localhost$
-RewriteRule ^(/)?$ http://localhost/open_re/trunk/public/login [L]
+RewriteCond %{HTTP_HOST} ^(www.)?webcluesglobal.com$
+RewriteRule ^(/)?$ http://webcluesglobal.com/qa/re/public/login [L]

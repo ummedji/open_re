@@ -156,7 +156,7 @@ AddDefaultCharset utf-8
   # change the following line to match the subfolder you need.
   # http://httpd.apache.org/docs/current/mod/mod_rewrite.html#rewritebase
   #RewriteBase /
-  RewriteBase /open_re/trunk/public/
+  RewriteBase /qa/re/public/
 
   # Removes access to the system folder by users.
   # Additionally this will allow you to create a System.php controller,

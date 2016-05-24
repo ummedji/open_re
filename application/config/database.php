@@ -41,10 +41,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = '192.168.1.245';
-$db['default']['username'] = 'sqlyog';
-$db['default']['password'] = 'sqlyog';
-$db['default']['database'] = 'open_reach_expansion';
+$db['default']['hostname'] = 'localhost';
+$db['default']['username'] = 'ab95976_re';
+$db['default']['password'] = 'Grqy=y)qnc!V';
+$db['default']['database'] = 'ab95976_re';
 $db['default']['port']     = '';
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = 'bf_';
