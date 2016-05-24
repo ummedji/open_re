@@ -1,0 +1,30 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+$lang['user_management_manage']			= 'Manage User Management';
+$lang['user_management_edit']				= 'Edit';
+$lang['user_management_true']				= 'True';
+$lang['user_management_false']				= 'False';
+$lang['user_management_create']			= 'Create';
+$lang['user_management_list']				= 'List';
+$lang['user_management_new']				= 'New';
+$lang['user_management_edit_text']			= 'Edit this to suit your needs';
+$lang['user_management_no_records']			= 'There aren\'t any user_management in the system.';
+$lang['user_management_create_new']			= 'Create a new User Management.';
+$lang['user_management_create_success']			= 'User Management successfully created.';
+$lang['user_management_create_failure']			= 'There was a problem creating the user_management: ';
+$lang['user_management_create_new_button']			= 'Create New User Management';
+$lang['user_management_invalid_id']			= 'Invalid User Management ID.';
+$lang['user_management_edit_success']			= 'User Management successfully saved.';
+$lang['user_management_edit_failure']			= 'There was a problem saving the user_management: ';
+$lang['user_management_delete_success']			= 'record(s) successfully deleted.';
+$lang['user_management_delete_failure']			= 'We could not delete the record: ';
+$lang['user_management_delete_error']			= 'You have not selected any records to delete.';
+$lang['user_management_actions']			= 'Actions';
+$lang['user_management_cancel']			= 'Cancel';
+$lang['user_management_delete_record']			= 'Delete this User Management';
+$lang['user_management_delete_confirm']			= 'Are you sure you want to delete this user_management?';
+$lang['user_management_edit_heading']			= 'Edit User Management';
+
+// Activities
+$lang['user_management_act_create_record']			= 'Created record with ID';
+$lang['user_management_act_edit_record']			= 'Updated record with ID';
+$lang['user_management_act_delete_record']			= 'Deleted record with ID';

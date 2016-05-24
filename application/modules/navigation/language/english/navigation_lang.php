@@ -1,0 +1,30 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+$lang['navigation_manage']			= 'Manage Navigation';
+$lang['navigation_edit']				= 'Edit';
+$lang['navigation_true']				= 'True';
+$lang['navigation_false']				= 'False';
+$lang['navigation_create']			= 'Create';
+$lang['navigation_list']				= 'List';
+$lang['navigation_new']				= 'New';
+$lang['navigation_edit_text']			= 'Edit this to suit your needs';
+$lang['navigation_no_records']			= 'There aren\'t any navigation in the system.';
+$lang['navigation_create_new']			= 'Create a new Navigation.';
+$lang['navigation_create_success']			= 'Navigation successfully created.';
+$lang['navigation_create_failure']			= 'There was a problem creating the navigation: ';
+$lang['navigation_create_new_button']			= 'Create New Navigation';
+$lang['navigation_invalid_id']			= 'Invalid Navigation ID.';
+$lang['navigation_edit_success']			= 'Navigation successfully saved.';
+$lang['navigation_edit_failure']			= 'There was a problem saving the navigation: ';
+$lang['navigation_delete_success']			= 'record(s) successfully deleted.';
+$lang['navigation_delete_failure']			= 'We could not delete the record: ';
+$lang['navigation_delete_error']			= 'You have not selected any records to delete.';
+$lang['navigation_actions']			= 'Actions';
+$lang['navigation_cancel']			= 'Cancel';
+$lang['navigation_delete_record']			= 'Delete this Navigation';
+$lang['navigation_delete_confirm']			= 'Are you sure you want to delete this navigation?';
+$lang['navigation_edit_heading']			= 'Edit Navigation';
+
+// Activities
+$lang['navigation_act_create_record']			= 'Created record with ID';
+$lang['navigation_act_edit_record']			= 'Updated record with ID';
+$lang['navigation_act_delete_record']			= 'Deleted record with ID';

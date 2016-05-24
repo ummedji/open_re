@@ -1,0 +1,30 @@
+<?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
+$lang['newsletter_manage']			= 'Manage Newsletter';
+$lang['newsletter_edit']				= 'Edit';
+$lang['newsletter_true']				= 'True';
+$lang['newsletter_false']				= 'False';
+$lang['newsletter_create']			= 'Create';
+$lang['newsletter_list']				= 'List';
+$lang['newsletter_new']				= 'New';
+$lang['newsletter_edit_text']			= 'Edit this to suit your needs';
+$lang['newsletter_no_records']			= 'There aren\'t any newsletter in the system.';
+$lang['newsletter_create_new']			= 'Create a new Newsletter.';
+$lang['newsletter_create_success']			= 'Newsletter successfully created.';
+$lang['newsletter_create_failure']			= 'There was a problem creating the newsletter: ';
+$lang['newsletter_create_new_button']			= 'Create New Newsletter';
+$lang['newsletter_invalid_id']			= 'Invalid Newsletter ID.';
+$lang['newsletter_edit_success']			= 'Newsletter successfully saved.';
+$lang['newsletter_edit_failure']			= 'There was a problem saving the newsletter: ';
+$lang['newsletter_delete_success']			= 'record(s) successfully deleted.';
+$lang['newsletter_delete_failure']			= 'We could not delete the record: ';
+$lang['newsletter_delete_error']			= 'You have not selected any records to delete.';
+$lang['newsletter_actions']			= 'Actions';
+$lang['newsletter_cancel']			= 'Cancel';
+$lang['newsletter_delete_record']			= 'Delete this Newsletter';
+$lang['newsletter_delete_confirm']			= 'Are you sure you want to delete this newsletter?';
+$lang['newsletter_edit_heading']			= 'Edit Newsletter';
+
+// Activities
+$lang['newsletter_act_create_record']			= 'Created record with ID';
+$lang['newsletter_act_edit_record']			= 'Updated record with ID';
+$lang['newsletter_act_delete_record']			= 'Deleted record with ID';

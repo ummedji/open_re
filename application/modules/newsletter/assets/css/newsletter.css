@@ -1,0 +1,35 @@
+/* 
+    Document   : newsletter
+    Created on : Apr 11, 2014, 3:36:41 PM
+    Author     : ws009
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.newsletter_left{       
+    width:75%;
+}
+.newsletter_right{
+    width: 25%;
+    float: right;
+    padding: 10px;    
+}
+ul{
+    list-style-type: none;
+}
+#user_email_list{
+    margin-top: 10px;
+}
+#user_role_list{
+    margin-top: 10px;
+    padding-left: 10px;
+}
+   #cke_content{
+max-width:625px !important;
+}
+
+

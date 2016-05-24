@@ -27,10 +27,10 @@ public/assets/cache/*
 !public/assets/cache/index.html
 
 # Ignore Custom config files
-application/config/development/*
-application/config/testing/*
-application/config/production/*
-application/config/installed.txt
+#application/config/development/*
+#application/config/testing/*
+#application/config/production/*
+#application/config/installed.txt
 
 application/config/database.php
 .htaccess
@@ -42,15 +42,15 @@ public/.htaccess
 !application/config/production/index.html
 
 # Helping GUIs omiting subtree repos
-bonfire/modules/**/.git/*
-bonfire/modules/**/.hg/*
-application/modules/**/.git/*
-application/modules/**/.hg/*
+#bonfire/modules/**/.git/*
+#bonfire/modules/**/.hg/*
+#application/modules/**/.git/*
+#application/modules/**/.hg/*
 !application/modules/index.html
 
 
 # Ignore all custom modules.
-application/modules/*
+#application/modules/*
 # Except the following modules:
 
 # Remove PHPStorm Project folders
@@ -61,7 +61,7 @@ bonfire/.ideas
 public/install/installed.txt
 
 # Ignore any composer downloaded packages
-vendor/*
+#vendor/*
 
 # Ignore any sparks that have been loaded
-sparks/*
+#sparks/*
