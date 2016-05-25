@@ -619,8 +619,8 @@ class Ishop_model extends BF_Model
     
     public function add_order_place_details($user_id) {
         
-        echo "<pre>";
-        print_r($_POST);
+       // echo "<pre>";
+       // print_r($_POST);
         
         
         if($this->input->post("login_customer_type") == 9){
@@ -778,13 +778,12 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
     
-    public function get_employee_geo_data($user_id,$country_id,$customer_type,$parent_geo_id=null,$radio_checked=null,$action_data=null){
+    public function get_employee_geo_data($user_id,$country_id,$customer_type,$parent_geo_id=null,$radio_checked=null,$action_data=null,$mobileno=null){
 
         $main_query_start = "";
         $main_query_end = "";
-        $select_data = " * ";
+        $select_data = " bmpgd.political_geo_id, bmpgd.political_geography_name ";
         $sub_query = "";
-        
         
 
        //$action_data =  $this->uri->segment(2);
@@ -792,7 +791,15 @@ class Ishop_model extends BF_Model
      //  echo $user_id."===".$country_id."===".$customer_type."===".$parent_geo_id."===".$radio_checked."===".$action_data;
        
       //  testdata($action_data);
-        if($radio_checked == 10 && $action_data == "order_place" && $parent_geo_id == null){
+        
+       // if($customer_type == 7){
+            
+      //  }
+        
+  if($customer_type == 8){
+            
+            
+            if($action_data == "order_place" && $parent_geo_id == null){
             $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
 `bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
  where `political_geo_id` IN ( ";
@@ -811,17 +818,82 @@ class Ishop_model extends BF_Model
             
         }
         
-        $query1 = $main_query_start." SELECT  ".$select_data." FROM (`bf_master_employe_to_customer` as etc) 
-
-JOIN `bf_users` as bu ON `bu`.`id` = `etc`.`customer_id` 
-JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id` 
+      $subquery1 =  $main_query_start." SELECT  ".$select_data." FROM (`bf_master_employe_to_customer` as etc)
+                    JOIN `bf_users` as bu ON `bu`.`id` = `etc`.`customer_id` ";
+      
+      $where1  = " `etc`.`employee_id` = ".$user_id;
+      $where2  = " AND YEAR(etc.year) = '".date("Y")."' AND ";
+      
+      if($mobileno != null)
+      {
+          $where3 = " `bmucd`.`primary_mobile_no` = '".$mobileno."' AND ";
+      }
+      
+            
+   }
+   elseif($customer_type == 7){
+       
+       
+        if($radio_checked == 10 && $action_data == "order_place" && $parent_geo_id == null){
+            $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
+`bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
+ where `political_geo_id` IN ( ";
+         
+                
+            $main_query_end .= " )";
+        
+            $select_data = " bmpgd.parent_geo_id ";
+            
+            
+            $subquery1 = $main_query_start." SELECT ".$select_data." FROM `bf_users` as bu";
+            $where1  = " ";
+            $where2  = " ";
+            $where3 = " ";
+            
+            
+        }elseif($parent_geo_id != null){
+            
+            $customer_type = 10;
+            $sub_query = " AND bmpgd.parent_geo_id = $parent_geo_id ";
+            
+            
+            $subquery1 = $main_query_start." SELECT ".$select_data." FROM `bf_users` as bu";
+      
+            $where1  = " ";
+            $where2  = " ";
+            $where3 = " ";
+            
+        }
+        else{
+        
+            $subquery1 = " SELECT ".$select_data." FROM `bf_users` as bu";
+            $where1  = " ";
+            $where2  = " ";
+            $where3 = " ";
+            
+        }
+            
+    }
+    else{
+         $subquery1 =  $main_query_start." SELECT  ".$select_data." FROM (`bf_master_employe_to_customer` as etc)
+                       JOIN `bf_users` as bu ON `bu`.`id` = `etc`.`customer_id` ";
+         
+         $where1  = " `etc`.`employee_id` = ".$user_id;
+         $where2  = " AND YEAR(etc.year) = '".date("Y")."' AND ";
+         
+        if($mobileno != null)
+        {
+            $where3 = "AND `bmucd`.`primary_mobile_no` = '".$mobileno;
+        }
+      
+    }
+        
+        $query1 = $subquery1." JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id` 
 JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id3`
 
+WHERE ".$where1." ".$where2." ".$where3."
 
-WHERE `etc`.`employee_id` = $user_id 
-
-AND YEAR(etc.year) = '".date("Y")."' 
-AND `bu`.`role_id` = ".$radio_checked." 
+`bu`.`role_id` = ".$radio_checked." 
 AND `bu`.`type` = 'Customer' 
 AND `bu`.`deleted` = '0' 
 AND `bu`.`country_id` = '".$country_id."' ".$sub_query." 
@@ -833,41 +905,12 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
 
         $geo_loc_data =  $query->result_array();
         
-  //    echo  $this->db->last_query();
-       
-     // echo "<pre>";
-      //print_r($geo_loc_data);
-      
-    /*    
-        $this->db->select('*');
-
-        $this->db->from('bf_master_employe_to_customer as etc');
-        $this->db->join('bf_users as bu','bu.id = etc.customer_id');
-        $this->db->join('bf_master_user_contact_details as bmucd','bmucd.user_id = bu.id'); // GET GEO FROM HERE FOR CUSTOMER USER
-        $this->db->join('bf_master_political_geography_details as bmpgd','bmpgd.political_geo_id = bmucd.geo_level_id3');
-        $this->db->where('etc.employee_id',$user_id);
-        $this->db->where('YEAR(etc.year)',date("Y"));
-
-        $this->db->where('bu.role_id',$customer_type);
-        $this->db->where('bu.type','Customer');
-        $this->db->where('bu.deleted','0');
-        $this->db->where('bu.country_id',$country_id);
-        $this->db->group_by("bmpgd.political_geography_name");
-        
-        
-        $geo_loc_data=$this->db->get()->result_array();
-
-     // echo  $this->db->last_query();die;
-
-        */
-      // echo $this->db->last_query();
-       
-      // die;
-        
+      //  echo $this->db->last_query();
 
         return $geo_loc_data;
         
     }
+    
     
     /**
      * @ Function Name		: get_user_for_geo_data
@@ -876,7 +919,7 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
      * @ Function Return 	: Json
      * */
     
-    public function get_user_for_geo_data($selected_geo_id,$country_id,$checked_data) {
+    public function get_user_for_geo_data($selected_geo_id,$country_id,$checked_data,$mobile_no=null) {
             
             if($checked_data == "farmer"){
                 
@@ -903,6 +946,11 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         $this->db->where('bmucd.geo_level_id3',$selected_geo_id);
         
         $this->db->where('bu.role_id',$selected_type); // FOR GETTING USER (FARMERS = 11) OF SPECFIC GEO
+        
+        if($mobile_no != null){
+           $this->db->where('bmucd.primary_mobile_no',$mobile_no); // FOR GETTING FARMER OF SPECIFIC MOBILE NUMBER
+        }
+        
         $this->db->where('bu.type','Customer');
         $this->db->where('bu.deleted','0');
         $this->db->where('bu.country_id',$country_id); //FOR GETTING USER OF SPECFIC COUNTRY
@@ -957,6 +1005,43 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         
         if(isset($retailer_user_data) && !empty($retailer_user_data)) {
             return json_encode($retailer_user_data);
+        } else{
+            return 0;
+        }
+        
+        
+    }
+    
+    /**
+     * @ Function Name		: get_prespective_order
+     * @ Function Params	: from date, to date, login userid , login usertype(role id)
+     * @ Function Purpose 	: For getting retailers for selected users (i.e FARMER) FO
+     * @ Function Return 	: Json
+     * */
+    
+    public function get_prespective_order($from_date,$todate,$loginusertype,$loginuserid) {
+        
+        $this->db->select('*');
+        $this->db->from('bf_ishop_orders as bio');
+        
+        //$this->db->join('bf_users as bu','bu.id = bmctcm.from_customer_id');
+        //$this->db->join('bf_master_user_personal_details as bmupd','bmupd.user_id = bu.id'); // FOR GETTING USER NAME AND OTHER DATA
+        
+       // $this->db->where('bmctcm.to_customer_id',$selected_user_id);
+        
+       // $this->db->where('bu.role_id',$role_data); // FOR GETTING USER (RETAILERS = 10) OF SPECIFICE FARMER
+       // $this->db->where('bu.type','Customer');
+       // $this->db->where('bu.deleted','0');
+        
+        $this->db->where('bio.order_date >=', $from_date);
+        $this->db->where('bio.order_date <=', $todate);
+        
+        $this->db->where('bio.customer_id_from',$loginuserid);
+        
+        $prespective_order = $this->db->get()->result_array();
+        
+        if(isset($prespective_order) && !empty($prespective_order)) {
+            return json_encode($prespective_order);
         } else{
             return 0;
         }

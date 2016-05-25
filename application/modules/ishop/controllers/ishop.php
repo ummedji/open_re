@@ -381,17 +381,40 @@ class Ishop extends Front_Controller
             $logined_user_id = $user->id;
             $logined_user_countryid = $user->country_id;
             
-            //FOR FO
-            
-            $default_farmer_type = 11;
-            
+            $get_geo_level_data = "";
             $action_data = $this->uri->segment(2);
             
-            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_farmer_type,$action_data);
+            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
             
+            if($logined_user_type == 7){
+                
+                //FOR HO
+                $default_type_selected = 9;
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
             
+                
+            }
+            elseif($logined_user_type == 8){
             
+                //FOR FO
+                $default_type_selected = 11; 
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
             
+                
+            }
+            elseif($logined_user_type == 9){
+            
+                //FOR DISTRIBUTOR
+                $default_type_selected = null; 
+            }
+            elseif($logined_user_type == 10){
+            
+                //FOR RETAILER
+                $default_type_selected = null; 
+            }
+           
 		  //var_dump($distributor);die;
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
@@ -464,18 +487,40 @@ class Ishop extends Front_Controller
             
         }
         
+        /**
+        * @ Function Name	: get_user_by_geo_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting user data on the base of selected GEO data
+        * @ Function Return 	: json
+        * */
+        
         public function get_user_by_geo_data(){
             
             $selected_geo_id = $_POST['selected_geo_id'];
             $login_user_country_id = $_POST['country_id'];
             $checked_data = $_POST['checked_data'];
+            
+            $mobile_num = null;
+            if(isset($_POST['moblie_num'])){
+                
+                $mobile_num = $_POST['moblie_num'];
+                
+            }
+            
            // echo $selected_geo_id."===".$login_user_country_id."===".$checked_data;die;
-            $user_data = $this->ishop_model->get_user_for_geo_data($selected_geo_id,$login_user_country_id,$checked_data);
+            $user_data = $this->ishop_model->get_user_for_geo_data($selected_geo_id,$login_user_country_id,$checked_data,$mobile_num);
           //  testdata($user_data);
             echo $user_data;
             die;
             
         }
+        
+        /**
+        * @ Function Name	: get_retailer_by_customer_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting retailer data on the base of selected customer (farmer) data
+        * @ Function Return 	: json
+        * */
         
         public function get_retailer_by_customer_data(){
             
@@ -489,6 +534,13 @@ class Ishop extends Front_Controller
             die;
             
         }
+        
+        /**
+        * @ Function Name	: get_geo_fo_userdata
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting geo data for loged in user on page hit first time //ONLY FOR FO user
+        * @ Function Return 	: json
+        * */
         
         public function get_geo_fo_userdata(){
            
@@ -522,6 +574,13 @@ class Ishop extends Front_Controller
             die;
             
         }
+        
+        /**
+        * @ Function Name	: get_lowergeo_from_uppergeo_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting child geo data for selected parent geo
+        * @ Function Return 	: json
+        * */
         
         public function get_lowergeo_from_uppergeo_data() {
             
@@ -566,5 +625,119 @@ class Ishop extends Front_Controller
             
         }
         
+        /**
+        * @ Function Name	: get_lower_geo_by_parent_geo_formobile_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting child geo data for selected parent geo on entering mobile number for FO, Farmer selected (radio button)
+        * @ Function Return 	: json
+        * */
+        
+        public function get_lower_geo_by_parent_geo_formobile_data() {
+            
+            $selected_user_id = $_POST['user_id']; // login user id
+            $user_country = $_POST['user_country'];
+            $login_customer_type = $_POST['login_customer_type']; //FO or HO or DISTRIBUTOR or RETAILER
+            $parent_geo_id = $_POST['parent_geo_id']; // SELECTED CHECKBOX Retailer, Farmer, Distributor
+            $checkedtype = $_POST['checkedtype']; 
+            
+            
+            if($checkedtype == "farmer"){
+                
+                $default_type = 11;
+                
+            }
+            else if($checkedtype == "retailer"){
+                
+                 $default_type = 10;
+                
+            }
+            else if($checkedtype == "distributor"){
+                
+                 $default_type = 9;
+                
+            }
+            
+            
+            $url_data = $_POST['urlsegment'];
+            $radio_selected_data = $_POST['checkedtype']; 
+            $mobileno = $_POST['moblie_num'];
+           // echo $url_data;
+            
+            //echo $selected_user_id."===".$user_country."===".$login_customer_type."===".$parent_geo_id;
+            
+            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,$parent_geo_id,$default_type,$url_data,$mobileno);
+            
+            echo json_encode($get_geo_level_data);
+            
+            //die;
+            
+            die;
+            
+        }
+        
+        /**
+        * @ Function Name	: get_data_from_mobile_num
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting parent geo data on entering mobile number for FO, Farmer selected (radio button)
+        * @ Function Return 	: json
+        * */
+        
+        
+        public function get_data_from_mobile_num() {
+            
+            $mobileno = $_POST['mobileno'];
+            $selected_user_id = $_POST['loginuserid']; 
+            $login_customer_type = $_POST['loginusertype']; 
+             
+            $user_country = $_POST['user_country'];
+            $url_data = $_POST['urlsegment'];
+            
+            $default_type = 11;
+             
+           $parent_geo_id = "";
+            
+         //   $get_geo_level_data = $this->ishop_model->get_mobile_user_geo_data($loginuserid,$user_country,$loginusertype,$default_type,$url_data,$mobileno,$parent_geo_id);
+           
+            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,$parent_geo_id,$default_type,$url_data,$mobileno);
+           
+            echo json_encode($get_geo_level_data);
+            die;
+            
+        }
+        
+        
+        /*
+         * PRESPECTIVE ORDER
+         */
+        
+        public function prespective_order() {
+            
+            Assets::add_module_js('ishop', 'prespective_order.js');
+            
+            $user = $this->auth->user();
+		
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set_view('ishop/prespective_order');
+            Template::render();
+        }
+        
+        public function get_prespective_order() {
+            
+            $from_date = $_POST["fromdate"];
+            $todate = $_POST["todate"];
+            $loginusertype = $_POST["loginusertype"];
+            $loginuserid = $_POST["loginuserid"];
+            
+            $prespective_order = $this->ishop_model->get_prespective_order($from_date,$todate,$loginusertype,$loginuserid);
+            echo $prespective_order;
+            die;
+        }
     
 }

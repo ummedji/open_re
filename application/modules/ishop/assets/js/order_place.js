@@ -54,6 +54,13 @@ $(document).ready(function(){
 
            }
            
+           if(login_customer_type == 7){
+       
+                var customer_selected = $("input#login_customer_id").val();
+                get_geo_fo_userdata(customer_selected,customer_type_selected);
+
+           }
+           
        }
        else if(customer_type_selected == "distributor"){
            $("div.retailer_data").css("display","none");
@@ -109,14 +116,18 @@ $(document).ready(function(){
        
    });
    
+   
     $("select#distributor_geo_level_1_data").on("change",function(){
        
        var selected_geo_data = $(this).val();
+       get_lower_geo_by_parent_geo(selected_geo_data);
        
-      
-      // $("select#distributor_geo_level_1_data").empty();
-      // $("select#distributor_geo_level_1_data").selectpicker('refresh');
+   });
+   
+   
+   $("select#distributor_geo_level_2_data").on("change",function(){
        
+       var selected_geo_data = $(this).val();
        get_user_by_geo_data(selected_geo_data);
        
    });
@@ -137,6 +148,27 @@ $(document).ready(function(){
        var selected_geo_id = $(this).val();
        
        get_lower_geo_by_parent_geo(selected_geo_id);
+       
+      // console.log(selected_user_id +"===="+selected_user_geo_location);
+       
+   });
+   
+   
+    $("select#geo_level_1_data").on("change",function(){
+       
+       var selected_geo_id = $(this).val();
+       
+       get_lower_geo_by_parent_geo(selected_geo_id);
+       
+      // console.log(selected_user_id +"===="+selected_user_geo_location);
+       
+   });
+   
+   $("select#geo_level_2_data").on("change",function(){
+       
+       var selected_geo_id = $(this).val();
+       
+       get_user_by_geo_data(selected_geo_id);
        
       // console.log(selected_user_id +"===="+selected_user_geo_location);
        
@@ -166,9 +198,154 @@ $(document).ready(function(){
        
    });
    
+   //ON ENTERING MOBILE NO GETTING GEO LOCATION DATA AND ASSOCIATED FARMER DATA AND THERE RETAILERS
    
+   
+   $("input.mobile_num").on("focusout",function(){
+       
+       var login_user_id = $("input#login_customer_id").val();
+       var login_user_type = $("input#login_customer_type" ).val();
+       
+       var mobile_no = $(this).val();
+       
+       var login_user_countryid = $("input#login_customer_countryid").val();
+       var url_seg = $("input.page_function" ).val();
+       
+       var checked_type = $('input[name=radio1]:checked').val();
+       
+       //GET FARMER DETAILES FOR FARMER ASSOCIATED WITH THAT MOBILE NUMBER FOR LOGINED USER
+       
+       var parent_geo_data = "";
+       
+        $.ajax({
+                type: 'POST',
+                url: site_url+"ishop/get_data_from_mobile_num",
+                data: {mobileno:mobile_no,loginuserid:login_user_id,loginusertype:login_user_type,user_country:login_user_countryid,urlsegment:url_seg},
+                dataType : 'json',
+                success: function(resp){
+                    console.log(resp);
+                    
+                     
+                        $("div#farmer_checked select#geo_level_1_data").empty();
+                        $("div#farmer_checked select#geo_level_1_data").selectpicker('refresh');
+                
+                
+                        if(resp.length > 0){
+
+                            $("div#farmer_checked select#geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+
+                            $.each(resp, function(key, value) {
+
+                                $('div#farmer_checked select#geo_level_1_data').append('<option selected="selected" value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                                
+                                parent_geo_data = value.political_geo_id;
+                                
+                            });
+
+                            $("div#farmer_checked select#geo_level_1_data").selectpicker('refresh');
+
+                        }
+                    
+                },
+                async:false
+            });
+            
+       var child_geo_data = "";
+            
+       $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_lower_geo_by_parent_geo_formobile_data",
+        data: {checkedtype:checked_type, user_id:customer_selected,user_country : login_user_countryid,login_customer_type :login_customer_type,parent_geo_id:parent_geo_data,urlsegment:url_seg,moblie_num:mobile_no },
+        dataType : 'json',
+        success: function(resp){
+            console.log(resp);
+           
+               if(login_customer_type == 8){
+                    
+                     if(checked_type == "farmer"){
+                        
+                        $("div#farmer_checked select#geo_level_2_data").empty();
+                        $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+                
+                
+                        if(resp.length > 0){
+
+                            $("div#farmer_checked select#geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+
+                            $.each(resp, function(key, value) {
+
+                                $('div#farmer_checked select#geo_level_2_data').append('<option selected="selected" value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                                
+                                 child_geo_data = value.political_geo_id;
+                                
+                            });
+
+                            $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+
+                        }
+                        
+                        
+                    }
+                    
+                }  
+                
+        },
+        async:false
+    });
+    
+    var selected_customer_data = "";
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_user_by_geo_data",
+        data: {selected_geo_id:child_geo_data, country_id : login_user_countryid, checked_data:checked_type,moblie_num:mobile_no},
+        dataType : 'json',
+        success: function(resp){
+            
+            console.log(resp);
+            
+            
+            $("div#farmer_checked select#farmer_data").empty();
+            $("div#farmer_checked select#farmer_data").selectpicker('refresh');
+
+
+            if(resp.length > 0){
+
+                $("div#farmer_checked select#farmer_data").append('<option value="0">Select Geo Location</option>');
+
+                $.each(resp, function(key, value) {
+
+                    $('div#farmer_checked select#farmer_data').append('<option selected="selected" value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                    
+                     selected_customer_data = value.id;
+
+                });
+
+                $("div#farmer_checked select#farmer_data").selectpicker('refresh');
+
+            }
+            
+            
+        },
+        async:false
+        
+       });
+    
+        if(selected_customer_data == "" || selected_customer_data == null){
+            
+            $("div#farmer_checked select#retailer_data").empty();
+            $("div#farmer_checked select#retailer_data").selectpicker('refresh');
+            
+        }
+        else{
+            get_retailer_by_user(selected_customer_data);
+        }
+            
+       
+   });
 
 });
+
 
 function get_lower_geo_by_parent_geo(selected_geo_id){
     
@@ -176,8 +353,9 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
     var login_customer_type = $("input#login_customer_type" ).val();
     var customer_selected = $("input#login_customer_id").val();
     
-     var checked_type = $('input[name=radio1]:checked').val();
+    var checked_type = $('input[name=radio1]:checked').val();
     var url_seg = $("input.page_function" ).val();
+    
     
      $.ajax({
         type: 'POST',
@@ -187,23 +365,91 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
         success: function(resp){
             console.log(resp);
            
-               
-                $("div#retailer_checked select#retailer_geo_level_2_data").empty();
-                $("div#retailer_checked select#retailer_geo_level_2_data").selectpicker('refresh');
-                
-                
-                if(resp.length > 0){
-                   
-                $("div#retailer_checked select#retailer_geo_level_2_data").append('<option value="0">Select Geo Location</option>');
-
-                $.each(resp, function(key, value) {
+               if(login_customer_type == 7){
                     
-                    $('div#retailer_checked select#retailer_geo_level_2_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
-                });
+                    $("div.retailer_data select#retailer_geo_level_2_data").empty();
+                    $("div.retailer_data select#retailer_geo_level_2_data").selectpicker('refresh');
 
-                $("div#retailer_checked select#retailer_geo_level_2_data").selectpicker('refresh');
+                    if(resp.length > 0){
 
-            }
+                        $("div.retailer_data select#retailer_geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+
+                        $.each(resp, function(key, value) {
+
+                            $('div.retailer_data select#retailer_geo_level_2_data').append('<option  value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                        });
+
+                        $("div.retailer_data select#retailer_geo_level_2_data").selectpicker('refresh');
+
+                    }
+                    
+                }
+                else
+                {
+                    
+                    if(checked_type == "farmer"){
+                        
+                        $("div#farmer_checked select#geo_level_2_data").empty();
+                        $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+                
+                
+                        if(resp.length > 0){
+
+                            $("div#farmer_checked select#geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+
+                            $.each(resp, function(key, value) {
+
+                                $('div#farmer_checked select#geo_level_2_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                            });
+
+                            $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+
+                        }
+                        
+                        
+                    }
+                    else if(checked_type == "retailer"){
+                        
+                        $("div#retailer_checked select#retailer_geo_level_2_data").empty();
+                        $("div#retailer_checked select#retailer_geo_level_2_data").selectpicker('refresh');
+                
+                        if(resp.length > 0){
+
+                            $("div#retailer_checked select#retailer_geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+
+                            $.each(resp, function(key, value) {
+
+                                $('div#retailer_checked select#retailer_geo_level_2_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                            });
+
+                            $("div#retailer_checked select#retailer_geo_level_2_data").selectpicker('refresh');
+
+                        }
+                        
+                    }
+                    else if(checked_type == "distributor"){
+                        
+                        $("div#distributor_checked select#distributor_geo_level_2_data").empty();
+                        $("div#distributor_checked select#distributor_geo_level_2_data").selectpicker('refresh');
+                
+                
+                        if(resp.length > 0){
+
+                            $("div#distributor_checked select#distributor_geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+
+                            $.each(resp, function(key, value) {
+
+                                $('div#distributor_checked select#distributor_geo_level_2_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                            });
+
+                            $("div#distributor_checked select#distributor_geo_level_2_data").selectpicker('refresh');
+
+                        }
+                        
+                    }
+                
+
+                }
             
             
             
@@ -271,22 +517,48 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
             
             if(customer_type_selected == "retailer"){
                 
-                $("div#retailer_checked select#retailer_geo_level_1_data").empty();
-                $("div#retailer_checked select#retailer_geo_level_1_data").selectpicker('refresh');
-                
-                
-                if(resp.length > 0){
-                   
-                $("div#retailer_checked select#retailer_geo_level_1_data").append('<option value="0">Select Geo Location</option>');
-
-                $.each(resp, function(key, value) {
+                if(login_customer_type == 7){
                     
-                    $('div#retailer_checked select#retailer_geo_level_1_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
-                });
+                    $("div.retailer_data select#retailer_geo_level_1_data").empty();
+                    $("div.retailer_data select#retailer_geo_level_1_data").selectpicker('refresh');
 
-                $("div#retailer_checked select#retailer_geo_level_1_data").selectpicker('refresh');
 
-            }
+                    if(resp.length > 0){
+
+                        $("div.retailer_data select#retailer_geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+
+                        $.each(resp, function(key, value) {
+
+                            $('div.retailer_data select#retailer_geo_level_1_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                        });
+
+                        $("div.retailer_data select#retailer_geo_level_1_data").selectpicker('refresh');
+
+                    }
+                    
+                }
+                else{
+                    
+                    $("div#retailer_checked select#retailer_geo_level_1_data").empty();
+                    $("div#retailer_checked select#retailer_geo_level_1_data").selectpicker('refresh');
+
+
+                    if(resp.length > 0){
+
+                        $("div#retailer_checked select#retailer_geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+
+                        $.each(resp, function(key, value) {
+
+                            $('div#retailer_checked select#retailer_geo_level_1_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                        });
+
+                        $("div#retailer_checked select#retailer_geo_level_1_data").selectpicker('refresh');
+
+                    }
+                    
+                }
+                
+               
                 
             }
             
@@ -347,7 +619,34 @@ function get_user_by_geo_data(selected_geo_data){
                     $("select#fo_distributor_data").selectpicker('refresh');
                     
                 }
-                else{
+                else if(checked_type == "distributor" && login_customer_type == 7 ){
+                    
+                     $("select#distributor_distributor_id").empty();
+
+                    $("select#distributor_distributor_id").append('<option value="0">Select Distributor Name</option>');
+
+                    $.each(resp, function(key, value) {
+                        $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                    });
+
+                    $("select#distributor_distributor_id").selectpicker('refresh');
+                    
+                }
+                if(checked_type == "retailer" && login_customer_type == 7){
+                    
+                     $("select#retailer_id").empty();
+
+                    $("select#retailer_id").append('<option value="0">Select Retailer Name</option>');
+
+                    $.each(resp, function(key, value) {
+                        $('select#retailer_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                    });
+
+                    $("select#retailer_id").selectpicker('refresh');
+                    
+                }
+                else
+                {
                     $("select#farmer_data").empty();
 
                     $("select#farmer_data").append('<option value="0">Select Farmer Name</option>');

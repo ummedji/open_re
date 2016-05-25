@@ -101,7 +101,7 @@
                                 ?>
                                 <?php if($current_user->role_id == 9 || $current_user->role_id == 10) {
                                     ?>
-                                    <li role="presentation"><a href="#">PERSPECTIVE ORDER</a></li>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/prespective_order') ?>">PERSPECTIVE ORDER</a></li>
                                     <?php
                                 }
                                 ?>

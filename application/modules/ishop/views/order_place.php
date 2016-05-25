@@ -43,13 +43,35 @@ echo form_open('',$attributes); ?>
                     <div class="row">
                         
                         <div class="col-md-6 col-sm-6 tp_form">
+                    
+                            <div class="form-group">
+                            <label>Geo L1</label>
+                            <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                                <option value="0">Select Geo Level</option>
+                                <?php
+                                if(isset($geo_level_data) && !empty($geo_level_data))
+                                {
+                                    foreach($geo_level_data as $key=>$val_geo_level_data)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+
+                        </div>
+                    </div>
+                        
+                        <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group">
                                 <div class="form-group">
                                 <label>Distributor Name</label>
                                 <select class="selectpicker" id="distributor_distributor_id" name="distributor_id" data-live-search="true">
-                                    <option value="0">Select Distributor Name</option>
+                                   <!-- <option value="0">Select Distributor Name</option> -->
                                     <?php
-                                    if(isset($distributor) && !empty($distributor))
+                                  /*  if(isset($distributor) && !empty($distributor))
                                     {
                                         foreach($distributor as $key=>$val_distributor)
                                         {
@@ -57,8 +79,8 @@ echo form_open('',$attributes); ?>
                                             <option value="<?php echo $val_distributor['id']; ?>"><?php echo $val_distributor['display_name']; ?></option>
                                             <?php
                                         }
-                                    }
-                                    ?>
+                                    }*/
+                                    ?> 
                                 </select>
                             </div>
                             </div>
@@ -67,13 +89,37 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-10 col-md-offset-1 distributore_form retailer_data" style="display:none;">
                 <div class="row">
+                    
+                     <div class="col-md-6 col-sm-6 tp_form">
+
+                             <div class="form-group">
+                                <label>Geo L2</label>
+                                <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+
+                                </select>
+
+                            </div>
+                    </div>
+                    
+                    <div class="col-md-6 col-sm-6 tp_form">
+                    
+                        <div class="form-group">
+                            <label>Geo L1</label>
+                            <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+
+                            </select>
+                    
+                        </div>
+                    </div>
+                
+                    
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Retailer Name</label>
                                 <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true" onchange="get_distributors('retailer')">
-                                    <option value="0">Select Retailer Name</option>
+                                 <!--   <option value="0">Select Retailer Name</option> -->
                                     <?php
-                                    if(isset($retailer) && !empty($retailer))
+                                   /* if(isset($retailer) && !empty($retailer))
                                     {
                                         foreach($retailer as $key=>$val_retailer)
                                         {
@@ -81,7 +127,7 @@ echo form_open('',$attributes); ?>
                                             <option value="<?php echo $val_retailer['id']; ?>"><?php echo $val_retailer['display_name']; ?></option>
                                             <?php
                                         }
-                                    }
+                                    }*/
                                     ?>
                                 </select>
                             </div>
@@ -180,11 +226,12 @@ echo form_open('',$attributes); ?>
                     </div>
                 </div>
             
-                 <div class="col-md-6 col-sm-6 tp_form">
+                
+                <div class="col-md-6 col-sm-6 tp_form">
                     
                         <div class="form-group">
-                        <label>Geo L1</label>
-                        <select class="selectpicker" class="geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                        <label>Geo L2</label>
+                        <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true">
                             <option value="0">Select Geo Level</option>
                             <?php
                             if(isset($geo_level_data) && !empty($geo_level_data))
@@ -196,6 +243,28 @@ echo form_open('',$attributes); ?>
                                     <?php
                                 }
                             }
+                            ?>
+                        </select>
+                    
+                    </div>
+                </div>
+                
+                 <div class="col-md-6 col-sm-6 tp_form">
+                    
+                        <div class="form-group">
+                        <label>Geo L1</label>
+                        <select class="selectpicker geo_level_2_data" class="" id="geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+                          <!--  <option value="0">Select Geo Level</option> -->
+                            <?php
+                       /*   if(isset($geo_level_data) && !empty($geo_level_data))
+                            {
+                                foreach($geo_level_data as $key=>$val_geo_level_data)
+                                {
+                                    ?>
+                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
+                                    <?php
+                                }
+                            } */
                             ?>
                         </select>
                     
@@ -241,8 +310,8 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-6 col-sm-6 tp_form">
                     
                         <div class="form-group">
-                        <label>Geo L1</label>
-                        <select class="selectpicker" class="retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                        <label>Geo L3</label>
+                        <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
                             
                         </select>
                     
@@ -253,7 +322,7 @@ echo form_open('',$attributes); ?>
                     
                         <div class="form-group">
                         <label>Geo L2</label>
-                        <select class="selectpicker" class="retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
                             
                         </select>
                     
@@ -291,8 +360,30 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-6 col-sm-6 tp_form">
                     
                         <div class="form-group">
+                        <label>Geo L2</label>
+                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                          <!--  <option value="0">Select Geo Level</option> -->
+                            <?php
+                         /*   if(isset($geo_level_data) && !empty($geo_level_data))
+                            {
+                                foreach($geo_level_data as $key=>$val_geo_level_data)
+                                {
+                                    ?>
+                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
+                                    <?php
+                                }
+                            } */
+                            ?>
+                        </select>
+                    
+                    </div>
+                </div>
+                
+                <div class="col-md-6 col-sm-6 tp_form">
+                    
+                        <div class="form-group">
                         <label>Geo L1</label>
-                        <select class="selectpicker distributor_geo_level_1_data"  id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
                             
                         </select>
                     
