@@ -415,6 +415,10 @@ class Ishop extends Front_Controller
                 $default_type_selected = null; 
             }
            
+          //  echo "<pre>";
+          //  print_r($get_geo_level_data);
+          //  die;
+            
 		  //var_dump($distributor);die;
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
@@ -730,14 +734,365 @@ class Ishop extends Front_Controller
         
         public function get_prespective_order() {
             
-            $from_date = $_POST["fromdate"];
-            $todate = $_POST["todate"];
-            $loginusertype = $_POST["loginusertype"];
-            $loginuserid = $_POST["loginuserid"];
+            $from_date = $_POST["form_date"];
+            $todate = $_POST["to_date"];
+            $loginusertype = $_POST["login_customer_type"];
+            $loginuserid = $_POST["login_customer_id"];
             
             $prespective_order = $this->ishop_model->get_prespective_order($from_date,$todate,$loginusertype,$loginuserid);
-            echo $prespective_order;
+            
+            $user = $this->auth->user();
+		
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set('table', $prespective_order);
+            
+            Template::set_view('ishop/prespective_order');
+            Template::render();
+            
+        }
+        
+        public function get_prespective_order_details()
+	{
+		$order_id = (isset($_POST['id']) ? $_POST['id'] : '');
+		if(isset($order_id) && !empty($order_id))
+		{
+			$order_details= $this->ishop_model->order_product_details_view_by_id($order_id);
+			Template::set('table',$order_details);
+		}
+		Template::set_view('ishop/prespective_order');
+		Template::render();
+	}
+        
+        public function mark_order_as_read() {
+            $order_id = (isset($_POST['orderid']) ? $_POST['orderid'] : '');
+            $mark_read = $this->ishop_model->order_mark_as_read($order_id);
+            echo $mark_read;
             die;
+        }
+        
+        public function mark_order_as_unread() {
+            
+            $order_id = (isset($_POST['orderid']) ? $_POST['orderid'] : '');
+            $mark_unread = $this->ishop_model->order_mark_as_unread($order_id);
+            echo $mark_unread;
+            die;
+        }
+        
+        
+        /*
+         * ORDER STATUS
+         */
+        
+        public function order_status() {
+            
+            Assets::add_module_js('ishop', 'order_place.js');
+            Assets::add_module_js('ishop', 'order_status.js');
+            
+            $user= $this->auth->user();
+            
+            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
+            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
+            
+            $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+            
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            $get_geo_level_data = "";
+            $action_data = $this->uri->segment(2);
+            
+            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
+            
+            if($logined_user_type == 7){
+                
+                //FOR HO
+                $default_type_selected = 9;
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 8){
+            
+                //FOR FO
+                $default_type_selected = 11; 
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 9){
+            
+                //FOR DISTRIBUTOR
+                $default_type_selected = null; 
+            }
+            elseif($logined_user_type == 10){
+            
+                //FOR RETAILER
+                $default_type_selected = null; 
+            }
+           
+          //  echo "<pre>";
+          //  print_r($get_geo_level_data);
+          //  die;
+            
+		  //var_dump($distributor);die;
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set('distributor',$distributor);
+            Template::set('retailer',$retailer);
+            Template::set('product_sku',$product_sku);
+            
+            
+            Template::set('geo_level_data',$get_geo_level_data);
+            
+            Template::set_view('ishop/order_status');
+            Template::render();
+            
+        }
+        
+        public function get_order_status_data() {
+            
+            
+            Assets::add_module_js('ishop', 'order_place.js');
+            Assets::add_module_js('ishop', 'order_status.js');
+            
+            $user= $this->auth->user();
+            
+            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
+            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
+            
+            $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+            
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            $get_geo_level_data = "";
+            $action_data = $this->uri->segment(2);
+            
+            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
+            
+            if($logined_user_type == 7){
+                
+                //FOR HO
+                $default_type_selected = 9;
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 8){
+            
+                //FOR FO
+                $default_type_selected = 11; 
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 9){
+            
+                //FOR DISTRIBUTOR
+                $default_type_selected = null; 
+            }
+            elseif($logined_user_type == 10){
+            
+                //FOR RETAILER
+                $default_type_selected = null; 
+            }
+           
+            /*
+             *  GETTING POST FROM DATA HERE
+             */
+           
+            
+         $loginusertype = $_POST["login_customer_type"];
+            
+         if($loginusertype == 7){
+            
+            //FOR HO
+            
+           
+            $radio_checked = $_POST["radio1"];
+            
+            if($radio_checked == "distributor"){
+                
+                $from_date = $_POST["form_date"];
+                $todate = $_POST["to_date"];
+
+                $loginuserid = $_POST["login_customer_id"];
+
+
+                $geo_level_1_data = $_POST["geo_level_1_data"];
+                $distributor_id = $_POST["distributor_id"];
+                $page_function = $_POST["page_function"];
+
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
+                
+                
+                
+         }
+         elseif($radio_checked == "retailer"){
+             
+                $from_date = $_POST["form_date"];
+                $todate = $_POST["to_date"];
+
+                $loginuserid = $_POST["login_customer_id"];
+
+                $customer_id = $_POST["retailer_id"];
+                $page_function = $_POST["page_function"];
+
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+                
+                
+         }
+            
+            
+            
+        }
+        else if($loginusertype == 8){
+            
+            //FOR FO
+            
+              $radio_checked = $_POST["radio1"];
+              
+            if($radio_checked == "farmer"){
+                
+                $from_date = $_POST["form_date"];
+                $todate = $_POST["to_date"];
+
+                $loginuserid = $_POST["login_customer_id"];
+
+
+                $geo_level_1_data = $_POST["geo_level_1_data"];
+                
+                $farmer_data = "";
+                
+                $order_tracking_no = $_POST["order_tracking_no"];
+                
+                $order_tracking_no = (isset($_POST['order_tracking_no']) ? $_POST['order_tracking_no'] : '');
+                
+                   
+                $farmer_data =  (isset($_POST['farmer_data']) ? $_POST['farmer_data'] : '');
+                  //  $farmer_data = $_POST["farmer_data"];
+                
+                $page_function = $_POST["page_function"];
+                
+                
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$farmer_data,$from_date,$todate,$order_tracking_no);
+                
+                
+                
+         }elseif($radio_checked == "distributor"){
+                
+                $from_date = $_POST["form_date"];
+                $todate = $_POST["to_date"];
+
+                $loginuserid = $_POST["login_customer_id"];
+
+
+                $geo_level_1_data = $_POST["geo_level_1_data"];
+                $distributor_id = $_POST["distributor_data"];
+                $page_function = $_POST["page_function"];
+
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
+                
+                
+                
+         }
+         elseif($radio_checked == "retailer"){
+             
+                $from_date = $_POST["form_date"];
+                $todate = $_POST["to_date"];
+
+                $loginuserid = $_POST["login_customer_id"];
+
+                $customer_id = $_POST["retailer_data"];
+                $page_function = $_POST["page_function"];
+
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+                
+                //echo "<pre>";
+                //print_r($order_data);
+                
+             //die;
+         }
+            
+            
+        }
+        else if($loginusertype == 9){
+            
+            //FOR DISTRIBUTOR
+           
+             $from_date = $_POST["form_date"];
+             $todate = $_POST["to_date"];
+
+            $loginuserid = $_POST["login_customer_id"];
+            $radio_checked = "";
+            $customer_id = $loginuserid;
+            
+            $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+            
+        }
+        else if($loginusertype == 10){
+            
+            //FOR RETAILER
+            
+             $from_date = $_POST["form_date"];
+             $todate = $_POST["to_date"];
+
+            $loginuserid = $_POST["login_customer_id"];
+            $radio_checked = "";
+            $customer_id = $loginuserid;
+            
+            $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+            
+            
+        }
+            
+            Template::set('table', $order_data);
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set('distributor',$distributor);
+            Template::set('retailer',$retailer);
+            Template::set('product_sku',$product_sku);
+            
+            Template::set('geo_level_data',$get_geo_level_data);
+            
+            Template::set_view('ishop/order_status');
+            Template::render();
+            
+        }
+        
+        public function get_order_status_data_details() {
+            
+                $order_id = (isset($_POST['id']) ? $_POST['id'] : '');
+                $radiochecked = (isset($_POST['radiochecked']) ? $_POST['radiochecked'] : '');
+                $logincustomertype = $_POST['logincustomertype'];
+                
+		if(isset($order_id) && !empty($order_id))
+		{
+			$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype);
+			Template::set('table',$order_details);
+		}
+		Template::set_view('ishop/order_status');
+		Template::render();
+            
         }
     
 }

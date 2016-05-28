@@ -120,8 +120,15 @@ $(document).ready(function(){
     $("select#distributor_geo_level_1_data").on("change",function(){
        
        var selected_geo_data = $(this).val();
-       get_lower_geo_by_parent_geo(selected_geo_data);
        
+       if(login_customer_type == 7){
+           
+           get_user_by_geo_data(selected_geo_data);
+           
+       }
+       else{
+            get_lower_geo_by_parent_geo(selected_geo_data);
+        }
    });
    
    
@@ -862,15 +869,27 @@ $("#order_place").on("submit",function(){
 
 
 $("body").on("change","select.select_unitdata",function(){
+      
+       var pathname = window.location.pathname;
        
-       var selected_row_id = $(this).parent().parent().attr("id");
+       var action_segment = pathname.split("/");
+       alert(pathname);
        
-       var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
-       
-       var units = $(this).val();
-       
-       var quantity = $(this).parent().parent().find("input.quantity_data").val();
-       
+       if(action_segment == "order_place"){
+            var selected_row_id = $(this).parent().parent().attr("id");
+
+            var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+
+            var units = $(this).val();
+
+            var quantity = $(this).parent().parent().find("input.quantity_data").val();
+        }
+        else
+        {
+            
+            
+            
+        }
        var unit_data = get_data_conversion(sku_id,quantity,units);
        
        $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
@@ -878,6 +897,8 @@ $("body").on("change","select.select_unitdata",function(){
 });
 
 $("body").on("focusout","input.quantity_data",function(){
+       
+       alert("2222");
        
        var selected_row_id = $(this).parent().parent().attr("id");
        

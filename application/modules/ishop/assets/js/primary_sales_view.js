@@ -5,14 +5,16 @@
 /*Date Picker*/
 $(function () {
     $('#form_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+         autoclose: true
     });
 
 });
 
 $(function () {
     $('#to_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+         autoclose: true
     });
 
 });

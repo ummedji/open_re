@@ -1,12 +1,16 @@
 <?php
-$attributes = array('class' => '', 'id' => 'order_place','name'=>'order_place');
-//echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('',$attributes); ?>
+ if (!$this->input->is_ajax_request()) {
+ ?>
 <!--------------------------------------Filter1-------------------------------------------------->
 
 <div class="col-md-12">
     <div class="top_form">
         <div class="row">
+          
+           <?php 
+           $attributes = array('class' => '', 'id' => 'order_status','name'=>'order_status');
+            echo form_open('',$attributes); 
+            ?>
             
             <div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
@@ -116,7 +120,7 @@ echo form_open('',$attributes); ?>
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Retailer Name</label>
-                                <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true" onchange="get_distributors('retailer')">
+                                <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
                                  <!--   <option value="0">Select Retailer Name</option> -->
                                     <?php
                                    /* if(isset($retailer) && !empty($retailer))
@@ -133,14 +137,14 @@ echo form_open('',$attributes); ?>
                             </div>
                     </div>
                     
-                    <div class="col-md-4 col-sm-4 tp_form">
+                  <!--  <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Distributor Name</label>
                                 <select class="selectpicker" id="retailer_distributor_id" name="distributor_id" data-live-search="true">
                                     
                                 </select>
                             </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
             
@@ -149,13 +153,6 @@ echo form_open('',$attributes); ?>
         ?>
             
             <div class="col-md-6 text-center radio_space">
-                <div class="col-md-6 col-sm-6 tp_form">
-                    <div class="form-group">
-                        <label for="invoice_date">PO NO.</label>
-                        <input type="text" name="po_no" class="form-control" id="po_no" placeholder="">
-                    </div>
-                </div>
-                    
                 <div class="clearfix"></div>
             </div>
             
@@ -163,30 +160,7 @@ echo form_open('',$attributes); ?>
             
             
             <div class="col-md-6 col-md-offset-3 distributore_form distributor_data">
-                    <div class="row">
-                        
-                        <div class="col-md-6 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <div class="form-group">
-                                <label>Distributor Name</label>
-                                <select class="selectpicker" id="retailer_distributor_id" name="distributor_id" data-live-search="true">
-                                    <option value="0">Select Distributor Name</option>
-                                    <?php
-                                    if(isset($distributor) && !empty($distributor))
-                                    {
-                                        foreach($distributor as $key=>$val_distributor)
-                                        {
-                                            ?>
-                                            <option value="<?php echo $val_distributor['id']; ?>"><?php echo $val_distributor['display_name']; ?></option>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
+                    
                 </div>
             
             <?php } ?>
@@ -220,21 +194,27 @@ echo form_open('',$attributes); ?>
                  <div class="col-md-6 col-sm-6 tp_form">
                     <div class="form-group">
                         <div class="form-group">
-                        <label>Date</label>
-                        <input type="text" name="order_date" class="order_date" id="order_date_datepicker" />
+                        <label>Order Tracking No. </label>
+                        <input type="text" name="order_tracking_no" class="order_tracking_no" id="order_tracking_no" />
                     </div>
                     </div>
+                     
+                     <div class="col-md-3 save_btn">
+                            <button id="order_status" type="submit" class="btn btn-primary">Execute</button> 
+                     </div>
+                     
                 </div>
-            
+                
+            <div class="clearfix"></div></br>
                 
                 <div class="col-md-6 col-sm-6 tp_form">
                     
                         <div class="form-group">
                         <label>Geo L2</label>
                         <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                            <option value="0">Select Geo Level</option>
+                          <!--  <option value="0">Select Geo Level</option> -->
                             <?php
-                            if(isset($geo_level_data) && !empty($geo_level_data))
+                          /*  if(isset($geo_level_data) && !empty($geo_level_data))
                             {
                                 foreach($geo_level_data as $key=>$val_geo_level_data)
                                 {
@@ -242,7 +222,7 @@ echo form_open('',$attributes); ?>
                                     <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
                                     <?php
                                 }
-                            }
+                            } */
                             ?>
                         </select>
                     
@@ -282,25 +262,9 @@ echo form_open('',$attributes); ?>
                    
                </div>
             
-                 <div class="col-md-6 col-sm-6 tp_form">
-                           
-                            <div class="form-group">
-                                <label>Mobile No</label>
-                                <input type="text" name="mobile_num" class="mobile_num" id="mobile_num" />
-                            </div>
-                            
-                 </div>
-            
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                                <div class="form-group">
-                                    <label>Retailer Name</label>
-                                    <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" >
-                                        
-                                    </select>
-                                    
-                                </div>
-                </div>
+                 
+                
+                
             
             </div>
             
@@ -341,16 +305,6 @@ echo form_open('',$attributes); ?>
                     </div>
                 </div>
                 
-                <div class="col-md-6 col-sm-6 tp_form">
-                   
-                       <div class="form-group">
-                       <label>Distributor Name</label>
-                       <select class="selectpicker" id="distributor_data" name="distributor_data" data-live-search="true">
-                           
-                       </select>
-                   </div>
-                   
-               </div>
                 
             </div>
             
@@ -415,123 +369,38 @@ echo form_open('',$attributes); ?>
             
             <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" /> 
             
+            
+            <div class="col-md-12 text-center tp_form inline-parent">
+                    <div class="form-group">
+                        <label>From Date</label>
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label>TO Date</label>
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                    </div>
+                </div>
+            
+            
+             <div class="col-md-3 save_btn">
+                    <button id="order_status" type="submit" class="btn btn-primary">Execute</button> 
+             </div>
+            <?php echo form_close(); ?>
         </div>
     </div>
     <div class="clearfix"></div>
 </div>
 
-<!--------------------------------------Filter2-------------------------------------------------->
-<div class="col-md-12">
-    <div class="row">
-        <div class="middle_form">
-            <div class="col-md-4_ tp_form">
-                <div class="form-group">
-                    <label>Product Sku Name</label>
-                    <select class="selectpicker" id="prod_sku" data-live-search="true">
-                        <option value="0">Product Name</option>
-                        <?php
-                        if(isset($product_sku) && !empty($product_sku))
-                        {
-                            foreach($product_sku as $k=> $prd_sku)
-                            {
-                                ?>
-                                <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                <?php
-                            }
-                        }
-                        ?>
-                    </select>
-                </div>
-            </div>
-            <div class="col-md-2_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Units</label>
-                   <!-- <input type="text" class="form-control" id="unit" placeholder=""> -->
-                    
-                    <select class="selectpicker" id="units" data-live-search="true">
-                        <option value="0">Select Unit</option>
-                        <option value="box">Box</option>
-                        <option value="packages">Packages</option>
-                        <option value="kg/ltr">Kg/Ltr</option>
-                    </select>
-                    
-                </div>
-                
-            </div>
-            <div class="col-md-3_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Quantity</label>
-                    <input type="text" class="form-control" id="quantity" placeholder="">
-                </div>
-                
-            </div>
-           
-            
-            <div class="plus_btn"><a href="javascript:void(0);" onclick="order_place_add_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
-            <div class="clearfix"></div>
-        </div>
-        <div class="clearfix"></div>
-    </div>
-</div>
-<!--------------------------------------Table-------------------------------------------------->
-<div class="col-md-12">
-    <div class="row">
-        
-         <div class="zoom_space">
-                <ul>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
-                </ul>
-            </div>
-        
-        <div id="no-more-tables">
-            <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                <thead class="cf">
-                <tr>
-                    <th>Sr. No. <span class="rts_bordet"></span></th>
-                    <th class="numeric">Remove <span class="rts_bordet"></span></th>
-                    <th>Product SKU Code <span class="rts_bordet"></span></th>
-                    <th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>
-                    <th class="numeric">Units <span class="rts_bordet"></span></th>
-                    <th class="numeric">Quantity <span class="rts_bordet"></span></th>
-                    <th class="numeric">Qty <div class="wl_sp">(Kg/Ltr)</div> <span class="rts_bordet"></span></th>
-                    
-                  <!--  <th class="numeric">Edit <span class="rts_bordet"></span></th> -->
-                   
-                </tr>
-                </thead>
-                <tbody id="order_place_data">
-                </tbody>
-            </table>
-            <div class="clearfix"></div>
-        </div>
-    </div>
-</div>
+<?php } ?>
+<?php
+if ($this->input->is_ajax_request()) {
+    echo theme_view('common/middle');
+}
+?>
+<div id="order_status_middle_container" class="order_status">
 
-<!--------------------------------------Save & Upload Data-------------------------------------------------->
-<div class="col-md-12 table_bottom">
-    <div class="row">
-        <div class="col-md-3 save_btn">
-            <!--  <div><input type="submit" class="btn btn-primary" value="Save" /></div>-->
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-        <!--<div class="col-md-9">
-            <div class="row">
-                <div class="col-md-3 upload_file_space">
-                    <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
-                                            Browse <input type="file" multiple>
-                                        </span>
-                                    </span>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-9 chech_data"><button type="button" class="btn btn-default">Check Data</button> <button type="button" class="btn btn-default">Download Templates</button></div>
-            </div>
-        </div>-->
-    </div>
 </div>
-<?php echo form_close(); ?>
+<div id="order_status_table_container">
+
+</div>
 <div class="clearfix"></div>
