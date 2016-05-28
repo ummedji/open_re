@@ -16,7 +16,7 @@ echo form_open('',$attributes); ?>
                         <?php 
                         if($login_customer_type == 9 || $login_customer_type == 10){
                         ?>
-                            <li><a href="#">PO Acknowledgment</a></li>
+                            <li><a href="<?php echo base_url('/ishop/po_acknowledgement') ?>">PO Acknowledgment</a></li>
                         <?php } ?>
                     </ul>
                     <div class="clearfix"></div>

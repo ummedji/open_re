@@ -10,10 +10,10 @@ $login_customer_type = $user->role_id;
 //echo "<pre>";print_r($_POST);
 
 if(isset($table) && count($table)>0) {
-    if($login_customer_type != 9 && $login_customer_type != 10){
-        if($action_data == "get_order_status_data_details"){
+    if($login_customer_type == 9 || $login_customer_type == 10){
+        if($action_data == "po_acknowledgement"){
 
-            $attributes = array('class' => '', 'id' => 'order_status_data_details','name'=>'order_status_data_details');
+            $attributes = array('class' => '', 'id' => 'po_acknowledgement','name'=>'po_acknowledgement');
                 echo form_open('',$attributes); 
 
         }
@@ -65,22 +65,8 @@ if(isset($table) && count($table)>0) {
                                         ?>
 
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>" class="numeric">
-                                            <?php
-                                            if(isset($table['eye']) && !empty($table['eye']))
-                                            {
-                                                ?>
-                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
-                                                <?php
-                                            }
-                                           if($action_data !="get_order_status_data"){
-                                            ?>
-                                            <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                           <?php } 
-                                           
-                                           
-                                           
-                                           ?>
-                                            <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                            
+                                            <div class="confirm_data" prdid ="<?php echo $row;?>"><input id="confirm_ack_<?php echo $row;?>" type="checkbox" name="confirm_ack[]" value="" /><a href="javascript:void(0);">Confirm</a></div>
                                            
                                         </td>
                                     <?php 
@@ -122,8 +108,8 @@ if(isset($table) && count($table)>0) {
                     <div class="clearfix"></div>
                 </div>
                 <?php 
-                if($login_customer_type != 9 && $login_customer_type != 10){
-                    if($action_data == "get_order_status_data_details"){                   
+                if($login_customer_type == 9 || $login_customer_type == 10){
+                    if($action_data == "po_acknowledgement"){                   
                 ?>
                 <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
                     <?php

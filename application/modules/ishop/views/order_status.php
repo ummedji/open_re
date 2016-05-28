@@ -1,3 +1,23 @@
+<div class="modal fade" id="myModal" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Header title</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="usr">label name:</label>
+                    <input type="text" class="form-control" id="usr">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
 <?php
  if (!$this->input->is_ajax_request()) {
  ?>
@@ -20,7 +40,7 @@
                         <?php 
                         if($login_customer_type == 9 || $login_customer_type == 10){
                         ?>
-                            <li><a href="#">PO Acknowledgment</a></li>
+                            <li><a href="<?php echo base_url('/ishop/po_acknowledgement') ?>">PO Acknowledgment</a></li>
                         <?php } ?>
                     </ul>
                     <div class="clearfix"></div>
@@ -404,3 +424,4 @@ if ($this->input->is_ajax_request()) {
 
 </div>
 <div class="clearfix"></div>
+

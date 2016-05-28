@@ -1094,5 +1094,99 @@ class Ishop extends Front_Controller
 		Template::render();
             
         }
+        
+        public function update_order_status_detail_data() {
+            
+            $detail_data = $_POST;
+            
+            $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
+            die;
+        }
+        
+        public function delete_order_detail_data(){
+            
+            $order_product_id = $_POST["data_id"];
+            
+            $detail_delete = $this->ishop_model->delete_order_detail_data($order_product_id);
+            die;
+            
+        }
+        
+        public function delete_product_order_data(){
+            
+            $order_id = $_POST["data_id"];
+            
+            $detail_delete = $this->ishop_model->delete_order_data($order_id);
+            die;
+            
+        }
+        
+       
+        
+        /*
+         * PO ACKNOWLEDGEMENT
+         */
+        
+        public function po_acknowledgement() {
+            
+            
+            Assets::add_module_js('ishop', 'order_place.js');
+            Assets::add_module_js('ishop', 'order_status.js');
+            Assets::add_module_js('ishop', 'po_acknowledgement.js');
+            
+            $user= $this->auth->user();
+            
+            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
+            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
+            
+            $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+            
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            $get_geo_level_data = "";
+            $action_data = $this->uri->segment(2);
+            
+            
+            if(isset($_POST) && !empty($_POST)){
+                
+              //  echo "<pre>";
+               // print_r($_POST);
+                
+            }
+            
+            
+           
+             $from_date = "";
+             $todate = "";
+
+            $radio_checked = "";
+            $customer_id = $logined_user_id;
+            
+            $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
+            
+            Template::set('table', $order_data);
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set('distributor',$distributor);
+            Template::set('retailer',$retailer);
+            Template::set('product_sku',$product_sku);
+            
+            Template::set('geo_level_data',$get_geo_level_data);
+            
+            Template::set_view('ishop/po_acknowledgement');
+            Template::render();
+            
+        }
     
+        
+        public function update_po_acknowledgement_data(){
+            
+            
+            
+        }
 }

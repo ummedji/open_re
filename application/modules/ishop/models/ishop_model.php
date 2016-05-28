@@ -1176,8 +1176,15 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                 
             }
             else{
-                    $this->db->where('bio.order_date >=', $from_date);
-                    $this->db->where('bio.order_date <=', $todate);
+                
+                    $action_data = $this->uri->segment(2);
+                    if($action_data != "po_acknowledgement"){
+                        $this->db->where('bio.order_date >=', $from_date);
+                        $this->db->where('bio.order_date <=', $todate);
+                    }
+                    if($action_data == "po_acknowledgement"){
+                        $this->db->where('bio.order_taken_by_id != ',$customer_id);
+                    }
                     $this->db->where('bio.customer_id_from',$customer_id);
             }
             
@@ -1291,41 +1298,66 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
 
                         //FOR DISTRIBUTOR
 
+                        $action_data = $this->uri->segment(2);
                         
-                        $order_view['head'] =array('Sr. No.','','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
+                        if($action_data != "po_acknowledgement"){
+                        
+                                $order_view['head'] =array('Sr. No.','','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
 
-                        $i=1;
+                                $i=1;
 
-                        foreach($orderdata['result'] as $od )
-                        {
-                            
-                            if($od['order_status'] == 0){
-                                $order_status = "Pending";
-                            }
-                            elseif($od['order_status'] == 1){
-                                $order_status = "Dispatched";
-                            }
-                            elseif($od['order_status'] == 2){
-                                $order_status = "";
-                            }
-                            elseif($od['order_status'] == 3){
-                                $order_status = "Rejected";
-                            }
-                            elseif($od['order_status'] == 4){
-                                $order_status = "op_ackno";
-                            }
-                            
-                            
-                            
-                            $otn = '<div prdid ="'.$od['order_id'].'"><a class="set_pono" onclick="set_po_no('.$od['order_id'].');" href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
-                            
-                            $po_no = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['PO_no'].'</a></div>';
+                                foreach($orderdata['result'] as $od )
+                                {
 
-                            $order_view['row'][]= array($i,'',$od['order_date'],$po_no,$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$order_status);
-                            $i++;
+                                    if($od['order_status'] == 0){
+                                        $order_status = "Pending";
+                                    }
+                                    elseif($od['order_status'] == 1){
+                                        $order_status = "Dispatched";
+                                    }
+                                    elseif($od['order_status'] == 2){
+                                        $order_status = "";
+                                    }
+                                    elseif($od['order_status'] == 3){
+                                        $order_status = "Rejected";
+                                    }
+                                    elseif($od['order_status'] == 4){
+                                        $order_status = "op_ackno";
+                                    }
+
+
+
+                                    $otn = '<div prdid ="'.$od['order_id'].'"><a data-toggle="modal"  data-target="#myModal" class="set_pono" href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                                    $po_no = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['PO_no'].'</a></div>';
+
+                                    $order_view['row'][]= array($i,'',$od['order_date'],$po_no,$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$order_status);
+                                    $i++;
+                                }
+                                $order_view['eye'] ='';
                         }
-                        $order_view['eye'] ='';
-                        
+                        else{
+                            
+                            //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
+                            
+                            $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Entered By','Enter PO No.');
+
+                                $i=1;
+
+                                foreach($orderdata['result'] as $od )
+                                {
+
+
+                                    $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                                    $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
+
+                                    $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$otn,$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$po_no);
+                                    $i++;
+                                }
+                                $order_view['eye'] ='';
+                            
+                        }
                         
 
                     }
@@ -1380,7 +1412,7 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
     
     public function order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype) {
         
-        $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity');
+        $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id');
         $this->db->from('bf_ishop_product_order as bipo');
         
         $this->db->join('bf_master_product_sku_country as psc','psc.product_sku_country_id = bipo.product_sku_id',"LEFT");
@@ -1411,10 +1443,18 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                 $i=1;
                 foreach($order_detail['result'] as $od )
                 {
+                    
+                    $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
 
-                    $unit_data = '<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+                    
+                    
+                    
+                    
+                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
                     $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
-                    $quantity_kg_ltr = '<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
                     $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
                     
                     $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
@@ -1464,12 +1504,50 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                     }
                     elseif($radiochecked == "retailer"){
 
-                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount'],$od['dispatched_quantity']);
+                        
+                        
+                    $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+
+                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+                    
+                    
+                    
+                    
+                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                    $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
+                    
+                    $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
+                        
+                        
+                        
+                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data,$quantity_kg_ltr,$amount,$dispatched_quantity);
 
                     }
                     elseif($radiochecked == "distributor"){
 
-                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount'],$od['dispatched_quantity']);
+                        
+                              
+                    $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+
+                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+                    
+                    
+                    
+                    
+                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                    $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
+                    
+                    $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
+                        
+                        
+                        
+                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$dispatched_quantity);
 
                     }
                     $i++;
@@ -1511,6 +1589,80 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
             
             return $product_view;
         }
+        
+    }
+    
+    public function update_order_detail_data($detail_data) {
+        
+        if(!empty($detail_data["order_product_id"])){
+            
+            foreach($detail_data["order_product_id"] as $key=> $order_product_id){
+                
+                $update_array = array();
+                
+                if(isset($detail_data["units"]) && !empty($detail_data["units"])){
+                    if(isset($detail_data["units"][$key])  && $detail_data["units"][$key] != ""){
+                        $unit_data = $detail_data["units"][$key];
+                        
+                        $update_array["unit"] = $unit_data;
+                        
+                    }
+                }
+                
+                if(isset($detail_data["quantity"]) && !empty($detail_data["quantity"])){
+                    if(isset($detail_data["quantity"][$key])  && $detail_data["quantity"][$key] != ""){
+                        $quantity_data = $detail_data["quantity"][$key];
+                        
+                        $update_array["quantity"] = $quantity_data;
+                        
+                    }
+                }
+                
+                if(isset($detail_data["quantity_kg_ltr"]) && !empty($detail_data["quantity_kg_ltr"])){
+                    if(isset($detail_data["quantity_kg_ltr"][$key])  && $detail_data["quantity_kg_ltr"][$key] != ""){
+                        $quantity_kg_ltr_data = $detail_data["quantity_kg_ltr"][$key];
+                        
+                        $update_array["quantity_kg_ltr"] = $quantity_kg_ltr_data;
+                        
+                    }
+                }
+                
+                if(isset($detail_data["amount"]) && !empty($detail_data["amount"])){
+                    if(isset($detail_data["amount"][$key])  && $detail_data["amount"][$key] != ""){
+                        $amount_data = $detail_data["amount"][$key];
+                        
+                        $update_array["amount"] = $amount_data;
+                        
+                    }
+                }
+                
+                if(isset($detail_data["dispatched_quantity"]) && !empty($detail_data["dispatched_quantity"])){
+                    if(isset($detail_data["dispatched_quantity"][$key]) && $detail_data["dispatched_quantity"][$key] != ""){
+                        $dispatched_quantity_data = $detail_data["dispatched_quantity"][$key];
+                        
+                        $update_array["dispatched_quantity"] = $dispatched_quantity_data;
+                        
+                    }
+                }
+                
+                
+                $this->db->where('product_order_id', $order_product_id);
+                $this->db->update('bf_ishop_product_order', $update_array); 
+                
+            }
+            
+        }
+        
+    }
+    
+    public function delete_order_detail_data($order_product_id) {
+        $this->db->delete('bf_ishop_product_order', array('product_order_id' => $order_product_id));
+    }
+    
+    public function delete_order_data($order_id) {
+        
+        $this->db->delete('bf_ishop_product_order', array('order_id' => $order_id));
+        $this->db->delete('bf_ishop_orders', array('order_id' => $order_id));
         
     }
     

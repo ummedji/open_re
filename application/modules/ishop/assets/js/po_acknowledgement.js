@@ -3,6 +3,9 @@
  */
 $(document).ready(function(){
     
+  //  alert("PO ACKNOWLEDGEMENT");
+    
+   /*
     $("#order_status").on("submit",function(){
         
         var param = $("form#order_status").serializeArray();
@@ -152,10 +155,10 @@ $(document).on('click', 'div.order_status .edit_i', function () {
             $("#order_status_table_container").html(resp);
         }
     });*/
-    return false;
+   // return false;
 });
 
-
+/*
  $("input.select_customer_type").on("click",function(){
        
         $("div#order_status_middle_container").empty();
@@ -166,8 +169,12 @@ $(document).on('click', 'div.order_status .edit_i', function () {
        
  });
     
-});
+    
+    
+    
+});*/
 
+/*
 function mark_as_read(order_id){
     
     $.ajax({
@@ -205,3 +212,5 @@ function mark_as_unread(order_id){
     return false;
     
 } 
+
+*/
