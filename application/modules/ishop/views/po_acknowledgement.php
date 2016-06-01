@@ -7,11 +7,6 @@
     <div class="top_form">
         <div class="row">
           
-           <?php 
-           $attributes = array('class' => '', 'id' => 'po_acknowledgement','name'=>'po_acknowledgement');
-            echo form_open('',$attributes); 
-            ?>
-            
             <div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
@@ -26,7 +21,10 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
-            
+            <?php 
+           $attributes = array('class' => '', 'id' => 'po_acknowledgement','name'=>'po_acknowledgement');
+            echo form_open('',$attributes); 
+            ?>
            <?php
          if($login_customer_type == 9){
         ?>
@@ -59,11 +57,11 @@
 </div>
 
 <?php } ?>
+
+<div id="po_acknowledgement_middle_container" class="po_acknowledgement">
 <?php
 echo theme_view('common/middle');
 ?>
-<div id="po_acknowledgement_middle_container" class="order_status">
-
 </div>
 <div id="po_acknowledgement_table_container">
 

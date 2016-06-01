@@ -21,17 +21,16 @@ function add_row()
     $("#primary_sls").append(
         "<tr>"+
             "<td data-title='Sr. No.' class='numeric'>" +
-                "<input type='text' value='"+sr_no+"' readonly/>" +
+                "<input class='input_remove_border'  type='text' value='"+sr_no+"' readonly/>" +
             "</td>"+
             "<td  data-title='Action' class='numeric'>" +
-              /*  "<div class='edit_i'><a href='#'><i class='fa fa-pencil' aria-hidden='true'></i></a></div>" +*/
                 "<div class='delete_i primary_sls' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
             "</td>"+
             "<td data-title='Product SKU Code' class='numeric'>" +
-                "<input type='text' value='"+sku_code+"' readonly/>" +
+                "<input class='input_remove_border'  type='text' value='"+sku_code+"' readonly/>" +
             "</td>"+
             "<td data-title='Product SKU Name'>" +
-                "<input type='text' value='"+sku_name+"' readonly/>" +
+                "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
                 "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
             "</td>"+
             "<td data-title='PO Qty'>" +

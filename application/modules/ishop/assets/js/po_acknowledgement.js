@@ -3,6 +3,21 @@
  */
 $(document).ready(function(){
     
+    $("input.confirm_data").on("click",function(){
+        
+       var checked_id = $(this).val();
+       
+       var confirm_val = $("input#confirm_data_"+checked_id).val();
+       
+       if(confirm_val == 0){
+           $("input#confirm_data_"+checked_id).val(1);
+       }
+       else{
+           $("input#confirm_data_"+checked_id).val(0);
+       }
+        
+    });
+    
   //  alert("PO ACKNOWLEDGEMENT");
     
    /*
@@ -26,22 +41,7 @@ $(document).ready(function(){
         return false;
     });
     
-    $(document).on('click', 'div.order_status .eye_i', function () {
-    var id = $(this).attr('prdid');
-    var radio_checked = $('input[name=radio1]:checked').val();
-    var login_customer_type = $("input#login_customer_type" ).val();
     
-    $.ajax({
-        type: 'POST',
-        url: site_url+'ishop/get_order_status_data_details',
-        data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type},
-        success: function(resp){
-            $("div#order_status_table_container").empty();
-            $("#order_status_table_container").html(resp);
-        }
-    });
-    return false;
-});
 
 
 
@@ -77,13 +77,20 @@ $(document).on('click','div#order_status_table_container div.delete_i',function(
     return false;
 });
 
-$(document).on('click','div#order_status_middle_container div.delete_i',function(){
+
+
+*/
+   // return false;
+});
+
+
+$(document).on('click','div#po_acknowledgement_table_container div.delete_i',function(){
         
     var id = $(this).attr('prdid');
 
     $.ajax({
             type: 'POST',
-            url: site_url+"ishop/delete_product_order_data",
+            url: site_url+"ishop/delete_order_detail_data",
             data: {data_id:id},
             success: function(resp){
                 console.log(resp);
@@ -93,8 +100,8 @@ $(document).on('click','div#order_status_middle_container div.delete_i',function
     return false;
 });
 
-
-$(document).on('click', 'div.order_status .edit_i', function () {
+$(document).on('click', 'div#po_acknowledgement_table_container .edit_i', function () {
+    
     var id = $(this).attr('prdid');
    
    //UNIT
@@ -146,16 +153,24 @@ $(document).on('click', 'div.order_status .edit_i', function () {
    $("div.dispatched_quantity_"+id).append('<input id="dispatched_quantity_'+id+'" type="text" name="dispatched_quantity[]" value="'+dispatched_quantity_value+'"/>');
    
     
-  /*  $.ajax({
+});
+
+
+$(document).on('click', 'div.po_acknowledgement .eye_i', function () {
+    var id = $(this).attr('prdid');
+    var action_data = $('input.page_function').val();
+    var login_customer_type = $("input#login_customer_type" ).val();
+    
+    $.ajax({
         type: 'POST',
         url: site_url+'ishop/get_order_status_data_details',
-        data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type},
+        data: {id: id,logincustomertype:login_customer_type,segment_data:action_data},
         success: function(resp){
-            $("div#order_status_table_container").empty();
-            $("#order_status_table_container").html(resp);
+            $("div#po_acknowledgement_table_container").empty();
+            $("#po_acknowledgement_table_container").html(resp);
         }
-    });*/
-   // return false;
+    });
+    return false;
 });
 
 /*

@@ -1,5 +1,4 @@
 <?php
-
 $action_data = $this->uri->segment(2);
 
 $user= $this->auth->user();
@@ -9,7 +8,7 @@ $login_customer_type = $user->role_id;
  
 //echo "<pre>";print_r($_POST);
 
-if(isset($table) && count($table)>0) {
+if(isset($order_table) && count($order_table)>0) {
     if($login_customer_type != 9 && $login_customer_type != 10){
         if($action_data == "get_order_status_data_details"){
 
@@ -18,6 +17,7 @@ if(isset($table) && count($table)>0) {
 
         }
     }
+    
     
     ?>
         <div class="col-md-12" style="margin-top: 25px;">
@@ -32,7 +32,7 @@ if(isset($table) && count($table)>0) {
                     <table class="col-md-12 table-bordered table-striped table-condensed cf">
                         <thead class="cf">
                         <tr>
-                            <?php foreach($table['head'] as $hkey => $head) { if($head != ""){ ?>
+                            <?php foreach($order_table['head'] as $hkey => $head) { if($head != ""){ ?>
                                 <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
                                     <a href="#">
                                         <?php echo $head;?>
@@ -42,9 +42,9 @@ if(isset($table) && count($table)>0) {
                             <?php } } ?>
                         </tr>
                         </thead>
-                        <?php if(isset($table['row']) && count($table['row']) ) {?>
+                        <?php if(isset($order_table['row']) && count($order_table['row']) ) {?>
                         <tbody class="tbl_body_row">
-                        <?php foreach($table['row'] as $rkey => $rowary) {
+                        <?php foreach($order_table['row'] as $rkey => $rowary) {
                             ?>
                             <tr>
                                 <?php
@@ -53,7 +53,7 @@ if(isset($table) && count($table)>0) {
                                     ?>
                                     <?php if($rwkey==0) {
                                         ?>
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
+                                        <td data-title="<?php echo $order_table['head'][$rwkey]; ?>">
                                             <div>
                                                 <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
@@ -64,9 +64,9 @@ if(isset($table) && count($table)>0) {
                                        
                                         ?>
 
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>" class="numeric">
+                                        <td data-title="<?php echo $order_table['head'][$rwkey]; ?>" class="numeric">
                                             <?php
-                                            if(isset($table['eye']) && !empty($table['eye']))
+                                            if(isset($order_table['eye']) && !empty($order_table['eye']))
                                             {
                                                 ?>
                                                 <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
@@ -96,7 +96,7 @@ if(isset($table) && count($table)>0) {
                                     {
                                       if($_POST["radio1"] == "farmer"){
                                         if($row != ""){ ?>
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
+                                        <td data-title="<?php echo $order_table['head'][$rwkey]; ?>">
                                             <?php echo $row;?>
                                         </td>
                                     <?php
@@ -105,7 +105,7 @@ if(isset($table) && count($table)>0) {
                                      else{
                                          
                                        ?>  
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
+                                        <td data-title="<?php echo $order_table['head'][$rwkey]; ?>">
                                             <?php echo $row;?>
                                         </td> 
                                     <?php     

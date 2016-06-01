@@ -1,5 +1,8 @@
 <?php if ($this->session->userdata('user_id') !='') {
-  //  testdata($current_user);
+    $segment = $this->uri->segment(1);
+    $segment2 = $this->uri->segment(2);
+    $segment3 = $this->uri->segment(3);
+      //testdata($segment);
     ?>
 <!--left sidebar-->
 <div class="main_header">
@@ -47,9 +50,9 @@
                             <ul class="nav nav-tabs" role="tablist">
                                 <?php if($current_user->role_id == 7){
                                     ?>
-                                    <li role="presentation" class="active"><a href="<?php echo base_url('/ishop') ?>">PRIMARY SALES</a></li>
+                                    <li role="presentation" class="<?php ($segment=='ishop' && $segment2=='') ? 'active' :'' ?>"><a href="<?php echo base_url('/ishop') ?>">PRIMARY SALES</a></li>
                                     <li role="presentation"><a href="<?php echo base_url('/ishop/primary_sales_view_details') ?>">PRIMARY SALES INVOICE</a></li>
-                                    <li role="presentation"><a href="#">ORDER APPROVAL</a></li>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/order_approval') ?>">ORDER APPROVAL</a></li>
                                 <?php
                                 } ?>
 
@@ -70,7 +73,7 @@
                                 ?>
                                 <?php if($current_user->role_id == 7 || $current_user->role_id == 8 || $current_user->role_id == 9) {
                                     ?>
-                                    <li role="presentation"><a href="#">TARGET</a></li>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/target') ?>">TARGET</a></li>
                                     <?php
                                 }
                                 ?>
@@ -94,8 +97,8 @@
                                 ?>
                                 <?php if($current_user->role_id == 7) {
                                     ?>
-                                    <li role="presentation"><a href="#">COMPANY CURRENT STOCK</a></li>
-                                    <li role="presentation"><a href="#">CREDIT LIMIT</a></li>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/company_current_stock') ?>">COMPANY CURRENT STOCK</a></li>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/credit_limit') ?>">CREDIT LIMIT</a></li>
                                     <?php
                                 }
                                 ?>
@@ -114,7 +117,7 @@
 
                                 <?php if($current_user->role_id == 8) {
                                     ?>
-                                    <li role="presentation"><a href="<?php echo base_url('/ishop/ishop_sales') ?>">SALES UPDATE</a></li>
+                                    <li role="presentation" class="<?php ($segment=='ishop' && $segment2=='ishop_sales') ? 'active' : '' ?>"><a href="<?php echo base_url('/ishop/ishop_sales') ?>">SALES UPDATE</a></li>
                                     <?php
                                 }
                                 ?>

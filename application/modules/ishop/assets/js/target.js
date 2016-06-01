@@ -4,8 +4,8 @@
 $(document).ready(function(){
     
     
-    $( "#order_date_datepicker" ).datepicker({
-      dateFormat: "yy-mm-dd",
+    $( "#month_data" ).datepicker({
+      dateFormat: "Y-m-d",
       showOn: "button",
       buttonImage: site_url+"/public/themes/default/images/calendar.gif",
       buttonImageOnly: true,
@@ -776,36 +776,40 @@ function get_data_conversion(sku_id,quantity,units){
     
 }
 
-function order_place_add_row()
+function target_add_row()
 {
     var sku_code = $('#prod_sku option:selected').attr('attr-code');
     var sku_name = $('#prod_sku option:selected').attr('attr-name');
     var sku_id = $('#prod_sku option:selected').val();
-    var units = $("#units option:selected").val();
+    
+    var geo_level_val = $('#distributor_geo_level_1_data option:selected').val();
+    var geo_level_name = $('#distributor_geo_level_1_data option:selected').html();
+    
+    var customer_val = $('#distributor_distributor_id option:selected').val();
+    var customer_name = $('#distributor_distributor_id option:selected').html();
+    
+    var customer_code = "";
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_customer_code",
+        data: {id:customer_val},
+        success: function(resp){
+            customer_code = resp;
+        },
+        async:false
+    });
+    
     var quantity = $('#quantity').val();
     var qty = "";
-    var sr_no =$("#order_place_data > tr").length + 1;
+    var sr_no =$("#target_data > tr").length + 1;
 
     var box_selected = "";
     var package_selected = "";
     var kg_ltr_selected = "";
     
-    var unit_data = get_data_conversion(sku_id,quantity,units);
 
-
-    if(units == 'box'){
-        box_selected = "selected = 'selected'"
-    }
-    if(units == 'packages'){
-        package_selected = "selected = 'selected'"
-    }
-    if(units == 'kg/ltr'){
-        kg_ltr_selected = "selected = 'selected'"
-    }
-
-    
-
-    $("#order_place_data").append(
+    $("#target_data").append(
         "<tr id='"+sr_no+"'>"+
             "<td data-title='Sr. No.' class='numeric'>" +
                 "<input class='input_remove_border' type='text' value='"+sr_no+"' readonly/>" +
@@ -815,35 +819,32 @@ function order_place_add_row()
                 "<div class='delete_i' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
             "</td>"+
             
-            "<td data-title='Product SKU Code' class='numeric'>" +
-                "<input class='sku_"+sr_no+"' type='hidden' value='"+sku_id+"' readonly/>"+
-                "<input class='input_remove_border' type='text' value='"+sku_code+"' readonly/>" +
+            "<td data-title='Geo L3'>" +
+                "<input type='hidden' name='geo_level_data[]' value='"+geo_level_val+"' readonly/>" +
+               "<input class='input_remove_border' type='text' value='"+geo_level_name+"' readonly/>" +
             "</td>"+
+            
+             "<td data-title='Distributor Code'>" +
+               "<input class='input_remove_border' type='text' value='"+customer_code+"' readonly/>" +
+            "</td>"+
+            
+             "<td data-title='Distributor Name'>" +
+                "<input type='hidden' value='"+customer_val+"' readonly/>" +
+               "<input class='input_remove_border' type='text' value='"+customer_name+"' readonly/>" +
+            "</td>"+
+            
             "<td data-title='Product SKU Name'>" +
                 "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
                 "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
-            "</td>"+
-            "<td data-title='Units'>" +
-            
-            "<select name='units[]' class='select_unitdata' id='units' >"+
-                       " <option  "+box_selected+" value='box'>Box</option>"+
-                      "  <option  "+package_selected+" value='packages'>Packages</option>"+
-                     "   <option  "+kg_ltr_selected+" value='kg/ltr'>Kg/Ltr</option>"+
-                  "  </select>"
-            
-                +
             "</td>"+
             "<td data-title='Quantity'>" +
                 "<input class='quantity_data' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
             "</td>"
             +
-            "<td data-title='Qty'>" +
-                "<input class='qty_"+sr_no+" input_remove_border' type='text' name='Qty[]' value='"+unit_data+"' class='numeric' readonly/>" +
-            "</td>"+
         "</tr>"
     );
     $('#prod_sku').selectpicker('val', '0');
-    $('#units').selectpicker('val', '0');
+    
     $('#quantity').val('');
    
 }

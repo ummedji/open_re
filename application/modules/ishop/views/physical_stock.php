@@ -1,4 +1,5 @@
 <?php
+
 $attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('',$attributes); ?>
@@ -32,9 +33,9 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-8 col-md-offset-2 distributore_form od_approval">
+                <div class="col-md-12 distributore_form od_approval">
                     <div class="row">
-                        <div class="col-md-4 col-sm-6 tp_form">
+                        <div class="col-md-3 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label>Month</label>
                                 <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
@@ -47,11 +48,11 @@ echo form_open('',$attributes); ?>
                             </div>
                         </div>
                         <div class="retailer_checked" id="retailer_checked" >
-                            <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Geo Level</label>
+                                    <label>Geo Level 3</label>
                                     <select class="selectpicker" id="geo_level">
-                                        <option>Select Geo</option>
+                                        <option>Select Geo Location</option>
                                         <?php
                                         if(isset($geo_data) && !empty($geo_data))
                                         {
@@ -66,11 +67,30 @@ echo form_open('',$attributes); ?>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="col-md-3 col-sm-6 tp_form">
+                                <div class="form-group">
+                                    <label>Geo Level 2</label>
+                                    <select class="selectpicker" id="geo_level_1">
+                                        <option>Select Geo Location</option>
+                                       <!-- <?php
+/*                                        if(isset($geo_data) && !empty($geo_data))
+                                        {
+                                            foreach($geo_data as $k=> $geo_val)
+                                            {
+                                                */?>
+                                                <option value="<?php /*echo $geo_val['political_geo_id']; */?>" attr-name="<?php /*echo $geo_val['political_geography_name']; */?>"><?php /*echo $geo_val['political_geography_name']; */?></option>
+                                                --><?php
+/*                                            }
+                                        }
+                                        */?>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label>Retailer Name</label>
                                     <select class="selectpicker" name="fo_retailer_id" id="retailer_phystok">
-                                        <option value="0">Select Retailer Name</option>
+                                        <option value="0">Select Retailer</option>
                                     </select>
                                 </div>
                             </div>
@@ -78,7 +98,7 @@ echo form_open('',$attributes); ?>
 
                         <div class="distributor_checked" id="distributor_checked" style="display:none;">
 
-                            <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label>Geo Level</label>
                                     <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
@@ -86,7 +106,7 @@ echo form_open('',$attributes); ?>
                                 </div>
                             </div>
 
-                            <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="col-md-3 col-sm-6 tp_form">
 
                                 <div class="form-group">
                                     <label>Distributor Name</label>

@@ -2,7 +2,16 @@
 $action_data = $this->uri->segment(2);
 
 if(isset($table) && count($table)>0) { ?>
-        <div class="col-md-12" style="margin-top: 25px;">
+        <?php if(isset($table['no_margin']) && !empty($table['no_margin']) )
+        { ?>
+                <div class="col-md-12">
+            <?php
+        }else{
+        ?>
+        <div class="col-md-12" style="margin-top: 24px">
+        <?php
+    }?>
+
             <div class="row">
                 <div class="zoom_space">
                     <ul>
@@ -33,7 +42,7 @@ if(isset($table) && count($table)>0) { ?>
                                 foreach($rowary as $rwkey => $row) {
 
                                     ?>
-                                    <?php if($rwkey==0   && $action_data !="get_prespective_order_details") {
+                                    <?php if($rwkey==0   && ($action_data !="get_prespective_order_details")) {
                                         ?>
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>">
                                             <div>
@@ -42,7 +51,10 @@ if(isset($table) && count($table)>0) { ?>
                                         </td>
                                     <?php }
 
-                                    else if($rwkey==1  && $action_data !="get_prespective_order_details") {
+                                    //else if(($rwkey==1  && $action_data !="get_prespective_order_details")) {
+                                    else if(($rwkey==1  && isset($table['action']) && !empty($table['action']))) {
+
+                                       // if($action_data != 'credit_limit'){
                                         ?>
 
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>" class="numeric">
@@ -53,13 +65,13 @@ if(isset($table) && count($table)>0) { ?>
                                                 <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
                                                 <?php
                                             }
-                                           if($action_data !="get_prespective_order"){
+                                           if($action_data !="get_prespective_order" ){
                                             ?>
                                             <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
                                             <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                            <?php } ?>
                                         </td>
-                                    <?php }
+                                    <?php } //}
                                     else
                                     { ?>
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>">

@@ -24,21 +24,21 @@ $(document).ready(function(){
     });
     
     $(document).on('click', 'div.order_status .eye_i', function () {
-    var id = $(this).attr('prdid');
-    var radio_checked = $('input[name=radio1]:checked').val();
-    var login_customer_type = $("input#login_customer_type" ).val();
-    
-    $.ajax({
-        type: 'POST',
-        url: site_url+'ishop/get_order_status_data_details',
-        data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type},
-        success: function(resp){
-            $("div#order_status_table_container").empty();
-            $("#order_status_table_container").html(resp);
-        }
+        var id = $(this).attr('prdid');
+        var radio_checked = $('input[name=radio1]:checked').val();
+        var login_customer_type = $("input#login_customer_type" ).val();
+
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/get_order_status_data_details',
+            data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type},
+            success: function(resp){
+                $("div#order_status_table_container").empty();
+                $("#order_status_table_container").html(resp);
+            }
+        });
+        return false;
     });
-    return false;
-});
 
 
 

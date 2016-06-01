@@ -76,7 +76,7 @@ class Ishop_model extends BF_Model
 
         $product_sku_id = $this->input->post("product_sku_id");
         $quantity = $this->input->post("quantity");
-      /*  $dispatched_quantity = $this->input->post("dispatched_quantity");*/
+        $dispatched_quantity = $this->input->post("dispatched_quantity");
         $amount = $this->input->post("amount");
         $total_amount=array_sum($amount);
 
@@ -105,7 +105,7 @@ class Ishop_model extends BF_Model
                 'primary_sales_id'=>$primary_sales_id,
                 'product_sku_id'=>$prd_sku,
                 'quantity'=>$quantity[$key],
-               /* 'dispatched_quantity'=>$dispatched_quantity[$key],*/
+                'dispatched_quantity'=>$dispatched_quantity[$key],
                 'amount'=>$amount[$key],
            );
            $this->db->insert('bf_ishop_primary_sales_product', $primary_sales_product_data);
@@ -143,6 +143,7 @@ class Ishop_model extends BF_Model
             $this->db->where('invoice_date <=', $to_date);
         }
         $this->db->join('users as bu', 'bu.id = ips.customer_id');
+        $this->db->order_by('primary_sales_id','DESC');
         $sales = $this->db->get();
        // echo $this->db->last_query();
         $primary_sales = $sales->result_array();
@@ -157,7 +158,49 @@ class Ishop_model extends BF_Model
                 $i++;
             }
             $primary['eye']=1;
+            $primary['action'] ='is_action';
             return $primary;
+        }
+    }
+
+    /**
+     * @ Function Name		: primary_sales_product_details_view_by_id
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function primary_sales_product_details_view_by_id($primary_sales_id)
+    {
+        $sql ='SELECT ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
+        $sql .= 'FROM bf_ishop_primary_sales_product AS ipsp ';
+        $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = ipsp.product_sku_id) ';
+        $sql .= 'JOIN bf_master_product_sku_regional AS psr ON (psr.product_sku_id = psc.product_sku_id) ';
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND ipsp.primary_sales_id ='.$primary_sales_id.' ';
+        $sql .= 'ORDER BY ipsp.primary_sales_product_id DESC ';
+        $info = $this->db->query($sql);
+        $primary_sales_product_detail = $info->result_array();
+        $product_detail = array('result'=>$primary_sales_product_detail);
+        // var_dump($product_detail);die;
+
+        if(isset($product_detail['result']) && !empty($product_detail['result']))
+        {
+            $product_view['head'] =array('Sr. No.','Action','Product SKU Code','Product SKU Name','PO Qty. Kg/Ltr','Dispatched Qty. Kg/Ltr','Amount');
+            $i=1;
+            foreach($product_detail['result'] as $pd )
+            {
+                $qty_data = '<div class="qty_'.$pd["primary_sales_product_id"].'"><span class="qty">'.$pd['quantity'].'</span></div>';
+
+                $dispatched_quantity = '<div class="dispatched_quantity_'.$pd["primary_sales_product_id"].'"><span class="dispatched_quantity">'.$pd['dispatched_quantity'].'</span></div>';
+                $amount = '<div class="amount_'.$pd["primary_sales_product_id"].'"><span class="amount">'.$pd['amount'].'</span></div>';
+                $product_view['row'][]= array($i,$pd['primary_sales_product_id'],$pd['product_sku_code'],$pd['product_sku_name'],$qty_data,$dispatched_quantity,$amount);
+                $i++;
+            }
+            $product_view['eye'] ='';
+            $product_view['action'] ='is_action';
+            // $product_view['pagination'] = $report_details['pagination'];
+            return $product_view;
         }
     }
     /*--------------------------------------------------------------------------------------------------------------------*/
@@ -211,7 +254,7 @@ class Ishop_model extends BF_Model
         $this->db->join('master_user_contact_details as ucd', 'ucd.user_id = bu.id');
         if(isset($provience_id) && !empty($provience_id) && $provience_id !='0')
         {
-            $this ->db->where('ucd.geo_level_id3',$provience_id);
+            $this ->db->where('ucd.geo_level_id1',$provience_id);
         }
         $this ->db->where('bu.active',1);
         $distributor = $this->db->get()->result_array();
@@ -229,7 +272,21 @@ class Ishop_model extends BF_Model
     public function add_rol_detail($user_id)
     {
 
-        $customer_id = $this->input->post("distributor_name");
+
+        $retailer_id=$this->input->post("fo_retailer_id");
+        $distributor_id=$this->input->post("distributor_rol");
+        if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
+        {
+            $customers_id=$retailer_id;
+        }
+        elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
+        {
+            $customers_id=$distributor_id;
+        }
+      /*  else{
+            $customers_id=$user_id;
+        }*/
+        //var_dump($customers_id);die;
         $product_sku_id = $this->input->post("product_sku_id");
         $units = $this->input->post("units");
         $rol_quantity = $this->input->post("rol_qty");
@@ -237,7 +294,7 @@ class Ishop_model extends BF_Model
 
         foreach($product_sku_id as $key=>$prd_sku) {
             $rol_data = array(
-                'customer_id' => (isset($customer_id) && !empty($customer_id)) ? $customer_id : '',
+                'customer_id' => (isset($customers_id) && !empty($customers_id)) ? $customers_id : '',
                 'product_sku_id' => (isset($product_sku_id) && !empty($product_sku_id)) ? $prd_sku : '',
                 'units' => (isset($units) && !empty($units)) ? $units[$key] : '',
                 'rol_quantity' => (isset($rol_quantity) && !empty($rol_quantity)) ? $rol_quantity[$key] : '',
@@ -246,6 +303,7 @@ class Ishop_model extends BF_Model
                 'status' => '1',
                 'created_on' => date('Y-m-d H:i:s')
             );
+           // testdata($rol_data);
             $this->db->insert('ishop_rol', $rol_data);
         }
         return 1;
@@ -384,6 +442,7 @@ class Ishop_model extends BF_Model
             $this->db->where('invoice_date <=', $to_date);
         }
         $this->db->join('users as bu', 'bu.id = iss.customer_id');
+        $this->db->order_by('secondary_sales_id','DESC');
         $sales = $this->db->get();
        // echo $this->db->last_query();
         $secondary_sales = $sales->result_array();
@@ -398,6 +457,7 @@ class Ishop_model extends BF_Model
                 $i++;
             }
             $secondary['eye']=1;
+            $secondary['action'] ='is_action';
             return $secondary;
         }
     }
@@ -417,6 +477,7 @@ class Ishop_model extends BF_Model
        $sql .= 'JOIN bf_master_product_sku_regional AS psr ON (psr.product_sku_id = psc.product_sku_id) ';
        $sql .= 'WHERE 1 ';
        $sql .= 'AND issp.secondary_sales_id ='.$secondary_sales_id.' ';
+       $sql .= 'ORDER BY issp.secondary_sales_product_id DESC ';
        $info = $this->db->query($sql);
        $secondary_sales_product_detail = $info->result_array();
        $product_detail = array('result'=>$secondary_sales_product_detail);
@@ -426,12 +487,14 @@ class Ishop_model extends BF_Model
        {
            $product_view['head'] =array('Sr. No.','Action','Product SKU Code','Product SKU Name','Qty. Kg/Ltr','Amount');
            $i=1;
+
            foreach($product_detail['result'] as $pd )
            {
                $product_view['row'][]= array($i,$pd['secondary_sales_product_id'],$pd['product_sku_code'],$pd['product_sku_name'],$pd['quantity'],$pd['amount']);
                $i++;
            }
            $product_view['eye'] ='';
+           $product_view['action'] ='is_action';
            // $product_view['pagination'] = $report_details['pagination'];
            return $product_view;
        }
@@ -465,9 +528,6 @@ class Ishop_model extends BF_Model
         $quantity = $this->input->post("quantity");
 
 
-      /*  echo "<pre>";
-        print_r($_POST);
-        die;*/
         foreach($product_sku_id as $key=>$prd_sku)
         {
             $physical_stock_data = array(
@@ -481,50 +541,333 @@ class Ishop_model extends BF_Model
                 'created_on' => date('Y-m-d H:i:s')
 
             );
-           //echo "<pre>";
-          /*  print_r($physical_stock_data);
-            echo "=====================================";
-            var_dump($physical_stock_data);*/
+
            $this->db->insert('ishop_physical_stock', $physical_stock_data);
         }
-      // die;
         return 1;
     }
 
+    /**
+     * @ Function Name		: add_ishop_sales_detail
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
 
+    public function add_ishop_sales_detail($user_id)
+    {
+       testdata($_POST);
+    }
+
+    /**
+     * @ Function Name		: add_company_current_stock_detail
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function add_company_current_stock_detail($user_id,$country_id)
+    {
+        $date = $this->input->post("current_date");
+        $product_sku_id=$this->input->post("product_sku");
+        $intrum_quantity=$this->input->post("intransist_qty");
+        $unrestricted_quantity=$this->input->post("unrusticted_qty");
+        $batch=$this->input->post("batch");
+        $batch_exp_date=$this->input->post("batch_expiry_date");
+        $batch_mfg_date=$this->input->post("batch_mfg_date");
+
+
+        $product=$this->check_products($product_sku_id);
+
+        if($product == 0){
+            $current_stock = array(
+                'date'                  =>$date,
+                'product_sku_id'        =>$product_sku_id,
+                'intrum_quantity'       =>$intrum_quantity,
+                'unrestricted_quantity' =>$unrestricted_quantity,
+                'batch'                 =>$batch,
+                'batch_exp_date'        =>$batch_exp_date,
+                'batch_mfg_date'        =>$batch_mfg_date,
+                'country_id'            =>$country_id,
+                'created_by_user'       =>$user_id,
+                'modified_by_user'      =>'0',
+                'status'                =>'1',
+                'created_on'            =>date('Y-m-d H:i:s'),
+
+            );
+            if ($this->db->insert('ishop_company_current_stock', $current_stock)) {
+                $insert_id = $this->db->insert_id();
+            }
+            $current_stock_log = array(
+                'date'                  =>$date,
+                'stock_id'              =>$insert_id,
+                'product_sku_id'        =>$product_sku_id,
+                'intransit_quantity'    =>$intrum_quantity,
+                'unrestricted_quantity' =>$unrestricted_quantity,
+                'batch'                 =>$batch,
+                'batch_exp_date'        =>$batch_exp_date,
+                'batch_mfg_date'        =>$batch_mfg_date,
+                'country_id'            =>$country_id,
+                'created_by_user'       =>$user_id,
+                'modified_by_user'      =>'0',
+                'log_date'              =>date('Y-m-d H:i:s'),
+                'status'                =>'1',
+                'created_on'            =>date('Y-m-d H:i:s'),
+            );
+           // testdata($current_stock_log);
+            $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+        }
+        else{
+           // update
+            $current_update_stock = array(
+                'date'                  =>$date,
+                'product_sku_id'        =>$product_sku_id,
+                'intrum_quantity'       =>$intrum_quantity,
+                'unrestricted_quantity' =>$unrestricted_quantity,
+                'batch'                 =>$batch,
+                'batch_exp_date'        =>$batch_exp_date,
+                'batch_mfg_date'        =>$batch_mfg_date,
+                'country_id'            =>$country_id,
+                'modified_by_user'      =>$user_id,
+                'status'                =>'1',
+                'modified_on'           =>date('Y-m-d H:i:s'),
+
+            );
+
+            $this->db->where('product_sku_id',$product[0]['product_sku_id']);
+            $this->db->update('ishop_company_current_stock',$current_update_stock);
+
+            $current_stock_log = array(
+                'date'                  =>$date,
+                'stock_id'              =>$product[0]['stock_id'],
+                'product_sku_id'        =>$product_sku_id,
+                'intransit_quantity'    =>$intrum_quantity,
+                'unrestricted_quantity' =>$unrestricted_quantity,
+                'batch'                 =>$batch,
+                'batch_exp_date'        =>$batch_exp_date,
+                'batch_mfg_date'        =>$batch_mfg_date,
+                'country_id'            =>$country_id,
+                'created_by_user'       =>$user_id,
+                'modified_by_user'      =>'0',
+                'log_date'              =>date('Y-m-d H:i:s'),
+                'status'                =>'1',
+                'created_on'            =>date('Y-m-d H:i:s'),
+            );
+            $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+        }
+
+    }
+
+    /**
+     * @ Function Name		: check_products
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function check_products($product_sku_id)
+    {
+        $this->db->select('product_sku_id,stock_id');
+        $this->db->from('ishop_company_current_stock');
+        $this->db->where('product_sku_id',$product_sku_id);
+        $data=$this->db->get()->result_array();
+        if(isset($data) && !empty($data)){
+            return $data;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    /**
+     * @ Function Name		: get_all_company_current_stock
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function get_all_company_current_stock($country_id)
+    {
+        $sql ='SELECT iccs.stock_id,iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
+        $sql .= 'FROM bf_ishop_company_current_stock AS iccs ';
+        $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = iccs.product_sku_id) ';
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND iccs.country_id ='.$country_id.' ';
+        $sql .= 'ORDER BY stock_id DESC ';
+        $info = $this->db->query($sql);
+        $stock = $info->result_array();
+        $stock_detail = array('result'=>$stock);
+         //testdata($stock_detail);
+
+        if(isset($stock_detail['result']) && !empty($stock_detail['result']))
+        {
+            $stock_view['head'] =array('Sr. No.','Action','Date','Product SKU Name','Intransist Qty.','Unrusticted Qty.','Batch','Batch Expiry Date','Batch Mfg. Date');
+            $i=1;
+
+            foreach($stock_detail['result'] as $sd )
+            {
+                $stock_view['row'][]= array($i,$sd['stock_id'],$sd['date'],$sd['product_sku_name'],$sd['intrum_quantity'],$sd['unrestricted_quantity'],$sd['batch'],$sd['batch_exp_date'],$sd['batch_mfg_date']);
+                $i++;
+            }
+            $stock_view['eye'] ='';
+            $stock_view['action'] ='is_action';
+            $stock_view['no_margin'] ='is_margin';
+            // $product_view['pagination'] = $report_details['pagination'];
+            //testdata($stock_view);
+            return $stock_view;
+        }
+    }
+
+    /**
+     * @ Function Name		: add_user_credit_limit_datail
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function add_user_credit_limit_datail($user_id,$country_id)
+    {
+       // testdata($_POST);
+        $dist_limit = $this->input->post("dist_limit");
+        $credit_limit=$this->input->post("credit_limit");
+        $curr_outstanding=$this->input->post("curr_outstanding");
+        $curr_date=$this->input->post("curr_date");
+
+        $distributor=$this->check_distributor($dist_limit);
+
+      //  testdata($distributor);
+        if($distributor == 0){
+            $credit_limits = array(
+                'customer_id'                  =>$dist_limit,
+                'credit_limit'                 =>$credit_limit,
+                'current_outstanding_limit'    =>$curr_outstanding,
+                'date'                         =>$curr_date,
+                'country_id'                   =>$country_id,
+                'created_by_user'              =>$user_id,
+                'modified_by_user'             =>'0',
+                'status'                       =>'1',
+                'created_on'                   =>date('Y-m-d H:i:s'),
+
+            );
+            if ($this->db->insert('ishop_credit_limit', $credit_limits)) {
+                $insert_id = $this->db->insert_id();
+            }
+            $credit_limits_log = array(
+                'credit_limit_id'              =>$insert_id,
+                'customer_id'                  =>$dist_limit,
+                'credit_limit'                 =>$credit_limit,
+                'current_outstanding_limit'    =>$curr_outstanding,
+                'date'                         =>$curr_date,
+                'country_id'                   =>$country_id,
+                'created_by_user'              =>$user_id,
+                'modified_by_user'             =>'0',
+                'log_date'                     =>date('Y-m-d H:i:s'),
+                'status'                       =>'1',
+                'created_on'                   =>date('Y-m-d H:i:s'),
+            );
+            // testdata($current_stock_log);
+            $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
+        }
+        else{
+            // update
+            $credit_update_limits = array(
+                'customer_id'                  =>$dist_limit,
+                'credit_limit'                 =>$credit_limit,
+                'current_outstanding_limit'    =>$curr_outstanding,
+                'date'                         =>$curr_date,
+                'country_id'                   =>$country_id,
+                'modified_by_user'             =>$user_id,
+                'status'                       =>'1',
+                'modified_on'                  =>date('Y-m-d H:i:s'),
+
+            );
+
+            $this->db->where('customer_id',$distributor[0]['customer_id']);
+            $this->db->update('ishop_credit_limit',$credit_update_limits);
+
+            $credit_limits_log = array(
+                'credit_limit_id'              =>$distributor[0]['credit_limit_id'],
+                'customer_id'                  =>$dist_limit,
+                'credit_limit'                 =>$credit_limit,
+                'current_outstanding_limit'    =>$curr_outstanding,
+                'date'                         =>$curr_date,
+                'country_id'                   =>$country_id,
+                'created_by_user'              =>$user_id,
+                'modified_by_user'             =>'0',
+                'log_date'                     =>date('Y-m-d H:i:s'),
+                'status'                       =>'1',
+                'created_on'                   =>date('Y-m-d H:i:s'),
+            );
+            $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
+        }
+    }
+
+    /**
+     * @ Function Name		: check_distributor
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function check_distributor($dist_limit)
+    {
+        $this->db->select('credit_limit_id,customer_id');
+        $this->db->from('ishop_credit_limit');
+        $this->db->where('customer_id',$dist_limit);
+        $data=$this->db->get()->result_array();
+        if(isset($data) && !empty($data)){
+           return $data;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    /**
+     * @ Function Name		: check_products
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+
+    public function get_all_distributors_credit_limit($country_id)
+    {
+        $sql ='SELECT bu.display_name,icl.credit_limit,icl.current_outstanding_limit,icl.date ';
+        $sql .= 'FROM bf_ishop_credit_limit AS icl ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = icl.customer_id) ';
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND icl.country_id ='.$country_id.' ';
+        $sql .= 'ORDER BY credit_limit_id DESC ';
+        $info = $this->db->query($sql);
+        $limit = $info->result_array();
+        $credit_limit_detail = array('result'=>$limit);
+       // testdata($credit_limit_detail);
+
+        if(isset($credit_limit_detail['result']) && !empty($credit_limit_detail['result']))
+        {
+            $credit_limit_view['head'] =array('Sr. No.','Distributor','Credit Limit','Current Outstanding','Date');
+            $i=1;
+
+            foreach($credit_limit_detail['result'] as $cld )
+            {
+                $credit_limit_view['row'][]= array($i,$cld['display_name'],$cld['credit_limit'],$cld['current_outstanding_limit'],$cld['date']);
+                $i++;
+            }
+            $credit_limit_view['eye'] ='';
+            $credit_limit_view['action'] ='';
+            $credit_limit_view['no_margin'] ='';
+            $credit_limit_view['no_margin'] ='is_margin';
+            // $product_view['pagination'] = $report_details['pagination'];
+            return $credit_limit_view;
+        }
+    }
 
     /*--------------------------------------------------------------------------------------------------------------------*/
 
 
 
-    public function primary_sales_product_details_view_by_id($primary_sales_id)
-    {
-        $sql ='SELECT ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
-        $sql .= 'FROM bf_ishop_primary_sales_product AS ipsp ';
-        $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = ipsp.product_sku_id) ';
-        $sql .= 'JOIN bf_master_product_sku_regional AS psr ON (psr.product_sku_id = psc.product_sku_id) ';
-        $sql .= 'WHERE 1 ';
-        $sql .= 'AND ipsp.primary_sales_id ='.$primary_sales_id.' ';
-        $info = $this->db->query($sql);
-        $primary_sales_product_detail = $info->result_array();
-        $product_detail = array('result'=>$primary_sales_product_detail);
-       // var_dump($product_detail);die;
 
-        if(isset($product_detail['result']) && !empty($product_detail['result']))
-        {
-            $product_view['head'] =array('Sr. No.','Action','Product SKU Code','Product SKU Name','Qty. Kg/Ltr','Dispatched Qty. Kg/Ltr','Amount');
-            $i=1;
-            foreach($product_detail['result'] as $pd )
-            {
-                $product_view['row'][]= array($i,$pd['primary_sales_product_id'],$pd['product_sku_code'],$pd['product_sku_name'],$pd['quantity'],$pd['dispatched_quantity']
-                ,$pd['amount']);
-                $i++;
-            }
-            $product_view['eye'] ='';
-           // $product_view['pagination'] = $report_details['pagination'];
-            return $product_view;
-        }
-    }
     
     
     /**
@@ -779,7 +1122,7 @@ class Ishop_model extends BF_Model
      * */
     
     public function get_employee_geo_data($user_id,$country_id,$customer_type,$parent_geo_id=null,$radio_checked=null,$action_data=null,$mobileno=null){
-
+      //  var_dump($radio_checked);
         $main_query_start = "";
         $main_query_end = "";
         $select_data = " bmpgd.political_geo_id, bmpgd.political_geography_name ";
@@ -799,7 +1142,7 @@ class Ishop_model extends BF_Model
   if($customer_type == 8){
             
             
-            if(($action_data == "order_place" || $action_data == "order_status") && $parent_geo_id == null){
+            if(($action_data == "order_place" || $action_data == "order_status" || (($action_data=="physical_stock" && $radio_checked != 9)||($action_data=="ishop_sales" && $radio_checked != 9))) && $parent_geo_id == null){
             $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
 `bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
  where `political_geo_id` IN ( ";
@@ -834,7 +1177,7 @@ class Ishop_model extends BF_Model
    elseif($customer_type == 7){
        
          
-        if($radio_checked == 10 && ($action_data == "order_place" || $action_data == "order_status" ) && $parent_geo_id == null){
+        if(($radio_checked == 10 && (($action_data == "order_place" || $action_data == "order_status") || ($action_data=="set_rol" && $radio_checked != 9)) && $parent_geo_id == null)){
             $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
 `bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
  where `political_geo_id` IN ( ";
@@ -891,7 +1234,7 @@ class Ishop_model extends BF_Model
     }
         
         $query1 = $subquery1." JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id` 
-JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id3`
+JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id1`
 
 WHERE ".$where1." ".$where2." ".$where3."
 
@@ -939,13 +1282,13 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                 
             }
         
-        $this->db->select('bu.id,bu.display_name,bmupd.first_name,bmupd.middle_name,bmupd.last_name,bmucd.geo_level_id3');
+        $this->db->select('bu.id,bu.display_name,bmupd.first_name,bmupd.middle_name,bmupd.last_name,bmucd.geo_level_id1,bu.user_code');
         $this->db->from('bf_users as bu');
         
         $this->db->join('bf_master_user_contact_details as bmucd','bmucd.user_id = bu.id'); // GET GEO FROM HERE FOR CUSTOMER USER
         $this->db->join('bf_master_user_personal_details as bmupd','bmupd.user_id = bu.id'); // FOR GETTING USER NAME AND OTHER DATA
         
-        $this->db->where('bmucd.geo_level_id3',$selected_geo_id);
+        $this->db->where('bmucd.geo_level_id1',$selected_geo_id);
         
         $this->db->where('bu.role_id',$selected_type); // FOR GETTING USER (FARMERS = 11) OF SPECFIC GEO
         
@@ -1094,6 +1437,13 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
        
     }
     
+    /**
+     * @ Function Name		: order_product_details_view_by_id
+     * @ Function Params	: order id
+     * @ Function Purpose 	: For getting order detailed data by order id
+     * @ Function Return 	: array
+     * */
+    
     public function order_product_details_view_by_id($order_id) {
         
         $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit');
@@ -1128,6 +1478,13 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         
     }
     
+    /**
+     * @ Function Name		: order_mark_as_read
+     * @ Function Params	: order id
+     * @ Function Purpose 	: For maring order as read
+     * @ Function Return 	: array
+     * */
+    
     public function order_mark_as_read($orderid) {
         
         $read_array = array('read_status'=>1);
@@ -1138,6 +1495,13 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         
         return $this->db->affected_rows();
     }
+    
+    /**
+     * @ Function Name		: order_mark_as_unread
+     * @ Function Params	: order id
+     * @ Function Purpose 	: For marking order as unread
+     * @ Function Return 	: array
+     * */
     
     public function order_mark_as_unread($orderid) {
         
@@ -1154,9 +1518,16 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
      * GET ORDER FOR ORDER STATUS
      */
     
-    public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null) {
+    /**
+     * @ Function Name		: get_order_data
+     * @ Function Params	: login user type, radio checked(farmer, retailer, distributor) login user id, from date , to date, otn no
+     * @ Function Purpose 	: For getting order data
+     * @ Function Return 	: array
+     * */
+    
+    public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null) {
         
-            $this->db->select('bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname');
+            $this->db->select('bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit');
             $this->db->from('bf_ishop_orders as bio');
 
             $this->db->join('bf_users as bu','bu.id = bio.order_taken_by_id',"LEFT");
@@ -1170,22 +1541,61 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
             $this->db->join('bf_users as t_bu','t_bu.id = bio.customer_id_to',"LEFT");
             $this->db->join('bf_master_user_personal_details as t_bmupd','t_bmupd.user_id = t_bu.id',"LEFT");
             
-            if($order_tracking_no != null){
+            //FOR GETTING USER CREDIT LIMIT
+            $this->db->join('bf_ishop_credit_limit as bicl','bicl.customer_id = bio.customer_id_from',"LEFT");
+            
+            
+            $action_data = $this->uri->segment(2);
+            $sub_action_data = $this->uri->segment(3);
+            
+            if($action_data != "order_approval"){
                 
-                $this->db->where('bio.order_tracking_no',$order_tracking_no);
-                
+                    if($order_tracking_no != null){
+
+                        $this->db->where('bio.order_tracking_no',$order_tracking_no);
+
+                    }
+                    else{
+
+
+                            if($action_data != "po_acknowledgement"){
+                                $this->db->where('bio.order_date >=', $from_date);
+                                $this->db->where('bio.order_date <=', $todate);
+                            }
+                            if($action_data == "po_acknowledgement"){
+                                $this->db->where('bio.order_taken_by_id != ',$customer_id);
+                                $this->db->where('bio.order_status',4);
+                            }
+                            $this->db->where('bio.customer_id_from',$customer_id);
+                    }
+
             }
-            else{
+            else if($action_data == "order_approval"){
                 
-                    $action_data = $this->uri->segment(2);
-                    if($action_data != "po_acknowledgement"){
-                        $this->db->where('bio.order_date >=', $from_date);
-                        $this->db->where('bio.order_date <=', $todate);
-                    }
-                    if($action_data == "po_acknowledgement"){
-                        $this->db->where('bio.order_taken_by_id != ',$customer_id);
-                    }
-                    $this->db->where('bio.customer_id_from',$customer_id);
+                $this->db->where('bio.order_date >=', $from_date);
+                $this->db->where('bio.order_date <=', $todate);
+                
+                $this->db->where('bio.order_taken_by_id',$customer_id);
+                
+                $this->db->where('f_bu.role_id',9);
+                
+                if($order_tracking_no != null){
+                    $this->db->where('bio.order_tracking_no',$order_tracking_no);
+                }
+                if($order_po_no != null){
+                    $this->db->where('bio.PO_no',$order_po_no);
+                }
+                
+                if($sub_action_data == "dispatched"){
+                    $this->db->where('bio.order_status',1);
+                }
+                elseif($sub_action_data == "pending"){
+                     $this->db->where('bio.order_status',0);
+                }
+                elseif($sub_action_data == "reject"){
+                     $this->db->where('bio.order_status',3);
+                }
+                
             }
             
             $this->db->order_by("bio.order_date", "desc"); 
@@ -1203,21 +1613,58 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                 if($loginusertype == 7){
             
                     //FOR HO
+                    
+                        if($action_data == "order_approval"){
 
-                        $order_view['head'] =array('Sr. No.','Remove','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
+                            $order_view['head'] =array('','Sr. No.','Distributor Code','Distributor Name','PO No.','Order Tracking No.','Credit Limit','Amount','Status');
 
-                        $i=1;
+                            $i=1;
 
-                        foreach($orderdata['result'] as $od )
-                        {
-                            $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+                            foreach($orderdata['result'] as $od )
+                            {
+                                
+                                if($od['order_status'] == 0){
+                                    $order_status = "Pending";
+                                }
+                                elseif($od['order_status'] == 1){
+                                    $order_status = "Dispatched";
+                                }
+                                elseif($od['order_status'] == 3){
+                                    $order_status = "Rejected";
+                                }
+                                elseif($od['order_status'] == 4){
+                                    $order_status = "op_ackno";
+                                }
+                                
+                                $order_data =  '<input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input id="check_data_'.$od['order_id'].'" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
+                               
+                                $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+                                
+                                $checkbox = $order_data.'<input id="order_status_'.$od['order_id'].'" type="checkbox" name="change_order_status1[]" class="order_status" />';
 
-                            $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$od['PO_no'],$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$od['order_status']);
-                            $i++;
+                                $order_view['row'][]= array($checkbox,$i,$od['f_u_code'],$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['PO_no'],$otn,$od['credit_limit'],$od['total_amount'],$order_status);
+                                $i++;
+                            }
+                            $order_view['eye'] ='';
+
                         }
-                        $order_view['eye'] ='';
+                        else
+                        {
 
+                            $order_view['head'] =array('Sr. No.','Remove','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
 
+                            $i=1;
+
+                            foreach($orderdata['result'] as $od )
+                            {
+                                $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                                $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$od['PO_no'],$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$od['order_status']);
+                                $i++;
+                            }
+                            $order_view['eye'] ='';
+
+                        }
                    }
                    else if($loginusertype == 8){
             
@@ -1350,7 +1797,7 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
 
                                     $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
 
-                                    $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
+                                    $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
 
                                     $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$otn,$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$po_no);
                                     $i++;
@@ -1364,6 +1811,10 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                     else if($loginusertype == 10){
 
                         //FOR RETAILER
+                        
+                        $action_data = $this->uri->segment(2);
+                        
+                        if($action_data != "po_acknowledgement"){
 
                         $order_view['head'] =array('Sr. No.','','Distributor Name','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
 
@@ -1399,7 +1850,29 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                         }
                         $order_view['eye'] ='';
                         
-                        
+                    }
+                    else{
+                            
+                            //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
+                            
+                            $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Distributor','Entered By','Enter PO No.');
+
+                                $i=1;
+
+                                foreach($orderdata['result'] as $od )
+                                {
+
+
+                                    $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                                    $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
+
+                                    $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$otn,$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$po_no);
+                                    $i++;
+                                }
+                                $order_view['eye'] ='';
+                            
+                        }
                         
 
                     }
@@ -1410,13 +1883,25 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         
     }
     
-    public function order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype) {
+    /**
+     * @ Function Name		: order_status_product_details_view_by_id
+     * @ Function Params	: login user type, radio checked(farmer, retailer, distributor), page url, order id
+     * @ Function Purpose 	: For getting order status detailed data
+     * @ Function Return 	: array
+     * */
+    
+    
+    public function order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data=null) {
         
-        $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id');
+        $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity');
         $this->db->from('bf_ishop_product_order as bipo');
         
         $this->db->join('bf_master_product_sku_country as psc','psc.product_sku_country_id = bipo.product_sku_id',"LEFT");
         $this->db->join('bf_master_product_sku_regional as psr','psr.product_sku_id = psc.product_sku_id',"LEFT");
+        
+        //FOR GETTING USER CURRENT STOCK
+        $this->db->join('bf_ishop_company_current_stock as biccs','biccs.product_sku_id = psr.product_sku_id',"LEFT");
+            
         
         $this->db->where('bipo.order_id',$order_id);
         
@@ -1433,6 +1918,9 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                 if($radiochecked == "distributor"){
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
 
+                }
+                elseif($action_data == "order_approval"){
+                     $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Current Stock','Dispatched Quantity');
                 }
                 else
                 {
@@ -1457,7 +1945,14 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                     $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
                     $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
                     
-                    $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
+                    if($action_data == "order_approval"){
+                        $dub_dispatched_data = '<input type="text" name="dispatched_quantity[]" class="dispatched_quantity" value="'.$od['dispatched_quantity'].'" />';
+                    }
+                    else{
+                         $dub_dispatched_data = '<span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span>';
+                    }
+                    
+                    $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'">'.$dub_dispatched_data.'</div>';
                     
                     
                     if($radiochecked == "distributor"){
@@ -1465,7 +1960,14 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
                         $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$dispatched_quantity);
 
                     }
-                    else{
+                    elseif($action_data == "order_approval"){
+                        
+                      $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$od['intrum_quantity'],$dispatched_quantity);
+                      
+
+                    }
+                    else
+                    {
 
                         $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount);
 
@@ -1557,32 +2059,111 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         }
         elseif($logincustomertype == 9){
             
-                $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
+                if($action_data == "po_acknowledgement"){
+                    
+                    
+                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
 
-                $i=1;
-                foreach($order_detail['result'] as $od )
-                {
+                    $i=1;
+                    foreach($order_detail['result'] as $od )
+                    {
+                        
+                        
+                        
+                             $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
 
-                        $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount'],$od['dispatched_quantity']);
+                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+                    
+                    
+                    
+                    
+                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                   
+                        
+                        
 
-                    $i++;
-            }
-            $product_view['eye'] ='';
+                            $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr);
+
+                        $i++;
+                        }
+                    $product_view['eye'] ='';
+                    
+                    
+                }else{
+                    
+                    
+                        $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
+
+                        $i=1;
+                        foreach($order_detail['result'] as $od )
+                        {
+
+                                $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount'],$od['dispatched_quantity']);
+
+                            $i++;
+                        }
+                        $product_view['eye'] ='';
+                    
+                }
+            
            
         }
         elseif($logincustomertype == 10){
             
-                $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
+            
+                
+                if($action_data == "po_acknowledgement"){
+                    
+                    
+                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
 
-                $i=1;
-                foreach($order_detail['result'] as $od )
-                {
+                    $i=1;
+                    foreach($order_detail['result'] as $od )
+                    {
+                        
+                        
+                        
+                             $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
 
-                        $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount']);
+                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+                    
+                    
+                    
+                    
+                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                   
+                        
+                        
 
-                    $i++;
-            }
-            $product_view['eye'] ='';
+                            $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr);
+
+                        $i++;
+                        }
+                    $product_view['eye'] ='';
+                    
+                    
+                }else{
+            
+                        $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
+
+                        $i=1;
+                        foreach($order_detail['result'] as $od )
+                        {
+
+                                $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount']);
+
+                            $i++;
+                    }
+                    $product_view['eye'] ='';
+
+
+              }
            
         }
         
@@ -1591,6 +2172,13 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         }
         
     }
+    
+    /**
+     * @ Function Name		: update_order_detail_data
+     * @ Function Params	: detail_data
+     * @ Function Purpose 	: For updating order detailed data
+     * @ Function Return 	: array
+     * */
     
     public function update_order_detail_data($detail_data) {
         
@@ -1655,14 +2243,100 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         
     }
     
+    /**
+     * @ Function Name		: delete_order_detail_data
+     * @ Function Params	: order product id
+     * @ Function Purpose 	: For deleting order detailed data
+     * @ Function Return 	: array
+     * */
+    
+    
     public function delete_order_detail_data($order_product_id) {
         $this->db->delete('bf_ishop_product_order', array('product_order_id' => $order_product_id));
     }
+    
+    /**
+     * @ Function Name		: delete_order_data
+     * @ Function Params	: order id
+     * @ Function Purpose 	: For deleting order data
+     * @ Function Return 	: array
+     * */
     
     public function delete_order_data($order_id) {
         
         $this->db->delete('bf_ishop_product_order', array('order_id' => $order_id));
         $this->db->delete('bf_ishop_orders', array('order_id' => $order_id));
+        
+    }
+    
+    /**
+     * @ Function Name		: update_order_data
+     * @ Function Params	: order data
+     * @ Function Purpose 	: For updating order data
+     * @ Function Return 	: 
+     * */
+    
+    
+    public function update_order_data($orderdata){
+        
+         if(!empty($orderdata)){
+             
+             foreach ($orderdata["order_data"] as $key => $value) {
+                 
+                 
+                 $update_array = array();
+                 
+                 if(isset($orderdata["confirm_ack"][$key]) && $orderdata["confirm_ack"][$key] == 1){
+                     $status = 0;
+                     $update_array["order_status"] = $status;
+                 }
+                 
+                 if(isset($orderdata["po_no"][$key]) && $orderdata["po_no"][$key] != ""){
+                     $update_array["PO_no"] = $orderdata["po_no"][$key];
+                 }
+                 
+                 if(isset($orderdata["change_order_status"][$key]) && $orderdata["change_order_status"][$key] != 0){
+                     
+                     if($orderdata["selected_action"] == "dispatch"){
+                         $orer_status = 1;
+                     }
+                     elseif($orderdata["selected_action"] == "pending"){
+                         $orer_status = 0;
+                     }
+                     elseif($orderdata["selected_action"] == "reject"){
+                         $orer_status = 3;
+                     }
+                     
+                     $update_array["order_status"] = $orer_status;
+                 }
+                 
+              //   echo "<pre>";
+               //  print_r($update_array);
+                
+                 if(!empty($update_array)){
+                    $this->db->where('order_id', $value);
+                    $this->db->update('bf_ishop_orders', $update_array); 
+                 }
+                 
+             }
+             
+         }
+        
+    }
+    
+    public function get_user_data($id) {
+        
+        $this->db->select('*');
+        $this->db->from('bf_users');
+        $this->db->where('id',$id);
+        
+        $distributor_data = $this->db->get()->result_array();
+        
+        if(isset($distributor_data) && !empty($distributor_data)) {
+            return $distributor_data;
+        } else{
+            return false;
+        }
         
     }
     

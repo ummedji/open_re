@@ -32,10 +32,10 @@ class Ishop extends Front_Controller
 		Assets::add_module_js('ishop', 'primary_sales.js');
 		Assets::add_module_js('ishop', 'secondary_sales.js');
 		Assets::add_module_js('ishop', 'secondary_sales_view.js');
-		Assets::add_module_js('ishop', 'physical_stock.js');
+
 		Assets::add_module_js('ishop', 'invoice_confirmation.js');
 		Assets::add_module_js('ishop', 'primary_sales_view.js');
-		Assets::add_module_js('ishop', 'rol.js');
+
 
 		$this->set_current_user();
 	}
@@ -123,15 +123,18 @@ class Ishop extends Front_Controller
 
 	public function set_rol()
 	{
-
+		Assets::add_module_js('ishop', 'rol.js');
 		$user = $this->auth->user();
-		//$customer_type_id=$this->ishop_model->get_customer_type_id_by_user_id($user->country_id);
-		$customer_type_id = 3;
-		$provience = $this->ishop_model->get_provience_by_customer_type($customer_type_id);
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
-		//var_dump($customer_type_id);
-		Template::set('provience', $provience);
-		Template::set('customer_type_id', $customer_type_id);
+		$default_retailer_role = 10;
+
+		$action_data = $this->uri->segment(2);
+
+		$logined_user_role = $user->role_id;
+		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_role,null,$default_retailer_role,$action_data);
+		//testdata($retailer_geo_data);
+		Template::set('geo_data', $retailer_geo_data);
+		Template::set('current_user', $user);
 		Template::set('product_sku', $product_sku);
 		Template::set_view('ishop/rol');
 		Template::render();
@@ -271,6 +274,7 @@ class Ishop extends Front_Controller
 
 	public function physical_stock()
 	{
+		Assets::add_module_js('ishop', 'physical_stock.js');
 		$user = $this->auth->user();
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
 
@@ -278,10 +282,12 @@ class Ishop extends Front_Controller
 
 		$action_data = $this->uri->segment(2);
 
-		//$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$default_retailer_role);
-		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,null,null,$default_retailer_role,$action_data);
+		// $retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$default_retailer_role);
+		// $retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,null,null,$default_retailer_role,$action_data);
 
-		//testdata($retailer_geo_data);
+		$logined_user_role = $user->role_id;
+		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_role,null,$default_retailer_role,$action_data);
+
 
 		Template::set('geo_data', $retailer_geo_data);
 		Template::set('product_sku', $product_sku);
@@ -332,8 +338,137 @@ class Ishop extends Front_Controller
 
 	public function ishop_sales()
 	{
+		Assets::add_module_js('ishop', 'ishop_sales.js');
+		$user = $this->auth->user();
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+
+		$default_retailer_role = 10;
+
+		$action_data = $this->uri->segment(2);
+
+		$logined_user_role = $user->role_id;
+		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_role,null,$default_retailer_role,$action_data);
+
+
+		Template::set('geo_data', $retailer_geo_data);
+		Template::set('product_sku', $product_sku);
+		Template::set('current_user', $user);
 		Template::set_view('ishop/ishop_sales');
 		Template::render();
+	}
+
+	/**
+	 * @ Function Name      : get_retailers_by_distributor
+	 * @ Function Params    :
+	 * @ Function Purpose   :
+	 * @ Function Return    :
+	 * */
+
+	public function get_retailers_by_distributor()
+	{
+
+		$distributor_id = $_POST['distributor_id'];
+		$country_id = $_POST['country'];
+		$retailers= $this->ishop_model->get_retailer_by_distributor_id($distributor_id,$country_id);
+		//testdata($retailers);
+		echo json_encode($retailers);;
+		die;
+	}
+
+	/**
+	 * @ Function Name      : add_ishop_sales_details
+	 * @ Function Params    :
+	 * @ Function Purpose   :
+	 * @ Function Return    :
+	 * */
+
+	public function add_ishop_sales_details()
+	{
+		$user_id = $this->session->userdata('user_id');
+		$this->ishop_model->add_ishop_sales_detail($user_id);
+
+		Template::set_message('Insert Data successful', 'success');
+		redirect('ishop/ishop_sales');
+	}
+
+	/**
+	 * @ Function Name      : company_current_stock
+	 * @ Function Params    :
+	 * @ Function Purpose   :
+	 * @ Function Return    :
+	 * */
+
+	public function company_current_stock()
+	{
+		Assets::add_module_js('ishop', 'current_stock.js');
+
+		$user = $this->auth->user();
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+
+		$current_stock= $this->ishop_model->get_all_company_current_stock($user->country_id);
+
+		Template::set('table', $current_stock);
+		Template::set('product_sku', $product_sku);
+		Template::set('current_user', $user);
+		Template::set_view('ishop/current_stock');
+		Template::render();
+	}
+
+	/**
+	 * @ Function Name      : add_company_current_stock_details
+	 * @ Function Params    :
+	 * @ Function Purpose   :
+	 * @ Function Return    :
+	 * */
+
+	public function add_company_current_stock_details()
+	{
+		$user = $this->auth->user();
+		$user_id = $this->session->userdata('user_id');
+		$this->ishop_model->add_company_current_stock_detail($user_id,$user->country_id);
+
+		Template::set_message('Insert Data successful', 'success');
+		redirect('ishop/company_current_stock');
+	}
+
+	/**
+	 * @ Function Name      : credit_limit
+	 * @ Function Params    :
+	 * @ Function Purpose   :
+	 * @ Function Return    :
+	 * */
+
+	public function credit_limit()
+	{
+		Assets::add_module_js('ishop', 'credit_limit.js');
+
+		$user = $this->auth->user();
+		$distributor = $this->ishop_model->get_distributor_by_user_id($user->country_id);
+
+		$credit_limit= $this->ishop_model->get_all_distributors_credit_limit($user->country_id);
+
+		Template::set('table', $credit_limit);
+		Template::set('distributor', $distributor);
+		Template::set('current_user', $user);
+		Template::set_view('ishop/credit_limit');
+		Template::render();
+	}
+
+	/**
+	 * @ Function Name      : add_user_credit_limit_datails
+	 * @ Function Params    :
+	 * @ Function Purpose   :
+	 * @ Function Return    :
+	 * */
+
+	public function add_user_credit_limit_datails()
+	{
+		$user = $this->auth->user();
+		$user_id = $this->session->userdata('user_id');
+		$this->ishop_model->add_user_credit_limit_datail($user_id,$user->country_id);
+
+		Template::set_message('Insert Data successful', 'success');
+		redirect('ishop/credit_limit');
 	}
 
 
@@ -444,7 +579,7 @@ class Ishop extends Front_Controller
 	 * */
         
         public function get_quantity_conversion_data() {
-           
+
            $skuid = $_POST['skuid'];
            $quantity_data = $_POST['quantity_data'];
            $unit_data = $_POST['unit'];
@@ -499,7 +634,7 @@ class Ishop extends Front_Controller
         * */
         
         public function get_user_by_geo_data(){
-            
+           // testdata($_POST);
             $selected_geo_id = $_POST['selected_geo_id'];
             $login_user_country_id = $_POST['country_id'];
             $checked_data = $_POST['checked_data'];
@@ -714,6 +849,13 @@ class Ishop extends Front_Controller
          * PRESPECTIVE ORDER
          */
         
+        /**
+        * @ Function Name	: prespective_order
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting prescriptive orders (HOME screen)
+        * @ Function Return 	: 
+        * */
+        
         public function prespective_order() {
             
             Assets::add_module_js('ishop', 'prespective_order.js');
@@ -731,6 +873,13 @@ class Ishop extends Front_Controller
             Template::set_view('ishop/prespective_order');
             Template::render();
         }
+        
+        /**
+        * @ Function Name	: get_prespective_order
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting prescriptive orders
+        * @ Function Return 	: 
+        * */
         
         public function get_prespective_order() {
             
@@ -758,6 +907,13 @@ class Ishop extends Front_Controller
             
         }
         
+        /**
+        * @ Function Name	: get_prespective_order_details
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting prescriptive orders details on click of specific order
+        * @ Function Return 	: 
+        * */
+        
         public function get_prespective_order_details()
 	{
 		$order_id = (isset($_POST['id']) ? $_POST['id'] : '');
@@ -770,12 +926,27 @@ class Ishop extends Front_Controller
 		Template::render();
 	}
         
+        /**
+        * @ Function Name	: mark_order_as_read
+        * @ Function Params	: 
+        * @ Function Purpose 	: For updateing order status as read
+        * @ Function Return 	: 
+        * */
+        
         public function mark_order_as_read() {
             $order_id = (isset($_POST['orderid']) ? $_POST['orderid'] : '');
             $mark_read = $this->ishop_model->order_mark_as_read($order_id);
             echo $mark_read;
             die;
         }
+        
+        /**
+        * @ Function Name	: mark_order_as_unread
+        * @ Function Params	: 
+        * @ Function Purpose 	: For updateing order status as unread
+        * @ Function Return 	: 
+        * */
+        
         
         public function mark_order_as_unread() {
             
@@ -789,6 +960,13 @@ class Ishop extends Front_Controller
         /*
          * ORDER STATUS
          */
+        
+         /**
+        * @ Function Name	: order_status
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting order status data (HOME SCREEN)
+        * @ Function Return 	: 
+        * */
         
         public function order_status() {
             
@@ -861,6 +1039,13 @@ class Ishop extends Front_Controller
             Template::render();
             
         }
+        
+         /**
+        * @ Function Name	: get_order_status_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting order status data
+        * @ Function Return 	: 
+        * */
         
         public function get_order_status_data() {
             
@@ -1063,7 +1248,7 @@ class Ishop extends Front_Controller
             
         }
             
-            Template::set('table', $order_data);
+            Template::set('order_table', $order_data);
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
@@ -1079,38 +1264,87 @@ class Ishop extends Front_Controller
             
         }
         
+        /**
+        * @ Function Name	: get_order_status_data_details
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting order status data details on click of single data
+        * @ Function Return 	: 
+        * */
+        
         public function get_order_status_data_details() {
             
                 $order_id = (isset($_POST['id']) ? $_POST['id'] : '');
                 $radiochecked = (isset($_POST['radiochecked']) ? $_POST['radiochecked'] : '');
                 $logincustomertype = $_POST['logincustomertype'];
                 
+                $action_data = (isset($_POST['segment_data']) ? $_POST['segment_data'] : '');
+                $order_details = "";
 		if(isset($order_id) && !empty($order_id))
 		{
-			$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype);
-			Template::set('table',$order_details);
+			$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
+			
 		}
-		Template::set_view('ishop/order_status');
+               
+                //echo $action_data;die;
+                
+                if($action_data == "po_acknowledgement"){
+                    
+                    Template::set('po_ack_table',$order_details);
+                    Template::set_view('ishop/po_acknowledgement');
+                }
+                elseif($action_data == "order_approval"){
+                    
+                    Template::set('order_approval_table',$order_details);
+                    Template::set_view('ishop/order_approval');
+                }
+                else{
+                    Template::set('order_table',$order_details);
+                    Template::set_view('ishop/order_status');
+                }
 		Template::render();
             
         }
+        
+        /**
+        * @ Function Name	: update_order_status_detail_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For updating status of order detailed data 
+        * @ Function Return 	: 
+        * */
         
         public function update_order_status_detail_data() {
             
             $detail_data = $_POST;
             
             $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
+            
             die;
         }
+        
+        /**
+        * @ Function Name	: delete_order_detail_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For deleting of order detailed data 
+        * @ Function Return 	: 
+        * */
         
         public function delete_order_detail_data(){
             
             $order_product_id = $_POST["data_id"];
             
             $detail_delete = $this->ishop_model->delete_order_detail_data($order_product_id);
+            
             die;
             
         }
+        
+         
+        /**
+        * @ Function Name	: delete_product_order_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For deleting of order data 
+        * @ Function Return 	: 
+        * */
         
         public function delete_product_order_data(){
             
@@ -1126,6 +1360,14 @@ class Ishop extends Front_Controller
         /*
          * PO ACKNOWLEDGEMENT
          */
+        
+        /**
+        * @ Function Name	: po_acknowledgement
+        * @ Function Params	: 
+        * @ Function Purpose 	: For getting po_acknowledgement order data 
+        * @ Function Return 	: 
+        * */
+        
         
         public function po_acknowledgement() {
             
@@ -1152,9 +1394,7 @@ class Ishop extends Front_Controller
             
             if(isset($_POST) && !empty($_POST)){
                 
-              //  echo "<pre>";
-               // print_r($_POST);
-                
+                 $update_order_data = $this->ishop_model->update_order_data($_POST);
             }
             
             
@@ -1167,7 +1407,7 @@ class Ishop extends Front_Controller
             
             $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
             
-            Template::set('table', $order_data);
+            Template::set('po_ack_table', $order_data);
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
@@ -1183,10 +1423,170 @@ class Ishop extends Front_Controller
             
         }
     
+        /**
+        * @ Function Name	: update_po_acknowledgement_data
+        * @ Function Params	: 
+        * @ Function Purpose 	: For updating po_acknowledgement detailed order data 
+        * @ Function Return 	: 
+        * */
         
         public function update_po_acknowledgement_data(){
+            $detail_data = $_POST;
+            $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
+            redirect("ishop/po_acknowledgement");
             
+        }
+        
+        
+        // FOR ORDER APPROVAL
+        
+        public function order_approval() {
+            
+            Assets::add_module_js('ishop', 'order_approval.js');
+           
+            $user= $this->auth->user();
+            
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+          
+            $action_data = $this->uri->segment(2);
+            $sub_action_data = $this->uri->segment(3);
+            
+            $order_data = "";
+            
+            if(isset($_POST) && !empty($_POST) && $_POST["form_date"] != "" && $_POST["to_date"] != ""){
+                
+                
+                    $from_date = $_POST["form_date"];
+                    $todate = $_POST["to_date"];
+
+                   $radio_checked = "";
+                   $customer_id = $logined_user_id;
+                
+                  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"]);
+                  
+            }
+            
+             
+            
+          //  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
+            if($order_data != ""){
+                Template::set('order_approval_table', $order_data);
+            }
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set_view('ishop/order_approval');
+            Template::render();
+           
+        }
+        
+        public function update_order_approval_detail_data() {
+            
+            $detail_data = $_POST;
+            $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
+            redirect("ishop/order_approval");
+            
+        }
+        
+        public function update_order_approval_status() {
+           $detail_data = $_POST;
+           
+           $detail_update = $this->ishop_model->update_order_data($detail_data);
+         //  redirect("ishop/order_approval");
+           die;
+           
+        }
+        
+        //TARGET
+        
+        public function target() {
+            
+            Assets::add_module_js('ishop', 'target.js');
+            
+            $user= $this->auth->user();
+            
+            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
+            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
+            
+            $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+            
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            $get_geo_level_data = "";
+            $action_data = $this->uri->segment(2);
+            
+            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
+            
+            if($logined_user_type == 7){
+                
+                //FOR HO
+                $default_type_selected = 9;
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 8){
+            
+                //FOR FO
+                $default_type_selected = 11; 
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 9){
+            
+                //FOR DISTRIBUTOR
+                $default_type_selected = null; 
+            }
+            elseif($logined_user_type == 10){
+            
+                //FOR RETAILER
+                $default_type_selected = null; 
+            }
+           
+          //  echo "<pre>";
+          //  print_r($get_geo_level_data);
+          //  die;
+            
+		  //var_dump($distributor);die;
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set('distributor',$distributor);
+            Template::set('retailer',$retailer);
+            Template::set('product_sku',$product_sku);
+            
+            
+            Template::set('geo_level_data',$get_geo_level_data);
+            
+            Template::set_view('ishop/target');
+            Template::render();
             
             
         }
+        
+        public function get_customer_code() {
+            
+            $id = $_POST["id"];
+            $user_data = $this->ishop_model->get_user_data($id);
+            if(!empty($user_data)){
+             $data = $user_data[0]["user_code"];
+            }
+            else{
+               $data = ""; 
+            }
+            echo $data;
+            die;      
+        }
+        
 }

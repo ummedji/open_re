@@ -1,5 +1,4 @@
 <?php
-
 $action_data = $this->uri->segment(2);
 
 $user= $this->auth->user();
@@ -9,14 +8,24 @@ $login_customer_type = $user->role_id;
  
 //echo "<pre>";print_r($_POST);
 
-if(isset($table) && count($table)>0) {
+if(isset($po_ack_table) && count($po_ack_table)>0) {
     if($login_customer_type == 9 || $login_customer_type == 10){
         if($action_data == "po_acknowledgement"){
 
-            $attributes = array('class' => '', 'id' => 'po_acknowledgement','name'=>'po_acknowledgement');
-                echo form_open('',$attributes); 
-
+            $formname = "po_acknowledgement";
+            $url = "ishop/po_acknowledgement";
+            
         }
+        else{
+             $formname = "update_order_status_detail_data";
+             
+             $url = 'ishop/update_po_acknowledgement_data';
+             
+            
+        }
+        
+        $attributes = array('class' => '', 'id' => $formname,'name'=>$formname);
+                echo form_open($url,$attributes); 
     }
     
     ?>
@@ -32,7 +41,7 @@ if(isset($table) && count($table)>0) {
                     <table class="col-md-12 table-bordered table-striped table-condensed cf">
                         <thead class="cf">
                         <tr>
-                            <?php foreach($table['head'] as $hkey => $head) { if($head != ""){ ?>
+                            <?php foreach($po_ack_table['head'] as $hkey => $head) { if($head != ""){ ?>
                                 <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
                                     <a href="#">
                                         <?php echo $head;?>
@@ -42,9 +51,9 @@ if(isset($table) && count($table)>0) {
                             <?php } } ?>
                         </tr>
                         </thead>
-                        <?php if(isset($table['row']) && count($table['row']) ) {?>
+                        <?php if(isset($po_ack_table['row']) && count($po_ack_table['row']) ) {?>
                         <tbody class="tbl_body_row">
-                        <?php foreach($table['row'] as $rkey => $rowary) {
+                        <?php foreach($po_ack_table['row'] as $rkey => $rowary) {
                             ?>
                             <tr>
                                 <?php
@@ -53,7 +62,7 @@ if(isset($table) && count($table)>0) {
                                     ?>
                                     <?php if($rwkey==0) {
                                         ?>
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
+                                        <td data-title="<?php echo $po_ack_table['head'][$rwkey]; ?>">
                                             <div>
                                                 <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
@@ -64,10 +73,19 @@ if(isset($table) && count($table)>0) {
                                        
                                         ?>
 
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>" class="numeric">
-                                            
-                                            <div class="confirm_data" prdid ="<?php echo $row;?>"><input id="confirm_ack_<?php echo $row;?>" type="checkbox" name="confirm_ack[]" value="" /><a href="javascript:void(0);">Confirm</a></div>
+                                        <td data-title="<?php echo $po_ack_table['head'][$rwkey]; ?>" class="numeric">
+                                           <?php 
+                                            if($action_data =="get_order_status_data_details"){
+                                            ?>
+                                            <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
+                                            <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                           <?php }else{
                                            
+                                           ?>
+                                            
+                                            
+                                            <div class="confirm_data" prdid ="<?php echo $row;?>"><input type="hidden" id="confirm_data_<?php echo $row;?>" name="confirm_ack[]" value="0" /><input class="confirm_data"  type="checkbox" name="" value="<?php echo $row;?>" /><a href="javascript:void(0);">Confirm</a></div>
+                                           <?php } ?>
                                         </td>
                                     <?php 
                                        
@@ -82,7 +100,7 @@ if(isset($table) && count($table)>0) {
                                     {
                                       if($_POST["radio1"] == "farmer"){
                                         if($row != ""){ ?>
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
+                                        <td data-title="<?php echo $po_ack_table['head'][$rwkey]; ?>">
                                             <?php echo $row;?>
                                         </td>
                                     <?php
@@ -91,7 +109,7 @@ if(isset($table) && count($table)>0) {
                                      else{
                                          
                                        ?>  
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
+                                        <td data-title="<?php echo $po_ack_table['head'][$rwkey]; ?>">
                                             <?php echo $row;?>
                                         </td> 
                                     <?php     
@@ -109,7 +127,7 @@ if(isset($table) && count($table)>0) {
                 </div>
                 <?php 
                 if($login_customer_type == 9 || $login_customer_type == 10){
-                    if($action_data == "po_acknowledgement"){                   
+                    if($action_data == "po_acknowledgement" || $action_data == "get_order_status_data_details"){                   
                 ?>
                 <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
                     <?php

@@ -14,9 +14,33 @@ function add_sec_sales_row()
     var amt = $('#sec_amt').val();
     var sr_no =$("#secondary_sls > tr").length + 1;
 
-    var unit_data = "";
 
-    $.ajax({
+
+    var box_selected = "";
+    var package_selected = "";
+    var kg_ltr_selected = "";
+
+    var unit_data = get_data_conversion(sku_id,qty,sec_sel_unit);
+
+
+    if(sec_sel_unit == 'box'){
+        box_selected = "selected = 'selected'"
+    }
+    if(sec_sel_unit == 'packages'){
+        package_selected = "selected = 'selected'"
+    }
+    if(sec_sel_unit == 'kg/ltr'){
+        kg_ltr_selected = "selected = 'selected'"
+    }
+
+
+
+
+
+
+
+
+  /*  $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_quantity_conversion_data",
         data: {skuid:sku_id, quantity_data:qty, unit : sec_sel_unit},
@@ -26,38 +50,42 @@ function add_sec_sales_row()
         },
         async:false
     });
-
+*/
 
     $("#secondary_sls").append(
-        "<tr>"+
+        "<tr id='"+sr_no+"'>"+
         "<td data-title='Sr. No.' class='numeric'>" +
-        "<input type='text' value='"+sr_no+"' readonly/>" +
+        "<input class='input_remove_border'  type='text' value='"+sr_no+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
-            /*  "<div class='edit_i'><a href='#'><i class='fa fa-pencil' aria-hidden='true'></i></a></div>" +*/
         "<div class='delete_i secondary_sal' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
         "</td>"+
         "<td data-title='Retailer Name' class='numeric'>" +
-        "<input type='text' value='"+reta_name+"' readonly/>" +
+        "<input class='input_remove_border'  type='text' value='"+reta_name+"' readonly/>" +
         "</td>"+
         "<td data-title='Product SKU Code' class='numeric'>" +
-        "<input type='text' value='"+sku_code+"' readonly/>" +
+        "<input class='sku_"+sr_no+"' type='hidden' value='"+sku_id+"' readonly/>"+
+        "<input class='input_remove_border' type='text' value='"+sku_code+"' readonly/>" +
         "</td>"+
         "<td data-title='Product SKU Name'>" +
-        "<input type='text' value='"+sku_name+"' readonly/>" +
+        "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
         "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
         "</td>"+
         "<td data-title='Qty'>" +
-        "<input type='text' name='quantity[]' value='"+qty+"'/>" +
+        "<input type='text' class='quantity_data numeric' name='quantity[]' value='"+qty+"'/>" +
         "</td>"+
-        "<td data-title='Unit'>" +
-        "<input type='text' value='"+sec_sel_unit+"'/>" +
+        "<td data-title='Units'>" +
+        "<select name='units[]' class='select_unitdata' id='unit_id' >"+
+        " <option  "+box_selected+" value='box'>Box</option>"+
+        "  <option  "+package_selected+" value='packages'>Packages</option>"+
+        "   <option  "+kg_ltr_selected+" value='kg/ltr'>Kg/Ltr</option>"+
+        "  </select>" +
         "</td>"+
         "<td data-title='Amount'>" +
         "<input type='text' name='amount[]' value='"+amt+"'/>" +
         "</td>"+
         "<td data-title='Qty Kg/Ltr'>" +
-        "<input type='text' value='"+unit_data+"'/>" +
+        "<input class='input_remove_border qty_"+sr_no+"' type='text' value='"+unit_data+"'/>" +
         "</td>"+
         "</tr>"
     );
@@ -90,4 +118,46 @@ $("#add_secondary_sales").on("submit",function(){
         }
     });
 });
+
+function get_data_conversion(sku_id,quantity,units){
+
+    var unit_data = "";
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_quantity_conversion_data",
+        data: {skuid:sku_id, quantity_data:quantity, unit : units},
+        //dataType : 'json',
+        success: function(resp){
+            unit_data = resp;
+        },
+        async:false
+    });
+
+    return unit_data;
+
+}
+
+$("body").on("change","select.select_unitdata",function(){
+
+    var selected_row_id = $(this).parent().parent().attr("id");
+    var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+    var units = $(this).val();
+    var quantity = $(this).parent().parent().find("input.quantity_data").val();
+    var unit_data = get_data_conversion(sku_id,quantity,units);
+    $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+});
+
+$("body").on("keyup","input.quantity_data",function(){
+
+    var selected_row_id = $(this).parent().parent().attr("id");
+    var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+    var units = $(this).parent().parent().find("select.select_unitdata").val();
+    var quantity = $(this).val();
+    var unit_data = get_data_conversion(sku_id,quantity,units);
+    $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+});
+
+
+
 

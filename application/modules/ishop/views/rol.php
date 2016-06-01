@@ -7,115 +7,91 @@ echo form_open('',$attributes); ?>
     <div class="top_form">
         <div class="row">
                 <div class="col-md-12 text-center radio_space">
-                  <!--  --><?php /*if(strtolower($customer_type_id['ctr_ctn'])=='distributor') { */?>
+                    <div class="col-md-12 text-center radio_space">
                         <div class="radio">
-                            <input class="sel_customer_type" type="radio" name="radio1" id="dist_radio1" attr-type="<?php /*echo $customer_type_id['customer_type_country_id'] */?>" value="distributor" checked>
-                            <label for="radio1">Distributor </label>
+                            <input class="select_customer_type" type="radio" name="radio1" id="retailer" value="retailer" checked>
+                            <label for="radio1">Retailer</label>
                         </div>
-                     <!--   --><?php
-/*                    }
-                    elseif(strtolower($customer_type_id['ctr_ctn'])=='retailer'){
-                        */?>
                         <div class="radio">
-                            <input class="sel_customer_type" type="radio" name="radio1" id="reta_radio2" attr-type="<?php /*echo $customer_type_id['customer_type_country_id'] */?>" value="retailer">
-                            <label for="radio2">Retailer</label>
+                            <input class="select_customer_type" type="radio" name="radio1" id="distributor" value="distributor">
+                            <label for="radio2">Distributor</label>
                         </div>
-                      <!--  --><?php
-/*                    }
-                    */?>
+                        <div class="clearfix"></div>
+                    </div>
                     <div class="clearfix"></div>
                 </div>
 
+
+
             <!--------------------------------------Distributor------------------------------------------>
-                <div class="col-md-6 col-md-offset-3 distributore_form distributor_radio">
-                    <div class="row">
-                        <div class="col-md-6 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <label>Provience Name</label>
-                                <select class="selectpicker" id="pro_id"  data-live-search="true">
-                                    <option value="0">Provience Name</option>
-                                    <?php
-                                    if(isset($provience) && !empty($provience))
-                                    {
-                                        foreach($provience as $key=>$val_provience)
-                                        {
-                                            ?>
-                                            <option value="<?php echo $val_provience['political_geo_id']; ?>"><?php echo $val_provience['political_geography_name']; ?></option>
-                                            <?php
-                                        }
-                                    }
+            <div class="col-md-12 distributore_form od_approval">
+                <div class="row">
+                    <div class="retailer_check_rol" id="retailer_check_rol" >
+                         <div class="col-md-3 col-sm-6 tp_form">
+                    <div class="form-group">
+                        <label>Geo Level 3</label>
+                        <select class="selectpicker" id="geo_level_rol">
+                            <option>Select Geo Location</option>
+                            <?php
+                            if(isset($geo_data) && !empty($geo_data))
+                            {
+                                foreach($geo_data as $k=> $geo_val)
+                                {
                                     ?>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-6 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <label>Distributor Name</label>
-                                <select class="selectpicker" name="distributor_name" id ='distr_id'>
-                                  <!--  <option>Select Distributor Name</option>
-                                    <option>Distributor Name</option>-->
-                                </select>
-                            </div>
-                        </div>
+                                    <option value="<?php echo $geo_val['political_geo_id']; ?>" attr-name="<?php echo $geo_val['political_geography_name']; ?>"><?php echo $geo_val['political_geography_name']; ?></option>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </select>
                     </div>
                 </div>
-            <!--------------------------------------End Distributor------------------------------------------>
-
-            <!--------------------------------------Start Retailer------------------------------------------>
-
-               <div class="col-md-10 col-md-offset-1 distributore_form retailer_radio">
-                <div class="row">
-                    <div class="col-md-4 col-sm-4 tp_form">
-                        <div class="form-group">
-                            <label>Provience Name</label>
-                            <select class="selectpicker" id="pro_id"  data-live-search="true">
-                                <option value="0">Provience Name</option>
-                                <?php
-                               if(isset($provience) && !empty($provience))
-                                {
-                                    foreach($provience as $key=>$val_provience)
-                                    {
-                                        ?>
-                                        <option value="<?php echo $val_provience['political_geo_id']; ?>"><?php echo $val_provience['political_geography_name']; ?></option>
-                                        <?php
-                                    }
-                                }
-                                ?>
-                            </select>
+                        <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>Geo Level 2</label>
+                                <select class="selectpicker" id="geo_level_1">
+                                    <option>Select Geo Location</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>Retailer Name</label>
+                                <select class="selectpicker" name="fo_retailer_id" id="retailer_rol">
+                                    <option value="0">Select Retailer</option>
+                                </select>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-4 tp_form">
-                        <div class="form-group">
-                            <label>Kabupaten Name</label>
-                            <select class="selectpicker" id="pro_id"  data-live-search="true">
-                                <option value="0">Kabupaten Name</option>
-                                <?php
-                                if(isset($provience) && !empty($provience))
-                                {
-                                    foreach($provience as $key=>$val_provience)
-                                    {
-                                        ?>
-                                        <option value="<?php echo $val_provience['political_geo_id']; ?>"><?php echo $val_provience['political_geography_name']; ?></option>
-                                        <?php
-                                    }
-                                }
-                                ?>
-                            </select>
+                    <!--------------------------------------End Retailer------------------------------------------>
+                     <div class="distributor_check_rol" id="distributor_check_rol" style="display:none;">
+                        <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>Geo Level</label>
+                                <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-sm-4 tp_form">
-                        <div class="form-group">
-                            <label>Retailer Name</label>
-                            <select class="selectpicker" id =''>
-                            </select>
+                        <div class="col-md-3 col-sm-6 tp_form">
+
+                            <div class="form-group">
+                                <label>Distributor Name</label>
+                                <select class="selectpicker" id="distributor_rol" name="distributor_rol" data-live-search="true">
+                                </select>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-
-            <!--------------------------------------End Retailer------------------------------------------>
+            <!--------------------------------------Distributor------------------------------------------>
         </div>
     </div>
+    <input class="login_customer_role" type="hidden" name="login_customer_role" id="login_customer_role" value="<?php echo $current_user->role_id; ?>" />
+    <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $current_user->id; ?>" />
+    <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $current_user->country_id; ?>" />
+
+    <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" />
+
     <div class="clearfix"></div>
 </div>
 
@@ -182,7 +158,7 @@ echo form_open('',$attributes); ?>
         <div id="no-more-tables">
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
-                <tr>
+                <tr id="rol_head">
                     <th>Sr. No. <span class="rts_bordet"></span></th>
                     <th class="numeric">Action <span class="rts_bordet"></span></th>
                     <th>Distributor Code <span class="rts_bordet"></span></th>
@@ -193,6 +169,8 @@ echo form_open('',$attributes); ?>
                     <th class="numeric">ROL Quantity <span class="wl_sp">(Kg/Ltr)</span> <span class="rts_bordet"></span></th>
                     <th class="numeric">ROL Qty Kg/Ltr <div class="wl_sp">(Kg/Ltr)</div> <span class="rts_bordet"></span></th>
                 </tr>
+             <!--   <tr id="rol_dist" ></tr>
+                <tr id="rol_ret" ></tr>-->
                 </thead>
                 <tbody id="rol_list">
                 </tbody>

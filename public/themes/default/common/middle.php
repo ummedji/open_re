@@ -6,16 +6,33 @@
     }*/
     if(isset($table))
     {
+         echo theme_view('common/table');
+    }
+    
+    if(isset($order_table))
+    {
         $action_segment = $this->uri->segment(2);
         
         if($action_segment == "get_order_status_data" || $action_segment == "get_order_status_data_details"){
              echo theme_view('common/order_status_table');
         }
-        elseif($action_segment == "po_acknowledgement"){
+    }
+    
+    if(isset($po_ack_table))
+    {
+        $action_segment = $this->uri->segment(2);
+        if($action_segment == "po_acknowledgement" || $action_segment == "get_order_status_data_details"){
             echo theme_view('common/po_acknowledgement_table');
         }
-        else{
-            echo theme_view('common/table');
+    }
+    
+     if(isset($order_approval_table))
+    {
+        $action_segment = $this->uri->segment(2);
+        
+        if($action_segment == "order_approval" || $action_segment == "get_order_status_data_details"){
+            echo theme_view('common/order_approval_table');
         }
     }
+    
 ?>

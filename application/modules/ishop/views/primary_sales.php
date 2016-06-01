@@ -59,7 +59,7 @@ echo theme_view('common/middle');
 <div id="middle_container" class="primary_cont">
 
 </div>
-<div id="product_table_container">
+<div id="product_table_container" class="primary_product">
 
 </div>
 
