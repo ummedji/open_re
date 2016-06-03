@@ -863,12 +863,251 @@ class Ishop_model extends BF_Model
         }
     }
 
+    /**
+     * @ Function Name		: get_all_schemes
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function get_all_schemes($country_id)
+    {
+        $this->db->select('*');
+        $this->db->from('bf_master_scheme');
+        $this->db->where('country_id',$country_id);
+        $this->db->where('status','1');
+        $this->db->where('DATE_FORMAT(year,"%Y")',date('Y'));
+        $data=$this->db->get()->result_array();
+        //testdata($data);
+        if(isset($data) && !empty($data)){
+            return $data;
+        }
+        else{
+            return false;
+        }
+    }
+
+    /**
+     * @ Function Name		: get_slab_by_selected_scheme_id
+     * @ Function Params	:
+     * @ Function Purpose 	:
+     * @ Function Return 	: Array
+     * */
+
+    public function get_slab_by_selected_scheme_id($scheme_id)
+    {
+        $sql ='SELECT mss.slab_id,mss.slab_no,psc.product_sku_name,mss.1point,mss.value_per_kg,mss.value_per_point,mss.target,mss.target_point,mss.target_value ';
+        $sql .= 'FROM bf_master_scheme_slab AS mss ';
+        $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = mss.product_sku_id) ';
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND mss.scheme_id ='.$scheme_id.' ';
+        $sql .= 'ORDER BY slab_id DESC ';
+        $info = $this->db->query($sql);
+        $limit = $info->result_array();
+        $slab_detail = array('result'=>$limit);
+        // testdata($slab_detail);
+
+        if(isset($slab_detail['result']) && !empty($slab_detail['result']))
+        {
+            $slab_view['head'] =array('Sr. No.','Select','Slab No.','Product SKU Name','1 point:?kg/ltr','Value Per Kg. per Ltr','Value Per Point','Target Kg/Ltr','Target Points','Programme Value');
+            $i=1;
+
+            foreach($slab_detail['result'] as $sd )
+            {
+                $slab_view['row'][]= array($i,$sd['slab_id'],$sd['slab_no'],$sd['product_sku_name'],$sd['1point'],$sd['value_per_kg'],$sd['value_per_point'],$sd['target'],$sd['target_point'],$sd['target_value']);
+                $i++;
+            }
+            $slab_view['eye'] ='';
+            $slab_view['action'] ='is_action';
+            $slab_view['radio'] ='is_radio';
+            $slab_view['no_margin'] ='';
+            $slab_view['no_margin'] ='is_margin';
+            // $product_view['pagination'] = $report_details['pagination'];
+            return $slab_view;
+        }
+    }
+
+    public function get_schemes_by_selected_year($selected_cur_year,$country_id)
+    {
+        $this->db->select('*');
+        $this->db->from('bf_master_scheme');
+        $this->db->where('country_id',$country_id);
+        $this->db->where('status','1');
+        $this->db->where('DATE_FORMAT(year,"%Y")',$selected_cur_year);
+        $data=$this->db->get()->result_array();
+        //testdata($data);
+        if(isset($data) && !empty($data)){
+            return $data;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function add_schemes_detail($user_id,$country_id)
+    {
+
+        $cur_year = $this->input->post("cur_year");
+        $customer_id=$this->input->post("fo_retailer_id");
+        $schemes=$this->input->post("schemes");
+        $scheme_slab=$this->input->post("radio_scheme_slab");
+        $region=$this->input->post("region");
+        $territory=$this->input->post("territory");
+
+        $schemes_list = array(
+                'year'               =>$cur_year.'-01-01',
+                'scheme_id'          =>$schemes,
+                'slab_id'            =>$scheme_slab,
+                'customer_id'        =>$customer_id,
+                'country_id'         =>$country_id,
+                'geo_id2'         =>$region,
+                'geo_id1'         =>$territory,
+                'created_by_user'    =>$user_id,
+                'status'             =>'1',
+                'created_on'         =>date('Y-m-d H:i:s')
+
+            );
+     //   testdata($schemes_list);
+        $this->db->insert('ishop_scheme_allocation', $schemes_list);
+
+    }
+
+    public function view_schemes_details($user_id,$country_id,$year,$region,$territory)
+    {
+        $sql ='SELECT isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
+        $sql .= 'FROM bf_ishop_scheme_allocation AS isa ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = isa.customer_id) ';
+        $sql .= 'JOIN bf_master_scheme AS ms ON (ms.scheme_id = isa.scheme_id) ';
+        $sql .= 'JOIN bf_master_scheme_slab AS mss ON (mss.slab_id = isa.slab_id) ';
+        $sql .= 'JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_country_id = mss.product_sku_id) ';
+        $sql .= 'LEFT JOIN bf_master_business_geography_details AS bmbgd ON (bmbgd.business_geo_id = isa.geo_id2) ';
+        $sql .= 'LEFT JOIN bf_master_business_geography_details AS bmbgd1 ON (bmbgd1.business_geo_id = isa.geo_id1) ';
+        $sql .= 'WHERE 1 ';
+        if(isset($year) && !empty($year))
+        {
+            $sql .= 'AND DATE_FORMAT(isa.year,"%Y") ='.$year.' ';
+        }
+        if(isset($region) && !empty($region) && $region != 0)
+        {
+            $sql .= 'AND geo_id2 ='.$region.' ';
+        }
+        if(isset($territory) && !empty($territory) && $territory != 0)
+        {
+            $sql .= 'AND geo_id1 ='.$territory.' ';
+        }
+        $sql .= 'AND mpsc.status =1 ';
+        $sql .= 'AND isa.country_id ='.$country_id;
+     //   $sql .= 'ORDER BY allocation_id DESC ';
+        $info = $this->db->query($sql);
+        $limit = $info->result_array();
+        $scheme_allocation = array('result'=>$limit);
+
+        if(isset($scheme_allocation['result']) && !empty($scheme_allocation['result'])) {
+            $i = 1;
+            $scheme_allocation_view=array();
+            foreach ($scheme_allocation['result'] as $sd) {
+                $scheme_allocation_view['row'][] = array($i,$sd['allocation_id'], $sd['business_georaphy_name_parent'], $sd['business_georaphy_code'], $sd['business_georaphy_name'], $sd['user_code'], $sd['display_name'], $sd['scheme_code'], $sd['scheme_name'], $sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$sd['value_per_kg']);
+                $i++;
+            }
+            // $product_view['pagination'] = $report_details['pagination'];
+
+            return $scheme_allocation_view;
+        }
+    }
+
+    public function get_business_geo_data($user_id,$country_id,$role,$parent_id=null,$year=null)
+    {
+        //var_dump($year) ;
+        $selected_data = "bmbgd.business_geo_id,bmbgd.business_georaphy_name,bmbgd.business_georaphy_code ";
+
+        $sql = "";
+        if($parent_id == null) {
+
+            $selected_data = " bmbgd.parent_geo_id ";
+
+            $sql .= " SELECT bmbgd_p.business_geo_id,bmbgd_p.business_georaphy_name,bmbgd_p.business_georaphy_code ";
+            $sql .= "FROM bf_master_business_geography_details as bmbgd_p WHERE bmbgd_p.business_geo_id IN ( ";
+        }
+
+
+        $sql .=  "SELECT ".$selected_data." as bmbgd_parent_geo_id ";
+        $sql .=  " FROM (`bf_users` as bu) ";
+        $sql .=  " JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id`  ";
+        $sql .=  " JOIN `bf_master_business_political_geo_mapping` as bmbpgm ON `bmbpgm`.`polotical_geo_id` = `bmucd`.`geo_level_id1` ";
+
+        $sql .=  " JOIN `bf_master_business_geography_details` as bmbgd ON `bmbgd`.`business_geo_id` = `bmbpgm`.`business_geo_id` ";
+
+        $sql .=  " WHERE 1 ";
+        $sql .=  " AND bu.country_id= ".$country_id." ";
+        $sql .=  " AND bu.type= 'Customer' ";
+        $sql .=  " AND bu.deleted= 0 ";
+        $sql .=  " AND bu.role_id= ".$role." ";
+
+        if($parent_id == null) {
+
+            if(isset($year) && !empty($year) && $year !=null){
+                $sql .=  " AND DATE_FORMAT(bmbgd_p.year,'%Y') = ".$year." ";
+            }
+          /*  else{
+                $sql .=  " AND DATE_FORMAT(bmbgd_p.year,'%Y') = ".date("Y")." ";
+            }*/
+        }
+
+        if($parent_id != null) {
+            $sql .= " AND bmbgd.parent_geo_id= ".$parent_id." ";
+
+        }
+
+        $sql .=  " GROUP BY bmbgd.business_georaphy_name ";
+
+        if($parent_id == null) {
+            $sql .= " ) ";
+        }
+      //  echo $sql;die;
+        $info = $this->db->query($sql);
+        $geo_id = $info->result_array();
+       // testdata($geo_id);
+        if(isset($geo_id) && !empty($geo_id))
+        {
+            return $geo_id;
+        }
+        else{
+           return false;
+        }
+    }
+
+    public function get_business_geo_data_to_retailer($selected_geo_id,$country_id)
+    {
+        $this->db->select('bu.id,bu.display_name');
+        $this->db->from('master_business_political_geo_mapping as mbpgm');
+        $this->db->join('master_user_contact_details as mucd','mucd.geo_level_id1 = mbpgm.polotical_geo_id');
+        $this->db->join('users as bu','bu.id = mucd.user_id');
+        $this->db->where('mbpgm.business_geo_id',$selected_geo_id);
+        $this->db->where('bu.country_id',$country_id);
+        $data=$this->db->get()->result_array();
+       // testdata($data);
+        if(isset($data) && !empty($data)){
+            return $data;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+    public function delete_schemes_by_id($cs)
+    {
+        $this->db->where_in('allocation_id', $cs);
+        $this->db->delete('bf_ishop_scheme_allocation');
+    }
+
+    public function get_region_by_selected_cur_year()
+    {
+
+    }
+
+
     /*--------------------------------------------------------------------------------------------------------------------*/
-
-
-
-
-    
     
     /**
      * @ Function Name		: get_product_conversion_data
@@ -1177,7 +1416,7 @@ class Ishop_model extends BF_Model
    elseif($customer_type == 7){
        
          
-        if(($radio_checked == 10 && (($action_data == "order_place" || $action_data == "order_status") || ($action_data=="set_rol" && $radio_checked != 9)) && $parent_geo_id == null)){
+        if(($radio_checked == 10 && (($action_data == "order_place" || $action_data == "order_status" || $action_data =='set_schemes' || $action_data =='schemes_view' || $action_data =='target') || ($action_data=="set_rol" && $radio_checked != 9)) && $parent_geo_id == null)){
             $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
 `bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
  where `political_geo_id` IN ( ";
@@ -1250,7 +1489,7 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
 
         $geo_loc_data =  $query->result_array();
         
-      // echo $this->db->last_query();
+     //  echo $this->db->last_query();
 //die;
         return $geo_loc_data;
         
@@ -1303,7 +1542,7 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         
         $geo_user_data = $this->db->get()->result_array();
 
-       // echo $this->db->last_query();
+        //echo $this->db->last_query();
        // die;
         if(isset($geo_user_data) && !empty($geo_user_data)) {
             return json_encode($geo_user_data);
@@ -2339,5 +2578,197 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
         }
         
     }
+    
+    public function check_target_data($product_sku_id,$month_data,$customer_id) {
+        
+        $this->db->select('*');
+        $this->db->from('bf_ishop_target');
+        
+        $this->db->where('month_data',$month_data);
+        $this->db->where('customer_id',$customer_id);
+        $this->db->where('product_sku_id',$product_sku_id);
+        
+        $target_data = $this->db->get()->result_array();
+        
+      //  echo "<pre>";print_r($target_data);die;
+        
+        if(isset($target_data) && !empty($target_data)) {
+            return 1;
+        } else{
+            return 0;
+        }
+        
+    }
+    
+    public function add_target_data($target_data) {
+        
+        $user= $this->auth->user();
+        $logined_user_id = $user->id;
+        
+       // $month_data = explode("/",$target_data["month_data"]);
+            
+        $month_data = $target_data["month_data"]."-01";
+            
+        if(isset($target_data["customer_data"]) && !empty($target_data["customer_data"])){
+            
+            foreach($target_data["customer_data"] as $key => $value){
+                
+                $target_array = array();
+                
+                $target_array["month_data"] = $month_data;
+                $target_array["customer_id"] = $value;
+                $target_array["product_sku_id"] = $target_data["product_sku_id"][$key];
+                $target_array["quantity"] = $target_data["quantity"][$key];
+                
+                $target_array["created_on"] = date("Y-m-d h:i:s");
+                $target_array["created_by_user"] = $logined_user_id;
+                        
+                $this->db->insert('bf_ishop_target', $target_array);
+                
+            }
+            
+        }
+        
+    }
+    
+    public function get_target_data($selecteddata) {
+        
+        $month_data = $selecteddata["month_data"]."-01";
+        
+        $month_data = date("m",strtotime($selecteddata["month_data"]));
+        
+        $customer_data = $selecteddata['distributor_data'];
+        $geo_level_data = $selecteddata['geo_level_1_data'];
+        
+        
+        $this->db->select('bmpgd.political_geography_name, bu.user_code, bmupd.first_name, bmupd.middle_name, bmupd.last_name, bmpsc.product_sku_name,bit.quantity, SUM(bipsp.dispatched_quantity) as total_qty');
+        $this->db->from('bf_ishop_target as bit');
+        
+        $this->db->join("bf_users as bu","bu.id = bit.customer_id");
+        $this->db->join("bf_master_user_personal_details as bmupd","bmupd.user_id = bu.id");
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id");
+        
+        $this->db->join("bf_master_political_geography_details as bmpgd","bmpgd.political_geo_id = bmucd.geo_level_id1");
+        $this->db->join("bf_master_product_sku_country as bmpsc","bmpsc.product_sku_country_id = bit.product_sku_id");
+        
+        $this->db->join("bf_ishop_primary_sales as bips","bips.customer_id = bit.customer_id");
+         
+        $this->db->join("bf_ishop_primary_sales_product as bipsp","bipsp.primary_sales_id = bips.primary_sales_id AND `bipsp`.`product_sku_id` = `bit`.`product_sku_id` ");
+        
+        $this->db->where('DATE_FORMAT(bips.invoice_date,"%m")',$month_data);
+        
+        $this->db->where('DATE_FORMAT(bit.month_data,"%m")',$month_data);
+        
+        
+        $this->db->where('bit.customer_id',$customer_data);
+       
+        $this->db->group_by("bit.product_sku_id"); 
+        
+        $target_data = $this->db->get()->result_array();
+        
+       // echo $this->db->last_query();die;
+        
+        if(isset($target_data) && !empty($target_data)) {
+            return $target_data;
+        } else{
+            return false;
+        }
+        
+    }
+    
+    public function get_target_monthly_data($data) {
+        
+        $from_date = $data['from_month_data']."-01";
+        $to_date = $data['to_month_data']."-01";
+        $login_user_id = $data['login_customer_id'];
+        
+        $this->db->select('*');
+        $this->db->from('bf_ishop_target');
+        
+        $this->db->where('month_data >=', $from_date);
+        $this->db->where('month_data <=', $to_date);
+        
+        $this->db->where('customer_id',$login_user_id);
+     
+        $target_data = $this->db->get()->result_array();
+        
+        echo "<pre>";print_r($target_data);//die;
+        
+        
+        $final_array = array();
+        
+        if(isset($target_data) && !empty($target_data)) {
+            
+            $date1  = $from_date;
+            $date2  = $to_date;
+            $month_output = array();
+            $time   = strtotime($from_date);
+            $last   = date('Y-m', strtotime($to_date));
+
+            do {
+                $month = date('Y-m', $time);
+                $total = date('t', $time);
+
+               /* $output[] = array(
+                    'month' => $month,
+                    'total' => $total,
+                );*/
+
+                $month_output[$month."-01"] = "";
+                        
+                $time = strtotime('+1 month', $time);
+            } while ($month != $last);
+
+
+            var_dump($month_output);
+            
+            $final_array = array();
+            
+            foreach($target_data as $key=>$data){
+                $inner_array = array();
+                if(!array_key_exists($data["product_sku_id"],$final_array)){
+                    
+                    $final_array[$data["product_sku_id"]][] = $month_output;
+                    
+                    foreach($month_output as $k =>$val){
+                        if($final_array[$data["product_sku_id"]][$val] == $data["month_data"]){
+
+                            $final_array[$data["product_sku_id"]][$val] =  $data["quantity"];
+                        }
+                    }
+                   //  $final_array[$data["product_sku_id"]][] =   $data;
+                    
+                }
+                else{
+                    $final_array[$data["product_sku_id"]][]  = $month_output;
+                      //  $final_array[$data["product_sku_id"]][] =   $data;
+                    
+                    foreach($month_output as $k =>$val){
+                        if($final_array[$data["product_sku_id"]][$val] == $data["month_data"]){
+
+                            $final_array[$data["product_sku_id"]][$val] =  $data["quantity"];
+                        }
+                    }
+                    
+                }
+                
+                
+                
+            }
+            
+            echo "<pre>";
+            print_r($final_array);
+            
+            die;
+        }
+        
+        if(isset($target_data) && !empty($target_data)) {
+            return $target_data;
+        } else{
+            return 0;
+        }
+        
+    }
+    
     
   }

@@ -1,7 +1,21 @@
 <?php
+
+$action_data  = $this->uri->segment(2);
+
 $attributes = array('class' => '', 'id' => 'target','name'=>'target');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('',$attributes); ?>
+if($action_data == "target_view"){
+    
+    echo form_open('ishop/target_view',$attributes);
+    
+}
+elseif($login_customer_type == 9){
+    echo form_open('',$attributes);
+}
+else{
+    echo form_open('ishop/add_target_data',$attributes);
+}
+?>
 <!--------------------------------------Filter1-------------------------------------------------->
 
 <div class="col-md-12">
@@ -11,8 +25,18 @@ echo form_open('',$attributes); ?>
             <div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
+                        <?php
+                        if($login_customer_type == 7){
+                        ?>
                         <li class="active"><a href="<?php echo base_url('/ishop/target') ?>">Target</a></li>
                         <li><a href="<?php echo base_url('/ishop/budget') ?>">Budget</a></li>
+                        <?php } ?>
+                        <?php
+                        if($login_customer_type == 8){
+                        ?>
+                        <li class="active"><a href="<?php echo base_url('/ishop/target') ?>">Enter</a></li>
+                        <li><a href="<?php echo base_url('/ishop/target_view') ?>">View</a></li>
+                        <?php } ?>
                     </ul>
                     <div class="clearfix"></div>
                 </div>
@@ -34,20 +58,28 @@ echo form_open('',$attributes); ?>
                     
                     <div class="clearfix"></div>
                 </div>
+                <?php } ?>
             
             
+
+            
+            <?php 
+                if($login_customer_type == 7){
+            ?>
+            
+                <div class="col-md-6 col-sm-6 tp_form">
+                <div class="form-group">
+                    <div class="form-group">
+                    <label>Month</label>
+                    <input type="text" name="month_data" id="month_data" class="form-control" />
+                </div>
+                </div>
+            </div>
+                
                 <div class="col-md-6 col-md-offset-3 distributore_form distributor_data">
                     <div class="row">
                         
-                        <div class="col-md-6 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <div class="form-group">
-                                <label>Month</label>
-                                <input type="text" name="month_data" id="month_data" class="form-control" />
-                            </div>
-                            </div>
-                        </div>
-
+                        
                         <div class="col-md-6 col-sm-6 tp_form">
                     
                             <div class="form-group">
@@ -85,6 +117,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-10 col-md-offset-1 distributore_form retailer_data" style="display:none;">
                 <div class="row">
                     
+                    
                      <div class="col-md-6 col-sm-6 tp_form">
 
                              <div class="form-group">
@@ -112,274 +145,80 @@ echo form_open('',$attributes); ?>
                         <div class="form-group">
                                 <label>Retailer Name</label>
                                 <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true" onchange="get_distributors('retailer')">
-                                 <!--   <option value="0">Select Retailer Name</option> -->
-                                    <?php
-                                   /* if(isset($retailer) && !empty($retailer))
-                                    {
-                                        foreach($retailer as $key=>$val_retailer)
-                                        {
-                                            ?>
-                                            <option value="<?php echo $val_retailer['id']; ?>"><?php echo $val_retailer['display_name']; ?></option>
-                                            <?php
-                                        }
-                                    }*/
-                                    ?>
                                 </select>
                             </div>
                     </div>
                     
-                  <!--  <div class="col-md-4 col-sm-4 tp_form">
-                        <div class="form-group">
-                                <label>Distributor Name</label>
-                                <select class="selectpicker" id="retailer_distributor_id" name="distributor_id" data-live-search="true">
-                                    
-                                </select>
-                            </div>
-                    </div> -->
                 </div>
             </div>
             
         <?php }
         else if($login_customer_type == 9){
         ?>
-            
-            <div class="col-md-6 text-center radio_space">
                 <div class="col-md-6 col-sm-6 tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">PO NO.</label>
-                        <input type="text" name="po_no" class="form-control" id="po_no" placeholder="">
+                        <div class="form-group">
+                        <label>From Month</label>
+                        <input type="text" name="from_month_data" id="from_month_data" class="form-control" />
+                    </div>
+                    </div>
+                </div>
+                <div class="col-md-6 col-sm-6 tp_form">
+                    <div class="form-group">
+                        <div class="form-group">
+                        <label>To Month</label>
+                        <input type="text" name="to_month_data" id="to_month_data" class="form-control" />
+                    </div>
                     </div>
                 </div>
                     
                 <div class="clearfix"></div>
-            </div>
             
-        <?php }else if($login_customer_type == 10){ ?>
-            
-            
-            <div class="col-md-6 col-md-offset-3 distributore_form distributor_data">
-                    <div class="row">
-                        
-                        <div class="col-md-6 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <div class="form-group">
-                                <label>Distributor Name</label>
-                                <select class="selectpicker" id="retailer_distributor_id" name="distributor_id" data-live-search="true">
-                                    <option value="0">Select Distributor Name</option>
-                                    <?php
-                                    if(isset($distributor) && !empty($distributor))
-                                    {
-                                        foreach($distributor as $key=>$val_distributor)
-                                        {
-                                            ?>
-                                            <option value="<?php echo $val_distributor['id']; ?>"><?php echo $val_distributor['display_name']; ?></option>
-                                            <?php
-                                        }
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            
-            <?php } ?>
-            
+        <?php } ?>
             
             <?php 
                 if($login_customer_type == 8){
             ?>
-                <div class="col-md-12 text-center radio_space">
-                    
-                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="farmer" checked="checked"/>
-                        <label for="radio1">Farmer</label>
-                    </div>
-                    
-                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="retailer" />
-                        <label for="radio1">Retailer</label>
-                    </div>
-                    
-                    <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio2" value="distributor" />
-                        <label for="radio2">Distributor</label>
-                    </div>
-                   
-                    <div class="clearfix"></div>
-                </div>
-            
-            <div class="farmer_checked" id="farmer_checked">
-            
-                 <div class="col-md-6 col-sm-6 tp_form">
+               
+            <div class="col-md-6 col-sm-6 tp_form">
+                <div class="form-group">
                     <div class="form-group">
-                        <div class="form-group">
-                        <label>Date</label>
-                        <input type="text" name="order_date" class="order_date" id="order_date_datepicker" />
-                    </div>
-                    </div>
+                    <label>Month</label>
+                    <input type="text" name="month_data" id="month_data" class="form-control" />
                 </div>
-            
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
-                        <label>Geo L2</label>
-                        <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                            <option value="0">Select Geo Level</option>
-                            <?php
-                            if(isset($geo_level_data) && !empty($geo_level_data))
-                            {
-                                foreach($geo_level_data as $key=>$val_geo_level_data)
-                                {
-                                    ?>
-                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                    <?php
-                                }
-                            }
-                            ?>
-                        </select>
-                    
-                    </div>
                 </div>
-                
-                 <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
-                        <label>Geo L1</label>
-                        <select class="selectpicker geo_level_2_data" class="" id="geo_level_2_data" name="geo_level_1_data" data-live-search="true">
-                          <!--  <option value="0">Select Geo Level</option> -->
-                            <?php
-                       /*   if(isset($geo_level_data) && !empty($geo_level_data))
-                            {
-                                foreach($geo_level_data as $key=>$val_geo_level_data)
-                                {
-                                    ?>
-                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                    <?php
-                                }
-                            } */
-                            ?>
-                        </select>
-                    
-                    </div>
-                </div>
-            
-                <div class="col-md-6 col-sm-6 tp_form">
-                   
-                       <div class="form-group">
-                       <label>Farmer Name</label>
-                       <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true">
-                           
-                       </select>
-                   </div>
-                   
-               </div>
-            
-                 <div class="col-md-6 col-sm-6 tp_form">
-                           
-                            <div class="form-group">
-                                <label>Mobile No</label>
-                                <input type="text" name="mobile_num" class="mobile_num" id="mobile_num" />
-                            </div>
-                            
-                 </div>
-            
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                                <div class="form-group">
-                                    <label>Retailer Name</label>
-                                    <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" >
-                                        
-                                    </select>
-                                    
-                                </div>
-                </div>
-            
             </div>
             
-            <div class="retailer_checked" id="retailer_checked" style="display:none;">
+            <div class="distributor_checked" id="distributor_checked" style="">
                 
                 
                 <div class="col-md-6 col-sm-6 tp_form">
                     
                         <div class="form-group">
-                        <label>Geo L3</label>
-                        <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                            
-                        </select>
-                    
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
-                        <label>Geo L2</label>
-                        <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
-                            
-                        </select>
-                    
-                    </div>
-                </div>
-                
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                    <div class="form-group">
-                        <label>Retailer Name</label>
-                        <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" >
-
-                        </select>
-
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                   
-                       <div class="form-group">
-                       <label>Distributor Name</label>
-                       <select class="selectpicker" id="distributor_data" name="distributor_data" data-live-search="true">
-                           
-                       </select>
-                   </div>
-                   
-               </div>
-                
-            </div>
-            
-            <div class="distributor_checked" id="distributor_checked" style="display:none;">
-                
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
-                        <label>Geo L2</label>
+                        <?php if($action_data == "target_view"){ ?>
+                            <label>Province</label>
+                        <?php }else{ ?>
+                            <label>Geo L1</label>
+                        <?php } ?>    
+                        
                         <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                          <!--  <option value="0">Select Geo Level</option> -->
-                            <?php
-                         /*   if(isset($geo_level_data) && !empty($geo_level_data))
-                            {
-                                foreach($geo_level_data as $key=>$val_geo_level_data)
+                            <?php if($action_data == "target_view"){ ?>
+                           <option value="0">Select Province</option>
+                        <?php }else{ ?>
+                            <option value="0">Select Geo Level</option>
+                        <?php } ?>
+                           
+                                <?php
+                                if(isset($geo_level_data) && !empty($geo_level_data))
                                 {
-                                    ?>
-                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                    <?php
+                                    foreach($geo_level_data as $key=>$val_geo_level_data)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
+                                        <?php
+                                    }
                                 }
-                            } */
-                            ?>
-                        </select>
-                    
-                    </div>
-                </div>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
-                        <label>Geo L1</label>
-                        <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
-                            
+                                ?>
                         </select>
                     
                     </div>
@@ -410,63 +249,69 @@ echo form_open('',$attributes); ?>
             
             <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" /> 
             
+            <?php  if($action_data == "target_view" || $login_customer_type == 9){ ?>
+    
+            <div class="col-md-3 save_btn">
+                <button type="submit" class="btn btn-primary">Execute</button>
+            </div>
+            <?php echo form_close(); ?>
+    <?php } ?>
+             <div class="clearfix"></div>
+            
         </div>
     </div>
     <div class="clearfix"></div>
+    
 </div>
 
 <!--------------------------------------Filter2-------------------------------------------------->
+
+<?php  if($action_data != "target_view" &&  $login_customer_type != 9){ ?>
+
 <div class="col-md-12">
     <div class="row">
         <div class="middle_form">
-            <div class="col-md-4_ tp_form">
-                <div class="form-group">
-                    <label>Product Sku Name</label>
-                    <select class="selectpicker" id="prod_sku" data-live-search="true">
-                        <option value="0">Product Name</option>
-                        <?php
-                        if(isset($product_sku) && !empty($product_sku))
-                        {
-                            foreach($product_sku as $k=> $prd_sku)
+            <div class="row">
+                <div class="col-md-4_ tp_form">
+                    <div class="form-group">
+                        <label>Product Sku Name</label>
+                        <select class="selectpicker" id="prod_sku" data-live-search="true">
+                            <option value="0">Product Name</option>
+                            <?php
+                            if(isset($product_sku) && !empty($product_sku))
                             {
-                                ?>
-                                <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                <?php
+                                foreach($product_sku as $k=> $prd_sku)
+                                {
+                                    ?>
+                                    <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                    <?php
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                    </div>
                 </div>
+
+                <div class="col-md-3_ tp_form">
+                    <div class="form-group">
+                        <label for="invoice_date">Quantity</label>
+                        <input type="text" class="form-control" id="quantity" placeholder="">
+                    </div>
+
+                </div>
+                <div class="plus_btn"><a href="javascript:void(0);" id="target_add_row" ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
-         <!--   <div class="col-md-2_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Units</label>
-                    <input type="text" class="form-control" id="unit" placeholder=""> 
-                    
-                    <select class="selectpicker" id="units" data-live-search="true">
-                        <option value="0">Select Unit</option>
-                        <option value="box">Box</option>
-                        <option value="packages">Packages</option>
-                        <option value="kg/ltr">Kg/Ltr</option>
-                    </select>
-                    
-                </div>
-                
-            </div> -->
-            <div class="col-md-3_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Quantity</label>
-                    <input type="text" class="form-control" id="quantity" placeholder="">
-                </div>
-                
-            </div>
-            <div class="plus_btn"><a href="javascript:void(0);" onclick="target_add_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>
     </div>
 </div>
+
+<?php } ?>
 <!--------------------------------------Table-------------------------------------------------->
+
+<?php if($login_customer_type != 9){ ?>
+
 <div class="col-md-12">
     <div class="row">
         
@@ -479,18 +324,76 @@ echo form_open('',$attributes); ?>
         
         <div id="no-more-tables">
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                <thead class="cf">
-                <tr>
+                <thead class="cf target_head_show_data">
+                   <tr> 
+                    
+                       
                     <th>Sr. No. <span class="rts_bordet"></span></th>
-                    <th class="numeric">Remove <span class="rts_bordet"></span></th>
-                    <th>Geo L3<span class="rts_bordet"></span></th>
-                    <th>Distributor Code <span class="rts_bordet"></span></th>
-                    <th>Distributor Name <span class="rts_bordet"></span></th>
+                     <?php  if($action_data != "target_view"){ ?>
+                        <th class="numeric">Remove <span class="rts_bordet"></span></th>
+                    <?php } ?>
+                    
+                    <?php if($login_customer_type == 7){ ?>
+                        <th>Geo L3<span class="rts_bordet"></span></th>
+                    <?php } ?>
+                    <?php if($login_customer_type == 8){ ?>
+                            <?php  if($action_data == "target_view"){ ?>
+                                <th>Province<span class="rts_bordet"></span></th>
+                            <?php }else{ ?>
+                                <th>Geo L1<span class="rts_bordet"></span></th>
+                            <?php }
+                    } ?>
+                    <th>Distributor Code <span class="rts_bordet th_distributor_checked"></span></th>
+                    <th>Distributor Name <span class="rts_bordet th_distributor_checked"></span></th>
+                    
                     <th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>
                     <th class="numeric">Quantity <span class="rts_bordet"></span></th>
-                </tr>
+                    
+                    <?php  if($action_data == "target_view"){ ?>
+                        <th class="numeric">Actual Qty <span class="rts_bordet"></span></th>
+                        <th class="numeric">Achieved <span class="rts_bordet"></span></th>
+                    <?php } ?>
+               
+                
+              
+                      </tr>
                 </thead>
                 <tbody id="target_data">
+                     <?php if($login_customer_type == 8){ ?>
+                            <?php  if($action_data == "target_view"){ ?>
+                    
+                             <?php   if(isset($view_target_data) && !empty($view_target_data)){ ?>
+                                        <?php 
+                                            $i = 1;
+                                            foreach($view_target_data as $key=>$data){
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo $i; ?></td>
+                                                    <td><?php echo $data["political_geography_name"]; ?></td>
+                                                    <td><?php echo $data["user_code"]; ?></td>
+                                                    <td><?php echo $data["first_name"]." ".$data["middle_name"]." ".$data["last_name"]; ?></td>
+                                                    <td><?php echo $data["product_sku_name"]; ?></td>
+                                                    <td><?php echo $data["quantity"]; ?></td>
+                                                    <td><?php echo $data["total_qty"]; ?></td>
+                                                    
+                                                    <?php 
+                                                    
+                                                        $achived_data = ($data["total_qty"]/$data["quantity"])*100;
+                                                    
+                                                    ?>
+                                                    
+                                                    <td><?php echo $achived_data; ?></td>
+                                                </tr>
+                                             <?php   
+                                                $i++;
+                                            }
+                                        
+                                        ?>
+                             <?php } 
+                            
+                             } ?>
+                     <?php } ?>
+                    
                 </tbody>
             </table>
             <div class="clearfix"></div>
@@ -498,30 +401,26 @@ echo form_open('',$attributes); ?>
     </div>
 </div>
 
+<?php }else{ ?>
+
+<?php echo theme_view('common/middle'); ?>
+
+<?php } ?>
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
+
+<?php  if($action_data != "target_view"){ ?>
+
 <div class="col-md-12 table_bottom">
     <div class="row">
         <div class="col-md-3 save_btn">
-            <!--  <div><input type="submit" class="btn btn-primary" value="Save" /></div>-->
+         
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
-        <!--<div class="col-md-9">
-            <div class="row">
-                <div class="col-md-3 upload_file_space">
-                    <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
-                                            Browse <input type="file" multiple>
-                                        </span>
-                                    </span>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-9 chech_data"><button type="button" class="btn btn-default">Check Data</button> <button type="button" class="btn btn-default">Download Templates</button></div>
-            </div>
-        </div>-->
+        
     </div>
 </div>
+
 <?php echo form_close(); ?>
+
+<?php } ?>
 <div class="clearfix"></div>

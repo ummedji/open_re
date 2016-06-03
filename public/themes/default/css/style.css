@@ -601,7 +601,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     overflow-x: hidden;
 }
 .full-height {
-    min-height: 96%;
+    min-height: 95.6%;
 }
 .content{
     overflow: auto;
@@ -636,7 +636,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
 }
 .tp_form .form-group label {
     font-family:'Exo2-Medium';
-    font-size: 15px;
+    font-size: 14px;
     color: #4d4e4e;
 }
 .tp_form .form-group input {
@@ -675,6 +675,11 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
 .tp_form .form-group .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
     width: auto;
 }
+/*100% select*/
+.fulle_wd .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn){
+    width: 100% !important;
+}
+/*100% select*/
 @media screen and (max-width:650px){
     .top_form {padding: 20px 20px 5px 20px;}
     .tp_form .form-group .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
@@ -705,18 +710,18 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
 }
 
 
-/*.col-md-4_ { width: 27.3%;}
-.col-md-3_ { width: 25.4%;}
-.col-md-2_ { width: 21.3%;}*/
+    /*.col-md-4_ { width: 27.3%;}
+    .col-md-3_ { width: 25.4%;}
+    .col-md-2_ { width: 21.3%;}*/
 
-/*.plus_btn {
-    float: right !important;
-    margin-top: 8px;
-    margin-right: 30px;
-}
-.col-md-4_, .col-md-3_ {
-    margin-bottom: 15px;
-}*/
+    /*.plus_btn {
+        float: right !important;
+        margin-top: 8px;
+        margin-right: 30px;
+    }
+    .col-md-4_, .col-md-3_ {
+        margin-bottom: 15px;
+    }*/
 @media screen and (max-width: 1363px) {
     .middle_form .tp_form .form-group .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {width: 100%;}
     .middle_form .tp_form .form-group input { width: 100%;}
@@ -991,6 +996,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
 input[readonly] {
     background-color: white !important;
     cursor: text !important;
+	border: 0px;
 }
 .upload_file_space .input-group {
     display: block;
@@ -1187,6 +1193,7 @@ input[readonly] {
         width: 100%;
         margin-left: 0;
     }
+    .inline-parent .form-control { width: 100%;}
 }
 /*inline form group css*/
 
@@ -1225,8 +1232,8 @@ input[readonly] {
 /*end Ishop-Order-Status-Distributor css*/
 /*oredr approval css*/
 .od_approval {
-    margin-top: 25px;
-    margin-bottom: 25px;
+    margin-top: 0px;
+    margin-bottom: 0px;
 }
 .od_approval .form-group label {
     display: inline-block;
@@ -1235,8 +1242,15 @@ input[readonly] {
     width: auto;
     display: inline-block;
 }
+.od_approval .fl_calender_i .tp_form .form-group input {
+    width: 91%;
+}
+.fl_calender_i .cal_icon { right: 0 !important;}
 .text-center_form {
     text-align: center;
+}
+@media screen and (max-width: 767px){
+    .fl_calender_i .cal_icon { bottom: 1px !important;}
 }
 @media screen and (max-width: 1199px){
     /*.text-center_form { text-align: left;}*/
@@ -1274,11 +1288,6 @@ input[readonly] {
     border: solid 1px #ccc;
 }
 
-.input_remove_border{
-    
-    border:none;
-}
-
 @media screen and (max-width: 767px){
     .filter_btn {
         left: 48%;
@@ -1286,3 +1295,64 @@ input[readonly] {
     }
 }
 /*end oredr approval css*/
+.gren_btn {
+    height: 28px;
+    padding: 0px 30px !important;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    width: 100%;
+}
+.svn_btn {
+    float: left;
+}
+.svn_btn button {
+    border: none;
+    height: 28px;
+    border-radius: 0;
+    margin-left: 15px;
+}
+@media screen and (max-width: 1365px){
+    .svn_btn {
+        float: left;
+        display: block;
+        width: 100%;
+        margin-left: 15px;
+        margin-top: 15px;
+    }
+    .svn_btn button {
+        display: block;
+        width: auto;
+        margin-left: 0px;
+    }
+}
+
+.inl_button  {
+    display: inline-block;
+    margin-left: 15px;
+}
+.inl_button button { margin-bottom: 5px;}
+.datepicker { z-index: 1000 !important;}
+
+nav {
+    background: #ffffff;
+    display: block;
+    height: 100%;
+    overflow: auto;
+    position: fixed;
+    right: -20em;
+    font-size: 15px;
+    top: 0;
+    width: 15em;
+    z-index: 2000;
+    box-shadow: 0px 0px 5px 1px rgba(0, 0, 0, 0.3);
+    transition: right 0.3s ease-in-out 0s;
+    -webkit-transition: right 0.3s ease-in-out 0s;
+    -moz-transition: right 0.3s ease-in-out 0s;
+    -o-transition: right 0.3s ease-in-out 0s;
+}
+.nav-expanded nav {
+    right: 0;
+}

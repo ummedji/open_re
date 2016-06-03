@@ -137,7 +137,7 @@
                     </div>
                 
                     
-                    <div class="col-md-4 col-sm-4 tp_form">
+                    <div class="col-md-6 col-sm-6 tp_form">
                         <div class="form-group">
                                 <label>Retailer Name</label>
                                 <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
@@ -211,76 +211,64 @@
             
             <div class="farmer_checked" id="farmer_checked">
             
-                 <div class="col-md-6 col-sm-6 tp_form">
+                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <div class="form-group">
-                        <label>Order Tracking No. </label>
-                        <input type="text" name="order_tracking_no" class="order_tracking_no" id="order_tracking_no" />
+                        <label>Order Tracking No.</label>
+                        <input type="text" name="order_tracking_no" class="order_tracking_no form-control" id="order_tracking_no" />
                     </div>
                     </div>
-                     
-                     <div class="col-md-3 save_btn">
-                            <button id="order_status" type="submit" class="btn btn-primary">Execute</button> 
+                     <div class="inl_button save_btn">
+                            <button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button>
                      </div>
-                     
                 </div>
                 
             <div class="clearfix"></div></br>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
+                <div class="col-md-12 text-center tp_form inline-parent">
+                    <div class="form-group">
                         <label>Geo L2</label>
                         <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                          <!--  <option value="0">Select Geo Level</option> -->
+                            <!--  <option value="0">Select Geo Level</option> -->
                             <?php
-                          /*  if(isset($geo_level_data) && !empty($geo_level_data))
-                            {
-                                foreach($geo_level_data as $key=>$val_geo_level_data)
-                                {
-                                    ?>
-                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                    <?php
-                                }
-                            } */
+                            /*  if(isset($geo_level_data) && !empty($geo_level_data))
+                              {
+                                  foreach($geo_level_data as $key=>$val_geo_level_data)
+                                  {
+                                      ?>
+                                      <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
+                                      <?php
+                                  }
+                              } */
                             ?>
                         </select>
-                    
+
                     </div>
-                </div>
-                
-                 <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
+                    <div class="form-group">
                         <label>Geo L1</label>
                         <select class="selectpicker geo_level_2_data" class="" id="geo_level_2_data" name="geo_level_1_data" data-live-search="true">
-                          <!--  <option value="0">Select Geo Level</option> -->
+                            <!--  <option value="0">Select Geo Level</option> -->
                             <?php
-                       /*   if(isset($geo_level_data) && !empty($geo_level_data))
-                            {
-                                foreach($geo_level_data as $key=>$val_geo_level_data)
-                                {
-                                    ?>
-                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                    <?php
-                                }
-                            } */
+                            /*   if(isset($geo_level_data) && !empty($geo_level_data))
+                                 {
+                                     foreach($geo_level_data as $key=>$val_geo_level_data)
+                                     {
+                                         ?>
+                                         <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
+                                         <?php
+                                     }
+                                 } */
                             ?>
                         </select>
-                    
+
+                    </div>
+                    <div class="form-group">
+                        <label>Farmer Name</label>
+                        <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true">
+
+                        </select>
                     </div>
                 </div>
-            
-                <div class="col-md-6 col-sm-6 tp_form">
-                   
-                       <div class="form-group">
-                       <label>Farmer Name</label>
-                       <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true">
-                           
-                       </select>
-                   </div>
-                   
-               </div>
+
             
                  
                 
@@ -290,28 +278,23 @@
             
             <div class="retailer_checked" id="retailer_checked" style="display:none;">
                 
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
+                <div class="col-md-12 text-center tp_form inline-parent">
+                    <div class="form-group">
                         <label>Geo L3</label>
                         <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                            
+
                         </select>
-                    
+
                     </div>
-                </div>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <div class="form-group">
+                    <div class="form-group">
                         <label>Geo L2</label>
                         <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
-                            
+
                         </select>
-                    
+
                     </div>
                 </div>
+
                 
                 
                 <div class="col-md-6 col-sm-6 tp_form">
@@ -390,21 +373,40 @@
             <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" /> 
             
             
-            <div class="col-md-12 text-center tp_form inline-parent">
-                    <div class="form-group">
-                        <label>From Date</label>
-                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+            <!--<div class="col-md-8 col-md-offset-2 tp_form">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>From Date 1</label>
+                                <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <div class="form-group">
+                                <label>TO Date</label>
+                                <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-2 save_btn">
+                            <label>&nbsp;</label>
+                            <button id="order_status" type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important;">Execute</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>TO Date</label>
-                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
-                    </div>
+                </div>-->
+            <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label>From Date 1</label>
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
                 </div>
+                <div class="form-group">
+                    <label>TO Date</label>
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                </div>
+                <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
+            </div>
             
             
-             <div class="col-md-3 save_btn">
-                    <button id="order_status" type="submit" class="btn btn-primary">Execute</button> 
-             </div>
+
             <?php echo form_close(); ?>
         </div>
     </div>

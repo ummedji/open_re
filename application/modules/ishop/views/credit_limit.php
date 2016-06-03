@@ -33,25 +33,27 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12">
     <div class="row">
         <div class="middle_form">
-                <div class="col-md-2_ tp_form">
-                    <div class="form-group">
-                        <label for="credit_limit">Credit Limit</label>
-                        <input type="text" class="form-control" name="credit_limit" id="credit_limit" placeholder="">
+                <div class="row">
+                    <div class="col-md-2_ tp_form">
+                        <div class="form-group">
+                            <label for="credit_limit">Credit Limit</label>
+                            <input type="text" class="form-control" name="credit_limit" id="credit_limit" placeholder="">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3_ tp_form">
-                    <div class="form-group">
-                        <label for="invoice_date">Current Outstanding</label>
-                        <input type="text" class="form-control" name="curr_outstanding" id="curr_outstanding" placeholder="">
+                    <div class="col-md-3_ tp_form">
+                        <div class="form-group">
+                            <label for="invoice_date">Current Outstanding</label>
+                            <input type="text" class="form-control" name="curr_outstanding" id="curr_outstanding" placeholder="">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2_ tp_form">
-                    <div class="form-group">
-                        <label for="curr_date">Date</label>
-                        <input type="text" class="form-control" name="curr_date" id="curr_date" placeholder="">
+                    <div class="col-md-2_ tp_form">
+                        <div class="form-group">
+                            <label for="curr_date">Date</label>
+                            <input type="text" class="form-control" name="curr_date" id="curr_date" placeholder="">
+                        </div>
                     </div>
+                    <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>
                 </div>
-                <div class="col-md-3 save_btn"><button type="submit" style="background-color: #fff;color: #00612f;" class="btn btn-primary">Save</button></div>
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>

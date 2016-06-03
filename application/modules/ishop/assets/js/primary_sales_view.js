@@ -30,7 +30,7 @@ $("#primary_sales_view").on("submit",function(){
         url: site_url+'ishop/primary_sales_details_view',
         data: param,
         success: function(resp){
-            console.log(resp);
+           // console.log(resp);
             $("#middle_container").html(resp);
         }
     });

@@ -27,7 +27,7 @@ echo form_open('',$attributes); ?>
             <div class="col-md-12 distributore_form od_approval">
                 <div class="row">
                     <div class="retailer_check_rol" id="retailer_check_rol" >
-                         <div class="col-md-3 col-sm-6 tp_form">
+                         <div class="col-md-4 col-sm-6 tp_form">
                     <div class="form-group">
                         <label>Geo Level 3</label>
                         <select class="selectpicker" id="geo_level_rol">
@@ -46,7 +46,7 @@ echo form_open('',$attributes); ?>
                         </select>
                     </div>
                 </div>
-                        <div class="col-md-3 col-sm-6 tp_form">
+                        <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label>Geo Level 2</label>
                                 <select class="selectpicker" id="geo_level_1">
@@ -54,7 +54,7 @@ echo form_open('',$attributes); ?>
                                 </select>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 tp_form">
+                        <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label>Retailer Name</label>
                                 <select class="selectpicker" name="fo_retailer_id" id="retailer_rol">
@@ -64,23 +64,27 @@ echo form_open('',$attributes); ?>
                         </div>
                     </div>
                     <!--------------------------------------End Retailer------------------------------------------>
-                     <div class="distributor_check_rol" id="distributor_check_rol" style="display:none;">
-                        <div class="col-md-3 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <label>Geo Level</label>
-                                <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 tp_form">
+                     <div class="col-md-8 col-md-offset-2">
+                         <div class="row">
+                             <div class="distributor_check_rol" id="distributor_check_rol" style="display:none;">
+                                 <div class="col-md-6 col-sm-6 tp_form">
+                                     <div class="form-group">
+                                         <label>Geo Level</label>
+                                         <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
+                                         </select>
+                                     </div>
+                                 </div>
+                                 <div class="col-md-6 col-sm-6 tp_form">
 
-                            <div class="form-group">
-                                <label>Distributor Name</label>
-                                <select class="selectpicker" id="distributor_rol" name="distributor_rol" data-live-search="true">
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+                                     <div class="form-group">
+                                         <label>Distributor Name</label>
+                                         <select class="selectpicker" id="distributor_rol" name="distributor_rol" data-live-search="true">
+                                         </select>
+                                     </div>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
                 </div>
             </div>
             <!--------------------------------------Distributor------------------------------------------>

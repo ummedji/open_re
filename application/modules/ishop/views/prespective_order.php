@@ -16,11 +16,12 @@
                         <label>TO Date</label>
                         <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                     </div>
+                    <div class="inl_button save_btn">
+                        <button id="get_prespective_order" type="submit" class="btn btn-primary gren_btn">Execute</button>
+                    </div>
                 </div>
                
-                <div class="col-md-3 save_btn">
-                    <button id="get_prespective_order" type="submit" class="btn btn-primary">Execute</button>
-                </div>
+
         </div>
         
        <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $login_customer_type; ?>" /> 

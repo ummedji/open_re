@@ -8,7 +8,10 @@
     {
          echo theme_view('common/table');
     }
-    
+    if(isset($scheme_table))
+    {
+        echo theme_view('common/scheme_table');
+    }
     if(isset($order_table))
     {
         $action_segment = $this->uri->segment(2);
@@ -32,6 +35,15 @@
         
         if($action_segment == "order_approval" || $action_segment == "get_order_status_data_details"){
             echo theme_view('common/order_approval_table');
+        }
+    }
+    
+     if(isset($target))
+    {
+        $action_segment = $this->uri->segment(2);
+        
+        if($action_segment == "target"){
+            echo theme_view('common/target_table');
         }
     }
     

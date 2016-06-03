@@ -1,11 +1,29 @@
 /**
  * Created by webclues on 5/17/2016.
  */
+
 $(document).ready(function(){
     
-    
     $( "#month_data" ).datepicker({
-      dateFormat: "Y-m-d",
+      format: "yyyy-mm",
+      showOn: "button",
+      buttonImage: site_url+"/public/themes/default/images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select date",
+      autoclose: true
+    });
+    
+    $( "#from_month_data" ).datepicker({
+      format: "yyyy-mm",
+      showOn: "button",
+      buttonImage: site_url+"/public/themes/default/images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select date",
+      autoclose: true
+    });
+    
+    $( "#to_month_data" ).datepicker({
+      format: "yyyy-mm",
       showOn: "button",
       buttonImage: site_url+"/public/themes/default/images/calendar.gif",
       buttonImageOnly: true,
@@ -36,6 +54,9 @@ $(document).ready(function(){
    $("input.select_customer_type").on("click",function(){
        
        var customer_type_selected = $(this).val();
+       
+       $("thead.target_head_show_data").empty();
+       $("tbody#target_data").empty();
        
       // alert(customer_type_selected);
        
@@ -95,9 +116,38 @@ $(document).ready(function(){
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
 
            }
-           
-           
        }
+       
+       
+    if($("thead.target_head_show_data tr").length == 0){
+        
+        var head_html = "";
+        
+        head_html += '<tr>'+
+                    '<th>Sr. No. <span class="rts_bordet"></span></th>'+
+                    '<th class="numeric">Remove <span class="rts_bordet"></span></th>';
+                    
+         head_html += '<th>Geo L3<span class="rts_bordet"></span></th>';
+          if(customer_type_selected == "retailer"){  
+                head_html += '<th>Geo L2<span class="rts_bordet th_retailer_checked"></span></th>';
+                
+                head_html +=  '<th>Retailer Code <span class="rts_bordet th_distributor_checked"></span></th>'+
+                    '<th>Retailer Name <span class="rts_bordet th_distributor_checked"></span></th>';
+                
+          }
+         if(customer_type_selected == "distributor"){
+                head_html +=  '<th>Distributor Code <span class="rts_bordet th_distributor_checked"></span></th>'+
+                    '<th>Distributor Name <span class="rts_bordet th_distributor_checked"></span></th>';
+         }        
+         head_html += '<th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>'+
+                    '<th class="numeric">Quantity <span class="rts_bordet"></span></th>'+
+                '</tr>';
+        
+        $("thead.target_head_show_data").html(head_html);
+        
+        
+    }
+       
        
    });
    
@@ -121,14 +171,14 @@ $(document).ready(function(){
        
        var selected_geo_data = $(this).val();
        
-       if(login_customer_type == 7){
+       //if(login_customer_type == 7){
            
            get_user_by_geo_data(selected_geo_data);
            
-       }
-       else{
-            get_lower_geo_by_parent_geo(selected_geo_data);
-        }
+       //}
+       //else{
+         //   get_lower_geo_by_parent_geo(selected_geo_data);
+        //}
    });
    
    
@@ -350,6 +400,233 @@ $(document).ready(function(){
             
        
    });
+   
+   var data_array = [];
+
+
+$("a#target_add_row").on("click",function(){
+
+    var login_user_role = $("input#login_customer_type").val();
+    var checked_type = "";
+    
+    var sku_code = $('#prod_sku option:selected').attr('attr-code');
+    var sku_name = $('#prod_sku option:selected').attr('attr-name');
+    var sku_id = $('#prod_sku option:selected').val();
+    
+    if(login_user_role == 8){
+        
+        var geo_level_val = $('#distributor_geo_level_1_data option:selected').val();
+        var geo_level_name = $('#distributor_geo_level_1_data option:selected').html();
+
+        var customer_val = $('#fo_distributor_data option:selected').val();
+        var customer_name = $('#fo_distributor_data option:selected').html();
+        
+    }
+    else
+    {
+        checked_type = $('input[name=radio1]:checked').val();
+        //$("thead.target_head_show_data").empty();
+
+
+        if(checked_type == "retailer"){
+
+            var geo_level_val = $('#retailer_geo_level_1_data option:selected').val();
+            var geo_level_name = $('#retailer_geo_level_1_data option:selected').html();
+
+            var geo_level_val2 = $('#retailer_geo_level_2_data option:selected').val();
+            var geo_level_name2 = $('#retailer_geo_level_2_data option:selected').html();
+
+            var customer_val = $('#retailer_id option:selected').val();
+            var customer_name = $('#retailer_id option:selected').html();
+
+        }
+        else{
+            var geo_level_val = $('#distributor_geo_level_1_data option:selected').val();
+            var geo_level_name = $('#distributor_geo_level_1_data option:selected').html();
+
+            var customer_val = $('#distributor_distributor_id option:selected').val();
+            var customer_name = $('#distributor_distributor_id option:selected').html();
+        }
+
+    }
+    
+    var monthdata = $('input#month_data').val();
+    
+    var quantity_data = $('input#quantity').val();
+            
+    
+            
+    //CHECK PRODUCT HAVING ALREADY ENTRY FOR SELECTED MONTH AND FOR SELECTED DISTRIBUTOR (DB CHECK)
+    
+    var data_status = 0;
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/check_target_data_status",
+        data: {product_sku_id:sku_id,month_data:monthdata,customer_id:customer_val},
+        success: function(resp){
+            data_status = resp;
+        },
+        async:false
+    });
+    
+    //alert(data_status);
+    
+    if(data_status == 1){
+        
+         alert("You have already entered value for selected product, selected distributor for selected month");
+        
+         //$('input#month_data').val(" ");
+         $('select#distributor_geo_level_1_data').val(" ");
+         $('select#prod_sku').val(" ");
+         $('select#distributor_distributor_id').empty();
+         
+         $("select#distributor_geo_level_1_data").selectpicker('refresh');
+         $("select#prod_sku").selectpicker('refresh');
+         $("select#distributor_distributor_id").selectpicker('refresh');
+         
+         $('input#quantity').val(" ");
+         
+         $("#fo_distributor_data").empty();
+         $("select#fo_distributor_data").selectpicker('refresh');
+         
+         return false;
+        
+    }
+    
+    
+    
+    //CHECK PRODUCT HAVING ALREADY ENTRY FOR SELECTED MONTH AND FOR SELECTED DISTRIBUTOR (CURRENT ADDED ROW CHECK)
+    
+    monthdata = monthdata.split("/");
+    
+   // alert($.inArray( sku_id+"-"+customer_val+"-"+monthdata[2]+"-"+monthdata[0]+"-01", data_array ));
+    
+    if($.inArray( sku_id+"-"+customer_val+"-"+monthdata[2]+"-"+monthdata[0]+"-01", data_array ) == -1){
+        data_array.push(sku_id+"-"+customer_val+"-"+monthdata[2]+"-"+monthdata[0]+"-01");
+        
+     //   console.log(data_array);
+    }
+    else{
+        
+      //  console.log(data_array);
+        
+        alert("You have already entered value for selected product, selected distributor for selected month");
+        
+         //$('input#month_data').val(" ");
+         $('select#distributor_geo_level_1_data').val(" ");
+         $('select#prod_sku').val(" ");
+         $('select#distributor_distributor_id').empty();
+         
+         $("select#distributor_geo_level_1_data").selectpicker('refresh');
+         $("select#prod_sku").selectpicker('refresh');
+         $("select#distributor_distributor_id").selectpicker('refresh');
+         
+         $('input#quantity').val(" ");
+         
+         $("#fo_distributor_data").empty();
+         $("select#fo_distributor_data").selectpicker('refresh');
+         
+         return false;
+        
+    }
+    
+    
+    var customer_code = "";
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_customer_code",
+        data: {id:customer_val},
+        success: function(resp){
+            customer_code = resp;
+        },
+        async:false
+    });
+    
+    var quantity = $('#quantity').val();
+    var qty = "";
+    var sr_no =$("#target_data > tr").length + 1;
+
+    var box_selected = "";
+    var package_selected = "";
+    var kg_ltr_selected = "";
+    
+    var html = "";
+    
+     if(checked_type == "retailer"){
+         html += "<td data-title='Geo L2'>" +
+                    "<input type='hidden' name='geo_level_data[]' value='"+geo_level_val2+"' readonly/>" +
+                   "<input class='input_remove_border' type='text' value='"+geo_level_name2+"' readonly/>" +
+                "</td>"+
+                
+                "<td data-title='Retailer Code'>" +
+               "<input class='input_remove_border' type='text' value='"+customer_code+"' readonly/>" +
+            "</td>"+
+            
+             "<td data-title='Retailer Name'>" +
+                "<input type='hidden' name='customer_data[]' value='"+customer_val+"' readonly/>" +
+               "<input class='input_remove_border' type='text' value='"+customer_name+"' readonly/>" +
+            "</td>";
+     }else{
+         html +=  "<td data-title='Distributor Code'>" +
+               "<input class='input_remove_border' type='text' value='"+customer_code+"' readonly/>" +
+            "</td>"+
+            
+             "<td data-title='Distributor Name'>" +
+                "<input type='hidden' name='customer_data[]' value='"+customer_val+"' readonly/>" +
+               "<input class='input_remove_border' type='text' value='"+customer_name+"' readonly/>" +
+            "</td>";
+     }
+    
+
+    $("#target_data").append(
+        "<tr id='"+sr_no+"'>"+
+            "<td data-title='Sr. No.' class='numeric'>" +
+                "<input class='input_remove_border' type='text' value='"+sr_no+"' readonly/>" +
+            "</td>"+
+            
+            "<td data-title='remove'>" +
+                "<div class='edit_i' prdid ='"+sr_no+"'><a href='javascript:void(0);'><i class='fa fa-pencil' aria-hidden='true'></i></a></div>&nbsp;<div class='delete_i' attr-dele=''><a href='javascript:void(0);'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
+            "</td>"+
+            
+            "<td data-title='Geo L3'>" +
+                "<input type='hidden' name='geo_level_data[]' value='"+geo_level_val+"' readonly/>" +
+               "<input class='input_remove_border' type='text' value='"+geo_level_name+"' readonly/>" +
+            "</td>"+
+            
+            html+
+            
+            "<td data-title='Product SKU Name'>" +
+                "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
+                "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
+            "</td>"+
+            "<td data-title='Quantity'>" +
+                "<input readonly class='quantity_data' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
+            "</td>"
+            +
+        "</tr>"
+    );
+    
+   // $('input#month_data').val(" ");
+   
+    $("#fo_distributor_data").empty();
+   
+    $('select#distributor_geo_level_1_data').val(" ");
+    $('select#prod_sku').val(" ");
+    $('select#distributor_distributor_id').empty();
+
+    $("select#fo_distributor_data").selectpicker('refresh');
+
+    $("select#distributor_geo_level_1_data").selectpicker('refresh');
+    $("select#prod_sku").selectpicker('refresh');
+    $("select#distributor_distributor_id").selectpicker('refresh');
+
+    $('input#quantity').val(" ");
+    
+}); 
+
+
 
 });
 
@@ -583,7 +860,14 @@ function get_user_by_geo_data(selected_geo_data){
     $("select#retailer_data").empty();
     $("select#retailer_data").selectpicker('refresh');
     
+    if($('input[name=radio1]:checked').length == 0){
+        
+        var checked_type = "distributor";
+        
+    }
+    else{
    var checked_type = $('input[name=radio1]:checked').val();
+    }
    var login_customer_type = $("input#login_customer_type" ).val();
    
    //alert(checked_type);
@@ -776,78 +1060,10 @@ function get_data_conversion(sku_id,quantity,units){
     
 }
 
-function target_add_row()
-{
-    var sku_code = $('#prod_sku option:selected').attr('attr-code');
-    var sku_name = $('#prod_sku option:selected').attr('attr-name');
-    var sku_id = $('#prod_sku option:selected').val();
-    
-    var geo_level_val = $('#distributor_geo_level_1_data option:selected').val();
-    var geo_level_name = $('#distributor_geo_level_1_data option:selected').html();
-    
-    var customer_val = $('#distributor_distributor_id option:selected').val();
-    var customer_name = $('#distributor_distributor_id option:selected').html();
-    
-    var customer_code = "";
+//function target_add_row(data_array)
+//{
 
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/get_customer_code",
-        data: {id:customer_val},
-        success: function(resp){
-            customer_code = resp;
-        },
-        async:false
-    });
-    
-    var quantity = $('#quantity').val();
-    var qty = "";
-    var sr_no =$("#target_data > tr").length + 1;
-
-    var box_selected = "";
-    var package_selected = "";
-    var kg_ltr_selected = "";
-    
-
-    $("#target_data").append(
-        "<tr id='"+sr_no+"'>"+
-            "<td data-title='Sr. No.' class='numeric'>" +
-                "<input class='input_remove_border' type='text' value='"+sr_no+"' readonly/>" +
-            "</td>"+
-            
-            "<td data-title='remove'>" +
-                "<div class='delete_i' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
-            "</td>"+
-            
-            "<td data-title='Geo L3'>" +
-                "<input type='hidden' name='geo_level_data[]' value='"+geo_level_val+"' readonly/>" +
-               "<input class='input_remove_border' type='text' value='"+geo_level_name+"' readonly/>" +
-            "</td>"+
-            
-             "<td data-title='Distributor Code'>" +
-               "<input class='input_remove_border' type='text' value='"+customer_code+"' readonly/>" +
-            "</td>"+
-            
-             "<td data-title='Distributor Name'>" +
-                "<input type='hidden' value='"+customer_val+"' readonly/>" +
-               "<input class='input_remove_border' type='text' value='"+customer_name+"' readonly/>" +
-            "</td>"+
-            
-            "<td data-title='Product SKU Name'>" +
-                "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
-                "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
-            "</td>"+
-            "<td data-title='Quantity'>" +
-                "<input class='quantity_data' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
-            "</td>"
-            +
-        "</tr>"
-    );
-    $('#prod_sku').selectpicker('val', '0');
-    
-    $('#quantity').val('');
-   
-}
+//}
 
 $("#order_place").on("submit",function(){
 
@@ -911,7 +1127,7 @@ $("body").on("change","select.select_unitdata",function(){
        
        
 });
-
+/*
 $("body").on("keyup","input.quantity_data",function(){
       
       
@@ -956,6 +1172,14 @@ $("body").on("keyup","input.quantity_data",function(){
             
         }
        
+}); */
+
+$(document).on('click', '#target_data .edit_i', function () {
+    
+    var id = $(this).attr('prdid');
+   
+    $("tr#"+id).find("input.quantity_data").removeAttr("readonly");
+    
 });
    
    

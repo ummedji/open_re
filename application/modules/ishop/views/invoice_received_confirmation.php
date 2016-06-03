@@ -7,21 +7,37 @@
             echo form_open('',$attributes); ?>
 
             <div class="row">
-                <div class="col-md-12 text-center tp_form inline-parent">
-                    <div class="form-group">
-                        <label>Month</label>
-                        <input type="text" class="form-control" name="invoice_month" id="form_date" placeholder="">
+                <div class="col-md-12 tp_form">
+                    <div class="row">
+                        <div class="col-md-1">&nbsp;</div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>Month</label>
+                                <input type="text" class="form-control" name="invoice_month" id="form_date" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label>PO No.</label>
+                                <input type="text" class="form-control" name="po_no" id="po_no" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-3">
+                            <div class="form-group">
+                                <label for="invoice_date">Invoice No.</label>
+                                <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-2 text-center save_btn">
+                            <label style="display: block;">&nbsp;</label>
+                            <button type="submit" class="btn btn-primary gren_btn">Execute</button>
+                        </div>
                     </div>
-                    <div class="form-group">
-                        <label>PO No.</label>
-                        <input type="text" class="form-control" name="po_no" id="po_no" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="invoice_date">Invoice No.</label>
-                        <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
-                    </div>
+
+
+
                     <div class="col-md-3 save_btn" style="float: right;">
-                        <button type="submit" class="btn btn-primary">Execute</button>
+
                     </div>
                 </div>
                 <div class="col-md-3 col-sm-6 tp_form">

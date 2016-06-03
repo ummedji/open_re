@@ -35,7 +35,7 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-12 distributore_form od_approval">
                     <div class="row">
-                        <div class="retailer_checked_sales" id="retailer_checked_sales" >
+                        <div class="retailer_checked_sales fl_calender_i" id="retailer_checked_sales" >
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label>Month</label>
@@ -86,57 +86,64 @@ echo form_open('',$attributes); ?>
                         </div>
 
                         <div class="distributor_checked_sales" id="distributor_checked_sales" style="display:none;">
+                            <div class="col-md-10 col-md-offset-1 tp_form">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-6 tp_form">
+                                        <div class="form-group">
+                                            <label>Geo Level</label>
+                                            <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
+                                            </select>
+                                        </div>
+                                    </div>
 
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label>Geo Level</label>
-                                    <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
-                                    </select>
+                                    <div class="col-md-4 col-sm-6 tp_form">
+                                        <div class="form-group">
+                                            <label>Distributor Name</label>
+                                            <select class="selectpicker" id="distributor_sales" name="distributor_sales" data-live-search="true">
+                                                <option value="0">Select Distributor</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-4 col-sm-6 tp_form">
+                                        <div class="form-group">
+                                            <label>Retailer Name</label>
+                                            <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
+                                                <option value="0">Select Retailer</option>
+                                            </select>
+                                        </div>
+                                </div>
+                            </div>
+                            </div>
+                            <div class="col-md-12 tp_form">
+                                <div class="row">
+                                    <div class="col-md-3 col-sm-6 tp_form">
+                                        <div class="form-group">
+                                            <label for="invoice_no">Invoice No.</label>
+                                            <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 tp_form">
+                                        <div class="form-group">
+                                            <label for="invoice_date">Invoice Date</label>
+                                            <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 tp_form">
+                                        <div class="form-group">
+                                            <label for="order_traking_no">Order Tracking No.</label>
+                                            <input type="text" class="form-control" name="order_tracking_no" id="order_traking_no" placeholder="" style="width: 100%;">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-sm-6 tp_form">
+                                        <div class="form-group">
+                                            <label for="po_no">PO No.</label>
+                                            <input type="text" class="form-control" name="PO_no" id="po_no" placeholder="" style="width: 100%;">
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label>Distributor Name</label>
-                                    <select class="selectpicker" id="distributor_sales" name="distributor_sales" data-live-search="true">
-                                        <option value="0">Select Distributor</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label>Retailer Name</label>
-                                    <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
-                                        <option value="0">Select Retailer</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label for="invoice_no">Invoice No.</label>
-                                    <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label for="invoice_date">Invoice Date</label>
-                                    <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label for="order_traking_no">Order Tracking No.</label>
-                                    <input type="text" class="form-control" name="order_tracking_no" id="order_traking_no" placeholder="">
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label for="po_no">PO No.</label>
-                                    <input type="text" class="form-control" name="PO_no" id="po_no" placeholder="">
-                                </div>
-                            </div>
                         </div>
 
                     </div>
@@ -160,50 +167,52 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12">
     <div class="row">
         <div class="middle_form">
-            <div class="col-md-4_ tp_form">
-                <div class="form-group">
-                    <label>Product Sku</label>
-                    <select class="selectpicker" id="sales_prod_sku" data-live-search="true">
-                        <option value="0">Product Name</option>
-                        <?php
-                        if(isset($product_sku) && !empty($product_sku))
-                        {
-                            foreach($product_sku as $k=> $prd_sku)
+            <div class="row">
+                <div class="col-md-4_ tp_form">
+                    <div class="form-group">
+                        <label>Product Sku</label>
+                        <select class="selectpicker" id="sales_prod_sku" data-live-search="true">
+                            <option value="0">Product Name</option>
+                            <?php
+                            if(isset($product_sku) && !empty($product_sku))
                             {
-                                ?>
-                                <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                <?php
+                                foreach($product_sku as $k=> $prd_sku)
+                                {
+                                    ?>
+                                    <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                    <?php
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-2_ tp_form">
-                <div class="form-group">
-                    <label>Unit</label>
-                    <select class="selectpicker" id="sec_sel_unit">
-                        <option value="0">Units</option>
-                        <option value="box">Box</option>
-                        <option value="packages">Packages</option>
-                        <option value="kg/ltr">Kg/Ltr</option>
-                    </select>
+                <div class="col-md-2_ tp_form">
+                    <div class="form-group">
+                        <label>Unit</label>
+                        <select class="selectpicker" id="sec_sel_unit">
+                            <option value="0">Units</option>
+                            <option value="box">Box</option>
+                            <option value="packages">Packages</option>
+                            <option value="kg/ltr">Kg/Ltr</option>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-3_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Quantity</label>
-                    <input type="text" class="form-control" id="sales_qty" placeholder="">
+                <div class="col-md-3_ tp_form">
+                    <div class="form-group">
+                        <label for="invoice_date">Quantity</label>
+                        <input type="text" class="form-control" id="sales_qty" placeholder="">
+                    </div>
+                    <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
-                <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
-            </div>
-            <div class="col-md-2_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Amount</label>
-                    <input type="text" class="form-control" id="amt" placeholder="">
+                <div class="col-md-2_ tp_form">
+                    <div class="form-group">
+                        <label for="invoice_date">Amount</label>
+                        <input type="text" class="form-control" id="amt" placeholder="">
+                    </div>
                 </div>
+                <div class="plus_btn"><a href="#" onclick="add_sales_stock_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
-            <div class="plus_btn"><a href="#" onclick="add_sales_stock_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>

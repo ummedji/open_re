@@ -22,6 +22,8 @@ echo Assets::js();
             $(".pr_right_contain").toggleClass("inn_right_contain");
             /*$(".pr_footer").toggleClass("footer");*/
             $(".toggle_wieght_sp").toggleClass("wieght_sp");
+            $(".left_contain_big").toggleClass("left_contain");
+
         });
         $(window).load(function(){
 
@@ -67,6 +69,37 @@ echo Assets::js();
     });
 
 </script>
+<script type="text/javascript">
+    $(document).ready(function(){
 
+        //Navigation Menu Slider
+        $('#nav-expander').on('click',function(e){
+            e.preventDefault();
+            $('body').toggleClass('nav-expanded');
+        });
+        $('#nav-close').on('click',function(e){
+            e.preventDefault();
+            $('body').removeClass('nav-expanded');
+        });
+
+        // Initialize navgoco with default options
+        $(".main-menu").navgoco({
+            caret: '<span class="caret"></span>',
+            accordion: false,
+            openClass: 'open',
+            save: true,
+            cookie: {
+                name: 'navgoco',
+                expires: false,
+                path: '/'
+            },
+            slide: {
+                duration: 300,
+                easing: 'swing'
+            }
+        });
+
+    });
+</script>
 </body>
 </html>

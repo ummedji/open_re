@@ -30,29 +30,34 @@
                         <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-3 col-sm-6 tp_form">
-                    <div class="form-group">
-                        <label for="invoice_date">Search By PO No.</label>
-                        <input type="text" class="form-control" name="by_po_no" id="by_po_no" placeholder="">
+                <div class="col-md-10 col-md-offset-1">
+                    <div class="row">
+                        <div class="col-md-5 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label for="invoice_date">Search By PO No.</label>
+                                <input type="text" class="form-control" name="by_po_no" id="by_po_no" placeholder="">
+                            </div>
+                        </div>
+                        <div class="col-md-5 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label for="invoice_date">Search By Order Tracking No.</label>
+                                <input type="text" class="form-control" name="by_otn" id="by_otn" placeholder="">
+                            </div>
+                        </div>
+
+                        <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $login_customer_type; ?>" />
+                        <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $login_customer_id; ?>" />
+                        <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $login_customer_countryid; ?>" />
+
+                        <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" />
+
+
+
+                        <div class="col-md-2 save_btn">
+                            <label>&nbsp;</label>
+                            <button type="submit" class="btn btn-primary gren_btn">Execute</button>
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-3 col-sm-6 tp_form">
-                    <div class="form-group">
-                        <label for="invoice_date">Search By Order Tracking No.</label>
-                        <input type="text" class="form-control" name="by_otn" id="by_otn" placeholder="">
-                    </div>
-                </div>
-            
-                <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $login_customer_type; ?>" /> 
-                <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $login_customer_id; ?>" /> 
-                <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $login_customer_countryid; ?>" /> 
-            
-                <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" /> 
-                
-                
-           
-                <div class="col-md-3 save_btn">
-                    <button type="submit" class="btn btn-primary">Execute</button>
                 </div>
         </div>
         <?php echo form_close(); ?>

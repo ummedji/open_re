@@ -1,5 +1,5 @@
 <?php if ($this->session->userdata('user_id') !='') { ?>
-<div class="left_contain">
+<div class="left_contain left_contain_big">
         <div class="side_menu_space pr_slide_menu">
             <ul class="sid_button">
                 <li><span><a href="#"><span class="ecp_icon"></span><div class="li_title pr_title">ECP</div></a></span> <div class="clearfix"></div></li>

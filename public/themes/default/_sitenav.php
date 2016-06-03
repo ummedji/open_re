@@ -27,7 +27,7 @@
                             <li><a href="#"><img src="<?php echo Template::theme_url('images/download_i.svg'); ?>" class="hvr-push" alt=""></a></li>
                             <li><a href="#"><img src="<?php echo Template::theme_url('images/share_i.svg'); ?>" class="hvr-push" alt=""></a></li>
                             <li><a href="<?php echo site_url('logout'); ?>"><img src="<?php echo Template::theme_url('images/logout_i.svg'); ?>"class="hvr-push" alt=""></a></li>
-                            <li class="nav_space"><a href="#"><img src="<?php echo Template::theme_url('images/nave_btn.svg'); ?>" alt=""></a></li>
+                            <li class="nav_space"><a href="#" id="nav-expander"><img src="<?php echo Template::theme_url('images/nave_btn.svg'); ?>" alt=""></a></li>
                         </ul>
                     </div>
                     <div class="clearfix"></div>
@@ -85,7 +85,7 @@
                                 ?>
                                 <?php if($current_user->role_id == 7 ||  $current_user->role_id == 8 || $current_user->role_id == 10) {
                                     ?>
-                                    <li role="presentation"><a href="#">SCHEMES</a></li>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/set_schemes') ?>">SCHEMES</a></li>
                                     <?php
                                 }
                                 ?>
@@ -135,4 +135,14 @@
     <!--end right contain part-->
     <div class="clearfix"></div>
 </div>
+    <!--sidenave-->
+    <nav>
+        <ul class="list-unstyled main-menu">
+
+            <!--Include your navigation here-->
+            <li class="text-right"><a href="#" id="nav-close">X</a></li>
+
+        </ul>
+    </nav>
+    <!--sidenave-->
 <?php }?>

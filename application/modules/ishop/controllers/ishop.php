@@ -471,6 +471,139 @@ class Ishop extends Front_Controller
 		redirect('ishop/credit_limit');
 	}
 
+	public function set_schemes()
+	{
+		Assets::add_module_js('ishop', 'scheme.js');
+		$user = $this->auth->user();
+		$default_retailer_role = 10;
+		$parent_id = null;
+
+		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id);
+		//testdata($retailer_geo_data);
+		$schemes = $this->ishop_model->get_all_schemes($user->country_id);
+
+		Template::set('geo_data', $retailer_geo_data);
+		Template::set('schemes', $schemes);
+
+		Template::set('current_user', $user);
+		Template::set_view('ishop/scheme');
+		Template::render();
+	}
+
+	public function get_lower_business_geo_data()
+	{
+		$user_id=$_POST['user_id'];
+		$country_id=$_POST['country_id'];
+		$role=$_POST['role'];
+		$parent_geo_id=$_POST['parent_geo_id'];
+		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user_id,$country_id,$role,$parent_geo_id);
+		echo json_encode($retailer_geo_data);;
+		die;
+	}
+
+	public function get_user_by_business_geo_data()
+	{
+		$selected_geo_id=$_POST['selected_geo_id'];
+		$country_id=$_POST['country_id'];
+		$retailer = $this->ishop_model->get_business_geo_data_to_retailer($selected_geo_id,$country_id);
+		echo json_encode($retailer);;
+		die;
+	}
+
+
+	public function get_slab_by_selected_schemes()
+	{
+		$scheme_id = $_POST['selected_schemes'];
+
+		$get_slabs= $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id);
+		Template::set('table',$get_slabs);
+		Template::set_view('ishop/scheme');
+		Template::render();
+	}
+
+
+	public function add_schemes_details()
+	{
+		$user = $this->auth->user();
+		$user_id = $this->session->userdata('user_id');
+		$this->ishop_model->add_schemes_detail($user_id,$user->country_id);
+
+		Template::set_message('Insert Data successful', 'success');
+		redirect('ishop/set_schemes');
+	}
+
+	public function get_schemes_by_selected_cur_year()
+	{
+		//$selected_cur_year =  $_POST['selected_cur_year'].'-01-01';
+		$selected_cur_year =  $_POST['selected_cur_year'];
+		$country_id =  $_POST['country_id'];
+		$schemes=$this->ishop_model->get_schemes_by_selected_year($selected_cur_year,$country_id);
+		echo json_encode($schemes);;
+		die;
+	}
+
+	public function schemes_view()
+	{
+		Assets::add_module_js('ishop', 'scheme_view.js');
+		$user = $this->auth->user();
+		$default_retailer_role = 10;
+		$parent_id = null;
+
+		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id);
+
+		Template::set('geo_data', $retailer_geo_data);
+		Template::set('current_user', $user);
+		Template::set_view('ishop/scheme_view');
+		Template::render();
+	}
+
+	public function view_schemes_details()
+	{
+		$user = $this->auth->user();
+		$user_id = $this->session->userdata('user_id');
+
+		$year = $this->input->post("year");
+		$region = $this->input->post("region");
+		$territory = $this->input->post("territory");
+
+		$scheme_view=$this->ishop_model->view_schemes_details($user_id,$user->country_id,$year,$region,$territory);
+		Template::set('scheme_table',$scheme_view);
+		Template::set_view('ishop/scheme_view');
+		Template::render();
+		//testdata($scheme_view);
+	}
+	public function delete_schemes()
+	{
+		$checked_schemes = $this->input->post("checked_schemes");
+
+		$param = $this->input->post("param");
+		$year = $param[0]['value'];
+		$region = $param[1]['value'];
+		$territory = $param[2]['value'];
+
+		$user = $this->auth->user();
+		$user_id = $this->session->userdata('user_id');
+		$this->ishop_model->delete_schemes_by_id($checked_schemes);
+		$scheme_view=$this->ishop_model->view_schemes_details($user_id,$user->country_id,$year,$region,$territory);
+		Template::set('scheme_table',$scheme_view);
+		Template::set_view('ishop/scheme_view');
+		Template::render();
+	}
+
+	public function get_region_by_selected_cur_year()
+	{
+		$year =  $_POST['selected_cur_year'];
+		//testdata($year);
+		$user = $this->auth->user();
+		$default_retailer_role=10;
+		$parent_id=null;
+		$business_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id,$year);
+		echo json_encode($business_geo_data);;
+		die;
+	}
+
+
+
 
 
 	/*---------------------------------------------------------------------------------------------------------------*/
@@ -1536,21 +1669,31 @@ class Ishop extends Front_Controller
             elseif($logined_user_type == 8){
             
                 //FOR FO
-                $default_type_selected = 11; 
+                $default_type_selected = 9; 
                 
                 $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
             
-                
             }
             elseif($logined_user_type == 9){
             
                 //FOR DISTRIBUTOR
                 $default_type_selected = null; 
+                
+                if(isset($_POST) && !empty($_POST)){
+                    
+                     $target_data = $this->ishop_model->get_target_monthly_data($_POST);
+                    
+                    echo "<pre>";
+                    print_r($_POST);
+                    die;
+                }
+                
             }
             elseif($logined_user_type == 10){
             
                 //FOR RETAILER
                 $default_type_selected = null; 
+                
             }
            
           //  echo "<pre>";
@@ -1587,6 +1730,106 @@ class Ishop extends Front_Controller
             }
             echo $data;
             die;      
+        }
+        
+        public function check_target_data_status() {
+            
+            $product_sku_id = $_POST["product_sku_id"];
+           // $month_data = explode("/",$_POST["month_data"]);
+            $customer_id = $_POST["customer_id"];
+            
+            $month_data = $_POST["month_data"]."-01";
+            
+            $target_data = $this->ishop_model->check_target_data($product_sku_id,$month_data,$customer_id);
+            echo $target_data;
+            die;
+        }
+        
+        public function add_target_data() {
+            
+            $target_data = $_POST;
+            $set_target_data = $this->ishop_model->add_target_data($target_data);
+            redirect("ishop/target");
+        }
+        
+        public function target_view() {
+            
+            Assets::add_module_js('ishop', 'target.js');
+            
+            $user= $this->auth->user();
+            
+            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
+            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
+            
+            $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+            
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            $get_geo_level_data = "";
+            $action_data = $this->uri->segment(2);
+            
+            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
+            
+            if($logined_user_type == 7){
+                
+                //FOR HO
+                $default_type_selected = 9;
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 8){
+            
+                //FOR FO
+                $default_type_selected = 9; 
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 9){
+            
+                //FOR DISTRIBUTOR
+                $default_type_selected = null; 
+            }
+            elseif($logined_user_type == 10){
+            
+                //FOR RETAILER
+                $default_type_selected = null; 
+            }
+           
+            if(isset($_POST) && !empty($_POST)){
+                
+                $view_target_data = $this->ishop_model->get_target_data($_POST);
+                
+                 Template::set('view_target_data',$view_target_data);
+                
+            }
+            
+          //  echo "<pre>";
+          //  print_r($get_geo_level_data);
+          //  die;
+            
+		  //var_dump($distributor);die;
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set('distributor',$distributor);
+            Template::set('retailer',$retailer);
+            Template::set('product_sku',$product_sku);
+            
+            
+            Template::set('geo_level_data',$get_geo_level_data);
+            
+            Template::set_view('ishop/target');
+            Template::render();
+            
+            
         }
         
 }

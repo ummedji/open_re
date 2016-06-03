@@ -13,7 +13,7 @@ echo form_open('',$attributes); ?>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-6 tp_form">
-                    <div class="form-group">
+                    <div class="form-group fulle_wd">
                             <label style="display: block;">Product Sku</label>
                             <select class="selectpicker" name="product_sku" id="sales_prod_sku" data-live-search="true">
                                 <option value="0">Product Name</option>
@@ -51,26 +51,28 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12">
     <div class="row">
         <div class="middle_form">
-                <div class="col-md-2_ tp_form">
-                    <div class="form-group">
-                        <label for="batch">Batch</label>
-                        <input type="text" class="form-control" name="batch" id="batch" placeholder="">
+                <div class="row">
+                    <div class="col-md-2_ tp_form">
+                        <div class="form-group">
+                            <label for="batch">Batch</label>
+                            <input type="text" class="form-control" name="batch" id="batch" placeholder="">
+                        </div>
+                        <div class="wieght_sp toggle_wieght_sp"></div>
                     </div>
-                    <div class="wieght_sp toggle_wieght_sp"></div>
-                </div>
-                <div class="col-md-3_ tp_form">
-                    <div class="form-group">
-                        <label for="batch_expiry_date">Batch Expiry Date</label>
-                        <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="">
+                    <div class="col-md-3_ tp_form">
+                        <div class="form-group">
+                            <label for="batch_expiry_date">Batch Expiry Date</label>
+                            <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="">
+                        </div>
                     </div>
-                </div>
-                <div class="col-md-2_ tp_form">
-                    <div class="form-group">
-                        <label for="batch_mfg_date">Batch Mfg.Date</label>
-                        <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="">
+                    <div class="col-md-2_ tp_form">
+                        <div class="form-group">
+                            <label for="batch_mfg_date">Batch Mfg.Date</label>
+                            <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="">
+                        </div>
                     </div>
+                    <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>
                 </div>
-            <div class="col-md-3 save_btn"><button type="submit" style="background-color: #fff;color: #00612f;" class="btn btn-primary">Save</button></div>
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>

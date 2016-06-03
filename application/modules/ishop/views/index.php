@@ -57,46 +57,48 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12">
     <div class="row">
         <div class="middle_form">
-            <div class="col-md-4_ tp_form">
-                <div class="form-group">
-                    <label>Product Sku</label>
-                    <select class="selectpicker" id="prod_sku" data-live-search="true">
-                        <option value="0">Product Name</option>
-                        <?php
-                        if(isset($product_sku) && !empty($product_sku))
-                        {
-                            foreach($product_sku as $k=> $prd_sku)
+            <div class="row">
+                <div class="col-md-4_ tp_form">
+                    <div class="form-group">
+                        <label>Product Sku</label>
+                        <select class="selectpicker" id="prod_sku" data-live-search="true">
+                            <option value="0">Product Name</option>
+                            <?php
+                            if(isset($product_sku) && !empty($product_sku))
                             {
-                                ?>
-                                <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                <?php
+                                foreach($product_sku as $k=> $prd_sku)
+                                {
+                                    ?>
+                                    <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                    <?php
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                    </div>
                 </div>
-            </div>
-            <div class="col-md-2_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">PO Qty.</label>
-                    <input type="text" class="form-control" id="po_qty" placeholder="">
+                <div class="col-md-2_ tp_form">
+                    <div class="form-group">
+                        <label for="invoice_date">PO Qty.</label>
+                        <input type="text" class="form-control" id="po_qty" placeholder="">
+                    </div>
+                    <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
-                <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
-            </div>
-            <div class="col-md-3_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Dispatched Qty.</label>
-                    <input type="text" class="form-control" id="dispatched_qty" placeholder="">
+                <div class="col-md-3_ tp_form">
+                    <div class="form-group">
+                        <label for="invoice_date">Dispatched Qty.</label>
+                        <input type="text" class="form-control" id="dispatched_qty" placeholder="">
+                    </div>
+                    <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
-                <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
-            </div>
-            <div class="col-md-2_ tp_form">
-                <div class="form-group">
-                    <label for="invoice_date">Amount</label>
-                    <input type="text" class="form-control" id="amt" placeholder="">
+                <div class="col-md-2_ tp_form">
+                    <div class="form-group">
+                        <label for="invoice_date">Amount</label>
+                        <input type="text" class="form-control" id="amt" placeholder="">
+                    </div>
                 </div>
+                <div class="plus_btn"><a href="#" onclick="add_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
-            <div class="plus_btn"><a href="#" onclick="add_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>

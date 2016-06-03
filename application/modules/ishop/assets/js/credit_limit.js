@@ -1,7 +1,7 @@
 /**
  * Created by webclues on 6/1/2016.
  */
-curr_date
+
 $(function () {
     $('#curr_date').datepicker({
         format: "yyyy-mm-dd"
@@ -12,7 +12,7 @@ $(function () {
 $("#add_user_credit_limit").on("submit",function(){
     //alert('in');
     var param = $("#add_user_credit_limit").serializeArray();
-      console.log(param);
+
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/add_user_credit_limit_datails",

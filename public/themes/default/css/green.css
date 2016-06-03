@@ -113,3 +113,9 @@ ul.listslider li{
 .filter_btn a{
     color: #00793a;
 }
+/**/
+.gren_btn {background-color: #00612f;}
+.gren_btn:hover, .gren_btn:focus {background-color: #65ac1e !important;}
+.svn_btn button:hover, .svn_btn button:focus {
+    background-color: #015e2e !important;
+}
