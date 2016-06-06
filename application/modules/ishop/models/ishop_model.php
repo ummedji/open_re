@@ -972,7 +972,7 @@ class Ishop_model extends BF_Model
 
     }
 
-    public function view_schemes_details($user_id,$country_id,$year,$region,$territory)
+    public function view_schemes_detail($user_id,$country_id,$year,$region,$territory,$login_user)
     {
         $sql ='SELECT isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
         $sql .= 'FROM bf_ishop_scheme_allocation AS isa ';
@@ -995,19 +995,52 @@ class Ishop_model extends BF_Model
         {
             $sql .= 'AND geo_id1 ='.$territory.' ';
         }
+        if($login_user== 10)
+        {
+            $sql .= 'AND isa.customer_id ='.$user_id.' ';
+        }
         $sql .= 'AND mpsc.status =1 ';
         $sql .= 'AND isa.country_id ='.$country_id;
      //   $sql .= 'ORDER BY allocation_id DESC ';
         $info = $this->db->query($sql);
         $limit = $info->result_array();
         $scheme_allocation = array('result'=>$limit);
-
+        //testdata($scheme_allocation);
         if(isset($scheme_allocation['result']) && !empty($scheme_allocation['result'])) {
-            $i = 1;
             $scheme_allocation_view=array();
-            foreach ($scheme_allocation['result'] as $sd) {
-                $scheme_allocation_view['row'][] = array($i,$sd['allocation_id'], $sd['business_georaphy_name_parent'], $sd['business_georaphy_code'], $sd['business_georaphy_name'], $sd['user_code'], $sd['display_name'], $sd['scheme_code'], $sd['scheme_name'], $sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$sd['value_per_kg']);
-                $i++;
+            if($login_user==7){
+                $i = 1;
+                foreach ($scheme_allocation['result'] as $sd) {
+                    $scheme_allocation_view['row'][] = array($i,$sd['allocation_id'], $sd['business_georaphy_name_parent'], $sd['business_georaphy_code'], $sd['business_georaphy_name'], $sd['user_code'], $sd['display_name'], $sd['scheme_code'], $sd['scheme_name'], $sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$sd['value_per_kg']);
+                    $i++;
+                }
+            }
+            elseif($login_user==8){
+
+                $scheme_allocation_view['head'] =array('Sr. No.','Retailer Name','Retailer Code','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr','Actual Sales');
+                $i=1;
+                foreach($scheme_allocation['result'] as $sd )
+                {
+                    $scheme_allocation_view['row'][]= array($i,$sd['display_name'],$sd['user_code'],$sd['scheme_code'],$sd['scheme_name'],$sd['product_sku_name'],$sd['slab_no'],$sd['1point']);
+                    $i++;
+                }
+                $scheme_allocation_view['eye'] ='';
+                $scheme_allocation_view['action'] ='';
+                $scheme_allocation_view['no_margin'] ='is_margin';
+            }
+            elseif($login_user==10){
+
+                $scheme_allocation_view['head'] =array('Sr. No.','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr');
+                $i=1;
+                foreach($scheme_allocation['result'] as $sd )
+                {
+                    $scheme_allocation_view['row'][]= array($i,$sd['scheme_code'],$sd['scheme_name'],$sd['product_sku_name'],$sd['slab_no'],$sd['1point']);
+                    $i++;
+                }
+                $scheme_allocation_view['eye'] ='';
+                $scheme_allocation_view['action'] ='';
+                $scheme_allocation_view['no_margin'] ='is_margin';
+
             }
             // $product_view['pagination'] = $report_details['pagination'];
 
@@ -1015,24 +1048,31 @@ class Ishop_model extends BF_Model
         }
     }
 
-    public function get_business_geo_data($user_id,$country_id,$role,$parent_id=null,$year=null)
+    public function get_business_geo_data($user_id,$country_id,$role,$parent_id=null,$year=null,$login_user_type)
     {
         //var_dump($year) ;
         $selected_data = "bmbgd.business_geo_id,bmbgd.business_georaphy_name,bmbgd.business_georaphy_code ";
-
         $sql = "";
-        if($parent_id == null) {
 
-            $selected_data = " bmbgd.parent_geo_id ";
+        //echo $role;
 
-            $sql .= " SELECT bmbgd_p.business_geo_id,bmbgd_p.business_georaphy_name,bmbgd_p.business_georaphy_code ";
-            $sql .= "FROM bf_master_business_geography_details as bmbgd_p WHERE bmbgd_p.business_geo_id IN ( ";
+        if($login_user_type == 7) {
+
+            if ($parent_id == null) {
+
+                $selected_data = " bmbgd.parent_geo_id ";
+
+                $sql .= " SELECT bmbgd_p.business_geo_id,bmbgd_p.business_georaphy_name,bmbgd_p.business_georaphy_code ";
+                $sql .= "FROM bf_master_business_geography_details as bmbgd_p WHERE bmbgd_p.business_geo_id IN ( ";
+            }
         }
-
 
         $sql .=  "SELECT ".$selected_data." as bmbgd_parent_geo_id ";
         $sql .=  " FROM (`bf_users` as bu) ";
         $sql .=  " JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id`  ";
+        if($login_user_type == 8) {
+            $sql .=  " JOIN `bf_master_employe_to_customer` as bmetc ON `bmetc`.`customer_id` = `bu`.`id`  ";
+        }
         $sql .=  " JOIN `bf_master_business_political_geo_mapping` as bmbpgm ON `bmbpgm`.`polotical_geo_id` = `bmucd`.`geo_level_id1` ";
 
         $sql .=  " JOIN `bf_master_business_geography_details` as bmbgd ON `bmbgd`.`business_geo_id` = `bmbpgm`.`business_geo_id` ";
@@ -1042,15 +1082,17 @@ class Ishop_model extends BF_Model
         $sql .=  " AND bu.type= 'Customer' ";
         $sql .=  " AND bu.deleted= 0 ";
         $sql .=  " AND bu.role_id= ".$role." ";
+        if($login_user_type == 8)
+        {
+            $sql .=  " AND bmetc.employee_id =".$user_id." ";
+        }
+        if($login_user_type == 7) {
+            if($parent_id == null) {
 
-        if($parent_id == null) {
-
-            if(isset($year) && !empty($year) && $year !=null){
-                $sql .=  " AND DATE_FORMAT(bmbgd_p.year,'%Y') = ".$year." ";
+                if(isset($year) && !empty($year) && $year !=null){
+                    $sql .=  " AND DATE_FORMAT(bmbgd_p.year,'%Y') = ".$year." ";
+                }
             }
-          /*  else{
-                $sql .=  " AND DATE_FORMAT(bmbgd_p.year,'%Y') = ".date("Y")." ";
-            }*/
         }
 
         if($parent_id != null) {
@@ -1060,10 +1102,14 @@ class Ishop_model extends BF_Model
 
         $sql .=  " GROUP BY bmbgd.business_georaphy_name ";
 
-        if($parent_id == null) {
-            $sql .= " ) ";
+        if($login_user_type == 7) {
+            if ($parent_id == null) {
+                $sql .= " ) ";
+            }
         }
+
       //  echo $sql;die;
+
         $info = $this->db->query($sql);
         $geo_id = $info->result_array();
        // testdata($geo_id);
@@ -2692,13 +2738,67 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
      
         $target_data = $this->db->get()->result_array();
         
-        echo "<pre>";print_r($target_data);//die;
+      //  echo "<pre>";print_r($target_data);//die;
         
         
         $final_array = array();
         
         if(isset($target_data) && !empty($target_data)) {
             
+           
+            $final_array = array();
+            
+            foreach($target_data as $key=>$data){
+                $inner_array = array();
+             //   if(!array_key_exists($data["product_sku_id"],$final_array)){
+                    
+                    $final_array[$data["product_sku_id"]][] = $data;
+                    
+                   /* foreach($month_output as $k =>$val){
+                        if($final_array[$data["product_sku_id"]][$val] == $data["month_data"]){
+
+                            $final_array[$data["product_sku_id"]][$val] =  $data["quantity"];
+                        }
+                    } */
+                   //  $final_array[$data["product_sku_id"]][] =   $data;
+                    
+              //  }
+             //   else{
+             //       $final_array[$data["product_sku_id"]][]  = $data;
+                      //  $final_array[$data["product_sku_id"]][] =   $data;
+                    
+                  /*  foreach($month_output as $k =>$val){
+                        if($final_array[$data["product_sku_id"]][$val] == $data["month_data"]){
+
+                            $final_array[$data["product_sku_id"]][$val] =  $data["quantity"];
+                        }
+                    }*/
+                    
+             //   }
+                
+                
+                
+            }
+            
+          //  echo "<pre>";
+          //  print_r($final_array);
+            
+          //  die;
+        }
+        
+        if(isset($final_array) && !empty($final_array)) {
+            return $final_array;
+        } else{
+            return 0;
+        }
+        
+    }
+    
+    public function get_monthly_data($data) {
+        
+            $from_date = $data['from_month_data']."-01";
+            $to_date = $data['to_month_data']."-01";
+        
             $date1  = $from_date;
             $date2  = $to_date;
             $month_output = array();
@@ -2720,53 +2820,7 @@ GROUP BY `bmpgd`.`political_geography_name` ".$main_query_end;
             } while ($month != $last);
 
 
-            var_dump($month_output);
-            
-            $final_array = array();
-            
-            foreach($target_data as $key=>$data){
-                $inner_array = array();
-                if(!array_key_exists($data["product_sku_id"],$final_array)){
-                    
-                    $final_array[$data["product_sku_id"]][] = $month_output;
-                    
-                    foreach($month_output as $k =>$val){
-                        if($final_array[$data["product_sku_id"]][$val] == $data["month_data"]){
-
-                            $final_array[$data["product_sku_id"]][$val] =  $data["quantity"];
-                        }
-                    }
-                   //  $final_array[$data["product_sku_id"]][] =   $data;
-                    
-                }
-                else{
-                    $final_array[$data["product_sku_id"]][]  = $month_output;
-                      //  $final_array[$data["product_sku_id"]][] =   $data;
-                    
-                    foreach($month_output as $k =>$val){
-                        if($final_array[$data["product_sku_id"]][$val] == $data["month_data"]){
-
-                            $final_array[$data["product_sku_id"]][$val] =  $data["quantity"];
-                        }
-                    }
-                    
-                }
-                
-                
-                
-            }
-            
-            echo "<pre>";
-            print_r($final_array);
-            
-            die;
-        }
-        
-        if(isset($target_data) && !empty($target_data)) {
-            return $target_data;
-        } else{
-            return 0;
-        }
+            return $month_output;
         
     }
     

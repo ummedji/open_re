@@ -5,15 +5,20 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12">
     <div class="top_form">
         <div class="row">
-            <div class="col-md-12 text-center sub_nave">
-                <div class="inn_sub_nave">
-                    <ul>
-                        <li><a href="<?php echo base_url('/ishop/set_schemes') ?>">Allocation</a></li>
-                        <li class="active"><a href="<?php echo base_url('/ishop/schemes_view') ?>">View</a></li>
-                    </ul>
-                    <div class="clearfix"></div>
+            <?php if($current_user->role_id == 7){
+                ?>
+                <div class="col-md-12 text-center sub_nave">
+                    <div class="inn_sub_nave">
+                        <ul>
+                            <li><a href="<?php echo base_url('/ishop/set_schemes') ?>">Allocation</a></li>
+                            <li class="active"><a href="<?php echo base_url('/ishop/schemes_view') ?>">View</a></li>
+                        </ul>
+                        <div class="clearfix"></div>
+                    </div>
                 </div>
-            </div>
+            <?php
+            }
+            ?>
             <div class="col-md-8 col-md-offset-2 distributore_form">
                 <div class="row">
                     <div class="col-md-4 col-sm-6 tp_form">
@@ -22,33 +27,62 @@ echo form_open('',$attributes); ?>
                             <input type="text" class="form-control" name="year" id="year" placeholder="">
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 tp_form">
-                        <div class="form-group">
-                            <label>Geo Level 3</label>
-                            <select class="selectpicker" name="region" id="geo_level_scheme">
-                                <option value="0">Select Geo Location</option>
-<!--                                --><?php
-//                                if(isset($geo_data) && !empty($geo_data))
-//                                {
-//                                    foreach($geo_data as $k=> $geo_val)
-//                                    {
-//                                        ?>
-<!--                                        <option value="--><?php //echo $geo_val['business_geo_id']; ?><!--" attr-name="--><?php //echo $geo_val['business_georaphy_name']; ?><!--">--><?php //echo $geo_val['business_georaphy_name']; ?><!--</option>-->
-<!--                                        --><?php
-//                                    }
-//                                }
-//                                ?>
-                            </select>
+                    <?php if($current_user->role_id == 7){
+                        ?>
+                        <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>Geo Level 3</label>
+                                <select class="selectpicker" name="region" id="geo_level_scheme">
+                                    <option value="0">Select Geo Location</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 tp_form">
-                        <div class="form-group">
-                            <label>Geo Level 2</label>
-                            <select class="selectpicker" name="territory" id="geo_level_1">
-                                <option value="0">Select Geo Location</option>
-                            </select>
+                        <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>Geo Level 2</label>
+                                <select class="selectpicker" name="territory" id="geo_level_1">
+                                    <option value="0">Select Geo Location</option>
+                                </select>
+                            </div>
                         </div>
-                    </div>
+                    <?php
+                    }
+
+                    elseif($current_user->role_id == 8)
+                    {
+                        ?>
+                        <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>Geo Level 2</label>
+                                <select class="selectpicker" name="territory" id="geo_level_1">
+                                    <option value="0">Select Geo Location</option>
+                                    <?php
+                                    if(isset($geo_data) && !empty($geo_data))
+                                    {
+                                        foreach($geo_data as $k=> $geo_val)
+                                        {
+                                            ?>
+                                        <option value="<?php echo $geo_val['business_geo_id']; ?>" attr-name="<?php echo $geo_val['business_georaphy_name']; ?>"><?php echo $geo_val['business_georaphy_name']; ?></option>
+                                    <?php
+                                        }
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>Retailer Name</label>
+                                <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme">
+                                    <option value="0">Select Retailer</option>
+                                </select>
+                            </div>
+                        </div>
+                    <?php
+                    }
+
+                    ?>
+
                     <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <div class="row">

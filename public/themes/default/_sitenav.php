@@ -83,9 +83,15 @@
                                     <?php
                                 }
                                 ?>
-                                <?php if($current_user->role_id == 7 ||  $current_user->role_id == 8 || $current_user->role_id == 10) {
+                                <?php if($current_user->role_id == 7) {
                                     ?>
                                     <li role="presentation"><a href="<?php echo base_url('/ishop/set_schemes') ?>">SCHEMES</a></li>
+                                    <?php
+                                }
+                                if($current_user->role_id == 8 || $current_user->role_id == 10)
+                                {
+                                    ?>
+                                    <li role="presentation"><a href="<?php echo base_url('/ishop/schemes_view') ?>">SCHEMES</a></li>
                                     <?php
                                 }
                                 ?>

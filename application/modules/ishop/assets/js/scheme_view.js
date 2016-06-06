@@ -99,9 +99,7 @@ $(document).on('click','#delete_schemes',function(e){
                 success: function(resp){
                     $("#scheme_view_middle_container").html(resp);
                 }
-
             });
-
     }
     return false;
 
@@ -142,6 +140,42 @@ function get_region_by_selected_cur_year(selected_cur_year){
             }
         }
     });
+}
+
+$("select#geo_level_1").on("change",function(){
+
+    var selected_geo_data = $(this).val();
+    get_retailer_by_geo_data(selected_geo_data);
+
+});
+
+function get_retailer_by_geo_data(selected_geo_data){
+
+
+    var login_user_countryid = $("input#login_customer_countryid").val();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_user_by_business_geo_data",
+        data: {selected_geo_id:selected_geo_data, country_id : login_user_countryid},
+        dataType : 'json',
+        success: function(resp){
+
+            if(resp != 0){
+
+                $("select#retailer_scheme").empty();
+
+                $("select#retailer_scheme").append('<option value="0">Select Retailer Name</option>');
+
+                $.each(resp, function (key, value) {
+                    $('select#retailer_scheme').append('<option value="' + value.id + '" >' + value.display_name + '</option>');
+                });
+
+                $("select#retailer_scheme").selectpicker('refresh');
+            }
+        }
+    });
+
 }
 
 

@@ -16,7 +16,8 @@ $("select#geo_level_rol").on("change",function(){
 function get_lower_geo_by_parent_geo_scheme(selected_geo_id){
 
     var login_user_countryid = $("input#login_customer_countryid").val();
-    var login_customer_type = 10;
+    var login_user_type = $("input#login_customer_role").val();
+    var default_customer_type = 10;
     var customer_selected = $("input#login_customer_id").val();
    /* var url_seg = $("input.page_function" ).val();
     var checked_type = 'retailer';*/
@@ -24,7 +25,7 @@ function get_lower_geo_by_parent_geo_scheme(selected_geo_id){
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_lower_business_geo_data",
-        data: {user_id:customer_selected,country_id : login_user_countryid,role :login_customer_type,parent_geo_id:selected_geo_id },
+        data: {user_id:customer_selected,country_id : login_user_countryid,role :default_customer_type,parent_geo_id:selected_geo_id },
         dataType : 'json',
         success: function(resp){
             console.log(resp);

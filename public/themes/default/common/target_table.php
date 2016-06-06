@@ -1,8 +1,8 @@
 <?php
 $action_data = $this->uri->segment(2);
 
-if(isset($table) && count($table)>0) { ?>
-        <?php if(isset($table['no_margin']) && !empty($table['no_margin']) )
+if(isset($target_data) && count($target_data)>0) { ?>
+        <?php if(isset($target_data['no_margin']) && !empty($target_data['no_margin']) )
         { ?>
                 <div class="col-md-12">
             <?php
@@ -23,7 +23,7 @@ if(isset($table) && count($table)>0) { ?>
                     <table class="col-md-12 table-bordered table-striped table-condensed cf">
                         <thead class="cf">
                         <tr>
-                            <?php foreach($table['head'] as $hkey => $head) { ?>
+                            <?php foreach($target_data['head'] as $hkey => $head) { ?>
                                 <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
                                     <a href="#">
                                         <?php echo $head;?>

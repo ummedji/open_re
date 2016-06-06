@@ -477,8 +477,9 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 		$default_retailer_role = 10;
 		$parent_id = null;
+		$logined_user_role = $user->role_id;
 
-		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id);
+		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id,$year=null,$logined_user_role);
 		//testdata($retailer_geo_data);
 		$schemes = $this->ishop_model->get_all_schemes($user->country_id);
 
@@ -492,11 +493,13 @@ class Ishop extends Front_Controller
 
 	public function get_lower_business_geo_data()
 	{
+		$user = $this->auth->user();
+		$login_user_type = $user->role_id;
 		$user_id=$_POST['user_id'];
 		$country_id=$_POST['country_id'];
 		$role=$_POST['role'];
 		$parent_geo_id=$_POST['parent_geo_id'];
-		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user_id,$country_id,$role,$parent_geo_id);
+		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user_id,$country_id,$role,$parent_geo_id,$year=null,$login_user_type);
 		echo json_encode($retailer_geo_data);;
 		die;
 	}
@@ -546,10 +549,12 @@ class Ishop extends Front_Controller
 	{
 		Assets::add_module_js('ishop', 'scheme_view.js');
 		$user = $this->auth->user();
+		$login_user_type= $user->role_id;
+
 		$default_retailer_role = 10;
 		$parent_id = null;
 
-		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id);
+		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id,$year=null,$login_user_type);
 
 		Template::set('geo_data', $retailer_geo_data);
 		Template::set('current_user', $user);
@@ -561,13 +566,20 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
-
+		$login_user_role=$user->role_id;
 		$year = $this->input->post("year");
 		$region = $this->input->post("region");
 		$territory = $this->input->post("territory");
 
-		$scheme_view=$this->ishop_model->view_schemes_details($user_id,$user->country_id,$year,$region,$territory);
-		Template::set('scheme_table',$scheme_view);
+		$scheme_view=$this->ishop_model->view_schemes_detail($user_id,$user->country_id,$year,$region,$territory,$login_user_role);
+	//	testdata($scheme_view);
+		if($login_user_role==7){
+			Template::set('scheme_table',$scheme_view);
+		}
+		else{
+			Template::set('table',$scheme_view);
+		}
+
 		Template::set_view('ishop/scheme_view');
 		Template::render();
 		//testdata($scheme_view);
@@ -595,9 +607,10 @@ class Ishop extends Front_Controller
 		$year =  $_POST['selected_cur_year'];
 		//testdata($year);
 		$user = $this->auth->user();
+		$login_user_type = $user->role_id;
 		$default_retailer_role=10;
 		$parent_id=null;
-		$business_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id,$year);
+		$business_geo_data = $this->ishop_model->get_business_geo_data($user->id,$user->country_id,$default_retailer_role,$parent_id,$year,$login_user_type);
 		echo json_encode($business_geo_data);;
 		die;
 	}
@@ -1682,10 +1695,18 @@ class Ishop extends Front_Controller
                 if(isset($_POST) && !empty($_POST)){
                     
                      $target_data = $this->ishop_model->get_target_monthly_data($_POST);
+                     
+                      $target_month_data = $this->ishop_model->get_monthly_data($_POST);
                     
-                    echo "<pre>";
+                       Template::set('target_data',$target_data);
+                       Template::set('month_data',$target_month_data);
+                      
+                   /* echo "<pre>";
                     print_r($_POST);
-                    die;
+                    print_r($target_data);
+                    print_r($target_month_data);
+                    
+                    die;*/
                 }
                 
             }

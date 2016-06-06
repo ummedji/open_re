@@ -79,17 +79,17 @@ echo form_open('',$attributes); ?>
                         <label>Schemes</label>
                         <select class="selectpicker" name="schemes" id="schemes">
                             <option>Select Schemes</option>
-                            <?php
-                            if(isset($schemes) && !empty($schemes))
+                          <!--  <?php
+/*                            if(isset($schemes) && !empty($schemes))
                             {
                                 foreach($schemes as $k=> $schemes_val)
                                 {
-                                    ?>
-                                    <option value="<?php echo $schemes_val['scheme_id']; ?>" attr-name="<?php echo $schemes_val['scheme_name']; ?>"><?php echo $schemes_val['scheme_name']; ?></option>
-                                    <?php
-                                }
+                                    */?>
+                                    <option value="<?php /*echo $schemes_val['scheme_id']; */?>" attr-name="<?php /*echo $schemes_val['scheme_name']; */?>"><?php /*echo $schemes_val['scheme_name']; */?></option>
+                                    --><?php
+/*                                }
                             }
-                            ?>
+                            */?>
                         </select>
                     </div>
                 </div>

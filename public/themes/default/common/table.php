@@ -1,6 +1,5 @@
 <?php
 $action_data = $this->uri->segment(2);
-
 if(isset($table) && count($table)>0) { ?>
         <?php if(isset($table['no_margin']) && !empty($table['no_margin']) )
         { ?>
