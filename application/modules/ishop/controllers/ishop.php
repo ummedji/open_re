@@ -2222,6 +2222,8 @@ class Ishop extends Front_Controller
             
                 $file = $_POST["upload_file_data"]["tmp_name"];
 
+                $filename = explode("_",$_POST["upload_file_data"]["name"]);
+                
                 //load the excel library
                 $this->load->library('excel');
 
@@ -2275,112 +2277,176 @@ class Ishop extends Front_Controller
                    /*
                     *  NEED TO CHANGE AS PER EXCEL FILE
                     */
-                   
-                   if(!isset($data["A"])){
-                       $month_data = "";
-                   } 
-                   else{
-                       $month_data = $data["A"];
-                   }
-                   
-                   if(!isset($data["B"])){
-                       $distributor_code = "";
-                   }
-                   else{
-                        $distributor_code = $data["B"];
-                   }
-                       
-                   if(!isset($data["C"])){
-                        $distributor_name = "";
-                   }
-                   else{
-                        $distributor_name = $data["C"];
-                   }
-                           
-                   if(!isset($data["D"])){
-                       $product_code = "";
-                   }
-                   else{
-                       $product_code = $data["D"];
-                   }
-                               
-                   if(!isset($data["E"])){
-                       $product_name = "";
-                   }
-                   else{
-                       $product_name = $data["E"];
-                   }
-                   
-                   if(!isset($data["F"])){
-                        $quantity = "";
-                   }
-                   else{
-                        $quantity = $data["F"];
-                   }
-                   
-                    
-                   if($month_data == "" || $distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $quantity == "")
-                   {
-                       //CHECK DATA BLANK
-                       
-                       if(!isset($error_array["error"]["header"])){
-                            $error_array["error"]["header"] = $header;
-                       }
-                       
-                       $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Some row data blank";
-                   }
-                   else
-                   {
-                       
-                       //CHECK PROPER DATA
-                       
-                       // DISTRIBUTOR AND PRODUCT CHECK
-                       
-                       $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
-                       $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-                       
-                       if($user_data != 0 && $product_data != 0)
-                       {
-                           //ADD DATA TO DATA ARRAY
-                           
-                           $month_data1 = explode("-",$month_data);
-                           $new_month_data = $month_data1[0]."-".$month_data1[1]."-01";
-                           
-                           $filename = explode("_",$_POST["upload_file_data"]["name"]);
-                           
-                           if($filename[0] == "target"){
-                                $check_already_data = $this->ishop_model->check_target_data($product_data,$new_month_data,$user_data);
-                           }
-                           elseif($filename[0] == "budget"){
-                                $check_already_data = $this->ishop_model->check_budget_data($product_data,$new_month_data,$user_data);
-                           }
-                           
-                           if($check_already_data == 1){
-                           
+                  if($filename[0] == "target" || $filename[0] == "budget"){
+                      
+                        if(!isset($data["A"])){
+                            $month_data = "";
+                        } 
+                        else{
+                            $month_data = $data["A"];
+                        }
+
+                        if(!isset($data["B"])){
+                            $distributor_code = "";
+                        }
+                        else{
+                             $distributor_code = $data["B"];
+                        }
+
+                        if(!isset($data["C"])){
+                             $distributor_name = "";
+                        }
+                        else{
+                             $distributor_name = $data["C"];
+                        }
+
+                        if(!isset($data["D"])){
+                            $product_code = "";
+                        }
+                        else{
+                            $product_code = $data["D"];
+                        }
+
+                        if(!isset($data["E"])){
+                            $product_name = "";
+                        }
+                        else{
+                            $product_name = $data["E"];
+                        }
+
+                        if(!isset($data["F"])){
+                             $quantity = "";
+                        }
+                        else{
+                             $quantity = $data["F"];
+                        }
+
+
+                        if($month_data == "" || $distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $quantity == "")
+                        {
+                            //CHECK DATA BLANK
+
+                            if(!isset($error_array["error"]["header"])){
+                                 $error_array["error"]["header"] = $header;
+                            }
+
+                            $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Some row data blank";
+                        }
+                        else
+                        {
+
+                            //CHECK PROPER DATA
+
+                            // DISTRIBUTOR AND PRODUCT CHECK
+
+                            $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
+                            $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
+
+                            if($user_data != 0 && $product_data != 0)
+                            {
+                                //ADD DATA TO DATA ARRAY
+
+                                $month_data1 = explode("-",$month_data);
+                                $new_month_data = $month_data1[0]."-".$month_data1[1]."-01";
+
+
+
+                                if($filename[0] == "target"){
+                                     $check_already_data = $this->ishop_model->check_target_data($product_data,$new_month_data,$user_data);
+                                }
+                                elseif($filename[0] == "budget"){
+                                     $check_already_data = $this->ishop_model->check_budget_data($product_data,$new_month_data,$user_data);
+                                }
+
+                                if($check_already_data == 1){
+
+                                     if(!isset($error_array["error"]["header"])){
+                                          $error_array["error"]["header"] = $header;
+                                     }
+                                     $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."data already exist for selected month, user, product";
+                                }
+                                else
+                                {
+                                     $inner_array[] = $new_month_data;
+                                     $inner_array[] = $user_data;
+                                     $inner_array[] = $product_data;
+                                  //   $inner_array[] = $product_code;
+                                  //   $inner_array[] = $product_name;
+                                     $inner_array[] = $quantity;
+
+                                     $final_array["success"][] = $inner_array;
+                                }
+                            }
+                            else{
+
                                 if(!isset($error_array["error"]["header"])){
                                      $error_array["error"]["header"] = $header;
                                 }
-                                $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."data already exist for selected month, user, product";
-                           }
-                           else
-                           {
-                                $inner_array[] = $new_month_data;
-                                $inner_array[] = $user_data;
-                                $inner_array[] = $product_data;
-                             //   $inner_array[] = $product_code;
-                             //   $inner_array[] = $product_name;
-                                $inner_array[] = $quantity;
+                                $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Excel User or Product data not matched with DB data";
+                            }
 
-                                $final_array["success"][] = $inner_array;
-                           }
-                       }
-                       else{
-                           
-                           if(!isset($error_array["error"]["header"])){
-                                $error_array["error"]["header"] = $header;
-                           }
-                           $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Excel User or Product data not matched with DB data";
-                       }
+                        }
+                   
+                    }
+                    elseif($filename[0] == "companycurrentstock")
+                    {
+                       
+                        if(!isset($data["A"])){
+                            $product_code = "";
+                        }
+                        else{
+                            $product_code = $data["A"];
+                        }
+
+                        if(!isset($data["B"])){
+                            $product_name = "";
+                        }
+                        else{
+                            $product_name = $data["B"];
+                        }
+                        
+                        if(!isset($data["C"])){
+                            $batch_no = "";
+                        } 
+                        else{
+                            $batch_no = $data["C"];
+                        }
+
+                        if(!isset($data["D"])){
+                            $Unrestricted_Qty = "";
+                        }
+                        else{
+                             $Unrestricted_Qty = $data["D"];
+                        }
+
+                        if(!isset($data["E"])){
+                             $In_Transit_Qty = "";
+                        }
+                        else{
+                             $In_Transit_Qty = $data["E"];
+                        }
+
+                        if(!isset($data["F"])){
+                             $Expiry_Date = "";
+                        }
+                        else{
+                             $Expiry_Date = $data["F"];
+                        }
+                        
+                        if(!isset($data["G"])){
+                             $Mfg_Date = "";
+                        }
+                        else{
+                             $Mfg_Date = $data["G"];
+                        }
+                        
+                        if(!isset($data["H"])){
+                             $Date_data = "";
+                        }
+                        else{
+                             $Date_data = $data["H"];
+                        }
+                        
                        
                    }
                    

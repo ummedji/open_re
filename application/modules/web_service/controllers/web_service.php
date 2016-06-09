@@ -112,7 +112,9 @@ class Web_service extends Front_Controller
                                     'display_name' => $code_data['display_name'],
                                     'email' => $code_data['email'],
                                     'color' => $code_data['color'],
-                                    'language' => $code_data['language']
+                                    'language' => $code_data['language'],
+                                    'role_id' => $code_data['role_id'],
+                                    'country_id' => $code_data['country_id']
                                     );
 
                     $id = $code_data['id'];
@@ -189,9 +191,21 @@ class Web_service extends Front_Controller
             $this->load->model('ishop/ishop_model');
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
-            $distributors = !empty($distributors) ? $distributors : array();
+
+            $dist_array = array();
+            if(!empty($distributors))
+            {
+                foreach($distributors as $distributor)
+                {
+                    $dist = array(
+                        "display_name"=>$distributor['display_name'],
+                        "user_code"=>$distributor['user_code'],
+                    );
+                    array_push($dist_array,$dist);
+                }
+            }
             $product_skus = !empty($product_skus) ? $product_skus : array();
-            $data = array("distributors" => $distributors, "products_skus" => $product_skus);
+            $data = array("distributors" => $dist_array, "products_skus" => $product_skus);
             $result['status'] = true;
             $result['data'] = $data;
         } else {

@@ -122,7 +122,7 @@ if (!$this->input->is_ajax_request()) {
                         Browse <input type="file" name="upload_file_data" id="upload_file_data" />
                     </span> 
                 </span>
-                     <!--   <input type="text" class="form-control" readonly> -->
+                       <input type="text" class="form-control" readonly> 
                     </div>
                     <div class="clearfix"></div>
                 </div>
@@ -135,7 +135,7 @@ if (!$this->input->is_ajax_request()) {
                        $folder = "qa/re";
                    }
                 ?>
-                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/company_current_stock/company_current_stock.xlsx","_blank" );' class="btn btn-default">Download Templates</a> <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/target/target_retailer.xlsx","_blank" );' class="btn btn-default">Download Templates</a></div>
+                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/company_current_stock/companycurrentstock_data.xlsx","_blank" );' class="btn btn-default">Download Templates</a> </div>
                 
                 <?php echo form_close(); ?>
                 
