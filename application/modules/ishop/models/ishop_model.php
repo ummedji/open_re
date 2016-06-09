@@ -3265,14 +3265,17 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
                 }
 
-
+                $order_id_data = '<input type="hidden" name="order_id" value="'.$order_id.'">';
+                
                 $i=1;
                 foreach($order_detail['result'] as $od )
                 {
                     
                     $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
 
-                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+                    
+                    
+                    $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
                     
                     
                     
@@ -3281,7 +3284,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
                     $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
                     $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
-                    $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
+                    $amount = '<div class="amount_'.$od["product_order_id"].'"><input type="hidden" class="amount_data" name="amount[]" value="'.$od['amount'].'" /><span class="amount">'.$od['amount'].'</span></div>';
                     
                     if($action_data == "order_approval"){
                         $dub_dispatched_data = '<input type="text" name="dispatched_quantity[]" class="dispatched_quantity" value="'.$od['dispatched_quantity'].'" />';
@@ -3332,6 +3335,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
                 }
 
+                
 
                 $i=1;
                 foreach($order_detail['result'] as $od )
@@ -3348,6 +3352,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         
                     $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
 
+                    
+                    
                     $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
                     
                     
@@ -3553,6 +3559,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
         if(!empty($detail_data["order_product_id"])){
             
+            $total_amount = 0;
+            
             foreach($detail_data["order_product_id"] as $key=> $order_product_id){
                 
                 $update_array = array();
@@ -3590,6 +3598,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         
                         $update_array["amount"] = $amount_data;
                         
+                        $total_amount = $total_amount+$amount_data;
+                        
                     }
                 }
                 
@@ -3602,9 +3612,14 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     }
                 }
                 
-                
                 $this->db->where('product_order_id', $order_product_id);
                 $this->db->update('bf_ishop_product_order', $update_array); 
+                
+                $amount_data = array(
+                    'total_amount' => $total_amount
+                 );
+                
+                $this->db->update('bf_ishop_orders', $amount_data, array('order_id' => $detail_data["order_id"]));
                 
             }
             
@@ -3621,6 +3636,33 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
     
     
     public function delete_order_detail_data($order_product_id) {
+        
+        $this->db->select('*');
+        $this->db->from('bf_ishop_product_order');
+        $this->db->where('product_order_id',$order_product_id);
+        
+        $order_detail_data = $this->db->get()->result_array();
+        
+        $amount_data = $order_detail_data[0]["amount"];
+        
+        $order_id = $order_detail_data[0]["order_id"];
+        
+        $this->db->select('*');
+        $this->db->from('bf_ishop_orders');
+        $this->db->where('order_id',$order_id);
+        
+        $order_data = $this->db->get()->result_array();
+        $order_amount_data = $order_data[0]["total_amount"];
+        
+        $final_amount = $order_amount_data-$amount_data;
+        
+        $update_data = array(
+            'total_amount' =>$final_amount
+        );
+
+        $this->db->where('order_id', $order_id);
+        $this->db->update('bf_ishop_orders',$update_data); 
+        
         $this->db->delete('bf_ishop_product_order', array('product_order_id' => $order_product_id));
     }
     

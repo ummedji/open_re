@@ -3,6 +3,26 @@
  */
 $(document).ready(function(){
     
+    
+    $( "#form_date" ).datepicker({
+      format: "yyyy-mm-dd",
+      showOn: "button",
+      buttonImage: site_url+"/public/themes/default/images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select date",
+      autoclose: true
+    });
+    
+    
+    $( "#to_date" ).datepicker({
+      format: "yyyy-mm-dd",
+      showOn: "button",
+      buttonImage: site_url+"/public/themes/default/images/calendar.gif",
+      buttonImageOnly: true,
+      buttonText: "Select date",
+      autoclose: true
+    });
+    
     $("#order_status").on("submit",function(){
         
         var param = $("form#order_status").serializeArray();
@@ -51,7 +71,7 @@ $(document).on('submit','#order_status_data_details',function(){
             url: site_url+"ishop/update_order_status_detail_data",
             data: param,
             success: function(resp){
-                console.log(resp);
+               // console.log(resp);
                 location.reload();
             }
         });
@@ -67,7 +87,9 @@ $(document).on('click','div#order_status_table_container div.delete_i',function(
             url: site_url+"ishop/delete_order_detail_data",
             data: {data_id:id},
             success: function(resp){
+                //alert(resp);
                 console.log(resp);
+                //return false;
                 location.reload();
             }
         });
