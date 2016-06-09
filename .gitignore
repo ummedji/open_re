@@ -36,6 +36,8 @@ application/config/database.php
 .htaccess
 public/.htaccess
 
+application/modules/web_service
+
 # but leave the config folders there
 !application/config/development/index.html
 !application/config/testing/index.html
