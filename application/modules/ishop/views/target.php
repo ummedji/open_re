@@ -518,6 +518,12 @@ else{
                     </div>
                     <div class="clearfix"></div>
                 </div>
+                
+                <?php
+                   echo $_SERVER['SERVER_NAME']."</br>";
+                   echo $_SERVER['DOCUMENT_ROOT'];
+                ?>
+                
                 <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/target/target_distributor.xlsx","_blank" );' class="btn btn-default">Download Templates</a> <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/target/target_retailer.xlsx","_blank" );' class="btn btn-default">Download Templates</a></div>
                 
                 <?php echo form_close(); ?>
