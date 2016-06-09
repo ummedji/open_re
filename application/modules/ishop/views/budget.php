@@ -454,7 +454,15 @@ else{
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/budget/budget_distributor.xlsx","_blank" );' class="btn btn-default">Download Templates</a> <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/budget/budget_retailer.xlsx","_blank" );' class="btn btn-default">Download Templates</a></div>
+                <?php
+                   if($_SERVER['SERVER_NAME'] == "localhost"){
+                       $folder = "open_re/trunk";
+                   }
+                   elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
+                       $folder = "qa/re";
+                   }
+                ?>
+                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/budget/budget_distributor.xlsx","_blank" );' class="btn btn-default">Download Templates</a> <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/budget/budget_retailer.xlsx","_blank" );' class="btn btn-default">Download Templates</a></div>
                 
                 <?php echo form_close(); ?>
                 

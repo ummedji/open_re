@@ -2497,14 +2497,20 @@ class Ishop extends Front_Controller
                  * NEED TO CHANGE AS PER UPLOADED FILE 
                  */
                 
+                 if($_SERVER['SERVER_NAME'] == "localhost"){
+                       $folder = "open_re/trunk";
+                   }
+                   elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
+                       $folder = "qa/re";
+                   }
                 
-                if(file_exists("D:/newWamp/www/open_re/trunk/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+                if(file_exists($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
                     
-                    unlink("D:/newWamp/www/open_re/trunk/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                    unlink($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
                     
                 }
                 
-                $objWriter->save("D:/newWamp/www/open_re/trunk/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                $objWriter->save($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
                 
                 echo $filename;
                 
