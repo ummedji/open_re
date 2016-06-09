@@ -114,7 +114,7 @@ class Web_service extends Front_Controller
                                     'color' => $code_data['color'],
                                     'language' => $code_data['language'],
                                     'role_id' => $code_data['role_id'],
-                                    'country_id' => $code_data['country_id']
+                                    'country_id' => $code_data['country_id'] 
                                     );
 
                     $id = $code_data['id'];
