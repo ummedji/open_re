@@ -182,14 +182,21 @@ class Web_service extends Front_Controller
     public function get_global_info()
     {
         $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
         $unq_no = $this->input->get_post('unq_no');
 
-        if (trim($user_id) && $user_id != 0) {
-
+        if (trim($user_id) && $user_id != 0 && trim($country_id) && $country_id != 0) {
+            $this->load->model('ishop/ishop_model');
+            $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
+            $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
+            $distributors = !empty($distributors) ? $distributors : array();
+            $product_skus = !empty($product_skus) ? $product_skus : array();
+            $data = array("distributors" => $distributors, "products_skus" => $product_skus);
+            $result['status'] = true;
+            $result['data'] = $data;
         } else {
             $result['status'] = false;
-            $result['message'] = '';
-            $result['data'] = '';
+            $result['message'] = 'Please Enter User Id and Country Id.';
         }
         echo json_encode($result);
         exit;
