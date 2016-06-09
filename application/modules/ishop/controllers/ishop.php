@@ -2447,6 +2447,74 @@ class Ishop extends Front_Controller
                              $Date_data = $data["H"];
                         }
                         
+                        
+                        if($product_code == "" || $product_name == "" || $batch_no == "" || $Unrestricted_Qty == "" || $In_Transit_Qty == "" || $Expiry_Date == "" || $Mfg_Date == "")
+                        {
+                            //CHECK DATA BLANK
+
+                            if(!isset($error_array["error"]["header"])){
+                                 $error_array["error"]["header"] = $header;
+                            }
+
+                            $error_array["error"][] = $product_code."~".$product_name."~".$batch_no."~".$Unrestricted_Qty."~".$In_Transit_Qty."~".$Expiry_Date."~".$Mfg_Date."~".$Date_data."~"."Some row data blank";
+                        }
+                        else
+                        {
+                          
+                            //CHECK PROPER DATA
+
+                            //PRODUCT CHECK
+
+                            $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
+
+                            if($product_data != 0)
+                            {
+                                //ADD DATA TO DATA ARRAY
+
+                                if($Date_data == ""){
+                                    $Date_data = date("Y-m-d");
+                                }
+                                else{
+                                    $Date_data = $Date_data;
+                                }
+                                
+                                //$month_data1 = explode("-",$month_data);
+                                //$new_month_data = $month_data1[0]."-".$month_data1[1]."-01";
+
+                                $check_already_data = $this->ishop_model->check_company_stock_data($product_data);
+                               
+
+                                if($check_already_data == 1){
+
+                                     if(!isset($error_array["error"]["header"])){
+                                          $error_array["error"]["header"] = $header;
+                                     }
+                                     $error_array["error"][] = $product_code."~".$product_name."~".$batch_no."~".$Unrestricted_Qty."~".$In_Transit_Qty."~".$Expiry_Date."~".$Mfg_Date."~".$Date_data."~"."data already exist for selected month, user, product";
+                                }
+                                else
+                                {
+                                     $inner_array[] = $new_month_data;
+                                     $inner_array[] = $user_data;
+                                     $inner_array[] = $product_data;
+                                  //   $inner_array[] = $product_code;
+                                  //   $inner_array[] = $product_name;
+                                     $inner_array[] = $quantity;
+
+                                     $final_array["success"][] = $inner_array;
+                                }
+                            }
+                            else{
+
+                                if(!isset($error_array["error"]["header"])){
+                                     $error_array["error"]["header"] = $header;
+                                }
+                                $error_array["error"][] = $product_code."~".$product_name."~".$batch_no."~".$Unrestricted_Qty."~".$In_Transit_Qty."~".$Expiry_Date."~".$Mfg_Date."~".$Date_data."~"."Excel User or Product data not matched with DB data";
+                            }
+                            
+                            
+                        }
+
+                        
                        
                    }
                    

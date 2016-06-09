@@ -171,8 +171,7 @@ class Web_service extends Front_Controller
                 }
             }
         }
-        echo json_encode($result);
-        exit;
+        $this->do_json($result);
     }
 
     /**
@@ -185,7 +184,6 @@ class Web_service extends Front_Controller
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
-        $unq_no = $this->input->get_post('unq_no');
 
         if (trim($user_id) && $user_id != 0 && trim($country_id) && $country_id != 0) {
             $this->load->model('ishop/ishop_model');
@@ -212,6 +210,14 @@ class Web_service extends Front_Controller
             $result['status'] = false;
             $result['message'] = 'Please Enter User Id and Country Id.';
         }
+        $this->do_json($result);
+    }
+
+    public function do_json($result)
+    {
+        array_walk_recursive($result, function (&$item, $key) {
+            $item = null === $item ? '' : $item;
+        });
         echo json_encode($result);
         exit;
     }
