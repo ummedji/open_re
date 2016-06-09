@@ -6,7 +6,7 @@ $login_customer_type = $user->role_id;
 
  $_POST['radio1'] =  (isset($_POST['radio1']) ? $_POST['radio1'] : '');
  
-//echo "<pre>";print_r($_POST);
+//echo "<pre>";print_r($order_table);die;
 
 if(isset($order_table) && count($order_table)>0) {
     if($login_customer_type != 9 && $login_customer_type != 10){
@@ -77,10 +77,16 @@ if(isset($order_table) && count($order_table)>0) {
                                             <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
                                            <?php } 
                                            
-                                           
+                                         
+                                           if(isset($order_table['delete'][$rkey]) && !empty($order_table['delete'][$rkey]) ){
+                                               $style = "style='pointer-events: none;opacity: 0.4;'";
+                                               
+                                           }
+                                            else {  $style = "";}
                                            
                                            ?>
-                                            <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                            
+                                           <div class="delete_i" <?php echo $style; ?> prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                            
                                         </td>
                                     <?php 

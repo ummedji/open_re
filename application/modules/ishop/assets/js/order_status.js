@@ -205,3 +205,61 @@ function mark_as_unread(order_id){
     return false;
     
 } 
+
+function show_po_popup(order_id,PO_no){
+    
+    $("div#myModal input#order_data").empty();
+    $("div#myModal input#po_number_data").empty();
+    
+    $("div#myModal input#order_data").val(order_id);
+    $("div#myModal input#po_number_data").val(PO_no);
+    
+    $('#myModal').modal('show');
+    
+}
+
+$(document).on("click","#save_po_data",function(){
+    
+    var order_id = $("div#myModal input#order_data").val();
+    var po_num_data = $("div#myModal input#po_number_data").val();
+    
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+'ishop/update_po_data',
+        data: {orderid: order_id,po_numdata:po_num_data},
+        success: function(resp){
+            
+             if(resp > 0){
+                 
+                 $("div#myModal div.modal-header").append("<div class='success_message'><span style='color:green;font-size:12px;text-align:center;'>Data updated Successfully.</span></div>");
+                    
+                    setTimeout(function(){
+                        $("div.success_message").remove();
+                     }, 1500);
+                 
+             }
+             else{
+                 
+                 $("div#myModal div.modal-header").append("<div class='error_message'><span style='color:red;font-size:12px;text-align:center;'>Data not Updated.Entered PO No already exist.</span></div>");
+                    
+                    setTimeout(function(){
+                        $("div.error_message").remove();
+                     }, 1500);
+                 
+             }
+             
+             setTimeout(function(){
+                    $(".modal-header .close").trigger("click");
+             }, 2500);
+             
+             $("button#order_status").trigger("click");
+             
+             
+             
+        }
+    });
+    
+    
+    
+});

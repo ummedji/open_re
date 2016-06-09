@@ -17,32 +17,21 @@ echo form_open('',$attributes); ?>
             </div>
             <div class="col-md-8 col-md-offset-2 distributore_form">
                 <div class="row">
-                    <div class="col-md-4 col-sm-6 tp_form">
+                    <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                             <label>Year</label>
                             <input type="text" class="form-control" name="cur_year" id="cur_year" placeholder="">
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 tp_form">
+                    <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                             <label>Geo Level 3</label>
                             <select class="selectpicker" name="region" id="geo_level_rol">
                                 <option value="0">Select Geo Location</option>
-                               <!-- <?php
-/*                                if(isset($geo_data) && !empty($geo_data))
-                                {
-                                    foreach($geo_data as $k=> $geo_val)
-                                    {
-                                        */?>
-                                        <option value="<?php /*echo $geo_val['business_geo_id']; */?>" attr-name="<?php /*echo $geo_val['business_georaphy_name']; */?>"><?php /*echo $geo_val['business_georaphy_name']; */?></option>
-                                        --><?php
-/*                                    }
-                                }
-                                */?>
                             </select>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 tp_form">
+                    <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                             <label>Geo Level 2</label>
                             <select class="selectpicker" name="territory" id="geo_level_1">
@@ -79,17 +68,6 @@ echo form_open('',$attributes); ?>
                         <label>Schemes</label>
                         <select class="selectpicker" name="schemes" id="schemes">
                             <option>Select Schemes</option>
-                          <!--  <?php
-/*                            if(isset($schemes) && !empty($schemes))
-                            {
-                                foreach($schemes as $k=> $schemes_val)
-                                {
-                                    */?>
-                                    <option value="<?php /*echo $schemes_val['scheme_id']; */?>" attr-name="<?php /*echo $schemes_val['scheme_name']; */?>"><?php /*echo $schemes_val['scheme_name']; */?></option>
-                                    --><?php
-/*                                }
-                            }
-                            */?>
                         </select>
                     </div>
                 </div>

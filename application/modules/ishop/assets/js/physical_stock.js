@@ -31,6 +31,17 @@ $("input.select_customer_type").on("click",function(){
 
         }
 
+
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/physical_stock",
+            data: {checked_type:'retailer'},
+            //dataType : 'json',
+            success: function(resp){
+                $(".phy_stock_container").html(resp);
+            }
+        });
+
     }
     else if(customer_type_selected == "distributor"){
         $("div.retailer_data").css("display","none");
@@ -46,9 +57,19 @@ $("input.select_customer_type").on("click",function(){
             get_geo_fo_userdata(customer_selected,customer_type_selected);
 
         }
+
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/physical_stock",
+            data: {checked_type:'distributor'},
+            //dataType : 'json',
+            success: function(resp){
+                $(".phy_stock_container").html(resp);
+            }
+        });
+
     }
 });
-
 
 
 $("select#distributor_geo_level").on("change",function(){
@@ -59,6 +80,7 @@ $("select#distributor_geo_level").on("change",function(){
 });
 
 function get_user_by_geo_data(selected_geo_data){
+
 
     var checked_type = $('input[name=radio1]:checked').val();
 
@@ -292,7 +314,6 @@ $(document).on('click', 'div.physical_stock', function () { // <-- changes
 $("#add_physical_stock").on("submit",function(){
 
     var param = $("#add_physical_stock").serializeArray();
-      //  console.log(param);
 
     $.ajax({
         type: 'POST',
@@ -305,5 +326,7 @@ $("#add_physical_stock").on("submit",function(){
             }
         }
     });
-    //return false;
+   // return false;
 });
+
+

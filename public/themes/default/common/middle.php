@@ -38,12 +38,21 @@
         }
     }
     
-     if(isset($target))
+     if(isset($target_data))
     {
         $action_segment = $this->uri->segment(2);
-        
+       
         if($action_segment == "target"){
             echo theme_view('common/target_table');
+        }
+    }
+    
+    if(isset($prespective_order_data))
+    {
+        $action_segment = $this->uri->segment(2);
+       
+        if($action_segment == "get_prespective_order" || $action_segment == "get_prespective_order_details"){
+            echo theme_view('common/prespective_order_table');
         }
     }
     

@@ -24,5 +24,5 @@ $("#add_user_credit_limit").on("submit",function(){
             }
         }
     });
-    // return false;
+    //return false;
 });

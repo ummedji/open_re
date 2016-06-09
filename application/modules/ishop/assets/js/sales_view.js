@@ -1,10 +1,30 @@
-
 $(function () {
-    $('#stock_month').datepicker({
+    $('#form_month').datepicker({
         format: "yyyy-mm"
     });
 
 });
+
+$(function () {
+    $('#to_month').datepicker({
+        format: "yyyy-mm"
+    });
+});
+
+$(function () {
+    $('#from_month_dist').datepicker({
+        format: "yyyy-mm"
+    });
+
+});
+
+$(function () {
+    $('#to_month_dist').datepicker({
+        format: "yyyy-mm"
+    });
+});
+
+
 
 var login_customer_type = $("input#login_customer_role").val();
 
@@ -287,103 +307,39 @@ function get_retailer_by_distributor(selected_id)
 }
 
 
+$("#view_ishop_sales").on("submit",function(){
 
-function add_sales_stock_row()
-{
-    var sku_code = $('#sales_prod_sku option:selected').attr('attr-code');
-    var sku_name = $('#sales_prod_sku option:selected').attr('attr-name');
-    var sku_id = $('#sales_prod_sku option:selected').val();
-    var po_qty = $('#sales_qty').val();
-    var disp_qty = $('#disp_qty').val();
-    var stock_month = $('#stock_month').val();
-    var unit = $('#sec_sel_unit option:selected').val();
-    var sr_no =$("#sales_stock > tr").length + 1;
-    var amt = $('#amt').val();
-
-    var box_selected = "";
-    var package_selected = "";
-    var kg_ltr_selected = "";
-
-    var unit_data = get_data_conversion(sku_id,po_qty,unit);
-
-
-    if(unit == 'box'){
-        box_selected = "selected = 'selected'"
-    }
-    if(unit == 'packages'){
-        package_selected = "selected = 'selected'"
-    }
-    if(unit == 'kg/ltr'){
-        kg_ltr_selected = "selected = 'selected'"
-    }
-
-    $("#sales_stock").append(
-        "<tr id='"+sr_no+"'>"+
-        "<td data-title='Sr. No.' class='numeric'>" +
-        "<input class='input_remove_border' type='text' value='"+sr_no+"' readonly/>" +
-        "</td>"+
-        "<td  data-title='Action' class='numeric'>" +
-        "<div class='delete_i sales_stock' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
-        "</td>"+
-       /* "<td data-title='Month Year' class='numeric'>" +
-        "<input class='input_remove_border' type='text' value='"+stock_month+"' readonly/>" +
-        "</td>"+*/
-        "<td data-title='Product SKU Code' class='numeric'>" +
-        "<input class='sku_"+sr_no+"' type='hidden' value='"+sku_id+"' readonly/>"+
-        "<input class='input_remove_border' type='text' value='"+sku_code+"' readonly/>" +
-        "</td>"+
-        "<td data-title='Product SKU Name'>" +
-        "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
-        "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
-        "</td>"+
-        "<td data-title='Units'>" +
-        "<select name='units[]' class='select_unitdata' id='unit_id' >"+
-        " <option  "+box_selected+" value='box'>Box</option>"+
-        "  <option  "+package_selected+" value='packages'>Packages</option>"+
-        "   <option  "+kg_ltr_selected+" value='kg/ltr'>Kg/Ltr</option>"+
-        "  </select>" +
-        "</td>"+
-        "<td data-title='PO Qty'>" +
-        "<input class='quantity_data numeric' type='text' name='quantity[]' value='"+po_qty+"'/>" +
-        "</td>"+
-        "<td data-title='Qty Kg/Ltr'>" +
-        "<input class='input_remove_border qty_"+sr_no+"' type='text' name='qty_kgl[]' value='"+unit_data+"' readonly/>" +
-        "</td>"+
-        "<td data-title='Amount'>" +
-        "<input type='text' name='amount[]' value='"+amt+"'/>" +
-        "</td>"+
-        "</tr>"
-    );
-    $('#sales_prod_sku').selectpicker('val', '0');
-    $('#sec_sel_unit').selectpicker('val', '0');
-    $('#sales_qty').val('');
-    $('#disp_qty').val('');
-    $('#amt').val('');
-}
-
-
-$(document).on('click', 'div.sales_stock', function () { // <-- changes
-    if (confirm("Are you sure?")) {
-        $(this).closest('tr').remove();
-    }
-    return false;
-});
-
-$("#add_ishop_sales").on("submit",function(){
-
-    var param = $("#add_ishop_sales").serializeArray();
-
-//return false;
+    var param = $("#view_ishop_sales").serializeArray();
+   // console.log(param);
+   // return false;
     $.ajax({
         type: 'POST',
-        url: site_url+"ishop/add_ishop_sales_details",
+            url: site_url+"ishop/view_ishop_sales_details",
         data: param,
-        //dataType : 'json',
+        dataType : 'html',
         success: function(resp){
-            if(resp==1){
-               // site_url+"ishop/physical_stock";
-            }
+            $("#middle_container_sales").html(resp);
         }
     });
-   // return false;
+     return false;
 });
+
+/*Get Sales Product Data*/
+$(document).on('click', 'div.sales_cont .eye_i', function () {
+    var id = $(this).attr('prdid');
+    var checked_type = $('input[name=radio1]:checked').val();
+    $.ajax({
+        type: 'POST',
+        url: site_url+'ishop/sales_product_details_view',
+        data: {id: id,checkedtype:checked_type},
+        success: function(resp){
+            $("#product_table_container_sales").html(resp);
+        }
+    });
+    return false;
+});
+/*Get Sales Data*/
+
+
+
+

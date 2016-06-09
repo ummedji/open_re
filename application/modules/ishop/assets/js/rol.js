@@ -26,20 +26,15 @@ $("input.select_customer_type").on("click",function(){
             get_geo_fo_userdata(customer_selected,customer_type_selected);
 
         }
-        /*$("#rol_dist").hide();
-        $("#rol_ret").append(
-            "<th>Sr. No. <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>Action <span class='rts_bordet'></span></th>" +
-            "<th>Retailer Code <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>Retailer Name <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>PBG <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>Product SKU Name <span class='rts_bordet></span></th>"+
-            "<th class='numeric'>Units <span class='rts_bordet'></span></th>"+
-            "<th class='numeric'>ROL Quantity <span class='wl_sp'>(Kg/Ltr)</span> <span class='rts_bordet'></span></th>"+
-            "<th class='numeric'>ROL Qty Kg/Ltr <div class='wl_sp'>(Kg/Ltr)</div> <span class='rts_bordet'></span></th>"
-        );*/
-
-
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/set_rol",
+            data: {checked_type:'retailer'},
+            //dataType : 'json',
+            success: function(resp){
+                $(".rol_container").html(resp);
+            }
+        });
     }
     else if(customer_type_selected == "distributor"){
         $("div.retailer_data").css("display","none");
@@ -55,22 +50,15 @@ $("input.select_customer_type").on("click",function(){
             get_geo_fo_userdata(customer_selected,customer_type_selected);
 
         }
-      /*  $("#rol_ret").hide();
-        $("#rol_head").hide();
-        $("#rol_dist").append(
-            "<tr>"+
-            "<th>Sr. No. <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>Action <span class='rts_bordet'></span></th>" +
-            "<th>Distributor Code <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>Distributor Name <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>PBG <span class='rts_bordet'></span></th>" +
-            "<th class='numeric'>Product SKU Name <span class='rts_bordet></span></th>"+
-            "<th class='numeric'>Units <span class='rts_bordet'></span></th>"+
-            "<th class='numeric'>ROL Quantity <span class='wl_sp'>(Kg/Ltr)</span> <span class='rts_bordet'></span></th>"+
-            "<th class='numeric'>ROL Qty Kg/Ltr <div class='wl_sp'>(Kg/Ltr)</div> <span class='rts_bordet'></span></th>"  +
-            "</tr>"
-        );*/
-
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/set_rol",
+            data: {checked_type:'distributor'},
+            //dataType : 'json',
+            success: function(resp){
+                $(".rol_container").html(resp);
+            }
+        });
     }
 });
 
@@ -303,7 +291,7 @@ function add_rol_row()
     var package_selected = "";
     var kg_ltr_selected = "";
 
-    var unit_data = get_data_conversion(sku_id,rol_qty,unit);
+    //var unit_data = get_data_conversion(sku_id,rol_qty,unit);
 
 
     if(unit == 'box'){
@@ -371,8 +359,8 @@ $(document).on('click', 'div.rol_del', function () {
 $("#rol_limit").on("submit",function(){
 
     var param = $("#rol_limit").serializeArray();
-   // console.log(param);
-
+    console.log(param);
+   // return false;
    $.ajax({
         type: 'POST',
         url: site_url+"ishop/add_rol_details",
@@ -381,7 +369,7 @@ $("#rol_limit").on("submit",function(){
         success: function(resp){
         }
     });
-     //return false;
+   //  return false;
 });
 
 function get_data_conversion(sku_id,quantity,units){
@@ -405,20 +393,114 @@ function get_data_conversion(sku_id,quantity,units){
 
 $("body").on("change","select.select_unitdata",function(){
 
-        var selected_row_id = $(this).parent().parent().attr("id");
-        var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+
+   // alert($(this).parent().parent().parent().html());
+        var selected_row_id = $(this).parent().parent().parent().find("div.edit_i").attr("prdid");
+
+   // alert(selected_row_id);
+
+        var sku_id = $("div.prd_"+$.trim(selected_row_id)+" span.prd_sku").text();
         var units = $(this).val();
-        var quantity = $(this).parent().parent().find("input.quantity_data").val();
+        var quantity = $("input#rol_quantity_"+$.trim(selected_row_id)).val();
+
         var unit_data = get_data_conversion(sku_id,quantity,units);
-        $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+
+         $("input#rol_quantity_kg_ltr_"+$.trim(selected_row_id)).val(unit_data);
 });
 
 $("body").on("keyup","input.quantity_data",function(){
 
-        var selected_row_id = $(this).parent().parent().attr("id");
-        var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
-        var units = $(this).parent().parent().find("select.select_unitdata").val();
-        var quantity = $(this).val();
-        var unit_data = get_data_conversion(sku_id,quantity,units);
-        $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+    var selected_row_id = $(this).parent().parent().parent().find("div.edit_i").attr("prdid");
+    var sku_id = $("div.prd_"+$.trim(selected_row_id)+" span.prd_sku").text();
+    //var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+
+    var units = $(this).parent().parent().parent().find("select.select_unitdata").val();
+    var quantity = $(this).val();
+    var unit_data = get_data_conversion(sku_id,quantity,units);
+
+    //alert(selected_row_id+"----"+sku_id+'-----'+units+'----'+quantity+'-----'+unit_data);
+
+    $("input#rol_quantity_kg_ltr_"+$.trim(selected_row_id)).val(unit_data);
 });
+
+$(document).on('click', '.edit_i', function () {
+    var id = $(this).attr('prdid');
+
+    //UNIT
+    var prd_sku = $(" div.prd_"+id+" span.prd_sku").text();
+    var units = $(" div.units_"+id+" span.units").text();
+
+    var box_selected = "";
+    var package_selected = "";
+    var kg_ltr_selected = "";
+
+   // alert(prd_sku);
+    if(units == 'box'){
+        box_selected = "selected = 'selected'"
+    }
+    if(units == 'packages'){
+        package_selected = "selected = 'selected'"
+    }
+    if(units == 'kg/ltr'){
+        kg_ltr_selected = "selected = 'selected'"
+    }
+
+    $("div.units_"+id).empty();
+    $("div.units_"+id).append('<input type="hidden" name="rol_id[]" value="'+id+'" />' +
+        '<select name="units[]" class="select_unitdata" id="unit_id" >'+
+        '<option '+box_selected+' value="box">Box</option>'+
+        '<option  '+package_selected+' value="packages">Packages</option>'+
+        '<option  '+kg_ltr_selected+' value="kg/ltr">Kg/Ltr</option>'+
+        '</select>');
+
+    //QTY
+
+    var qty = $(" div.rol_quantity_"+id+" span.rol_quantity").text();
+    $("div.rol_quantity_"+id).empty();
+    $("div.rol_quantity_"+id).append('<input id="rol_quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty+'"/>');
+
+    var qty_kg_ltr = $(" div.rol_quantity_kg_ltr_"+id+" span.rol_quantity_kg_ltr").text();
+    $("div.rol_quantity_kg_ltr_"+id).empty();
+    $("div.rol_quantity_kg_ltr_"+id).append('<input id="rol_quantity_kg_ltr_'+id+'" type="text" class="input_remove_border" name="rol_quantity_kg_ltr[]" value="'+qty_kg_ltr+'" readonly/>');
+
+    return false;
+});
+
+$(document).on('click', '.edit_i', function () {
+    $("div.check_save_btn").css("display","block");
+});
+
+
+$(document).on('click', 'div.check_save_btn #check_save', function () {
+    var rol_data = $("#update_rol_limit").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+'ishop/update_rol_limit_details',
+        data: rol_data,
+        success: function(resp){
+        }
+    });
+   // return false;
+});
+
+$(document).on('click', 'div.rol_container .delete_i', function () {
+    if (confirm("Are you sure?")) {
+        var id = $(this).attr('prdid');
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/delete_rol_details',
+            data: {rol_id:id},
+            success: function(resp){}
+        });
+    }
+    else{
+        return false;
+    }
+
+});
+
+
+
+
+

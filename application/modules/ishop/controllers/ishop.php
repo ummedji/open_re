@@ -5,9 +5,6 @@
  */
 class Ishop extends Front_Controller
 {
-	protected $permissionCreate = 'Ishop.Ishop.Create';
-	protected $permissionDelete = 'Ishop.Ishop.Delete';
-	protected $permissionEdit = 'Ishop.Ishop.Edit';
 	protected $permissionView = 'Ishop.Ishop.View';
 
 	/**
@@ -19,6 +16,7 @@ class Ishop extends Front_Controller
 	public function __construct()
 	{
 		parent::__construct();
+	//	$this->auth->restrict('Ishop.Ishop.View');
 		$this->load->library('users/auth');
 		$this->load->helper('application');
 		$this->load->library('Template');
@@ -29,13 +27,6 @@ class Ishop extends Front_Controller
 		$this->load->helper('form');
 		$this->lang->load('ishop');
 		$this->load->model('ishop_model');
-		Assets::add_module_js('ishop', 'primary_sales.js');
-		Assets::add_module_js('ishop', 'secondary_sales.js');
-		Assets::add_module_js('ishop', 'secondary_sales_view.js');
-
-		Assets::add_module_js('ishop', 'invoice_confirmation.js');
-		Assets::add_module_js('ishop', 'primary_sales_view.js');
-
 
 		$this->set_current_user();
 	}
@@ -47,6 +38,7 @@ class Ishop extends Front_Controller
 	 */
 	public function index()
 	{
+		Assets::add_module_js('ishop', 'primary_sales.js');
 		$user = $this->auth->user();
 		$distributor = $this->ishop_model->get_distributor_by_user_id($user->country_id);
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
@@ -81,6 +73,7 @@ class Ishop extends Front_Controller
 
 	public function primary_sales_view_details()
 	{
+		Assets::add_module_js('ishop', 'primary_sales_view.js');
 		$user = $this->auth->user();
 		$distributor = $this->ishop_model->get_distributor_by_user_id($user->country_id);
 		Template::set('distributor', $distributor);
@@ -111,6 +104,27 @@ class Ishop extends Front_Controller
 	}
 
 
+	public function update_sales_details()
+	{
+		$user = $this->auth->user();
+		$update_sales_details = $this->ishop_model->update_sales_detail($user->id,$user->country_id);
+		redirect('ishop/primary_sales_view_details');
+	}
+
+	public function delete_sales_details()
+	{
+		$sales_id = isset($_POST['sales_id']) ? $_POST['sales_id'] : '';
+		$this->ishop_model->delete_sales_detail($sales_id);
+		redirect('ishop/primary_sales_view_details');
+	}
+	public function delete_sales_product_details()
+	{
+		$product_sales_id = isset($_POST['product_sales_id']) ? $_POST['product_sales_id'] : '';
+		$this->ishop_model->delete_sales_product_detail($product_sales_id);
+		redirect('ishop/primary_sales_view_details');
+	}
+
+
 
 	/*---------------------------------------------------------------------------------------------------------------*/
 
@@ -132,12 +146,37 @@ class Ishop extends Front_Controller
 
 		$logined_user_role = $user->role_id;
 		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_role,null,$default_retailer_role,$action_data);
+
+		if($logined_user_role== 7){
+			$checked_type = (isset($_POST['checked_type']) && !empty($_POST['checked_type']) ) ? $_POST['checked_type'] :'retailer';
+		}
+		else{
+			$checked_type=null;
+		}
+
+		$rol= $this->ishop_model->get_all_rol_by_user($user->id,$user->country_id,$logined_user_role,$checked_type);
+
+		Template::set('table', $rol);
 		//testdata($retailer_geo_data);
 		Template::set('geo_data', $retailer_geo_data);
 		Template::set('current_user', $user);
 		Template::set('product_sku', $product_sku);
 		Template::set_view('ishop/rol');
 		Template::render();
+	}
+
+
+	public function update_rol_limit_details()
+	{
+		$user = $this->auth->user();
+		$this->ishop_model->update_rol_limit_detail($user->id,$user->country_id);
+		redirect('ishop/set_rol');
+	}
+
+	public function delete_rol_details()
+	{
+		$rol_id = isset($_POST['rol_id']) ? $_POST['rol_id'] : '';
+		$this->ishop_model->delete_rol_limit_detail($rol_id);
 	}
 
 	/**
@@ -167,8 +206,8 @@ class Ishop extends Front_Controller
 
 	public function add_rol_details()
 	{
-		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_rol_detail($user_id);
+		$user = $this->auth->user();
+		$this->ishop_model->add_rol_detail($user->id,$user->country_id);
 
 		Template::set_message('Insert Data successful', 'success');
 		redirect('ishop/set_rol');
@@ -183,6 +222,7 @@ class Ishop extends Front_Controller
 
 	public function secondary_sales_details()
 	{
+		Assets::add_module_js('ishop', 'secondary_sales.js');
 		$user = $this->auth->user();
 		$retailer = $this->ishop_model->get_retailer_by_distributor_id($user->id, $user->country_id);
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
@@ -202,8 +242,8 @@ class Ishop extends Front_Controller
 
 	public function add_secondary_sales_details()
 	{
-		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_secondary_sales_details_data($user_id);
+		$user = $this->auth->user();
+		$this->ishop_model->add_secondary_sales_details_data($user->id, $user->country_id);
 		Template::set_message('Insert Data successful', 'success');
 		redirect('ishop/secondary_sales_details');
 	}
@@ -217,6 +257,9 @@ class Ishop extends Front_Controller
 
 	public function secondary_sales_details_view()
 	{
+
+		Assets::add_module_js('ishop', 'secondary_sales_view.js');
+
 		$user = $this->auth->user();
 		$retailer = $this->ishop_model->get_retailer_by_distributor_id($user->id, $user->country_id);
 		Template::set('retailer', $retailer);
@@ -234,12 +277,13 @@ class Ishop extends Front_Controller
 	public function secondary_sales_view_details()
 	{
 		//testdata($_POST);
+		$user = $this->auth->user();
 		$form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
 		$to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
 		$by_retailer = (isset($_POST['by_retailer']) ? $_POST['by_retailer'] : '');
 		$by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
 
-		$secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no);
+		$secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no,$user->id,$user->country_id,$sales_view=null);
 
 		Template::set('table', $secondary_sales_details);
 		Template::set_view('ishop/secondary_sales_view');
@@ -260,8 +304,29 @@ class Ishop extends Front_Controller
 			$secondary_sales_details = $this->ishop_model->secondary_sales_product_details_view_by_id($secondary_sales_id);
 			Template::set('table', $secondary_sales_details);
 		}
-		Template::set_view('ishop/primary_sales');
+		Template::set_view('ishop/secondary_sales_view');
 		Template::render();
+	}
+
+	public function update_secondary_sales_details()
+	{
+		$user = $this->auth->user();
+		$this->ishop_model->update_secondary_sales_detail($user->id,$user->country_id);
+		redirect('ishop/secondary_sales_view_details');
+	}
+
+	public function delete_secondary_sales_details()
+	{
+		$secondary_sales_id = isset($_POST['secondary_sales_id']) ? $_POST['secondary_sales_id'] : '';
+		$this->ishop_model->delete_secondary_sales_detail($secondary_sales_id);
+		redirect('ishop/secondary_sales_view_details');
+	}
+
+	public function delete_secondary_sales_product_details()
+	{
+		$secondary_product_sales_id = isset($_POST['secondary_product_sales_id']) ? $_POST['secondary_product_sales_id'] : '';
+		$this->ishop_model->delete_secondary_sales_product_detail($secondary_product_sales_id);
+		redirect('ishop/secondary_sales_view_details');
 	}
 
 	/**
@@ -282,13 +347,19 @@ class Ishop extends Front_Controller
 
 		$action_data = $this->uri->segment(2);
 
-		// $retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$default_retailer_role);
-		// $retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,null,null,$default_retailer_role,$action_data);
-
 		$logined_user_role = $user->role_id;
 		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_role,null,$default_retailer_role,$action_data);
 
+		if($logined_user_role== 8){
+			$checked_type = (isset($_POST['checked_type']) && !empty($_POST['checked_type']) ) ? $_POST['checked_type'] :'retailer';
+		}
+		else{
+			$checked_type=null;
+		}
+		//$checked_type= $_POST['checked_type'];
+		$physical_stock= $this->ishop_model->get_all_physical_stock_by_user($user->id,$user->country_id,$user->role_id,$checked_type);
 
+		Template::set('table', $physical_stock);
 		Template::set('geo_data', $retailer_geo_data);
 		Template::set('product_sku', $product_sku);
 		Template::set('current_user', $user);
@@ -305,8 +376,8 @@ class Ishop extends Front_Controller
 
 	public function add_physical_stock_details()
 	{
-		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_physical_stock_detail($user_id);
+		$user = $this->auth->user();
+		$this->ishop_model->add_physical_stock_detail($user->id,$user->country_id);
 
 		Template::set_message('Insert Data successful', 'success');
 		redirect('ishop/physical_stock');
@@ -314,7 +385,7 @@ class Ishop extends Front_Controller
 
 
 	/**
-	 * @ Function Name        : ishop_sales
+	 * @ Function Name        : invoice_received_confirmation
 	 * @ Function Params    :
 	 * @ Function Purpose    :
 	 * @ Function Return    :
@@ -322,6 +393,41 @@ class Ishop extends Front_Controller
 
 	public function invoice_received_confirmation()
 	{
+		Assets::add_module_js('ishop', 'invoice_confirmation.js');
+
+		Template::set_view('ishop/invoice_received_confirmation');
+		Template::render();
+	}
+
+
+	public function invoice_confirmation_received()
+	{
+		$user = $this->auth->user();
+		$invoice_month = (isset($_POST['invoice_month']) ? $_POST['invoice_month'] : '');
+		$po_no = (isset($_POST['po_no']) ? $_POST['po_no'] : '');
+		$invoice_no = (isset($_POST['invoice_no']) ? $_POST['invoice_no'] : '');
+
+		$invoice_receved = $this->ishop_model->invoice_confirmation_received_by_distributor($invoice_month,$po_no,$invoice_no,$user->id,$user->country_id);
+		Template::set('table',$invoice_receved);
+		Template::set_view('ishop/invoice_received_confirmation');
+		Template::render();
+	}
+
+	public function update_invoice_confirmation_received()
+	{
+		//testdata($_POST['sales']);
+		$user = $this->auth->user();
+		$sales_id=  (isset($_POST['sales']) ? $_POST['sales'] : '');
+		$this->ishop_model->update_invoice_confirmation_received_by_distributor($sales_id,$user->id,$user->country_id);
+	}
+
+	public function invoice_sales_product_details_view()
+	{
+		$user = $this->auth->user();
+		$sales_id = (isset($_POST['id']) ? $_POST['id'] : '');
+
+		$invoice_product = $this->ishop_model->invoice_sales_product_details($sales_id);
+		Template::set('table',$invoice_product);
 		Template::set_view('ishop/invoice_received_confirmation');
 		Template::render();
 	}
@@ -384,11 +490,83 @@ class Ishop extends Front_Controller
 
 	public function add_ishop_sales_details()
 	{
+		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_ishop_sales_detail($user_id);
+
+		$this->ishop_model->add_ishop_sales_detail($user->id,$user->country_id);
 
 		Template::set_message('Insert Data successful', 'success');
 		redirect('ishop/ishop_sales');
+	}
+
+
+	public function sales_view()
+	{
+		Assets::add_module_js('ishop', 'sales_view.js');
+		$user = $this->auth->user();
+		$default_retailer_role = 10;
+
+		$action_data = $this->uri->segment(2);
+
+		$logined_user_role = $user->role_id;
+		$retailer_geo_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_role,null,$default_retailer_role,$action_data);
+
+
+		Template::set('geo_data', $retailer_geo_data);
+		Template::set('current_user', $user);
+		Template::set_view('ishop/sales_view');
+		Template::render();
+	}
+
+	public function view_ishop_sales_details()
+	{
+		$user = $this->auth->user();
+		$check_redio = (isset($_POST['radio1']) ? $_POST['radio1'] : '');
+		if($check_redio == 'retailer')
+		{
+			$from_month = (isset($_POST['from_month']) ? $_POST['from_month'] : '');
+			$to_month = (isset($_POST['to_month']) ? $_POST['to_month'] : '');
+			$geo_level_0 = (isset($_POST['geo_level_0']) ? $_POST['geo_level_0'] : '');
+			$geo_level_1 = (isset($_POST['geo_level_1']) ? $_POST['geo_level_1'] : '');
+			$retailer_id = (isset($_POST['fo_retailer_id']) ? $_POST['fo_retailer_id'] : '');
+			$tertiary = $this->ishop_model-> view_ishop_sales_detail_by_retailer($user->id,$user->country_id,$from_month,$to_month,$geo_level_0,$geo_level_1,$retailer_id);
+			Template::set('table', $tertiary);
+
+		}
+		elseif($check_redio == 'distributor')
+		{
+			$from_month = (isset($_POST['from_month_dist']) ? $_POST['from_month_dist'] : '');
+			$to_month = (isset($_POST['to_month_dist']) ? $_POST['to_month_dist'] : '');
+			$geo_level = (isset($_POST['distributor_geo_level']) ? $_POST['distributor_geo_level'] : '');
+			$distributor_id = (isset($_POST['distributor_sales']) ? $_POST['distributor_sales'] : '');
+			$invoice_no = (isset($_POST['invoice_no']) ? $_POST['invoice_no'] : '');
+			$secondary = $this->ishop_model->secondary_sales_details_data_view($form_date=null,$to_date=null,$by_retailer=null,$invoice_no,$user->id,$user->country_id,'sales_view',$from_month,$to_month,$geo_level,$distributor_id);
+
+			Template::set('table', $secondary);
+
+		}
+		Template::set_view('ishop/sales_view');
+		Template::render();
+	}
+
+
+	public function sales_product_details_view()
+	{
+
+		$sales_id = (isset($_POST['id']) ? $_POST['id'] : '');
+		$checkedtype = (isset($_POST['checkedtype']) ? $_POST['checkedtype'] : '');
+
+		if ($checkedtype == "retailer") {
+
+			$tertiary_sales_details = $this->ishop_model->tertiary_sales_product_details_view_by_id($sales_id);
+			Template::set('table', $tertiary_sales_details);
+		}
+		else{
+			$secondary_sales_details = $this->ishop_model->secondary_sales_product_details_view_by_id($sales_id);
+			Template::set('table', $secondary_sales_details);
+		}
+		Template::set_view('ishop/sales_view');
+		Template::render();
 	}
 
 	/**
@@ -428,6 +606,20 @@ class Ishop extends Front_Controller
 		$this->ishop_model->add_company_current_stock_detail($user_id,$user->country_id);
 
 		Template::set_message('Insert Data successful', 'success');
+		redirect('ishop/company_current_stock');
+	}
+
+
+	public function update_current_stock_details()
+	{
+		$user = $this->auth->user();
+		$this->ishop_model->update_current_stock_details($user->id,$user->country_id);
+		redirect('ishop/company_current_stock');
+	}
+	public function delete_current_stock_details()
+	{
+		$stock_id = isset($_POST['stock_id']) ? $_POST['stock_id'] : '';
+		$this->ishop_model->delete_current_stock_detail($stock_id);
 		redirect('ishop/company_current_stock');
 	}
 
@@ -570,8 +762,9 @@ class Ishop extends Front_Controller
 		$year = $this->input->post("year");
 		$region = $this->input->post("region");
 		$territory = $this->input->post("territory");
+		$retailer = $this->input->post("fo_retailer_id");
 
-		$scheme_view=$this->ishop_model->view_schemes_detail($user_id,$user->country_id,$year,$region,$territory,$login_user_role);
+		$scheme_view=$this->ishop_model->view_schemes_detail($user_id,$user->country_id,$year,$region,$territory,$login_user_role,$retailer);
 	//	testdata($scheme_view);
 		if($login_user_role==7){
 			Template::set('scheme_table',$scheme_view);
@@ -860,6 +1053,39 @@ class Ishop extends Front_Controller
             
         }
         
+        public function get_copy_popup_geo_data(){
+            
+         //   $selected_user_id = $_POST['user_id']; // login user id
+            $user_country = $_POST['user_country'];
+            $login_customer_type = $_POST['login_customer_type']; //FO or HO or DISTRIBUTOR or RETAILER
+            $customer_type_selected = $_POST['customer_type_selected']; // SELECTED CHECKBOX Retailer, Farmer, Distributor
+            
+            $url_data = $_POST['urlsegment'];
+            
+            if($customer_type_selected == "farmer"){
+                
+                $default_type = 11;
+                
+            }
+            else if($customer_type_selected == "retailer"){
+                
+                 $default_type = 10;
+                
+            }
+            else if($customer_type_selected == "distributor"){
+                
+                 $default_type = 9;
+                
+            }
+            
+            $get_geo_level_data = $this->ishop_model->get_employee_geo_data_for_copy_popup($user_country,$login_customer_type,$default_type,$url_data);
+          //  var_dump($get_geo_level_data);die;
+            echo json_encode($get_geo_level_data);
+            
+            die;
+            
+        }
+        
         /**
         * @ Function Name	: get_lowergeo_from_uppergeo_data
         * @ Function Params	: 
@@ -1046,7 +1272,7 @@ class Ishop extends Front_Controller
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
             
-            Template::set('table', $prespective_order);
+            Template::set('prespective_order_data', $prespective_order);
             
             Template::set_view('ishop/prespective_order');
             Template::render();
@@ -1066,7 +1292,7 @@ class Ishop extends Front_Controller
 		if(isset($order_id) && !empty($order_id))
 		{
 			$order_details= $this->ishop_model->order_product_details_view_by_id($order_id);
-			Template::set('table',$order_details);
+			Template::set('prespective_order_data',$order_details);
 		}
 		Template::set_view('ishop/prespective_order');
 		Template::render();
@@ -1451,6 +1677,25 @@ class Ishop extends Front_Controller
             
         }
         
+        
+       public function update_po_data() {
+            
+            $orderid = $_POST['orderid'];
+            $po_numdata = $_POST['po_numdata'];
+            
+            $check_po_data = $this->ishop_model->check_po_data($po_numdata);
+            if($check_po_data != 0){
+                $po_data_status = $this->ishop_model->update_po_data($orderid,$po_numdata);
+            }
+            else{
+                $po_data_status = $check_po_data;
+            }
+                    
+            echo $po_data_status;
+            die;
+        }
+        
+        
         /**
         * @ Function Name	: update_order_status_detail_data
         * @ Function Params	: 
@@ -1701,12 +1946,13 @@ class Ishop extends Front_Controller
                        Template::set('target_data',$target_data);
                        Template::set('month_data',$target_month_data);
                       
-                   /* echo "<pre>";
+              /*
+                    echo "<pre>";
                     print_r($_POST);
                     print_r($target_data);
                     print_r($target_month_data);
                     
-                    die;*/
+                    die; */
                 }
                 
             }
@@ -1852,5 +2098,441 @@ class Ishop extends Front_Controller
             
             
         }
+        
+        //BUDGET
+        
+        public function budget() {
+            
+            Assets::add_module_js('ishop', 'budget.js');
+            
+            $user= $this->auth->user();
+            
+            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
+            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
+            
+            $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+            
+            $logined_user_type = $user->role_id;
+            $logined_user_id = $user->id;
+            $logined_user_countryid = $user->country_id;
+            
+            $get_geo_level_data = "";
+            $action_data = $this->uri->segment(2);
+            
+            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
+            
+            if($logined_user_type == 7){
+                
+                //FOR HO
+                $default_type_selected = 9;
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+                
+            }
+            elseif($logined_user_type == 8){
+            
+                //FOR FO
+                $default_type_selected = 9; 
+                
+                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+            
+            }
+            elseif($logined_user_type == 9){
+            
+                //FOR DISTRIBUTOR
+                $default_type_selected = null; 
+                
+                if(isset($_POST) && !empty($_POST)){
+                    
+                     $target_data = $this->ishop_model->get_target_monthly_data($_POST);
+                     
+                      $target_month_data = $this->ishop_model->get_monthly_data($_POST);
+                    
+                       Template::set('target_data',$target_data);
+                       Template::set('month_data',$target_month_data);
+                      
+              /*
+                    echo "<pre>";
+                    print_r($_POST);
+                    print_r($target_data);
+                    print_r($target_month_data);
+                    
+                    die; */
+                }
+                
+            }
+            elseif($logined_user_type == 10){
+            
+                //FOR RETAILER
+                $default_type_selected = null; 
+                
+            }
+           
+          //  echo "<pre>";
+          //  print_r($get_geo_level_data);
+          //  die;
+            
+		  //var_dump($distributor);die;
+            Template::set('login_customer_type',$logined_user_type);
+            Template::set('login_customer_id',$logined_user_id);
+            Template::set('login_customer_countryid',$logined_user_countryid);
+            
+            Template::set('distributor',$distributor);
+            Template::set('retailer',$retailer);
+            Template::set('product_sku',$product_sku);
+            
+            
+            Template::set('geo_level_data',$get_geo_level_data);
+            
+            Template::set_view('ishop/budget');
+            Template::render();
+            
+        }
+        
+        public function add_budget_data() {
+            
+            $budget_data = $_POST;
+            $set_budget_data = $this->ishop_model->add_budget_data($budget_data);
+            redirect("ishop/budget");
+        }
+        
+        public function check_budget_data_status() {
+            
+            $product_sku_id = $_POST["product_sku_id"];
+           // $month_data = explode("/",$_POST["month_data"]);
+            $customer_id = $_POST["customer_id"];
+            
+            $month_data = $_POST["month_data"]."-01";
+            
+            $budget_data = $this->ishop_model->check_budget_data($product_sku_id,$month_data,$customer_id);
+            echo $budget_data;
+            die;
+        }
+        
+        //TARGET DATA UPLOAD
+        
+        public function upload_data() {
+            
+           // testdata($_POST);
+            
+            if(isset($_POST["upload_file_data"]) && !empty($_POST["upload_file_data"]))
+            {
+            
+                $file = $_POST["upload_file_data"]["tmp_name"];
+
+                //load the excel library
+                $this->load->library('excel');
+
+                //read file from path
+                $objPHPExcel = PHPExcel_IOFactory::load($file);
+
+                //get only the Cell Collection
+                $cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
+                
+                $arr_data = array();
+                //extract to a PHP readable array format
+                foreach ($cell_collection as $cell) {
+
+                    $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
+                    $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
+                    $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
+
+                    if($column == 'A' && $row != 1){
+
+                            $phpexcepDate = $data_value-25569; //to offset to Unix epoch
+                            $data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
+                            $data_value = date("Y-m-d",$data_value); 
+
+                    }
+
+                    //header will/should be in row 1 only. of course this can be modified to suit your need.
+                    if ($row == 1) {
+                        $header[$row][$column] = $data_value;
+                    } else {
+                        $arr_data[$row][$column] = $data_value;
+                    }
+                }
+
+                //send the data in an array format
+                $data['header'] = $header;
+                $data['values'] = $arr_data;
+
+                //testdata($data);
+                
+                $error_array = array();
+                $final_array = array();
+                
+              //  testdata($data['values']);
+                
+                // CHECK DATA IS PRESENT AND VALID
+           if(!empty($data['values'])){   
+                foreach($data['values'] as $key=>$data){
+                   
+                   $inner_array = array();
+                   
+                   /*
+                    *  NEED TO CHANGE AS PER EXCEL FILE
+                    */
+                   
+                   if(!isset($data["A"])){
+                       $month_data = "";
+                   } 
+                   else{
+                       $month_data = $data["A"];
+                   }
+                   
+                   if(!isset($data["B"])){
+                       $distributor_code = "";
+                   }
+                   else{
+                        $distributor_code = $data["B"];
+                   }
+                       
+                   if(!isset($data["C"])){
+                        $distributor_name = "";
+                   }
+                   else{
+                        $distributor_name = $data["C"];
+                   }
+                           
+                   if(!isset($data["D"])){
+                       $product_code = "";
+                   }
+                   else{
+                       $product_code = $data["D"];
+                   }
+                               
+                   if(!isset($data["E"])){
+                       $product_name = "";
+                   }
+                   else{
+                       $product_name = $data["E"];
+                   }
+                   
+                   if(!isset($data["F"])){
+                        $quantity = "";
+                   }
+                   else{
+                        $quantity = $data["F"];
+                   }
+                   
+                    
+                   if($month_data == "" || $distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $quantity == "")
+                   {
+                       //CHECK DATA BLANK
+                       
+                       if(!isset($error_array["error"]["header"])){
+                            $error_array["error"]["header"] = $header;
+                       }
+                       
+                       $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Some row data blank";
+                   }
+                   else
+                   {
+                       
+                       //CHECK PROPER DATA
+                       
+                       // DISTRIBUTOR AND PRODUCT CHECK
+                       
+                       $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
+                       $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
+                       
+                       if($user_data != 0 && $product_data != 0)
+                       {
+                           //ADD DATA TO DATA ARRAY
+                           
+                           $month_data1 = explode("-",$month_data);
+                           $new_month_data = $month_data1[0]."-".$month_data1[1]."-01";
+                           
+                           $filename = explode("_",$_POST["upload_file_data"]["name"]);
+                           
+                           if($filename[0] == "target"){
+                                $check_already_data = $this->ishop_model->check_target_data($product_data,$new_month_data,$user_data);
+                           }
+                           elseif($filename[0] == "budget"){
+                                $check_already_data = $this->ishop_model->check_budget_data($product_data,$new_month_data,$user_data);
+                           }
+                           
+                           if($check_already_data == 1){
+                           
+                                if(!isset($error_array["error"]["header"])){
+                                     $error_array["error"]["header"] = $header;
+                                }
+                                $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."data already exist for selected month, user, product";
+                           }
+                           else
+                           {
+                                $inner_array[] = $new_month_data;
+                                $inner_array[] = $user_data;
+                                $inner_array[] = $product_data;
+                             //   $inner_array[] = $product_code;
+                             //   $inner_array[] = $product_name;
+                                $inner_array[] = $quantity;
+
+                                $final_array["success"][] = $inner_array;
+                           }
+                       }
+                       else{
+                           
+                           if(!isset($error_array["error"]["header"])){
+                                $error_array["error"]["header"] = $header;
+                           }
+                           $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Excel User or Product data not matched with DB data";
+                       }
+                       
+                   }
+                   
+                    
+                }
+            }
+            else{
+                $error_array["error"][] = "No data found";
+                echo json_encode($error_array); die;
+            }
+                header('Content-Type: application/json');
+                
+                if(empty($error_array)){
+                 
+                    echo  json_encode($final_array); die;
+                }
+                else{
+                    echo json_encode($error_array); die;
+                }
+                
+            }
+            else{
+                
+                $error_array["error"][] = "No file uploaded";
+                echo json_encode($error_array); die;
+                
+            }
+            
+        }
+        
+        public function create_data_xl() {
+           
+            //$req_data = json_decode($_GET["data"],true);
+            
+           // testdata($_POST['val']);
+            
+            if(!empty($_POST['val']))
+            {
+                $this->load->library('excel');
+
+               // $result = $this->product_model->read($this->input->post());
+                $records=array();
+               // $records = (isset($result['result']) && !empty($result['result'])) ? $result['result'] : '';
+
+                $this->excel->setActiveSheetIndex(0);
+                //name the worksheet
+                $this->excel->getActiveSheet()->setTitle('Incorrect Data');
+                /*$this->excel->getActiveSheet()->setCellValue('A1','Sr. No.');*/
+                
+                $k = 1;
+                
+                $l = 1;
+                $first_data = 'A'.$l;
+                $last_data  = "";
+                
+                foreach($_POST['val']["header"][1] as $key=> $col_data){
+                
+                    $this->excel->getActiveSheet()->setCellValue($key.$l,$col_data);
+                    
+                    $last_data = $key.$l;
+                    
+                    $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setSize(12);
+                    $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setBold(true);
+                    
+                    $k++; 
+                }
+                
+
+                foreach(range($first_data,$last_data) as $columnID){
+                    $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+                }
+
+               // $records = $this->product_model->join("product_specificaion ps","ps.pid=product.product_id")->find_all();
+
+                $data_array = array();
+                
+                    $m = 2;
+                    foreach($_POST['val'] as $key1 => $value)
+                    {
+                        
+                        if((string)$key1 != 'header') {
+                           
+                            $row_data = explode("~",$value);
+                            
+                            $j = 0;
+                            foreach($_POST['val']["header"][1] as $key2=> $col_data){
+                
+                                if($j == 0){
+                                    $date_data = explode("-",$row_data[$j]);
+                                    $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                }
+                                
+                                $this->excel->getActiveSheet()->setCellValue($key2.$m, $row_data[$j]);
+                                $j++;
+                            }
+                            
+                        }
+                        
+                         $m++;
+                        
+                    }
+            
+                $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xlsx';
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+                header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+                header('Cache-Control: max-age=0'); //no cache
+
+                //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+                //if you want to save it as .XLSX Excel 2007 format
+                $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+                //force user to download the Excel file without writing it to server's HD
+                
+                /*
+                 * NEED TO CHANGE AS PER UPLOADED FILE 
+                 */
+                
+                
+                if(file_exists("D:/newWamp/www/open_re/trunk/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+                    
+                    unlink("D:/newWamp/www/open_re/trunk/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                    
+                }
+                
+                $objWriter->save("D:/newWamp/www/open_re/trunk/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                
+                echo $filename;
+                
+                //$objWriter->save('php://output');
+                exit();
+            }
+            
+        }
+        
+        public function add_xl_data() {
+            if($_POST["dirname"] == "target"){
+                $target_data = $this->ishop_model->add_target_data($_POST["val"]);
+            }
+            elseif($_POST["dirname"] == "budget"){
+                $budget_data = $this->ishop_model->add_budget_data($_POST["val"]);
+            }
+            
+            
+        }
+        
+        
+        public function copy_data(){
+            
+             $copy_data = $this->ishop_model->copy_data($_POST);
+            echo $copy_data;
+           
+            die;
+        }
+        
         
 }

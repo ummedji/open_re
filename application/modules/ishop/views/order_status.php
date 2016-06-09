@@ -3,17 +3,18 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Header title</h4>
+               <!-- <h4 class="modal-title">Header title</h4> -->
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <label for="usr">label name:</label>
-                    <input type="text" class="form-control" id="usr">
+                    <label for="usr">PO No:</label>
+                    <input type="hidden" name="order_id" value=""  id="order_data" class="form-control po_number_data" />
+                    <input type="text" name="po_no" value=""  id="po_number_data" class="form-control po_number_data" />
                 </div>
             </div>
             <div class="modal-footer">
                 <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
-                <button type="button" class="btn btn-primary">Save</button>
+                <button id="save_po_data" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
     </div>
@@ -114,7 +115,7 @@
                 <div class="col-md-10 col-md-offset-1 distributore_form retailer_data" style="display:none;">
                 <div class="row">
                     
-                     <div class="col-md-6 col-sm-6 tp_form">
+                     <div class="col-md-4 col-sm-4 tp_form">
 
                              <div class="form-group">
                                 <label>Geo L2</label>
@@ -125,7 +126,7 @@
                             </div>
                     </div>
                     
-                    <div class="col-md-6 col-sm-6 tp_form">
+                    <div class="col-md-4 col-sm-4 tp_form">
                     
                         <div class="form-group">
                             <label>Geo L1</label>
@@ -137,7 +138,7 @@
                     </div>
                 
                     
-                    <div class="col-md-6 col-sm-6 tp_form">
+                    <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Retailer Name</label>
                                 <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
@@ -167,7 +168,19 @@
                     </div> -->
                 </div>
             </div>
-            
+
+                    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label>TO Date</label>
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                        </div>
+                        <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
+                    </div>
+
         <?php }
         else if($login_customer_type == 9){
         ?>
@@ -175,6 +188,19 @@
             <div class="col-md-6 text-center radio_space">
                 <div class="clearfix"></div>
             </div>
+
+            <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label>TO Date</label>
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                </div>
+                <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
+            </div>
+
             
         <?php }else if($login_customer_type == 10){ ?>
             
@@ -182,6 +208,19 @@
             <div class="col-md-6 col-md-offset-3 distributore_form distributor_data">
                     
                 </div>
+
+
+            <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+                <div class="form-group">
+                    <label>From Date</label>
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                </div>
+                <div class="form-group">
+                    <label>TO Date</label>
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                </div>
+                <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
+            </div>
             
             <?php } ?>
             
@@ -293,12 +332,7 @@
                         </select>
 
                     </div>
-                </div>
 
-                
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
                     <div class="form-group">
                         <label>Retailer Name</label>
                         <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" >
@@ -306,7 +340,12 @@
                         </select>
 
                     </div>
+
                 </div>
+
+                
+                
+
                 
                 
             </div>
@@ -314,7 +353,7 @@
             <div class="distributor_checked" id="distributor_checked" style="display:none;">
                 
                 
-                <div class="col-md-6 col-sm-6 tp_form">
+                <div class="col-md-12 text-center tp_form inline-parent">
                     
                         <div class="form-group">
                         <label>Geo L2</label>
@@ -334,9 +373,7 @@
                         </select>
                     
                     </div>
-                </div>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
+
                     
                         <div class="form-group">
                         <label>Geo L1</label>
@@ -345,14 +382,12 @@
                         </select>
                     
                     </div>
-                </div>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
+
                    
                        <div class="form-group">
                        <label>Distributor Name</label>
                        <select class="selectpicker" id="fo_distributor_data" name="distributor_data" data-live-search="true">
-                           
+
                        </select>
                    </div>
                    
@@ -360,7 +395,20 @@
                 
                 
             </div>
-            
+
+                    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+                        <div class="form-group">
+                            <label>From Date</label>
+                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                        </div>
+                        <div class="form-group">
+                            <label>TO Date</label>
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                        </div>
+                        <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
+                    </div>
+
+
             
             <?php } ?>
             
@@ -393,17 +441,7 @@
                         </div>
                     </div>
                 </div>-->
-            <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
-                <div class="form-group">
-                    <label>From Date 1</label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
-                </div>
-                <div class="form-group">
-                    <label>TO Date</label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
-                </div>
-                <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
-            </div>
+
             
             
 

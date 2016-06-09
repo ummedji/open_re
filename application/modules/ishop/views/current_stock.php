@@ -12,7 +12,7 @@ echo form_open('',$attributes); ?>
                         <input type="text" class="form-control" name="current_date" id="current_date" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 tp_form">
+                <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group fulle_wd">
                             <label style="display: block;">Product Sku</label>
                             <select class="selectpicker" name="product_sku" id="sales_prod_sku" data-live-search="true">
@@ -31,13 +31,13 @@ echo form_open('',$attributes); ?>
                             </select>
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 tp_form">
+                <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group">
                         <label for="intransist_qty">Intransist Qty.</label>
                         <input type="text" class="form-control" name="intransist_qty" id="intransist_qty" placeholder="">
                     </div>
                 </div>
-                <div class="col-md-4 col-sm-6 tp_form">
+                <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group">
                         <label for="unrusticted_qty">Unrusticted Qty.</label>
                         <input type="text" class="form-control" name="unrusticted_qty" id="unrusticted_qty" placeholder="">
@@ -78,30 +78,26 @@ echo form_open('',$attributes); ?>
         <div class="clearfix"></div>
     </div>
 </div>
+<?php echo form_close(); ?>
 
+<?php $attributes = array('class' => '', 'id' => 'update_current_stock','name'=>'update_current_stock');
+echo form_open('',$attributes); ?>
+<div class="current_stock_container">
 <?php
     echo theme_view('common/middle');
 ?>
-<!--<div class="col-md-12 table_bottom">
-    <div class="row">
-        <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div>
-        <div class="col-md-9">
-            <div class="row">
-                <div class="col-md-1 upload_text">Upload: </div>
-                <div class="col-md-3 upload_file_space">
-                    <div class="input-group">
-                                                <span class="input-group-btn">
-                                                    <span class="btn btn-primary btn-file">
-                                                        Browse <input type="file" multiple>
-                                                    </span>
-                                                </span>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-8 chech_data"><button type="button" class="btn btn-default">Check Data</button> <button type="button" class="btn btn-default">Download Templates</button></div>
-            </div>
+</div>
+<?php echo form_close(); ?>
+
+<?php
+if (!$this->input->is_ajax_request()) {
+    ?>
+    <div class="check_save_btn" id="check_save_btn" style="display:none;">
+        <div class="col-md-2 save_btn">
+            <label>&nbsp;</label>
+            <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
         </div>
     </div>
-</div>-->
-<?php echo form_close(); ?>
+    <?php
+}
+?>

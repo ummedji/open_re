@@ -13,7 +13,6 @@ $(document).ready(function(){
       autoclose: true
     });
     
-    
     $( "#from_month_data" ).datepicker({
       format: "yyyy-mm",
       showOn: "button",
@@ -32,7 +31,7 @@ $(document).ready(function(){
       autoclose: true
     });
     
-     $( "#from_copy_popup_datepicker" ).datepicker({
+   $( "#from_copy_popup_datepicker" ).datepicker({
       format: "yyyy",
       showOn: "button",
       buttonImage: site_url+"/public/themes/default/images/calendar.gif",
@@ -50,7 +49,6 @@ $(document).ready(function(){
       autoclose: true
     });
     
-   
    var login_customer_type = $("input#login_customer_type").val();
    
    //alert(login_customer_type);
@@ -74,8 +72,8 @@ $(document).ready(function(){
        
        var customer_type_selected = $(this).val();
        
-       $("thead.target_head_show_data").empty();
-       $("tbody#target_data").empty();
+       $("thead.budget_head_show_data").empty();
+       $("tbody#budget_data").empty();
        
       // alert(customer_type_selected);
        
@@ -102,7 +100,7 @@ $(document).ready(function(){
        
                 var customer_selected = $("input#login_customer_id").val();
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
-                
+
            }
            
            //FOR COPY POPUP
@@ -129,7 +127,6 @@ $(document).ready(function(){
            
            $("a#retailer_xl").css("display","none");
            $("a#distributor_xl").css("display","block");
-           
            
            $("div.retailer_data").css("display","none");
            $("div.distributor_data").css("display","block");
@@ -187,7 +184,7 @@ $(document).ready(function(){
        }
        
        
-    if($("thead.target_head_show_data tr").length == 0){
+    if($("thead.budget_head_show_data tr").length == 0){
         
         var head_html = "";
         
@@ -211,7 +208,7 @@ $(document).ready(function(){
                     '<th class="numeric">Quantity <span class="rts_bordet"></span></th>'+
                 '</tr>';
         
-        $("thead.target_head_show_data").html(head_html);
+        $("thead.budget_head_show_data").html(head_html);
         
         
     }
@@ -486,7 +483,7 @@ $(document).ready(function(){
    var data_array = [];
 
 
-$("a#target_add_row").on("click",function(){
+$("a#budget_add_row").on("click",function(){
 
     var login_user_role = $("input#login_customer_type").val();
     var checked_type = "";
@@ -544,7 +541,7 @@ $("a#target_add_row").on("click",function(){
     
     $.ajax({
         type: 'POST',
-        url: site_url+"ishop/check_target_data_status",
+        url: site_url+"ishop/check_budget_data_status",
         data: {product_sku_id:sku_id,month_data:monthdata,customer_id:customer_val},
         success: function(resp){
             data_status = resp;
@@ -628,7 +625,7 @@ $("a#target_add_row").on("click",function(){
     
     var quantity = $('#quantity').val();
     var qty = "";
-    var sr_no =$("#target_data > tr").length + 1;
+    var sr_no =$("#budget_data > tr").length + 1;
 
     var box_selected = "";
     var package_selected = "";
@@ -662,7 +659,7 @@ $("a#target_add_row").on("click",function(){
      }
     
 
-    $("#target_data").append(
+    $("#budget_data").append(
         "<tr id='"+sr_no+"'>"+
             "<td data-title='Sr. No.' class='numeric'>" +
                 "<input class='input_remove_border' type='text' value='"+sr_no+"' readonly/>" +
@@ -1011,8 +1008,6 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
     
     var login_user_countryid = $("input#login_customer_countryid").val();
     
-    //alert(checked_type+"=="+login_user_countryid+"=="+login_customer_type);
-    
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_user_by_geo_data",
@@ -1058,6 +1053,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                     $.each(resp, function(key, value) {
                         $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
                     });
+
                     $("select#distributor_distributor_id").selectpicker('refresh');
                     
                     //FOR FROM DISTRIBUTOR IN COPY POPUP
@@ -1253,6 +1249,11 @@ function get_data_conversion(sku_id,quantity,units){
     
 }
 
+//function target_add_row(data_array)
+//{
+
+//}
+
 $("#order_place").on("submit",function(){
 
     var param = $("#order_place").serializeArray();
@@ -1315,23 +1316,69 @@ $("body").on("change","select.select_unitdata",function(){
        
        
 });
+/*
+$("body").on("keyup","input.quantity_data",function(){
+      
+      
+      var pathname = window.location.pathname;
+       
+       var action_segment = pathname.split("/");
+       
+       action_segment = action_segment[action_segment.length-1];
+       
+       if(action_segment == "order_place"){
+      
+            var selected_row_id = $(this).parent().parent().attr("id");
 
-$(document).on('click', '#target_data .edit_i', function () {
+            var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+
+            var units = $(this).parent().parent().find("select.select_unitdata").val()
+
+            var quantity = $(this).val();
+
+            var unit_data = get_data_conversion(sku_id,quantity,units);
+
+            $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+       
+        }
+        else
+        {
+            
+            var selected_row_id = $(this).attr('id');
+            var product_row_id = selected_row_id.split("_");
+            product_row_id = product_row_id[1];
+            
+            var sku_id = $("input#sku_"+$.trim(product_row_id)).val();
+            var units = $("select#units_"+$.trim(product_row_id)).val();
+            var quantity = $(this).val();
+            
+            var unit_data = get_data_conversion(sku_id,quantity,units);
+            
+            alert(sku_id+"==="+units+"==="+quantity+"==="+unit_data);
+            
+            $("input#qty_kg_ltr_"+$.trim(product_row_id)).val(unit_data);
+            $("div.quantity_kg_ltr_"+$.trim(product_row_id) +" span.quantity_kg_ltr").text(unit_data);
+            
+        }
+       
+}); */
+
+$(document).on('click', '#budget_data .edit_i', function () {
     
     var id = $(this).attr('prdid');
    
     $("tr#"+id).find("input.quantity_data").removeAttr("readonly");
     
 });
+   
 
-$(document).on('submit', '#upload_target_data', function (e) {
+
+$(document).on('submit', '#upload_budget_data', function (e) {
     
     e.preventDefault();
      
      var file_data = new FormData(this);
-     var dir_name = "target";
-     
-     //file_data.push(dir_name);
+     var dir_name = "budget";
      
      $.ajax({
         url: site_url+"ishop/upload_data", // Url to which the request is send

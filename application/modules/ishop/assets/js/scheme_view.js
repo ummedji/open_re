@@ -53,6 +53,7 @@ $("#view_schemes").on("submit",function(){
     //alert('in');
     var param = $("#view_schemes").serializeArray();
     console.log(param);
+    //return false;
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/view_schemes_details",

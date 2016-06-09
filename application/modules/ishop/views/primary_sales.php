@@ -1,11 +1,10 @@
+<?php
+$attributes = array('class' => '', 'id' => 'primary_sales_view','name'=>'primary_sales_view');
+echo form_open('',$attributes); ?>
+
 <?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
     <div class="top_form">
-        <?php
-        $attributes = array('class' => '', 'id' => 'primary_sales_view','name'=>'primary_sales_view');
-        //echo form_open($this->uri->uri_string(),$attributes);
-        echo form_open('',$attributes); ?>
-
         <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
@@ -46,7 +45,7 @@
                         </div>
                         <div class="col-md-2 save_btn">
                             <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary gren_btn">Execute</button>
+                            <button type="submit" name="execute" value="execute" class="btn btn-primary gren_btn">Execute</button>
                         </div>
                     </div>
                 </div>
@@ -59,12 +58,36 @@
 <?php
 if ($this->input->is_ajax_request()) {
 echo theme_view('common/middle');
+
 }
 ?>
-<div id="middle_container" class="primary_cont">
+<?php if (!$this->input->is_ajax_request()) {
+    ?>
+    <?php
+    $attributes = array('class' => '', 'id' => 'primary_sales_view_data','name'=>'primary_sales_view_data');
+    echo form_open('',$attributes); ?>
+        <div id="middle_container_primary" class="primary_cont">
 
-</div>
-<div id="product_table_container" class="primary_product">
+        </div>
 
-</div>
+        <div id="product_table_container" class="primary_products">
+
+        </div>
+    <?php echo form_close(); ?>
+<?php
+}?>
+
+
+<?php
+if (!$this->input->is_ajax_request()) {
+    ?>
+    <div class="check_save_btn" id="check_save_btn" style="display:none;">
+        <div class="col-md-2 save_btn">
+            <label>&nbsp;</label>
+            <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
+        </div>
+    </div>
+    <?php
+}
+?>
 

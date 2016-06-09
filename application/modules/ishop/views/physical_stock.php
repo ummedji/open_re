@@ -1,9 +1,9 @@
 <?php
-
 $attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12 od_approval">
     <div class="top_form">
          <div class="row">
@@ -17,7 +17,7 @@ echo form_open('',$attributes); ?>
                         <ul>
                             <li><a href="<?php echo base_url('/ishop/ishop_sales') ?>">Sales</a></li>
                             <li class="active"><a href="<?php echo base_url('/ishop/physical_stock') ?>">Physical Stock</a></li>
-                            <li><a href="#">View</a></li>
+                            <li><a href="<?php echo base_url('/ishop/sales_view') ?>">View</a></li>
                         </ul>
                         <div class="clearfix"></div>
                     </div>
@@ -51,7 +51,7 @@ echo form_open('',$attributes); ?>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label>Geo Level 3</label>
-                                    <select class="selectpicker" id="geo_level">
+                                    <select class="selectpicker" name="geo_level" id="geo_level">
                                         <option>Select Geo Location</option>
                                         <?php
                                         if(isset($geo_data) && !empty($geo_data))
@@ -70,19 +70,8 @@ echo form_open('',$attributes); ?>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label>Geo Level 2</label>
-                                    <select class="selectpicker" id="geo_level_1">
+                                    <select class="selectpicker" name="geo_level_1" id="geo_level_1">
                                         <option>Select Geo Location</option>
-                                       <!-- <?php
-/*                                        if(isset($geo_data) && !empty($geo_data))
-                                        {
-                                            foreach($geo_data as $k=> $geo_val)
-                                            {
-                                                */?>
-                                                <option value="<?php /*echo $geo_val['political_geo_id']; */?>" attr-name="<?php /*echo $geo_val['political_geography_name']; */?>"><?php /*echo $geo_val['political_geography_name']; */?></option>
-                                                --><?php
-/*                                            }
-                                        }
-                                        */?>
                                     </select>
                                 </div>
                             </div>
@@ -160,7 +149,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Product Sku</label>
-                        <select class="selectpicker" id="phy_prod_sku" data-live-search="true">
+                        <select class="selectpicker" name="phy_prod_sku" id="phy_prod_sku" data-live-search="true">
                             <option value="0">Product Name</option>
                             <?php
                             if(isset($product_sku) && !empty($product_sku))
@@ -179,7 +168,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label>Unit</label>
-                        <select class="selectpicker" id="sec_sel_unit">
+                        <select class="selectpicker" name="sec_sel_unit" id="sec_sel_unit">
                             <option value="0">Units</option>
                             <option value="box">Box</option>
                             <option value="packages">Packages</option>
@@ -190,72 +179,25 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity</label>
-                        <input type="text" class="form-control" id="phy_qty" placeholder="">
+                        <input type="text" class="form-control" name="phy_qty" id="phy_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
-                <div class="plus_btn"><a href="#" onclick="add_phy_stock_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>
     </div>
 </div>
+<?php }?>
 <!--------------------------------------Table-------------------------------------------------->
-<div class="col-md-12">
-    <div class="row">
-        <div class="zoom_space">
-            <ul>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
-            </ul>
-        </div>
-        <div id="no-more-tables">
-            <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                <thead class="cf">
-                <tr>
-                    <th>Sr. No. <span class="rts_bordet"></span></th>
-                    <th class="numeric">Action</th>
-                    <th>Month Year <span class="rts_bordet"></span></th>
-                    <th>Product SKU Code <span class="rts_bordet"></span></th>
-                    <th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>
-                    <th class="numeric">Quantity <span class="wl_sp">(Kg/Ltr)</span> <span class="rts_bordet"></span></th>
-                    <th>Unit <span class="rts_bordet"></span></th>
-                  <!--  <th class="numeric">Qty Kg/Ltr<div class="wl_sp">(Kg/Ltr)</div> <span class="rts_bordet"></span></th>-->
-                </tr>
-                </thead>
-                <tbody id="physical_stock">
-                </tbody>
-            </table>
-            <div class="clearfix"></div>
-        </div>
-    </div>
+<div class="phy_stock_container">
+<?php
+echo theme_view('common/middle');
+?>
 </div>
 
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
-<div class="col-md-12 table_bottom">
-    <div class="row">
-        <div class="col-md-3 save_btn">
-            <!--  <div><input type="submit" class="btn btn-primary" value="Save" /></div>-->
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-        <!--<div class="col-md-9">
-            <div class="row">
-                <div class="col-md-3 upload_file_space">
-                    <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
-                                            Browse <input type="file" multiple>
-                                        </span>
-                                    </span>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-9 chech_data"><button type="button" class="btn btn-default">Check Data</button> <button type="button" class="btn btn-default">Download Templates</button></div>
-            </div>
-        </div>-->
-    </div>
-</div>
 <?php echo form_close(); ?>
 <div class="clearfix"></div>

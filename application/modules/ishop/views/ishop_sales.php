@@ -15,9 +15,9 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-12 text-center sub_nave">
                     <div class="inn_sub_nave">
                         <ul>
-                            <li><a href="<?php echo base_url('/ishop/ishop_sales') ?>">Sales</a></li>
-                            <li class="active"><a href="<?php echo base_url('/ishop/physical_stock') ?>">Physical Stock</a></li>
-                            <li><a href="#">View</a></li>
+                            <li class="active"><a href="<?php echo base_url('/ishop/ishop_sales') ?>">Sales</a></li>
+                            <li><a href="<?php echo base_url('/ishop/physical_stock') ?>">Physical Stock</a></li>
+                            <li><a href="<?php echo base_url('/ishop/sales_view') ?>">View</a></li>
                         </ul>
                         <div class="clearfix"></div>
                     </div>

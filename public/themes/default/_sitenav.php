@@ -65,7 +65,7 @@
                                 ?>
                                 <li role="presentation"><a href="<?php echo base_url('/ishop/order_place') ?>">ORDER PLACE</a></li>
 
-                                <?php if($current_user->role_id == 7) {
+                                <?php if($current_user->role_id == 7 || $current_user->role_id == 9 || $current_user->role_id == 10 ) {
                                     ?>
                                     <li role="presentation"><a href="<?php echo base_url('/ishop/set_rol') ?>">ROL</a></li>
                                     <?php

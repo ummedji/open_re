@@ -88,9 +88,9 @@ ul.listslider li{
 .listslider-arrow.listslider-left{ background-color: #33932c;}
 .footer { background-color: #00793a;}
 .pr_footer { background-color: #00793a;}
-@media (max-width: 991px) {
+/*@media (max-width: 991px) {
     .left_contain { background-color: #65ac1e;}
-}
+}*/
 .middle_form { background-color: #65ac1e;}
 .plus_btn a { color: #00793a;}
 .big_breadcrumb { background-color: #00793a;}
@@ -118,4 +118,30 @@ ul.listslider li{
 .gren_btn:hover, .gren_btn:focus {background-color: #65ac1e !important;}
 .svn_btn button:hover, .svn_btn button:focus {
     background-color: #015e2e !important;
+}
+.tr_modal .modal-content .modal-header .modal-title { color: #00793a;}
+.radio_bb input[type=radio]:not(old):checked +  label > span > span{
+    border           : 0.0625em solid rgb(0,121,58);
+    background       : rgb(101,172,30);
+    background-image :    -moz-linear-gradient(rgb(101,172,30),rgb(101,172,30));
+    background-image :     -ms-linear-gradient(rgb(101,172,30),rgb(101,172,30));
+    background-image :      -o-linear-gradient(rgb(101,172,30),rgb(101,172,30));
+    background-image : -webkit-linear-gradient(rgb(101,172,30),rgb(101,172,30));
+    background-image :         linear-gradient(rgb(101,172,30),rgb(101,172,30));
+}
+.radio_bb input[type=radio]:not(old):checked +  label > span > span{
+    background       : rgb(101,172,30);
+}
+.radio_bb input[type=checkbox]:not(old):checked + label > span:before{
+    color       : rgb(101,172,30);
+}
+.save_default_bb {
+    background-color: #65ac1e;
+    border: solid 1px #00793a;
+    color: #fff;
+}
+.save_default_bb:hover, .save_default_bb:focus {
+    background-color: #00793a;
+    border: solid 1px #00793a;
+    color: #fff;
 }

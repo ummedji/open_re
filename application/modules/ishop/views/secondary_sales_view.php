@@ -61,10 +61,33 @@ if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
 ?>
-<div id="middle_container_secondary" class="secondary_cont">
 
-</div>
-<div id="product_table_container_secondary">
+<?php
+if (!$this->input->is_ajax_request()) {
+    $attributes = array('class' => '', 'id' => 'secondary_sales_view_data','name'=>'secondary_sales_view_data');
+    echo form_open('',$attributes); ?>
+    <div id="middle_container_secondary" class="secondary_cont">
 
-</div>
+    </div>
+    <div id="product_table_container_secondary" class="secondary_product">
+
+    </div>
+    <?php echo form_close(); ?>
+<?php
+}
+?>
+<?php
+if (!$this->input->is_ajax_request()) {
+    ?>
+    <div class="check_save_btn" id="check_save_btn" style="display:none;">
+        <div class="col-md-2 save_btn">
+            <label>&nbsp;</label>
+            <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
+        </div>
+    </div>
+    <?php
+}
+?>
+
+
 

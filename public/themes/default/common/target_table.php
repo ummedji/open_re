@@ -2,99 +2,53 @@
 $action_data = $this->uri->segment(2);
 
 if(isset($target_data) && count($target_data)>0) { ?>
-        <?php if(isset($target_data['no_margin']) && !empty($target_data['no_margin']) )
-        { ?>
-                <div class="col-md-12">
-            <?php
-        }else{
-        ?>
-        <div class="col-md-12" style="margin-top: 24px">
-        <?php
-    }?>
+        
+<table class="col-md-12 table-bordered table-striped table-condensed cf">
+        <thead class="cf target_head_show_data">
+           <tr> 
 
-            <div class="row">
-                <div class="zoom_space">
-                    <ul>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
-                    </ul>
-                </div>
-                <div id="no-more-tables">
-                    <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                        <thead class="cf">
-                        <tr>
-                            <?php foreach($target_data['head'] as $hkey => $head) { ?>
-                                <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
-                                    <a href="#">
-                                        <?php echo $head;?>
-                                    </a>
-                                    <span class="rts_bordet"></span>
-                                </th>
-                            <?php } ?>
-                        </tr>
-                        </thead>
-                        <?php if(isset($table['row']) && count($table['row']) ) {?>
-                        <tbody class="tbl_body_row">
-                        <?php foreach($table['row'] as $rkey => $rowary) {
-                            ?>
-                            <tr>
-                                <?php
-                                foreach($rowary as $rwkey => $row) {
 
-                                    ?>
-                                    <?php if($rwkey==0   && ($action_data !="get_prespective_order_details")) {
-                                        ?>
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
-                                            <div>
-                                                <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
-                                            </div>
-                                        </td>
-                                    <?php }
+                <th>Sr. No. <span class="rts_bordet"></span></th>
 
-                                    //else if(($rwkey==1  && $action_data !="get_prespective_order_details")) {
-                                    else if(($rwkey==1  && isset($table['action']) && !empty($table['action']))) {
-                                       // if($action_data != 'credit_limit'){
-                                        ?>
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>" class="numeric">
-                                            <?php
-                                            if(isset($table['radio']) && !empty($table['radio']))
-                                            {
-                                                ?>
-                                                <input type="radio" name="radio_scheme_slab" id="radio_scheme" value="<?php echo $row;?>">
-                                                <?php
-                                            }
-                                            elseif(isset($table['eye']) && !empty($table['eye']))
-                                            {
-                                                ?>
-                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
-                                                <?php
-                                            }
-                                         //  if($action_data !="get_prespective_order" ){
-                                           else{
-                                            ?>
-                                            <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                            <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                                           <?php } ?>
-                                        </td>
-                                    <?php } //}
-                                    else
-                                    { ?>
-                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
-                                            <?php echo $row;?>
-                                        </td>
-                                    <?php
-                                    } ?>
-                                <?php } ?>
-                            </tr>
-                        <?php } ?>
-                        </tbody>
-                        <?php } ?>
-                    </table>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-        </div>
-    <?php }
+                <th class="numeric">SKU Code <span class="rts_bordet"></span></th>
+                <th class="numeric">SKU Name <span class="rts_bordet"></span></th>
+               
+                <?php if(isset($month_data) && !empty($month_data)){ ?>
+                    <?php foreach ($month_data as $key => $value) { ?>
+                        <th class="numeric"><?php echo date("Y-M",strtotime($value)); ?><span class="rts_bordet">(Kg/Ltr)</span></th>
+                    <?php } ?>
+                <?php } ?>
+            
+
+           </tr>
+        </thead>
+        <tbody id="target_data">
+            <?php 
+                $i = 1;
+                
+                foreach($target_data as $key=>$data){
+                    $product_data = explode("-",$key);
+                    ?>
+                    <tr>
+                        <td><?php echo $i; ?></td>
+                        <td><?php echo $product_data[1]; ?></td>
+                        <td><?php echo $product_data[2]; ?></td>
+                       <?php foreach($data as $k=>$q_data){ ?>
+                            <td><?php echo $q_data; ?></td>
+                       <?php } ?>
+                        
+                        
+                    </tr>
+                 <?php   
+                    $i++;
+                }
+
+            ?>
+        </tbody>
+    </table>
+
+
+<?php }
     else{
         ?>
         <h1 align="center" class="on_data">NO Data Available</h1>

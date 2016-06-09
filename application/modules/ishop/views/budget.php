@@ -13,7 +13,7 @@ elseif($login_customer_type == 9){
     echo form_open('',$attributes);
 }
 else{
-    echo form_open('ishop/add_target_data',$attributes);
+    echo form_open('ishop/add_budget_data',$attributes);
 }
 ?>
 <!--------------------------------------Filter1-------------------------------------------------->
@@ -41,12 +41,11 @@ else{
                     <div class="clearfix"></div>
                 </div>
             </div>
-            
             <?php 
                 if($login_customer_type == 7){
             ?>
              <div class="copy_btn">
-                <a href="javascript:void(0);" id="target_copy"  data-toggle="modal" data-target="#TargetCopyModal">Copy</a>
+                <a href="javascript:void(0);" id="budget_copy"  data-toggle="modal" data-target="#BudgetCopyModal">Copy</a>
             </div>
             
                 <?php } ?>
@@ -69,6 +68,8 @@ else{
                 <?php } ?>
             
             
+
+            
             <?php 
                 if($login_customer_type == 7){
             ?>
@@ -77,6 +78,7 @@ else{
                 
                 <div class="col-md-10 col-md-offset-1 distributore_form distributor_data">
                     <div class="row">
+
                         <div class="col-md-4 col-sm-4 tp_form">
                             <div class="form-group">
                                 <div class="form-group">
@@ -85,7 +87,9 @@ else{
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-4 col-sm-4 tp_form">
+                    
                             <div class="form-group">
                             <label>Geo L3</label>
                             <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
@@ -123,21 +127,28 @@ else{
                     
                     
                      <div class="col-md-4 col-sm-4 tp_form">
+
                              <div class="form-group">
                                 <label>Geo L3</label>
                                 <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+
                                 </select>
+
                             </div>
                     </div>
                     
                     <div class="col-md-4 col-sm-4 tp_form">
+                    
                         <div class="form-group">
                             <label>Geo L2</label>
                             <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+
                             </select>
+                    
                         </div>
                     </div>
-
+                
+                    
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Retailer Name</label>
@@ -145,52 +156,32 @@ else{
                                 </select>
                             </div>
                     </div>
-
-                    <?php  if($action_data == "target_view" || $login_customer_type == 9){ ?>
-                        <label>&nbsp;</label>
-                        <button type="submit" class="btn btn-primary gren_btn">Execute</button>
-
-                        <?php echo form_close(); ?>
-                    <?php } ?>
-
+                    
                 </div>
             </div>
             
         <?php }
         else if($login_customer_type == 9){
         ?>
-                <div class="col-md-12 text-center tp_form inline-parent">
 
-
-                            <div class="form-group">
-                                <div class="form-group">
-                                    <label>From Month</label>
-                                    <input type="text" name="from_month_data" id="from_month_data" class="form-control" />
-                                </div>
-                            </div>
-
-
-                            <div class="form-group">
-                                <div class="form-group">
-                                    <label>To Month</label>
-                                    <input type="text" name="to_month_data" id="to_month_data" class="form-control" />
-                                </div>
-                            </div>
-
-                        <div class="inl_button save_btn">
-
-                            <?php  if($action_data == "target_view" || $login_customer_type == 9){ ?>
-                                    <label>&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary gren_btn">Execute</button>
-
-                                <?php echo form_close(); ?>
-                            <?php } ?>
-
-                        </div>
-
-                        <div class="clearfix"></div>
-
+                <div class="col-md-6 col-sm-6 tp_form">
+                    <div class="form-group">
+                        <div class="form-group">
+                        <label>From Month</label>
+                        <input type="text" name="from_month_data" id="from_month_data" class="form-control" />
+                    </div>
+                    </div>
                 </div>
+                <div class="col-md-6 col-sm-6 tp_form">
+                    <div class="form-group">
+                        <div class="form-group">
+                        <label>To Month</label>
+                        <input type="text" name="to_month_data" id="to_month_data" class="form-control" />
+                    </div>
+                    </div>
+                </div>
+
+                <div class="clearfix"></div>
             
         <?php } ?>
             
@@ -199,38 +190,33 @@ else{
             ?>
                
             <div class="col-md-6 col-sm-6 tp_form">
-                <!--<div class="form-group">
+                <div class="form-group">
                     <div class="form-group">
                     <label>Month</label>
                     <input type="text" name="month_data" id="month_data" class="form-control" />
                 </div>
-                </div>-->
+                </div>
             </div>
             
             <div class="distributor_checked" id="distributor_checked" style="">
                 
-                <div class="col-md-12 text-center tp_form inline-parent">
-                    <div class="row">
+                
+                <div class="col-md-6 col-sm-6 tp_form">
+                    
                         <div class="form-group">
-                            <div class="form-group">
-                                <label>Month</label>
-                                <input type="text" name="month_data" id="month_data" class="form-control" />
-                            </div>
-                        </div>
-                        <div class="form-group">
+                        <?php if($action_data == "target_view"){ ?>
+                            <label>Province</label>
+                        <?php }else{ ?>
+                            <label>Geo L1</label>
+                        <?php } ?>    
+                        
+                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
                             <?php if($action_data == "target_view"){ ?>
-                                <label>Province</label>
-                            <?php }else{ ?>
-                                <label>Geo L1</label>
-                            <?php } ?>
-
-                            <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                                <?php if($action_data == "target_view"){ ?>
-                                    <option value="0">Select Province</option>
-                                <?php }else{ ?>
-                                    <option value="0">Select Geo Level</option>
-                                <?php } ?>
-
+                           <option value="0">Select Province</option>
+                        <?php }else{ ?>
+                            <option value="0">Select Geo Level</option>
+                        <?php } ?>
+                           
                                 <?php
                                 if(isset($geo_level_data) && !empty($geo_level_data))
                                 {
@@ -242,72 +228,22 @@ else{
                                     }
                                 }
                                 ?>
-                            </select>
-
-                        </div>
-                        <div class="form-group">
-                            <label>Distributor Name</label>
-                            <select class="selectpicker" id="fo_distributor_data" name="distributor_data" data-live-search="true">
-
-                            </select>
-                        </div>
-                        <div class="form-group">
-                        <div class="inl_button save_btn">
-                            <?php  if($action_data == "target_view" || $login_customer_type == 9){ ?>
-                                <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary gren_btn" style="margin-top: 4px;">Execute</button>
-
-                                <?php echo form_close(); ?>
-                            <?php } ?>
-                        </div>
-                            </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <!--<div class="form-group">
-                        <?php /*if($action_data == "target_view"){ */?>
-                            <label>Province</label>
-                        <?php /*}else{ */?>
-                            <label>Geo L1</label>
-                        <?php /*} */?>
-                        
-                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                            <?php /*if($action_data == "target_view"){ */?>
-                           <option value="0">Select Province</option>
-                        <?php /*}else{ */?>
-                            <option value="0">Select Geo Level</option>
-                        <?php /*} */?>
-                           
-                                <?php
-/*                                if(isset($geo_level_data) && !empty($geo_level_data))
-                                {
-                                    foreach($geo_level_data as $key=>$val_geo_level_data)
-                                    {
-                                        */?>
-                                        <option value="<?php /*echo $val_geo_level_data['political_geo_id']; */?>"><?php /*echo $val_geo_level_data['political_geography_name']; */?></option>
-                                        <?php
-/*                                    }
-                                }
-                                */?>
                         </select>
                     
-                    </div>-->
+                    </div>
                 </div>
                 
                 <div class="col-md-6 col-sm-6 tp_form">
                    
-                       <!--<div class="form-group">
+                       <div class="form-group">
                        <label>Distributor Name</label>
                        <select class="selectpicker" id="fo_distributor_data" name="distributor_data" data-live-search="true">
                            
                        </select>
-                   </div>-->
+                   </div>
                    
                </div>
-
-
-
+                
                 
             </div>
             
@@ -322,11 +258,13 @@ else{
             
             <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" /> 
             
-
-            <!--EXECUTE BUTTON--->
-
-
-
+            <?php  if($action_data == "target_view" || $login_customer_type == 9){ ?>
+    
+            <div class="col-md-3 save_btn">
+                <button type="submit" class="btn btn-primary">Execute</button>
+            </div>
+            <?php echo form_close(); ?>
+    <?php } ?>
              <div class="clearfix"></div>
             
         </div>
@@ -370,7 +308,7 @@ else{
                     </div>
 
                 </div>
-                <div class="plus_btn"><a href="javascript:void(0);" id="target_add_row" ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <div class="plus_btn"><a href="javascript:void(0);" id="budget_add_row" ><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -395,7 +333,7 @@ else{
         
         <div id="no-more-tables">
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                <thead class="cf target_head_show_data">
+                <thead class="cf budget_head_show_data">
                    <tr> 
                     
                        
@@ -425,11 +363,10 @@ else{
                         <th class="numeric">Achieved <span class="rts_bordet"></span></th>
                     <?php } ?>
                
-                
               
                       </tr>
                 </thead>
-                <tbody id="target_data">
+                <tbody id="budget_data">
                      <?php if($login_customer_type == 8){ ?>
                             <?php  if($action_data == "target_view"){ ?>
                     
@@ -495,13 +432,12 @@ else{
 
 <?php } ?>
 <div class="clearfix"></div>
-
 <div class="col-md-12 table_bottom">
     
     <div class="row">
       <!--  <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div> -->
      <?php 
-         $attributes = array('class' => '', 'id' => 'upload_target_data','name'=>'upload_target_data');
+         $attributes = array('class' => '', 'id' => 'upload_budget_data','name'=>'upload_budget_data');
          echo form_open_multipart('',$attributes);
      ?>
         <div class="col-md-9">
@@ -518,7 +454,7 @@ else{
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/target/target_distributor.xlsx","_blank" );' class="btn btn-default">Download Templates</a> <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/target/target_retailer.xlsx","_blank" );' class="btn btn-default">Download Templates</a></div>
+                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/budget/budget_distributor.xlsx","_blank" );' class="btn btn-default">Download Templates</a> <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://localhost/open_re/trunk/public/assets/uploads/Uploads/budget/budget_retailer.xlsx","_blank" );' class="btn btn-default">Download Templates</a></div>
                 
                 <?php echo form_close(); ?>
                 
@@ -527,11 +463,12 @@ else{
     </div>
 </div>
 
+
 <div class="clearfix"></div>
 
 
 <!-- Modal -->
-<div id="TargetCopyModal" class="modal fade tr_modal" role="dialog">
+<div id="BudgetCopyModal" class="modal fade tr_modal" role="dialog">
   <div class="modal-dialog">
 
     <!-- Modal content-->
@@ -675,7 +612,7 @@ else{
       </div>
       <div class="modal-footer">
           <div class="col-md-12 text-center">
-              <input type="hidden" value="target" name="popup_page" />
+              <input type="hidden" value="budget" name="popup_page" />
               <input type="submit" id="submit_copy_popup" value="Save" class="btn btn-primary save_default_bb" />
 
               <?php echo form_close(); ?>

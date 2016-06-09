@@ -41,10 +41,10 @@ if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
 ?>
-<div id="middle_container" class="order_cont">
+<div id="prespective_middle_container" class="order_cont">
 
 </div>
-<div id="product_table_container">
+<div id="prescpective_table_container">
 
 </div>
 

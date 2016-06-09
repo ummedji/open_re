@@ -33,25 +33,6 @@ function add_sec_sales_row()
         kg_ltr_selected = "selected = 'selected'"
     }
 
-
-
-
-
-
-
-
-  /*  $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/get_quantity_conversion_data",
-        data: {skuid:sku_id, quantity_data:qty, unit : sec_sel_unit},
-        //dataType : 'json',
-        success: function(resp){
-            unit_data = resp;
-        },
-        async:false
-    });
-*/
-
     $("#secondary_sls").append(
         "<tr id='"+sr_no+"'>"+
         "<td data-title='Sr. No.' class='numeric'>" +
@@ -85,7 +66,7 @@ function add_sec_sales_row()
         "<input type='text' name='amount[]' value='"+amt+"'/>" +
         "</td>"+
         "<td data-title='Qty Kg/Ltr'>" +
-        "<input class='input_remove_border qty_"+sr_no+"' type='text' value='"+unit_data+"'/>" +
+        "<input class='input_remove_border qty_"+sr_no+"'name='qty_kgl[]' type='text' value='"+unit_data+"'/>" +
         "</td>"+
         "</tr>"
     );

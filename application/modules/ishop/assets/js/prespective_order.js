@@ -16,7 +16,7 @@ $(document).ready(function(){
                     console.log(resp);
                  //   alert(resp);
                  //   $("div#middle_data_contailer").empty();
-                    $("div#middle_container").html(resp);
+                    $("div#prespective_middle_container").html(resp);
                     
                 }
             });
@@ -33,7 +33,7 @@ $(document).on('click', 'div.order_cont .eye_i', function () {
         url: site_url+'ishop/get_prespective_order_details',
         data: {id: id},
         success: function(resp){
-            $("#product_table_container").html(resp);
+            $("#prescpective_table_container").html(resp);
         }
     });
     return false;

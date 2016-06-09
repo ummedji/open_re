@@ -19,39 +19,39 @@ echo form_open('',$attributes); ?>
             <?php
             }
             ?>
-            <div class="col-md-8 col-md-offset-2 distributore_form">
+            <div class="col-md-12 text-center tp_form inline-parent distributore_form" style="margin-top: 15px;">
                 <div class="row">
-                    <div class="col-md-4 col-sm-6 tp_form">
+                   <!-- <div class="col-md-4 col-sm-6 tp_form">-->
                         <div class="form-group">
                             <label>Year</label>
                             <input type="text" class="form-control" name="year" id="year" placeholder="">
                         </div>
-                    </div>
+                    <!--</div>-->
                     <?php if($current_user->role_id == 7){
                         ?>
-                        <div class="col-md-4 col-sm-6 tp_form">
+                        <!--<div class="col-md-4 col-sm-6 tp_form">-->
                             <div class="form-group">
                                 <label>Geo Level 3</label>
                                 <select class="selectpicker" name="region" id="geo_level_scheme">
                                     <option value="0">Select Geo Location</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 tp_form">
+                        <!--</div>-->
+                        <!--<div class="col-md-4 col-sm-6 tp_form">-->
                             <div class="form-group">
                                 <label>Geo Level 2</label>
                                 <select class="selectpicker" name="territory" id="geo_level_1">
                                     <option value="0">Select Geo Location</option>
                                 </select>
                             </div>
-                        </div>
+                        <!--</div>-->
                     <?php
                     }
 
                     elseif($current_user->role_id == 8)
                     {
                         ?>
-                        <div class="col-md-4 col-sm-6 tp_form">
+                        <!--<div class="col-md-4 col-sm-6 tp_form">-->
                             <div class="form-group">
                                 <label>Geo Level 2</label>
                                 <select class="selectpicker" name="territory" id="geo_level_1">
@@ -69,29 +69,29 @@ echo form_open('',$attributes); ?>
                                     ?>
                                 </select>
                             </div>
-                        </div>
-                        <div class="col-md-4 col-sm-6 tp_form">
+                        <!--</div>-->
+                       <!-- <div class="col-md-4 col-sm-6 tp_form">-->
                             <div class="form-group">
                                 <label>Retailer Name</label>
                                 <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme">
                                     <option value="0">Select Retailer</option>
                                 </select>
                             </div>
-                        </div>
+                       <!-- </div-->
                     <?php
                     }
 
                     ?>
 
-                    <div class="col-md-4 col-sm-6 tp_form">
+                    <!--<div class="col-md-4 col-sm-6 tp_form">-->
                         <div class="form-group">
-                            <div class="row">
-                                <div class="col-md-3 save_btn">
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                            <!--<div class="row">-->
+                                <div class="inl_button save_btn">
+                                    <button type="submit" class="btn btn-primary gren_btn">Save</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    <!--</div>-->
                 </div>
             </div>
         </div>
