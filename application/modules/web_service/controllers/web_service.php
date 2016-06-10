@@ -187,32 +187,31 @@ class Web_service extends Front_Controller
      * */
     public function get_global_info()
     {
-        $this->form_validation->set_rules('user_id', 'user_id', 'required');
+        /*$this->form_validation->set_rules('user_id', 'user_id', 'required');
         $this->form_validation->set_rules('country_id', 'country_id', 'required');
 
         if ($this->form_validation->run() == FALSE)
         {
             $result['status'] = false;
-            $result['message'] = "All Fields are Required."/*strip_tags(trim(validation_errors()))*/;
+            $result['message'] = "All Fields are Required.";
         }
         else
-        {
+        {*/
             $user_id = $this->input->get_post('user_id');
             $country_id = $this->input->get_post('country_id');
 
+        if(isset($user_id) && isset($country_id)) {
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
 
             $dist_array = array();
-            if(!empty($distributors))
-            {
-                foreach($distributors as $distributor)
-                {
+            if (!empty($distributors)) {
+                foreach ($distributors as $distributor) {
                     $dist = array(
-                        "display_name"=>$distributor['display_name'],
-                        "user_code"=>$distributor['user_code'],
+                        "display_name" => $distributor['display_name'],
+                        "user_code" => $distributor['user_code'],
                     );
-                    array_push($dist_array,$dist);
+                    array_push($dist_array, $dist);
                 }
             }
             $product_skus = !empty($product_skus) ? $product_skus : array();
@@ -221,6 +220,7 @@ class Web_service extends Front_Controller
             $result['message'] = 'Success';
             $result['data'] = $data;
         }
+       // }
         $this->do_json($result);
     }
 
@@ -299,7 +299,7 @@ class Web_service extends Front_Controller
             else
             {
                 $result['status'] = false;
-                $result['message'] = 'Fail';
+                $result['message'] = 'No Records Found.';
             }
         }
         $this->do_json($result);
@@ -333,7 +333,7 @@ class Web_service extends Front_Controller
             else
             {
                 $result['status'] = false;
-                $result['message'] = 'Fail';
+                $result['message'] = 'No Records Found.';
             }
         }
         $this->do_json($result);
