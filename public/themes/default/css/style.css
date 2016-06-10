@@ -1471,3 +1471,7 @@ nav {
 /*radio-checkbox css*/
 /*target popup css*/
 
+.error{
+    color: #ff0000 !important;
+}
+

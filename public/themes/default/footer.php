@@ -1,7 +1,7 @@
 <?php
 Assets::add_js((array('bootstrap.min.js',
     'jquery.mCustomScrollbar.concat.min.js',
-    'jquery-listslider.js','bootstrap-select.min.js','bootstrap-datepicker.min.js'
+    'jquery-listslider.js','bootstrap-select.min.js','bootstrap-datepicker.min.js','jquery.validate.min.js',
 
 )
 ));

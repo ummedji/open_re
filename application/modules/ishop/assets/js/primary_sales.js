@@ -8,6 +8,47 @@ $(function () {
 
 });
 
+// START ::: Added By Vishal Malaviya For Validation
+var primary_sales_validators = $("#primary_sales").validate({
+    ignore: ".ignore",
+    rules: {
+        customer_id:{
+            required: true
+        },
+        invoice_no:{
+            required: true
+        },
+        invoice_date:{
+            required: true
+        },
+        prod_sku:{
+            required: true
+        },
+        dispatched_qty:{
+            required: true
+        },
+        amt:{
+            required: true
+        }
+    }
+});
+$("#add_row").click(function() {
+    $('#prod_sku').removeClass('ignore');
+    $('#dispatched_qty').removeClass('ignore');
+    $('#amt').removeClass('ignore');
+
+    var $valid = $("#primary_sales").valid();
+    if(!$valid) {
+        primary_sales_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        add_row();
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
+
 function add_row()
 {
     var sku_code = $('#prod_sku option:selected').attr('attr-code');
@@ -59,18 +100,213 @@ $(document).on('click', 'div.primary_sls', function () { // <-- changes
 
 $("#primary_sales").on("submit",function(){
 
+    $('#prod_sku').addClass('ignore');
+    $('#dispatched_qty').addClass('ignore');
+    $('#amt').addClass('ignore');
     var param = $("#primary_sales").serializeArray();
 
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/primary_sales_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-           if(resp==1){
-               site_url+"ishop";
-           }
+    var $valid = $("#primary_sales").valid();
+    if(!$valid) {
+        primary_sales_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        if($("#primary_sls").children().length <= 0)
+        {
+            alert('No Product Selected');
+            return false;
         }
-    });
+        else {
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ishop/primary_sales_details",
+                data: param,
+                //dataType : 'json',
+                success: function (resp) {
+                    if (resp == 1) {
+                        site_url + "ishop";
+                    }
+                }
+            });
+        }
+    }
     /*return false;*/
+});
+
+
+$(document).on('submit', '#upload_primarysales_data', function (e) {
+
+    e.preventDefault();
+
+    var file_data = new FormData(this);
+    var dir_name = "primary_sales";
+
+    //file_data.push(dir_name);
+
+    $.ajax({
+        url: site_url+"ishop/upload_data", // Url to which the request is send
+        type: "POST",             // Type of request to be send, called as method
+        data: file_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        contentType: false,       // The content type used when sending data to the server.
+        cache: false,             // To unable request pages to be cached
+        processData:false,        // To send DOMDocument or non processed data file it is set to false
+        success: function(data)   // A function to be called if request succeeds
+        {
+
+            console.log(data);
+            $.each( data, function( key, value ) {
+
+                //alert(key+"==="+ value);
+
+                if(key == "error"){
+
+                    var value_data = JSON.stringify(value);
+
+                    //alert("ERROR");
+                    var error_message = "";
+
+                    var t_data = "<table><thead>";
+
+                    //   console.log(value);
+
+                    $.each( value, function( key5, des_value5 ) {
+
+
+                        if(key5 == "header"){
+
+                            //  console.log(key5+"==="+des_value5);
+
+                            t_data += "<tr>";
+                            $.each( des_value5, function( key2, header_desc_value ){
+                                $.each( header_desc_value, function( key6, header_desc_value6 ){
+                                    t_data += "<th style='border:1px solid;text-align:center;'>"+header_desc_value6+"</th>";
+                                });
+                            });
+                            t_data += "<th style='border:1px solid;text-align:center;'>Error Description</th></tr>";
+
+                            t_data += "</thead><tbody>";
+                        }
+                    });
+
+
+                    $.each( value, function( key1, des_value ) {
+
+                        if(key1 != "header"){
+
+                            t_data += "<tr>";
+                            var des_data = des_value.split("~");
+
+                            $.each( des_data, function( key3, desc_data ){
+                                t_data += "<td style='border:1px solid;text-align:center;'>"+desc_data+"</td>";
+                            });
+
+                            t_data += "</tr>";
+                        }
+                    });
+                    t_data += "</tbody></table>";
+
+
+                    $('<div></div>').appendTo('body')
+                        .html('<div><h4><b>The following data is incorrect Kindly upload correct data.</b></h4></br>'+t_data+'</div>')
+                        .dialog({
+                            modal: true,
+                            title: 'Incorrect Data',
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: false,
+                            buttons: {
+                                Download: function () {
+
+                                    if(value != "No data found"){
+
+                                        var file_name = "";
+
+                                        $.ajax({
+                                            url: site_url+"ishop/create_data_xl", // Url to which the request is send
+                                            type: "POST",             // Type of request to be send, called as method
+                                            data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
+                                            success: function(data)   // A function to be called if request succeeds
+                                            {
+                                                file_name = data;
+                                            },
+                                            dataType:'html',
+                                            async:false
+                                        });
+
+                                        window.open(site_url+"assets/uploads/Uploads/"+dir_name+"/"+file_name,'_blank' );
+                                    }
+                                    // return false;
+                                    //console.log(file_data);
+                                    $(this).dialog("close");
+                                },
+                                Decline: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            close: function (event, ui) {
+                                $(this).remove();
+                            }
+                        });
+
+
+
+                }
+                else
+                {
+
+
+
+                    $('<div></div>').appendTo('body')
+                        .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')
+                        .dialog({
+                            modal: true,
+                            title: 'Save Data',
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: false,
+                            buttons: {
+                                Save: function () {
+
+
+                                    $.ajax({
+                                        url: site_url+"ishop/add_xl_data", // Url to which the request is send
+                                        type: "POST",             // Type of request to be send, called as method
+                                        data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
+                                        success: function(data)   // A function to be called if request succeeds
+                                        {
+                                            console.log(data)
+                                            //file_name = data;
+                                        }
+                                    });
+
+                                    // window.open(site_url+"assets/uploads/Uploads/target/"+file_name,'_blank' );
+
+                                    // return false;
+                                    //console.log(file_data);
+                                    $(this).dialog("close");
+                                },
+                                Decline: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            close: function (event, ui) {
+                                $(this).remove();
+                            }
+                        });
+
+
+                }
+
+            })
+
+        },
+        dataType: 'json'
+    });
+
+
+    return false;
+
 });

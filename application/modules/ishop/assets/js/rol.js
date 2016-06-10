@@ -373,6 +373,47 @@ $(document).on('click', 'div.rol_del', function () {
     return false;
 });
 
+// START ::: Added By Vishal Malaviya For Validation
+var primary_sales_validators = $("#primary_sales").validate({
+    ignore: ".ignore",
+    rules: {
+        customer_id:{
+            required: true
+        },
+        invoice_no:{
+            required: true
+        },
+        invoice_date:{
+            required: true
+        },
+        prod_sku:{
+            required: true
+        },
+        dispatched_qty:{
+            required: true
+        },
+        amt:{
+            required: true
+        }
+    }
+});
+$("#add_row").click(function() {
+    $('#prod_sku').removeClass('ignore');
+    $('#dispatched_qty').removeClass('ignore');
+    $('#amt').removeClass('ignore');
+
+    var $valid = $("#primary_sales").valid();
+    if(!$valid) {
+        primary_sales_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        add_row();
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
+
 $("#rol_limit").on("submit",function(){
 
     var param = $("#rol_limit").serializeArray();

@@ -2367,6 +2367,28 @@ class Ishop extends Front_Controller
                         }
                         
                     }
+                    elseif($filename[0] == "secondarysales"){
+                        
+                        if($column == 'F' && $row != 1 && $data_value != ""){
+
+                                $phpexcepDate = $data_value-25569; //to offset to Unix epoch
+                                $data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
+                                $data_value = date("Y-m-d",$data_value); 
+
+                        }
+                        
+                    }
+					elseif($filename[0] == "primarysales"){
+
+						if($column == 'D' && $row != 1 && $data_value != ""){
+
+							$phpexcepDate = $data_value-25569; //to offset to Unix epoch
+							$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
+							$data_value = date("Y-m-d",$data_value);
+
+						}
+
+					}
 
                     //header will/should be in row 1 only. of course this can be modified to suit your need.
                     if ($row == 1) {
@@ -2386,6 +2408,9 @@ class Ishop extends Front_Controller
                 $final_array = array();
                 
               //  testdata($data['values']);
+                
+                $dist_invoice_ret_mapp_data_array = array();
+                $dist_invoice_product_mapp_data_array = array();
                 
                 // CHECK DATA IS PRESENT AND VALID
            if(!empty($data['values'])){   
@@ -2876,6 +2901,445 @@ class Ishop extends Front_Controller
                        }
                        
                    }
+                    elseif($filename[0] == "primarysales")
+				  {
+
+					  if(!isset($data["A"])){
+						  $distributor_code = "";
+					  }
+					  else{
+						  $distributor_code = $data["A"];
+					  }
+
+					  if(!isset($data["B"])){
+						  $distributor_name = "";
+					  }
+					  else{
+						  $distributor_name = $data["B"];
+					  }
+
+					  if(!isset($data["C"])){
+						  $invoice_no = "";
+					  }
+					  else{
+						  $invoice_no = $data["C"];
+					  }
+
+					  if(!isset($data["D"])){
+						  $invoice_date = "";
+					  }
+					  else{
+						  $invoice_date = $data["D"];
+					  }
+
+					  if(!isset($data["E"])){
+						  $otn = "";
+					  }
+					  else{
+						  $otn = $data["E"];
+					  }
+
+					  if(!isset($data["F"])){
+						  $po_no = "";
+					  }
+					  else{
+						  $po_no = $data["F"];
+					  }
+
+					  if(!isset($data["G"])){
+						  $product_code = "";
+					  }
+					  else{
+						  $product_code = $data["G"];
+					  }
+					  if(!isset($data["H"])){
+						  $product_name = "";
+					  }
+					  else{
+						  $product_name = $data["H"];
+					  }
+					  if(!isset($data["I"])){
+						  $po_qty = "";
+					  }
+					  else{
+						  $po_qty = $data["I"];
+					  }
+
+					  if(!isset($data["J"])){
+						  $dispatch_qty = "";
+					  }
+					  else{
+						  $dispatch_qty = $data["J"];
+					  }
+					  if(!isset($data["K"])){
+						  $amt = "";
+					  }
+					  else{
+						  $amt = $data["K"];
+					  }
+
+					  if($distributor_code == "" || $distributor_name == "" || $invoice_no == "" || $invoice_date == "" || $otn == "" || $po_no=="" || $product_code =="" || $product_name == "" || $po_qty == "" || $dispatch_qty =="" || $amt=="")
+					  {
+						  //CHECK DATA BLANK
+
+						  if(!isset($error_array["error"]["header"])){
+							  $error_array["error"]["header"] = $header;
+						  }
+
+						  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Some row data blank";
+					  }
+					  else
+					  {
+
+						  //CHECK PROPER DATA
+
+						  //PRODUCT CHECK
+
+						  $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
+						  $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
+
+						  if($user_data != 0 && $product_data != 0)
+						  {
+							  //ADD DATA TO DATA ARRAY
+
+							  $check_invoice_data = $this->ishop_model->check_invoice_data($invoice_no);
+							  $check_otn_data = $this->ishop_model->check_otn_data($otn);
+
+
+							  if($check_invoice_data == 1 || $check_otn_data == 1){
+
+								  $error_message = "";
+								  if($check_invoice_data == 1) {
+									  $error_message = "Invoice data already exist in DB";
+								  }
+								  elseif($check_otn_data == 1){
+									  $error_message = "OTN already exist in DB";
+								  }
+								  elseif($check_invoice_data == 1 && $check_otn_data == 1){
+									  $error_message = "Invoice data and OTN already exist in DB";
+								  }
+
+								  if(!isset($error_array["error"]["header"])){
+									  $error_array["error"]["header"] = $header;
+								  }
+
+								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
+							  }
+							  else{
+
+								  $inner_array[] = $user_data;
+								  $inner_array[] = $invoice_no;
+								  $inner_array[] = $invoice_date;
+								  $inner_array[] = $otn;
+								  $inner_array[] = $po_no;
+								  $inner_array[] = $product_data;
+								  $inner_array[] = $po_qty;
+								  $inner_array[] = $dispatch_qty;
+								  $inner_array[] = $amt;
+
+								  $final_array["success"][] = $inner_array;
+
+							  }
+
+						  }
+						  else{
+
+							  if(!isset($error_array["error"]["header"])){
+								  $error_array["error"]["header"] = $header;
+							  }
+							  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Excel User or Product data not matched with DB data";
+						  }
+
+					  }
+                   }
+                   elseif($filename[0] == "secondarysales")
+                   {
+                       
+                        if(!isset($data["A"])){
+                            $distributor_code = "";
+                        }
+                        else{
+                            $distributor_code = $data["A"];
+                        }
+
+                        if(!isset($data["B"])){
+                            $distributor_name = "";
+                        }
+                        else{
+                            $distributor_name = $data["B"];
+                        }
+                        
+                        if(!isset($data["C"])){
+                            $retailer_code = "";
+                        } 
+                        else{
+                            $retailer_code = $data["C"];
+                        }
+
+                        if(!isset($data["D"])){
+                            $retailer_name = "";
+                        }
+                        else{
+                             $retailer_name = $data["D"];
+                        }
+
+                        if(!isset($data["E"])){
+                             $invoice_no = "";
+                        }
+                        else{
+                             $invoice_no = $data["E"];
+                        }
+                        
+                        if(!isset($data["F"])){
+                             $invoice_date = "";
+                        }
+                        else{
+                             $invoice_date = $data["F"];
+                        }
+                        
+                        if(!isset($data["G"])){
+                             $po_no = "";
+                        }
+                        else{
+                             $po_no = $data["G"];
+                        }
+                        
+                        if(!isset($data["H"])){
+                             $otn = "";
+                        }
+                        else{
+                             $otn = $data["H"];
+                        }
+                        
+                        if(!isset($data["I"])){
+                             $product_code = "";
+                        }
+                        else{
+                             $product_code = $data["I"];
+                        }
+                        
+                        if(!isset($data["J"])){
+                             $product_name = "";
+                        }
+                        else{
+                             $product_name = $data["J"];
+                        }
+                        
+                        if(!isset($data["K"])){
+                             $unit = "";
+                        }
+                        else{
+                             $unit = $data["K"];
+                        }
+                        
+                        if(!isset($data["L"])){
+                             $quantity = "";
+                        }
+                        else{
+                             $quantity = $data["L"];
+                        }
+                        
+                        if(!isset($data["M"])){
+                             $amount = "";
+                        }
+                        else{
+                             $amount = $data["M"];
+                        }
+
+                        
+                        if($distributor_code == "" || $distributor_name == "" || $retailer_code == "" || $retailer_name == "" || $invoice_no == "" || $invoice_date == "" || $po_no == "" || $otn == "" || $product_code == "" || $product_name == "" || $unit == "" || $quantity == "" || $amount == "")
+                        {
+                            //CHECK DATA BLANK
+
+                            if(!isset($error_array["error"]["header"])){
+                                 $error_array["error"]["header"] = $header;
+                            }
+
+                            $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Some row data blank";
+                        }
+                        else
+                        {
+                          
+                            //CHECK PROPER DATA
+
+                            //PRODUCT CHECK
+                            
+                            $user_distributor_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
+                            $user_retailer_data = $this->ishop_model->check_user_data($retailer_code,$retailer_name);
+                            
+                            $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
+
+                            if($user_distributor_data != 0 && $product_data != 0 &&  $user_retailer_data != 0)
+                            {
+                                //CHECK DISTRIBUTOR RETAILER ASSOCATION
+
+                                $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user_distributor_data,$user_retailer_data);
+                                
+                               // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
+                                
+                              //  dumpme($dist_invoice_ret_mapp_data_array);
+                                
+                                
+                                if($distributor_retailer_mapping_data == 1){
+                                
+                                if(!isset($dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no]) ){
+                                    
+                                    $dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] = $user_retailer_data;
+                                    
+                                    
+                                    if(!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
+                                        $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no] = array();
+                                    }
+                                    
+                                    
+                                    
+                                    if(!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no]) && !in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
+                                        
+                                        $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+                                        
+                                        $inner_array[] = $user_distributor_data;
+                                        $inner_array[] = $user_retailer_data;
+                                        $inner_array[] = $invoice_no;
+                                        $inner_array[] = $invoice_date;
+                                        $inner_array[] = $po_no;
+                                        $inner_array[] = $otn;
+                                        $inner_array[] = $product_data;
+                                        $inner_array[] = $unit;
+                                        $inner_array[] = $quantity;
+                                        $inner_array[] = $amount;
+
+                                        $final_array["success"][] = $inner_array;
+                                        
+                                    }
+                                    else{
+                                        
+                                        if(in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
+                                        
+                                            //DUPLICATE DATA IN FILE ERROR
+
+                                           if(!isset($error_array["error"]["header"])){
+                                                $error_array["error"]["header"] = $header;
+                                           }
+                                           $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate product data";
+
+                                        }
+                                        else{
+                                            
+                                             $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+                                        
+                                            $inner_array[] = $user_distributor_data;
+                                            $inner_array[] = $user_retailer_data;
+                                            $inner_array[] = $invoice_no;
+                                            $inner_array[] = $invoice_date;
+                                            $inner_array[] = $po_no;
+                                            $inner_array[] = $otn;
+                                            $inner_array[] = $product_data;
+                                            $inner_array[] = $unit;
+                                            $inner_array[] = $quantity;
+                                            $inner_array[] = $amount;
+
+                                            $final_array["success"][] = $inner_array;
+                                            
+                                        }
+                                        
+                                        
+                                    }
+                                    
+                                     
+                                    
+                                }
+                                else{
+                                    if($dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] == $user_retailer_data){
+                                        
+                                        //DUPLICATE DATA IN FILE ERROR
+                                        
+                                       if(!isset($error_array["error"]["header"])){
+                                            $error_array["error"]["header"] = $header;
+                                       }
+                                       $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate data";
+                                        
+                                    }
+                                    else{
+                                        
+                                        //SAME INVOICE ASSIGNED TO OTHER RETAILER
+                                        
+                                         if(!isset($error_array["error"]["header"])){
+                                            $error_array["error"]["header"] = $header;
+                                       }
+                                       $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Same invoice assigned to other Retailer";
+                                        
+                                        
+                                    }
+                                }
+                                
+                            }
+                            else{
+                                
+                                //DISTRIBUTOR RETAILER MAPPING ERROR
+                                        
+                                         if(!isset($error_array["error"]["header"])){
+                                            $error_array["error"]["header"] = $header;
+                                       }
+                                       $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Distributor and Retailer not correctly mapped.";
+                                
+                            }
+                            
+                            
+                                
+                              //  $dist_invoice_ret_mapp_data = 
+                                
+                             /*   $invoice_data = $this->ishop_model->check_secondary_invoice_data($invoice_no);
+                                $invoice_date_data = $this->ishop_model->check_secondary_invoice_date_data($invoice_no,$invoice_date);
+                                
+                                $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no,$user_retailer_data);
+                                */
+                            /*    
+                                
+                          if($distributor_retailer_mapping_data == 1 && $invoice_data == 0 && $invoice_date_data == 0 && $invoice_retailer_data == 0){
+                                    
+                                    
+                                }
+                                else{
+                                    
+                                    $error_message = "";
+                                    
+                                    if($distributor_retailer_mapping_data == 0){
+                                        $error_message .= "Distributor and retailer are not mapped in DB. ";
+                                    }
+                                    
+                                    if($invoice_data == 1){
+                                        $error_message .= "Invoice No already exist in DB. ";
+                                    }
+                                    
+                                    if($invoice_date_data == 1){
+                                        $error_message .= "Invoice No and Invoice date already exist in DB. ";
+                                    }
+                                    
+                                    if($invoice_retailer_data == 1){
+                                        $error_message .= "Invoice No for Retailer already exist in DB. ";
+                                    }
+                                    
+                                    if(!isset($error_array["error"]["header"])){
+                                        $error_array["error"]["header"] = $header;
+                                    }
+                                    
+                                    $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
+                                    
+                                    
+                                }
+                                */
+                                
+                            }
+                            else{
+
+                                if(!isset($error_array["error"]["header"])){
+                                     $error_array["error"]["header"] = $header;
+                                }
+                                $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel User or Product data not matched with DB data";
+                            }
+                            
+                        }
+                   }
                    
                 }
             }
@@ -2978,6 +3442,20 @@ class Ishop extends Front_Controller
                                         $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
                                     }
                                 }
+                                elseif($_POST["dirname"] == "primary_sales"){
+                                        if($j == 2 && ($row_data[$j] != "")){
+                                                $date_data = explode("-",$row_data[$j]);
+                                                $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                        }
+                                }
+                                elseif($_POST["dirname"] == "secondary_sales"){
+                                        if($j == 3 && ($row_data[$j] != "")){
+                                                $date_data = explode("-",$row_data[$j]);
+                                                $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                        }
+                                }
+                                
+
                                 
                                 $this->excel->getActiveSheet()->setCellValue($key2.$m, $row_data[$j]);
                                 $j++;
@@ -3053,6 +3531,10 @@ class Ishop extends Front_Controller
                 
                 $credit_limit_data = $this->ishop_model->add_rol_detail($user_id,$country_id,$_POST["val"],'excel');
             }
+			elseif($_POST["dirname"] == "primary_sales"){
+
+				$primary_sales = $this->ishop_model->add_primary_sales_details($user_id,$country_id,$web_service = null,$_POST["val"],'excel');
+			}
             
             
         }
