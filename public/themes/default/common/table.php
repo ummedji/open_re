@@ -1,4 +1,15 @@
-<?php
+<div class='report-box'>
+    <?php
+    $attributes = array(
+        'name' => 'admin_listing_form',
+        'id' => 'admin_listing_form',
+        'class'=>'form-inline'
+    );
+    ?>
+    <?php echo form_open($this->uri->uri_string(), $attributes); ?>
+    <div id='ajax_loader'>
+    </div>
+    <?php
 $action_data = $this->uri->segment(2);
 if(isset($table) && count($table)>0) { ?>
         <?php if(isset($table['no_margin']) && !empty($table['no_margin']) )
@@ -90,12 +101,24 @@ if(isset($table) && count($table)>0) { ?>
                             </tr>
                         <?php } ?>
                         </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan='<?php echo $td?>'>
+                                    <?php
+                                    if (isset($pagination)) {
+                                        echo $pagination;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            </tfoot>
                         <?php } ?>
                     </table>
                     <div class="clearfix"></div>
                 </div>
             </div>
         </div>
+
     <?php }
     else{
         ?>
@@ -103,4 +126,11 @@ if(isset($table) && count($table)>0) { ?>
         <?php
     }
     ?>
-<!--    --><?php /*echo form_close(); */?>
+
+<?php echo form_close(); ?>
+                </div>
+    </div>
+
+
+
+

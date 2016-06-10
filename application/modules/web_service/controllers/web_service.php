@@ -18,19 +18,26 @@ class Web_service extends Front_Controller
     {
         parent::__construct();
 
-        $this->load->library('users/auth');
-        $this->load->model('users/user_model');
-        //$this->load->model('role_access/role_access_model');
+        // Load Assets
+        Assets::add_module_js('web_service', 'web_service.js');
 
+        // Load Libraries
+        $this->load->library('users/auth');
+        $this->load->library('form_validation');
+
+        // Load Models
+        $this->load->model('users/user_model');
+        $this->load->model('ishop/ishop_model');
+
+        // Load Languages
         $this->lang->load('web_service');
 
+        // Load Others
         /*$check_session = $this->check_active_session();
         if($check_session!==false){
             echo json_encode($check_session);
             exit;
         }*/
-
-        Assets::add_module_js('web_service', 'web_service.js');
     }
 
     /**
@@ -65,7 +72,6 @@ class Web_service extends Front_Controller
         }
         return false;
     }
-
 
     public function set_language()
     {
@@ -176,17 +182,24 @@ class Web_service extends Front_Controller
 
     /**
      * @ Function Name        : get_global_info
-     * @ Function Params    : $user_id,$unq_no
+     * @ Function Params    : user_id,country_id (POST)
      * @ Function Purpose    : Get all user information by user_id
      * */
-
     public function get_global_info()
     {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
+        $this->form_validation->set_rules('user_id', 'user_id', 'required');
+        $this->form_validation->set_rules('country_id', 'country_id', 'required');
 
-        if (trim($user_id) && $user_id != 0 && trim($country_id) && $country_id != 0) {
-            $this->load->model('ishop/ishop_model');
+        if ($this->form_validation->run() == FALSE)
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required."/*strip_tags(trim(validation_errors()))*/;
+        }
+        else
+        {
+            $user_id = $this->input->get_post('user_id');
+            $country_id = $this->input->get_post('country_id');
+
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
 
@@ -205,14 +218,132 @@ class Web_service extends Front_Controller
             $product_skus = !empty($product_skus) ? $product_skus : array();
             $data = array("distributors" => $dist_array, "products_skus" => $product_skus);
             $result['status'] = true;
+            $result['message'] = 'Success';
             $result['data'] = $data;
-        } else {
-            $result['status'] = false;
-            $result['message'] = 'Please Enter User Id and Country Id.';
         }
         $this->do_json($result);
     }
 
+    /**
+     * @ Function Name        : savePrimarySales
+     * @ Function Params    : customer_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Save Primary Sales Data
+     * */
+    public function savePrimarySales()
+    {
+        $this->form_validation->set_rules('customer_id', 'customer_id', 'required');
+        $this->form_validation->set_rules('invoice_no', 'invoice_no', 'required');
+        $this->form_validation->set_rules('invoice_date', 'invoice_date', 'required');
+        $this->form_validation->set_rules('order_tracking_no', 'order_tracking_no', 'required');
+        $this->form_validation->set_rules('PO_no', 'PO_no', 'required');
+
+        $this->form_validation->set_rules('product_sku_id', 'product_sku_id', 'required');
+        $this->form_validation->set_rules('quantity', 'quantity', 'required');
+        $this->form_validation->set_rules('dispatched_quantity', 'dispatched_quantity', 'required');
+        $this->form_validation->set_rules('amount', 'amount', 'required');
+
+        if ($this->form_validation->run() == FALSE)
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required."/*strip_tags(trim(validation_errors()))*/;
+        }
+        else
+        {
+            $user_id = $this->input->get_post('customer_id');
+            $country_id = $this->input->get_post('country_id');
+
+            $id = $this->ishop_model->add_primary_sales_details($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getPrimarySalesInvoices
+     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * */
+    public function getPrimarySalesInvoices()
+    {
+        $this->form_validation->set_rules('form_date', 'form_date', 'required');
+        $this->form_validation->set_rules('to_date', 'to_date', 'required');
+
+        if ($this->form_validation->run() == FALSE)
+        {
+            $result['status'] = false;
+            $result['message'] = "Fields are Required."/*strip_tags(trim(validation_errors()))*/;
+        }
+        else
+        {
+            $form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+            $to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+            $by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
+            $by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
+
+            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
+            if(!empty($primary_sales_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $primary_sales_details;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getPrimarySalesProductDetails
+     * @ Function Params    : primary_sales_id (POST)
+     * @ Function Purpose    : Get Primary Sales Product Details Data
+     * */
+    public function getPrimarySalesProductDetails()
+    {
+        $this->form_validation->set_rules('primary_sales_id', 'primary_sales_id', 'required');
+
+        if ($this->form_validation->run() == FALSE)
+        {
+            $result['status'] = false;
+            $result['message'] = "Fields are Required."/*strip_tags(trim(validation_errors()))*/;
+        }
+        else
+        {
+            $primary_sales_id = (isset($_POST['primary_sales_id']) ? $_POST['primary_sales_id'] : '');
+
+            $primary_sales_product_details = $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id,'web_service');
+            if(!empty($primary_sales_product_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $primary_sales_product_details;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : do_json
+     * @ Function Params    : result Array
+     * @ Function Purpose    : Make JSON format for Sending Data to Mobile
+     * */
     public function do_json($result)
     {
         array_walk_recursive($result, function (&$item, $key) {
@@ -221,5 +352,4 @@ class Web_service extends Front_Controller
         echo json_encode($result);
         exit;
     }
-
 }

@@ -330,3 +330,127 @@ $("#add_physical_stock").on("submit",function(){
 });
 
 
+
+/*--------------------------------------------------------------------------------*/
+function get_data_conversion(sku_id,quantity,units){
+
+    var unit_data = "";
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_quantity_conversion_data",
+        data: {skuid:sku_id, quantity_data:quantity, unit : units},
+        //dataType : 'json',
+        success: function(resp){
+            unit_data = resp;
+        },
+        async:false
+    });
+
+    return unit_data;
+
+}
+
+$("body").on("change","select.select_unitdata",function(){
+
+
+    var selected_row_id = $(this).parent().parent().parent().find("div.edit_i").attr("prdid");
+    var sku_id = $("div.prd_"+$.trim(selected_row_id)+" span.prd_sku").text();
+    var units = $(this).val();
+    var quantity = $("input#rol_quantity_"+$.trim(selected_row_id)).val();
+
+    var unit_data = get_data_conversion(sku_id,quantity,units);
+
+    $("input#rol_quantity_kg_ltr_"+$.trim(selected_row_id)).val(unit_data);
+});
+
+$("body").on("keyup","input.quantity_data",function(){
+
+    var selected_row_id = $(this).parent().parent().parent().find("div.edit_i").attr("prdid");
+    var sku_id = $("div.prd_"+$.trim(selected_row_id)+" span.prd_sku").text();
+
+    var units = $(this).parent().parent().parent().find("select.select_unitdata").val();
+    var quantity = $(this).val();
+    var unit_data = get_data_conversion(sku_id,quantity,units);
+    $("input#rol_quantity_kg_ltr_"+$.trim(selected_row_id)).val(unit_data);
+});
+
+$(document).on('click', '.edit_i', function () {
+    var id = $(this).attr('prdid');
+
+    //UNIT
+    var prd_sku = $(" div.prd_"+id+" span.prd_sku").text();
+    var units = $(" div.units_"+id+" span.units").text();
+
+    var box_selected = "";
+    var package_selected = "";
+    var kg_ltr_selected = "";
+
+    // alert(prd_sku);
+    if(units == 'box'){
+        box_selected = "selected = 'selected'"
+    }
+    if(units == 'packages'){
+        package_selected = "selected = 'selected'"
+    }
+    if(units == 'kg/ltr'){
+        kg_ltr_selected = "selected = 'selected'"
+    }
+
+    $("div.units_"+id).empty();
+    $("div.units_"+id).append('<input type="hidden" name="stock_id[]" value="'+id+'" />' +
+        '<select name="units[]" class="select_unitdata" id="unit_id" >'+
+        '<option '+box_selected+' value="box">Box</option>'+
+        '<option  '+package_selected+' value="packages">Packages</option>'+
+        '<option  '+kg_ltr_selected+' value="kg/ltr">Kg/Ltr</option>'+
+        '</select>');
+
+    //QTY
+
+    var qty = $(" div.rol_quantity_"+id+" span.rol_quantity").text();
+    $("div.rol_quantity_"+id).empty();
+    $("div.rol_quantity_"+id).append('<input id="rol_quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty+'"/>');
+
+    var qty_kg_ltr = $(" div.rol_quantity_kg_ltr_"+id+" span.rol_quantity_kg_ltr").text();
+    $("div.rol_quantity_kg_ltr_"+id).empty();
+    $("div.rol_quantity_kg_ltr_"+id).append('<input id="rol_quantity_kg_ltr_'+id+'" type="text" class="input_remove_border" name="rol_quantity_kg_ltr[]" value="'+qty_kg_ltr+'" readonly/>');
+
+    return false;
+});
+
+$(document).on('click', '.edit_i', function () {
+    $("div.check_save_btn").css("display","block");
+});
+
+
+$(document).on('click', 'div.check_save_btn #check_save', function () {
+    var physical_data = $("#update_physical_stock").serializeArray();
+     //console.log(physical_data);
+    //return false;
+    $.ajax({
+        type: 'POST',
+        url: site_url+'ishop/update_physical_stock_details',
+        data: physical_data,
+        success: function(resp){
+        }
+    });
+
+});
+
+$(document).on('click', 'div.phy_stock_container .delete_i', function () {
+    if (confirm("Are you sure?")) {
+        var id = $(this).attr('prdid');
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/delete_physical_stock_details',
+            data: {stock_id:id},
+            success: function(resp){}
+        });
+    }
+    else{
+        return false;
+    }
+
+});
+
+

@@ -191,13 +191,30 @@ echo form_open('',$attributes); ?>
     </div>
 </div>
 <?php }?>
+<?php echo form_close(); ?>
 <!--------------------------------------Table-------------------------------------------------->
+<?php $attributes = array('class' => '', 'id' => 'update_physical_stock','name'=>'update_physical_stock');
+echo form_open('',$attributes); ?>
+
 <div class="phy_stock_container">
 <?php
 echo theme_view('common/middle');
 ?>
 </div>
+<?php echo form_close(); ?>
 
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
-<?php echo form_close(); ?>
 <div class="clearfix"></div>
+
+<?php
+if (!$this->input->is_ajax_request()) {
+    ?>
+    <div class="check_save_btn" id="check_save_btn" style="display:none;">
+        <div class="col-md-2 save_btn">
+            <label>&nbsp;</label>
+            <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
+        </div>
+    </div>
+    <?php
+}
+?>

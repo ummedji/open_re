@@ -58,6 +58,7 @@ $(document).on('click', 'div.secondary_cont .eye_i', function () {
 
 
 $(document).on('click', 'div.secondary_cont .edit_i', function () {
+
     var id = $(this).attr('prdid');
 
     var invoice_no = $("div.secondary_cont div.invoice_no_"+id+" span.invoice_no").text();
@@ -76,7 +77,7 @@ $(document).on('click', 'div.secondary_cont .edit_i', function () {
 
     var po_value = $("div.secondary_cont div.PO_no_"+id+" span.PO_no").text();
     $("div.secondary_cont div.PO_no_"+id).empty();
-    $("div.secondary_cont div.PO_no_"+id).append('<input id="PO_no_'+id+'" type="text" class="po_no" name="PO_no[]" value="'+po_value+'"/>');
+    $("div.secondary_cont div.PO_no_"+id).append('<input id="PO_no_'+id+'" type="text" class="PO_no_" name="PO_no[]" value="'+po_value+'"/>');
 
     //Order Tracking No
 

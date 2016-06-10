@@ -3,6 +3,10 @@ $(function () {
     $('#stock_month').datepicker({
         format: "yyyy-mm"
     });
+    $('#invoice_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+
 
 });
 
@@ -386,4 +390,42 @@ $("#add_ishop_sales").on("submit",function(){
         }
     });
    // return false;
+});
+function get_data_conversion(sku_id,quantity,units){
+
+    var unit_data = "";
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/get_quantity_conversion_data",
+        data: {skuid:sku_id, quantity_data:quantity, unit : units},
+        //dataType : 'json',
+        success: function(resp){
+            unit_data = resp;
+        },
+        async:false
+    });
+
+    return unit_data;
+
+}
+
+$("body").on("change","select.select_unitdata",function(){
+
+    var selected_row_id = $(this).parent().parent().attr("id");
+    var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+    var units = $(this).val();
+    var quantity = $(this).parent().parent().find("input.quantity_data").val();
+    var unit_data = get_data_conversion(sku_id,quantity,units);
+    $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+});
+
+$("body").on("keyup","input.quantity_data",function(){
+
+    var selected_row_id = $(this).parent().parent().attr("id");
+    var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+    var units = $(this).parent().parent().find("select.select_unitdata").val();
+    var quantity = $(this).val();
+    var unit_data = get_data_conversion(sku_id,quantity,units);
+    $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
 });

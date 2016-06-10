@@ -12,13 +12,22 @@ if(login_customer_type == 7){
 $("input.select_customer_type").on("click",function(){
 
     var customer_type_selected = $(this).val();
-    // alert(customer_type_selected);
+   //  alert(customer_type_selected);
     if(customer_type_selected == "retailer"){
+        
+       // alert("1111");
+        
+        $("a#retailer_xl").css("display","block");
+        $("a#distributor_xl").css("display","none");
+        
         $("div.distributor_data").css("display","none");
         $("div.retailer_data").css("display","block");
 
         $("div.distributor_check_rol").css("display","none");
         $("div.retailer_check_rol").css("display","block");
+
+        
+
 
         if(login_customer_type == 7){
 
@@ -37,11 +46,19 @@ $("input.select_customer_type").on("click",function(){
         });
     }
     else if(customer_type_selected == "distributor"){
+        
+       // alert("2222");
+        
+        $("a#retailer_xl").css("display","none");
+        $("a#distributor_xl").css("display","block");
+        
         $("div.retailer_data").css("display","none");
         $("div.distributor_data").css("display","block");
 
         $("div.distributor_check_rol").css("display","block");
         $("div.retailer_check_rol").css("display","none");
+
+        
 
 
         if(login_customer_type == 7){
@@ -394,11 +411,7 @@ function get_data_conversion(sku_id,quantity,units){
 $("body").on("change","select.select_unitdata",function(){
 
 
-   // alert($(this).parent().parent().parent().html());
         var selected_row_id = $(this).parent().parent().parent().find("div.edit_i").attr("prdid");
-
-   // alert(selected_row_id);
-
         var sku_id = $("div.prd_"+$.trim(selected_row_id)+" span.prd_sku").text();
         var units = $(this).val();
         var quantity = $("input#rol_quantity_"+$.trim(selected_row_id)).val();
@@ -412,14 +425,10 @@ $("body").on("keyup","input.quantity_data",function(){
 
     var selected_row_id = $(this).parent().parent().parent().find("div.edit_i").attr("prdid");
     var sku_id = $("div.prd_"+$.trim(selected_row_id)+" span.prd_sku").text();
-    //var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
 
     var units = $(this).parent().parent().parent().find("select.select_unitdata").val();
     var quantity = $(this).val();
     var unit_data = get_data_conversion(sku_id,quantity,units);
-
-    //alert(selected_row_id+"----"+sku_id+'-----'+units+'----'+quantity+'-----'+unit_data);
-
     $("input#rol_quantity_kg_ltr_"+$.trim(selected_row_id)).val(unit_data);
 });
 
@@ -501,6 +510,178 @@ $(document).on('click', 'div.rol_container .delete_i', function () {
 });
 
 
+$(document).on('submit', '#upload_rol_data', function (e) {
+    
+    e.preventDefault();
+     
+     var file_data = new FormData(this);
+     var dir_name = "rol";
+     
+     //file_data.push(dir_name);
+     
+     $.ajax({
+        url: site_url+"ishop/upload_data", // Url to which the request is send
+        type: "POST",             // Type of request to be send, called as method
+        data: file_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
+        contentType: false,       // The content type used when sending data to the server.
+        cache: false,             // To unable request pages to be cached
+        processData:false,        // To send DOMDocument or non processed data file it is set to false
+        success: function(data)   // A function to be called if request succeeds
+        {
+            
+            console.log(data);
+             $.each( data, function( key, value ) {
+                 
+                 //alert(key+"==="+ value);
+                 
+                 if(key == "error"){
+                     
+                     var value_data = JSON.stringify(value);
+                     
+                     //alert("ERROR");
+                     var error_message = "";
+                     
+                     var t_data = "<table><thead>";
+                     
+                     //   console.log(value);
+                     
+                      $.each( value, function( key5, des_value5 ) {
+                            
+                            
+                        if(key5 == "header"){
+                            
+                          //  console.log(key5+"==="+des_value5);
+                            
+                                t_data += "<tr>";
+                                    $.each( des_value5, function( key2, header_desc_value ){
+                                        $.each( header_desc_value, function( key6, header_desc_value6 ){
+                                            t_data += "<th style='border:1px solid;text-align:center;'>"+header_desc_value6+"</th>";
+                                        });
+                                    });
+                                t_data += "<th style='border:1px solid;text-align:center;'>Error Description</th></tr>";
+                                
+                                t_data += "</thead><tbody>";
+                            }
+                        });
+                     
+                     
+                        $.each( value, function( key1, des_value ) {
+                            
+                            if(key1 != "header"){
+                                
+                                t_data += "<tr>";
+                                var des_data = des_value.split("~");
+                                
+                                $.each( des_data, function( key3, desc_data ){
+                                    t_data += "<td style='border:1px solid;text-align:center;'>"+desc_data+"</td>";
+                                });
+                                
+                                t_data += "</tr>";
+                            }
+                        });
+                        t_data += "</tbody></table>";
+                    
+                     
+                     $('<div></div>').appendTo('body')
+                        .html('<div><h4><b>The following data is incorrect Kindly upload correct data.</b></h4></br>'+t_data+'</div>')
+                        .dialog({
+                            modal: true,
+                            title: 'Incorrect Data',
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: false,
+                            buttons: {
+                                Download: function () {
+                                    
+                                    if(value != "No data found"){
+                                    
+                                        var file_name = "";
 
+                                        $.ajax({
+                                            url: site_url+"ishop/create_data_xl", // Url to which the request is send
+                                            type: "POST",             // Type of request to be send, called as method
+                                            data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
+                                            success: function(data)   // A function to be called if request succeeds
+                                            {
+                                                file_name = data;
+                                            },
+                                            dataType:'html',
+                                            async:false
+                                        });
 
+                                        window.open(site_url+"assets/uploads/Uploads/"+dir_name+"/"+file_name,'_blank' );
+                                    }
+                                   // return false;
+                                    //console.log(file_data);
+                                    $(this).dialog("close");
+                                },
+                                Decline: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            close: function (event, ui) {
+                                $(this).remove();
+                            }
+                        });
+                     
+                     
+                     
+                 }
+                 else
+                 {
+                     
+                     
+                     
+                     $('<div></div>').appendTo('body')
+                        .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')
+                        .dialog({
+                            modal: true,
+                            title: 'Save Data',
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: false,
+                            buttons: {
+                                Save: function () {
+                                    
+                                    
+                                    $.ajax({
+                                        url: site_url+"ishop/add_xl_data", // Url to which the request is send
+                                        type: "POST",             // Type of request to be send, called as method
+                                        data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs 
+                                        success: function(data)   // A function to be called if request succeeds
+                                        {
+                                            console.log(data)
+                                            //file_name = data;
+                                        }
+                                    });
+                                    
+                                   // window.open(site_url+"assets/uploads/Uploads/target/"+file_name,'_blank' );
+                                    
+                                   // return false;
+                                    //console.log(file_data);
+                                    $(this).dialog("close");
+                                },
+                                Decline: function () {
+                                    $(this).dialog("close");
+                                }
+                            },
+                            close: function (event, ui) {
+                                $(this).remove();
+                            }
+                        });
+                     
+                     
+                 }
+                 
+              })
 
+        },
+        dataType: 'json'
+     });
+     
+  
+   return false;
+    
+});

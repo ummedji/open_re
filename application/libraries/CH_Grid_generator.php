@@ -97,6 +97,45 @@ class CH_Grid_generator
         }
     }
 
+
+
+    public function get_result_res($report_details,$is_limit=true)
+    {
+        $this->req_data['page'] = isset($_POST['page']) ? $_POST['page'] : '0';
+        $this->req_data['per_page'] = isset($_POST['per_page']) ? $_POST['per_page'] : '10';
+
+        $info1=$this->CI->db->query($report_details);
+        $this->count = $info1->num_rows;
+
+        $this->_paginate();
+        $report_detail = $report_details;
+
+        if($is_limit)
+        {
+            $report_detail .= 'limit '.$this->offset.','.$this->per_page;
+        }
+
+        $info = $this->CI->db->query($report_detail);
+
+        $this->CI->db->flush_cache();
+
+        if ($this->count  != 0) {
+            $data = array();
+            if ($this->message != NULL) {
+                $data['message'] = $this->message;
+            }
+            if($is_limit) {
+                $data['result'] = $info->result_array();
+                $data['pagination'] = $this->print_pagination();
+            } else {
+                $data = $info->result_array();
+            }
+            return $data;
+        } else {
+            return FALSE;
+        }
+    }
+
     //private functions
     private function _fire_action()
     {

@@ -181,9 +181,34 @@ echo form_open('',$attributes); ?>
 echo theme_view('common/middle');
 }
 ?>
-<div id="middle_container_sales" class="sales_cont">
+<?php if (!$this->input->is_ajax_request()) {
+    ?>
+    <?php $attributes = array('class' => '', 'id' => 'update_sales','name'=>'update_sales');
+    echo form_open('',$attributes); ?>
 
-</div>
-<div id="product_table_container_sales">
+    <div id="middle_container_sales" class="sales_cont">
 
-</div>
+    </div>
+    <div id="product_table_container_sales" class="sales_product">
+
+    </div>
+    <?php echo form_close(); ?>
+<?php
+}
+?>
+
+<?php
+if (!$this->input->is_ajax_request()) {
+    ?>
+    <div class="check_save_btn" id="check_save_btn" style="display:none;">
+        <div class="col-md-2 save_btn">
+            <label>&nbsp;</label>
+            <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
+        </div>
+    </div>
+    <?php
+}
+?>
+
+
+

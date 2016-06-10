@@ -7,7 +7,8 @@ class Ishop_model extends BF_Model
     {
 
         parent::__construct();
-
+        $config=array();
+        $this->load->library("CH_Grid_generator", $config, "grid");
     }
     /**
      * @ Function Name		: get_distributor_by_user_id
@@ -64,7 +65,7 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function add_primary_sales_details($user_id)
+    public function add_primary_sales_details($user_id,$country_id,$web_service = null)
     {
         $customer_id = $this->input->post("customer_id");
         $invoice_no = $this->input->post("invoice_no");
@@ -72,10 +73,21 @@ class Ishop_model extends BF_Model
         $order_tracking_no = $this->input->post("order_tracking_no");
         $PO_no = $this->input->post("PO_no");
 
-        $product_sku_id = $this->input->post("product_sku_id");
-        $quantity = $this->input->post("quantity");
-        $dispatched_quantity = $this->input->post("dispatched_quantity");
-        $amount = $this->input->post("amount");
+        if(!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
+        {
+            $product_sku_id = explode(',',$this->input->post("product_sku_id"));
+            $quantity = explode(',',$this->input->post("quantity"));
+            $dispatched_quantity = explode(',',$this->input->post("dispatched_quantity"));
+            $amount = explode(',',$this->input->post("amount"));
+        }
+        else
+        {
+            $product_sku_id = $this->input->post("product_sku_id");
+            $quantity = $this->input->post("quantity");
+            $dispatched_quantity = $this->input->post("dispatched_quantity");
+            $amount = $this->input->post("amount");
+        }
+
         $total_amount=array_sum($amount);
 
         $primary_sales_data = array(
@@ -118,7 +130,7 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function get_primary_details_view($form_date,$to_date,$by_distributor,$by_invoice_no)
+    public function get_primary_details_view($form_date,$to_date,$by_distributor,$by_invoice_no,$web_service = null)
     {
         $sql ='SELECT ips.invoice_no,ips.invoice_date,bu.user_code,bu.display_name,ips.PO_no,ips.order_tracking_no,ips.total_amount,ips.primary_sales_id ';
         $sql .= 'FROM bf_ishop_primary_sales AS ips ';
@@ -130,38 +142,53 @@ class Ishop_model extends BF_Model
         }
         if(isset($by_invoice_no) && !empty($by_invoice_no))
         {
-            $sql .= 'AND ips.invoice_no ='.$by_invoice_no.' ';
+            $sql .= 'AND ips.invoice_no ="'.$by_invoice_no.'" ';
         }
         if((isset($form_date) && !empty($form_date)) && (isset($to_date) && !empty($to_date)) )
         {
             $sql .= 'AND ips.invoice_date BETWEEN '.'"'.$form_date.'"'.' AND '.'"'.$to_date.'"'.' ';
         }
         $sql .= 'ORDER BY ips.primary_sales_id DESC ';
-        $info = $this->db->query($sql);
-        $primary_sales_detail = $info->result_array();
-        $primary_sales = array('result'=>$primary_sales_detail);
 
-        if(isset($primary_sales['result']) && !empty($primary_sales['result']))
+
+        if(!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
         {
-            $primary['head'] =array('Sr. No.','Action','Invoice No','Invoice Date','Distributor Code','Distributor Name','PO No.','Order Tracking No.','Dispatch Amount');
-            $i=1;
-            foreach($primary_sales['result'] as $ps )
+            $info = $this->db->query($sql);
+            $primary_sales_detail = $info->result_array();
+            return $primary_sales_detail;
+        }
+        else
+        {
+            //$info = $this->db->query($sql);
+            //$primary_sales_detail = $info->result_array();
+            $primary_sales =  $this->grid->get_result_res($sql);
+            //  testdata($primary_sales);
+            // $primary_sales = array('result'=>$primary_sales_detail);
+
+            if(isset($primary_sales['result']) && !empty($primary_sales['result']))
             {
+                $primary['head'] =array('Sr. No.','Action','Invoice No','Invoice Date','Distributor Code','Distributor Name','PO No.','Order Tracking No.','Dispatch Amount');
+                $primary['count'] = count($primary['head']);
+                $i=1;
+                foreach($primary_sales['result'] as $ps )
+                {
 
-                $invoice_no = '<div class="invoice_no_'.$ps["primary_sales_id"].'"><span class="invoice_no">'.$ps['invoice_no'].'</span></div>';
-              //  $invoice_date = '<div class="invoice_date_'.$ps["primary_sales_id"].'"><span class="invoice_date">'.$ps['invoice_date'].'</span></div>';
-                $po_no = '<div class="po_no_'.$ps["primary_sales_id"].'"><span class="po_no">'.$ps['PO_no'].'</span></div>';
-                $order_tracking_no = '<div class="order_tracking_no_'.$ps["primary_sales_id"].'"><span class="order_tracking_no">'.$ps['order_tracking_no'].'</span></div>';
+                    $invoice_no = '<div class="invoice_no_'.$ps["primary_sales_id"].'"><span class="invoice_no">'.$ps['invoice_no'].'</span></div>';
+                    //  $invoice_date = '<div class="invoice_date_'.$ps["primary_sales_id"].'"><span class="invoice_date">'.$ps['invoice_date'].'</span></div>';
+                    $po_no = '<div class="po_no_'.$ps["primary_sales_id"].'"><span class="po_no">'.$ps['PO_no'].'</span></div>';
+                    $order_tracking_no = '<div class="order_tracking_no_'.$ps["primary_sales_id"].'"><span class="order_tracking_no">'.$ps['order_tracking_no'].'</span></div>';
 
 
-                $primary['row'][]= array($i,$ps['primary_sales_id'],$invoice_no,$ps['invoice_date'],$ps['user_code'],$ps['display_name'],$po_no,$order_tracking_no,$ps['total_amount']);
-                $i++;
+                    $primary['row'][]= array($i,$ps['primary_sales_id'],$invoice_no,$ps['invoice_date'],$ps['user_code'],$ps['display_name'],$po_no,$order_tracking_no,$ps['total_amount']);
+                    $i++;
+                }
+                $primary['eye']=1;
+                $primary['action'] ='is_action';
+                $primary['edit'] ='is_edit';
+                $primary['delete'] ='is_delete';
+                $primary['pagination'] = $primary_sales['pagination'];
+                return $primary;
             }
-            $primary['eye']=1;
-            $primary['action'] ='is_action';
-            $primary['edit'] ='is_edit';
-            $primary['delete'] ='is_delete';
-            return $primary;
         }
     }
 
@@ -172,7 +199,7 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function primary_sales_product_details_view_by_id($primary_sales_id)
+    public function primary_sales_product_details_view_by_id($primary_sales_id,$web_service = null)
     {
         $sql ='SELECT ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
         $sql .= 'FROM bf_ishop_primary_sales_product AS ipsp ';
@@ -181,30 +208,42 @@ class Ishop_model extends BF_Model
         $sql .= 'WHERE 1 ';
         $sql .= 'AND ipsp.primary_sales_id ='.$primary_sales_id.' ';
         $sql .= 'ORDER BY ipsp.primary_sales_product_id DESC ';
-        $info = $this->db->query($sql);
-        $primary_sales_product_detail = $info->result_array();
-        $product_detail = array('result'=>$primary_sales_product_detail);
-        // var_dump($product_detail);die;
 
-        if(isset($product_detail['result']) && !empty($product_detail['result']))
+
+        if(!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
         {
-            $product_view['head'] =array('Sr. No.','Action','Product SKU Code','Product SKU Name','PO Qty. Kg/Ltr','Dispatched Qty. Kg/Ltr','Amount');
-            $i=1;
-            foreach($product_detail['result'] as $pd )
-            {
-                $qty_data = '<div class="qty_'.$pd["primary_sales_product_id"].'"><span class="qty">'.$pd['quantity'].'</span></div>';
+            $info = $this->db->query($sql);
+            $primary_sales_product_detail = $info->result_array();
+            return $primary_sales_product_detail;
+        }
+        else
+        {
+            //$info = $this->db->query($sql);
+            $product_detail = $this->grid->get_result_res($sql);
+            /* $primary_sales_product_detail = $info->result_array();
+             $product_detail = array('result'=>$primary_sales_product_detail);*/
 
-                $dispatched_quantity = '<div class="dispatched_quantity_'.$pd["primary_sales_product_id"].'"><span class="dispatched_quantity">'.$pd['dispatched_quantity'].'</span></div>';
-                $amount = '<div class="amount_'.$pd["primary_sales_product_id"].'"><span class="amount">'.$pd['amount'].'</span></div>';
-                $product_view['row'][]= array($i,$pd['primary_sales_product_id'],$pd['product_sku_code'],$pd['product_sku_name'],$qty_data,$dispatched_quantity,$amount);
-                $i++;
+
+            if (isset($product_detail['result']) && !empty($product_detail['result'])) {
+                $product_view['head'] = array('Sr. No.', 'Action', 'Product SKU Code', 'Product SKU Name', 'PO Qty. Kg/Ltr', 'Dispatched Qty. Kg/Ltr', 'Amount');
+                $product_view['count'] = count($product_view['head']);
+                $i = 1;
+                foreach ($product_detail['result'] as $pd) {
+                    $qty_data = '<div class="qty_' . $pd["primary_sales_product_id"] . '"><span class="qty">' . $pd['quantity'] . '</span></div>';
+
+                    $dispatched_quantity = '<div class="dispatched_quantity_' . $pd["primary_sales_product_id"] . '"><span class="dispatched_quantity">' . $pd['dispatched_quantity'] . '</span></div>';
+                    $amount = '<div class="amount_' . $pd["primary_sales_product_id"] . '"><input  type="hidden"  name="amount[]" value="' . $pd['amount'] . '"/><span class="amount">' . $pd['amount'] . '</span></div>';
+                    $product_view['row'][] = array($i, $pd['primary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $qty_data, $dispatched_quantity, $amount);
+                    $i++;
+                }
+                $product_view['eye'] = '';
+                $product_view['action'] = 'is_action';
+                $product_view['edit'] = 'is_edit';
+                $product_view['delete'] = 'is_delete';
+                $product_view['pagination'] = $product_detail['pagination'];
+                // $product_view['pagination'] = $report_details['pagination'];
+                return $product_view;
             }
-            $product_view['eye'] ='';
-            $product_view['action'] ='is_action';
-            $product_view['edit'] ='is_edit';
-            $product_view['delete'] ='is_delete';
-            // $product_view['pagination'] = $report_details['pagination'];
-            return $product_view;
         }
     }
 
@@ -287,6 +326,34 @@ class Ishop_model extends BF_Model
     }
     public function delete_sales_product_detail($product_sales_id)
     {
+
+
+        $this->db->select('*');
+        $this->db->from('ishop_primary_sales_product');
+        $this->db->where('primary_sales_product_id',$product_sales_id);
+
+        $primary_sales_detail = $this->db->get()->result_array();
+
+        $amount_data = $primary_sales_detail[0]["amount"];
+
+        $primary_sales_id = $primary_sales_detail[0]["primary_sales_id"];
+
+        $this->db->select('*');
+        $this->db->from('ishop_primary_sales');
+        $this->db->where('primary_sales_id',$primary_sales_id);
+
+        $ishop_primary_sales = $this->db->get()->result_array();
+        $primary_sales_amount = $ishop_primary_sales[0]["total_amount"];
+
+        $final_amount = $primary_sales_amount-$amount_data;
+
+        $update_data = array(
+            'total_amount' =>$final_amount
+        );
+
+        $this->db->where('primary_sales_id', $primary_sales_id);
+        $this->db->update('ishop_primary_sales',$update_data);
+
         $this->db->where('primary_sales_product_id', $product_sales_id);
         $this->db->delete('ishop_primary_sales_product');
 
@@ -357,147 +424,290 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function add_rol_detail($user_id,$country_id)
+    public function add_rol_detail($user_id,$country_id,$xl_data=null,$xl_flag=null)
     {
 
-        $prod_sku = $this->input->post("prod_sku");
-        $unit = $this->input->post("unit");
-        $rol_qty = $this->input->post("rol_qty");
+        if($xl_flag == null){
+                $prod_sku = $this->input->post("prod_sku");
+                $unit = $this->input->post("unit");
+                $rol_qty = $this->input->post("rol_qty");
 
-        $retailer_id=$this->input->post("fo_retailer_id");
-        $distributor_id=$this->input->post("distributor_rol");
+                $retailer_id=$this->input->post("fo_retailer_id");
+                $distributor_id=$this->input->post("distributor_rol");
 
-        $qty_kgl= $this->get_product_conversion_data($prod_sku,$rol_qty,$unit);
+                $qty_kgl= $this->get_product_conversion_data($prod_sku,$rol_qty,$unit);
 
-        $login_customer_role = $this->input->post("login_customer_role");
+                $login_customer_role = $this->input->post("login_customer_role");
 
-        if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
-        {
-            $cust_id=$retailer_id;
-        }
-        elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
-        {
-            $cust_id=$distributor_id;
-        }
-        else{
-            $cust_id=$user_id;
-        }
-        $product=$this->check_products_rol_stock($prod_sku,$unit,$cust_id,$cust_id);
-
-        if(isset($product) && !empty($product) && $product !=0)
-        {
-            if($login_customer_role == 7)
-            {
                 if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
                 {
-                    $customers_id=$retailer_id;
+                    $cust_id=$retailer_id;
                 }
                 elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
                 {
-                    $customers_id=$distributor_id;
+                    $cust_id=$distributor_id;
                 }
-                $rol_update_data = array(
-                    'customer_id' => $customers_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'units' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
-                );
+                else{
+                    $cust_id=$user_id;
+                }
+                $product=$this->check_products_rol_stock($prod_sku,$unit,$cust_id);
 
-            }
-            if($login_customer_role == 9)
-            {
-                $rol_update_data = array(
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'units' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
-                );
-
-            }
-            if($login_customer_role == 10)
-            {
-                $rol_update_data = array(
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'units' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
-                );
-            }
-
-            $this->db->where('rol_id',$product[0]['rol_id']);
-            $this->db->update('ishop_rol', $rol_update_data);
-        }
-        else{
-            if($login_customer_role == 7)
-            {
-                if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
+                if(isset($product) && !empty($product) && $product !=0)
                 {
-                    $customers_id=$retailer_id;
+                    if($login_customer_role == 7)
+                    {
+                        if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
+                        {
+                            $customers_id=$retailer_id;
+                        }
+                        elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
+                        {
+                            $customers_id=$distributor_id;
+                        }
+                        $rol_update_data = array(
+                            'customer_id' => $customers_id,
+                            'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                            'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                            'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                            'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                            'modified_by_user' => $user_id,
+                            'country_id' => $country_id,
+                            'status' => '1',
+                            'modified_on' => date('Y-m-d H:i:s')
+                        );
+
+                    }
+                    if($login_customer_role == 9)
+                    {
+                        $rol_update_data = array(
+                            'customer_id' => $user_id,
+                            'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                            'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                            'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                            'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                            'modified_by_user' => $user_id,
+                            'country_id' => $country_id,
+                            'status' => '1',
+                            'modified_on' => date('Y-m-d H:i:s')
+                        );
+
+                    }
+                    if($login_customer_role == 10)
+                    {
+                        $rol_update_data = array(
+                            'customer_id' => $user_id,
+                            'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                            'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                            'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                            'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                            'modified_by_user' => $user_id,
+                            'country_id' => $country_id,
+                            'status' => '1',
+                            'modified_on' => date('Y-m-d H:i:s')
+                        );
+                    }
+
+                    $this->db->where('rol_id',$product[0]['rol_id']);
+                    $this->db->update('ishop_rol', $rol_update_data);
                 }
-                elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
-                {
-                    $customers_id=$distributor_id;
+                else{
+                    if($login_customer_role == 7)
+                    {
+                        if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
+                        {
+                            $customers_id=$retailer_id;
+                        }
+                        elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
+                        {
+                            $customers_id=$distributor_id;
+                        }
+                        $rol_data = array(
+                            'customer_id' => $customers_id,
+                            'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                            'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                            'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                            'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                            'created_by_user' => $user_id,
+                            'country_id' => $country_id,
+                            'status' => '1',
+                            'created_on' => date('Y-m-d H:i:s')
+                        );
+
+                    }
+                    if($login_customer_role == 9)
+                    {
+                        $rol_data = array(
+                            'customer_id' => $user_id,
+                            'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                            'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                            'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                            'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                            'created_by_user' => $user_id,
+                            'country_id' => $country_id,
+                            'status' => '1',
+                            'created_on' => date('Y-m-d H:i:s')
+                        );
+
+                    }
+                    if($login_customer_role == 10)
+                    {
+                        $rol_data = array(
+                            'customer_id' => $user_id,
+                            'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                            'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                            'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                            'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                            'created_by_user' => $user_id,
+                            'country_id' => $country_id,
+                            'status' => '1',
+                            'created_on' => date('Y-m-d H:i:s')
+                        );
+                    }
+                    $this->db->insert('ishop_rol', $rol_data);
                 }
-                $rol_data = array(
-                    'customer_id' => $customers_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'units' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'created_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s')
-                );
 
-            }
-            if($login_customer_role == 9)
-            {
-                $rol_data = array(
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'units' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'created_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s')
-                );
+         }
+         else{
+             
+             
+             if($xl_data != null){
+                
+                foreach($xl_data as $key => $value){
 
-            }
-            if($login_customer_role == 10)
-            {
-                $rol_data = array(
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'units' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'created_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s')
-                );
-            }
-            $this->db->insert('ishop_rol', $rol_data);
-        }
+                    $user= $this->auth->user();
+                    $login_customer_role = $user->role_id;
+                    
+                    if($login_customer_role == 7)
+                    {
+                        $cust_id = $value[0];
+                        $prod_sku =   $value[1];  
+                        $unit = $value[2];
+                        $rol_qty = $value[3]; 
+                    }
+                    elseif($login_customer_role == 9 || $login_customer_role == 10)
+                    {
+                        $cust_id = $user_id;
+                        $prod_sku = $value[0];
+                        $unit =   $value[1];  
+                        $rol_qty = $value[2];
+                    }
+                    
+                    $qty_kgl= $this->get_product_conversion_data($prod_sku,$rol_qty,$unit);
 
+                    //NEED TO BE DYNAMIC
+                    
+                    $product=$this->check_products_rol_stock($prod_sku,$unit,$cust_id);
+
+                    if(isset($product) && !empty($product) && $product !=0)
+                    {
+                        if($login_customer_role == 7)
+                        {
+                            
+                            $customers_id=$cust_id;
+                           
+                            $rol_update_data = array(
+                                'customer_id' => $customers_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'modified_on' => date('Y-m-d H:i:s')
+                            );
+
+                        }
+                        if($login_customer_role == 9)
+                        {
+                            $rol_update_data = array(
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'modified_on' => date('Y-m-d H:i:s')
+                            );
+
+                        }
+                        if($login_customer_role == 10)
+                        {
+                            $rol_update_data = array(
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'modified_on' => date('Y-m-d H:i:s')
+                            );
+                        }
+
+                        $this->db->where('rol_id',$product[0]['rol_id']);
+                        $this->db->update('ishop_rol', $rol_update_data);
+                    }
+                    else{
+                        if($login_customer_role == 7)
+                        {
+                            $customers_id = $cust_id;
+                            
+                            $rol_data = array(
+                                'customer_id' => $customers_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'created_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'created_on' => date('Y-m-d H:i:s')
+                            );
+
+                        }
+                        if($login_customer_role == 9)
+                        {
+                            $rol_data = array(
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'created_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'created_on' => date('Y-m-d H:i:s')
+                            );
+
+                        }
+                        if($login_customer_role == 10)
+                        {
+                            $rol_data = array(
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'units' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'rol_quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'rol_quantity_Kg_Ltr' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'created_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'created_on' => date('Y-m-d H:i:s')
+                            );
+                        }
+                        $this->db->insert('ishop_rol', $rol_data);
+                    }
+
+                    
+                }
+                
+             }
+             
+         }
+        
     }
 
 
@@ -542,16 +752,17 @@ class Ishop_model extends BF_Model
      //   $sql .= 'AND ir.created_by_user ='.$user_id.' ';
         $sql .= 'AND ir.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY ir.rol_id DESC ';
-
-        $info = $this->db->query($sql);
+        $rol_details =  $this->grid->get_result_res($sql);
+       /* $info = $this->db->query($sql);
         $rol_detail = $info->result_array();
-        $rol_details = array('result'=>$rol_detail);
+        $rol_details = array('result'=>$rol_detail);*/
        // testdata($rol_details);
         if(isset($rol_details['result']) && !empty($rol_details['result']))
         {
             if($logined_user_role == 9 || $logined_user_role == 10){
                 $rol['head'] =array('Sr. No.','Action','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
                 $i=1;
+                $rol['count'] = count($rol['head']);
                 foreach($rol_details['result'] as $rd )
                 {   $product_sku_id='<div class="prd_'.$rd["rol_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
                     $units = $product_sku_id.'<div class="units_'.$rd["rol_id"].'"><span class="units">'.$rd['units'].'</span></div>';
@@ -565,9 +776,11 @@ class Ishop_model extends BF_Model
             else{
                 if($checked_type == 'retailer'){
                     $rol['head'] =array('Sr. No.','Action','Retailer Code','Retailer Name','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
+                    $rol['count'] = count($rol['head']);
                 }
                 else{
                     $rol['head'] =array('Sr. No.','Action','Distributor Code','Distributor Name','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
+                    $rol['count'] = count($rol['head']);
                 }
 
                 $i=1;
@@ -584,7 +797,7 @@ class Ishop_model extends BF_Model
                     $i++;
                 }
             }
-
+            $rol['pagination'] = $rol_details['pagination'];
             $rol['action'] ='is_action';
             $rol['edit'] ='is_edit';
             $rol['delete'] ='is_delete';
@@ -779,13 +992,15 @@ class Ishop_model extends BF_Model
         $sql .= 'AND iss.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY iss.secondary_sales_id DESC ';
 
-        $info = $this->db->query($sql);
+      /*  $info = $this->db->query($sql);
         $secondary_sales_product_detail = $info->result_array();
-        $secondary_sales = array('result'=>$secondary_sales_product_detail);
+        $secondary_sales = array('result'=>$secondary_sales_product_detail);*/
+        $secondary_sales =  $this->grid->get_result_res($sql);
 
         if(isset($secondary_sales['result']) && !empty($secondary_sales['result']))
         {
             $secondary['head'] =array('Sr. No.','Action','Entry By','Entry Date','ENT','Invoice No','Invoice Date','Retailer Code','Retailer Name','PO No.','Order Tracking No.','Dispatch Amount');
+            $secondary['count'] = count($secondary['head']);
             $i=1;
             foreach($secondary_sales['result'] as $ss )
             {
@@ -803,6 +1018,7 @@ class Ishop_model extends BF_Model
             $secondary['action'] ='is_action';
             $secondary['edit'] ='is_edit';
             $secondary['delete'] ='is_delete';
+            $secondary['pagination'] = $secondary_sales['pagination'];
 
             return $secondary;
         }
@@ -824,23 +1040,27 @@ class Ishop_model extends BF_Model
        $sql .= 'WHERE 1 ';
        $sql .= 'AND issp.secondary_sales_id ='.$secondary_sales_id.' ';
        $sql .= 'ORDER BY issp.secondary_sales_product_id DESC ';
-       $info = $this->db->query($sql);
+     /*  $info = $this->db->query($sql);
        $secondary_sales_product_detail = $info->result_array();
-       $product_detail = array('result'=>$secondary_sales_product_detail);
+       $product_detail = array('result'=>$secondary_sales_product_detail);*/
+       $product_detail =  $this->grid->get_result_res($sql);
       // var_dump($product_detail);die;
 
        if(isset($product_detail['result']) && !empty($product_detail['result']))
        {
            $product_view['head'] =array('Sr. No.','Action','Product SKU Code','Product SKU Name','Qty.','Unit','Qty Kg/Ltr','Amount');
+           $product_view['count'] = count($product_view['head']);
            $i=1;
+
+           $secondary_id_data = '<input type="hidden" name="secondary_sales_id" value="'.$secondary_sales_id.'">';
 
            foreach($product_detail['result'] as $pd )
            {
-               $product_sku_id='<div class="prd_'.$pd["secondary_sales_product_id"].'"><span class="prd_sku" style="display:none;" >'.$pd['product_sku_id'].'</span></div>';
+               $product_sku_id= $secondary_id_data.'<div class="prd_'.$pd["secondary_sales_product_id"].'"><span class="prd_sku" style="display:none;" >'.$pd['product_sku_id'].'</span></div>';
                $units = $product_sku_id.'<div class="units_'.$pd["secondary_sales_product_id"].'"><span class="units">'.$pd['unit'].'</span></div>';
                $quantity = '<div class="quantity_'.$pd["secondary_sales_product_id"].'"><span class="quantity">'.$pd['quantity'].'</span></div>';
 
-               $amount = '<div class="amount_'.$pd["secondary_sales_product_id"].'"><span class="amount">'.$pd['amount'].'</span></div>';
+               $amount = '<div class="amount_'.$pd["secondary_sales_product_id"].'"><input  type="hidden"  name="amount[]" value="'.$pd['amount'].'"/><span class="amount">'.$pd['amount'].'</span></div>';
                $qty_kgl = '<div class="rol_quantity_kg_ltr_'.$pd["secondary_sales_product_id"].'"><span class="rol_quantity_kg_ltr">'.$pd['qty_kgl'].'</span></div>';
 
                $product_view['row'][]= array($i,$pd['secondary_sales_product_id'],$pd['product_sku_code'],$pd['product_sku_name'],$quantity,$units,$qty_kgl,$amount);
@@ -850,7 +1070,7 @@ class Ishop_model extends BF_Model
            $product_view['action'] ='is_action';
            $product_view['edit'] ='is_edit';
            $product_view['delete'] ='is_delete';
-           //$product_view['pagination'] = $report_details['pagination'];
+           $product_view['pagination'] = $product_detail['pagination'];
            return $product_view;
        }
    }
@@ -877,7 +1097,7 @@ class Ishop_model extends BF_Model
                 $secondary_sales_product_update = array(
                     'quantity'=>$quantity[$k],
                     'unit'=>$units[$k],
-                    'dispatched_quantity'=>$qty_kgl[$k],
+                    'qty_kgl'=>$qty_kgl[$k],
                     'amount'=>$amount[$k],
                 );
 
@@ -938,15 +1158,44 @@ class Ishop_model extends BF_Model
 
     public function delete_secondary_sales_product_detail($secondary_product_sales_id)
     {
+        //testdata($secondary_product_sales_id);
+        $this->db->select('*');
+        $this->db->from('ishop_secondary_sales_product');
+        $this->db->where('secondary_sales_product_id',$secondary_product_sales_id);
+
+        $secondary_sales_detail = $this->db->get()->result_array();
+        //testdata($secondary_sales_detail);
+        $amount_data = $secondary_sales_detail[0]["amount"];
+
+        $secondary_sales_id = $secondary_sales_detail[0]["secondary_sales_id"];
+
+        $this->db->select('*');
+        $this->db->from('ishop_secondary_sales');
+        $this->db->where('secondary_sales_id',$secondary_sales_id);
+
+        $ishop_secondary_sales = $this->db->get()->result_array();
+        $secondary_sales_amount = $ishop_secondary_sales[0]["total_amount"];
+
+        $final_amount = $secondary_sales_amount-$amount_data;
+
+        $update_data = array(
+            'total_amount' =>$final_amount
+        );
+
+        $this->db->where('secondary_sales_id', $secondary_sales_id);
+        $this->db->update('ishop_secondary_sales',$update_data);
+
         $this->db->where('secondary_sales_product_id', $secondary_product_sales_id);
         $this->db->delete('ishop_secondary_sales_product');
+
+
 
     }
 
 
     public function get_all_physical_stock_by_user($user_id,$country_id,$role_id,$checked_type=null)
     {
-        $sql ='SELECT bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
+        $sql ='SELECT bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.product_sku_id,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
         $sql .= 'FROM bf_ishop_physical_stock AS ips ';
         $sql .= 'LEFT JOIN bf_users AS bu  ON (bu.id = ips.modified_by_user) ';
         $sql .= 'LEFT JOIN bf_users AS bu1  ON (bu1.id = ips.customer_id) ';
@@ -970,10 +1219,10 @@ class Ishop_model extends BF_Model
 
         //echo $sql;die;
 
-        $info = $this->db->query($sql);
+       /* $info = $this->db->query($sql);
         $phy_detail = $info->result_array();
-        $pyh_stock_details = array('result'=>$phy_detail);
-
+        $pyh_stock_details = array('result'=>$phy_detail);*/
+        $pyh_stock_details =  $this->grid->get_result_res($sql);
 
         //echo $user_id."==".$country_id."==".$role_id."==".$checked_type; die;
 
@@ -983,12 +1232,19 @@ class Ishop_model extends BF_Model
             {
                 //echo "aaaaa";die;
                 $pyh_stock['head'] =array('Sr. No.','Action','Month Year','Product SKU Code','Product SKU Name','Quantity','Units','Qty Kg/Ltr');
+                $pyh_stock['count'] = count($pyh_stock['head']);
                 $i=1;
                 foreach($pyh_stock_details['result'] as $rd )
                 {
+
+                    $product_sku_id='<div class="prd_'.$rd["stock_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
+                    $units = $product_sku_id.'<div class="units_'.$rd["stock_id"].'"><span class="units">'.$rd['unit'].'</span></div>';
+                    $quantity = '<div class="rol_quantity_'.$rd["stock_id"].'"><span class="rol_quantity">'.$rd['quantity'].'</span></div>';
+                    $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["stock_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['qty_kgl'].'</span></div>';
+
                     $month=strtotime($rd['stock_month']);
                     $month=date('F - Y',$month);
-                    $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['product_sku_code'],$rd['product_sku_name'],$rd['quantity'],$rd['unit'],$rd['qty_kgl']);
+                    $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['product_sku_code'],$rd['product_sku_name'],$quantity,$units,$quantity_kg_ltr);
                     $i++;
                 }
             }
@@ -996,19 +1252,27 @@ class Ishop_model extends BF_Model
 
 
                 $pyh_stock['head'] =array('Sr. No.','Action','Month Year','Latest Updated By','Entry Date','Product SKU Code','Product SKU Name','Quantity','Units','Qty Kg/Ltr');
+                $pyh_stock['count'] = count($pyh_stock['head']);
                 $i=1;
                 foreach($pyh_stock_details['result'] as $rd )
                 {
+                    $product_sku_id='<div class="prd_'.$rd["stock_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
+                    $units = $product_sku_id.'<div class="units_'.$rd["stock_id"].'"><span class="units">'.$rd['unit'].'</span></div>';
+                    $quantity = '<div class="rol_quantity_'.$rd["stock_id"].'"><span class="rol_quantity">'.$rd['quantity'].'</span></div>';
+                    $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["stock_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['qty_kgl'].'</span></div>';
+
+
                     $month=strtotime($rd['stock_month']);
                     $month=date('F - Y',$month);
 
-                    $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['display_name'],$rd['created_on'],$rd['product_sku_code'],$rd['product_sku_name'],$rd['quantity'],$rd['unit'],$rd['qty_kgl']);
+                    $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['display_name'],$rd['created_on'],$rd['product_sku_code'],$rd['product_sku_name'],$quantity,$units,$quantity_kg_ltr);
                     $i++;
                 }
             }
             $pyh_stock['action'] ='is_action';
             $pyh_stock['edit'] ='is_edit';
             $pyh_stock['delete'] ='is_delete';
+            $pyh_stock['pagination'] = $pyh_stock_details['pagination'];
             return $pyh_stock;
         }
     }
@@ -1121,6 +1385,7 @@ class Ishop_model extends BF_Model
                 {
                     $customers_id=$distributor_id;
                 }
+
                 $physical_stock_data = array(
                     'stock_month' => $stock_month.'-01',
                     'customer_id' => $customers_id,
@@ -1129,9 +1394,11 @@ class Ishop_model extends BF_Model
                     'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
                     'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
                     'created_by_user' => $user_id,
+                    'modified_by_user' => $user_id,
                     'country_id' => $country_id,
                     'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s')
+                    'created_on' => date('Y-m-d H:i:s'),
+                    'modified_on' => date('Y-m-d H:i:s'),
                 );
 
             }
@@ -1146,9 +1413,11 @@ class Ishop_model extends BF_Model
                     'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
                     'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
                     'created_by_user' => $user_id,
+                    'modified_by_user' => $user_id,
                     'country_id' => $country_id,
                     'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s')
+                    'created_on' => date('Y-m-d H:i:s'),
+                    'modified_on' => date('Y-m-d H:i:s'),
                 );
             }
             if($login_customer_role == 10)
@@ -1161,9 +1430,11 @@ class Ishop_model extends BF_Model
                     'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
                     'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
                     'created_by_user' => $user_id,
+                    'modified_by_user' => $user_id,
                     'country_id' => $country_id,
                     'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s')
+                    'created_on' => date('Y-m-d H:i:s'),
+                    'modified_on' => date('Y-m-d H:i:s'),
                 );
             }
 
@@ -1189,6 +1460,39 @@ class Ishop_model extends BF_Model
             return 0;
         }
     }
+
+    public function update_physical_stock_detail($user_id,$country_id)
+    {
+        $stock_id = $this->input->post("stock_id");
+        $units = $this->input->post("units");
+        $quantity = $this->input->post("quantity");
+        $qty_kg_ltr = $this->input->post("rol_quantity_kg_ltr");
+
+
+        if(isset($stock_id) && !empty($stock_id))
+        {
+            foreach($stock_id as $k=>$Si)
+            {
+                $stock_update = array(
+                    'quantity'=>$quantity[$k],
+                    'unit'=>$units[$k],
+                    'qty_kgl'=>$qty_kg_ltr[$k],
+                    'modified_by_user' => $user_id,
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+
+                $this->db->where('stock_id',$stock_id[$k]);
+                $this->db->update('ishop_physical_stock',$stock_update);
+            }
+        }
+    }
+
+    public function delete_physical_stock_details($stock_id)
+    {
+        $this->db->where('stock_id', $stock_id);
+        $this->db->delete('ishop_physical_stock');
+    }
+
 
     /**
      * @ Function Name		: add_ishop_sales_detail
@@ -1309,15 +1613,16 @@ class Ishop_model extends BF_Model
         $sql .= 'AND itsp.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_id DESC ';
         //echo $sql;
-        $info = $this->db->query($sql);
+       /* $info = $this->db->query($sql);
         $tertiary_sales_detail = $info->result_array();
-        $sales_detail = array('result'=>$tertiary_sales_detail);
+        $sales_detail = array('result'=>$tertiary_sales_detail);*/
+        $sales_detail =  $this->grid->get_result_res($sql);
 
         if(isset($sales_detail['result']) && !empty($sales_detail['result']))
         {
             $sales_view['head'] =array('Sr. No.','Action','Month','Retailer Code','Retailer Name');
             $i=1;
-
+            $sales_view['count'] = count($sales_view['head']);
             foreach($sales_detail['result'] as $sd )
             {
                 $month=strtotime($sd['sales_month']);
@@ -1329,7 +1634,7 @@ class Ishop_model extends BF_Model
             $sales_view['action'] ='is_action';
             $sales_view['edit'] ='is_edit';
             $sales_view['delete'] ='is_delete';
-            // $product_view['pagination'] = $report_details['pagination'];
+            $sales_view['pagination'] = $sales_detail['pagination'];
             return $sales_view;
         }
     }
@@ -1337,7 +1642,7 @@ class Ishop_model extends BF_Model
 
     public function tertiary_sales_product_details_view_by_id($tertiary_sales_id)
     {
-        $sql ='SELECT itsp.tertiary_sales_product_id,mpsr.product_sku_code,mpsc.product_sku_name,itsp.unit,itsp.quantity,itsp.qty_kgl ';
+        $sql ='SELECT itsp.tertiary_sales_product_id,mpsr.product_sku_code,itsp.product_sku_id,mpsc.product_sku_name,itsp.unit,itsp.quantity,itsp.qty_kgl ';
         $sql .= 'FROM bf_ishop_tertiary_sales_products AS itsp ';
         $sql .= 'JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_country_id = itsp.product_sku_id) ';
         $sql .= 'JOIN bf_master_product_sku_regional AS mpsr ON (mpsr.product_sku_id = mpsc.product_sku_id) ';
@@ -1345,26 +1650,177 @@ class Ishop_model extends BF_Model
         $sql .= 'AND itsp.tertiary_sales_id ='.$tertiary_sales_id.' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_product_id DESC ';
         //echo $sql;
-        $info = $this->db->query($sql);
+       /* $info = $this->db->query($sql);
         $tertiary_sales_detail = $info->result_array();
-        $sales_detail = array('result'=>$tertiary_sales_detail);
+        $sales_detail = array('result'=>$tertiary_sales_detail);*/
+        $sales_detail =  $this->grid->get_result_res($sql);
 
         if(isset($sales_detail['result']) && !empty($sales_detail['result'])) {
             $sales_view['head'] = array('Sr. No.', 'Action', 'Product SKU Code', 'Product SKU Name', 'Unit','Qty.','Qty. Kg/Ltr');
+            $sales_view['count'] = count($sales_view['head']);
             $i = 1;
 
             foreach ($sales_detail['result'] as $sd) {
-                $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'],$sd['unit'],$sd['quantity'],$sd['qty_kgl']);
+
+                $product_sku_id='<div class="prd_'.$sd["tertiary_sales_product_id"].'"><span class="prd_sku" style="display:none;" >'.$sd['product_sku_id'].'</span></div>';
+                $units = $product_sku_id.'<div class="units_'.$sd["tertiary_sales_product_id"].'"><span class="units">'.$sd['unit'].'</span></div>';
+                $quantity = '<div class="quantity_'.$sd["tertiary_sales_product_id"].'"><span class="quantity">'.$sd['quantity'].'</span></div>';
+                $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$sd["tertiary_sales_product_id"].'"><span class="rol_quantity_kg_ltr">'.$sd['qty_kgl'].'</span></div>';
+
+
+                $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'],$units,$quantity,$quantity_kg_ltr);
                 $i++;
             }
             $sales_view['eye'] = '';
             $sales_view['action'] = 'is_action';
             $sales_view['edit'] = 'is_edit';
             $sales_view['delete'] = 'is_delete';
-            // $product_view['pagination'] = $report_details['pagination'];
+            $sales_view['pagination'] = $sales_detail['pagination'];
             return $sales_view;
         }
     }
+
+    public function update_ishop_sales_detail($user_id,$country_id)
+    {
+       // testdata($_POST);
+        $checked_type = $this->input->post("checked_type");
+
+        $secondary_sales_id = $this->input->post("secondary_sales_detail");
+        $invoice_no = $this->input->post("invoice_no");
+        $PO_no = $this->input->post("PO_no");
+        $order_tracking_no = $this->input->post("order_tracking_no");
+        $secondary_sales_product_id = $this->input->post("secondary_sales_product");
+        $quantity = $this->input->post("quantity");
+        $units = $this->input->post("units");
+        $qty_kgl = $this->input->post("qty_kgl");
+        $amount = $this->input->post("amount");
+
+        if($checked_type=='distributor')
+        {
+
+            $total_amt=array_sum($amount);
+
+            if(isset($secondary_sales_product_id) && !empty($secondary_sales_product_id))
+            {
+                foreach($secondary_sales_product_id as $k=>$pspi)
+                {
+                    $secondary_sales_product_update = array(
+                        'quantity'=>$quantity[$k],
+                        'unit'=>$units[$k],
+                        'qty_kgl'=>$qty_kgl[$k],
+                        'amount'=>$amount[$k],
+                    );
+
+                    $this->db->where('secondary_sales_product_id',$secondary_sales_product_id[$k]);
+                    $this->db->update('ishop_secondary_sales_product',$secondary_sales_product_update);
+                }
+                $secondary_sales=$this->get_sales_id_by_secondary_sales_product_id($secondary_sales_product_id);
+
+                $secondary_sales_update_by_product = array(
+                    'total_amount'=>$total_amt,
+                    'modified_by_user' => $user_id,
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+
+                $this->db->where('secondary_sales_id',$secondary_sales[0]['secondary_sales_id']);
+                $this->db->update('ishop_secondary_sales',$secondary_sales_update_by_product);
+            }
+
+            if(isset($secondary_sales_id) && !empty($secondary_sales_id))
+            {
+                foreach($secondary_sales_id as $key=>$psi)
+                {
+                    $secondary_sales_update = array(
+                        'invoice_no' => $invoice_no[$key],
+                        'PO_no' => $PO_no[$key],
+                        'order_tracking_no' => $order_tracking_no[$key],
+                        'modified_by_user' => $user_id,
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
+
+                    $this->db->where('secondary_sales_id',$secondary_sales_id[$key]);
+                    $this->db->update('ishop_secondary_sales',$secondary_sales_update);
+                }
+            }
+
+
+        }
+        else{
+
+            if(isset($secondary_sales_product_id) && !empty($secondary_sales_product_id))
+            {
+                foreach($secondary_sales_product_id as $k=>$pspi)
+                {
+                    $tertiary_sales_product_update = array(
+                        'quantity'=>$quantity[$k],
+                        'unit'=>$units[$k],
+                        'qty_kgl'=>$qty_kgl[$k],
+
+                    );
+
+                    $this->db->where('tertiary_sales_product_id',$secondary_sales_product_id[$k]);
+                    $this->db->update('ishop_tertiary_sales_products',$tertiary_sales_product_update);
+                }
+                $tertiary_sales=$this->get_sales_id_by_tertiary_sales_product_id($secondary_sales_product_id);
+
+                $secondary_sales_update_by_product = array(
+                    'modified_by_user' => $user_id,
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+
+                $this->db->where('tertiary_sales_id',$tertiary_sales[0]['tertiary_sales_id']);
+                $this->db->update('ishop_tertiary_sales',$secondary_sales_update_by_product);
+            }
+
+        }
+
+        return true;
+    }
+
+    public function get_sales_id_by_tertiary_sales_product_id($tertiary_sales_product_id)
+    {
+        $this->db->select('tertiary_sales_id');
+        $this->db->from('ishop_tertiary_sales_products');
+        $this->db->where('tertiary_sales_product_id',$tertiary_sales_product_id[0]);
+        $sales_id = $this->db->get()->result_array();
+        //testdata($sales_id);
+        if(isset($sales_id) && !empty($sales_id))
+        {
+            return $sales_id;
+        }
+    }
+
+
+    public function delete_ishop_sales_detail($sales_id,$checked_type)
+    {
+        if($checked_type == 'distributor')
+        {
+            $this->delete_secondary_sales_detail($sales_id);
+          //  $this->db->where('secondary_sales_id', $sales_id);
+            //$this->db->delete('ishop_secondary_sales');
+        }
+        else{
+            $this->db->where('tertiary_sales_id', $sales_id);
+            $this->db->delete('ishop_tertiary_sales');
+        }
+    }
+    public function delete_ishop_sales_product_detail($product_sales_id,$checked_type)
+    {
+            //testdata($product_sales_id);
+        if($checked_type == 'distributor')
+        {
+
+            $this->delete_secondary_sales_product_detail($product_sales_id);
+          /*  $this->db->where('secondary_sales_product_id', $product_sales_id);
+            $this->db->delete('ishop_secondary_sales_product');*/
+        }
+        else{
+
+            $this->db->where('tertiary_sales_product_id', $product_sales_id);
+            $this->db->delete('ishop_tertiary_sales_products');
+        }
+    }
+
 
     /**
      * @ Function Name		: add_company_current_stock_detail
@@ -1373,94 +1829,193 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function add_company_current_stock_detail($user_id,$country_id)
+    public function add_company_current_stock_detail($user_id,$country_id,$xl_data=null,$xl_flag=null)
     {
-        $date = $this->input->post("current_date");
-        $product_sku_id=$this->input->post("product_sku");
-        $intrum_quantity=$this->input->post("intransist_qty");
-        $unrestricted_quantity=$this->input->post("unrusticted_qty");
-        $batch=$this->input->post("batch");
-        $batch_exp_date=$this->input->post("batch_expiry_date");
-        $batch_mfg_date=$this->input->post("batch_mfg_date");
+        if($xl_flag == null){
+            $date = $this->input->post("current_date");
+            $product_sku_id=$this->input->post("product_sku");
+            $intrum_quantity=$this->input->post("intransist_qty");
+            $unrestricted_quantity=$this->input->post("unrusticted_qty");
+            $batch=$this->input->post("batch");
+            $batch_exp_date=$this->input->post("batch_expiry_date");
+            $batch_mfg_date=$this->input->post("batch_mfg_date");
 
 
-        $product=$this->check_products($product_sku_id);
+            $product=$this->check_products($product_sku_id);
 
-        if($product == 0){
-            $current_stock = array(
-                'date'                  =>$date,
-                'product_sku_id'        =>$product_sku_id,
-                'intrum_quantity'       =>$intrum_quantity,
-                'unrestricted_quantity' =>$unrestricted_quantity,
-                'batch'                 =>$batch,
-                'batch_exp_date'        =>$batch_exp_date,
-                'batch_mfg_date'        =>$batch_mfg_date,
-                'country_id'            =>$country_id,
-                'created_by_user'       =>$user_id,
-                'modified_by_user'      =>'0',
-                'status'                =>'1',
-                'created_on'            =>date('Y-m-d H:i:s'),
+            if($product == 0){
+                $current_stock = array(
+                    'date'                  =>$date,
+                    'product_sku_id'        =>$product_sku_id,
+                    'intrum_quantity'       =>$intrum_quantity,
+                    'unrestricted_quantity' =>$unrestricted_quantity,
+                    'batch'                 =>$batch,
+                    'batch_exp_date'        =>$batch_exp_date,
+                    'batch_mfg_date'        =>$batch_mfg_date,
+                    'country_id'            =>$country_id,
+                    'created_by_user'       =>$user_id,
+                    'modified_by_user'      =>'0',
+                    'status'                =>'1',
+                    'created_on'            =>date('Y-m-d H:i:s'),
 
-            );
-            if ($this->db->insert('ishop_company_current_stock', $current_stock)) {
-                $insert_id = $this->db->insert_id();
+                );
+                if ($this->db->insert('ishop_company_current_stock', $current_stock)) {
+                    $insert_id = $this->db->insert_id();
+                }
+                $current_stock_log = array(
+                    'date'                  =>$date,
+                    'stock_id'              =>$insert_id,
+                    'product_sku_id'        =>$product_sku_id,
+                    'intransit_quantity'    =>$intrum_quantity,
+                    'unrestricted_quantity' =>$unrestricted_quantity,
+                    'batch'                 =>$batch,
+                    'batch_exp_date'        =>$batch_exp_date,
+                    'batch_mfg_date'        =>$batch_mfg_date,
+                    'country_id'            =>$country_id,
+                    'created_by_user'       =>$user_id,
+                    'modified_by_user'      =>'0',
+                    'log_date'              =>date('Y-m-d H:i:s'),
+                    'status'                =>'1',
+                    'created_on'            =>date('Y-m-d H:i:s'),
+                );
+               // testdata($current_stock_log);
+                $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
             }
-            $current_stock_log = array(
-                'date'                  =>$date,
-                'stock_id'              =>$insert_id,
-                'product_sku_id'        =>$product_sku_id,
-                'intransit_quantity'    =>$intrum_quantity,
-                'unrestricted_quantity' =>$unrestricted_quantity,
-                'batch'                 =>$batch,
-                'batch_exp_date'        =>$batch_exp_date,
-                'batch_mfg_date'        =>$batch_mfg_date,
-                'country_id'            =>$country_id,
-                'created_by_user'       =>$user_id,
-                'modified_by_user'      =>'0',
-                'log_date'              =>date('Y-m-d H:i:s'),
-                'status'                =>'1',
-                'created_on'            =>date('Y-m-d H:i:s'),
-            );
-           // testdata($current_stock_log);
-            $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+            else{
+               // update
+                $current_update_stock = array(
+                    'date'                  =>$date,
+                    'product_sku_id'        =>$product_sku_id,
+                    'intrum_quantity'       =>$intrum_quantity,
+                    'unrestricted_quantity' =>$unrestricted_quantity,
+                    'batch'                 =>$batch,
+                    'batch_exp_date'        =>$batch_exp_date,
+                    'batch_mfg_date'        =>$batch_mfg_date,
+                    'country_id'            =>$country_id,
+                    'modified_by_user'      =>$user_id,
+                    'status'                =>'1',
+                    'modified_on'           =>date('Y-m-d H:i:s'),
+
+                );
+
+                $this->db->where('product_sku_id',$product[0]['product_sku_id']);
+                $this->db->update('ishop_company_current_stock',$current_update_stock);
+
+                $current_stock_log = array(
+                    'date'                  =>$date,
+                    'stock_id'              =>$product[0]['stock_id'],
+                    'product_sku_id'        =>$product_sku_id,
+                    'intransit_quantity'    =>$intrum_quantity,
+                    'unrestricted_quantity' =>$unrestricted_quantity,
+                    'batch'                 =>$batch,
+                    'batch_exp_date'        =>$batch_exp_date,
+                    'batch_mfg_date'        =>$batch_mfg_date,
+                    'country_id'            =>$country_id,
+                    'created_by_user'       =>$user_id,
+                    'modified_by_user'      =>'0',
+                    'log_date'              =>date('Y-m-d H:i:s'),
+                    'status'                =>'1',
+                    'created_on'            =>date('Y-m-d H:i:s'),
+                );
+                $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+            }
         }
         else{
-           // update
-            $current_update_stock = array(
-                'date'                  =>$date,
-                'product_sku_id'        =>$product_sku_id,
-                'intrum_quantity'       =>$intrum_quantity,
-                'unrestricted_quantity' =>$unrestricted_quantity,
-                'batch'                 =>$batch,
-                'batch_exp_date'        =>$batch_exp_date,
-                'batch_mfg_date'        =>$batch_mfg_date,
-                'country_id'            =>$country_id,
-                'modified_by_user'      =>$user_id,
-                'status'                =>'1',
-                'modified_on'           =>date('Y-m-d H:i:s'),
+            
+            if($xl_data != null){
+                foreach($xl_data as $key => $value){
 
-            );
+                    $product_sku_id = $value[0];
+                    $batch =   $value[1];  
+                    $unrestricted_quantity = $value[2];
+                    $intrum_quantity = $value[3]; 
+                    $batch_exp_date =  $value[4];
+                    $batch_mfg_date =    $value[5];
+                    $date = $value[6];
+                    
+                            
+                    $product=$this->check_products($product_sku_id);
 
-            $this->db->where('product_sku_id',$product[0]['product_sku_id']);
-            $this->db->update('ishop_company_current_stock',$current_update_stock);
+                    if($product == 0){
+                        $current_stock = array(
+                            'date'                  =>$date,
+                            'product_sku_id'        =>$product_sku_id,
+                            'intrum_quantity'       =>$intrum_quantity,
+                            'unrestricted_quantity' =>$unrestricted_quantity,
+                            'batch'                 =>$batch,
+                            'batch_exp_date'        =>$batch_exp_date,
+                            'batch_mfg_date'        =>$batch_mfg_date,
+                            'country_id'            =>$country_id,
+                            'created_by_user'       =>$user_id,
+                            'modified_by_user'      =>'0',
+                            'status'                =>'1',
+                            'created_on'            =>date('Y-m-d H:i:s'),
 
-            $current_stock_log = array(
-                'date'                  =>$date,
-                'stock_id'              =>$product[0]['stock_id'],
-                'product_sku_id'        =>$product_sku_id,
-                'intransit_quantity'    =>$intrum_quantity,
-                'unrestricted_quantity' =>$unrestricted_quantity,
-                'batch'                 =>$batch,
-                'batch_exp_date'        =>$batch_exp_date,
-                'batch_mfg_date'        =>$batch_mfg_date,
-                'country_id'            =>$country_id,
-                'created_by_user'       =>$user_id,
-                'modified_by_user'      =>'0',
-                'log_date'              =>date('Y-m-d H:i:s'),
-                'status'                =>'1',
-                'created_on'            =>date('Y-m-d H:i:s'),
-            );
-            $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+                        );
+                        if ($this->db->insert('ishop_company_current_stock', $current_stock)) {
+                            $insert_id = $this->db->insert_id();
+                        }
+                        $current_stock_log = array(
+                            'date'                  =>$date,
+                            'stock_id'              =>$insert_id,
+                            'product_sku_id'        =>$product_sku_id,
+                            'intransit_quantity'    =>$intrum_quantity,
+                            'unrestricted_quantity' =>$unrestricted_quantity,
+                            'batch'                 =>$batch,
+                            'batch_exp_date'        =>$batch_exp_date,
+                            'batch_mfg_date'        =>$batch_mfg_date,
+                            'country_id'            =>$country_id,
+                            'created_by_user'       =>$user_id,
+                            'modified_by_user'      =>'0',
+                            'log_date'              =>date('Y-m-d H:i:s'),
+                            'status'                =>'1',
+                            'created_on'            =>date('Y-m-d H:i:s'),
+                        );
+                       // testdata($current_stock_log);
+                        $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+                    }
+                    else{
+                       // update
+                        $current_update_stock = array(
+                            'date'                  =>$date,
+                            'product_sku_id'        =>$product_sku_id,
+                            'intrum_quantity'       =>$intrum_quantity,
+                            'unrestricted_quantity' =>$unrestricted_quantity,
+                            'batch'                 =>$batch,
+                            'batch_exp_date'        =>$batch_exp_date,
+                            'batch_mfg_date'        =>$batch_mfg_date,
+                            'country_id'            =>$country_id,
+                            'modified_by_user'      =>$user_id,
+                            'status'                =>'1',
+                            'modified_on'           =>date('Y-m-d H:i:s'),
+
+                        );
+
+                        $this->db->where('product_sku_id',$product[0]['product_sku_id']);
+                        $this->db->update('ishop_company_current_stock',$current_update_stock);
+
+                        $current_stock_log = array(
+                            'date'                  =>$date,
+                            'stock_id'              =>$product[0]['stock_id'],
+                            'product_sku_id'        =>$product_sku_id,
+                            'intransit_quantity'    =>$intrum_quantity,
+                            'unrestricted_quantity' =>$unrestricted_quantity,
+                            'batch'                 =>$batch,
+                            'batch_exp_date'        =>$batch_exp_date,
+                            'batch_mfg_date'        =>$batch_mfg_date,
+                            'country_id'            =>$country_id,
+                            'created_by_user'       =>$user_id,
+                            'modified_by_user'      =>'0',
+                            'log_date'              =>date('Y-m-d H:i:s'),
+                            'status'                =>'1',
+                            'created_on'            =>date('Y-m-d H:i:s'),
+                        );
+                        $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+                    }
+                    
+                    
+                }
+            }
         }
 
     }
@@ -1561,14 +2116,16 @@ class Ishop_model extends BF_Model
         $sql .= 'WHERE 1 ';
         $sql .= 'AND iccs.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY stock_id DESC ';
-        $info = $this->db->query($sql);
+       /* $info = $this->db->query($sql);
         $stock = $info->result_array();
-        $stock_detail = array('result'=>$stock);
+        $stock_detail = array('result'=>$stock);*/
+        $stock_detail =  $this->grid->get_result_res($sql);
          //testdata($stock_detail);
 
         if(isset($stock_detail['result']) && !empty($stock_detail['result']))
         {
             $stock_view['head'] =array('Sr. No.','Action','Date','Product SKU Name','Intransist Qty.','Unrusticted Qty.','Batch','Batch Expiry Date','Batch Mfg. Date');
+            $stock_view['count'] = count($stock_view['head']);
             $i=1;
 
             foreach($stock_detail['result'] as $sd )
@@ -1593,7 +2150,7 @@ class Ishop_model extends BF_Model
             $stock_view['no_margin'] ='is_margin';
             $stock_view['edit'] ='is_edit';
             $stock_view['delete'] ='is_delete';
-
+            $stock_view['pagination'] = $stock_detail['pagination'];
             // $product_view['pagination'] = $report_details['pagination'];
             //testdata($stock_view);
             return $stock_view;
@@ -1607,81 +2164,167 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function add_user_credit_limit_datail($user_id,$country_id)
+    public function add_user_credit_limit_datail($user_id,$country_id,$xl_data=null,$xl_flag=null)
     {
        // testdata($_POST);
-        $dist_limit = $this->input->post("dist_limit");
-        $credit_limit=$this->input->post("credit_limit");
-        $curr_outstanding=$this->input->post("curr_outstanding");
-        $curr_date=$this->input->post("curr_date");
+        if($xl_flag == null){
+            $dist_limit = $this->input->post("dist_limit");
+            $credit_limit=$this->input->post("credit_limit");
+            $curr_outstanding=$this->input->post("curr_outstanding");
+            $curr_date=$this->input->post("curr_date");
 
-        $distributor=$this->check_distributor($dist_limit);
+            $distributor=$this->check_distributor($dist_limit);
 
-       // testdata($distributor);
-        if($distributor == 0){
-            $credit_limits = array(
-                'customer_id'                  =>$dist_limit,
-                'credit_limit'                 =>$credit_limit,
-                'current_outstanding_limit'    =>$curr_outstanding,
-                'date'                         =>$curr_date,
-                'country_id'                   =>$country_id,
-                'created_by_user'              =>$user_id,
-                'modified_by_user'             =>'0',
-                'status'                       =>'1',
-                'created_on'                   =>date('Y-m-d H:i:s'),
+           // testdata($distributor);
+            if($distributor == 0){
+                $credit_limits = array(
+                    'customer_id'                  =>$dist_limit,
+                    'credit_limit'                 =>$credit_limit,
+                    'current_outstanding_limit'    =>$curr_outstanding,
+                    'date'                         =>$curr_date,
+                    'country_id'                   =>$country_id,
+                    'created_by_user'              =>$user_id,
+                    'modified_by_user'             =>'0',
+                    'status'                       =>'1',
+                    'created_on'                   =>date('Y-m-d H:i:s'),
 
-            );
-            if ($this->db->insert('ishop_credit_limit', $credit_limits)) {
-                $insert_id = $this->db->insert_id();
+                );
+                if ($this->db->insert('ishop_credit_limit', $credit_limits)) {
+                    $insert_id = $this->db->insert_id();
+                }
+                $credit_limits_log = array(
+                    'credit_limit_id'              =>$insert_id,
+                    'customer_id'                  =>$dist_limit,
+                    'credit_limit'                 =>$credit_limit,
+                    'current_outstanding_limit'    =>$curr_outstanding,
+                    'date'                         =>$curr_date,
+                    'country_id'                   =>$country_id,
+                    'created_by_user'              =>$user_id,
+                    'modified_by_user'             =>'0',
+                    'log_date'                     =>date('Y-m-d H:i:s'),
+                    'status'                       =>'1',
+                    'created_on'                   =>date('Y-m-d H:i:s'),
+                );
+                // testdata($current_stock_log);
+                $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
             }
-            $credit_limits_log = array(
-                'credit_limit_id'              =>$insert_id,
-                'customer_id'                  =>$dist_limit,
-                'credit_limit'                 =>$credit_limit,
-                'current_outstanding_limit'    =>$curr_outstanding,
-                'date'                         =>$curr_date,
-                'country_id'                   =>$country_id,
-                'created_by_user'              =>$user_id,
-                'modified_by_user'             =>'0',
-                'log_date'                     =>date('Y-m-d H:i:s'),
-                'status'                       =>'1',
-                'created_on'                   =>date('Y-m-d H:i:s'),
-            );
-            // testdata($current_stock_log);
-            $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
+            else{
+                // update
+                $credit_update_limits = array(
+                    'customer_id'                  =>$dist_limit,
+                    'credit_limit'                 =>$credit_limit,
+                    'current_outstanding_limit'    =>$curr_outstanding,
+                    'date'                         =>$curr_date,
+                    'country_id'                   =>$country_id,
+                    'modified_by_user'             =>$user_id,
+                    'status'                       =>'1',
+                    'modified_on'                  =>date('Y-m-d H:i:s'),
+
+                );
+
+                $this->db->where('customer_id',$distributor[0]['customer_id']);
+                $this->db->update('ishop_credit_limit',$credit_update_limits);
+
+                $credit_limits_log = array(
+                    'credit_limit_id'              =>$distributor[0]['credit_limit_id'],
+                    'customer_id'                  =>$dist_limit,
+                    'credit_limit'                 =>$credit_limit,
+                    'current_outstanding_limit'    =>$curr_outstanding,
+                    'date'                         =>$curr_date,
+                    'country_id'                   =>$country_id,
+                    'created_by_user'              =>$user_id,
+                    'modified_by_user'             =>'0',
+                    'log_date'                     =>date('Y-m-d H:i:s'),
+                    'status'                       =>'1',
+                    'created_on'                   =>date('Y-m-d H:i:s'),
+                );
+                $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
+            }
+
         }
         else{
-            // update
-            $credit_update_limits = array(
-                'customer_id'                  =>$dist_limit,
-                'credit_limit'                 =>$credit_limit,
-                'current_outstanding_limit'    =>$curr_outstanding,
-                'date'                         =>$curr_date,
-                'country_id'                   =>$country_id,
-                'modified_by_user'             =>$user_id,
-                'status'                       =>'1',
-                'modified_on'                  =>date('Y-m-d H:i:s'),
+            
+            if($xl_data != null){
+                
+                foreach($xl_data as $key => $value){
 
-            );
+                    $dist_limit = $value[0];
+                    $credit_limit =   $value[1];  
+                    $curr_outstanding = $value[2];
+                    $curr_date = $value[3]; 
+                    
+                    $distributor=$this->check_distributor($dist_limit);
 
-            $this->db->where('customer_id',$distributor[0]['customer_id']);
-            $this->db->update('ishop_credit_limit',$credit_update_limits);
+                   // testdata($distributor);
+                    if($distributor == 0){
+                        $credit_limits = array(
+                            'customer_id'                  =>$dist_limit,
+                            'credit_limit'                 =>$credit_limit,
+                            'current_outstanding_limit'    =>$curr_outstanding,
+                            'date'                         =>$curr_date,
+                            'country_id'                   =>$country_id,
+                            'created_by_user'              =>$user_id,
+                            'modified_by_user'             =>'0',
+                            'status'                       =>'1',
+                            'created_on'                   =>date('Y-m-d H:i:s'),
 
-            $credit_limits_log = array(
-                'credit_limit_id'              =>$distributor[0]['credit_limit_id'],
-                'customer_id'                  =>$dist_limit,
-                'credit_limit'                 =>$credit_limit,
-                'current_outstanding_limit'    =>$curr_outstanding,
-                'date'                         =>$curr_date,
-                'country_id'                   =>$country_id,
-                'created_by_user'              =>$user_id,
-                'modified_by_user'             =>'0',
-                'log_date'                     =>date('Y-m-d H:i:s'),
-                'status'                       =>'1',
-                'created_on'                   =>date('Y-m-d H:i:s'),
-            );
-            $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
+                        );
+                        if ($this->db->insert('ishop_credit_limit', $credit_limits)) {
+                            $insert_id = $this->db->insert_id();
+                        }
+                        $credit_limits_log = array(
+                            'credit_limit_id'              =>$insert_id,
+                            'customer_id'                  =>$dist_limit,
+                            'credit_limit'                 =>$credit_limit,
+                            'current_outstanding_limit'    =>$curr_outstanding,
+                            'date'                         =>$curr_date,
+                            'country_id'                   =>$country_id,
+                            'created_by_user'              =>$user_id,
+                            'modified_by_user'             =>'0',
+                            'log_date'                     =>date('Y-m-d H:i:s'),
+                            'status'                       =>'1',
+                            'created_on'                   =>date('Y-m-d H:i:s'),
+                        );
+                        // testdata($current_stock_log);
+                        $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
+                    }
+                    else{
+                        // update
+                        $credit_update_limits = array(
+                            'customer_id'                  =>$dist_limit,
+                            'credit_limit'                 =>$credit_limit,
+                            'current_outstanding_limit'    =>$curr_outstanding,
+                            'date'                         =>$curr_date,
+                            'country_id'                   =>$country_id,
+                            'modified_by_user'             =>$user_id,
+                            'status'                       =>'1',
+                            'modified_on'                  =>date('Y-m-d H:i:s'),
+
+                        );
+
+                        $this->db->where('customer_id',$distributor[0]['customer_id']);
+                        $this->db->update('ishop_credit_limit',$credit_update_limits);
+
+                        $credit_limits_log = array(
+                            'credit_limit_id'              =>$distributor[0]['credit_limit_id'],
+                            'customer_id'                  =>$dist_limit,
+                            'credit_limit'                 =>$credit_limit,
+                            'current_outstanding_limit'    =>$curr_outstanding,
+                            'date'                         =>$curr_date,
+                            'country_id'                   =>$country_id,
+                            'created_by_user'              =>$user_id,
+                            'modified_by_user'             =>'0',
+                            'log_date'                     =>date('Y-m-d H:i:s'),
+                            'status'                       =>'1',
+                            'created_on'                   =>date('Y-m-d H:i:s'),
+                        );
+                        $this->db->insert('ishop_credit_limit_log', $credit_limits_log);
+                    }
+                }
+            }
+            
         }
+        
     }
 
     /**
@@ -1721,14 +2364,18 @@ class Ishop_model extends BF_Model
         $sql .= 'WHERE 1 ';
         $sql .= 'AND icl.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY credit_limit_id DESC ';
-        $info = $this->db->query($sql);
+      /*  $info = $this->db->query($sql);
         $limit = $info->result_array();
-        $credit_limit_detail = array('result'=>$limit);
+        $credit_limit_detail = array('result'=>$limit);*/
+        $credit_limit_detail =  $this->grid->get_result_res($sql);
        // testdata($credit_limit_detail);
 
         if(isset($credit_limit_detail['result']) && !empty($credit_limit_detail['result']))
         {
             $credit_limit_view['head'] =array('Sr. No.','Distributor','Credit Limit','Current Outstanding','Date');
+
+            $credit_limit_view['count'] = count($credit_limit_view['head']);
+
             $i=1;
 
             foreach($credit_limit_detail['result'] as $cld )
@@ -1740,7 +2387,7 @@ class Ishop_model extends BF_Model
             $credit_limit_view['action'] ='';
             $credit_limit_view['no_margin'] ='';
             $credit_limit_view['no_margin'] ='is_margin';
-            // $product_view['pagination'] = $report_details['pagination'];
+            $credit_limit_view['pagination'] = $credit_limit_detail['pagination'];
             return $credit_limit_view;
         }
     }
@@ -1901,13 +2548,16 @@ class Ishop_model extends BF_Model
             $sql .= ' GROUP BY isa.allocation_id ';
         }
        // echo $sql;die;
-        $info = $this->db->query($sql);
+      /*  $info = $this->db->query($sql);
         $limit = $info->result_array();
-        $scheme_allocation = array('result'=>$limit);
+        $scheme_allocation = array('result'=>$limit);*/
        // testdata($scheme_allocation);
+        $scheme_allocation =  $this->grid->get_result_res($sql);
         if(isset($scheme_allocation['result']) && !empty($scheme_allocation['result'])) {
             $scheme_allocation_view=array();
+
             if($login_user==7){
+                $scheme_allocation_view['count'] = '14';
                 $i = 1;
                 foreach ($scheme_allocation['result'] as $sd) {
                     $scheme_allocation_view['row'][] = array($i,$sd['allocation_id'], $sd['business_georaphy_name_parent'], $sd['business_georaphy_code'], $sd['business_georaphy_name'], $sd['user_code'], $sd['display_name'], $sd['scheme_code'], $sd['scheme_name'], $sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$sd['value_per_kg']);
@@ -1917,6 +2567,7 @@ class Ishop_model extends BF_Model
             elseif($login_user==8){
 
                 $scheme_allocation_view['head'] =array('Sr. No.','Retailer Name','Retailer Code','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr','Actual Sales');
+                $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
                 $i=1;
                 foreach($scheme_allocation['result'] as $sd )
                 {
@@ -1937,6 +2588,7 @@ class Ishop_model extends BF_Model
             elseif($login_user==10){
 
                 $scheme_allocation_view['head'] =array('Sr. No.','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr');
+                $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
                 $i=1;
                 foreach($scheme_allocation['result'] as $sd )
                 {
@@ -1948,7 +2600,8 @@ class Ishop_model extends BF_Model
                 $scheme_allocation_view['no_margin'] ='';
 
             }
-            // $product_view['pagination'] = $report_details['pagination'];
+
+            $scheme_allocation_view['pagination'] = $scheme_allocation['pagination'];
 
             return $scheme_allocation_view;
         }
@@ -2081,16 +2734,17 @@ class Ishop_model extends BF_Model
         $sql .=  " AND ips.invoice_recived_status= 0 ";
         $sql .=  " AND ips.status = 1 ";
       //  echo $sql;
-        $info = $this->db->query($sql);
+      /*  $info = $this->db->query($sql);
         $limit = $info->result_array();
-        $invoice_confirmation = array('result'=>$limit);
+        $invoice_confirmation = array('result'=>$limit);*/
+        $invoice_confirmation =  $this->grid->get_result_res($sql);
        // testdata($invoice_confirmation);
 
         if(isset($invoice_confirmation['result']) && !empty($invoice_confirmation['result']))
         {
             $i=1;
             $invoice_confirmation_view['head'] =array('Sr. No.','View','PO No.','OTN','Invoice No.','Invoice Value','Received');
-
+            $invoice_confirmation_view['count'] = count($invoice_confirmation_view['head']);
             foreach($invoice_confirmation['result'] as $ic )
             {
                 if($ic['invoice_recived_status']== '0')
@@ -2109,7 +2763,7 @@ class Ishop_model extends BF_Model
             $invoice_confirmation_view['action'] ='is_action';
             $invoice_confirmation_view['radio'] ='';
             $invoice_confirmation_view['no_margin'] ='';
-            // $product_view['pagination'] = $report_details['pagination'];
+            $invoice_confirmation_view['pagination'] = $invoice_confirmation['pagination'];
             return $invoice_confirmation_view;
 
         }
@@ -2915,7 +3569,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
 
             $order_data = $this->db->get()->result_array();
             
-          //  echo $this->db->last_query();die;
+             //$sql= $this->db->last_query();
             
             $orderdata = array('result'=>$order_data);
        // var_dump($product_detail);die;

@@ -152,6 +152,9 @@ $(document).on('submit', '#upload_current_stock_data', function (e) {
         {
             
             console.log(data);
+            
+            
+            
              $.each( data, function( key, value ) {
                  
                  //alert(key+"==="+ value);
@@ -274,6 +277,7 @@ $(document).on('submit', '#upload_current_stock_data', function (e) {
                                         data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs 
                                         success: function(data)   // A function to be called if request succeeds
                                         {
+                                            //return false;
                                             console.log(data)
                                             //file_name = data;
                                         }

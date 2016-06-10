@@ -119,6 +119,8 @@ function get_data_conversion(sku_id,quantity,units){
 
 }
 
+
+
 $("body").on("change","select.select_unitdata",function(){
 
     var selected_row_id = $(this).parent().parent().attr("id");
