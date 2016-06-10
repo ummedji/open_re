@@ -187,20 +187,11 @@ class Web_service extends Front_Controller
      * */
     public function get_global_info()
     {
-        /*$this->form_validation->set_rules('user_id', 'user_id', 'required');
-        $this->form_validation->set_rules('country_id', 'country_id', 'required');
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
 
-        if ($this->form_validation->run() == FALSE)
+        if(isset($user_id) && isset($country_id))
         {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        else
-        {*/
-            $user_id = $this->input->get_post('user_id');
-            $country_id = $this->input->get_post('country_id');
-
-        if(isset($user_id) && isset($country_id)) {
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
 
@@ -220,7 +211,11 @@ class Web_service extends Front_Controller
             $result['message'] = 'Success';
             $result['data'] = $data;
         }
-       // }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
         $this->do_json($result);
     }
 
@@ -231,27 +226,11 @@ class Web_service extends Front_Controller
      * */
     public function savePrimarySales()
     {
-        $this->form_validation->set_rules('customer_id', 'customer_id', 'required');
-        $this->form_validation->set_rules('invoice_no', 'invoice_no', 'required');
-        $this->form_validation->set_rules('invoice_date', 'invoice_date', 'required');
-        $this->form_validation->set_rules('order_tracking_no', 'order_tracking_no', 'required');
-        $this->form_validation->set_rules('PO_no', 'PO_no', 'required');
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
 
-        $this->form_validation->set_rules('product_sku_id', 'product_sku_id', 'required');
-        $this->form_validation->set_rules('quantity', 'quantity', 'required');
-        $this->form_validation->set_rules('dispatched_quantity', 'dispatched_quantity', 'required');
-        $this->form_validation->set_rules('amount', 'amount', 'required');
-
-        if ($this->form_validation->run() == FALSE)
+        if(isset($user_id))
         {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required."/*strip_tags(trim(validation_errors()))*/;
-        }
-        else
-        {
-            $user_id = $this->input->get_post('customer_id');
-            $country_id = $this->input->get_post('country_id');
-
             $id = $this->ishop_model->add_primary_sales_details($user_id,$country_id,'web_service');
             if($id)
             {
@@ -264,6 +243,11 @@ class Web_service extends Front_Controller
                 $result['message'] = 'Fail';
             }
         }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
         $this->do_json($result);
     }
 
@@ -274,15 +258,9 @@ class Web_service extends Front_Controller
      * */
     public function getPrimarySalesInvoices()
     {
-        $this->form_validation->set_rules('form_date', 'form_date', 'required');
-        $this->form_validation->set_rules('to_date', 'to_date', 'required');
+        $user_id = $this->input->get_post('user_id');
 
-        if ($this->form_validation->run() == FALSE)
-        {
-            $result['status'] = false;
-            $result['message'] = "Fields are Required."/*strip_tags(trim(validation_errors()))*/;
-        }
-        else
+        if(isset($user_id))
         {
             $form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
             $to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
@@ -302,6 +280,11 @@ class Web_service extends Front_Controller
                 $result['message'] = 'No Records Found.';
             }
         }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
         $this->do_json($result);
     }
 
@@ -312,14 +295,9 @@ class Web_service extends Front_Controller
      * */
     public function getPrimarySalesProductDetails()
     {
-        $this->form_validation->set_rules('primary_sales_id', 'primary_sales_id', 'required');
+        $user_id = $this->input->get_post('user_id');
 
-        if ($this->form_validation->run() == FALSE)
-        {
-            $result['status'] = false;
-            $result['message'] = "Fields are Required."/*strip_tags(trim(validation_errors()))*/;
-        }
-        else
+        if(isset($user_id))
         {
             $primary_sales_id = (isset($_POST['primary_sales_id']) ? $_POST['primary_sales_id'] : '');
 
@@ -335,6 +313,11 @@ class Web_service extends Front_Controller
                 $result['status'] = false;
                 $result['message'] = 'No Records Found.';
             }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
         }
         $this->do_json($result);
     }

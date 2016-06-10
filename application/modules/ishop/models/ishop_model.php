@@ -67,7 +67,6 @@ class Ishop_model extends BF_Model
 
     public function add_primary_sales_details($user_id,$country_id,$web_service = null)
     {
-        $customer_id = $this->input->post("customer_id");
         $invoice_no = $this->input->post("invoice_no");
         $invoice_date = $this->input->post("invoice_date");
         $order_tracking_no = $this->input->post("order_tracking_no");
@@ -75,6 +74,7 @@ class Ishop_model extends BF_Model
 
         if(!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
         {
+            $customer_id = $this->input->post("distributor_id");
             $product_sku_id = explode(',',$this->input->post("product_sku_id"));
             $quantity = explode(',',$this->input->post("quantity"));
             $dispatched_quantity = explode(',',$this->input->post("dispatched_quantity"));
@@ -82,6 +82,7 @@ class Ishop_model extends BF_Model
         }
         else
         {
+            $customer_id = $this->input->post("customer_id");
             $product_sku_id = $this->input->post("product_sku_id");
             $quantity = $this->input->post("quantity");
             $dispatched_quantity = $this->input->post("dispatched_quantity");
