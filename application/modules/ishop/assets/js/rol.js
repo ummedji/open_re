@@ -125,7 +125,7 @@ function get_user_by_geo_data(selected_geo_data){
 
                     $("select#distributor_rol").empty();
 
-                    $("select#distributor_rol").append('<option value="0">Select Distributor Name</option>');
+                    $("select#distributor_rol").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function (key, value) {
                         $('select#distributor_rol').append('<option value="' + value.id + '" attr-dstcode ="'+value.user_code+'" attr-dstname = "'+value.display_name+'">' + value.display_name + '</option>');
@@ -136,7 +136,7 @@ function get_user_by_geo_data(selected_geo_data){
 
                     $("select#retailer_rol").empty();
 
-                    $("select#retailer_rol").append('<option value="0">Select Retailer Name</option>');
+                    $("select#retailer_rol").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function (key, value) {
                         $('select#retailer_rol').append('<option value="' + value.id + '" >' + value.display_name + '</option>');
@@ -178,7 +178,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                 if(resp.length > 0){
 
-                    $("div#distributor_check_rol select.distributor_geo_level").append('<option value="0">Select Geo Location</option>');
+                    $("div#distributor_check_rol select.distributor_geo_level").append('<option value="">Select Geo Location</option>');
 
                     $.each(resp, function(key, value) {
                         $('div#distributor_check_rol select.distributor_geo_level').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
@@ -198,7 +198,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                 if(resp.length > 0){
 
-                    $("div#retailer_check_rol select.geo_level_rol").append('<option value="0">Select Geo Location</option>');
+                    $("div#retailer_check_rol select.geo_level_rol").append('<option value="">Select Geo Location</option>');
 
                     $.each(resp, function(key, value) {
                         $('div#retailer_check_rol select.geo_level_rol').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
@@ -242,7 +242,7 @@ function get_lower_geo_by_parent_geo_rol(selected_geo_id){
 
                     if (resp.length > 0) {
 
-                        $("div#retailer_check_rol select#geo_level_1").append('<option value="0">Select Geo Location</option>');
+                        $("div#retailer_check_rol select#geo_level_1").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function (key, value) {
 
@@ -262,7 +262,7 @@ function get_lower_geo_by_parent_geo_rol(selected_geo_id){
 
                     if (resp.length > 0) {
 
-                        $("div#distributor_check_rol select#distributor_geo_level").append('<option value="0">Select Geo Location</option>');
+                        $("div#distributor_check_rol select#distributor_geo_level").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function (key, value) {
 
@@ -374,42 +374,32 @@ $(document).on('click', 'div.rol_del', function () {
 });
 
 // START ::: Added By Vishal Malaviya For Validation
-var primary_sales_validators = $("#primary_sales").validate({
-    ignore: ".ignore",
+var rol_validators = $("#rol_limit").validate({
     rules: {
-        customer_id:{
+        geo_level_rol:{
             required: true
         },
-        invoice_no:{
+        geo_level_1:{
             required: true
         },
-        invoice_date:{
+        fo_retailer_id:{
+            required: true
+        },
+        distributor_geo_level:{
+            required: true
+        },
+        distributor_rol:{
             required: true
         },
         prod_sku:{
             required: true
         },
-        dispatched_qty:{
+        unit:{
             required: true
         },
-        amt:{
+        rol_qty:{
             required: true
         }
-    }
-});
-$("#add_row").click(function() {
-    $('#prod_sku').removeClass('ignore');
-    $('#dispatched_qty').removeClass('ignore');
-    $('#amt').removeClass('ignore');
-
-    var $valid = $("#primary_sales").valid();
-    if(!$valid) {
-        primary_sales_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        add_row();
     }
 });
 // END ::: Added By Vishal Malaviya For Validation
@@ -418,15 +408,25 @@ $("#rol_limit").on("submit",function(){
 
     var param = $("#rol_limit").serializeArray();
     console.log(param);
+
+    var $valid = $("#rol_limit").valid();
+    if(!$valid) {
+        rol_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/add_rol_details",
+            data: param,
+            //dataType : 'json',
+            success: function(resp){
+            }
+        });
+    }
    // return false;
-   $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/add_rol_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-        }
-    });
+
    //  return false;
 });
 

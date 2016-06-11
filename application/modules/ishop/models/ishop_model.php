@@ -1413,160 +1413,329 @@ class Ishop_model extends BF_Model
      * */
 
 
-    public function add_physical_stock_detail($user_id,$country_id)
+    public function add_physical_stock_detail($user_id,$country_id,$user_role,$xl_data=null,$xl_flag=null)
     {
+        if($xl_flag == null) {
 
-        $stock_month = $this->input->post("stock_month");
-        $prod_sku = $this->input->post("phy_prod_sku");
-        $unit = $this->input->post("sec_sel_unit");
-        $rol_qty = $this->input->post("phy_qty");
-        $retailer_id=$this->input->post("fo_retailer_id");
-        $distributor_id=$this->input->post("distributor_phystok");
+            $stock_month = $this->input->post("stock_month");
+            $prod_sku = $this->input->post("phy_prod_sku");
+            $unit = $this->input->post("sec_sel_unit");
+            $rol_qty = $this->input->post("phy_qty");
+            $retailer_id=$this->input->post("fo_retailer_id");
+            $distributor_id=$this->input->post("distributor_phystok");
 
-        $qty_kgl= $this->get_product_conversion_data($prod_sku,$rol_qty,$unit);
+            $qty_kgl= $this->get_product_conversion_data($prod_sku,$rol_qty,$unit);
 
-        $login_customer_role = $this->input->post("login_customer_role");
+            $login_customer_role = $this->input->post("login_customer_role");
 
-        if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
-        {
-            $cust_id=$retailer_id;
-        }
-        elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
-        {
-            $cust_id=$distributor_id;
+            if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
+            {
+                $cust_id=$retailer_id;
+            }
+            elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
+            {
+                $cust_id=$distributor_id;
+            }
+            else{
+                $cust_id=$user_id;
+            }
+
+            $product=$this->check_products_phy_stock($stock_month,$prod_sku,$unit,$cust_id);
+
+            if(isset($product) && !empty($product) && $product !=0)
+            {
+                if($login_customer_role == 8)
+                {
+                    if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
+                    {
+                        $customers_id=$retailer_id;
+                    }
+                    elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
+                    {
+                        $customers_id=$distributor_id;
+                    }
+                    $physical_stock_update_data = array(
+                        'stock_month' => $stock_month.'-01',
+                        'customer_id' => $customers_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                        'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                        'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
+
+                }
+                if($login_customer_role == 9)
+                {
+
+                    $physical_stock_update_data = array(
+                        'stock_month' => $stock_month.'-01',
+                        'customer_id' => $user_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                        'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                        'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
+                }
+                if($login_customer_role == 10)
+                {
+                    $physical_stock_update_data = array(
+                        'stock_month' => $stock_month.'-01',
+                        'customer_id' => $user_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                        'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                        'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
+                }
+                $this->db->where('stock_id',$product[0]['stock_id']);
+                $this->db->update('ishop_physical_stock', $physical_stock_update_data);
+            }
+            else{
+                if($login_customer_role == 8)
+                {
+                    if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
+                    {
+                        $customers_id=$retailer_id;
+                    }
+                    elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
+                    {
+                        $customers_id=$distributor_id;
+                    }
+
+                    $physical_stock_data = array(
+                        'stock_month' => $stock_month.'-01',
+                        'customer_id' => $customers_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                        'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                        'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                        'created_by_user' => $user_id,
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'created_on' => date('Y-m-d H:i:s'),
+                        'modified_on' => date('Y-m-d H:i:s'),
+                    );
+
+                }
+                if($login_customer_role == 9)
+                {
+
+                    $physical_stock_data = array(
+                        'stock_month' => $stock_month.'-01',
+                        'customer_id' => $user_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                        'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                        'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                        'created_by_user' => $user_id,
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'created_on' => date('Y-m-d H:i:s'),
+                        'modified_on' => date('Y-m-d H:i:s'),
+                    );
+                }
+                if($login_customer_role == 10)
+                {
+                    $physical_stock_data = array(
+                        'stock_month' => $stock_month.'-01',
+                        'customer_id' => $user_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                        'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                        'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                        'created_by_user' => $user_id,
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'created_on' => date('Y-m-d H:i:s'),
+                        'modified_on' => date('Y-m-d H:i:s'),
+                    );
+                }
+
+                $this->db->insert('ishop_physical_stock', $physical_stock_data);
+            }
         }
         else{
-            $cust_id=$user_id;
+            if($xl_data !='')
+            {
+                foreach ($xl_data as $key => $value) {
+                    $stock_month = $value[0];
+                    $prod_sku = $value[1];
+                    $qty =  $value[2];
+                    $unit =  $value[3];
+
+                    $stock_month= strtotime($stock_month);
+                    $stock_month= date('Y-m',$stock_month);
+
+                   /* dumpme($stock_month);
+                    dumpme($prod_sku);
+                    dumpme($qty);
+                    testdata($unit);*/
+
+                    $qty_kgl= $this->get_product_conversion_data($prod_sku,$qty,$unit);
+
+                    $login_customer_role = $user_role;
+
+                   /* if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
+                    {
+                        $cust_id=$retailer_id;
+                    }
+                    elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
+                    {
+                        $cust_id=$distributor_id;
+                    }
+                    else{
+                        $cust_id=$user_id;
+                    }*/
+                    $cust_id=$user_id;
+
+                    $product=$this->check_products_phy_stock($stock_month,$prod_sku,$unit,$cust_id);
+
+                    if(isset($product) && !empty($product) && $product !=0)
+                    {
+                      /*  if($login_customer_role == 8)
+                        {
+                            if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
+                            {
+                                $customers_id=$retailer_id;
+                            }
+                            elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
+                            {
+                                $customers_id=$distributor_id;
+                            }
+                            $physical_stock_update_data = array(
+                                'stock_month' => $stock_month.'-01',
+                                'customer_id' => $customers_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'modified_on' => date('Y-m-d H:i:s')
+                            );
+
+                        }*/
+                        if($login_customer_role == 9)
+                        {
+
+                            $physical_stock_update_data = array(
+                                'stock_month' => $stock_month.'-01',
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'modified_on' => date('Y-m-d H:i:s')
+                            );
+                        }
+                        if($login_customer_role == 10)
+                        {
+                            $physical_stock_update_data = array(
+                                'stock_month' => $stock_month.'-01',
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'modified_on' => date('Y-m-d H:i:s')
+                            );
+                        }
+                        $this->db->where('stock_id',$product[0]['stock_id']);
+                        $this->db->update('ishop_physical_stock', $physical_stock_update_data);
+                    }
+                    else{
+                       // var_dump('in');die;
+                        /*if($login_customer_role == 8)
+                        {
+                            if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
+                            {
+                                $customers_id=$retailer_id;
+                            }
+                            elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
+                            {
+                                $customers_id=$distributor_id;
+                            }
+
+                            $physical_stock_data = array(
+                                'stock_month' => $stock_month.'-01',
+                                'customer_id' => $customers_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'created_by_user' => $user_id,
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'created_on' => date('Y-m-d H:i:s'),
+                                'modified_on' => date('Y-m-d H:i:s'),
+                            );
+
+                        }*/
+                        if($login_customer_role == 9)
+                        {
+
+                            $physical_stock_data = array(
+                                'stock_month' => $stock_month.'-01',
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : '',
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'created_by_user' => $user_id,
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'created_on' => date('Y-m-d H:i:s'),
+                                'modified_on' => date('Y-m-d H:i:s'),
+                            );
+                        }
+                        if($login_customer_role == 10)
+                        {
+                            $physical_stock_data = array(
+                                'stock_month' => $stock_month.'-01',
+                                'customer_id' => $user_id,
+                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
+                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : '',
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'created_by_user' => $user_id,
+                                'modified_by_user' => $user_id,
+                                'country_id' => $country_id,
+                                'status' => '1',
+                                'created_on' => date('Y-m-d H:i:s'),
+                                'modified_on' => date('Y-m-d H:i:s'),
+                            );
+                        }
+
+                        $this->db->insert('ishop_physical_stock', $physical_stock_data);
+                    }
+                }
+            }
         }
 
-        $product=$this->check_products_phy_stock($stock_month,$prod_sku,$unit,$cust_id);
-
-        if(isset($product) && !empty($product) && $product !=0)
-        {
-            if($login_customer_role == 8)
-            {
-                if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
-                {
-                    $customers_id=$retailer_id;
-                }
-                elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
-                {
-                    $customers_id=$distributor_id;
-                }
-                $physical_stock_update_data = array(
-                    'stock_month' => $stock_month.'-01',
-                    'customer_id' => $customers_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
-                );
-
-            }
-            if($login_customer_role == 9)
-            {
-
-                $physical_stock_update_data = array(
-                    'stock_month' => $stock_month.'-01',
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
-                );
-            }
-            if($login_customer_role == 10)
-            {
-                $physical_stock_update_data = array(
-                    'stock_month' => $stock_month.'-01',
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
-                );
-            }
-            $this->db->where('stock_id',$product[0]['stock_id']);
-            $this->db->update('ishop_physical_stock', $physical_stock_update_data);
-        }
-        else{
-            if($login_customer_role == 8)
-            {
-                if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
-                {
-                    $customers_id=$retailer_id;
-                }
-                elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
-                {
-                    $customers_id=$distributor_id;
-                }
-
-                $physical_stock_data = array(
-                    'stock_month' => $stock_month.'-01',
-                    'customer_id' => $customers_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'created_by_user' => $user_id,
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s'),
-                    'modified_on' => date('Y-m-d H:i:s'),
-                );
-
-            }
-            if($login_customer_role == 9)
-            {
-
-                $physical_stock_data = array(
-                    'stock_month' => $stock_month.'-01',
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'created_by_user' => $user_id,
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s'),
-                    'modified_on' => date('Y-m-d H:i:s'),
-                );
-            }
-            if($login_customer_role == 10)
-            {
-                $physical_stock_data = array(
-                    'stock_month' => $stock_month.'-01',
-                    'customer_id' => $user_id,
-                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                    'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                    'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                    'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                    'created_by_user' => $user_id,
-                    'modified_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s'),
-                    'modified_on' => date('Y-m-d H:i:s'),
-                );
-            }
-
-            $this->db->insert('ishop_physical_stock', $physical_stock_data);
-        }
 
     }
 
@@ -5037,6 +5206,32 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
         
     }
+
+    public function check_product_data_exist($month,$product_data,$user_id,$unit)
+    {
+        $month=strtotime($month);
+        $month=date('Y-m',$month);
+      /*  dumpme($month);
+        dumpme($product_data);
+        testdata($user_id);*/
+
+        $this->db->select('*');
+        $this->db->from('ishop_physical_stock');
+        $this->db->where('DATE_FORMAT(stock_month,"%Y-%m")',$month);
+        $this->db->where('product_sku_id',$product_data);
+        $this->db->where('customer_id',$user_id);
+        $this->db->where('unit',$unit);
+        $phy_data = $this->db->get()->result_array();
+       // echo $this->db->last_query();
+     //   testdata($phy_data);
+        if(isset($phy_data) && !empty($phy_data)) {
+            return 1;
+        } else{
+            return 0;
+        }
+
+    }
+
     
     
   }

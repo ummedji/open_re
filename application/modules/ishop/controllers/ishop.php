@@ -2305,7 +2305,7 @@ class Ishop extends Front_Controller
         
         public function upload_data() {
             
-           // testdata($_POST);
+         //   testdata($_POST);
             
             $user= $this->auth->user();
             $logined_user_type = $user->role_id;
@@ -2381,6 +2381,17 @@ class Ishop extends Front_Controller
 					elseif($filename[0] == "primarysales"){
 
 						if($column == 'D' && $row != 1 && $data_value != ""){
+
+							$phpexcepDate = $data_value-25569; //to offset to Unix epoch
+							$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
+							$data_value = date("Y-m-d",$data_value);
+
+						}
+
+					}
+					elseif($filename[0] == "physicalstock"){
+
+						if($column == 'A' && $row != 1 && $data_value != ""){
 
 							$phpexcepDate = $data_value-25569; //to offset to Unix epoch
 							$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
@@ -3340,6 +3351,106 @@ class Ishop extends Front_Controller
                             
                         }
                    }
+				  elseif($filename[0] == "physicalstock")
+				  {
+
+					  if(!isset($data["A"])){
+						  $month = "";
+					  }
+					  else{
+						  $month = $data["A"];
+					  }
+
+					  if(!isset($data["B"])){
+						  $product_code = "";
+					  }
+					  else{
+						  $product_code = $data["B"];
+					  }
+					  if(!isset($data["C"])){
+						  $product_name = "";
+					  }
+					  else{
+						  $product_name = $data["C"];
+					  }
+
+					  if(!isset($data["D"])){
+						  $qty = "";
+					  }
+					  else{
+						  $qty = $data["D"];
+					  }
+					  if(!isset($data["E"])){
+						  $unit = "";
+					  }
+					  else{
+						  $unit = $data["E"];
+					  }
+
+
+					  if($month == "" || $product_code =="" || $product_name == "" || $qty == "" || $unit =="")
+					  {
+						  //CHECK DATA BLANK
+
+						  if(!isset($error_array["error"]["header"])){
+							  $error_array["error"]["header"] = $header;
+						  }
+
+						  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~"."Some row data blank";
+					  }
+					  else
+					  {
+
+						  //CHECK PROPER DATA
+
+						  //PRODUCT CHECK
+
+						  $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
+
+						//  testdata($product_data);
+						  if($product_data != 0)
+						  {
+							  //ADD DATA TO DATA ARRAY
+
+							  $product_sku_exist = $this->ishop_model->check_product_data_exist($month,$product_data,$user->id,$unit);
+
+
+							  if($product_sku_exist == 1){
+
+								  $error_message = "";
+								  if($product_sku_exist == 1) {
+									  $error_message = "Product SKU  already exist in DB for This Month";
+								  }
+
+								  if(!isset($error_array["error"]["header"])){
+									  $error_array["error"]["header"] = $header;
+								  }
+
+								  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~".$error_message;
+							  }
+							  else{
+
+								  $inner_array[] = $month;
+								  $inner_array[] = $product_data;
+								  $inner_array[] = $qty;
+								  $inner_array[] = $unit;
+
+								  $final_array["success"][] = $inner_array;
+
+							  }
+
+						  }
+						  else{
+							  //testdata('in');
+
+							  if(!isset($error_array["error"]["header"])){
+								  $error_array["error"]["header"] = $header;
+							  }
+							  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~"."Excel Product data not matched with DB data";
+						  }
+
+					  }
+				  }
                    
                 }
             }
@@ -3454,6 +3565,12 @@ class Ishop extends Front_Controller
                                                 $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
                                         }
                                 }
+								elseif($_POST["dirname"] == "physical_stock"){
+									if($j == 0 && ($row_data[$j] != "")){
+										$date_data = explode("-",$row_data[$j]);
+										$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+									}
+								}
                                 
 
                                 
@@ -3534,6 +3651,10 @@ class Ishop extends Front_Controller
 			elseif($_POST["dirname"] == "primary_sales"){
 
 				$primary_sales = $this->ishop_model->add_primary_sales_details($user_id,$country_id,$web_service = null,$_POST["val"],'excel');
+			}
+			elseif($_POST["dirname"] == "physical_stock"){
+
+				$primary_sales = $this->ishop_model->add_physical_stock_detail($user_id,$country_id,$user->role_id,$_POST["val"],'excel');
 			}
             
             

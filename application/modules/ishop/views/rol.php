@@ -33,7 +33,7 @@ echo form_open('',$attributes); ?>
                                     <div class="form-group">
                                         <label>Geo Level 3</label>
                                         <select class="selectpicker" name="geo_level_rol" id="geo_level_rol">
-                                            <option>Select Geo Location</option>
+                                            <option value="">Select Geo Location</option>
                                             <?php
                                             if(isset($geo_data) && !empty($geo_data))
                                             {
@@ -52,7 +52,7 @@ echo form_open('',$attributes); ?>
                                     <div class="form-group">
                                         <label>Geo Level 2</label>
                                         <select class="selectpicker" name="geo_level_1" id="geo_level_1">
-                                            <option>Select Geo Location</option>
+                                            <option value="">Select Geo Location</option>
                                         </select>
                                     </div>
                                 </div>
@@ -60,7 +60,7 @@ echo form_open('',$attributes); ?>
                                     <div class="form-group">
                                         <label>Retailer Name</label>
                                         <select class="selectpicker" name="fo_retailer_id" id="retailer_rol">
-                                            <option value="0">Select Retailer</option>
+                                            <option value="">Select Retailer</option>
                                         </select>
                                     </div>
                                 </div>
@@ -114,7 +114,7 @@ echo form_open('',$attributes); ?>
                         <div class="form-group">
                             <label>Product SKU Name</label>
                             <select class="selectpicker" name="prod_sku" id="prod_sku" data-live-search="true" >
-                                <option value="0">Product Name</option>
+                                <option value="">Product Name</option>
                                 <?php
                                 if(isset($product_sku) && !empty($product_sku))
                                 {
@@ -133,7 +133,7 @@ echo form_open('',$attributes); ?>
                         <div class="form-group">
                             <label>Units</label>
                             <select class="selectpicker" name="unit" id="unit_id">
-                                <option value="0">Units</option>
+                                <option value="">Units</option>
                                 <option value="box">Box</option>
                                 <option value="packages">Packages</option>
                                 <option value="kg/ltr">Kg/Ltr</option>
@@ -145,6 +145,7 @@ echo form_open('',$attributes); ?>
                             <label for="po_qty">ROL Quantity</label>
                             <input type="text" class="form-control" name="rol_qty" id="rol_qty" placeholder="">
                         </div>
+                        <label id="rol_qty-error" class="error" for="rol_qty"></label>
                     </div>
                     <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>
                 </div>

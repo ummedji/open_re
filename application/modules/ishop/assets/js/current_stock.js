@@ -20,24 +20,58 @@ $(function () {
     });
 });
 
-
+// START ::: Added By Vishal Malaviya For Validation
+var current_stock_validators = $("#add_company_current_stock").validate({
+    rules: {
+        current_date:{
+            required: true
+        },
+        product_sku:{
+            required: true
+        },
+        intransist_qty:{
+            required: true
+        },
+        unrusticted_qty:{
+            required: true
+        },
+        batch:{
+            required: true
+        },
+        batch_expiry_date:{
+            required: true
+        },
+        batch_mfg_date:{
+            required: true
+        }
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
 
 $("#add_company_current_stock").on("submit",function(){
     //alert('in');
     var param = $("#add_company_current_stock").serializeArray();
   // console.log(param);
 
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/add_company_current_stock_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-            if(resp==1){
-                // site_url+"ishop/physical_stock";
+    var $valid = $("#add_company_current_stock").valid();
+    if(!$valid) {
+        current_stock_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ishop/add_company_current_stock_details",
+            data: param,
+            //dataType : 'json',
+            success: function (resp) {
+                if (resp == 1) {
+                    // site_url+"ishop/physical_stock";
+                }
             }
-        }
-    });
+        });
+    }
 
 });
 

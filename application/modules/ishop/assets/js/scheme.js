@@ -36,7 +36,7 @@ function get_lower_geo_by_parent_geo_scheme(selected_geo_id){
 
                 if (resp.length > 0) {
 
-                    $("select#geo_level_1").append('<option value="0">Select Geo Location</option>');
+                    $("select#geo_level_1").append('<option value="">Select Geo Location</option>');
 
                     $.each(resp, function (key, value) {
 
@@ -74,7 +74,7 @@ function get_retailer_by_geo_data(selected_geo_data){
 
                     $("select#retailer_scheme").empty();
 
-                    $("select#retailer_scheme").append('<option value="0">Select Retailer Name</option>');
+                    $("select#retailer_scheme").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function (key, value) {
                         $('select#retailer_scheme').append('<option value="' + value.id + '" >' + value.display_name + '</option>');
@@ -108,23 +108,56 @@ function get_slab_by_selected_schemes(selected_schemes)
     });
 }
 
+// START ::: Added By Vishal Malaviya For Validation
+var schemes_validators = $("#add_schemes").validate({
+    rules: {
+        cur_year:{
+            required: true
+        },
+        region:{
+            required: true
+        },
+        territory:{
+            required: true
+        },
+        fo_retailer_id:{
+            required: true
+        },
+        schemes:{
+            required: true
+        },
+        radio_scheme_slab:{
+            required: true
+        }
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
 
 $("#add_schemes").on("submit",function(){
     //alert('in');
     var param = $("#add_schemes").serializeArray();
         //console.log(param);
    // return false;
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/add_schemes_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-            if(resp==1){
-                // site_url+"ishop/physical_stock";
+
+    var $valid = $("#add_schemes").valid();
+    if(!$valid) {
+        schemes_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ishop/add_schemes_details",
+            data: param,
+            //dataType : 'json',
+            success: function (resp) {
+                if (resp == 1) {
+                    // site_url+"ishop/physical_stock";
+                }
             }
-        }
-    });
+        });
+    }
    //
 });
 
@@ -153,7 +186,7 @@ function get_schemes_by_selected_cur_year(selected_cur_year){
 
                 $("select#schemes").empty();
 
-                $("select#schemes").append('<option value="0">Select Schemes </option>');
+                $("select#schemes").append('<option value="">Select Schemes </option>');
 
                 $.each(resp, function (key, value) {
                     $('select#schemes').append('<option value="' + value.scheme_id + '" >' + value.scheme_name + '</option>');
@@ -163,7 +196,7 @@ function get_schemes_by_selected_cur_year(selected_cur_year){
             }
             else{
                 $("select#schemes").empty();
-                $("select#schemes").append('<option value="0">Select Schemes </option>');
+                $("select#schemes").append('<option value="">Select Schemes </option>');
                 $("select#schemes").selectpicker('refresh');
             }
         }
@@ -185,7 +218,7 @@ function get_region_by_selected_cur_year(selected_cur_year){
 
                 $("select#geo_level_rol").empty();
 
-                $("select#geo_level_rol").append('<option value="0">Select Geo Location </option>');
+                $("select#geo_level_rol").append('<option value="">Select Geo Location </option>');
 
                 $.each(resp, function (key, value) {
                     $('select#geo_level_rol').append('<option value="' + value.business_geo_id + '" >' + value.business_georaphy_name + '</option>');
@@ -195,7 +228,7 @@ function get_region_by_selected_cur_year(selected_cur_year){
             }
             else{
                 $("select#geo_level_rol").empty();
-                $("select#geo_level_rol").append('<option value="0">Select Geo Location </option>');
+                $("select#geo_level_rol").append('<option value="">Select Geo Location </option>');
                 $("select#geo_level_rol").selectpicker('refresh');
             }
         }

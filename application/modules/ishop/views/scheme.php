@@ -27,7 +27,7 @@ echo form_open('',$attributes); ?>
                         <div class="form-group">
                             <label>Geo Level 3</label>
                             <select class="selectpicker" name="region" id="geo_level_rol">
-                                <option value="0">Select Geo Location</option>
+                                <option value="">Select Geo Location</option>
                             </select>
                         </div>
                     </div>
@@ -35,7 +35,7 @@ echo form_open('',$attributes); ?>
                         <div class="form-group">
                             <label>Geo Level 2</label>
                             <select class="selectpicker" name="territory" id="geo_level_1">
-                                <option value="0">Select Geo Location</option>
+                                <option value="">Select Geo Location</option>
                             </select>
                         </div>
                     </div>
@@ -59,7 +59,7 @@ echo form_open('',$attributes); ?>
                     <div class="form-group">
                         <label>Retailer Name</label>
                         <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme">
-                            <option value="0">Select Retailer</option>
+                            <option value="">Select Retailer</option>
                         </select>
                     </div>
                 </div>
@@ -67,7 +67,7 @@ echo form_open('',$attributes); ?>
                     <div class="form-group">
                         <label>Schemes</label>
                         <select class="selectpicker" name="schemes" id="schemes">
-                            <option>Select Schemes</option>
+                            <option value="">Select Schemes</option>
                         </select>
                     </div>
                 </div>

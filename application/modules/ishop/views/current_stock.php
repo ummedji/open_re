@@ -16,7 +16,7 @@ echo form_open('',$attributes); ?>
                     <div class="form-group fulle_wd">
                             <label style="display: block;">Product Sku</label>
                             <select class="selectpicker" name="product_sku" id="sales_prod_sku" data-live-search="true">
-                                <option value="0">Product Name</option>
+                                <option value="">Product Name</option>
                                 <?php
                                 if(isset($product_sku) && !empty($product_sku))
                                 {

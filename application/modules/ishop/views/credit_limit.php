@@ -10,7 +10,7 @@ echo form_open('',$attributes); ?>
                 <div class="form-group">
                     <label>Distributor Name</label>
                     <select class="selectpicker" name="dist_limit" id="dist_limit">
-                        <option value="0">Select Distributor Name</option>
+                        <option value="">Select Distributor Name</option>
                         <?php
                         if(isset($distributor) && !empty($distributor))
                         {

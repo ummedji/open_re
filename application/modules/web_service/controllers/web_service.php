@@ -323,6 +323,51 @@ class Web_service extends Front_Controller
     }
 
     /**
+     * @ Function Name        : getPrimarySalesProductDetailsMix
+     * @ Function Params    : primary_sales_id (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice and Product Details Data
+     * */
+    public function getPrimarySalesInvoicesMix()
+    {
+        $user_id = $this->input->get_post('user_id');
+
+        if(isset($user_id))
+        {
+            $form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+            $to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+            $by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
+            $by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
+
+            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
+            if(!empty($primary_sales_details))
+            {
+                $final_array = array();
+                foreach($primary_sales_details as $k => $psd)
+                {
+                    $primary_sales_id = $psd['primary_sales_id'];
+                    $primary_sales_product_details = $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id,'web_service');
+                    $psd["details"]=$primary_sales_product_details;
+                    $final_array[] = $psd;
+                }
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $final_array;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
      * @ Function Name        : do_json
      * @ Function Params    : result Array
      * @ Function Purpose    : Make JSON format for Sending Data to Mobile
