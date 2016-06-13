@@ -646,7 +646,7 @@ class Ishop_model extends BF_Model
                     }
 
                     $this->db->where('rol_id',$product[0]['rol_id']);
-                    $this->db->update('ishop_rol', $rol_update_data);
+                    $id = $this->db->update('ishop_rol', $rol_update_data);
                 }
                 else{
                     if($login_customer_role == 7)
@@ -701,9 +701,9 @@ class Ishop_model extends BF_Model
                             'created_on' => date('Y-m-d H:i:s')
                         );
                     }
-                    $this->db->insert('ishop_rol', $rol_data);
+                    $id = $this->db->insert('ishop_rol', $rol_data);
                 }
-
+            return $id;
          }
          else{
              
@@ -944,12 +944,19 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function update_rol_limit_detail($user_id,$country_id)
+    public function update_rol_limit_detail($user_id,$country_id,$web_service=null)
     {
-        $rol_id = $this->input->post("rol_id");
-        $units = $this->input->post("units");
-        $quantity = $this->input->post("quantity");
-        $rol_qty_kg_ltr = $this->input->post("rol_quantity_kg_ltr");
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $rol_id = explode(',', $this->input->post("rol_id"));
+            $units = explode(',', $this->input->post("units"));
+            $quantity = explode(',', $this->input->post("quantity"));
+            $rol_qty_kg_ltr = explode(',', $this->input->post("rol_quantity_kg_ltr"));
+        } else {
+            $rol_id = $this->input->post("rol_id");
+            $units = $this->input->post("units");
+            $quantity = $this->input->post("quantity");
+            $rol_qty_kg_ltr = $this->input->post("rol_quantity_kg_ltr");
+        }
 
         if(isset($rol_id) && !empty($rol_id))
         {
@@ -964,9 +971,10 @@ class Ishop_model extends BF_Model
                 );
 
                 $this->db->where('rol_id',$rol_id[$k]);
-                $this->db->update('ishop_rol',$rol_update);
+                $id = $this->db->update('ishop_rol',$rol_update);
             }
         }
+        return $id;
     }
 
     public function delete_rol_limit_detail($rol_id)
