@@ -345,7 +345,7 @@ class Settings extends Admin_Controller
 
 		Template::set('matrix_role_permissions', $current_permissions);
 		Template::set("toolbar_title", lang('matrix_header'));
-
+		//testdata($current_permissions);
 		Template::set_view('settings/permission_matrix');
 		Template::render();
 	}

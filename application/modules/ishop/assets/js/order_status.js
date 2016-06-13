@@ -23,25 +23,7 @@ $(document).ready(function(){
       autoclose: true
     });
     
-    $("#order_status").on("submit",function(){
-        
-        var param = $("form#order_status").serializeArray();
-        
-        $.ajax({
-                type: 'POST',
-                url: site_url+"ishop/get_order_status_data",
-                data: param,
-                dataType : 'html',
-                success: function(resp){
-                    console.log(resp);
-                 //   alert(resp);
-                    $("div#order_status_middle_container").empty();
-                    $("div#order_status_middle_container").html(resp);
-                    
-                }
-            });
-        return false;
-    });
+    
     
     $(document).on('click', 'div.order_status .eye_i', function () {
         var id = $(this).attr('prdid');
@@ -187,6 +169,71 @@ $(document).on('click', 'div.order_status .edit_i', function () {
        $("#to_date").val(" ");
        
  });
+ 
+ var order_status_validators = $("#order_status").validate({
+        ignore: ".ignore",
+        rules: {
+            dis_distributor_geo_level_1_data :{
+                required: true
+            },
+            distributor_id :{
+                required: true
+            },
+            retailer_geo_level_2_data:{ 
+                required: true
+            },
+            retailer_geo_level_1_data:{ 
+                required: true
+            },
+            retailer_distributor_id:{
+                required: true
+            },
+            retailer_id :{ 
+                required: true
+            },
+            form_date:{ 
+                required: true
+            },
+            to_date:{ 
+                required: true
+            },
+            geo_level_2_data:{ 
+                required: true
+            }
+        }
+    });
+ 
+    $("#order_status").on("submit",function(){
+        
+        var param = $("form#order_status").serializeArray();
+        
+        var validator = order_status_validators;
+
+    var $valid = $("#order_status").valid();
+    if(!$valid) {
+        alert('focusInvalid');
+        validator.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+                type: 'POST',
+                url: site_url+"ishop/get_order_status_data",
+                data: param,
+                dataType : 'html',
+                success: function(resp){
+                    console.log(resp);
+                 //   alert(resp);
+                    $("div#order_status_middle_container").empty();
+                    $("div#order_status_middle_container").html(resp);
+                    
+                }
+            });
+            return false;
+        }
+        
+    });
     
 });
 

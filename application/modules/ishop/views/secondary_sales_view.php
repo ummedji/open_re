@@ -9,11 +9,11 @@
             <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
-                        <label>From Date</label>
+                        <label>From Date<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
                     </div>
                     <div class="form-group">
-                        <label>TO Date</label>
+                        <label>TO Date<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                     </div>
                 </div>

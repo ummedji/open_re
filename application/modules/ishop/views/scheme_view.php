@@ -23,7 +23,7 @@ echo form_open('',$attributes); ?>
                 <div class="row">
                    <!-- <div class="col-md-4 col-sm-6 tp_form">-->
                         <div class="form-group">
-                            <label>Year</label>
+                            <label>Year<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="year" id="year" placeholder="">
                         </div>
                     <!--</div>-->
@@ -53,9 +53,9 @@ echo form_open('',$attributes); ?>
                         ?>
                         <!--<div class="col-md-4 col-sm-6 tp_form">-->
                             <div class="form-group">
-                                <label>Geo Level 2</label>
+                                <label>Geo Level 2<span style="color: red">*</span></label>
                                 <select class="selectpicker" name="territory" id="geo_level_1">
-                                    <option value="0">Select Geo Location</option>
+                                    <option value="">Select Geo Location</option>
                                     <?php
                                     if(isset($geo_data) && !empty($geo_data))
                                     {

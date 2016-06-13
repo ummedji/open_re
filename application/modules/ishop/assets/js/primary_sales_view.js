@@ -6,7 +6,7 @@
 $(function () {
     $('#form_date').datepicker({
         format: "yyyy-mm-dd",
-         autoclose: true
+        autoclose: true
     });
 
 });

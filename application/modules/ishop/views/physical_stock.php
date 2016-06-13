@@ -37,7 +37,7 @@ echo form_open('',$attributes); ?>
                     <div class="row">
                         <div class="col-md-3 col-sm-6 tp_form">
                             <div class="form-group">
-                                <label>Month</label>
+                                <label>Month<span style="color: red">*</span></label>
                                 <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
                                 <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                     <a href="#">
@@ -50,9 +50,9 @@ echo form_open('',$attributes); ?>
                         <div class="retailer_checked" id="retailer_checked" >
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Geo Level 3</label>
+                                    <label>Geo Level 3<span style="color: red">*</span></label>
                                     <select class="selectpicker" name="geo_level" id="geo_level">
-                                        <option>Select Geo Location</option>
+                                        <option value="">Select Geo Location</option>
                                         <?php
                                         if(isset($geo_data) && !empty($geo_data))
                                         {
@@ -69,17 +69,17 @@ echo form_open('',$attributes); ?>
                             </div>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Geo Level 2</label>
+                                    <label>Geo Level 2<span style="color: red">*</span></label>
                                     <select class="selectpicker" name="geo_level_1" id="geo_level_1">
-                                        <option>Select Geo Location</option>
+                                        <option value="">Select Geo Location</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Retailer Name</label>
+                                    <label>Retailer Name<span style="color: red">*</span></label>
                                     <select class="selectpicker" name="fo_retailer_id" id="retailer_phystok">
-                                        <option value="0">Select Retailer</option>
+                                        <option value="">Select Retailer</option>
                                     </select>
                                 </div>
                             </div>
@@ -89,16 +89,17 @@ echo form_open('',$attributes); ?>
 
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Geo Level</label>
-                                    <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
+                                    <label>Geo Level<span style="color: red">*</span></label>
+                                    <select class="selectpicker distributor_geo_level" id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
                                     </select>
-                                </div>
+                                    <!--<label id="distributor_geo_level-error" class="error" for="distributor_geo_level">This field is required.</label>
+-->                                </div>
                             </div>
 
                             <div class="col-md-3 col-sm-6 tp_form">
 
                                 <div class="form-group">
-                                    <label>Distributor Name</label>
+                                    <label>Distributor Name<span style="color: red">*</span></label>
                                     <select class="selectpicker" id="distributor_phystok" name="distributor_phystok" data-live-search="true">
                                     </select>
                                 </div>
@@ -117,7 +118,7 @@ echo form_open('',$attributes); ?>
                     <!--<div class="col-md-2 col-md-offset-4 text-center tp_form">-->
                     <div class="col-md-4 col-md-offset-4 tp_form text-center_form" >
                         <div class="form-group">
-                            <label>Month</label>
+                            <label>Month<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
                             <div class="cal_icon">
                                 <a href="#">
@@ -148,9 +149,9 @@ echo form_open('',$attributes); ?>
             <div class="row">
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
-                        <label>Product Sku</label>
+                        <label>Product Sku<span style="color: red">*</span></label>
                         <select class="selectpicker" name="phy_prod_sku" id="phy_prod_sku" data-live-search="true">
-                            <option value="0">Product Name</option>
+                            <option value="">Product Name</option>
                             <?php
                             if(isset($product_sku) && !empty($product_sku))
                             {
@@ -167,9 +168,9 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
-                        <label>Unit</label>
+                        <label>Unit<span style="color: red">*</span></label>
                         <select class="selectpicker" name="sec_sel_unit" id="sec_sel_unit">
-                            <option value="0">Units</option>
+                            <option value="">Units</option>
                             <option value="box">Box</option>
                             <option value="packages">Packages</option>
                             <option value="kg/ltr">Kg/Ltr</option>
@@ -178,7 +179,7 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">Quantity</label>
+                        <label for="invoice_date">Quantity<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="phy_qty" id="phy_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>

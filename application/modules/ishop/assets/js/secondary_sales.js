@@ -1,6 +1,60 @@
 /**
  * Created by webclues on 5/20/2016.
  */
+$(function () {
+    $('#invoice_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+
+});
+
+// START ::: Added By Vishal Malaviya For Validation
+var secondary_sales_validators = $("#add_secondary_sales").validate({
+    ignore: ".ignore",
+    rules: {
+        customer_id:{
+            required: true
+        },
+        invoice_no:{
+            required: true
+        },
+        invoice_date:{
+            required: true
+        },
+        sec_prod_sku:{
+            required: true
+        },
+        sec_sel_unit:{
+            required: true
+        },
+        sec_qty:{
+            required: true
+        },
+        sec_amt:{
+            required: true
+        }
+    }
+});
+$("#sec_add_row").click(function() {
+
+    $('#sec_prod_sku').removeClass('ignore');
+    $('#sec_sel_unit').removeClass('ignore');
+    $('#sec_qty').removeClass('ignore');
+    $('#sec_amt').removeClass('ignore');
+
+    var $valid = $("#add_secondary_sales").valid();
+    if(!$valid) {
+        secondary_sales_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        add_sec_sales_row();
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
+
+
 
 function add_sec_sales_row()
 {
@@ -70,8 +124,8 @@ function add_sec_sales_row()
         "</td>"+
         "</tr>"
     );
-    $('#sec_prod_sku').selectpicker('val', '0');
-    $('#sec_sel_unit').selectpicker('val', '0');
+    $('#sec_prod_sku').selectpicker('val', '');
+    $('#sec_sel_unit').selectpicker('val', '');
     $('#sec_qty').val('');
     $('#sec_amt').val('');
 }
@@ -85,19 +139,39 @@ $(document).on('click', 'div.secondary_sal', function () { // <-- changes
 
 $("#add_secondary_sales").on("submit",function(){
 
+    $('#sec_prod_sku').addClass('ignore');
+    $('#sec_sel_unit').addClass('ignore');
+    $('#sec_qty').addClass('ignore');
+    $('#sec_amt').addClass('ignore');
+
     var param = $("#add_secondary_sales").serializeArray();
 
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/add_secondary_sales_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-            if(resp==1){
-                site_url+"ishop/secondary_sales_details";
-            }
+    var $valid = $("#add_secondary_sales").valid();
+    if(!$valid) {
+        secondary_sales_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        if($("#add_secondary_sales").children().length <= 0)
+        {
+            alert('No Product Selected');
+            return false;
         }
-    });
+        else {
+            $.ajax({
+                type: 'POST',
+                url: site_url+"ishop/add_secondary_sales_details",
+                data: param,
+                //dataType : 'json',
+                success: function(resp){
+                    if(resp==1){
+                        site_url+"ishop/secondary_sales_details";
+                    }
+                }
+            });
+        }
+    }
 });
 
 function get_data_conversion(sku_id,quantity,units){

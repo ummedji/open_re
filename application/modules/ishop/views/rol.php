@@ -31,7 +31,7 @@ echo form_open('',$attributes); ?>
                             <div class="retailer_check_rol" id="retailer_check_rol" >
                                 <div class="col-md-4 col-sm-6 tp_form">
                                     <div class="form-group">
-                                        <label>Geo Level 3</label>
+                                        <label>Geo Level 3<span style="color: red">*</span></label>
                                         <select class="selectpicker" name="geo_level_rol" id="geo_level_rol">
                                             <option value="">Select Geo Location</option>
                                             <?php
@@ -50,7 +50,7 @@ echo form_open('',$attributes); ?>
                                 </div>
                                 <div class="col-md-4 col-sm-6 tp_form">
                                     <div class="form-group">
-                                        <label>Geo Level 2</label>
+                                        <label>Geo Level 2<span style="color: red">*</span></label>
                                         <select class="selectpicker" name="geo_level_1" id="geo_level_1">
                                             <option value="">Select Geo Location</option>
                                         </select>
@@ -58,7 +58,7 @@ echo form_open('',$attributes); ?>
                                 </div>
                                 <div class="col-md-4 col-sm-6 tp_form">
                                     <div class="form-group">
-                                        <label>Retailer Name</label>
+                                        <label>Retailer Name<span style="color: red">*</span></label>
                                         <select class="selectpicker" name="fo_retailer_id" id="retailer_rol">
                                             <option value="">Select Retailer</option>
                                         </select>
@@ -71,7 +71,7 @@ echo form_open('',$attributes); ?>
                                     <div class="distributor_check_rol" id="distributor_check_rol" style="display:none;">
                                         <div class="col-md-6 col-sm-6 tp_form">
                                             <div class="form-group">
-                                                <label>Geo Level</label>
+                                                <label>Geo Level<span style="color: red">*</span></label>
                                                 <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
                                                 </select>
                                             </div>
@@ -79,7 +79,7 @@ echo form_open('',$attributes); ?>
                                         <div class="col-md-6 col-sm-6 tp_form">
 
                                             <div class="form-group">
-                                                <label>Distributor Name</label>
+                                                <label>Distributor Name<span style="color: red">*</span></label>
                                                 <select class="selectpicker" id="distributor_rol" name="distributor_rol" data-live-search="true">
                                                 </select>
                                             </div>
@@ -114,7 +114,7 @@ echo form_open('',$attributes); ?>
                         <div class="form-group">
                             <label>Product SKU Name</label>
                             <select class="selectpicker" name="prod_sku" id="prod_sku" data-live-search="true" >
-                                <option value="">Product Name</option>
+                                <option value="">Product Name<span style="color: red">*</span></option>
                                 <?php
                                 if(isset($product_sku) && !empty($product_sku))
                                 {
@@ -131,7 +131,7 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="col-md-4_ tp_form">
                         <div class="form-group">
-                            <label>Units</label>
+                            <label>Units<span style="color: red">*</span></label>
                             <select class="selectpicker" name="unit" id="unit_id">
                                 <option value="">Units</option>
                                 <option value="box">Box</option>
@@ -142,7 +142,7 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
-                            <label for="po_qty">ROL Quantity</label>
+                            <label for="po_qty">ROL Quantity<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="rol_qty" id="rol_qty" placeholder="">
                         </div>
                         <label id="rol_qty-error" class="error" for="rol_qty"></label>

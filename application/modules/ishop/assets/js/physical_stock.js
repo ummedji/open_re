@@ -6,6 +6,7 @@ $(function () {
 
 });
 
+
 var login_customer_type = $("input#login_customer_role").val();
 
  if(login_customer_type == 8){
@@ -14,6 +15,9 @@ var login_customer_type = $("input#login_customer_role").val();
 
 
 $("input.select_customer_type").on("click",function(){
+
+    var validator = $( "#add_physical_stock" ).validate();
+    validator.resetForm();
 
     var customer_type_selected = $(this).val();
        // alert(customer_type_selected);
@@ -152,7 +156,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                 if(resp.length > 0){
 
-                    $("div#distributor_checked select.distributor_geo_level").append('<option value="0">Select Geo Location</option>');
+                    $("div#distributor_checked select.distributor_geo_level").append('<option value="">Select Geo Location</option>');
 
                     $.each(resp, function(key, value) {
                         $('div#distributor_checked select.distributor_geo_level').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
@@ -217,7 +221,7 @@ function get_lower_geo_by_parent_geo_physical_stock(selected_geo_id){
 
                     if (resp.length > 0) {
 
-                        $("div#retailer_checked select#geo_level_1").append('<option value="0">Select Geo Location</option>');
+                        $("div#retailer_checked select#geo_level_1").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function (key, value) {
 
@@ -237,7 +241,7 @@ function get_lower_geo_by_parent_geo_physical_stock(selected_geo_id){
 
                     if (resp.length > 0) {
 
-                        $("div#distributor_checked select#distributor_geo_level").append('<option value="0">Select Geo Location</option>');
+                        $("div#distributor_checked select#distributor_geo_level").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function (key, value) {
 
@@ -311,25 +315,71 @@ $(document).on('click', 'div.physical_stock', function () { // <-- changes
     return false;
 });
 
+
+
+// START ::: For Validation
+$(document).ready(function(){
+
+var physical_stock_validators = $("#add_physical_stock").validate({
+    rules: {
+        stock_month:{
+            required: true
+        },
+        geo_level:{
+            required: true
+        },
+        geo_level_1:{
+            required: true
+        },
+        fo_retailer_id:{
+            required: true
+        },
+        distributor_geo_level:{
+            required: true
+        },
+        distributor_phystok:{
+            required: true
+        },
+        phy_prod_sku:{
+            required: true
+        },
+        sec_sel_unit:{
+            required: true
+        },
+        phy_qty:{
+            required: true
+        }
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
+
 $("#add_physical_stock").on("submit",function(){
 
     var param = $("#add_physical_stock").serializeArray();
 
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/add_physical_stock_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-            if(resp==1){
-                site_url+"ishop/physical_stock";
+    var $valid = $("#add_physical_stock").valid();
+    if(!$valid) {
+        physical_stock_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/add_physical_stock_details",
+            data: param,
+            //dataType : 'json',
+            success: function(resp){
+                if(resp==1){
+                    site_url+"ishop/physical_stock";
+                }
             }
-        }
-    });
+        });
+    }
    // return false;
 });
 
-
+});
 
 /*--------------------------------------------------------------------------------*/
 function get_data_conversion(sku_id,quantity,units){

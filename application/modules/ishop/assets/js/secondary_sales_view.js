@@ -18,22 +18,46 @@ $(function () {
 });
 /*Date Picker*/
 
+
+// START ::: Added By Vishal Malaviya For Validation
+var secondary_sales_view_validators = $("#secondary_sales_view").validate({
+    ignore: ".ignore",
+    rules: {
+        form_date:{
+            required: true
+        },
+        to_date:{
+            required: true
+        }
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
+
+
+
 /* Get  Secondary Sales Data*/
 $("#secondary_sales_view").on("submit",function(){
 
     var param = $("#secondary_sales_view").serializeArray();
   //  console.log(param);
 
-    $.ajax({
-        type: 'POST',
-        url: site_url+'ishop/secondary_sales_view_details',
-        data: param,
-        success: function(resp){
-            console.log(resp);
-            $("#middle_container_secondary").html(resp);
-        }
-    });
-
+    var $valid = $("#secondary_sales_view").valid();
+    if(!$valid) {
+        secondary_sales_view_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/secondary_sales_view_details',
+            data: param,
+            success: function(resp){
+                console.log(resp);
+                $("#middle_container_secondary").html(resp);
+            }
+        });
+    }
     return false;
 });
 

@@ -38,7 +38,7 @@ echo form_open('',$attributes); ?>
                         <div class="retailer_checked_sales fl_calender_i" id="retailer_checked_sales" >
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Month</label>
+                                    <label>Month<span style="color: red">*</span></label>
                                     <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
                                     <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                         <a href="#">
@@ -50,9 +50,9 @@ echo form_open('',$attributes); ?>
                             </div>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Geo Level 3</label>
-                                    <select class="selectpicker" id="geo_level_0">
-                                        <option>Select Geo Location</option>
+                                    <label>Geo Level 3<span style="color: red">*</span></label>
+                                    <select class="selectpicker" name="geo_level_0" id="geo_level_0">
+                                        <option value="">Select Geo Location</option>
                                         <?php
                                         if(isset($geo_data) && !empty($geo_data))
                                         {
@@ -69,17 +69,17 @@ echo form_open('',$attributes); ?>
                             </div>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Geo Level 2</label>
-                                    <select class="selectpicker" id="geo_level_1">
-                                        <option>Select Geo Location</option>
+                                    <label>Geo Level 2<span style="color: red">*</span></label>
+                                    <select class="selectpicker" name="geo_level_1" id="geo_level_1">
+                                        <option value="">Select Geo Location</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
-                                    <label>Retailer Name</label>
+                                    <label>Retailer Name<span style="color: red">*</span></label>
                                     <select class="selectpicker" name="fo_retailer_id" id="retailer_sales">
-                                        <option value="0">Select Retailer</option>
+                                        <option value="">Select Retailer</option>
                                     </select>
                                 </div>
                             </div>
@@ -90,26 +90,27 @@ echo form_open('',$attributes); ?>
                                 <div class="row">
                                     <div class="col-md-4 col-sm-6 tp_form">
                                         <div class="form-group">
-                                            <label>Geo Level</label>
+                                            <label>Geo Level<span style="color: red">*</span></label>
                                             <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
+                                                <option value="">Select Geo Level</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 col-sm-6 tp_form">
                                         <div class="form-group">
-                                            <label>Distributor Name</label>
+                                            <label>Distributor Name<span style="color: red">*</span></label>
                                             <select class="selectpicker" id="distributor_sales" name="distributor_sales" data-live-search="true">
-                                                <option value="0">Select Distributor</option>
+                                                <option value="">Select Distributor</option>
                                             </select>
                                         </div>
                                     </div>
 
                                     <div class="col-md-4 col-sm-6 tp_form">
                                         <div class="form-group">
-                                            <label>Retailer Name</label>
+                                            <label>Retailer Name<span style="color: red">*</span></label>
                                             <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
-                                                <option value="0">Select Retailer</option>
+                                                <option value="">Select Retailer</option>
                                             </select>
                                         </div>
                                 </div>
@@ -119,13 +120,13 @@ echo form_open('',$attributes); ?>
                                 <div class="row">
                                     <div class="col-md-3 col-sm-6 tp_form">
                                         <div class="form-group">
-                                            <label for="invoice_no">Invoice No.</label>
+                                            <label for="invoice_no">Invoice No.<span style="color: red">*</span></label>
                                             <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="" style="width: 100%;">
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6 tp_form">
                                         <div class="form-group">
-                                            <label for="invoice_date">Invoice Date</label>
+                                            <label for="invoice_date">Invoice Date<span style="color: red">*</span></label>
                                             <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" style="width: 100%;">
                                         </div>
                                     </div>
@@ -170,9 +171,9 @@ echo form_open('',$attributes); ?>
             <div class="row">
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
-                        <label>Product Sku</label>
-                        <select class="selectpicker" id="sales_prod_sku" data-live-search="true">
-                            <option value="0">Product Name</option>
+                        <label>Product Sku<span style="color: red">*</span></label>
+                        <select class="selectpicker" name="sales_prod_sku" id="sales_prod_sku" data-live-search="true">
+                            <option value="">Product Name</option>
                             <?php
                             if(isset($product_sku) && !empty($product_sku))
                             {
@@ -189,9 +190,9 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
-                        <label>Unit</label>
-                        <select class="selectpicker" id="sec_sel_unit">
-                            <option value="0">Units</option>
+                        <label>Unit<span style="color: red">*</span></label>
+                        <select class="selectpicker" name="sec_sel_unit" id="sec_sel_unit">
+                            <option value="">Units</option>
                             <option value="box">Box</option>
                             <option value="packages">Packages</option>
                             <option value="kg/ltr">Kg/Ltr</option>
@@ -200,18 +201,18 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">Quantity</label>
-                        <input type="text" class="form-control" id="sales_qty" placeholder="">
+                        <label for="invoice_date">Quantity<span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="sales_qty" id="sales_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">Amount</label>
-                        <input type="text" class="form-control" id="amt" placeholder="">
+                        <label for="invoice_date">Amount<span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="amt" id="amt" placeholder="">
                     </div>
                 </div>
-                <div class="plus_btn"><a href="#" onclick="add_sales_stock_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <div class="plus_btn"><a href="#" id="add_sales_stock_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -279,7 +280,7 @@ echo form_open('',$attributes); ?>
 <div class="clearfix"></div>
 
 
-<div class="col-md-12 table_bottom">
+<div class="col-md-12 table_bottom upload_sales_data" style="display: none">
     
     <div class="row">
       <!--  <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div> -->

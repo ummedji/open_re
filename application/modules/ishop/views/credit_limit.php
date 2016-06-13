@@ -8,7 +8,7 @@ echo form_open('',$attributes); ?>
         <div class="row">
             <div class="col-md-12 text-center tp_form">
                 <div class="form-group">
-                    <label>Distributor Name</label>
+                    <label>Distributor Name<span style="color: red">*</span></label>
                     <select class="selectpicker" name="dist_limit" id="dist_limit">
                         <option value="">Select Distributor Name</option>
                         <?php
@@ -36,19 +36,19 @@ echo form_open('',$attributes); ?>
                 <div class="row">
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
-                            <label for="credit_limit">Credit Limit</label>
+                            <label for="credit_limit">Credit Limit<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="credit_limit" id="credit_limit" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
-                            <label for="invoice_date">Current Outstanding</label>
+                            <label for="invoice_date">Current Outstanding<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="curr_outstanding" id="curr_outstanding" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
-                            <label for="curr_date">Date</label>
+                            <label for="curr_date">Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="curr_date" id="curr_date" placeholder="">
                         </div>
                     </div>

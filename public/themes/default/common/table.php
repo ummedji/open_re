@@ -1,8 +1,8 @@
 <div class='report-box'>
     <?php
     $attributes = array(
-        'name' => 'admin_listing_form',
-        'id' => 'admin_listing_form',
+        'name' => 'front_listing_form',
+        'id' => 'front_listing_form',
         'class'=>'form-inline'
     );
     ?>

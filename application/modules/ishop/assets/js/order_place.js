@@ -35,6 +35,14 @@ $(document).ready(function(){
    
    $("input.select_customer_type").on("click",function(){
        
+       if($("#order_place").length > 0){
+            var validator = $("#order_place").validate();
+        }
+        else{
+            var validator = $("#order_status").validate();
+        }
+       validator.resetForm();
+       
        var customer_type_selected = $(this).val();
        
       // alert(customer_type_selected);
@@ -239,7 +247,7 @@ $(document).ready(function(){
                 
                         if(resp.length > 0){
 
-                            $("div#farmer_checked select#geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+                            $("div#farmer_checked select#geo_level_1_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
@@ -277,7 +285,7 @@ $(document).ready(function(){
                 
                         if(resp.length > 0){
 
-                            $("div#farmer_checked select#geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+                            $("div#farmer_checked select#geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
@@ -318,7 +326,7 @@ $(document).ready(function(){
 
             if(resp.length > 0){
 
-                $("div#farmer_checked select#farmer_data").append('<option value="0">Select Geo Location</option>');
+                $("div#farmer_checked select#farmer_data").append('<option value="">Select Geo Location</option>');
 
                 $.each(resp, function(key, value) {
 
@@ -350,6 +358,147 @@ $(document).ready(function(){
             
        
    });
+   
+   
+   
+   var order_place_validators = $("#order_place").validate({
+        ignore: ".ignore",
+        rules: {
+            geo_level_1_data :{
+                required: true
+            },
+            distributor_id :{
+                required: true
+            },
+            retailer_geo_level_2_data:{ 
+                required: true
+            },
+            retailer_geo_level_1_data:{ 
+                required: true
+            },
+            retailer_distributor_id:{
+                required: true
+            },
+            retailer_id :{ 
+                required: true
+            },
+            geo_level_2_data:{ 
+                required: true
+            },
+            farmer_geo_level_1_data :{ 
+                required: true
+            },
+            farmer_geo_level_2_data:{ 
+                required: true
+            },
+            farmer_retailer_data:{ 
+                required: true
+            },
+            farmer_data:{ 
+                required: true
+            },
+            retailer_data:{ 
+                required: true
+            },
+            distributor_data:{ 
+                required: true
+            },
+            prod_sku :{
+                required: true
+            },
+            units :{
+                required: true
+            },
+            quantity:{
+                required: true
+            },
+            order_date :{
+                required: true
+            },
+            distributor_geo_level_1_data:{
+                required: true
+            },
+            distributor_geo_level_2_data:{
+                required: true
+            },
+            fo_distributor_data:{
+                required: true
+            },
+            fo_retailer_data:{
+                required: true
+            }
+            
+            
+        }
+    });
+   
+
+    
+  $("#order_place_add_row").click(function() {
+
+        
+        $('#prod_sku').removeClass('ignore');
+        $('#units').removeClass('ignore');
+        $('#quantity').removeClass('ignore');
+      
+        var $valid = $("#order_place").valid();
+       // var checked_type = $('input[name=radio1]:checked').val();
+
+        if(!$valid) {
+            order_place_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            order_place_add_row();
+        }
+  });
+
+
+$("#order_place").on("submit",function(){
+
+    $('#prod_sku').addClass('ignore');
+    $('#units').addClass('ignore');
+    $('#quantity').addClass('ignore');
+
+    var param = $("#order_place").serializeArray();
+
+    var validator = order_place_validators;
+
+    var $valid = $("#order_place").valid();
+    if(!$valid) {
+        alert('focusInvalid');
+        validator.focusInvalid();
+        return false;
+    }
+    else
+    {
+      
+      if($("#order_place_data").children().length <= 0)
+        {
+            alert('No data added');
+            return false;
+        }
+        else {
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/order_place_details",
+            data: param,
+            //dataType : 'json',
+            success: function(resp){
+
+               // window.location.href = site_url+"ishop/order_place";
+               // return false;
+
+            }
+        });
+      }
+    
+    }
+   // return false; 
+});
+
+
 
 });
 
@@ -379,7 +528,7 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
 
                     if(resp.length > 0){
 
-                        $("div.retailer_data select#retailer_geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+                        $("div.retailer_data select#retailer_geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function(key, value) {
 
@@ -402,7 +551,7 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
                 
                         if(resp.length > 0){
 
-                            $("div#farmer_checked select#geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+                            $("div#farmer_checked select#geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
@@ -422,7 +571,7 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
                 
                         if(resp.length > 0){
 
-                            $("div#retailer_checked select#retailer_geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+                            $("div#retailer_checked select#retailer_geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
@@ -442,7 +591,7 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
                 
                         if(resp.length > 0){
 
-                            $("div#distributor_checked select#distributor_geo_level_2_data").append('<option value="0">Select Geo Location</option>');
+                            $("div#distributor_checked select#distributor_geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
@@ -490,7 +639,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                 
                 if(resp.length > 0){
                    
-                $("div#farmer_checked select#geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+                $("div#farmer_checked select#geo_level_1_data").append('<option value="">Select Geo Location</option>');
 
                 $.each(resp, function(key, value) {
                     $('div#farmer_checked select#geo_level_1_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
@@ -510,7 +659,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                 
                 if(resp.length > 0){
                    
-                $("div#distributor_checked select#distributor_geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+                $("div#distributor_checked select#distributor_geo_level_1_data").append('<option value="">Select Geo Location</option>');
 
                 $.each(resp, function(key, value) {
                     $('div#distributor_checked select#distributor_geo_level_1_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
@@ -532,7 +681,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                     if(resp.length > 0){
 
-                        $("div.retailer_data select#retailer_geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+                        $("div.retailer_data select#retailer_geo_level_1_data").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function(key, value) {
 
@@ -552,7 +701,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                     if(resp.length > 0){
 
-                        $("div#retailer_checked select#retailer_geo_level_1_data").append('<option value="0">Select Geo Location</option>');
+                        $("div#retailer_checked select#retailer_geo_level_1_data").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function(key, value) {
 
@@ -604,7 +753,7 @@ function get_user_by_geo_data(selected_geo_data){
                     
                      $("select#retailer_data").empty();
 
-                    $("select#retailer_data").append('<option value="0">Select Retailer Name</option>');
+                    $("select#retailer_data").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
                         $('select#retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -617,7 +766,7 @@ function get_user_by_geo_data(selected_geo_data){
                     
                      $("select#fo_distributor_data").empty();
 
-                    $("select#fo_distributor_data").append('<option value="0">Select Distributor Name</option>');
+                    $("select#fo_distributor_data").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
                         $('select#fo_distributor_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -630,7 +779,7 @@ function get_user_by_geo_data(selected_geo_data){
                     
                      $("select#distributor_distributor_id").empty();
 
-                    $("select#distributor_distributor_id").append('<option value="0">Select Distributor Name</option>');
+                    $("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
                         $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -643,7 +792,7 @@ function get_user_by_geo_data(selected_geo_data){
                     
                      $("select#retailer_id").empty();
 
-                    $("select#retailer_id").append('<option value="0">Select Retailer Name</option>');
+                    $("select#retailer_id").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
                         $('select#retailer_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -656,7 +805,7 @@ function get_user_by_geo_data(selected_geo_data){
                 {
                     $("select#farmer_data").empty();
 
-                    $("select#farmer_data").append('<option value="0">Select Farmer Name</option>');
+                    $("select#farmer_data").append('<option value="">Select Farmer Name</option>');
 
                     $.each(resp, function(key, value) {
                         $('select#farmer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -690,7 +839,7 @@ function get_retailer_by_user(selected_user_id){
                             
                         $("select#distributor_data").empty();
 
-                        $("select#distributor_data").append('<option value="0">Select Distributor Name</option>');
+                        $("select#distributor_data").append('<option value="">Select Distributor Name</option>');
 
                         $.each(resp, function(key, value) {
                             $('select#distributor_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -702,7 +851,7 @@ function get_retailer_by_user(selected_user_id){
                         
                     $("select#retailer_data").empty();
 
-                    $("select#retailer_data").append('<option value="0">Select Retailer Name</option>');
+                    $("select#retailer_data").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
                         $('select#retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -739,7 +888,7 @@ function get_distributors(customer_type_selected){
                         
                         $("select#retailer_distributor_id").empty();
                         
-                        $("select#retailer_distributor_id").append('<option value="0">Select Distributor Name</option>');
+                        $("select#retailer_distributor_id").append('<option value="">Select Distributor Name</option>');
                         
                         $.each(JSON.parse(resp), function(key, value) {
                             $('select#retailer_distributor_id').append('<option value="' + value.id + '">' + value.display_name + '</option>');
@@ -847,26 +996,7 @@ function order_place_add_row()
     $('#quantity').val('');
    
 }
-
-$("#order_place").on("submit",function(){
-
-    var param = $("#order_place").serializeArray();
-
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/order_place_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-            
-           // window.location.href = site_url+"ishop/order_place";
-           // return false;
-           
-        }
-    });
-   // return false; 
-});
-
+ 
 
 $("body").on("change","select.select_unitdata",function(){
       

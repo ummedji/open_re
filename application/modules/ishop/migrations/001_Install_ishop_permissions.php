@@ -6,6 +6,10 @@ class Migration_Install_ishop_permissions extends Migration
 	 * @var array Permissions to Migrate
 	 */
 	private $permissionValues = array(
+		array('name' => 'Ishop.Ishop.View', 'description' => '', 'status' => 'active',),
+		array('name' => 'Ishop.Ishop.Create', 'description' => '', 'status' => 'active',),
+		array('name' => 'Ishop.Ishop.Edit', 'description' => '', 'status' => 'active',),
+		array('name' => 'Ishop.Ishop.Delete', 'description' => '', 'status' => 'active',),
     );
 
     /**

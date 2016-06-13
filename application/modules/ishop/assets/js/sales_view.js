@@ -1,30 +1,17 @@
 $(function () {
     $('#form_month').datepicker({
-        format: "yyyy-mm"
+        format: "yyyy-mm",
+        autoclose: true
     });
 
 });
 
 $(function () {
     $('#to_month').datepicker({
-        format: "yyyy-mm"
+        format: "yyyy-mm",
+        autoclose: true
     });
 });
-
-$(function () {
-    $('#from_month_dist').datepicker({
-        format: "yyyy-mm"
-    });
-
-});
-
-$(function () {
-    $('#to_month_dist').datepicker({
-        format: "yyyy-mm"
-    });
-});
-
-
 
 var login_customer_type = $("input#login_customer_role").val();
 
@@ -314,21 +301,43 @@ function get_retailer_by_distributor(selected_id)
 }
 
 
+// START ::: Added By Vishal Malaviya For Validation
+var ishop_sales_view_validators = $("#view_ishop_sales").validate({
+    ignore: ".ignore",
+    rules: {
+        from_month:{
+            required: true
+        },
+        to_month:{
+            required: true
+        }
+    }
+});
+// END ::: Added By Vishal Malaviya For Validation
+
+
 $("#view_ishop_sales").on("submit",function(){
 
     var param = $("#view_ishop_sales").serializeArray();
-   // console.log(param);
-   // return false;
-    $.ajax({
-        type: 'POST',
+    var $valid = $("#view_ishop_sales").valid();
+    if(!$valid) {
+        ishop_sales_view_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
             url: site_url+"ishop/view_ishop_sales_details",
-        data: param,
-        dataType : 'html',
-        success: function(resp){
-            $("#middle_container_sales").html(resp);
-        }
-    });
-     return false;
+            data: param,
+            dataType : 'html',
+            success: function(resp){
+                $("#middle_container_sales").html(resp);
+            }
+        });
+        return false;
+    }
+
 });
 
 /*Get Sales Product Data*/

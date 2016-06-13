@@ -19,13 +19,13 @@ echo form_open('',$attributes); ?>
                 <div class="row">
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
-                            <label>Year</label>
+                            <label>Year<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="cur_year" id="cur_year" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
-                            <label>Geo Level 3</label>
+                            <label>Geo Level 3<span style="color: red">*</span></label>
                             <select class="selectpicker" name="region" id="geo_level_rol">
                                 <option value="">Select Geo Location</option>
                             </select>
@@ -33,7 +33,7 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
-                            <label>Geo Level 2</label>
+                            <label>Geo Level 2<span style="color: red">*</span></label>
                             <select class="selectpicker" name="territory" id="geo_level_1">
                                 <option value="">Select Geo Location</option>
                             </select>
@@ -57,7 +57,7 @@ echo form_open('',$attributes); ?>
             <div class="row">
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
-                        <label>Retailer Name</label>
+                        <label>Retailer Name<span style="color: red">*</span></label>
                         <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme">
                             <option value="">Select Retailer</option>
                         </select>
@@ -65,7 +65,7 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
-                        <label>Schemes</label>
+                        <label>Schemes<span style="color: red">*</span></label>
                         <select class="selectpicker" name="schemes" id="schemes">
                             <option value="">Select Schemes</option>
                         </select>

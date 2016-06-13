@@ -8,9 +8,9 @@ echo form_open('',$attributes); ?>
         <div class="row">
             <div class="col-md-12 text-center tp_form">
                 <div class="form-group">
-                    <label>Retailer Name</label>
+                    <label>Retailer Name<span style="color: red">*</span></label>
                     <select class="selectpicker" name="customer_id" id="reta_id" data-live-search="true">
-                        <option value="0">Select Retailer Name</option>
+                        <option value="">Select Retailer Name</option>
                         <?php
                         if(isset($retailer) && !empty($retailer))
                         {
@@ -27,13 +27,13 @@ echo form_open('',$attributes); ?>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
-                    <label for="invoice_no">Invoice No.</label>
+                    <label for="invoice_no">Invoice No.<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
-                    <label for="invoice_date">Invoice Date</label>
+                    <label for="invoice_date">Invoice Date<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="">
                 </div>
             </div>
@@ -60,9 +60,9 @@ echo form_open('',$attributes); ?>
             <div class="row">
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
-                        <label>Product Sku</label>
-                        <select class="selectpicker" id="sec_prod_sku" data-live-search="true">
-                            <option value="0">Product Name</option>
+                        <label>Product Sku<span style="color: red">*</span></label>
+                        <select class="selectpicker" id="sec_prod_sku" name="sec_prod_sku" data-live-search="true">
+                            <option value="">Product Name</option>
                             <?php
                             if(isset($product_sku) && !empty($product_sku))
                             {
@@ -79,9 +79,9 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
-                        <label>Unit</label>
-                        <select class="selectpicker" id="sec_sel_unit">
-                            <option value="0">Units</option>
+                        <label>Unit<span style="color: red">*</span></label>
+                        <select class="selectpicker" name="sec_sel_unit" id="sec_sel_unit">
+                            <option value="">Units</option>
                             <option value="box">Box</option>
                             <option value="packages">Packages</option>
                             <option value="kg/ltr">Kg/Ltr</option>
@@ -90,18 +90,18 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">Quantity</label>
-                        <input type="text" class="form-control" id="sec_qty" placeholder="">
+                        <label for="invoice_date">Quantity<span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="sec_qty" id="sec_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">Amount</label>
-                        <input type="text" class="form-control" id="sec_amt" placeholder="">
+                        <label for="invoice_date">Amount<span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="sec_amt" id="sec_amt" placeholder="">
                     </div>
                 </div>
-                <div class="plus_btn"><a href="#" onclick="add_sec_sales_row();"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <div class="plus_btn"><a href="#"id="sec_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
             <div class="clearfix"></div>
         </div>

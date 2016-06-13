@@ -192,6 +192,7 @@ class Web_service extends Front_Controller
 
         if(isset($user_id) && isset($country_id))
         {
+
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
 
@@ -206,7 +207,12 @@ class Web_service extends Front_Controller
                 }
             }
             $product_skus = !empty($product_skus) ? $product_skus : array();
-            $data = array("distributors" => $dist_array, "products_skus" => $product_skus);
+            $units = array(
+                array("name"=>"Box","value"=>"box"),
+                array("name"=>"Packages","value"=>"packages"),
+                array("name"=>"Kg/Ltr","value"=>"kg/ltr")
+            );
+            $data = array("distributors" => $dist_array, "products_skus" => $product_skus, "units" => $units);
             $result['status'] = true;
             $result['message'] = 'Success';
             $result['data'] = $data;
@@ -221,7 +227,7 @@ class Web_service extends Front_Controller
 
     /**
      * @ Function Name        : savePrimarySales
-     * @ Function Params    : customer_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount (POST)
+     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
      * @ Function Purpose    : Save Primary Sales Data
      * */
     public function savePrimarySales()
@@ -235,7 +241,7 @@ class Web_service extends Front_Controller
             if($id)
             {
                 $result['status'] = true;
-                $result['message'] = 'Success';
+                $result['message'] = 'Saved Successfully.';
             }
             else
             {
@@ -352,6 +358,104 @@ class Web_service extends Front_Controller
                 $result['status'] = true;
                 $result['message'] = 'Success';
                 $result['data'] = $final_array;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : editPrimarySalesInvoice
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function editPrimarySalesInvoice()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $update_sales_details = $this->ishop_model->update_sales_detail($user_id,$country_id,'web_service');
+            if(!empty($update_sales_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getDropDownData
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function getDropDownData()
+    {
+        $action_data = 'set_rol';
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $radio_type = $this->input->get_post('radio_type'); // farmer,retailer,distributor
+
+        if(isset($user_id))
+        {
+            // Role Check
+            if($radio_type == "farmer"){
+                $default_type = 11;
+            }
+            else if($radio_type == "retailer"){
+                $default_type = 10;
+            }
+            else if($radio_type == "distributor"){
+                $default_type = 9;
+            }
+
+            //Get Data
+            $geolevels3 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,null,$default_type,$action_data);
+            if(!empty($geolevels3))
+            {
+                $final_array = array();
+                foreach($geolevels3 as $geolevel3)
+                {
+                    array_push($final_array,$geolevel3);
+                    $parent_geo_id3 = $geolevel3['parent_geo_id'];
+                    $geolevels2 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,$parent_geo_id3,$default_type,$action_data);
+                    foreach($geolevels2 as $geolevel2)
+                    {
+                        print_r($final_array);
+                        //array_push($final_array,$geolevel2);
+                        $parent_geo_id2 = $geolevel2->parent_geo_id;
+                        $retailers_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id2,$country_id,$radio_type,null);
+                        foreach($retailers_names as $retailers_name)
+                        {
+                            //array_push($geolevel2,$retailers_name);
+                        }
+                    }
+                }
+
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
             }
             else
             {

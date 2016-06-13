@@ -10,7 +10,7 @@ echo form_open('',$attributes); ?>
                 <div class="form-group">
                     <label>Distributor Name</label>
                     <select class="selectpicker" name="customer_id" data-live-search="true">
-                        <option value="">Select Distributor Name</option>
+                        <option value="">Select Distributor Name<span style="color: red">*</span></option>
                         <?php
                         if(isset($distributor) && !empty($distributor))
                         {
@@ -27,13 +27,13 @@ echo form_open('',$attributes); ?>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
-                    <label for="invoice_no">Invoice No.</label>
+                    <label for="invoice_no">Invoice No.<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
-                    <label for="invoice_date">Invoice Date</label>
+                    <label for="invoice_date">Invoice Date<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="">
                 </div>
             </div>
@@ -60,7 +60,7 @@ echo form_open('',$attributes); ?>
             <div class="row">
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
-                        <label>Product Sku</label>
+                        <label>Product Sku<span style="color: red">*</span></label>
                         <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true">
                             <option value="">Product Name</option>
                             <?php
@@ -88,7 +88,7 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">Dispatched Qty.</label>
+                        <label for="invoice_date">Dispatched Qty.<span style="color: red">*</span></label>
                         <input type="text" class="form-control" id="dispatched_qty" name="dispatched_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
@@ -96,7 +96,7 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
-                        <label for="invoice_date">Amount</label>
+                        <label for="invoice_date">Amount<span style="color: red">*</span></label>
                         <input type="text" class="form-control" id="amt" name="amt" placeholder="">
                     </div>
                     <label id="amt-error" class="error" for="amt"></label>

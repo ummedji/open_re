@@ -19,6 +19,10 @@ if(login_customer_type == 8){
 
 $("input.select_customer_type").on("click",function(){
 
+
+    var validator = $( "#add_ishop_sales" ).validate();
+    validator.resetForm();
+
     var customer_type_selected = $(this).val();
     // alert(customer_type_selected);
     if(customer_type_selected == "retailer"){
@@ -27,6 +31,8 @@ $("input.select_customer_type").on("click",function(){
 
         $("div.distributor_checked_sales").css("display","none");
         $("div.retailer_checked_sales").css("display","block");
+        $("div.upload_sales_data").css("display","none");
+       // $("#add_sales_stock_row").empty();
 
         if(login_customer_type == 8){
 
@@ -34,6 +40,7 @@ $("input.select_customer_type").on("click",function(){
             get_geo_fo_userdata(customer_selected,customer_type_selected);
 
         }
+        $("#sales_stock").empty();
 
     }
     else if(customer_type_selected == "distributor"){
@@ -42,14 +49,16 @@ $("input.select_customer_type").on("click",function(){
 
         $("div.distributor_checked_sales").css("display","block");
         $("div.retailer_checked_sales").css("display","none");
+        $("div.upload_sales_data").css("display","block");
 
-
+       // $("#add_sales_stock_row").empty();
         if(login_customer_type == 8){
 
             var customer_selected = $("input#login_customer_id").val();
             get_geo_fo_userdata(customer_selected,customer_type_selected);
 
         }
+        $("#sales_stock").empty();
     }
 });
 
@@ -81,7 +90,7 @@ function get_user_by_geo_data(selected_geo_data){
 
                 if(checked_type == "distributor"){
                     $("select#distributor_sales").empty();
-                    $("select#distributor_sales").append('<option value="0">Select Distributor Name</option>');
+                    $("select#distributor_sales").append('<option value="">Select Distributor Name</option>');
                     $.each(resp, function (key, value) {
                         $('select#distributor_sales').append('<option value="' + value.id + '" >' + value.display_name + '</option>');
                     });
@@ -91,7 +100,7 @@ function get_user_by_geo_data(selected_geo_data){
 
                     $("select#retailer_sales").empty();
 
-                    $("select#retailer_sales").append('<option value="0">Select Retailer Name</option>');
+                    $("select#retailer_sales").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function (key, value) {
 
@@ -135,7 +144,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                 if(resp.length > 0){
 
-                    $("div#distributor_checked_sales select.distributor_geo_level").append('<option value="0">Select Geo Location</option>');
+                    $("div#distributor_checked_sales select.distributor_geo_level").append('<option value="">Select Geo Location</option>');
 
                     $.each(resp, function(key, value) {
                         $('div#distributor_checked_sales select.distributor_geo_level').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
@@ -155,7 +164,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                 if(resp.length > 0){
 
-                    $("div#retailer_checked_sales select.geo_level_0").append('<option value="0">Select Geo Location</option>');
+                    $("div#retailer_checked_sales select.geo_level_0").append('<option value="">Select Geo Location</option>');
 
                     $.each(resp, function(key, value) {
                         $('div#retailer_checked_sales select.geo_level_0').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
@@ -200,7 +209,7 @@ function get_lower_geo_by_parent_geo_physical_stock(selected_geo_id){
 
                     if (resp.length > 0) {
 
-                        $("div#retailer_checked_sales select#geo_level_1").append('<option value="0">Select Geo Location</option>');
+                        $("div#retailer_checked_sales select#geo_level_1").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function (key, value) {
 
@@ -220,7 +229,7 @@ function get_lower_geo_by_parent_geo_physical_stock(selected_geo_id){
 
                     if (resp.length > 0) {
 
-                        $("div#distributor_checked_sales select#distributor_geo_level").append('<option value="0">Select Geo Location</option>');
+                        $("div#distributor_checked_sales select#distributor_geo_level").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function (key, value) {
 
@@ -273,7 +282,7 @@ function get_retailer_by_distributor(selected_id)
 
                 $("select#retailer_id").empty();
 
-                $("select#retailer_id").append('<option value="0">Select Distributor Name</option>');
+                $("select#retailer_id").append('<option value="">Select Distributor Name</option>');
 
                 $.each(JSON.parse(resp), function(key, value) {
                     $('select#retailer_id').append('<option value="' + value.id + '">' + value.display_name + '</option>');
@@ -291,9 +300,174 @@ function get_retailer_by_distributor(selected_id)
 }
 
 
+// START ::: Added By Vishal Malaviya For Validation
+$(document).ready(function(){
+    var ishop_sales_validators = $("#add_ishop_sales").validate({
+        ignore: ".ignore",
+        rules: {
+            stock_month :{
+                required: true
+            },
+            geo_level_0 :{
+                required: true
+            },
+            geo_level_1 :{
+                required: true
+            },
+            fo_retailer_id :{
+                required: true
+            },
+            sales_prod_sku:{
+                required: true
+            },
+            sec_sel_unit:{
+                required: true
+            },
+            sales_qty:{
+                required: true
+            },
+            amt:{
+                required: true
+            },
+            distributor_geo_level :{
+                required: true
+            },
+            retailer_id:{
+                required: true
+            },
+            distributor_sales :{
+                required: true
+            },
+            invoice_no:{
+                required: true
+            },
+            invoice_date:{
+                required: true
+            }
+        }
+    });
+
+  /*  var ishop_sales_distributor_validators = $("#add_ishop_sales").validate({
+        ignore: ".ignore",
+        rules: {
+
+
+            sales_prod_sku:{
+                required: true
+            },
+            sec_sel_unit:{
+                required: true
+            },
+            sales_qty:{
+                required: true
+            },
+            amt:{
+                required: true
+            }
+        }
+    });*/
+
+
+
+    $("#add_sales_stock_row").click(function() {
+
+        $('#sales_prod_sku').removeClass('ignore');
+        $('#sec_sel_unit').removeClass('ignore');
+        $('#sales_qty').removeClass('ignore');
+        $('#amt').removeClass('ignore');
+
+        var $valid = $("#add_ishop_sales").valid();
+        var checked_type = $('input[name=radio1]:checked').val();
+
+        if(!$valid) {
+            ishop_sales_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            add_sales_stock_row();
+        }
+      /*  if(checked_type== 'retailer')
+        {
+            alert('retailer');
+            if(!$valid) {
+                ishop_sales_validators.focusInvalid();
+                return false;
+            }
+            else
+            {
+                add_sales_stock_row();
+            }
+        }
+        else{
+            alert('distributor');
+            if(!$valid) {
+                alert('in3');
+                ishop_sales_distributor_validators.focusInvalid();
+                return false;
+            }
+            else
+            {
+                alert('in2');
+                add_sales_stock_row();
+            }
+        }*/
+    });
+    $("#add_ishop_sales").on("submit",function(){
+
+        $('#sales_prod_sku').addClass('ignore');
+        $('#sec_sel_unit').addClass('ignore');
+        $('#sales_qty').addClass('ignore');
+        $('#amt').addClass('ignore');
+
+        var param = $("#add_ishop_sales").serializeArray();
+        var checked_type = $('input[name=radio1]:checked').val();
+        var validator = ishop_sales_validators;
+
+      /*  if(checked_type== 'retailer')
+        {
+            var validator = ishop_sales_validators;
+        }
+        else{
+            alert('in');
+            var validator = ishop_sales_distributor_validators;
+        }*/
+        var $valid = $("#add_ishop_sales").valid();
+        if(!$valid) {
+            alert('focusInvalid');
+            validator.focusInvalid();
+            return false;
+        }
+        else
+        {
+            alert('focus valid');
+            if($("#add_ishop_sales").children().length <= 0)
+            {
+                alert('No Product Selected');
+                return false;
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: site_url+"ishop/add_ishop_sales_details",
+                    data: param,
+                    //dataType : 'json',
+                    success: function(resp){
+                        if(resp==1){
+                            // site_url+"ishop/physical_stock";
+                        }
+                    }
+                });
+            }
+        }
+    });
+});
+// END ::: Added By Vishal Malaviya For Validation
+
 
 function add_sales_stock_row()
 {
+   // alert('sachin');
     var sku_code = $('#sales_prod_sku option:selected').attr('attr-code');
     var sku_name = $('#sales_prod_sku option:selected').attr('attr-name');
     var sku_id = $('#sales_prod_sku option:selected').val();
@@ -373,24 +547,6 @@ $(document).on('click', 'div.sales_stock', function () { // <-- changes
     return false;
 });
 
-$("#add_ishop_sales").on("submit",function(){
-
-    var param = $("#add_ishop_sales").serializeArray();
-
-//return false;
-    $.ajax({
-        type: 'POST',
-        url: site_url+"ishop/add_ishop_sales_details",
-        data: param,
-        //dataType : 'json',
-        success: function(resp){
-            if(resp==1){
-               // site_url+"ishop/physical_stock";
-            }
-        }
-    });
-   // return false;
-});
 function get_data_conversion(sku_id,quantity,units){
 
     var unit_data = "";

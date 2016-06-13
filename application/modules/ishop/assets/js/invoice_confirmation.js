@@ -4,7 +4,8 @@
 
 $(function () {
     $('#invoice_month').datepicker({
-        format: "yyyy-mm"
+        format: "yyyy-mm",
+        autoclose: true
     });
 });
 

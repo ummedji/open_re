@@ -32,6 +32,7 @@
     <link rel="shortcut icon" href="<?php echo base_url(); ?>favicon.ico">
     <script src="<?php echo Template::theme_url('js/jquery.min.js'); ?>"></script>
     <script type="text/javascript">
+        window.loaderImage = "<?php echo Template::theme_url("images/ajax_loader.gif"); ?>";
         window.base_url = "<?php echo base_url(); ?>";
         window.site_url = "<?php echo site_url(); ?>";
     </script>

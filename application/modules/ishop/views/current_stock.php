@@ -8,13 +8,13 @@ echo form_open('',$attributes); ?>
         <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
-                        <label>Date</label>
+                        <label>Date<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="current_date" id="current_date" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group fulle_wd">
-                            <label style="display: block;">Product Sku</label>
+                            <label style="display: block;">Product Sku<span style="color: red">*</span></label>
                             <select class="selectpicker" name="product_sku" id="sales_prod_sku" data-live-search="true">
                                 <option value="">Product Name</option>
                                 <?php
@@ -33,13 +33,13 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group">
-                        <label for="intransist_qty">Intransist Qty.</label>
+                        <label for="intransist_qty">Intransist Qty.<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="intransist_qty" id="intransist_qty" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group">
-                        <label for="unrusticted_qty">Unrusticted Qty.</label>
+                        <label for="unrusticted_qty">Unrusticted Qty.<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="unrusticted_qty" id="unrusticted_qty" placeholder="">
                     </div>
                 </div>
@@ -54,20 +54,20 @@ echo form_open('',$attributes); ?>
                 <div class="row">
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
-                            <label for="batch">Batch</label>
+                            <label for="batch">Batch<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="batch" id="batch" placeholder="">
                         </div>
                         <div class="wieght_sp toggle_wieght_sp"></div>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
-                            <label for="batch_expiry_date">Batch Expiry Date</label>
+                            <label for="batch_expiry_date">Batch Expiry Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
-                            <label for="batch_mfg_date">Batch Mfg.Date</label>
+                            <label for="batch_mfg_date">Batch Mfg.Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="">
                         </div>
                     </div>

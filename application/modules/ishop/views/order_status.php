@@ -71,7 +71,7 @@
                     
                             <div class="form-group">
                             <label>Geo L1</label>
-                            <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                            <select class="selectpicker" class="distributor_geo_level_1_data" id="dis_distributor_geo_level_1_data" name="dis_distributor_geo_level_1_data" data-live-search="true">
                                 <option value="0">Select Geo Level</option>
                                 <?php
                                 if(isset($geo_level_data) && !empty($geo_level_data))
@@ -119,7 +119,7 @@
 
                              <div class="form-group">
                                 <label>Geo L2</label>
-                                <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                                <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="retailer_geo_level_1_data" data-live-search="true">
 
                                 </select>
 
@@ -130,7 +130,7 @@
                     
                         <div class="form-group">
                             <label>Geo L1</label>
-                            <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+                            <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="retailer_geo_level_2_data" data-live-search="true">
 
                             </select>
                     

@@ -70,30 +70,6 @@ echo form_open('',$attributes); ?>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label>From Month</label>
-                                    <input type="text" class="form-control" name="from_month" id="form_month" placeholder="">
-                                    <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                        <a href="#">
-                                            <i class="fa fa-calendar" aria-hidden="true">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-3 col-sm-6 tp_form">
-                                <div class="form-group">
-                                    <label>TO Month</label>
-                                    <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
-                                    <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                        <a href="#">
-                                            <i class="fa fa-calendar" aria-hidden="true">
-                                            </i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
 
                         <div class="distributor_checked_sales" id="distributor_checked_sales" style="display:none;">
@@ -117,41 +93,37 @@ echo form_open('',$attributes); ?>
                                     </div>
                                     <div class="col-md-3 col-sm-6 tp_form">
                                         <div class="form-group">
-                                            <label>From Month</label>
-                                            <input type="text" class="form-control" name="from_month_dist" id="from_month_dist" placeholder="">
-                                            <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                                <a href="#">
-                                                    <i class="fa fa-calendar" aria-hidden="true">
-                                                    </i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 col-sm-6 tp_form">
-                                        <div class="form-group">
-                                            <label>TO Month</label>
-                                            <input type="text" class="form-control" name="to_month_dist" id="to_month_dist" placeholder="">
-                                            <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                                <a href="#">
-                                                    <i class="fa fa-calendar" aria-hidden="true">
-                                                    </i>
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-12 tp_form">
-                                <div class="row">
-                                    <div class="col-md-3 col-sm-6 tp_form">
-                                        <div class="form-group">
                                             <label for="invoice_no">Scarch By Invoice No.</label>
                                             <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="" style="width: 100%;">
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>From Month<span style="color: red">*</span></label>
+                                <input type="text" class="form-control" name="from_month" id="form_month" placeholder="">
+                                <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                    <a href="#">
+                                        <i class="fa fa-calendar" aria-hidden="true">
+                                        </i>
+                                    </a>
+                                </div>
 
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label>TO Month<span style="color: red">*</span></label>
+                                <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
+                               <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                    <a href="#">
+                                        <i class="fa fa-calendar" aria-hidden="true">
+                                        </i>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-2 save_btn">
                             <label>&nbsp;</label>
