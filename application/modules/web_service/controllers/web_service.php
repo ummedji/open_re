@@ -484,9 +484,13 @@ class Web_service extends Front_Controller
                     }
                 }
             }
+
+            // Get ROL Data
+            $rol = $this->ishop_model->get_all_rol_by_user($user_id,$country_id,$role_id,$radio_type,'web_service');
+
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = $final_array;
+            $result['data'] = array("dp_data"=>$final_array,"rol_data"=>!empty($rol) ? $rol : array());
         }
         else
         {

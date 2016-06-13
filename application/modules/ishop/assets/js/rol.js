@@ -20,7 +20,7 @@ $("input.select_customer_type").on("click",function(){
         
        // alert("1111");
         
-        $("a#retailer_xl").css("display","block");
+        $("a#retailer_xl").css("display","inline-block");
         $("a#distributor_xl").css("display","none");
         
         $("div.distributor_data").css("display","none");
@@ -53,7 +53,7 @@ $("input.select_customer_type").on("click",function(){
        // alert("2222");
         
         $("a#retailer_xl").css("display","none");
-        $("a#distributor_xl").css("display","block");
+        $("a#distributor_xl").css("display","inline-block");
         
         $("div.retailer_data").css("display","none");
         $("div.distributor_data").css("display","block");

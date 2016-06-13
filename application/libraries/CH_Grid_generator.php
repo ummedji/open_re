@@ -621,7 +621,7 @@ EOT;
         $output = <<<PAGE
         <div class="inner_pagination">
 		<div class="pDiv2">
-                        <div class="selects">
+                        <div class="selects" style="width: 200px;display: inline-block;margin: 20px 0;">
                         <select class="selectpicker show-tick per_page span2 form-control input-xsmall form-control input-xsmall input-sm input-inline" name="per_page" id="per_page">
                             {$options}
                         </select>
@@ -638,7 +638,7 @@ EOT;
 
 
 
-                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" id="page" size="4" value="{$this->page}" name="page">
+                        <input type="text" class="pagination-panel-input form-control input-mini input-inline input-sm" id="page" size="4" value="{$this->page}" name="page" style="display: inline-block;width: auto;">
 
 
                         <span><a effect='tooltip' title='Next' class="next_page pagination_link btn btn-sm default " href="javascript:void(0);" value="{$this->next}" ><i class="fa fa-angle-right" title="Last" title="Next" alt="Next"></i></a></span>

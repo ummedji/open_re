@@ -81,7 +81,7 @@ $(document).ready(function(){
        
        if(customer_type_selected == "retailer"){
            
-           $("a#retailer_xl").css("display","block");
+           $("a#retailer_xl").css("display","inline-block");
            $("a#distributor_xl").css("display","none");
            
            $("div.distributor_data").css("display","none");

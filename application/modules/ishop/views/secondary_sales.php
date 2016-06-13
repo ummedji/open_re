@@ -171,6 +171,7 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12 table_bottom">
     
     <div class="row">
+        <div class="col-md-3 save_btn"></div>
       <!--  <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div> -->
      <?php 
          $attributes = array('class' => '', 'id' => 'upload_secondary_sales_data','name'=>'upload_secondary_sales_data');
@@ -186,7 +187,7 @@ echo form_open('',$attributes); ?>
                         Browse <input type="file" name="upload_file_data" id="upload_file_data" />
                     </span> 
                 </span>
-                     <!--   <input type="text" class="form-control" readonly> -->
+                        <input type="text" class="form-control" readonly>
                     </div>
                     <div class="clearfix"></div>
                 </div>

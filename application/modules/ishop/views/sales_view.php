@@ -32,10 +32,10 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-12 distributore_form od_approval">
+                <div class="col-md-10 col-md-offset-1 distributore_form od_approval">
                     <div class="row">
                         <div class="retailer_checked_sales fl_calender_i" id="retailer_checked_sales" >
-                            <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="col-md-4 col-sm-4 tp_form">
                                 <div class="form-group">
                                     <label>Geo Level 3</label>
                                     <select class="selectpicker" name="geo_level_0" id="geo_level_0">
@@ -54,7 +54,7 @@ echo form_open('',$attributes); ?>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="col-md-4 col-sm-4 tp_form">
                                 <div class="form-group">
                                     <label>Geo Level 2</label>
                                     <select class="selectpicker" name="geo_level_1" id="geo_level_1">
@@ -62,7 +62,7 @@ echo form_open('',$attributes); ?>
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-6 tp_form">
+                            <div class="col-md-4 col-sm-4 tp_form">
                                 <div class="form-group">
                                     <label>Retailer Name</label>
                                     <select class="selectpicker" name="fo_retailer_id" id="retailer_sales">
@@ -75,7 +75,7 @@ echo form_open('',$attributes); ?>
                         <div class="distributor_checked_sales" id="distributor_checked_sales" style="display:none;">
                             <div class="col-md-10 col-md-offset-1 tp_form">
                                 <div class="row">
-                                    <div class="col-md-3 col-sm-6 tp_form">
+                                    <div class="col-md-4 col-sm-4 tp_form">
                                         <div class="form-group">
                                             <label>Geo Level</label>
                                             <select class="selectpicker distributor_geo_level " id="distributor_geo_level" name="distributor_geo_level" data-live-search="true">
@@ -83,7 +83,7 @@ echo form_open('',$attributes); ?>
                                         </div>
                                     </div>
 
-                                    <div class="col-md-3 col-sm-6 tp_form">
+                                    <div class="col-md-4 col-sm-4 tp_form">
                                         <div class="form-group">
                                             <label>Distributor Name</label>
                                             <select class="selectpicker" id="distributor_sales" name="distributor_sales" data-live-search="true">
@@ -91,7 +91,7 @@ echo form_open('',$attributes); ?>
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-3 col-sm-6 tp_form">
+                                    <div class="col-md-4 col-sm-4 tp_form">
                                         <div class="form-group">
                                             <label for="invoice_no">Scarch By Invoice No.</label>
                                             <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="" style="width: 100%;">
@@ -100,35 +100,38 @@ echo form_open('',$attributes); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <label>From Month<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="from_month" id="form_month" placeholder="">
-                                <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                    <a href="#">
-                                        <i class="fa fa-calendar" aria-hidden="true">
-                                        </i>
-                                    </a>
-                                </div>
+                        <div class="col-md-10 col-md-offset-1 tp_form">
+                            <div class="col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label>From Month<span style="color: red">*</span></label>
+                                    <input type="text" class="form-control" name="from_month" id="form_month" placeholder="">
+                                    <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                        <a href="#">
+                                            <i class="fa fa-calendar" aria-hidden="true">
+                                            </i>
+                                        </a>
+                                    </div>
 
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <label>TO Month<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
-                               <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                    <a href="#">
-                                        <i class="fa fa-calendar" aria-hidden="true">
-                                        </i>
-                                    </a>
                                 </div>
                             </div>
+                            <div class="col-md-4 col-sm-6">
+                                <div class="form-group">
+                                    <label>TO Month<span style="color: red">*</span></label>
+                                    <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
+                                    <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                        <a href="#">
+                                            <i class="fa fa-calendar" aria-hidden="true">
+                                            </i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2 save_btn">
+                                <label>&nbsp;</label>
+                                <button type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important;">Execute</button>
+                            </div>
                         </div>
-                        <div class="col-md-2 save_btn">
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important;">Execute</button>
-                        </div>
+
 
                     </div>
                 </div>

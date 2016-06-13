@@ -281,10 +281,11 @@ echo form_open('',$attributes); ?>
 
 
 <div class="col-md-12 table_bottom upload_sales_data" style="display: none">
-    
+
     <div class="row">
+        <div class="col-md-3 save_btn"></div>
       <!--  <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div> -->
-     <?php 
+     <?php
          $attributes = array('class' => '', 'id' => 'upload_secondary_sales_data','name'=>'upload_secondary_sales_data');
          echo form_open_multipart('',$attributes);
      ?>
@@ -296,13 +297,13 @@ echo form_open('',$attributes); ?>
                 <span class="input-group-btn">
                     <span class="btn btn-primary btn-file">
                         Browse <input type="file" name="upload_file_data" id="upload_file_data" />
-                    </span> 
+                    </span>
                 </span>
-                     <!--   <input type="text" class="form-control" readonly> -->
+                        <input type="text" class="form-control" readonly>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-               
+
                 <?php
                    if($_SERVER['SERVER_NAME'] == "localhost"){
                        $folder = "open_re/trunk";
@@ -310,27 +311,27 @@ echo form_open('',$attributes); ?>
                    elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
                        $folder = "qa/re";
                    }
-                   
+
                 ?>
                     <div class="col-md-8 chech_data">
-                        
-                        <button type="submit" class="btn btn-default">Check Data</button> 
+
+                        <button type="submit" class="btn btn-default">Check Data</button>
                   <?php  if($current_user->role_id == 8){ ?>
-                        
+
                                 <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/secondary_sales/secondarysales_data.xlsx","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
-                    
+
                         <?php }elseif($current_user->role_id == 9){ ?>
-                                
+
                                      <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/secondary_sales/secondarysales_distributor.xlsx","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
-                                     
+
                         <?php } ?>
-                    
-                                     
-                        
+
+
+
                     </div>
-                
+
                 <?php echo form_close(); ?>
-                
+
             </div>
         </div>
     </div>

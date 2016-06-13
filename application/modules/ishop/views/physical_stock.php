@@ -184,7 +184,8 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
-                <button type="submit" class="btn btn-primary">Save</button>
+                <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>
+
             </div>
             <div class="clearfix"></div>
         </div>
@@ -227,6 +228,7 @@ if($current_user->role_id != 8)
     <div class="col-md-12 table_bottom">
 
         <div class="row">
+            <div class="col-md-3 save_btn"></div>
             <!--  <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div> -->
             <?php
             $attributes = array('class' => '', 'id' => 'upload_physicalstock_data','name'=>'upload_physicalstock_data');
@@ -242,7 +244,7 @@ if($current_user->role_id != 8)
                         Browse <input type="file" name="upload_file_data" id="upload_file_data" />
                     </span>
                 </span>
-                            <!--   <input type="text" class="form-control" readonly> -->
+                               <input type="text" class="form-control" readonly>
                         </div>
                         <div class="clearfix"></div>
                     </div>

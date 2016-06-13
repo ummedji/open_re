@@ -19,8 +19,11 @@
                                 echo isset($content) ? $content : Template::content();
                                 ?>
                             </div>
+                            <div class="row">
+                                <?php  echo theme_view('bottombar'); ?>
+                            </div>
                         </div>
-                        <?php  echo theme_view('bottombar'); ?>
+
                     </div>
                     <div class="clearfix"></div>
                 </div>

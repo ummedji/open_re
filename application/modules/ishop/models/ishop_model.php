@@ -867,7 +867,7 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function get_all_rol_by_user($user_id,$country_id,$logined_user_role,$checked_type=null)
+    public function get_all_rol_by_user($user_id,$country_id,$logined_user_role,$checked_type=null,$web_service=null)
     {
        // echo $user_id;die;
         $sql ='SELECT ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
@@ -890,56 +890,65 @@ class Ishop_model extends BF_Model
      //   $sql .= 'AND ir.created_by_user ='.$user_id.' ';
         $sql .= 'AND ir.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY ir.rol_id DESC ';
-        $rol_details =  $this->grid->get_result_res($sql);
-       /* $info = $this->db->query($sql);
-        $rol_detail = $info->result_array();
-        $rol_details = array('result'=>$rol_detail);*/
-       // testdata($rol_details);
-        if(isset($rol_details['result']) && !empty($rol_details['result']))
-        {
-            if($logined_user_role == 9 || $logined_user_role == 10){
-                $rol['head'] =array('Sr. No.','Action','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
-                $i=1;
-                $rol['count'] = count($rol['head']);
-                foreach($rol_details['result'] as $rd )
-                {   $product_sku_id='<div class="prd_'.$rd["rol_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
-                    $units = $product_sku_id.'<div class="units_'.$rd["rol_id"].'"><span class="units">'.$rd['units'].'</span></div>';
-                    $rol_quantity = '<div class="rol_quantity_'.$rd["rol_id"].'"><span class="rol_quantity">'.$rd['rol_quantity'].'</span></div>';
-                    $rol_quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["rol_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['rol_quantity_Kg_Ltr'].'</span></div>';
 
-                    $rol['row'][]= array($i,$rd['rol_id'],$rd['product_country_name'],$rd['product_sku_name'],$units,$rol_quantity,$rol_quantity_kg_ltr);
-                    $i++;
-                }
-            }
-            else{
-                if($checked_type == 'retailer'){
-                    $rol['head'] =array('Sr. No.','Action','Retailer Code','Retailer Name','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $rol_detail = $info->result_array();
+            return $rol_detail;
+        }
+        else
+        {
+            $rol_details =  $this->grid->get_result_res($sql);
+            /* $info = $this->db->query($sql);
+             $rol_detail = $info->result_array();
+             $rol_details = array('result'=>$rol_detail);*/
+            // testdata($rol_details);
+            if(isset($rol_details['result']) && !empty($rol_details['result']))
+            {
+                if($logined_user_role == 9 || $logined_user_role == 10){
+                    $rol['head'] =array('Sr. No.','Action','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
+                    $i=1;
                     $rol['count'] = count($rol['head']);
+                    foreach($rol_details['result'] as $rd )
+                    {   $product_sku_id='<div class="prd_'.$rd["rol_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
+                        $units = $product_sku_id.'<div class="units_'.$rd["rol_id"].'"><span class="units">'.$rd['units'].'</span></div>';
+                        $rol_quantity = '<div class="rol_quantity_'.$rd["rol_id"].'"><span class="rol_quantity">'.$rd['rol_quantity'].'</span></div>';
+                        $rol_quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["rol_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['rol_quantity_Kg_Ltr'].'</span></div>';
+
+                        $rol['row'][]= array($i,$rd['rol_id'],$rd['product_country_name'],$rd['product_sku_name'],$units,$rol_quantity,$rol_quantity_kg_ltr);
+                        $i++;
+                    }
                 }
                 else{
-                    $rol['head'] =array('Sr. No.','Action','Distributor Code','Distributor Name','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
-                    $rol['count'] = count($rol['head']);
+                    if($checked_type == 'retailer'){
+                        $rol['head'] =array('Sr. No.','Action','Retailer Code','Retailer Name','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
+                        $rol['count'] = count($rol['head']);
+                    }
+                    else{
+                        $rol['head'] =array('Sr. No.','Action','Distributor Code','Distributor Name','PBG','Product SKU Name','Units','ROL Quantity','ROL Qty Kg/Ltr');
+                        $rol['count'] = count($rol['head']);
+                    }
+
+                    $i=1;
+                    foreach($rol_details['result'] as $rd )
+                    {
+                        $product_sku_id='<div class="prd_'.$rd["rol_id"].'"><span class="prd_sku" style="display:none;">'.$rd['product_sku_id'].'</span></div>';
+                        $units = $product_sku_id.'<div class="units_'.$rd["rol_id"].'"><span class="units">'.$rd['units'].'</span></div>';
+
+                        $rol_quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["rol_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['rol_quantity_Kg_Ltr'].'</span></div>';
+
+                        $rol_quantity = '<div class="rol_quantity_'.$rd["rol_id"].'"><span class="rol_quantity">'.$rd['rol_quantity'].'</span></div>';
+
+                        $rol['row'][]= array($i,$rd['rol_id'],$rd['user_code'],$rd['display_name'],$rd['product_country_name'],$rd['product_sku_name'],$units,$rol_quantity,$rol_quantity_kg_ltr);
+                        $i++;
+                    }
                 }
-
-                $i=1;
-                foreach($rol_details['result'] as $rd )
-                {
-                    $product_sku_id='<div class="prd_'.$rd["rol_id"].'"><span class="prd_sku" style="display:none;">'.$rd['product_sku_id'].'</span></div>';
-                    $units = $product_sku_id.'<div class="units_'.$rd["rol_id"].'"><span class="units">'.$rd['units'].'</span></div>';
-
-                    $rol_quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["rol_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['rol_quantity_Kg_Ltr'].'</span></div>';
-
-                    $rol_quantity = '<div class="rol_quantity_'.$rd["rol_id"].'"><span class="rol_quantity">'.$rd['rol_quantity'].'</span></div>';
-
-                    $rol['row'][]= array($i,$rd['rol_id'],$rd['user_code'],$rd['display_name'],$rd['product_country_name'],$rd['product_sku_name'],$units,$rol_quantity,$rol_quantity_kg_ltr);
-                    $i++;
-                }
+                $rol['pagination'] = $rol_details['pagination'];
+                $rol['action'] ='is_action';
+                $rol['edit'] ='is_edit';
+                $rol['delete'] ='is_delete';
+                return $rol;
             }
-            $rol['pagination'] = $rol_details['pagination'];
-            $rol['action'] ='is_action';
-            $rol['edit'] ='is_edit';
-            $rol['delete'] ='is_delete';
-            return $rol;
         }
     }
 

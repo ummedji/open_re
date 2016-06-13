@@ -180,7 +180,7 @@ else{
                         <div class="inl_button save_btn">
 
                             <?php  if($action_data == "target_view" || $login_customer_type == 9){ ?>
-                                    <label>&nbsp;</label>
+                                    <!--<label>&nbsp;</label>-->
                                     <button type="submit" class="btn btn-primary gren_btn">Execute</button>
 
                                 <?php echo form_close(); ?>
@@ -254,8 +254,8 @@ else{
                         <div class="form-group">
                         <div class="inl_button save_btn">
                             <?php  if($action_data == "target_view" || $login_customer_type == 9){ ?>
-                                <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary gren_btn" style="margin-top: 4px;">Execute</button>
+                                <!--<label>&nbsp;</label>-->
+                                <button type="submit" class="btn btn-primary gren_btn" style="margin-top: 0px;">Execute</button>
 
                                 <?php echo form_close(); ?>
                             <?php } ?>
@@ -484,7 +484,6 @@ else{
 <div class="col-md-12 table_bottom">
     <div class="row">
         <div class="col-md-3 save_btn">
-         
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
         
@@ -499,6 +498,7 @@ else{
 <div class="col-md-12 table_bottom">
     
     <div class="row">
+        <div class="col-md-3 save_btn"></div>
       <!--  <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div> -->
      <?php 
          $attributes = array('class' => '', 'id' => 'upload_target_data','name'=>'upload_target_data');
@@ -514,7 +514,7 @@ else{
                         Browse <input type="file" name="upload_file_data" id="upload_file_data" />
                     </span> 
                 </span>
-                     <!--   <input type="text" class="form-control" readonly> -->
+                      <input type="text" class="form-control" readonly>
                     </div>
                     <div class="clearfix"></div>
                 </div>

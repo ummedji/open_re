@@ -70,6 +70,7 @@ echo theme_view('common/middle');
 <div class="col-md-12 table_bottom">
     
     <div class="row">
+        <div class="col-md-3 save_btn"></div>
       <!--  <div class="col-md-3 save_btn"><button type="button" class="btn btn-primary">Save</button></div> -->
      <?php 
          $attributes = array('class' => '', 'id' => 'upload_credit_limit_data','name'=>'upload_credit_limit_data');
