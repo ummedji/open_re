@@ -9,50 +9,45 @@ $(function () {
 });
 
 
-// START ::: Added By Vishal Malaviya For Validation
-var user_credit_limit_validators = $("#add_user_credit_limit").validate({
-    rules: {
-        dist_limit:{
-            required: true
-        },
-        credit_limit:{
-            required: true
-        },
-        curr_outstanding:{
-            required: true
-        },
-        curr_date:{
-            required: true
-        }
-    }
-});
-// END ::: Added By Vishal Malaviya For Validation
-
-
-$("#add_user_credit_limit").on("submit",function(){
-    //alert('in');
-    var param = $("#add_user_credit_limit").serializeArray();
-
-    var $valid = $("#add_user_credit_limit").valid();
-    if(!$valid) {
-        user_credit_limit_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        $.ajax({
-            type: 'POST',
-            url: site_url + "ishop/add_user_credit_limit_datails",
-            data: param,
-            //dataType : 'json',
-            success: function (resp) {
-                if (resp == 1) {
-                    // site_url+"ishop/physical_stock";
-                }
+$(document).ready(function(){
+    var user_credit_limit_validators = $("#add_user_credit_limit").validate({
+        rules: {
+            dist_limit:{
+                required: true
+            },
+            credit_limit:{
+                required: true
+            },
+            curr_outstanding:{
+                required: true
+            },
+            curr_date:{
+                required: true
             }
-        });
-    }
-    //return false;
+        }
+    });
+
+
+    $("#add_user_credit_limit").on("submit",function(){
+        var param = $("#add_user_credit_limit").serializeArray();
+
+        var $valid = $("#add_user_credit_limit").valid();
+        if(!$valid) {
+            user_credit_limit_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ishop/add_user_credit_limit_datails",
+                data: param,
+                success: function (resp) {
+                }
+            });
+        }
+    });
+
 });
 
 

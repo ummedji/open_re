@@ -173,6 +173,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         url: site_url+'ishop/update_secondary_sales_details',
         data: secondary_sales_data,
         success: function(resp){
+            location.reload();
         }
     });
     //return false;
@@ -239,6 +240,7 @@ $(document).on('click', 'div.secondary_cont .delete_i', function () {
             url: site_url+'ishop/delete_secondary_sales_details',
             data: {secondary_sales_id:id},
             success: function(resp){
+                location.reload();
             }
         });
     }
@@ -256,6 +258,7 @@ $(document).on('click', 'div.secondary_product .delete_i', function () {
             url: site_url+'ishop/delete_secondary_sales_product_details',
             data: {secondary_product_sales_id:id},
             success: function(resp){
+                location.reload();
             }
         });
     }

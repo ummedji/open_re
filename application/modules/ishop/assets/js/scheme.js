@@ -108,57 +108,53 @@ function get_slab_by_selected_schemes(selected_schemes)
     });
 }
 
-// START ::: Added By Vishal Malaviya For Validation
-var schemes_validators = $("#add_schemes").validate({
-    rules: {
-        cur_year:{
-            required: true
-        },
-        region:{
-            required: true
-        },
-        territory:{
-            required: true
-        },
-        fo_retailer_id:{
-            required: true
-        },
-        schemes:{
-            required: true
-        },
-        radio_scheme_slab:{
-            required: true
-        }
-    }
-});
-// END ::: Added By Vishal Malaviya For Validation
+$(document).ready(function(){
 
-$("#add_schemes").on("submit",function(){
-    //alert('in');
-    var param = $("#add_schemes").serializeArray();
-        //console.log(param);
-   // return false;
-
-    var $valid = $("#add_schemes").valid();
-    if(!$valid) {
-        schemes_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        $.ajax({
-            type: 'POST',
-            url: site_url + "ishop/add_schemes_details",
-            data: param,
-            //dataType : 'json',
-            success: function (resp) {
-                if (resp == 1) {
-                    // site_url+"ishop/physical_stock";
-                }
+    var schemes_validators = $("#add_schemes").validate({
+        rules: {
+            cur_year:{
+                required: true
+            },
+            region:{
+                required: true
+            },
+            territory:{
+                required: true
+            },
+            fo_retailer_id:{
+                required: true
+            },
+            schemes:{
+                required: true
+            },
+            radio_scheme_slab:{
+                required: true
             }
-        });
-    }
-   //
+        }
+    });
+
+
+    $("#add_schemes").on("submit",function(){
+
+        var param = $("#add_schemes").serializeArray();
+
+        var $valid = $("#add_schemes").valid();
+        if(!$valid) {
+            schemes_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ishop/add_schemes_details",
+                data: param,
+                success: function (resp) {
+
+                }
+            });
+        }
+    });
 });
 
 

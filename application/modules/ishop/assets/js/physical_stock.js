@@ -351,7 +351,6 @@ var physical_stock_validators = $("#add_physical_stock").validate({
         }
     }
 });
-// END ::: Added By Vishal Malaviya For Validation
 
 $("#add_physical_stock").on("submit",function(){
 
@@ -370,9 +369,7 @@ $("#add_physical_stock").on("submit",function(){
             data: param,
             //dataType : 'json',
             success: function(resp){
-                if(resp==1){
-                    site_url+"ishop/physical_stock";
-                }
+                location.reload();
             }
         });
     }
@@ -482,6 +479,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         url: site_url+'ishop/update_physical_stock_details',
         data: physical_data,
         success: function(resp){
+            location.reload();
         }
     });
 
@@ -494,7 +492,9 @@ $(document).on('click', 'div.phy_stock_container .delete_i', function () {
             type: 'POST',
             url: site_url+'ishop/delete_physical_stock_details',
             data: {stock_id:id},
-            success: function(resp){}
+            success: function(){
+                location.reload();
+            }
         });
     }
     else{

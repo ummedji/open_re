@@ -3904,31 +3904,34 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * */
     
     public function get_prespective_order($from_date,$todate,$loginusertype,$loginuserid) {
-        
-        $this->db->select('bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1');
-        $this->db->from('bf_ishop_orders as bio');
-        
-        $this->db->join('bf_users as bu','bu.id = bio.customer_id_from',"LEFT");
-        $this->db->join('bf_master_user_personal_details as bmupd','bmupd.user_id = bu.id',"LEFT"); // FOR GETTING USER NAME AND OTHER DATA
-        $this->db->join('bf_master_user_contact_details as bmucd','bmucd.user_id = bu.id',"LEFT"); 
-        
-        $this->db->join('bf_users as u','u.id = bio.order_taken_by_id',"LEFT");
-        $this->db->join('bf_master_user_personal_details as bmupd1','bmupd1.user_id = u.id',"LEFT"); // FOR GETTING USER NAME AND OTHER DATA
-      
-        $this->db->where('bio.order_date >=', $from_date);
-        $this->db->where('bio.order_date <=', $todate);
-        
-        $this->db->where('bio.customer_id_to',$loginuserid);
-        $this->db->order_by("order_date", "desc"); 
-        
-        $prespective_order = $this->db->get()->result_array();
+
+        $sql ='SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1 ';
+        $sql .= ' FROM bf_ishop_orders as bio ';
+        $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.customer_id_from) ';
+        $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd ON (bmupd.user_id = bu.id) ';
+        $sql .= ' LEFT JOIN bf_master_user_contact_details as bmucd ON (bmucd.user_id = bu.id) ';
+
+        $sql .= ' LEFT JOIN bf_users as u ON (u.id = bio.order_taken_by_id) ';
+        $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd1 ON (bmupd1.user_id = u.id) ';
+
+        $sql .= 'WHERE 1 ';
+
+        $sql .= 'AND bio.order_date BETWEEN '.'"'.$from_date.'"'.' AND '.'"'.$todate.'"'.' ';
+
+        $sql .= 'AND bio.customer_id_to ='.$loginuserid.' ';
+
+        $sql .= 'ORDER BY order_date DESC ';
+
+        $prespective_order =  $this->grid->get_result_res($sql);
+       // testdata($prespective_order);
+      //  $prespective_order = $this->db->get()->result_array();
         
       //  echo $this->db->last_query();
         
      //   echo "<pre>";
      //   print_r($prespective_order);//die;
         
-        if(isset($prespective_order) && !empty($prespective_order))
+        if(isset($prespective_order['result']) && !empty($prespective_order['result']))
         {
             
             if($loginusertype == 9){
@@ -3939,8 +3942,9 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
             }
             
             $prespective['head'] =array('Sr. No.','Entered By','PO No','OTN','Date Of Entry',$head_data,'Address','Mobile No.','Read');
+            $prespective['count'] = count($prespective['head']);
             $i=1;
-            foreach($prespective_order as $po )
+            foreach($prespective_order['result'] as $po )
             {
                 //$read_status = "";
                // if($loginusertype == 9){
@@ -3954,7 +3958,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
 
                // }
               //  else if($loginusertype == 10){
-              //  
+              //
               //      if($po['read_status'] == 0){
               //          $read_status = "Unread";
               //      }
@@ -3963,7 +3967,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
               //      }
 
               //  }
-            
+
                 $otn = '<div class="eye_i" prdid ="'.$po['order_id'].'"><a href="javascript:void(0);">'.$po['order_tracking_no'].'</a></div>';
                 
                 
@@ -3971,6 +3975,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 $i++;
             }
             $prespective['eye']= "";
+            $prespective['pagination'] = $prespective_order['pagination'];
             return $prespective;
         }
        
@@ -3984,26 +3989,28 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * */
     
     public function order_product_details_view_by_id($order_id) {
+
+        $sql ='SELECT bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit ';
+        $sql .= ' FROM bf_ishop_product_order as bipo ';
+
+        $sql .= ' LEFT JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
+        $sql .= ' LEFT JOIN bf_master_product_sku_regional as psr ON (psr.product_sku_id = psc.product_sku_id) ';
+
+        $sql .= 'WHERE 1 ';
+
+        $sql .= 'AND bipo.order_id ='.$order_id.' ';
+
+        //$sql .= 'ORDER BY order_date DESC ';
+
+        $order_detail =  $this->grid->get_result_res($sql);
+
         
-        $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit');
-        $this->db->from('bf_ishop_product_order as bipo');
-        
-        $this->db->join('bf_master_product_sku_country as psc','psc.product_sku_country_id = bipo.product_sku_id',"LEFT");
-        $this->db->join('bf_master_product_sku_regional as psr','psr.product_sku_id = psc.product_sku_id',"LEFT");
-        
-        $this->db->where('bipo.order_id',$order_id);
-        
-        $prespective_order_details = $this->db->get()->result_array();
-        
-       // echo "<pre>";
-       // print_r($prespective_order_details);
-        
-        $order_detail = array('result'=>$prespective_order_details);
-       // var_dump($product_detail);die;
+      //  $order_detail = array('result'=>$prespective_order_details);
 
         if(isset($order_detail['result']) && !empty($order_detail['result']))
         {
             $product_view['head'] =array('Sr. No.','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
+            $product_view['count'] = count($product_view['head']);
             $i=1;
             foreach($order_detail['result'] as $od )
             {
@@ -4011,7 +4018,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 $i++;
             }
             $product_view['eye'] ='';
-           // $product_view['pagination'] = $report_details['pagination'];
+            $product_view['pagination'] = $order_detail['pagination'];
             return $product_view;
         }
         
@@ -4065,85 +4072,82 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * */
     
     public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null) {
-        
-            $this->db->select('bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit');
-            $this->db->from('bf_ishop_orders as bio');
-
-            $this->db->join('bf_users as bu','bu.id = bio.order_taken_by_id',"LEFT");
-            $this->db->join('bf_master_user_personal_details as bmupd','bmupd.user_id = bu.id',"LEFT"); // FOR GETTING USER NAME AND OTHER DATA
-            
-            //FROM USER DATA
-            $this->db->join('bf_users as f_bu','f_bu.id = bio.customer_id_from',"LEFT");
-            $this->db->join('bf_master_user_personal_details as f_bmupd','f_bmupd.user_id = f_bu.id',"LEFT");
-            
-            //TO USER DATA
-            $this->db->join('bf_users as t_bu','t_bu.id = bio.customer_id_to',"LEFT");
-            $this->db->join('bf_master_user_personal_details as t_bmupd','t_bmupd.user_id = t_bu.id',"LEFT");
-            
-            //FOR GETTING USER CREDIT LIMIT
-            $this->db->join('bf_ishop_credit_limit as bicl','bicl.customer_id = bio.customer_id_from',"LEFT");
-            
-            
-            $action_data = $this->uri->segment(2);
-            $sub_action_data = $this->uri->segment(3);
-            
-            if($action_data != "order_approval"){
-                
-                    if($order_tracking_no != null){
-
-                        $this->db->where('bio.order_tracking_no',$order_tracking_no);
-
-                    }
-                    else{
 
 
-                            if($action_data != "po_acknowledgement"){
-                                $this->db->where('bio.order_date >=', $from_date);
-                                $this->db->where('bio.order_date <=', $todate);
-                            }
-                            if($action_data == "po_acknowledgement"){
-                                $this->db->where('bio.order_taken_by_id != ',$customer_id);
-                                $this->db->where('bio.order_status',4);
-                            }
-                            $this->db->where('bio.customer_id_from',$customer_id);
-                    }
+        $sql ='SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
+        $sql .= ' FROM bf_ishop_orders as bio ';
+        $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
+        $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd ON (bmupd.user_id = bu.id) '; // FOR GETTING USER NAME AND OTHER DATA
 
+        $sql .= ' LEFT JOIN bf_users as f_bu ON (f_bu.id = bio.customer_id_from) ';
+        $sql .= ' LEFT JOIN bf_master_user_personal_details as f_bmupd ON (f_bmupd.user_id = f_bu.id) ';
+
+        $sql .= ' LEFT JOIN bf_users as t_bu ON (t_bu.id = bio.customer_id_to) ';
+        $sql .= ' LEFT JOIN bf_master_user_personal_details as t_bmupd ON (t_bmupd.user_id = t_bu.id) ';
+
+        $sql .= ' LEFT JOIN bf_ishop_credit_limit as bicl ON (bicl.customer_id = bio.customer_id_from) ';
+
+        $sql .= 'WHERE 1 ';
+
+        $action_data = $this->uri->segment(2);
+        $sub_action_data = $this->uri->segment(3);
+
+        if($action_data != "order_approval"){
+
+            if($order_tracking_no != null){
+
+                $sql .= ' AND bio.order_tracking_no ='.$order_tracking_no.' ';
             }
-            else if($action_data == "order_approval"){
-                
-                $this->db->where('bio.order_date >=', $from_date);
-                $this->db->where('bio.order_date <=', $todate);
-                
-                $this->db->where('bio.order_taken_by_id',$customer_id);
-                
-                $this->db->where('f_bu.role_id',9);
-                
-                if($order_tracking_no != null){
-                    $this->db->where('bio.order_tracking_no',$order_tracking_no);
-                }
-                if($order_po_no != null){
-                    $this->db->where('bio.PO_no',$order_po_no);
-                }
-                
-                if($sub_action_data == "dispatched"){
-                    $this->db->where('bio.order_status',1);
-                }
-                elseif($sub_action_data == "pending"){
-                     $this->db->where('bio.order_status',0);
-                }
-                elseif($sub_action_data == "reject"){
-                     $this->db->where('bio.order_status',3);
-                }
-                
-            }
-            
-            $this->db->order_by("bio.order_date", "desc"); 
+            else{
 
-            $order_data = $this->db->get()->result_array();
-            
-             //$sql= $this->db->last_query();
-            
-            $orderdata = array('result'=>$order_data);
+
+                if($action_data != "po_acknowledgement"){
+                    $sql .= ' AND bio.order_date BETWEEN '.'"'.$from_date.'"'.' AND '.'"'.$todate.'"'.' ';
+                }
+                if($action_data == "po_acknowledgement"){
+
+                    $sql .= ' AND bio.order_taken_by_id !='.$customer_id.' ';
+
+                    $sql .= ' AND bio.order_status = 4 ';
+
+                }
+                $sql .= ' AND bio.customer_id_from ='.$customer_id.' ';
+            }
+
+        }
+
+        else if($action_data == "order_approval"){
+
+            $sql .= ' AND bio.order_date BETWEEN '.'"'.$from_date.'"'.' AND '.'"'.$todate.'"'.' ';
+
+            $sql .= ' AND bio.order_taken_by_id ='.$customer_id.' ';
+
+            $sql .= ' AND f_bu.role_id = 9 ';
+
+            if($order_tracking_no != null){
+                $sql .= ' AND bio.order_tracking_no ='.$order_tracking_no.' ';
+            }
+            if($order_po_no != null){
+                $sql .= ' AND bio.PO_no ='.$order_po_no.' ';
+            }
+
+            if($sub_action_data == "dispatched"){
+                $sql .= ' AND bio.order_status = 1 ';
+            }
+            elseif($sub_action_data == "pending"){
+                $sql .= ' AND bio.order_status = 0 ';
+            }
+            elseif($sub_action_data == "reject"){
+                $sql .= ' AND bio.order_status = 3 ';
+            }
+
+        }
+        $sql .= ' ORDER BY bio.order_date DESC ';
+
+        $orderdata =  $this->grid->get_result_res($sql);
+       // testdata($orderdata);
+        //$order_data = $this->db->get()->result_array();
+       // $orderdata = array('result'=>$order_data);
        // var_dump($product_detail);die;
 
             if(isset($orderdata['result']) && !empty($orderdata['result']))
@@ -4156,7 +4160,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         if($action_data == "order_approval"){
 
                             $order_view['head'] =array('','Sr. No.','Distributor Code','Distributor Name','PO No.','Order Tracking No.','Credit Limit','Amount','Status');
-
+                            $order_view['count'] = count($order_view['head']);
                             $i=1;
 
                             foreach($orderdata['result'] as $od )
@@ -4191,7 +4195,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         {
 
                             $order_view['head'] =array('Sr. No.','Remove','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
-
+                            $order_view['count'] = count($order_view['head']);
                             $i=1;
 
                             foreach($orderdata['result'] as $od )
@@ -4237,17 +4241,17 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         if($radio_checked == "farmer"){
                             
                             $order_view['head'] =array('Sr. No.','','Farmer Name','Retailer Name','Order Tracking No.','Entered By','Read');
-                            
+                            $order_view['count'] = count($order_view['head']);
                         }
                         elseif($radio_checked == "retailer"){
                             
                             $order_view['head'] =array('Sr. No.','Action','Retailer Code','Retailer Name','Distributor Name','Order Date','PO NO.','Order Tracking No.','EDD','Amount','Entered By', 'Status');
-                            
+                            $order_view['count'] = count($order_view['head']);
                         }
                         elseif($radio_checked == "distributor"){
                             
                             $order_view['head'] =array('Sr. No.','Action','Distributor Code','Distributor Name','Order Date','PO NO.','Order Tracking No.','EDD','Amount','Entered By', 'Status');
-                            
+                            $order_view['count'] = count($order_view['head']);
                         }
                         
                         $i=1;
@@ -4286,12 +4290,12 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                             if($radio_checked == "farmer"){
                             
                                 $order_view['row'][]= array($i,"",$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$otn,$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$read_status);
-                            
+
                             }
                             elseif($radio_checked == "retailer"){
                                 
                                  $order_view['row'][]= array($i,$od['order_id'],'',$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$od["order_date"],$od["PO_no"],$otn,$od["estimated_delivery_date"],$od["total_amount"],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$order_status);
-                                
+
                             }
                             elseif($radio_checked == "distributor"){
                                 
@@ -4314,7 +4318,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         if($action_data != "po_acknowledgement"){
                         
                                 $order_view['head'] =array('Sr. No.','','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
-
+                                $order_view['count'] = count($order_view['head']);
                                 $i=1;
 
                                 foreach($orderdata['result'] as $od )
@@ -4352,7 +4356,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                             //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
                             
                             $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Entered By','Enter PO No.');
-
+                            $order_view['count'] = count($order_view['head']);
                                 $i=1;
 
                                 foreach($orderdata['result'] as $od )
@@ -4381,7 +4385,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         if($action_data != "po_acknowledgement"){
 
                         $order_view['head'] =array('Sr. No.','','Distributor Name','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
-
+                        $order_view['count'] = count($order_view['head']);
                         $i=1;
 
                         foreach($orderdata['result'] as $od )
@@ -4420,7 +4424,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                             //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
                             
                             $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Distributor','Entered By','Enter PO No.');
-
+                            $order_view['count'] = count($order_view['head']);
                                 $i=1;
 
                                 foreach($orderdata['result'] as $od )
@@ -4440,8 +4444,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         
 
                     }
-                
-               // $product_view['pagination'] = $report_details['pagination'];
+
+                $order_view['pagination'] = $orderdata['pagination'];
                 return $order_view;
             }
         
@@ -4456,7 +4460,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
     
     
     public function order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data=null) {
-        
+
         $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity');
         $this->db->from('bf_ishop_product_order as bipo');
         
@@ -4468,6 +4472,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
             
         
         $this->db->where('bipo.order_id',$order_id);
+
+
         
         $order_details = $this->db->get()->result_array();
         

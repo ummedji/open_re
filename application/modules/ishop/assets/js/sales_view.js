@@ -22,6 +22,9 @@ if(login_customer_type == 8){
 
 $("input.select_customer_type").on("click",function(){
 
+    var validator = $( "#view_ishop_sales" ).validate();
+    validator.resetForm();
+
     var customer_type_selected = $(this).val();
     // alert(customer_type_selected);
     if(customer_type_selected == "retailer"){
@@ -301,44 +304,45 @@ function get_retailer_by_distributor(selected_id)
 }
 
 
-// START ::: Added By Vishal Malaviya For Validation
-var ishop_sales_view_validators = $("#view_ishop_sales").validate({
-    ignore: ".ignore",
-    rules: {
-        from_month:{
-            required: true
-        },
-        to_month:{
-            required: true
-        }
-    }
-});
-// END ::: Added By Vishal Malaviya For Validation
 
-
-$("#view_ishop_sales").on("submit",function(){
-
-    var param = $("#view_ishop_sales").serializeArray();
-    var $valid = $("#view_ishop_sales").valid();
-    if(!$valid) {
-        ishop_sales_view_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/view_ishop_sales_details",
-            data: param,
-            dataType : 'html',
-            success: function(resp){
-                $("#middle_container_sales").html(resp);
+$(document).ready(function(){
+    var ishop_sales_view_validators = $("#view_ishop_sales").validate({
+        ignore: ".ignore",
+        rules: {
+            from_month:{
+                required: true
+            },
+            to_month:{
+                required: true
             }
-        });
-        return false;
-    }
+        }
+    });
 
+    $("#view_ishop_sales").on("submit",function(){
+
+        var param = $("#view_ishop_sales").serializeArray();
+        var $valid = $("#view_ishop_sales").valid();
+        if(!$valid) {
+            ishop_sales_view_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                type: 'POST',
+                url: site_url+"ishop/view_ishop_sales_details",
+                data: param,
+                dataType : 'html',
+                success: function(resp){
+                    $("#middle_container_sales").html(resp);
+                }
+            });
+            return false;
+        }
+
+    });
 });
+
 
 /*Get Sales Product Data*/
 $(document).on('click', 'div.sales_cont .eye_i', function () {

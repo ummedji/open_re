@@ -137,6 +137,17 @@ if(isset($order_approval_table) && count($order_approval_table)>0) {
                             </tr>
                         <?php } ?>
                         </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan='<?php echo $td?>'>
+                                    <?php
+                                    if (isset($pagination)) {
+                                        echo $pagination;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            </tfoot>
                         <?php } ?>
                     </table>
                     <div class="clearfix"></div>

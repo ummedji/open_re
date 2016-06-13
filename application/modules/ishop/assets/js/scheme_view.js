@@ -50,46 +50,43 @@ function get_lower_geo_by_parent_geo_scheme(selected_geo_id){
     });
 }
 
-// END ::: Added By Vishal Malaviya For Validation
 
-var scheme_view_validators = $("#view_schemes").validate({
-    rules: {
-        year:{
-            required: true
-        },
-        territory:{
-            required: true
-        }
-    }
-});
-
-// END ::: Added By Vishal Malaviya For Validation
-
-$("#view_schemes").on("submit",function(){
-    //alert('in');
-    var param = $("#view_schemes").serializeArray();
-    console.log(param);
-
-    var $valid = $("#view_schemes").valid();
-    if(!$valid) {
-        scheme_view_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/view_schemes_details",
-            data: param,
-            dataType : 'html',
-            success: function(resp){
-                $("#scheme_view_middle_container").html(resp);
+$(document).ready(function(){
+    var scheme_view_validators = $("#view_schemes").validate({
+        rules: {
+            year:{
+                required: true
+            },
+            territory:{
+                required: true
             }
-        });
-        return false;
-    }
-    //return false;
+        }
+    });
 
+    $("#view_schemes").on("submit",function(){
+        //alert('in');
+        var param = $("#view_schemes").serializeArray();
+        console.log(param);
+
+        var $valid = $("#view_schemes").valid();
+        if(!$valid) {
+            scheme_view_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                type: 'POST',
+                url: site_url+"ishop/view_schemes_details",
+                data: param,
+                dataType : 'html',
+                success: function(resp){
+                    $("#scheme_view_middle_container").html(resp);
+                }
+            });
+            return false;
+        }
+    });
 });
 
 

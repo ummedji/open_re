@@ -123,6 +123,17 @@ if(isset($order_table) && count($order_table)>0) {
                             </tr>
                         <?php } ?>
                         </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan='<?php echo $td?>'>
+                                    <?php
+                                    if (isset($pagination)) {
+                                        echo $pagination;
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            </tfoot>
                         <?php } ?>
                     </table>
                     <div class="clearfix"></div>
@@ -133,9 +144,7 @@ if(isset($order_table) && count($order_table)>0) {
                 ?>
                 <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
                     <?php
-                    
                         echo form_close();
-                    
                 } 
                 
              }?>

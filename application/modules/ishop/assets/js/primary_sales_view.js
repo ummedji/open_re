@@ -148,6 +148,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         url: site_url+'ishop/update_sales_details',
         data: primary_sales_data,
         success: function(resp){
+            location.reload();
         }
     });
     //return false;
@@ -162,6 +163,7 @@ $(document).on('click', 'div.primary_cont .delete_i', function () {
             url: site_url+'ishop/delete_sales_details',
             data: {sales_id:id},
             success: function(resp){
+                location.reload();
             }
         });
     }
@@ -179,6 +181,7 @@ $(document).on('click', 'div.primary_products .delete_i', function () {
             url: site_url+'ishop/delete_sales_product_details',
             data: {product_sales_id:id},
             success: function(resp){
+                location.reload();
             }
         });
     }

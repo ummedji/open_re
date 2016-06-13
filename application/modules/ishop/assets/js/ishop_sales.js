@@ -347,28 +347,6 @@ $(document).ready(function(){
         }
     });
 
-  /*  var ishop_sales_distributor_validators = $("#add_ishop_sales").validate({
-        ignore: ".ignore",
-        rules: {
-
-
-            sales_prod_sku:{
-                required: true
-            },
-            sec_sel_unit:{
-                required: true
-            },
-            sales_qty:{
-                required: true
-            },
-            amt:{
-                required: true
-            }
-        }
-    });*/
-
-
-
     $("#add_sales_stock_row").click(function() {
 
         $('#sales_prod_sku').removeClass('ignore');
@@ -387,31 +365,7 @@ $(document).ready(function(){
         {
             add_sales_stock_row();
         }
-      /*  if(checked_type== 'retailer')
-        {
-            alert('retailer');
-            if(!$valid) {
-                ishop_sales_validators.focusInvalid();
-                return false;
-            }
-            else
-            {
-                add_sales_stock_row();
-            }
-        }
-        else{
-            alert('distributor');
-            if(!$valid) {
-                alert('in3');
-                ishop_sales_distributor_validators.focusInvalid();
-                return false;
-            }
-            else
-            {
-                alert('in2');
-                add_sales_stock_row();
-            }
-        }*/
+
     });
     $("#add_ishop_sales").on("submit",function(){
 
@@ -421,17 +375,10 @@ $(document).ready(function(){
         $('#amt').addClass('ignore');
 
         var param = $("#add_ishop_sales").serializeArray();
-        var checked_type = $('input[name=radio1]:checked').val();
+
         var validator = ishop_sales_validators;
 
-      /*  if(checked_type== 'retailer')
-        {
-            var validator = ishop_sales_validators;
-        }
-        else{
-            alert('in');
-            var validator = ishop_sales_distributor_validators;
-        }*/
+
         var $valid = $("#add_ishop_sales").valid();
         if(!$valid) {
             alert('focusInvalid');
@@ -440,7 +387,6 @@ $(document).ready(function(){
         }
         else
         {
-            alert('focus valid');
             if($("#add_ishop_sales").children().length <= 0)
             {
                 alert('No Product Selected');

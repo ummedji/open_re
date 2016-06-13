@@ -2,9 +2,14 @@
  * Created by webclues on 6/1/2016.
  */
 $(document).ready(function(){
-    
-    
-    
+    $('#form_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    $('#to_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+
+
 });
 
 $(document).on('click', 'input.order_status', function () {

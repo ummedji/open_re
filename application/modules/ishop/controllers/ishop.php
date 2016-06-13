@@ -1361,8 +1361,12 @@ class Ishop extends Front_Controller
             Template::set('login_customer_countryid',$logined_user_countryid);
             
             Template::set('prespective_order_data', $prespective_order);
-            
-            Template::set_view('ishop/prespective_order');
+
+			Template::set('td', $prespective_order['count']);
+			Template::set('pagination', (isset($prespective_order['pagination']) && !empty($prespective_order['pagination'])) ? $prespective_order['pagination'] : '' );
+
+
+			Template::set_view('ishop/prespective_order');
             Template::render();
             
         }
@@ -1380,7 +1384,12 @@ class Ishop extends Front_Controller
 		if(isset($order_id) && !empty($order_id))
 		{
 			$order_details= $this->ishop_model->order_product_details_view_by_id($order_id);
+
 			Template::set('prespective_order_data',$order_details);
+
+			Template::set('td', $order_details['count']);
+			Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
+
 		}
 		Template::set_view('ishop/prespective_order');
 		Template::render();
@@ -1956,8 +1965,12 @@ class Ishop extends Front_Controller
             
           //  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
             if($order_data != ""){
+
                 Template::set('order_approval_table', $order_data);
-            }
+				Template::set('td', $order_data['count']);
+				Template::set('pagination', (isset($order_data['pagination']) && !empty($order_data['pagination'])) ? $order_data['pagination'] : '' );
+
+			}
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);

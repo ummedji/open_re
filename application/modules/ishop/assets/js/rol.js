@@ -11,6 +11,9 @@ if(login_customer_type == 7){
 
 $("input.select_customer_type").on("click",function(){
 
+    var validator = $( "#rol_limit" ).validate();
+    validator.resetForm();
+
     var customer_type_selected = $(this).val();
    //  alert(customer_type_selected);
     if(customer_type_selected == "retailer"){
@@ -373,62 +376,60 @@ $(document).on('click', 'div.rol_del', function () {
     return false;
 });
 
-// START ::: Added By Vishal Malaviya For Validation
-var rol_validators = $("#rol_limit").validate({
-    rules: {
-        geo_level_rol:{
-            required: true
-        },
-        geo_level_1:{
-            required: true
-        },
-        fo_retailer_id:{
-            required: true
-        },
-        distributor_geo_level:{
-            required: true
-        },
-        distributor_rol:{
-            required: true
-        },
-        prod_sku:{
-            required: true
-        },
-        unit:{
-            required: true
-        },
-        rol_qty:{
-            required: true
-        }
-    }
-});
-// END ::: Added By Vishal Malaviya For Validation
-
-$("#rol_limit").on("submit",function(){
-
-    var param = $("#rol_limit").serializeArray();
-    console.log(param);
-
-    var $valid = $("#rol_limit").valid();
-    if(!$valid) {
-        rol_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/add_rol_details",
-            data: param,
-            //dataType : 'json',
-            success: function(resp){
+$(document).ready(function(){
+    var rol_validators = $("#rol_limit").validate({
+        rules: {
+            geo_level_rol:{
+                required: true
+            },
+            geo_level_1:{
+                required: true
+            },
+            fo_retailer_id:{
+                required: true
+            },
+            distributor_geo_level:{
+                required: true
+            },
+            distributor_rol:{
+                required: true
+            },
+            prod_sku:{
+                required: true
+            },
+            unit:{
+                required: true
+            },
+            rol_qty:{
+                required: true
             }
-        });
-    }
-   // return false;
+        }
+    });
 
-   //  return false;
+
+    $("#rol_limit").on("submit",function(){
+
+        var param = $("#rol_limit").serializeArray();
+
+        var $valid = $("#rol_limit").valid();
+        if(!$valid) {
+            rol_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                type: 'POST',
+                url: site_url+"ishop/add_rol_details",
+                data: param,
+
+                success: function(resp){
+                }
+            });
+        }
+    });
 });
+
 
 function get_data_conversion(sku_id,quantity,units){
 
@@ -529,6 +530,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         url: site_url+'ishop/update_rol_limit_details',
         data: rol_data,
         success: function(resp){
+            location.reload();
         }
     });
    // return false;
@@ -541,7 +543,9 @@ $(document).on('click', 'div.rol_container .delete_i', function () {
             type: 'POST',
             url: site_url+'ishop/delete_rol_details',
             data: {rol_id:id},
-            success: function(resp){}
+            success: function(resp){
+                location.reload();
+            }
         });
     }
     else{
