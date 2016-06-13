@@ -4478,23 +4478,22 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
     
     public function order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data=null) {
 
-        $this->db->select('bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity');
-        $this->db->from('bf_ishop_product_order as bipo');
-        
-        $this->db->join('bf_master_product_sku_country as psc','psc.product_sku_country_id = bipo.product_sku_id',"LEFT");
-        $this->db->join('bf_master_product_sku_regional as psr','psr.product_sku_id = psc.product_sku_id',"LEFT");
-        
-        //FOR GETTING USER CURRENT STOCK
-        $this->db->join('bf_ishop_company_current_stock as biccs','biccs.product_sku_id = psr.product_sku_id',"LEFT");
-            
-        
-        $this->db->where('bipo.order_id',$order_id);
+        $sql ='SELECT bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity ';
+        $sql .= ' FROM bf_ishop_product_order as bipo ';
+        $sql .= ' LEFT JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
+        $sql .= ' LEFT JOIN bf_master_product_sku_regional as psr ON (psr.product_sku_id = psc.product_sku_id) ';
 
+        $sql .= ' LEFT JOIN bf_ishop_company_current_stock as biccs ON (biccs.product_sku_id = psr.product_sku_id) ';
 
+        $sql .= 'WHERE 1 ';
+
+        $sql .= ' AND bipo.order_id ='.$order_id.' ';
+
+      //  $orderdata =  $this->grid->get_result_res($sql);
+
+        $order_detail = $this->db->get()->result_array();
         
-        $order_details = $this->db->get()->result_array();
-        
-        $order_detail = array('result'=>$order_details);
+     //   $order_detail = array('result'=>$order_details);
      
         if(isset($order_detail['result']) && !empty($order_detail['result']))
         {
@@ -4504,14 +4503,16 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
             
                 if($radiochecked == "distributor"){
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
-
+                    $product_view['count'] = count($product_view['head']);
                 }
                 elseif($action_data == "order_approval"){
                      $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Current Stock','Dispatched Quantity');
+                    $product_view['count'] = count($product_view['head']);
                 }
                 else
                 {
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
+                    $product_view['count'] = count($product_view['head']);
                 }
 
                 $order_id_data = '<input type="hidden" name="order_id" value="'.$order_id.'">';
@@ -4573,15 +4574,16 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
             
                 if($radiochecked == "farmer"){
                     $product_view['head'] =array('Sr. No.',"",'Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
-
+                    $product_view['count'] = count($product_view['head']);
                 }
                 elseif($radiochecked == "retailer"){
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
-
+                    $product_view['count'] = count($product_view['head']);
                 }
                 elseif($radiochecked == "distributor")
                 {
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
+                    $product_view['count'] = count($product_view['head']);
                 }
 
                 
@@ -4656,7 +4658,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     
                     
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
-
+                    $product_view['count'] = count($product_view['head']);
                     $i=1;
                     foreach($order_detail['result'] as $od )
                     {
@@ -4689,7 +4691,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     
                     
                         $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
-
+                        $product_view['count'] = count($product_view['head']);
                         $i=1;
                         foreach($order_detail['result'] as $od )
                         {
@@ -4712,7 +4714,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     
                     
                     $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
-
+                    $product_view['count'] = count($product_view['head']);
                     $i=1;
                     foreach($order_detail['result'] as $od )
                     {
@@ -4744,7 +4746,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 }else{
             
                         $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
-
+                        $product_view['count'] = count($product_view['head']);
                         $i=1;
                         foreach($order_detail['result'] as $od )
                         {
@@ -4759,8 +4761,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
               }
            
         }
-        
-            
+
+            $product_view['pagination'] = $order_detail['pagination'];
             return $product_view;
         }
         

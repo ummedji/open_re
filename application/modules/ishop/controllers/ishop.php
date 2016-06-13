@@ -1763,18 +1763,23 @@ class Ishop extends Front_Controller
                 if($action_data == "po_acknowledgement"){
                     
                     Template::set('po_ack_table',$order_details);
+
                     Template::set_view('ishop/po_acknowledgement');
                 }
                 elseif($action_data == "order_approval"){
                     
                     Template::set('order_approval_table',$order_details);
+
                     Template::set_view('ishop/order_approval');
                 }
                 else{
                     Template::set('order_table',$order_details);
                     Template::set_view('ishop/order_status');
                 }
-		Template::render();
+			Template::set('td', $order_details['count']);
+			Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
+
+			Template::render();
             
         }
         

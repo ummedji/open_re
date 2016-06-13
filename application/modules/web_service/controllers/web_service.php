@@ -406,11 +406,11 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : getDropDownData
+     * @ Function Name        : getRol
      * @ Function Params    : user_id,country_id,role_id,radio_type (POST)
-     * @ Function Purpose    : Get Rol Drop Down Data
+     * @ Function Purpose    : Get Rol and Drop Down Data
      * */
-    public function getRolDropDownData()
+    public function getRol()
     {
         $action_data = 'set_rol';
         $user_id = $this->input->get_post('user_id');
