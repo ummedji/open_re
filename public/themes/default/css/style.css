@@ -459,7 +459,7 @@ ul.listslider{
 ul.listslider li{
     list-style: none;
     display: inline-block;
-    float: left;
+    /*float: left;*/
     padding: 0px;
     width: auto;
     text-align: center;
@@ -926,6 +926,8 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     margin-bottom: 0px;
     display: inline-block;
 }
+#no-more-tables tfoot td .selects { display: none !important;}
+#no-more-tables tfoot td .inner_pagination { margin-top: 15px; margin-bottom: 10px;}
 @media only screen and (max-width: 736px) {
     #no-more-tables table,
     #no-more-tables thead,

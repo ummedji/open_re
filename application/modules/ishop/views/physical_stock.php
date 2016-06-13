@@ -261,7 +261,7 @@ if($current_user->role_id != 8)
 
                     <?php echo form_close(); ?>
 
-                </div>
+                <!--</div>-->
             </div>
         </div>
     </div>

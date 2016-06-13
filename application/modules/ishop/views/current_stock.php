@@ -140,7 +140,7 @@ if (!$this->input->is_ajax_request()) {
                 
                 <?php echo form_close(); ?>
                 
-            </div>
+            <!--</div>-->
         </div>
     </div>
 </div>

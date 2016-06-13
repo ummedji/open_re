@@ -103,7 +103,7 @@ echo theme_view('common/middle');
                 
                 <?php echo form_close(); ?>
                 
-            </div>
+            <!--</div>-->
         </div>
     </div>
 </div>

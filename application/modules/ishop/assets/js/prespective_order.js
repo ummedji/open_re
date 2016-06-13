@@ -2,12 +2,44 @@
  * Created by webclues on 5/25/2016.
  */
 $(document).ready(function(){
+     $('#form_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    
+    $('#to_date').datepicker({
+        format: "yyyy-mm-dd"
+    });
+    
+    
+    var prespective_order_validators = $("#prespective_order").validate({
+    ignore: ".ignore",
+    rules: {
+        form_date:{
+            required: true
+        },
+        to_date:{
+            required: true
+        }
+    }
+});
+    
     
     $("#prespective_order").on("submit",function(){
         
         var param = $("#prespective_order").serializeArray();
         
-        $.ajax({
+        
+         var $valid = $("#add_ishop_sales").valid();
+        var checked_type = $('input[name=radio1]:checked').val();
+
+        if(!$valid) {
+            prespective_order_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            
+             $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/get_prespective_order",
                 data: param,
@@ -20,9 +52,14 @@ $(document).ready(function(){
                     
                 }
             });
-        return false;
-    });
-    
+            
+             return false;
+             
+        }
+        
+   
+     });
+
 });
 
 $(document).on('click', 'div.order_cont .eye_i', function () {

@@ -240,7 +240,7 @@ if (!$this->input->is_ajax_request()) {
 
                         <?php } ?>
 
-                    </div>
+                    <!--</div>-->
 
                 <?php echo form_close(); ?>
 
@@ -248,5 +248,6 @@ if (!$this->input->is_ajax_request()) {
         </div>
     </div>
 </div>
+
 <?php } ?>
 

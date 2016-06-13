@@ -565,6 +565,96 @@ class Web_service extends Front_Controller
     }
 
     /**
+     * @ Function Name        : getCompanyCurrentStock
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getCompanyCurrentStock()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $current_stock = $this->ishop_model->get_all_company_current_stock($country_id,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($current_stock) ? $current_stock : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : saveCompanyCurrentStock
+     * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
+     * @ Function Purpose    : Save ROL Data
+     * */
+    public function saveCompanyCurrentStock()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->add_company_current_stock_detail($user_id,$country_id);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : editCompanyCurrentStock
+     * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
+     * @ Function Purpose    : Save ROL Data
+     * */
+    public function editCompanyCurrentStock()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->update_current_stock_details($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
      * @ Function Name        : do_json
      * @ Function Params    : result Array
      * @ Function Purpose    : Make JSON format for Sending Data to Mobile

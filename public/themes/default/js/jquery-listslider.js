@@ -62,6 +62,7 @@ jQuery.fn.extend({
         }();
 
         function initListsliderFor(element){
+            try {
 
             var self = this;
 
@@ -155,16 +156,28 @@ jQuery.fn.extend({
 
 
 
-            self.ul = $(element);
-            self.ul.addClass('listslider');
+                self.ul = $(element);
+                self.ul.addClass('listslider');
 
-            self.setupParentDiv();
-            self.addWrapper();
-            self.addContainer();
-            self.addArrows();
-            self.attachEventsToElements();
-            self.showPaginationIfWrapperIsHidden();
+                self.setupParentDiv();
+                self.addWrapper();
+                self.addContainer();
+                self.addArrows();
+                self.attachEventsToElements();
+                self.showPaginationIfWrapperIsHidden();
 
+
+                if($("ul.nav.nav-tabs.listslider li.active").length > 0)
+                {
+                    var activePos = $("ul.nav.nav-tabs.listslider li.active").position();
+                    if(typeof activePos['left'] != 'undefined')
+                    {
+                        self.scroll(activePos['left']);
+                    }
+                }
+            } catch(err) {
+                alert(err);
+            }
         }
     }
 });

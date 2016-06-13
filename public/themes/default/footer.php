@@ -83,7 +83,7 @@ echo Assets::js();
         });
 
         // Initialize navgoco with default options
-        $(".main-menu").navgoco({
+        /*$(".main-menu").navgoco({
             caret: '<span class="caret"></span>',
             accordion: false,
             openClass: 'open',
@@ -97,7 +97,7 @@ echo Assets::js();
                 duration: 300,
                 easing: 'swing'
             }
-        });
+        });*/
 
     });
 </script>

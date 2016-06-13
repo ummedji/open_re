@@ -19,11 +19,12 @@
                                 echo isset($content) ? $content : Template::content();
                                 ?>
                             </div>
+                        </div>
+                        <div class="col-md-12">
                             <div class="row">
                                 <?php  echo theme_view('bottombar'); ?>
                             </div>
                         </div>
-
                     </div>
                     <div class="clearfix"></div>
                 </div>

@@ -2468,7 +2468,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                     'created_on'            =>date('Y-m-d H:i:s'),
                 );
                // testdata($current_stock_log);
-                $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+                $id = $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
             }
             else{
                // update
@@ -2506,8 +2506,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                     'status'                =>'1',
                     'created_on'            =>date('Y-m-d H:i:s'),
                 );
-                $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+                $id = $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
             }
+            return $id;
         }
         else{
             
@@ -2610,17 +2611,30 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
     }
 
 
-    public function update_current_stock_details($user_id,$country_id)
+    public function update_current_stock_details($user_id,$country_id,$web_service=null)
     {
        // testdata($_POST);
-        $product_sku_id = $this->input->post("product_sku_id");
-        $cur_date = $this->input->post("cur_date");
-        $stock_id = $this->input->post("stock_id");
-        $int_qty = $this->input->post("int_qty");
-        $unrtd_qty = $this->input->post("unrtd_qty");
-        $batch = $this->input->post("batch");
-        $batch_exp_date = $this->input->post("batch_exp_date");
-        $batch_mfg_date = $this->input->post("batch_mfg_date");
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $product_sku_id = explode(',',$this->input->get_post("product_sku_id"));
+            $cur_date = explode(',',$this->input->get_post("cur_date"));
+            $stock_id = explode(',',$this->input->get_post("stock_id"));
+            $int_qty = explode(',',$this->input->get_post("int_qty"));
+            $unrtd_qty = explode(',',$this->input->get_post("unrtd_qty"));
+            $batch = explode(',',$this->input->get_post("batch"));
+            $batch_exp_date = explode(',',$this->input->get_post("batch_exp_date"));
+            $batch_mfg_date = explode(',',$this->input->get_post("batch_mfg_date"));
+        }
+        else
+        {
+            $product_sku_id = $this->input->post("product_sku_id");
+            $cur_date = $this->input->post("cur_date");
+            $stock_id = $this->input->post("stock_id");
+            $int_qty = $this->input->post("int_qty");
+            $unrtd_qty = $this->input->post("unrtd_qty");
+            $batch = $this->input->post("batch");
+            $batch_exp_date = $this->input->post("batch_exp_date");
+            $batch_mfg_date = $this->input->post("batch_mfg_date");
+        }
 
         if(isset($stock_id) && !empty($stock_id))
         {
@@ -2658,8 +2672,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                     'status' => '1',
                 );
 
-                $this->db->insert('ishop_company_current_stock_log',$stock_add);
+                $id = $this->db->insert('ishop_company_current_stock_log',$stock_add);
             }
+            return $id;
         }
     }
 
@@ -2697,7 +2712,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
      * @ Function Return 	: Array
      * */
 
-    public function get_all_company_current_stock($country_id)
+    public function get_all_company_current_stock($country_id,$web_service=null)
     {
         $sql ='SELECT iccs.stock_id,iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
         $sql .= 'FROM bf_ishop_company_current_stock AS iccs ';
@@ -2705,44 +2720,52 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         $sql .= 'WHERE 1 ';
         $sql .= 'AND iccs.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY stock_id DESC ';
-       /* $info = $this->db->query($sql);
+
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $stock = $info->result_array();
+            return $stock;
+        } else {
+            /* $info = $this->db->query($sql);
         $stock = $info->result_array();
         $stock_detail = array('result'=>$stock);*/
-        $stock_detail =  $this->grid->get_result_res($sql);
-         //testdata($stock_detail);
+            $stock_detail =  $this->grid->get_result_res($sql);
+            //testdata($stock_detail);
 
-        if(isset($stock_detail['result']) && !empty($stock_detail['result']))
-        {
-            $stock_view['head'] =array('Sr. No.','Action','Date','Product SKU Name','Intransist Qty.','Unrusticted Qty.','Batch','Batch Expiry Date','Batch Mfg. Date');
-            $stock_view['count'] = count($stock_view['head']);
-            $i=1;
-
-            foreach($stock_detail['result'] as $sd )
+            if(isset($stock_detail['result']) && !empty($stock_detail['result']))
             {
-                $product_sku_id='<div class="product_sku_id_'.$sd["stock_id"].'"><span class="product_sku_id" style="display:none">'.$sd['product_sku_id'].'</span></div>';
-                $date='<div class="date_'.$sd["stock_id"].'"><span class="date" style="display:none">'.$sd['date'].'</span></div>';
+                $stock_view['head'] =array('Sr. No.','Action','Date','Product SKU Name','Intransist Qty.','Unrusticted Qty.','Batch','Batch Expiry Date','Batch Mfg. Date');
+                $stock_view['count'] = count($stock_view['head']);
+                $i=1;
 
-                $intrum_quantity= $product_sku_id.'<div class="int_qty_'.$sd["stock_id"].'"><span class="int_qty">'.$sd['intrum_quantity'].'</span></div>';
-                $unrestricted_quantity = $date.'<div class="unrtd_qty_'.$sd["stock_id"].'"><span class="unrtd_qty">'.$sd['unrestricted_quantity'].'</span></div>';
+                foreach($stock_detail['result'] as $sd )
+                {
+                    $product_sku_id='<div class="product_sku_id_'.$sd["stock_id"].'"><span class="product_sku_id" style="display:none">'.$sd['product_sku_id'].'</span></div>';
+                    $date='<div class="date_'.$sd["stock_id"].'"><span class="date" style="display:none">'.$sd['date'].'</span></div>';
 
-                $batch = '<div class="batch_'.$sd["stock_id"].'"><span class="batch">'.$sd['batch'].'</span></div>';
+                    $intrum_quantity= $product_sku_id.'<div class="int_qty_'.$sd["stock_id"].'"><span class="int_qty">'.$sd['intrum_quantity'].'</span></div>';
+                    $unrestricted_quantity = $date.'<div class="unrtd_qty_'.$sd["stock_id"].'"><span class="unrtd_qty">'.$sd['unrestricted_quantity'].'</span></div>';
 
-                $batch_exp_date = '<div class="batch_exp_date_'.$sd["stock_id"].'"><span class="batch_exp_date">'.$sd['batch_exp_date'].'</span></div>';
+                    $batch = '<div class="batch_'.$sd["stock_id"].'"><span class="batch">'.$sd['batch'].'</span></div>';
 
-                $batch_mfg_date = '<div class="batch_mfg_date_'.$sd["stock_id"].'"><span class="batch_mfg_date">'.$sd['batch_mfg_date'].'</span></div>';
+                    $batch_exp_date = '<div class="batch_exp_date_'.$sd["stock_id"].'"><span class="batch_exp_date">'.$sd['batch_exp_date'].'</span></div>';
 
-                $stock_view['row'][]= array($i,$sd['stock_id'],$sd['date'],$sd['product_sku_name'],$intrum_quantity,$unrestricted_quantity,$batch,$batch_exp_date,$batch_mfg_date);
-                $i++;
+                    $batch_mfg_date = '<div class="batch_mfg_date_'.$sd["stock_id"].'"><span class="batch_mfg_date">'.$sd['batch_mfg_date'].'</span></div>';
+
+                    $stock_view['row'][]= array($i,$sd['stock_id'],$sd['date'],$sd['product_sku_name'],$intrum_quantity,$unrestricted_quantity,$batch,$batch_exp_date,$batch_mfg_date);
+                    $i++;
+                }
+                $stock_view['eye'] ='';
+                $stock_view['action'] ='is_action';
+                $stock_view['no_margin'] ='is_margin';
+                $stock_view['edit'] ='is_edit';
+                $stock_view['delete'] ='is_delete';
+                $stock_view['pagination'] = $stock_detail['pagination'];
+                // $product_view['pagination'] = $report_details['pagination'];
+                //testdata($stock_view);
+                return $stock_view;
             }
-            $stock_view['eye'] ='';
-            $stock_view['action'] ='is_action';
-            $stock_view['no_margin'] ='is_margin';
-            $stock_view['edit'] ='is_edit';
-            $stock_view['delete'] ='is_delete';
-            $stock_view['pagination'] = $stock_detail['pagination'];
-            // $product_view['pagination'] = $report_details['pagination'];
-            //testdata($stock_view);
-            return $stock_view;
         }
     }
 

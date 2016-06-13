@@ -128,7 +128,7 @@ $(document).ready(function(){
        else if(customer_type_selected == "distributor"){
            
            $("a#retailer_xl").css("display","none");
-           $("a#distributor_xl").css("display","block");
+           $("a#distributor_xl").css("display","inline-block");
            
            
            $("div.retailer_data").css("display","none");
