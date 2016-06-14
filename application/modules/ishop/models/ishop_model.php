@@ -259,7 +259,7 @@ class Ishop_model extends BF_Model
 
     public function get_primary_details_view($form_date,$to_date,$by_distributor,$by_invoice_no,$web_service = null,$page=null)
     {
-        $sql ='SELECT ips.invoice_no,ips.invoice_date,bu.user_code,bu.display_name,ips.PO_no,ips.order_tracking_no,ips.total_amount,ips.primary_sales_id ';
+        $sql ='SELECT SQL_CALC_FOUND_ROWS ips.primary_sales_id as id, ips.invoice_no,ips.invoice_date,bu.user_code,bu.display_name,ips.PO_no,ips.order_tracking_no,ips.total_amount,ips.primary_sales_id ';
         $sql .= 'FROM bf_ishop_primary_sales AS ips ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = ips.customer_id) ';
         $sql .= 'WHERE 1 ';
@@ -280,7 +280,16 @@ class Ishop_model extends BF_Model
 
         if(!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
         {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
+
             $primary_sales_detail = $info->result_array();
             return $primary_sales_detail;
         }
@@ -339,7 +348,7 @@ class Ishop_model extends BF_Model
 
     public function primary_sales_product_details_view_by_id($primary_sales_id,$web_service = null)
     {
-        $sql ='SELECT ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
+        $sql ='SELECT ipsp.primary_sales_product_id AS id,ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
         $sql .= 'FROM bf_ishop_primary_sales_product AS ipsp ';
         $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = ipsp.product_sku_id) ';
         $sql .= 'JOIN bf_master_product_sku_regional AS psr ON (psr.product_sku_id = psc.product_sku_id) ';
@@ -881,7 +890,7 @@ class Ishop_model extends BF_Model
     public function get_all_rol_by_user($user_id,$country_id,$logined_user_role,$checked_type=null,$web_service=null,$page=null)
     {
        // echo $user_id;die;
-        $sql ='SELECT ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
+        $sql ='SELECT ir.rol_id as id,ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
         $sql .= 'FROM bf_ishop_rol AS ir ';
         $sql .= 'JOIN bf_users AS bu  ON (bu.id = ir.customer_id) ';
         $sql .= 'JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ir.product_sku_id) ';
@@ -2492,7 +2501,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             $batch_mfg_date=$this->input->post("batch_mfg_date");
 
 
-            $product=$this->check_products($product_sku_id);
+            $product=$this->check_products($product_sku_id,$batch);
 
             if($product == 0){
                 $current_stock = array(
@@ -2586,7 +2595,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                     $date = $value[6];
                     
                             
-                    $product=$this->check_products($product_sku_id);
+                    $product=$this->check_products($product_sku_id,$batch);
 
                     if($product == 0){
                         $current_stock = array(
@@ -2753,11 +2762,12 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
      * @ Function Return 	: Array
      * */
 
-    public function check_products($product_sku_id)
+    public function check_products($product_sku_id,$batch)
     {
         $this->db->select('product_sku_id,stock_id');
         $this->db->from('ishop_company_current_stock');
         $this->db->where('product_sku_id',$product_sku_id);
+        $this->db->where('batch',$batch);
         $data=$this->db->get()->result_array();
         if(isset($data) && !empty($data)){
             return $data;
@@ -2776,7 +2786,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     public function get_all_company_current_stock($country_id,$web_service=null,$page=null)
     {
-        $sql ='SELECT iccs.stock_id,iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
+        $sql ='SELECT iccs.stock_id AS id,iccs.stock_id,iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
         $sql .= 'FROM bf_ishop_company_current_stock AS iccs ';
         $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = iccs.product_sku_id) ';
         $sql .= 'WHERE 1 ';
@@ -3040,7 +3050,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     public function get_all_distributors_credit_limit($country_id,$web_service=null,$page=null)
     {
-        $sql ='SELECT bu.display_name,icl.credit_limit,icl.current_outstanding_limit,icl.date ';
+        $sql ='SELECT icl.credit_limit_id as id,bu.display_name,icl.credit_limit,icl.current_outstanding_limit,icl.date ';
         $sql .= 'FROM bf_ishop_credit_limit AS icl ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = icl.customer_id) ';
         $sql .= 'WHERE 1 ';
@@ -3115,9 +3125,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
      * @ Function Return 	: Array
      * */
 
-    public function get_slab_by_selected_scheme_id($scheme_id)
+    public function get_slab_by_selected_scheme_id($scheme_id,$web_service=null)
     {
-        $sql ='SELECT mss.slab_id,mss.slab_no,psc.product_sku_name,mss.1point,mss.value_per_kg,mss.value_per_point,mss.target,mss.target_point,mss.target_value ';
+        $sql ='SELECT mss.slab_id as id,mss.slab_id,mss.slab_no,psc.product_sku_name,mss.1point,mss.value_per_kg,mss.value_per_point,mss.target,mss.target_point,mss.target_value ';
         $sql .= 'FROM bf_master_scheme_slab AS mss ';
         $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = mss.product_sku_id) ';
         $sql .= 'WHERE 1 ';
@@ -3125,32 +3135,37 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         $sql .= 'ORDER BY slab_id DESC ';
         $info = $this->db->query($sql);
         $limit = $info->result_array();
-        $slab_detail = array('result'=>$limit);
-        // testdata($slab_detail);
 
-        if(isset($slab_detail['result']) && !empty($slab_detail['result']))
-        {
-            $slab_view['head'] =array('Sr. No.','Select','Slab No.','Product SKU Name','1 point:?kg/ltr','Value Per Kg. per Ltr','Value Per Point','Target Kg/Ltr','Target Points','Programme Value');
-            $i=1;
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            return $limit;
+        } else {
+            $slab_detail = array('result'=>$limit);
+            // testdata($slab_detail);
 
-            foreach($slab_detail['result'] as $sd )
+            if(isset($slab_detail['result']) && !empty($slab_detail['result']))
             {
-                $slab_view['row'][]= array($i,$sd['slab_id'],$sd['slab_no'],$sd['product_sku_name'],$sd['1point'],$sd['value_per_kg'],$sd['value_per_point'],$sd['target'],$sd['target_point'],$sd['target_value']);
-                $i++;
+                $slab_view['head'] =array('Sr. No.','Select','Slab No.','Product SKU Name','1 point:?kg/ltr','Value Per Kg. per Ltr','Value Per Point','Target Kg/Ltr','Target Points','Programme Value');
+                $i=1;
+
+                foreach($slab_detail['result'] as $sd )
+                {
+                    $slab_view['row'][]= array($i,$sd['slab_id'],$sd['slab_no'],$sd['product_sku_name'],$sd['1point'],$sd['value_per_kg'],$sd['value_per_point'],$sd['target'],$sd['target_point'],$sd['target_value']);
+                    $i++;
+                }
+                $slab_view['eye'] ='';
+                $slab_view['action'] ='is_action';
+                $slab_view['radio'] ='is_radio';
+                $slab_view['no_margin'] ='';
+                $slab_view['no_margin'] ='is_margin';
+                // $product_view['pagination'] = $report_details['pagination'];
+                return $slab_view;
             }
-            $slab_view['eye'] ='';
-            $slab_view['action'] ='is_action';
-            $slab_view['radio'] ='is_radio';
-            $slab_view['no_margin'] ='';
-            $slab_view['no_margin'] ='is_margin';
-            // $product_view['pagination'] = $report_details['pagination'];
-            return $slab_view;
         }
     }
 
     public function get_schemes_by_selected_year($selected_cur_year,$country_id)
     {
-        $this->db->select('*');
+        $this->db->select('scheme_id as id,scheme_id,scheme_code,scheme_name,year,country_id,status');
         $this->db->from('bf_master_scheme');
         $this->db->where('country_id',$country_id);
         $this->db->where('status','1');
@@ -3189,13 +3204,14 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
             );
      //   testdata($schemes_list);
-        $this->db->insert('ishop_scheme_allocation', $schemes_list);
+        $id = $this->db->insert('ishop_scheme_allocation', $schemes_list);
+        return $id;
 
     }
 
-    public function view_schemes_detail($user_id,$country_id,$year,$region,$territory,$login_user,$retailer=null)
+    public function view_schemes_detail($user_id,$country_id,$year,$region,$territory,$login_user,$retailer=null,$page=null,$web_service=null)
     {
-        $sql ='SELECT isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
+        $sql ='SELECT isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
         if($login_user== 8)
         {
             $sql .= ' ,SUM(isp.quantity) as qty ';
@@ -3239,63 +3255,84 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             }
             $sql .= ' GROUP BY isa.allocation_id ';
         }
-       // echo $sql;die;
-      /*  $info = $this->db->query($sql);
-        $limit = $info->result_array();
-        $scheme_allocation = array('result'=>$limit);*/
-       // testdata($scheme_allocation);
-        $scheme_allocation =  $this->grid->get_result_res($sql);
-        if(isset($scheme_allocation['result']) && !empty($scheme_allocation['result'])) {
-            $scheme_allocation_view=array();
 
-            if($login_user==7){
-                $scheme_allocation_view['count'] = '14';
-                $i = 1;
-                foreach ($scheme_allocation['result'] as $sd) {
-                    $scheme_allocation_view['row'][] = array($i,$sd['allocation_id'], $sd['business_georaphy_name_parent'], $sd['business_georaphy_code'], $sd['business_georaphy_name'], $sd['user_code'], $sd['display_name'], $sd['scheme_code'], $sd['scheme_name'], $sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$sd['value_per_kg']);
-                    $i++;
-                }
-            }
-            elseif($login_user==8){
 
-                $scheme_allocation_view['head'] =array('Sr. No.','Retailer Name','Retailer Code','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr','Actual Sales');
-                $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
-                $i=1;
-                foreach($scheme_allocation['result'] as $sd )
-                {
-                    if(isset($sd['qty']) && !empty($sd['qty']))
-                    {
-                        $qty=$sd['qty'];
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // echo $sql;die;
+              $info = $this->db->query($sql);
+              $limit = $info->result_array();
+              return $limit;
+            // testdata($scheme_allocation);
+        } else {
+            $scheme_allocation =  $this->grid->get_result_res($sql);
+            if(isset($scheme_allocation['result']) && !empty($scheme_allocation['result'])) {
+                $scheme_allocation_view=array();
+
+                if($login_user==7){
+                    $scheme_allocation_view['count'] = '14';
+                    if($page != null || $page != ""){
+                        $i = $page*10 - 9;
                     }
                     else{
-                        $qty='0';
+                        $i=1;
                     }
-                    $scheme_allocation_view['row'][]= array($i,$sd['display_name'],$sd['user_code'],$sd['scheme_code'],$sd['scheme_name'],$sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$qty);
-                    $i++;
+
+                    foreach ($scheme_allocation['result'] as $sd) {
+                        $scheme_allocation_view['row'][] = array($i,$sd['allocation_id'], $sd['business_georaphy_name_parent'], $sd['business_georaphy_code'], $sd['business_georaphy_name'], $sd['user_code'], $sd['display_name'], $sd['scheme_code'], $sd['scheme_name'], $sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$sd['value_per_kg']);
+                        $i++;
+                    }
                 }
-                $scheme_allocation_view['eye'] ='';
-                $scheme_allocation_view['action'] ='';
-                $scheme_allocation_view['no_margin'] ='';
-            }
-            elseif($login_user==10){
+                elseif($login_user==8){
 
-                $scheme_allocation_view['head'] =array('Sr. No.','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr');
-                $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
-                $i=1;
-                foreach($scheme_allocation['result'] as $sd )
-                {
-                    $scheme_allocation_view['row'][]= array($i,$sd['scheme_code'],$sd['scheme_name'],$sd['product_sku_name'],$sd['slab_no'],$sd['1point']);
-                    $i++;
+                    $scheme_allocation_view['head'] =array('Sr. No.','Retailer Name','Retailer Code','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr','Actual Sales');
+                    $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
+                    if($page != null || $page != ""){
+                        $i = $page*10 - 9;
+                    }
+                    else{
+                        $i=1;
+                    }
+                    foreach($scheme_allocation['result'] as $sd )
+                    {
+                        if(isset($sd['qty']) && !empty($sd['qty']))
+                        {
+                            $qty=$sd['qty'];
+                        }
+                        else{
+                            $qty='0';
+                        }
+                        $scheme_allocation_view['row'][]= array($i,$sd['display_name'],$sd['user_code'],$sd['scheme_code'],$sd['scheme_name'],$sd['product_sku_name'],$sd['slab_no'],$sd['1point'],$qty);
+                        $i++;
+                    }
+                    $scheme_allocation_view['eye'] ='';
+                    $scheme_allocation_view['action'] ='';
+                    $scheme_allocation_view['no_margin'] ='';
                 }
-                $scheme_allocation_view['eye'] ='';
-                $scheme_allocation_view['action'] ='';
-                $scheme_allocation_view['no_margin'] ='';
+                elseif($login_user==10){
 
+                    $scheme_allocation_view['head'] =array('Sr. No.','Scheme Code','Scheme Name','Product SKU Name','Slab No.','1 pt = ? Kg per Ltr');
+                    $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
+                    if($page != null || $page != ""){
+                        $i = $page*10 - 9;
+                    }
+                    else{
+                        $i=1;
+                    }
+                    foreach($scheme_allocation['result'] as $sd )
+                    {
+                        $scheme_allocation_view['row'][]= array($i,$sd['scheme_code'],$sd['scheme_name'],$sd['product_sku_name'],$sd['slab_no'],$sd['1point']);
+                        $i++;
+                    }
+                    $scheme_allocation_view['eye'] ='';
+                    $scheme_allocation_view['action'] ='';
+                    $scheme_allocation_view['no_margin'] ='';
+
+                }
+
+                $scheme_allocation_view['pagination'] = $scheme_allocation['pagination'];
+
+                return $scheme_allocation_view;
             }
-
-            $scheme_allocation_view['pagination'] = $scheme_allocation['pagination'];
-
-            return $scheme_allocation_view;
         }
     }
 
@@ -5391,7 +5428,19 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 $budget_array["created_on"] = date("Y-m-d h:i:s");
                 $budget_array["created_by_user"] = $logined_user_id;
                         
-                $this->db->insert('bf_ishop_budget', $budget_array);
+                
+                $check_already_data = $this->check_budget_data($budget_array["product_sku_id"],$budget_array["month_data"],$budget_array["customer_id"]);
+                if($check_already_data == 0){
+                   $this->db->insert('bf_ishop_budget', $budget_array);
+                }
+                else{
+                    
+                    $this->db->where('ishop_budget_id', $check_already_data);
+                    $this->db->update('bf_ishop_budget',$budget_array); 
+                    
+                }
+                
+                
                 
             } 
             
@@ -5412,7 +5461,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
       //  echo "<pre>";print_r($target_data);die;
         
         if(isset($budget_data) && !empty($budget_data)) {
-            return 1;
+            return $budget_data[0]["ishop_budget_id"];
         } else{
             return 0;
         }

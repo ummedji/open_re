@@ -1,3 +1,7 @@
+<div class='report-box'>
+
+    <div id='ajax_loader'>
+    </div>
 <?php
 if(isset($scheme_table) && count($scheme_table)>0) { ?>
     <div class="col-md-12" style="margin-top: 24px">
@@ -83,3 +87,4 @@ if(isset($scheme_table) && count($scheme_table)>0) { ?>
        echo "NO Date Available";
     }
     ?>
+</div>

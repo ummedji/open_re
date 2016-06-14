@@ -145,3 +145,5 @@ ul.listslider li{
     border: solid 1px #00793a;
     color: #fff;
 }
+.extra_btn a { background-color: #00793a;}
+.extra_btn a:hover, .extra_btn a:focus { background-color: #65ac1e;}

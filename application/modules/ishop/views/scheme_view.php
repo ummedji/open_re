@@ -1,6 +1,6 @@
 <?php
 $attributes = array('class' => '', 'id' => 'view_schemes','name'=>'view_schemes');
-echo form_open('',$attributes); ?>
+echo form_open('ishop/view_schemes_details',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
     <div class="top_form">
@@ -103,13 +103,12 @@ echo form_open('',$attributes); ?>
     <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" />
     <?php echo form_close(); ?>
     <div class="clearfix"></div>
-</div>
 <?php }?>
 <?php
 if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
 ?>
-<div id="scheme_view_middle_container" class="scheme_view_middle_container">
+<div id="middle_container" class="scheme_view_middle_container">
 
 </div>

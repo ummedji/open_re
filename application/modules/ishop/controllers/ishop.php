@@ -861,8 +861,9 @@ class Ishop extends Front_Controller
 		$region = $this->input->post("region");
 		$territory = $this->input->post("territory");
 		$retailer = $this->input->post("fo_retailer_id");
+		$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
-		$scheme_view=$this->ishop_model->view_schemes_detail($user_id,$user->country_id,$year,$region,$territory,$login_user_role,$retailer);
+		$scheme_view=$this->ishop_model->view_schemes_detail($user_id,$user->country_id,$year,$region,$territory,$login_user_role,$retailer,$page);
 	//	testdata($scheme_view);
 
 		if($login_user_role==7){
@@ -3887,7 +3888,11 @@ class Ishop extends Front_Controller
                                 elseif($_POST["dirname"] == "company_current_stock"){
                                     if(($j == 5 || $j == 6 || $j == 7) && ($row_data[$j] != "")){
                                         $date_data = explode("-",$row_data[$j]);
-                                        $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                        
+                                        
+                                        $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
+                                        
+                                        $row_data[$j] = $date_data[0]."-".$monthName."-".$date_data[2];
                                     }
                                 }
                                 elseif($_POST["dirname"] == "credit_limit"){

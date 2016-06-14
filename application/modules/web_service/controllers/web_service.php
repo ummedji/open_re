@@ -190,9 +190,8 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
 
-        if(isset($user_id) && isset($country_id))
+        if(isset($user_id) && isset($country_id) && !empty($user_id) && !empty($country_id))
         {
-
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
 
@@ -200,19 +199,33 @@ class Web_service extends Front_Controller
             if (!empty($distributors)) {
                 foreach ($distributors as $distributor) {
                     $dist = array(
+                        "id" => $distributor['id'],
                         "display_name" => $distributor['display_name'],
-                        "user_code" => $distributor['user_code'],
                     );
                     array_push($dist_array, $dist);
                 }
             }
-            $product_skus = !empty($product_skus) ? $product_skus : array();
+
+            $sku_array = array();
+            if (!empty($product_skus)) {
+                foreach ($product_skus as $product_sku) {
+                    $sku = array(
+                        "id" => $product_sku['product_sku_country_id'],
+                        "product_sku_name" => $product_sku['product_sku_name'],
+                        "product_sku_code" => $product_sku['product_sku_code'],
+                        "product_type_label_name" => trim($product_sku['product_type_label_name']),
+                    );
+                    array_push($sku_array, $sku);
+                }
+            }
+
             $units = array(
                 array("name"=>"Box","value"=>"box"),
                 array("name"=>"Packages","value"=>"packages"),
                 array("name"=>"Kg/Ltr","value"=>"kg/ltr")
             );
-            $data = array("distributors" => $dist_array, "products_skus" => $product_skus, "units" => $units);
+
+            $data = array("distributors" => $dist_array, "products_skus" => $sku_array, "units" => $units);
             $result['status'] = true;
             $result['message'] = 'Success';
             $result['data'] = $data;
@@ -265,20 +278,24 @@ class Web_service extends Front_Controller
     public function getPrimarySalesInvoices()
     {
         $user_id = $this->input->get_post('user_id');
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $by_distributor = $this->input->get_post('by_distributor');
+        $by_invoice_no = $this->input->get_post('by_invoice_no');
 
         if(isset($user_id))
         {
-            $form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
-            $to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
-            $by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
-            $by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
-
-            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service',$page=2);
+            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
             if(!empty($primary_sales_details))
             {
                 $result['status'] = true;
                 $result['message'] = 'Success';
                 $result['data'] = $primary_sales_details;
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $result['total_rows'] = $total_rows;
+                // For Pagination
             }
             else
             {
@@ -302,11 +319,10 @@ class Web_service extends Front_Controller
     public function getPrimarySalesProductDetails()
     {
         $user_id = $this->input->get_post('user_id');
+        $primary_sales_id = $this->input->get_post('primary_sales_id');
 
-        if(isset($user_id))
+        if(isset($user_id) && !empty($user_id) && isset($primary_sales_id) && !empty($primary_sales_id))
         {
-            $primary_sales_id = (isset($_POST['primary_sales_id']) ? $_POST['primary_sales_id'] : '');
-
             $primary_sales_product_details = $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id,'web_service');
             if(!empty($primary_sales_product_details))
             {
@@ -336,14 +352,13 @@ class Web_service extends Front_Controller
     public function getPrimarySalesInvoicesMix()
     {
         $user_id = $this->input->get_post('user_id');
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $by_distributor = $this->input->get_post('by_distributor');
+        $by_invoice_no = $this->input->get_post('by_invoice_no');
 
         if(isset($user_id))
         {
-            $form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
-            $to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
-            $by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
-            $by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
-
             $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
             if(!empty($primary_sales_details))
             {
@@ -418,7 +433,11 @@ class Web_service extends Front_Controller
         $role_id = $this->input->get_post('role_id');
         $radio_type = $this->input->get_post('radio_type'); // farmer,retailer,distributor
 
-        if(isset($user_id))
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && isset($role_id) && !empty($role_id)
+            && isset($radio_type) && !empty($radio_type)
+        )
         {
             // Role Check
             if($radio_type == "farmer"){
@@ -440,14 +459,22 @@ class Web_service extends Front_Controller
                 {
                     foreach($geolevels3 as $k3 => $geolevel3)
                     {
-                        $final_array[] = $geolevel3; // Add Geo Level 3 Into Final Array
+                        $g3 = array(
+                            "id"=>$geolevel3['political_geo_id'],
+                            "political_geography_name"=>$geolevel3['political_geography_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
                         $parent_geo_id3 = $geolevel3['political_geo_id'];
                         $geolevels2 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,$parent_geo_id3,$default_type,$action_data);
                         if(!empty($geolevels2))
                         {
                             foreach ($geolevels2 as $k2 => $geolevel2)
                             {
-                                $final_array[$k3]['geolevel2'][] = $geolevel2; // Add Geo Level 2 Into Final Array
+                                $g2 = array(
+                                    "id"=>$geolevel2['political_geo_id'],
+                                    "political_geography_name"=>$geolevel2['political_geography_name'],
+                                );
+                                $final_array[$k3]['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
                                 $parent_geo_id2 = $geolevel2['political_geo_id'];
                                 $retailers_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id2, $country_id, $radio_type, null);
                                 $retailers_names = json_decode($retailers_names, true);
@@ -574,7 +601,7 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
 
-        if(isset($user_id))
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
             $current_stock = $this->ishop_model->get_all_company_current_stock($country_id,'web_service');
 
@@ -713,23 +740,30 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : getCreditLimit
-     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Name        : viewSchemes
+     * @ Function Params    : user_id,country_id,role_id,year,region,territory (POST)
      * @ Function Purpose    : Get Credit Limit Data
      * */
-    public function getSchemes()
+    public function viewSchemes()
     {
         $user_id = $this->input->get_post('user_id');
-        $role_id = $this->input->get_post('role_id');
         $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
         $year = $this->input->get_post("year");
         $region = $this->input->get_post("region");
         $territory = $this->input->get_post("territory");
         $retailer = $this->input->get_post("fo_retailer_id");
 
-        if(isset($user_id))
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && isset($role_id) && !empty($role_id)
+            && isset($year) && !empty($year)
+            && isset($region) && !empty($region)
+            && isset($territory) && !empty($territory)
+            && isset($region) && !empty($region)
+        )
         {
-            $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer);
+            $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer,null,'web_service');
 
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
@@ -744,11 +778,43 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : getCreditLimit
+     * @ Function Name        : saveSchemes
+     * @ Function Params    : user_id,country_id,dist_limit,credit_limit,curr_outstanding,curr_date (POST)
+     * @ Function Purpose    : Save Credit Limit Data
+     * */
+    public function saveSchemes()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->add_schemes_detail($user_id,$country_id);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getSchemes
      * @ Function Params    : user_id,country_id (POST)
      * @ Function Purpose    : Get Credit Limit Data
      * */
-    public function getSchemesDp()
+    public function getSchemes()
     {
         $default_retailer_role = 10;
         $year = $this->input->get_post('year');
@@ -756,7 +822,11 @@ class Web_service extends Front_Controller
         $logined_user_role = $this->input->get_post('role_id');
         $country_id = $this->input->get_post('country_id');
 
-        if(isset($user_id))
+        if(isset($user_id) && !empty($user_id)
+            && isset($year) && !empty($year)
+            && isset($logined_user_role) && !empty($logined_user_role)
+            && isset($country_id) && !empty($country_id)
+        )
         {
             //Get Data
             $final_array = array();
@@ -765,14 +835,22 @@ class Web_service extends Front_Controller
             {
                 foreach($geolevels3 as $k3 => $geolevel3)
                 {
-                    $final_array[] = $geolevel3; // Add Geo Level 3 Into Final Array
+                    $g3 = array(
+                        "id"=>$geolevel3['business_geo_id'],
+                        "business_georaphy_name"=>$geolevel3['business_georaphy_name'],
+                    );
+                    $final_array[] = $g3; // Add Geo Level 3 Into Final Array
                     $parent_geo_id3 = $geolevel3['business_geo_id'];
                     $geolevels2 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,$parent_geo_id3,$year,$logined_user_role);
                     if(!empty($geolevels2))
                     {
                         foreach ($geolevels2 as $k2 => $geolevel2)
                         {
-                            $final_array[$k3]['geolevel2'][] = $geolevel2; // Add Geo Level 2 Into Final Array
+                            $g2 = array(
+                                "id"=>$geolevel2['business_geo_id'],
+                                "business_georaphy_name"=>$geolevel2['business_georaphy_name'],
+                            );
+                            $final_array[$k3]['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
                             $parent_geo_id2 = $geolevel2['business_geo_id'];
                             $retailers_names = $this->ishop_model->get_business_geo_data_to_retailer($parent_geo_id2,$country_id);
                             if(!empty($retailers_names))
@@ -787,15 +865,30 @@ class Web_service extends Front_Controller
                 }
             }
 
+            $final_array2 = array();
             $schemes = $this->ishop_model->get_schemes_by_selected_year($year,$country_id);
-
-            //$get_slabs= $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id);
+            if(!empty($schemes))
+            {
+                foreach($schemes as $k3 => $scheme)
+                {
+                    $final_array2[] = $scheme; // Add Geo Level 3 Into Final Array2
+                    $scheme_id = $scheme['scheme_id'];
+                    $get_slabs = $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id,'web_service');
+                    if(!empty($get_slabs))
+                    {
+                        foreach ($get_slabs as $k2 => $get_slab)
+                        {
+                            $final_array2[$k3]['slabs'][] = $get_slab; // Add Geo Level 2 Into Final Array2
+                        }
+                    }
+                }
+            }
 
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = array(
                 "geo_data" => !empty($final_array) ? $final_array : array(),
-                "schema_data" => !empty($schemes) ? $schemes : array()
+                "schema_data" => !empty($final_array2) ? $final_array2 : array()
             );
         }
         else

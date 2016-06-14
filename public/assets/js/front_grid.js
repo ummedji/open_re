@@ -28,7 +28,6 @@ $(document).ready(function () {
 
 $(document).delegate(".report-box .pagination_link", "click", function (e) {
     var page = $(this).attr("value");
-    //alert(page);
     paginationCall(page);
 });
 
@@ -54,13 +53,6 @@ $(document).delegate('.report-box body [effect=tooltip]', 'mouseenter mouseleave
 // });
 
 function ajax_report(url, data, callback) {
-   // alert(url);
-   // alert(data);
-   // alert(callback);
-
-    console.log(url);
-    console.log(data);
-
     hideTooltip();
     ajaxLoaderOverlay($(".report-box"));
     $.ajax({
@@ -93,7 +85,6 @@ function paginationCall(page) {
 }
 
 function submitForm() {
-
     var uri = $(location).attr('href');
     //alert(uri);
     var lm = uri.split('/').reverse()[0];
@@ -108,6 +99,7 @@ function submitForm() {
         case'physical_stock': val = $("#add_physical_stock");break;
         case'invoice_received_confirmation': val = $("#invoice_confirmation");break;
         case'sales_view': val = $("#view_ishop_sales");break;
+        case'schemes_view': val = $("#view_schemes");break;
        /* default  : val = $("#form_ntfdetails");break;*/
     }
 
@@ -118,8 +110,6 @@ function submitForm() {
     data.push({name: "page", value:pages});
 
     var url = val.attr("action");
-    //var url = "http://localhost/open_re/trunk/public/ishop/primary_sales_details_view";
-
     ajax_report(url, data, settblResponse);
 }
 

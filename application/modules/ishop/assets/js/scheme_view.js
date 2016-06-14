@@ -63,8 +63,10 @@ $(document).ready(function(){
         }
     });
 
-    $("#view_schemes").on("submit",function(){
+    $("#view_schemes").on("submit",function(e){
         //alert('in');
+        e.preventDefault();
+
         var param = $("#view_schemes").serializeArray();
         console.log(param);
 
@@ -81,7 +83,7 @@ $(document).ready(function(){
                 data: param,
                 dataType : 'html',
                 success: function(resp){
-                    $("#scheme_view_middle_container").html(resp);
+                    $("#middle_container").html(resp);
                 }
             });
             return false;

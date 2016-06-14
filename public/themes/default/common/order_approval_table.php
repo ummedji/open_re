@@ -115,7 +115,6 @@ if(isset($order_approval_table) && count($order_approval_table)>0) {
                                             <div>
                                                 <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
-                                           
                                         </td>
                                     <?php }
                                     else
@@ -164,7 +163,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0) {
                     {
                     ?>
                         <input class="selected_action" type="hidden" name="selected_action" id="" value="" /> 
-                        <div class="col-md-3 save_btn">
+                        <div class="col-md-12 extra_btn text-center" style="margin-top: 20px; margin-bottom: 10px;">
                             <a rel="dispatch" class="update_order_status btn btn-primary">Dispatch</a>
                             <a rel="pending" class="update_order_status btn btn-primary">Pending</a>
                             <a rel="reject" class="update_order_status btn btn-primary">Reject</a>
