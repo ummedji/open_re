@@ -36,12 +36,12 @@
             <div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
-                        <li class="active"><a href="<?php echo base_url('/ishop/order_place') ?>">Order Place</a></li>
-                        <li><a href="<?php echo base_url('/ishop/order_status') ?>">Order Status</a></li>
+                        <li class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_place') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_place') ?>">Order Place</a></li>
+                        <li  class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_status') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_status') ?>">Order Status</a></li>
                         <?php 
                         if($login_customer_type == 9 || $login_customer_type == 10){
                         ?>
-                            <li><a href="<?php echo base_url('/ishop/po_acknowledgement') ?>">PO Acknowledgment</a></li>
+                            <li  class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='po_acknowledgement') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/po_acknowledgement') ?>">PO Acknowledgment</a></li>
                         <?php } ?>
                     </ul>
                     <div class="clearfix"></div>

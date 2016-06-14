@@ -1,6 +1,6 @@
 <?php
 $attributes = array('class' => '', 'id' => 'primary_sales_view','name'=>'primary_sales_view');
-echo form_open('',$attributes); ?>
+echo form_open('ishop/primary_sales_details_view',$attributes); ?>
 
 <?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
@@ -66,11 +66,11 @@ echo theme_view('common/middle');
     <?php
     $attributes = array('class' => '', 'id' => 'primary_sales_view_data','name'=>'primary_sales_view_data');
     echo form_open('',$attributes); ?>
-        <div id="middle_container_primary" class="primary_cont">
+        <div id="middle_container" class="primary_cont">
 
         </div>
 
-        <div id="product_table_container" class="primary_products">
+        <div id="middle_container_product" class="primary_products">
 
         </div>
     <?php echo form_close(); ?>

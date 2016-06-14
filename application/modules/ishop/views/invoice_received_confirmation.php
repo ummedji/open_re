@@ -1,7 +1,7 @@
 <?php
 $attributes = array('class' => '', 'id' => 'invoice_confirmation','name'=>'invoice_confirmation');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('',$attributes); ?>
+echo form_open('ishop/invoice_confirmation_received',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>
     <div class="col-md-12">
         <div class="top_form">
@@ -47,10 +47,10 @@ if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
 ?>
-<div id="middle_container_received" class="middle_container_received">
+<div id="middle_container" class="middle_container_received">
 
 </div>
-<div id="product_table_container_invoice">
+<div id="middle_container_product">
 
 </div>
 <?php echo form_close(); ?>

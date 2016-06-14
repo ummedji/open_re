@@ -352,7 +352,9 @@ var physical_stock_validators = $("#add_physical_stock").validate({
     }
 });
 
-$("#add_physical_stock").on("submit",function(){
+$("#add_physical_stock").on("submit",function(e){
+
+    e.preventDefault();
 
     var param = $("#add_physical_stock").serializeArray();
 

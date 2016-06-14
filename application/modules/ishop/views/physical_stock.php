@@ -1,7 +1,7 @@
 <?php
 $attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('',$attributes); ?>
+echo form_open('ishop/physical_stock',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
 <?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12 od_approval">
@@ -198,7 +198,7 @@ echo form_open('',$attributes); ?>
 <?php $attributes = array('class' => '', 'id' => 'update_physical_stock','name'=>'update_physical_stock');
 echo form_open('',$attributes); ?>
 
-<div class="phy_stock_container">
+<div id="middle_container" class="phy_stock_container">
 <?php
 echo theme_view('common/middle');
 ?>
@@ -217,10 +217,8 @@ if (!$this->input->is_ajax_request()) {
             <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
         </div>
     </div>
-    <?php
-}
-?>
-
+    <?php } ?>
+<?php if (!$this->input->is_ajax_request()) {?>
 <?php
 if($current_user->role_id != 8)
 {
@@ -268,5 +266,4 @@ if($current_user->role_id != 8)
 
 <?php
 }
-?>
-
+ } ?>

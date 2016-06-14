@@ -2,7 +2,7 @@
 $attributes = array('class' => '', 'id' => 'add_user_credit_limit','name'=>'add_user_credit_limit');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('',$attributes); ?>
-
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
     <div class="top_form">
         <div class="row">
@@ -59,14 +59,18 @@ echo form_open('',$attributes); ?>
         <div class="clearfix"></div>
     </div>
 </div>
+<?php } ?>
+<div id="middle_container">
+    <?php
+    echo theme_view('common/middle');
+    ?>
+</div>
 
-<?php
-echo theme_view('common/middle');
-?>
 <?php echo form_close(); ?>
 
 <div class="clearfix"></div>
 
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12 table_bottom">
     
     <div class="row">
@@ -107,3 +111,4 @@ echo theme_view('common/middle');
         </div>
     </div>
 </div>
+<?php } ?>

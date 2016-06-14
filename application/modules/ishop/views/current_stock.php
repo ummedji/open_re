@@ -1,8 +1,8 @@
 <?php
 $attributes = array('class' => '', 'id' => 'add_company_current_stock','name'=>'add_company_current_stock');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('',$attributes); ?>
-
+echo form_open('ishop/company_current_stock',$attributes); ?>
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
     <div class="top_form">
         <div class="row">
@@ -78,11 +78,12 @@ echo form_open('',$attributes); ?>
         <div class="clearfix"></div>
     </div>
 </div>
+<?php } ?>
 <?php echo form_close(); ?>
 
 <?php $attributes = array('class' => '', 'id' => 'update_current_stock','name'=>'update_current_stock');
 echo form_open('',$attributes); ?>
-<div class="current_stock_container">
+<div id="middle_container" class="current_stock_container">
 <?php
     echo theme_view('common/middle');
 ?>
@@ -103,7 +104,7 @@ if (!$this->input->is_ajax_request()) {
 ?>
 
 <div class="clearfix"></div>
-
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12 table_bottom">
     
     <div class="row">
@@ -144,3 +145,4 @@ if (!$this->input->is_ajax_request()) {
         </div>
     </div>
 </div>
+<?php } ?>

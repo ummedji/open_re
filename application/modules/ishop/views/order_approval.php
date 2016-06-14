@@ -5,10 +5,10 @@
             <div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
-                        <li class="active"><a href="<?php echo base_url('/ishop/order_approval/dispatched') ?>">Dispatched</a></li>
-                        <li class="active"><a href="<?php echo base_url('/ishop/order_approval/pending') ?>">Pending</a></li>
-                        <li class="active"><a href="<?php echo base_url('/ishop/order_approval/reject') ?>">Reject</a></li>
-                        <li class="active"><a href="<?php echo base_url('/ishop/order_approval/all') ?>">All</a></li>
+                        <li class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_approval' && $this->uri->segment(3)=='dispatched') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval/dispatched') ?>">Dispatched</a></li>
+                        <li class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_approval' && $this->uri->segment(3)=='pending') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval/pending') ?>">Pending</a></li>
+                        <li class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_approval' && $this->uri->segment(3)=='reject') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval/reject') ?>">Reject</a></li>
+                        <li class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_approval' && $this->uri->segment(3)=='all') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval/all') ?>">All</a></li>
                     </ul>
                     <div class="clearfix"></div>
                 </div>

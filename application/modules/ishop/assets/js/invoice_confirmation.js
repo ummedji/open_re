@@ -10,7 +10,9 @@ $(function () {
 });
 
 
-$("#invoice_confirmation").on("submit",function(){
+$("#invoice_confirmation").on("submit",function(e){
+
+    e.preventDefault();
 
     var param = $("#invoice_confirmation").serializeArray();
 
@@ -26,7 +28,7 @@ function get_invoice_confirmation_received(param)
         data: param,
         dataType : 'html',
         success: function(resp){
-            $("#middle_container_received").html(resp);
+            $("#middle_container").html(resp);
         }
     });
 
@@ -62,7 +64,7 @@ $(document).on('click', 'div.middle_container_received .eye_i', function () {
         url: site_url+'ishop/invoice_sales_product_details_view',
         data: {id: id},
         success: function(resp){
-            $("#product_table_container_invoice").html(resp);
+            $("#middle_container_product").html(resp);
 
         }
     });

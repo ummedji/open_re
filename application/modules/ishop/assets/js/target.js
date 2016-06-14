@@ -1331,6 +1331,23 @@ $(document).on('submit', '#upload_target_data', function (e) {
      var file_data = new FormData(this);
      var dir_name = "target";
      
+     
+     
+        var month = new Array();
+        month[0] = "Jan";
+        month[1] = "Feb";
+        month[2] = "Mar";
+        month[3] = "Apr";
+        month[4] = "May";
+        month[5] = "Jun";
+        month[6] = "Jul";
+        month[7] = "Aug";
+        month[8] = "Sep";
+        month[9] = "Oct";
+        month[10] = "Nov";
+        month[11] = "Dec";
+        
+     
      //file_data.push(dir_name);
      
      $.ajax({
@@ -1387,6 +1404,15 @@ $(document).on('submit', '#upload_target_data', function (e) {
                                 var des_data = des_value.split("~");
                                 
                                 $.each( des_data, function( key3, desc_data ){
+                                    
+                                    if(key3 == 0){
+                                        
+                                        var year_data = desc_data.split("-");
+                                        
+                                        var d = new Date(desc_data);
+                                        var desc_data = month[d.getMonth()]+"-"+year_data[0];
+                                    }
+                                    
                                     t_data += "<td style='border:1px solid;text-align:center;'>"+desc_data+"</td>";
                                 });
                                 

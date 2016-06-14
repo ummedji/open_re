@@ -1,7 +1,7 @@
 <?php
 $attributes = array('class' => '', 'id' => 'rol_limit','name'=>'rol_limit');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('',$attributes); ?>
+echo form_open('ishop/set_rol',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>
     <div class="col-md-12">
         <?php if($current_user->role_id == '7'){
@@ -162,7 +162,7 @@ echo form_open('',$attributes); ?>
 <?php $attributes = array('class' => '', 'id' => 'update_rol_limit','name'=>'update_rol_limit');
 echo form_open('',$attributes); ?>
 
-<div class="rol_container">
+<div id="middle_container" class="rol_container">
     <?php
     echo theme_view('common/middle');
     ?>

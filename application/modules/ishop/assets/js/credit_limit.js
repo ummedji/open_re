@@ -28,7 +28,9 @@ $(document).ready(function(){
     });
 
 
-    $("#add_user_credit_limit").on("submit",function(){
+    $("#add_user_credit_limit").on("submit",function(e){
+        e.preventDefault();
+
         var param = $("#add_user_credit_limit").serializeArray();
 
         var $valid = $("#add_user_credit_limit").valid();

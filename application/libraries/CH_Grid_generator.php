@@ -104,6 +104,8 @@ class CH_Grid_generator
         $this->req_data['page'] = isset($_POST['page']) ? $_POST['page'] : '0';
         $this->req_data['per_page'] = isset($_POST['per_page']) ? $_POST['per_page'] : '10';
 
+
+
         $info1=$this->CI->db->query($report_details);
         $this->count = $info1->num_rows;
 
@@ -116,6 +118,9 @@ class CH_Grid_generator
         }
 
         $info = $this->CI->db->query($report_detail);
+
+        //echo $report_detail;die;
+
 
         $this->CI->db->flush_cache();
 
@@ -130,6 +135,9 @@ class CH_Grid_generator
             } else {
                 $data = $info->result_array();
             }
+
+         //   testdata($data);
+
             return $data;
         } else {
             return FALSE;

@@ -1,12 +1,5 @@
 <div class='report-box'>
-    <?php
-    $attributes = array(
-        'name' => 'front_listing_form',
-        'id' => 'front_listing_form',
-        'class'=>'form-inline'
-    );
-    ?>
-    <?php echo form_open($this->uri->uri_string(), $attributes); ?>
+
     <div id='ajax_loader'>
     </div>
     <?php
@@ -127,7 +120,6 @@ if(isset($table) && count($table)>0) { ?>
     }
     ?>
 
-<?php echo form_close(); ?>
                 </div>
     </div>
 

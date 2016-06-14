@@ -37,7 +37,9 @@ var primary_sales_view_validators = $("#primary_sales_view").validate({
 
 
 /* Get  Primary Sales Data*/
-$("#primary_sales_view").on("submit",function(){
+$("#primary_sales_view").on("submit",function(e){
+
+    e.preventDefault();
 
     var param = $("#primary_sales_view").serializeArray();
    // console.log(param);return false;
@@ -54,7 +56,7 @@ $("#primary_sales_view").on("submit",function(){
             data: param,
             success: function(resp){
                 // console.log(resp);
-                $('#middle_container_primary').html(resp);
+                $('#middle_container').html(resp);
             }
         });
         return false;
@@ -73,7 +75,7 @@ $(document).on('click', 'div.primary_cont .eye_i', function () {
         url: site_url+'ishop/primary_sales_product_details_view',
         data: {id: id},
         success: function(resp){
-            $("#product_table_container").html(resp);
+            $("#middle_container_product").html(resp);
         }
     });
     return false;

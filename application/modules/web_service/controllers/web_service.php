@@ -273,7 +273,7 @@ class Web_service extends Front_Controller
             $by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
             $by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
 
-            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
+            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service',$page=2);
             if(!empty($primary_sales_details))
             {
                 $result['status'] = true;
@@ -645,6 +645,158 @@ class Web_service extends Front_Controller
                 $result['status'] = false;
                 $result['message'] = 'Fail';
             }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getCreditLimit
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Credit Limit Data
+     * */
+    public function getCreditLimit()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $credit_limit= $this->ishop_model->get_all_distributors_credit_limit($country_id,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($credit_limit) ? $credit_limit : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : saveCreditLimit
+     * @ Function Params    : user_id,country_id,dist_limit,credit_limit,curr_outstanding,curr_date (POST)
+     * @ Function Purpose    : Save Credit Limit Data
+     * */
+    public function saveCreditLimit()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->add_user_credit_limit_datail($user_id,$country_id);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getCreditLimit
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Credit Limit Data
+     * */
+    public function getSchemes()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $role_id = $this->input->get_post('role_id');
+        $country_id = $this->input->get_post('country_id');
+        $year = $this->input->get_post("year");
+        $region = $this->input->get_post("region");
+        $territory = $this->input->get_post("territory");
+        $retailer = $this->input->get_post("fo_retailer_id");
+
+        if(isset($user_id))
+        {
+            $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer);
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($scheme_view) ? $scheme_view : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getCreditLimit
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Credit Limit Data
+     * */
+    public function getSchemesDp()
+    {
+        $default_retailer_role = 10;
+        $year = $this->input->get_post('year');
+        $user_id = $this->input->get_post('user_id');
+        $logined_user_role = $this->input->get_post('role_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            //Get Data
+            $final_array = array();
+            $geolevels3 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,null,$year,$logined_user_role);
+            if(!empty($geolevels3))
+            {
+                foreach($geolevels3 as $k3 => $geolevel3)
+                {
+                    $final_array[] = $geolevel3; // Add Geo Level 3 Into Final Array
+                    $parent_geo_id3 = $geolevel3['business_geo_id'];
+                    $geolevels2 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,$parent_geo_id3,$year,$logined_user_role);
+                    if(!empty($geolevels2))
+                    {
+                        foreach ($geolevels2 as $k2 => $geolevel2)
+                        {
+                            $final_array[$k3]['geolevel2'][] = $geolevel2; // Add Geo Level 2 Into Final Array
+                            $parent_geo_id2 = $geolevel2['business_geo_id'];
+                            $retailers_names = $this->ishop_model->get_business_geo_data_to_retailer($parent_geo_id2,$country_id);
+                            if(!empty($retailers_names))
+                            {
+                                foreach ($retailers_names as $k1 => $retailers_name)
+                                {
+                                    $final_array[$k3]['geolevel2'][$k2]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            $schemes = $this->ishop_model->get_schemes_by_selected_year($year,$country_id);
+
+            //$get_slabs= $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id);
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = array(
+                "geo_data" => !empty($final_array) ? $final_array : array(),
+                "schema_data" => !empty($schemes) ? $schemes : array()
+            );
         }
         else
         {

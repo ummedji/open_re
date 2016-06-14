@@ -47,7 +47,10 @@ $(document).ready(function(){
         }
     });
 
-    $("#add_company_current_stock").on("submit",function(){
+    $("#add_company_current_stock").on("submit",function(e){
+
+
+        e.preventDefault();
 
         var param = $("#add_company_current_stock").serializeArray();
 

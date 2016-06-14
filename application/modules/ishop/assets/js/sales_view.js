@@ -318,9 +318,12 @@ $(document).ready(function(){
         }
     });
 
-    $("#view_ishop_sales").on("submit",function(){
+    $("#view_ishop_sales").on("submit",function(e){
+
+        e.preventDefault();
 
         var param = $("#view_ishop_sales").serializeArray();
+
         var $valid = $("#view_ishop_sales").valid();
         if(!$valid) {
             ishop_sales_view_validators.focusInvalid();
@@ -334,7 +337,7 @@ $(document).ready(function(){
                 data: param,
                 dataType : 'html',
                 success: function(resp){
-                    $("#middle_container_sales").html(resp);
+                    $("#middle_container").html(resp);
                 }
             });
             return false;
@@ -353,7 +356,7 @@ $(document).on('click', 'div.sales_cont .eye_i', function () {
         url: site_url+'ishop/sales_product_details_view',
         data: {id: id,checkedtype:checked_type},
         success: function(resp){
-            $("#product_table_container_sales").html(resp);
+            $("#middle_container_product").html(resp);
         }
     });
     return false;

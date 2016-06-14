@@ -1,7 +1,7 @@
 <?php if (!$this->input->is_ajax_request()) { ?>
 <?php
 $attributes = array('class' => '', 'id' => 'view_ishop_sales','name'=>'view_ishop_sales');
-echo form_open('',$attributes); ?>
+echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
 <div class="col-md-12 od_approval">
     <div class="top_form">
@@ -161,10 +161,10 @@ echo theme_view('common/middle');
     <?php $attributes = array('class' => '', 'id' => 'update_sales','name'=>'update_sales');
     echo form_open('',$attributes); ?>
 
-    <div id="middle_container_sales" class="sales_cont">
+    <div id="middle_container" class="sales_cont">
 
     </div>
-    <div id="product_table_container_sales" class="sales_product">
+    <div id="middle_container_product" class="sales_product">
 
     </div>
     <?php echo form_close(); ?>

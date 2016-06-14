@@ -407,7 +407,9 @@ $(document).ready(function(){
     });
 
 
-    $("#rol_limit").on("submit",function(){
+    $("#rol_limit").on("submit",function(e){
+
+        e.preventDefault();
 
         var param = $("#rol_limit").serializeArray();
 
@@ -424,6 +426,7 @@ $(document).ready(function(){
                 data: param,
 
                 success: function(resp){
+
                 }
             });
         }

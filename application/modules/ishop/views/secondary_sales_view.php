@@ -4,7 +4,7 @@
             <?php
             $attributes = array('class' => '', 'id' => 'secondary_sales_view','name'=>'secondary_sales_view');
             //echo form_open($this->uri->uri_string(),$attributes);
-            echo form_open('',$attributes); ?>
+            echo form_open('ishop/secondary_sales_view_details',$attributes); ?>
 
             <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
@@ -66,10 +66,10 @@ if ($this->input->is_ajax_request()) {
 if (!$this->input->is_ajax_request()) {
     $attributes = array('class' => '', 'id' => 'secondary_sales_view_data','name'=>'secondary_sales_view_data');
     echo form_open('',$attributes); ?>
-    <div id="middle_container_secondary" class="secondary_cont">
+    <div id="middle_container" class="secondary_cont">
 
     </div>
-    <div id="product_table_container_secondary" class="secondary_product">
+    <div id="middle_container_product" class="secondary_product">
 
     </div>
     <?php echo form_close(); ?>

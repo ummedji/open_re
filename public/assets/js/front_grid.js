@@ -57,6 +57,10 @@ function ajax_report(url, data, callback) {
    // alert(url);
    // alert(data);
    // alert(callback);
+
+    console.log(url);
+    console.log(data);
+
     hideTooltip();
     ajaxLoaderOverlay($(".report-box"));
     $.ajax({
@@ -70,9 +74,13 @@ function ajax_report(url, data, callback) {
 }
 
 function settblResponse(response) {
+
+    //console.log(response);
+
     removeOverlay();
     $("#action").val('');
     $("#middle_container").hide().html(response).fadeIn("slow");
+    $("#middle_container_product").empty();
     $('.search-field-dropdown').trigger('change');
     attachTooltip();
 }
@@ -89,22 +97,29 @@ function submitForm() {
     var uri = $(location).attr('href');
     //alert(uri);
     var lm = uri.split('/').reverse()[0];
+
     switch(lm)
     {
-        case'secondary_sales_details_view':  val = $("#secondary_sales_view");break;
         case'primary_sales_view_details': val = $("#primary_sales_view");break;
-       /* case'device_data_report': val = $("#form_ddreport");break;
-        default  : val = $("#form_ntfdetails");break;*/
+        case'secondary_sales_details_view':  val = $("#secondary_sales_view");break;
+        case'set_rol': val = $("#rol_limit");break;
+        case'company_current_stock': val = $("#add_company_current_stock");break;
+        case'credit_limit': val = $("#add_user_credit_limit");break;
+        case'physical_stock': val = $("#add_physical_stock");break;
+        case'invoice_received_confirmation': val = $("#invoice_confirmation");break;
+        case'sales_view': val = $("#view_ishop_sales");break;
+       /* default  : val = $("#form_ntfdetails");break;*/
     }
 
-    var parama = val.serializeArray();
-   // console.log(parama);
-    var pages = $("#front_listing_form").serializeArray();
-    console.log(pages);
-    var data= $.merge( $.merge( [], pages ), parama );
-    //console.log(data);
-    var url = $("#front_listing_form").attr("action");
-   // alert(url);
+
+    var pages = $("input#page").val();
+
+    var data = val.serializeArray();
+    data.push({name: "page", value:pages});
+
+    var url = val.attr("action");
+    //var url = "http://localhost/open_re/trunk/public/ishop/primary_sales_details_view";
+
     ajax_report(url, data, settblResponse);
 }
 
