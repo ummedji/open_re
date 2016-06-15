@@ -3457,7 +3457,7 @@ class Ishop extends Front_Controller
 							   if($product_data != 0 &&  $user_retailer_data != 0)
 							   {
 
-								   $check_invoice_data = $this->ishop_model->check_secondary_invoice_data($invoice_no);
+								 /*  $check_invoice_data = $this->ishop_model->check_secondary_invoice_data($invoice_no);
 								   $check_otn_data = $this->ishop_model->check_secondary_otn_data($otn);
 
 								   if($check_invoice_data == 1 || $check_otn_data == 1){
@@ -3479,7 +3479,7 @@ class Ishop extends Front_Controller
 
 									   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
 								   }
-								   else{
+								   else{ */
 									   //CHECK DISTRIBUTOR RETAILER ASSOCATION
 
 									   $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user->id,$user_retailer_data);
@@ -3553,8 +3553,6 @@ class Ishop extends Front_Controller
 
 											   }
 
-
-
 										   }
 										   else{
 											   if($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] == $user_retailer_data){
@@ -3576,7 +3574,6 @@ class Ishop extends Front_Controller
 												   }
 												   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Same invoice assigned to other Retailer";
 
-
 											   }
 										   }
 
@@ -3593,7 +3590,7 @@ class Ishop extends Front_Controller
 									   }
 
 
-								   }
+								 //  }
 							   }
 							   else{
 
@@ -3665,26 +3662,7 @@ class Ishop extends Front_Controller
 						//  testdata($product_data);
 						  if($product_data != 0)
 						  {
-							  //ADD DATA TO DATA ARRAY
-
-							//  $product_sku_exist = $this->ishop_model->check_product_data_exist($month,$product_data,$user->id,$unit);
-
-                              /*
-							  if($product_sku_exist == 1){
-
-								  $error_message = "";
-								  if($product_sku_exist == 1) {
-									  $error_message = "Product SKU  already exist in DB for This Month";
-								  }
-
-								  if(!isset($error_array["error"]["header"])){
-									  $error_array["error"]["header"] = $header;
-								  }
-
-								  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~".$error_message;
-							  }
-							  else{
-                                  */
+							 
 
 								  $inner_array[] = $month;
 								  $inner_array[] = $product_data;
@@ -3693,12 +3671,10 @@ class Ishop extends Front_Controller
 
 								  $final_array["success"][] = $inner_array;
 
-							//  }
 
 						  }
 						  else{
-							  //testdata('in');
-
+							 
 							  if(!isset($error_array["error"]["header"])){
 								  $error_array["error"]["header"] = $header;
 							  }

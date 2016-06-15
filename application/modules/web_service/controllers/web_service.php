@@ -367,6 +367,7 @@ class Web_service extends Front_Controller
                 {
                     $primary_sales_id = $psd['primary_sales_id'];
                     $primary_sales_product_details = $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id,'web_service');
+                    print_r($primary_sales_product_details);
                     $psd["details"]=$primary_sales_product_details;
                     $final_array[] = $psd;
                 }
@@ -916,6 +917,7 @@ class Web_service extends Front_Controller
         if(isset($user_id))
         {
             $id = $this->ishop_model->add_primary_sales_details($user_id,$country_id,'web_service');
+            $id = $this->ishop_model->add_target_data($this->input->get_post());
             if($id)
             {
                 $result['status'] = true;
