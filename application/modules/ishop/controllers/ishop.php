@@ -2446,7 +2446,11 @@ class Ishop extends Front_Controller
 
 							$phpexcepDate = $data_value-25569; //to offset to Unix epoch
 							$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-							$data_value = date("Y-m-d",$data_value);
+                            
+                            $data_value = date("Y-m",$data_value); 
+                            $data_value = $data_value."-01"; 
+                            
+							//$data_value = date("Y-m-d",$data_value);
 
 						}
 
@@ -2473,6 +2477,7 @@ class Ishop extends Front_Controller
                 
                 $dist_invoice_ret_mapp_data_array = array();
                 $dist_invoice_product_mapp_data_array = array();
+                $dist_invoice_otn_mapp_data_array = array();
                 
                 // CHECK DATA IS PRESENT AND VALID
            if(!empty($data['values'])){   
@@ -3046,44 +3051,52 @@ class Ishop extends Front_Controller
 						  {
 							  //ADD DATA TO DATA ARRAY
 
-							  $check_invoice_data = $this->ishop_model->check_invoice_data($invoice_no);
-							  $check_otn_data = $this->ishop_model->check_otn_data($otn);
+									   if(!isset($dist_invoice_otn_mapp_data_array[$invoice_no][$otn])){
 
+										   $dist_invoice_otn_mapp_data_array[$invoice_no][$otn] = $user_data;
+                                           
+                                              $inner_array[] = $user_data;
+                                              $inner_array[] = $invoice_no;
+                                              $inner_array[] = $invoice_date;
+                                              $inner_array[] = $otn;
+                                              $inner_array[] = $po_no;
+                                              $inner_array[] = $product_data;
+                                              $inner_array[] = $po_qty;
+                                              $inner_array[] = $dispatch_qty;
+                                              $inner_array[] = $amt;
 
-							  if($check_invoice_data == 1 || $check_otn_data == 1){
+                                              $final_array["success"][] = $inner_array;
 
-								  $error_message = "";
-								  if($check_invoice_data == 1) {
-									  $error_message = "Invoice data already exist in DB";
-								  }
-								  elseif($check_otn_data == 1){
-									  $error_message = "OTN already exist in DB";
-								  }
-								  elseif($check_invoice_data == 1 && $check_otn_data == 1){
-									  $error_message = "Invoice data and OTN already exist in DB";
-								  }
+                                           
+									   }
+									   else{
+										   if($dist_invoice_otn_mapp_data_array[$invoice_no][$otn] != $user_data){
 
-								  if(!isset($error_array["error"]["header"])){
-									  $error_array["error"]["header"] = $header;
-								  }
+											   //SAME INVOICE ASSIGNED TO OTHER RETAILER
 
-								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
-							  }
-							  else{
+											   if(!isset($error_array["error"]["header"])){
+												   $error_array["error"]["header"] = $header;
+											   }
+											   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Same invoice assigned to other Distributor";
 
-								  $inner_array[] = $user_data;
-								  $inner_array[] = $invoice_no;
-								  $inner_array[] = $invoice_date;
-								  $inner_array[] = $otn;
-								  $inner_array[] = $po_no;
-								  $inner_array[] = $product_data;
-								  $inner_array[] = $po_qty;
-								  $inner_array[] = $dispatch_qty;
-								  $inner_array[] = $amt;
+										   }
+										   else{
 
-								  $final_array["success"][] = $inner_array;
+											   
+                                              $inner_array[] = $user_data;
+                                              $inner_array[] = $invoice_no;
+                                              $inner_array[] = $invoice_date;
+                                              $inner_array[] = $otn;
+                                              $inner_array[] = $po_no;
+                                              $inner_array[] = $product_data;
+                                              $inner_array[] = $po_qty;
+                                              $inner_array[] = $dispatch_qty;
+                                              $inner_array[] = $amt;
 
-							  }
+                                              $final_array["success"][] = $inner_array;
+
+										   }
+									   }
 
 						  }
 						  else{
@@ -3258,7 +3271,6 @@ class Ishop extends Front_Controller
 
 										   }
 										   else{
-
 											   if(in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
 
 												   //DUPLICATE DATA IN FILE ERROR
@@ -3270,8 +3282,7 @@ class Ishop extends Front_Controller
 
 											   }
 											   else{
-
-												   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+                                                   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
 
 												   $inner_array[] = $user_distributor_data;
 												   $inner_array[] = $user_retailer_data;
@@ -3288,10 +3299,7 @@ class Ishop extends Front_Controller
 
 											   }
 
-
 										   }
-
-
 
 									   }
 									   else{
@@ -3330,50 +3338,6 @@ class Ishop extends Front_Controller
 
 								   }
 
-
-
-								   //  $dist_invoice_ret_mapp_data =
-
-								   /*   $invoice_data = $this->ishop_model->check_secondary_invoice_data($invoice_no);
-                                      $invoice_date_data = $this->ishop_model->check_secondary_invoice_date_data($invoice_no,$invoice_date);
-
-                                      $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no,$user_retailer_data);
-                                      */
-								   /*
-
-                                 if($distributor_retailer_mapping_data == 1 && $invoice_data == 0 && $invoice_date_data == 0 && $invoice_retailer_data == 0){
-
-
-                                       }
-                                       else{
-
-                                           $error_message = "";
-
-                                           if($distributor_retailer_mapping_data == 0){
-                                               $error_message .= "Distributor and retailer are not mapped in DB. ";
-                                           }
-
-                                           if($invoice_data == 1){
-                                               $error_message .= "Invoice No already exist in DB. ";
-                                           }
-
-                                           if($invoice_date_data == 1){
-                                               $error_message .= "Invoice No and Invoice date already exist in DB. ";
-                                           }
-
-                                           if($invoice_retailer_data == 1){
-                                               $error_message .= "Invoice No for Retailer already exist in DB. ";
-                                           }
-
-                                           if(!isset($error_array["error"]["header"])){
-                                               $error_array["error"]["header"] = $header;
-                                           }
-
-                                           $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
-
-
-                                       }
-                                       */
 
 							   }
 							   else{
@@ -3629,50 +3593,6 @@ class Ishop extends Front_Controller
 									   }
 
 
-
-									   //  $dist_invoice_ret_mapp_data =
-
-									   /*   $invoice_data = $this->ishop_model->check_secondary_invoice_data($invoice_no);
-                                          $invoice_date_data = $this->ishop_model->check_secondary_invoice_date_data($invoice_no,$invoice_date);
-
-                                          $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no,$user_retailer_data);
-                                          */
-									   /*
-
-                                     if($distributor_retailer_mapping_data == 1 && $invoice_data == 0 && $invoice_date_data == 0 && $invoice_retailer_data == 0){
-
-
-                                           }
-                                           else{
-
-                                               $error_message = "";
-
-                                               if($distributor_retailer_mapping_data == 0){
-                                                   $error_message .= "Distributor and retailer are not mapped in DB. ";
-                                               }
-
-                                               if($invoice_data == 1){
-                                                   $error_message .= "Invoice No already exist in DB. ";
-                                               }
-
-                                               if($invoice_date_data == 1){
-                                                   $error_message .= "Invoice No and Invoice date already exist in DB. ";
-                                               }
-
-                                               if($invoice_retailer_data == 1){
-                                                   $error_message .= "Invoice No for Retailer already exist in DB. ";
-                                               }
-
-                                               if(!isset($error_array["error"]["header"])){
-                                                   $error_array["error"]["header"] = $header;
-                                               }
-
-                                               $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
-
-
-                                           }
-                                           */
-
 								   }
 							   }
 							   else{
@@ -3747,9 +3667,9 @@ class Ishop extends Front_Controller
 						  {
 							  //ADD DATA TO DATA ARRAY
 
-							  $product_sku_exist = $this->ishop_model->check_product_data_exist($month,$product_data,$user->id,$unit);
+							//  $product_sku_exist = $this->ishop_model->check_product_data_exist($month,$product_data,$user->id,$unit);
 
-
+                              /*
 							  if($product_sku_exist == 1){
 
 								  $error_message = "";
@@ -3764,6 +3684,7 @@ class Ishop extends Front_Controller
 								  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~".$error_message;
 							  }
 							  else{
+                                  */
 
 								  $inner_array[] = $month;
 								  $inner_array[] = $product_data;
@@ -3772,7 +3693,7 @@ class Ishop extends Front_Controller
 
 								  $final_array["success"][] = $inner_array;
 
-							  }
+							//  }
 
 						  }
 						  else{
@@ -3889,42 +3810,61 @@ class Ishop extends Front_Controller
                                     if(($j == 5 || $j == 6 || $j == 7) && ($row_data[$j] != "")){
                                         $date_data = explode("-",$row_data[$j]);
                                         
-                                        
                                         $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
-                                        
-                                        $row_data[$j] = $date_data[0]."-".$monthName."-".$date_data[2];
+                                        $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
                                     }
                                 }
                                 elseif($_POST["dirname"] == "credit_limit"){
                                     if($j == 4 && ($row_data[$j] != "")){
                                         $date_data = explode("-",$row_data[$j]);
-                                        $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                        
+                                        $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
+                                        
+                                        $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
+                                        
+                                        //$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
                                     }
                                 }
                                 elseif($_POST["dirname"] == "primary_sales"){
-                                        if($j == 2 && ($row_data[$j] != "")){
+                                        if($j == 3 && ($row_data[$j] != "")){
+                                            //echo $row_data[$j];die;
                                                 $date_data = explode("-",$row_data[$j]);
-                                                $row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                            
+                                                $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
+                                                $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
+                                                //$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
                                         }
                                 }
                                 elseif($_POST["dirname"] == "secondary_sales"){
 
 										if($j == 3 && ($row_data[$j] != "")){
 											$date_data = explode("-",$row_data[$j]);
-											$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                            
+                                            $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
+                                            $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
+                                            
+											//$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
 										}
 
 									else{
 										if($j == 2 && ($row_data[$j] != "")){
 											$date_data = explode("-",$row_data[$j]);
-											$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                            
+                                            $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
+                                            $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
+                                            
+											//$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
 										}
 									}
                                 }
 								elseif($_POST["dirname"] == "physical_stock"){
 									if($j == 0 && ($row_data[$j] != "")){
 										$date_data = explode("-",$row_data[$j]);
-										$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
+                                        
+                                        $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
+                                        $row_data[$j] = $monthName."-".$date_data[0];
+                                        
+										//$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
 									}
 								}
                                 

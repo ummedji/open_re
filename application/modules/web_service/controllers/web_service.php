@@ -497,7 +497,11 @@ class Web_service extends Front_Controller
                 {
                     foreach($geolevels3 as $k3 => $geolevel3)
                     {
-                        $final_array[] = $geolevel3; // Add Geo Level 3 Into Final Array
+                        $g3 = array(
+                            "id"=>$geolevel3['political_geo_id'],
+                            "political_geography_name"=>$geolevel3['political_geography_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
                         $parent_geo_id3 = $geolevel3['political_geo_id'];
                         $distibutors_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id3, $country_id, $radio_type, null);
                         $distibutors_names = json_decode($distibutors_names, true);
@@ -890,6 +894,38 @@ class Web_service extends Front_Controller
                 "geo_data" => !empty($final_array) ? $final_array : array(),
                 "schema_data" => !empty($final_array2) ? $final_array2 : array()
             );
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : savePrimarySales
+     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
+     * @ Function Purpose    : Save Primary Sales Data
+     * */
+    public function saveTarget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->add_primary_sales_details($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
         }
         else
         {

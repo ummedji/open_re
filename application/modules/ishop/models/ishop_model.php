@@ -1755,7 +1755,7 @@ class Ishop_model extends BF_Model
             }
         }
         else{
-            if($xl_data !='')
+            if($xl_data !='' || $xl_data != null)
             {
                 foreach ($xl_data as $key => $value) {
                     $stock_month = $value[0];
@@ -1766,56 +1766,17 @@ class Ishop_model extends BF_Model
                     $stock_month= strtotime($stock_month);
                     $stock_month= date('Y-m',$stock_month);
 
-                   /* dumpme($stock_month);
-                    dumpme($prod_sku);
-                    dumpme($qty);
-                    testdata($unit);*/
-
                     $qty_kgl= $this->get_product_conversion_data($prod_sku,$qty,$unit);
 
                     $login_customer_role = $user_role;
 
-                   /* if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
-                    {
-                        $cust_id=$retailer_id;
-                    }
-                    elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
-                    {
-                        $cust_id=$distributor_id;
-                    }
-                    else{
-                        $cust_id=$user_id;
-                    }*/
                     $cust_id=$user_id;
 
                     $product=$this->check_products_phy_stock($stock_month,$prod_sku,$unit,$cust_id);
 
                     if(isset($product) && !empty($product) && $product !=0)
                     {
-                      /*  if($login_customer_role == 8)
-                        {
-                            if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
-                            {
-                                $customers_id=$retailer_id;
-                            }
-                            elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
-                            {
-                                $customers_id=$distributor_id;
-                            }
-                            $physical_stock_update_data = array(
-                                'stock_month' => $stock_month.'-01',
-                                'customer_id' => $customers_id,
-                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                                'modified_by_user' => $user_id,
-                                'country_id' => $country_id,
-                                'status' => '1',
-                                'modified_on' => date('Y-m-d H:i:s')
-                            );
-
-                        }*/
+                      
                         if($login_customer_role == 9)
                         {
 
@@ -1824,7 +1785,7 @@ class Ishop_model extends BF_Model
                                 'customer_id' => $user_id,
                                 'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                                 'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : '',
                                 'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
                                 'modified_by_user' => $user_id,
                                 'country_id' => $country_id,
@@ -1839,7 +1800,7 @@ class Ishop_model extends BF_Model
                                 'customer_id' => $user_id,
                                 'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                                 'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
+                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : '',
                                 'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
                                 'modified_by_user' => $user_id,
                                 'country_id' => $country_id,
@@ -1851,34 +1812,7 @@ class Ishop_model extends BF_Model
                         $this->db->update('ishop_physical_stock', $physical_stock_update_data);
                     }
                     else{
-                       // var_dump('in');die;
-                        /*if($login_customer_role == 8)
-                        {
-                            if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
-                            {
-                                $customers_id=$retailer_id;
-                            }
-                            elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
-                            {
-                                $customers_id=$distributor_id;
-                            }
-
-                            $physical_stock_data = array(
-                                'stock_month' => $stock_month.'-01',
-                                'customer_id' => $customers_id,
-                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                                'created_by_user' => $user_id,
-                                'modified_by_user' => $user_id,
-                                'country_id' => $country_id,
-                                'status' => '1',
-                                'created_on' => date('Y-m-d H:i:s'),
-                                'modified_on' => date('Y-m-d H:i:s'),
-                            );
-
-                        }*/
+                       
                         if($login_customer_role == 9)
                         {
 
