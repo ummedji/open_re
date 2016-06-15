@@ -30,7 +30,7 @@
           
            <?php 
            $attributes = array('class' => '', 'id' => 'order_status','name'=>'order_status');
-            echo form_open('',$attributes); 
+            echo form_open('ishop/get_order_status_data',$attributes);
             ?>
             
             <div class="col-md-12 text-center sub_nave">
@@ -71,7 +71,7 @@
                     
                             <div class="form-group">
                             <label>Geo L1</label>
-                            <select class="selectpicker" class="distributor_geo_level_1_data" id="dis_distributor_geo_level_1_data" name="dis_distributor_geo_level_1_data" data-live-search="true">
+                            <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="dis_distributor_geo_level_1_data" data-live-search="true">
                                 <option value="0">Select Geo Level</option>
                                 <?php
                                 if(isset($geo_level_data) && !empty($geo_level_data))
@@ -457,11 +457,15 @@ if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
 ?>
-<div id="order_status_middle_container" class="order_status">
+<?php
+if (!$this->input->is_ajax_request()) { ?>
+<div id="middle_container" class="order_status">
 
 </div>
-<div id="order_status_table_container">
+<div id="middle_container_product">
 
 </div>
 <div class="clearfix"></div>
-
+<?php
+}
+?>

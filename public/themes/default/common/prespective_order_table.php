@@ -1,3 +1,7 @@
+<div class='report-box'>
+
+    <div id='ajax_loader'>
+    </div>
 <?php
 $action_data = $this->uri->segment(2);
 if(isset($prespective_order_data) && count($prespective_order_data)>0) { ?>
@@ -49,33 +53,6 @@ if(isset($prespective_order_data) && count($prespective_order_data)>0) { ?>
                                             </div>
                                         </td>
                                     <?php }
-
-                                   /* else if(($rwkey==1  && $action_data !="get_prespective_order_details")) {
-                                   // else if(($rwkey==1  && isset($table['action']) && !empty($table['action']))) {
-                                       // if($action_data != 'credit_limit'){
-                                        ?>
-                                        <td data-title="<?php echo $prespective_order_data['head'][$rwkey]; ?>" class="numeric">
-                                            <?php
-                                            if(isset($prespective_order_data['radio']) && !empty($prespective_order_data['radio']))
-                                            {
-                                                ?>
-                                                <input type="radio" name="radio_scheme_slab" id="radio_scheme" value="<?php echo $row;?>">
-                                                <?php
-                                            }
-                                            elseif(isset($prespective_order_data['eye']) && !empty($prespective_order_data['eye']))
-                                            {
-                                                ?>
-                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
-                                                <?php
-                                            }
-                                           if($action_data !="get_prespective_order" ){
-                                           
-                                            ?>
-                                            <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                            <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                                           <?php } ?>
-                                        </td>
-                                    <?php }*/ 
                                     else
                                     { ?>
                                         <td data-title="<?php echo $prespective_order_data['head'][$rwkey]; ?>">
@@ -109,4 +86,4 @@ if(isset($prespective_order_data) && count($prespective_order_data)>0) { ?>
         <?php
     }
     ?>
-<!--    --><?php /*echo form_close(); */?>
+ </div>

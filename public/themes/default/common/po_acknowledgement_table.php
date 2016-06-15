@@ -1,3 +1,7 @@
+<div class='report-box'>
+
+    <div id='ajax_loader'>
+    </div>
 <?php
 $action_data = $this->uri->segment(2);
 
@@ -140,7 +144,14 @@ if(isset($po_ack_table) && count($po_ack_table)>0) {
                 if($login_customer_type == 9 || $login_customer_type == 10){
                     if($action_data == "po_acknowledgement" || $action_data == "get_order_status_data_details"){                   
                 ?>
-                <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                        <div class="col-md-12 table_bottom">
+                            <div class="row">
+                                <div class="col-md-3 save_btn">
+                                    <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                                </div>
+                            </div>
+                        </div>
+
                     <?php
                     
                         echo form_close();
@@ -158,4 +169,4 @@ if(isset($po_ack_table) && count($po_ack_table)>0) {
         <?php
     }
     ?>
-<!--    --><?php /*echo form_close(); */?>
+</div>

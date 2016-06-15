@@ -17,51 +17,10 @@ $(document).ready(function(){
        }
         
     });
-    
-  //  alert("PO ACKNOWLEDGEMENT");
-    
-   /*
-    $("#order_status").on("submit",function(){
-        
-        var param = $("form#order_status").serializeArray();
-        
-        $.ajax({
-                type: 'POST',
-                url: site_url+"ishop/get_order_status_data",
-                data: param,
-                dataType : 'html',
-                success: function(resp){
-                    console.log(resp);
-                 //   alert(resp);
-                    $("div#order_status_middle_container").empty();
-                    $("div#order_status_middle_container").html(resp);
-                    
-                }
-            });
-        return false;
-    });
-    
-    
-
-
-
-$(document).on('submit','#order_status_data_details',function(){
-        
-    var param = $("form#order_status_data_details").serializeArray();
-
-    $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/update_order_status_detail_data",
-            data: param,
-            success: function(resp){
-                console.log(resp);
-                location.reload();
-            }
-        });
-    return false;
 });
 
-$(document).on('click','div#order_status_table_container div.delete_i',function(){
+
+$(document).on('click','div#middle_container_product div.delete_i',function(){
         
     var id = $(this).attr('prdid');
 
@@ -77,30 +36,7 @@ $(document).on('click','div#order_status_table_container div.delete_i',function(
     return false;
 });
 
-
-
-*/
-   // return false;
-});
-
-
-$(document).on('click','div#po_acknowledgement_table_container div.delete_i',function(){
-        
-    var id = $(this).attr('prdid');
-
-    $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/delete_order_detail_data",
-            data: {data_id:id},
-            success: function(resp){
-                console.log(resp);
-                location.reload();
-            }
-        });
-    return false;
-});
-
-$(document).on('click', 'div#po_acknowledgement_table_container .edit_i', function () {
+$(document).on('click', 'div#middle_container_product .edit_i', function () {
     
     var id = $(this).attr('prdid');
    
@@ -166,66 +102,10 @@ $(document).on('click', 'div.po_acknowledgement .eye_i', function () {
         url: site_url+'ishop/get_order_status_data_details',
         data: {id: id,logincustomertype:login_customer_type,segment_data:action_data},
         success: function(resp){
-            $("div#po_acknowledgement_table_container").empty();
-            $("#po_acknowledgement_table_container").html(resp);
+            //$("div#middle_container_product").empty();
+            $("#middle_container_product").html(resp);
         }
     });
     return false;
 });
 
-/*
- $("input.select_customer_type").on("click",function(){
-       
-        $("div#order_status_middle_container").empty();
-        $("div#order_status_table_container").empty();
-       
-       $("#form_date").val(" ");
-       $("#to_date").val(" ");
-       
- });
-    
-    
-    
-    
-});*/
-
-/*
-function mark_as_read(order_id){
-    
-    $.ajax({
-        type: 'POST',
-        url: site_url+'ishop/mark_order_as_read',
-        data: {orderid: order_id},
-        success: function(resp){
-          //  alert(resp);
-            
-            $("a.read_"+order_id).parent().html("<a class='unread_"+order_id+"'  href='javascript:void(0);'  onclick = 'mark_as_unread("+order_id+");'>Mark as Unread</a>");
-            
-             $("a.read_"+order_id).remove();
-            
-            //$("#product_table_container").html(resp);
-        }
-    });
-    return false;
-    
-} 
-
- 
-function mark_as_unread(order_id){
-    
-     $.ajax({
-        type: 'POST',
-        url: site_url+'ishop/mark_order_as_unread',
-        data: {orderid: order_id},
-        success: function(resp){
-            
-             $("a.unread_"+order_id).parent().html("<a class='read_"+order_id+"'  href='javascript:void(0);'  onclick = 'mark_as_read("+order_id+");'>Mark as Read</a>");
-            
-             $("a.unread_"+order_id).remove();
-        }
-    });
-    return false;
-    
-} 
-
-*/

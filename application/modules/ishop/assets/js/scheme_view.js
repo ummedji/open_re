@@ -4,7 +4,8 @@
 
 $(function () {
     $('#year').datepicker({
-        format: "yyyy"
+        format: "yyyy",
+        autoclose: true
     });
 });
 
@@ -64,11 +65,11 @@ $(document).ready(function(){
     });
 
     $("#view_schemes").on("submit",function(e){
-        //alert('in');
+
         e.preventDefault();
 
         var param = $("#view_schemes").serializeArray();
-        console.log(param);
+
 
         var $valid = $("#view_schemes").valid();
         if(!$valid) {

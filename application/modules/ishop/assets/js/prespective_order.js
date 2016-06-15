@@ -1,65 +1,58 @@
 /**
  * Created by webclues on 5/25/2016.
  */
-$(document).ready(function(){
-     $('#form_date').datepicker({
-        format: "yyyy-mm-dd"
-    });
-    
-    $('#to_date').datepicker({
-        format: "yyyy-mm-dd"
-    });
-    
-    
-    var prespective_order_validators = $("#prespective_order").validate({
-    ignore: ".ignore",
-    rules: {
-        form_date:{
-            required: true
-        },
-        to_date:{
-            required: true
-        }
-    }
-});
-    
-    
-    $("#prespective_order").on("submit",function(){
-        
-        var param = $("#prespective_order").serializeArray();
-        
-        
-         var $valid = $("#add_ishop_sales").valid();
-        var checked_type = $('input[name=radio1]:checked').val();
 
+$(document).ready(function(){
+
+    $('#form_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    });
+    $('#to_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    });
+
+    var prespective_order_validators = $("#prespective_order").validate({
+        rules: {
+            form_date:{
+                required: true
+            },
+            to_date:{
+                required: true
+
+            }
+        }
+    });
+
+    
+    $("#prespective_order").on("submit",function(e){
+        e.preventDefault();
+
+        var param = $("#prespective_order").serializeArray();
+
+        var $valid = $("#prespective_order").valid();
         if(!$valid) {
             prespective_order_validators.focusInvalid();
             return false;
         }
         else
         {
-            
-             $.ajax({
+            $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/get_prespective_order",
                 data: param,
                 dataType : 'html',
                 success: function(resp){
                     console.log(resp);
-                 //   alert(resp);
-                 //   $("div#middle_data_contailer").empty();
-                    $("div#prespective_middle_container").html(resp);
-                    
+                    $("div#middle_container").html(resp);
+
                 }
             });
-            
-             return false;
-             
+            return false;
         }
-        
-   
-     });
-
+    });
+    
 });
 
 $(document).on('click', 'div.order_cont .eye_i', function () {
@@ -70,7 +63,7 @@ $(document).on('click', 'div.order_cont .eye_i', function () {
         url: site_url+'ishop/get_prespective_order_details',
         data: {id: id},
         success: function(resp){
-            $("#prescpective_table_container").html(resp);
+            $("#middle_container_product").html(resp);
         }
     });
     return false;
@@ -88,8 +81,6 @@ function mark_as_read(order_id){
             $("a.read_"+order_id).parent().html("<a class='unread_"+order_id+"'  href='javascript:void(0);'  onclick = 'mark_as_unread("+order_id+");'>Mark as Unread</a>");
             
              $("a.read_"+order_id).remove();
-            
-            //$("#product_table_container").html(resp);
         }
     });
     return false;

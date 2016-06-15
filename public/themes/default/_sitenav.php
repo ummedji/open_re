@@ -52,7 +52,7 @@
                                     ?>
                                     <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop') ?>">PRIMARY SALES</a></li>
                                     <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='primary_sales_view_details') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/primary_sales_view_details') ?>">PRIMARY SALES INVOICE</a></li>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='order_approval') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval') ?>">ORDER APPROVAL</a></li>
+                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='order_approval' && $segment2=='order_approval') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval/all') ?>">ORDER APPROVAL</a></li>
                                 <?php
                                 } ?>
 

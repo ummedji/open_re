@@ -3,7 +3,8 @@
  */
 $(function () {
     $('#invoice_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
         });
 
 });
@@ -212,9 +213,6 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                         }
                     });
 
-
-                    console.log(header_array);
-
                     $.each( value, function( key1, des_value ) {
 
                         if(key1 != "header"){
@@ -246,7 +244,7 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
 
 
                     $('<div id="no-more-tables"></div>').appendTo('body')
-                        .html('<div><h4><b></b></h4></br>'+t_data+'</div>')
+                        .html('<div>'+t_data+'</div>')
                         .dialog({
                             appendTo: "#error_file_popup",
                             modal: true,

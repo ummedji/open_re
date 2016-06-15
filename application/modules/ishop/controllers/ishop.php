@@ -1365,8 +1365,9 @@ class Ishop extends Front_Controller
             $todate = $_POST["to_date"];
             $loginusertype = $_POST["login_customer_type"];
             $loginuserid = $_POST["login_customer_id"];
-            
-            $prespective_order = $this->ishop_model->get_prespective_order($from_date,$todate,$loginusertype,$loginuserid);
+			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+
+            $prespective_order = $this->ishop_model->get_prespective_order($from_date,$todate,$loginusertype,$loginuserid,$page);
             
             $user = $this->auth->user();
 		
@@ -1405,8 +1406,8 @@ class Ishop extends Front_Controller
 
 			Template::set('prespective_order_data',$order_details);
 
-			Template::set('td', $order_details['count']);
-			Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
+		//	Template::set('td', $order_details['count']);
+			//Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
 
 		}
 		Template::set_view('ishop/prespective_order');
@@ -1794,8 +1795,8 @@ class Ishop extends Front_Controller
                     Template::set('order_table',$order_details);
                     Template::set_view('ishop/order_status');
                 }
-			Template::set('td', $order_details['count']);
-			Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
+		//	Template::set('td', $order_details['count']);
+			//Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
 
 			Template::render();
             
@@ -1905,9 +1906,13 @@ class Ishop extends Front_Controller
             
             $get_geo_level_data = "";
             $action_data = $this->uri->segment(2);
-            
-            
-            if(isset($_POST) && !empty($_POST)){
+
+			//testdata($_POST);per_page
+
+			$per_page = (isset($_POST['per_page']) ? $_POST['per_page'] : '');
+			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+
+            if(isset($_POST) && !empty($_POST) && isset($per_page)&&  $per_page != ""){
                 
                  $update_order_data = $this->ishop_model->update_order_data($_POST);
             }
@@ -1919,10 +1924,14 @@ class Ishop extends Front_Controller
 
             $radio_checked = "";
             $customer_id = $logined_user_id;
-            
-            $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
+
+
+            $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page);
             
             Template::set('po_ack_table', $order_data);
+			Template::set('td', $order_data['count']);
+			Template::set('pagination', (isset($order_data['pagination']) && !empty($order_data['pagination'])) ? $order_data['pagination'] : '' );
+
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
@@ -1970,9 +1979,10 @@ class Ishop extends Front_Controller
             $sub_action_data = $this->uri->segment(3);
             
             $order_data = "";
-            
+
+			$page = (isset($_POST['page']) ? $_POST['page'] : '');
             if(isset($_POST) && !empty($_POST) && $_POST["form_date"] != "" && $_POST["to_date"] != ""){
-                
+
                 
                     $from_date = $_POST["form_date"];
                     $todate = $_POST["to_date"];
@@ -1980,7 +1990,7 @@ class Ishop extends Front_Controller
                    $radio_checked = "";
                    $customer_id = $logined_user_id;
                 
-                  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"]);
+                  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
                   
             }
             

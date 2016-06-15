@@ -45,6 +45,7 @@ $(document).ready(function(){
                 url: site_url + "ishop/add_user_credit_limit_datails",
                 data: param,
                 success: function (resp) {
+                    location.reload();
                 }
             });
         }

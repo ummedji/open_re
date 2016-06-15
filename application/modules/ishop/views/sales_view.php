@@ -128,7 +128,7 @@ echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
                             </div>
                             <div class="col-md-2 save_btn">
                                 <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important;">Execute</button>
+                                <button type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important; margin-top: 2px;">Execute</button>
                             </div>
                         </div>
 

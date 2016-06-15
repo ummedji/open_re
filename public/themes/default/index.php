@@ -1,4 +1,6 @@
 <?php echo theme_view('header'); ?>
+    <?php if ($this->session->userdata('user_id') !='') {
+    ?>
     <div id="wrapper">
         <?php
         echo theme_view('_sitenav');
@@ -33,6 +35,16 @@
             <!--inner contain-->
         </div>
     </div>
+    <?php
+    }
+else{
+
+    echo Template::message();
+    echo isset($content) ? $content : Template::content();
+}
+?>
+
+
     <?php
     echo theme_view('footer');
     ?>

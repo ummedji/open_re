@@ -17,37 +17,37 @@
 .sid_button li a .ecp_icon {
     background: url(../images/menu_icon.png) no-repeat 0 3px;
 }
-.sid_button li a:hover .ecp_icon, .sid_button li.active a .ecp_icon {
+.sid_button li:hover .ecp_icon, .sid_button li.active a .ecp_icon {
     background: url(../images/white_menu_icon.png) no-repeat 0 3px;
 }
 .sid_button li a .i_shop_icon {
     background: url(../images/menu_icon.png) no-repeat 0px -50px;
 }
-.sid_button li a:hover .i_shop_icon, .sid_button li.active a .i_shop_icon {
+.sid_button li:hover .i_shop_icon, .sid_button li.active a .i_shop_icon {
     background: url(../images/white_menu_icon.png) no-repeat 0px -50px;
 }
 .sid_button li a .esp_icon {
     background: url(../images/menu_icon.png) no-repeat 0px -103px;
 }
-.sid_button li a:hover .esp_icon, .sid_button li.active a .esp_icon {
+.sid_button li:hover .esp_icon, .sid_button li.active a .esp_icon {
     background: url(../images/white_menu_icon.png) no-repeat 0px -103px;
 }
 .sid_button li a .reports_icon {
     background: url(../images/menu_icon.png) no-repeat 0px -153px;
 }
-.sid_button li a:hover .reports_icon, .sid_button li.active a .reports_icon {
+.sid_button li:hover .reports_icon, .sid_button li.active a .reports_icon {
     background: url(../images/white_menu_icon.png) no-repeat 0px -153px;
 }
 .sid_button li a .e_assassments_icon {
     background: url(../images/menu_icon.png) no-repeat 0px -203px;
 }
-.sid_button li a:hover .e_assassments_icon, .sid_button li.active a .e_assassments_icon {
+.sid_button li:hover .e_assassments_icon, .sid_button li.active a .e_assassments_icon {
     background: url(../images/white_menu_icon.png) no-repeat 0px -203px;
 }
 .sid_button li a .e_learning_icon {
     background: url(../images/menu_icon.png) no-repeat 0px -257px;
 }
-.sid_button li a:hover .e_learning_icon, .sid_button li.active a .e_learning_icon {
+.sid_button li:hover .e_learning_icon, .sid_button li.active a .e_learning_icon {
     background: url(../images/white_menu_icon.png) no-repeat 0px -257px;
 }
 
@@ -97,7 +97,7 @@ ul.listslider li{
 #no-more-tables tr td .edit_i a {color: #00793a;}
 .upload_file_space .input-group-btn .btn-primary { background-color: #65ac1e;}
 .save_btn button { background-color: #00793a;}
-.save_btn button:hover { background-color: #00612f;}
+.save_btn button:hover, .save_btn button:focus { background-color: #00612f;}
 /*end scrollbar*/
 
 /*Budget Distributor*/
@@ -147,6 +147,26 @@ ul.listslider li{
 }
 .extra_btn a { background-color: #00793a;}
 .extra_btn a:hover, .extra_btn a:focus { background-color: #65ac1e;}
+/*login css*/
+.login_bg_color {
+    background: #00793a;
+    background: -webkit-linear-gradient(top, #00793a, #33932c);
+    background: -o-linear-gradient(bottom, #00793a, #33932c);
+    background: -moz-linear-gradient(bottom, #00793a, #33932c);
+    background: linear-gradient(to bottom, #00793a, #33932c);
+    opacity: 0.8;
+}
+.login_header {
+    background: #00793a;
+    background: -webkit-linear-gradient(top, rgba(0, 121, 58, 0.9), rgba(51, 147, 44, 0.8));
+    background: -o-linear-gradient(bottom, rgba(0, 121, 58, 0.9), rgba(51, 147, 44, 0.8));
+    background: -moz-linear-gradient(bottom, rgba(0, 121, 58, 0.9), rgba(51, 147, 44, 0.8));
+    background: linear-gradient(to bottom, rgba(0, 121, 58, 0.9), rgba(51, 147, 44, 0.8));
+    border-bottom: solid 1px #439b50;
+}
+.login_btn { background-color: #278e57;}
+.login_btn:hover, .login_btn:focus { background-color: #65ac1e;}
+/*end login css*/
 #error_file_popup .ui-dialog .ui-dialog-titlebar-close {  background-color: #00793a;}
 #error_file_popup .ui-dialog .ui-dialog-buttonpane button { background-color: #00793a;}
 #error_file_popup .ui-dialog .ui-dialog-buttonpane button:hover {

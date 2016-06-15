@@ -4,7 +4,7 @@
 $(document).ready(function(){
     
     
-    $( "#order_date_datepicker" ).datepicker({
+    $( "#order_date" ).datepicker({
       dateFormat: "yy-mm-dd",
       showOn: "button",
       buttonImage: site_url+"/public/themes/default/images/calendar.gif",
@@ -34,7 +34,7 @@ $(document).ready(function(){
    
    
    $("input.select_customer_type").on("click",function(){
-       
+
        if($("#order_place").length > 0){
             var validator = $("#order_place").validate();
         }
@@ -169,17 +169,17 @@ $(document).ready(function(){
    });
    
    
-    $("select#geo_level_1_data").on("change",function(){
+    $("select.geo_level_1_data").on("change",function(){
        
        var selected_geo_id = $(this).val();
-       
+       alert(selected_geo_id);
        get_lower_geo_by_parent_geo(selected_geo_id);
        
       // console.log(selected_user_id +"===="+selected_user_geo_location);
        
    });
    
-   $("select#geo_level_2_data").on("change",function(){
+   $("select.geo_level_2_data").on("change",function(){
        
        var selected_geo_id = $(this).val();
        
@@ -199,7 +199,7 @@ $(document).ready(function(){
        
    });
    
-   $("select#retailer_data").on("change",function(){
+   $("select.retailer_data").on("change",function(){
        
        var login_customer_type = $("input#login_customer_type" ).val();
        
@@ -241,23 +241,23 @@ $(document).ready(function(){
                     console.log(resp);
                     
                      
-                        $("div#farmer_checked select#geo_level_1_data").empty();
-                        $("div#farmer_checked select#geo_level_1_data").selectpicker('refresh');
+                        $("div#farmer_checked select.geo_level_1_data").empty();
+                        $("div#farmer_checked select.geo_level_1_data").selectpicker('refresh');
                 
                 
                         if(resp.length > 0){
 
-                            $("div#farmer_checked select#geo_level_1_data").append('<option value="">Select Geo Location</option>');
+                            $("div#farmer_checked select.geo_level_1_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
-                                $('div#farmer_checked select#geo_level_1_data').append('<option selected="selected" value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                                $('div#farmer_checked select.geo_level_1_data').append('<option selected="selected" value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
                                 
                                 parent_geo_data = value.political_geo_id;
                                 
                             });
 
-                            $("div#farmer_checked select#geo_level_1_data").selectpicker('refresh');
+                            $("div#farmer_checked select.geo_level_1_data").selectpicker('refresh');
 
                         }
                     
@@ -279,23 +279,23 @@ $(document).ready(function(){
                     
                      if(checked_type == "farmer"){
                         
-                        $("div#farmer_checked select#geo_level_2_data").empty();
-                        $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+                        $("div#farmer_checked select.geo_level_2_data").empty();
+                        $("div#farmer_checked select.geo_level_2_data").selectpicker('refresh');
                 
                 
                         if(resp.length > 0){
 
-                            $("div#farmer_checked select#geo_level_2_data").append('<option value="">Select Geo Location</option>');
+                            $("div#farmer_checked select.geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
-                                $('div#farmer_checked select#geo_level_2_data').append('<option selected="selected" value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                                $('div#farmer_checked select.geo_level_2_data').append('<option selected="selected" value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
                                 
                                  child_geo_data = value.political_geo_id;
                                 
                             });
 
-                            $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+                            $("div#farmer_checked select.geo_level_2_data").selectpicker('refresh');
 
                         }
                         
@@ -361,7 +361,7 @@ $(document).ready(function(){
    
    
    
-   var order_place_validators = $("#order_place").validate({
+  /* var order_place_validators = $("#order_place").validate({
         ignore: ".ignore",
         rules: {
             geo_level_1_data :{
@@ -397,9 +397,9 @@ $(document).ready(function(){
             farmer_data:{ 
                 required: true
             },
-            retailer_data:{ 
+           /!* retailer_data:{
                 required: true
-            },
+            },*!/
             distributor_data:{ 
                 required: true
             },
@@ -430,10 +430,140 @@ $(document).ready(function(){
             
             
         }
-    });
-   
+    });*/
 
-    
+  /*  var farmer_order_place_validators = $("#order_place").validate({
+        ignore: ".ignore",
+        rules: {
+
+            order_date:{
+                 required: true
+            },
+            farmer_geo_level_1_data:{
+                required: true
+            },
+            farmer_geo_level_2_data:{
+                required: true
+            },
+            farmer_data:{
+                required: true
+            },
+            farmer_retailer_data:{
+                required: true
+            },
+            prod_sku :{
+                required: true
+            },
+            units :{
+                required: true
+            },
+            quantity:{
+                required: true
+            },
+        }
+    });*/
+
+ /*   var retailer_order_place_validators = $("#order_place").validate({
+        ignore: ".ignore",
+        rules: {
+
+            retailer_geo_level_1_data:{
+                required: true
+            },
+            retailer_geo_level_2_data:{
+                required: true
+            },
+            fo_retailer_data:{
+                required: true
+            },
+            distributor_data:{
+                required: true
+            },
+            prod_sku :{
+                required: true
+            },
+            units :{
+                required: true
+            },
+            quantity:{
+                required: true
+            }
+        }
+    });*/
+
+
+    var order_place_validators = $("#order_place").validate({
+        ignore: ".ignore",
+        rules: {
+            distributor_geo_level_1_data :{
+                required: true
+            },
+            distributor_geo_level_1 :{
+                required: true
+            },
+            distributor_distributor_id :{
+                required: true
+            },
+            retailer_geo_level_1_data:{
+                required: true
+            },
+            retailer_geo_level_2_data:{
+                required: true
+            },
+            retailer_id:{
+                required: true
+            },
+            retailer_distributor_id :{
+                required: true
+            },
+            order_date:{
+                required: true
+            },
+            geo_level_1_data :{
+                required: true
+            },
+            geo_level_2_data:{
+                required: true
+            },
+            farmer_data:{
+                required: true
+            },
+            retailer_data:{
+                required: true
+            },
+            prod_sku :{
+                required: true
+            },
+            units :{
+                required: true
+            },
+            quantity:{
+                required: true
+            },
+            fo_distributor_data:{
+                required: true
+            },
+            distributor_geo_level_2_data:{
+                required: true
+            },
+            fo_retailer_data:{
+                required: true
+            },
+            distributor_data:{
+                required: true
+            },
+            farmer_geo_level_1_data:{
+                required: true
+            },
+            farmer_geo_level_2_data:{
+                required: true
+            },
+            farmer_retailer_data:{
+                required: true
+            }
+        }
+    });
+
   $("#order_place_add_row").click(function() {
 
 
@@ -442,14 +572,24 @@ $(document).ready(function(){
         $('#quantity').removeClass('ignore');
       
         var $valid = $("#order_place").valid();
-       // var checked_type = $('input[name=radio1]:checked').val();
-
+        var checked_type = $('input[name=radio1]:checked').val();
         if(!$valid) {
+           /* if(checked_type=='farmer'){
+                 order_place_validators = farmer_order_place_validators;
+            }
+            if(checked_type=='retailer')
+            {
+                retailer_order_place_validators = farmer_order_place_validators;
+            }
+            if(checked_type=='distributor'){
+                //order_place_validators = farmer_order_place_validators;
+            }*/
             order_place_validators.focusInvalid();
             return false;
         }
         else
         {
+            alert('in');
             order_place_add_row();
         }
   });
@@ -460,6 +600,7 @@ $("#order_place").on("submit",function(){
     $('#prod_sku').addClass('ignore');
     $('#units').addClass('ignore');
     $('#quantity').addClass('ignore');
+
 
     var param = $("#order_place").serializeArray();
     console.log(param);
@@ -487,16 +628,11 @@ $("#order_place").on("submit",function(){
             data: param,
             //dataType : 'json',
             success: function(resp){
-
-               // window.location.href = site_url+"ishop/order_place";
-               // return false;
-
             }
         });
       }
-    
     }
-   // return false; 
+  //  return false;
 });
 
 
@@ -546,20 +682,20 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
                     
                     if(checked_type == "farmer"){
                         
-                        $("div#farmer_checked select#geo_level_2_data").empty();
-                        $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+                        $("div#farmer_checked select.geo_level_2_data").empty();
+                        $("div#farmer_checked select.geo_level_2_data").selectpicker('refresh');
                 
                 
                         if(resp.length > 0){
 
-                            $("div#farmer_checked select#geo_level_2_data").append('<option value="">Select Geo Location</option>');
+                            $("div#farmer_checked select.geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                             $.each(resp, function(key, value) {
 
-                                $('div#farmer_checked select#geo_level_2_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                                $('div#farmer_checked select.geo_level_2_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
                             });
 
-                            $("div#farmer_checked select#geo_level_2_data").selectpicker('refresh');
+                            $("div#farmer_checked select.geo_level_2_data").selectpicker('refresh');
 
                         }
                         
@@ -752,15 +888,15 @@ function get_user_by_geo_data(selected_geo_data){
                      
                 if(checked_type == "retailer" && login_customer_type == 8){
                     
-                     $("select#retailer_data").empty();
+                     $("select#fo_retailer_data").empty();
 
-                    $("select#retailer_data").append('<option value="">Select Retailer Name</option>');
+                    $("select#fo_retailer_data").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select#fo_retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
                     });
 
-                    $("select#retailer_data").selectpicker('refresh');
+                    $("select#fo_retailer_data").selectpicker('refresh');
                     
                 }
                 else if(checked_type == "distributor" && login_customer_type == 8 ){
@@ -850,15 +986,15 @@ function get_retailer_by_user(selected_user_id){
                             
                   }else{
                         
-                    $("select#retailer_data").empty();
+                    $("select.retailer_data").empty();
 
-                    $("select#retailer_data").append('<option value="">Select Retailer Name</option>');
+                    $("select.retailer_data").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select.retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
                     });
 
-                    $("select#retailer_data").selectpicker('refresh');
+                    $("select.retailer_data").selectpicker('refresh');
 
                 }
             }

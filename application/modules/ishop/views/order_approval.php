@@ -16,8 +16,7 @@
             
              <?php
                 $attributes = array('class' => '', 'id' => 'order_approval','name'=>'order_approval');
-                //echo form_open($this->uri->uri_string(),$attributes);
-                echo form_open('',$attributes);
+                echo form_open('ishop/order_approval',$attributes);
              ?>
             
                 <div class="col-md-12 text-center tp_form inline-parent">
@@ -51,7 +50,13 @@
 
                         <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" />
 
+                        <?php
 
+                       // if(!isset($this->uri->segment(3)))
+
+                        ?>
+
+                        <input class="renderdata" type="hidden" name="renderdata" id="" value="<?php echo $this->uri->segment(3); ?>" />
 
                         <div class="col-md-2 save_btn">
                             <label>&nbsp;</label>
@@ -65,10 +70,10 @@
     <div class="clearfix"></div>
 </div>
 <?php }?>
-<div id="order_approval_middle_container" class="order_approval">
+<div id="middle_container" class="order_approval">
 <?php echo theme_view('common/middle'); ?>
 </div>
-<div id="order_approval_table_container" class="primary_product">
+<div id="middle_container_product" class="primary_product">
 
 </div>
 

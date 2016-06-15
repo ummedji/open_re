@@ -66,6 +66,7 @@ $(document).ready(function(){
                 url: site_url + "ishop/add_company_current_stock_details",
                 data: param,
                 success: function (resp) {
+                    location.reload();
                 }
             });
         }

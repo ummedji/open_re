@@ -182,6 +182,7 @@ ul.sid_button {
     list-style: none;
     padding: 5px 2px 5px 15px;
     position: relative;
+    cursor: pointer;
     transition: 0.5s all;
     -webkit-transition: 0.5s all;
     -moz-transition: 0.5s all;
@@ -1505,7 +1506,175 @@ nav {
 .error{
     color: #ff0000 !important;
 }
+/*start login css*/
+.main_login {
+    position: absolute;
+    /*background: url(../images/login_bg.jpg) no-repeat 0 0;*/
+    height: 100%;
+    width: 100%;
+    /*background-size: cover;*/
+}
+.login_bg {
+    position: fixed;
+    background: url(../images/login_bg.jpg) no-repeat 0 0;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    z-index: 10;
+}
+.login_bg_color {
+    position: fixed;
+    height: 100%;
+    width: 100%;
+    z-index: 100;
+}
+.inner_login {
+    position: fixed;
+    height: 100%;
+    width: 420px;
+    right: 0;
+    z-index: 110;
+    background-color: #fff;
+    box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.5);
+    text-align: left;
+}
+.login_header {
+    display: block;
+    padding: 10% 0;
+}
+.setting_icon { display: block; padding: 10px 0;}
+.lg_form {
+    margin-top: 8%;
+}
+.lg_form h4 {
+    font-family: 'Exo2-Medium';
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 20px;
+}
+.in_lg_form .form-group {
+    margin-bottom: 25px;
+}
+.in_lg_form .form-group input {
+    font-family: 'Exo2-Regular';
+    font-size: 15px;
+    color: #767676;
+    border-radius: 0;
+    border-color: #c9c9c9;
+    background-color: #fff;
+    outline: none;
+    box-shadow: none;
+    height: 35px;
+    padding: 0px 12px;
+}
+/*checkbox*/
+.checkbox {
+    padding-left: 20px;
+    margin-top: 0;
+    position: relative;
+}
+.checkbox a.forgot_pass {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-family: 'Exo2-Medium';
+    font-size: 15px;
+    color: #999;
+}
+.checkbox input[type="checkbox"], .checkbox input[type="radio"] {
+    opacity: 0;
+    z-index: 1;
+}
+.checkbox label {
+    display: inline-block;
+    vertical-align: middle;
+    position: relative;
+    padding-left: 12px;
+    font-family: 'Exo2-Medium';
+    font-size: 15px;
+    color: #000;
+}
+.checkbox label::before {
+    content: "";
+    display: inline-block;
+    position: absolute;
+    width: 22px;
+    height: 22px;
+    left: 0;
+    margin-left: -20px;
+    border: 1px solid #cccccc;
+    border-radius: 3px;
+    background-color: #fff;
+    -webkit-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    -o-transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    transition: border 0.15s ease-in-out, color 0.15s ease-in-out;
+    top: -1px;
+}
+.checkbox label::after {
+    display: inline-block;
+    position: absolute;
+    width: 21px;
+    height: 21px;
+    left: 0;
+    top: 0;
+    margin-left: -20px;
+    padding-left: 4px;
+    padding-top: 0px;
+    font-size: 14px;
+    color: #555555;
+}
+input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:checked + label:after {
+    font-family: 'FontAwesome';
+    content: "\f00c";
+}
+.checkbox input[type="checkbox"]:checked + label::after, .checkbox input[type="radio"]:checked + label::after {
+    font-family: "FontAwesome";
+    content: "\f00c";
+}
+/*end checkbox*/
+.login_btn {
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
+    height: 32px;
+    border: none;
+    padding: 0 25px;
+    line-height: inherit;
+    margin-top: 15%;
+    transition: 0.5s all;
+    -webkit-transition: 0.5s all;
+    -moz-transition: 0.5s all;
+    -ms-transition: 0.5s all;
+    -o-transition: 0.5s all;
+    font-family: 'Exo2-Medium';
+    font-size: 15px;
+    color: #fff;
+}
+@media screen and (max-width: 991px){
+    .main_login {
+        position: relative;
+        margin: 0 auto;
+        text-align: center;
+    }
+    .inner_login {
+        position: relative;
+        display: inline-block;
+        left: auto;
+        right: auto;
+        top: 20px;
+    }
+    .login_header { padding: 5% 0;}
+    .lg_form {margin-top: 5%;}
+    .login_btn {margin-top: 5%; margin-bottom: 5%;}
 
+}
+@media screen and (max-width: 575px){
+    .inner_login { width: 320px;}
+
+}
+@media screen and (max-width: 360px){.inner_login { width: 300px;}}
+/*end login css*/
 /*deta popup*/
 #error_file_popup {
     margin: 0 auto;
@@ -1557,17 +1726,9 @@ nav {
     background-color: #e7ebee;
     padding: 20px 30px;
 }
-#error_file_popup .ui-dialog #no-more-tables {
-    overflow-x: inherit !important;
-    margin-bottom: 0 !important;
-    border: none !important;
-    box-shadow: none !important;
-}
-#error_file_popup .ui-dialog #no-more-tables tr th { min-width: 150px !important;}
 #error_file_popup .ui-dialog .ui-dialog-content div {
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
     overflow-x: scroll;
-    background-color: #fff;
 }
 #error_file_popup .ui-dialog .ui-dialog-content h4, #error_file_popup .ui-dialog .ui-dialog-content br{ display: none; }
 #error_file_popup .ui-dialog .ui-dialog-buttonpane {

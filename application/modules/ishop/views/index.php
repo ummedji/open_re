@@ -122,7 +122,7 @@ echo form_open('',$attributes); ?>
                 <thead class="cf">
                 <tr>
                     <th>Sr. No. <span class="rts_bordet"></span></th>
-                    <th class="numeric">Action</th>
+                    <th class="numeric">Action <span class="rts_bordet"></span></th>
                     <th>Product SKU Code <span class="rts_bordet"></span></th>
                     <th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>
                     <th class="numeric">PO Qty <span class="wl_sp">(Kg/Ltr)</span> <span class="rts_bordet"></span></th>

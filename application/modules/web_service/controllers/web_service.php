@@ -1006,7 +1006,7 @@ class Web_service extends Front_Controller
 
     /**
      * @ Function Name        : saveOrderPlace
-     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
+     * @ Function Params    : user_id,distributor_id,retailer_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
      * @ Function Purpose    : Save Primary Sales Data
      * */
     public function saveOrderPlace()
@@ -1016,7 +1016,7 @@ class Web_service extends Front_Controller
 
         if(isset($user_id))
         {
-            $id = $this->ishop_model->add_order_place_details($user_id,$country_id,'web_service');
+            $id = $this->ishop_model->add_order_place_details($user_id,'web_service');
             if($id)
             {
                 $result['status'] = true;
@@ -1027,6 +1027,41 @@ class Web_service extends Front_Controller
                 $result['status'] = false;
                 $result['message'] = 'Fail';
             }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    /**
+     * @ Function Name        : getConversion
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getConversion()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $skuid = $this->input->get_post('sku_id');
+        $quantity_data = $this->input->get_post('quantity');
+        $unit_data = $this->input->get_post('unit');
+
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && !empty($skuid) && isset($skuid)
+            && !empty($quantity_data) && isset($quantity_data)
+            && !empty($unit_data) && isset($unit_data)
+        )
+        {
+            $conversion = $this->ishop_model->get_product_conversion_data($skuid,$quantity_data,$unit_data);
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($conversion) ? $conversion : "";
         }
         else
         {

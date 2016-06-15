@@ -3,17 +3,16 @@
     <div class="top_form">
         <?php
         $attributes = array('class' => '', 'id' => 'prespective_order','name'=>'prespective_order');
-        //echo form_open($this->uri->uri_string(),$attributes);
-        echo form_open('',$attributes); ?>
+        echo form_open('ishop/get_prespective_order',$attributes); ?>
 
         <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
-                        <label>From Date</label>
+                        <label>From Date<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
                     </div>
                     <div class="form-group">
-                        <label>TO Date</label>
+                        <label>TO Date<span style="color: red">*</span></label>
                         <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                     </div>
                     <div class="inl_button save_btn">
@@ -40,11 +39,17 @@
 if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
+
+if (!$this->input->is_ajax_request()) {
+
 ?>
-<div id="prespective_middle_container" class="order_cont">
+
+<div id="middle_container" class="order_cont">
 
 </div>
-<div id="prescpective_table_container">
+<div id="middle_container_product">
 
 </div>
-
+<?php
+}
+?>

@@ -1,6 +1,5 @@
 <?php echo theme_view('header'); ?>
-<style>body { background: #f5f5f5; }</style>
-<div class="container"><!-- Start of Main Container -->
+<!-- Start of Main Container -->
     <?php
     echo isset($content) ? $content : Template::content();
 

@@ -35,8 +35,8 @@ $(document).ready(function(){
             url: site_url+'ishop/get_order_status_data_details',
             data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type},
             success: function(resp){
-                $("div#order_status_table_container").empty();
-                $("#order_status_table_container").html(resp);
+                $("div#middle_container_product").empty();
+                $("#middle_container_product").html(resp);
             }
         });
         return false;
@@ -60,7 +60,7 @@ $(document).on('submit','#order_status_data_details',function(){
     return false;
 });
 
-$(document).on('click','div#order_status_table_container div.delete_i',function(){
+$(document).on('click','div#middle_container_product div.delete_i',function(){
         
     var id = $(this).attr('prdid');
 
@@ -78,7 +78,7 @@ $(document).on('click','div#order_status_table_container div.delete_i',function(
     return false;
 });
 
-$(document).on('click','div#order_status_middle_container div.delete_i',function(){
+$(document).on('click','div#middle_container div.delete_i',function(){
         
     var id = $(this).attr('prdid');
 
@@ -162,8 +162,8 @@ $(document).on('click', 'div.order_status .edit_i', function () {
 
  $("input.select_customer_type").on("click",function(){
        
-        $("div#order_status_middle_container").empty();
-        $("div#order_status_table_container").empty();
+        $("div#middle_container").empty();
+        $("div#middle_container_product").empty();
        
        $("#form_date").val(" ");
        $("#to_date").val(" ");
@@ -203,11 +203,11 @@ $(document).on('click', 'div.order_status .edit_i', function () {
         }
     });
  
-    $("#order_status").on("submit",function(){
-        
+    $("#order_status").on("submit",function(e){
+        e.preventDefault();
         var param = $("form#order_status").serializeArray();
         
-        var validator = order_status_validators;
+     /*   var validator = order_status_validators;
 
     var $valid = $("#order_status").valid();
     if(!$valid) {
@@ -216,7 +216,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
         return false;
     }
     else
-    {
+    {*/
         $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/get_order_status_data",
@@ -225,13 +225,13 @@ $(document).on('click', 'div.order_status .edit_i', function () {
                 success: function(resp){
                     console.log(resp);
                  //   alert(resp);
-                    $("div#order_status_middle_container").empty();
-                    $("div#order_status_middle_container").html(resp);
+                    //$("div#middle_container").empty();
+                    $("div#middle_container").html(resp);
                     
                 }
             });
             return false;
-        }
+     //   }
         
     });
     

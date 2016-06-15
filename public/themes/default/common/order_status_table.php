@@ -1,3 +1,7 @@
+<div class='report-box'>
+
+    <div id='ajax_loader'>
+    </div>
 <?php
 $action_data = $this->uri->segment(2);
 
@@ -158,4 +162,4 @@ if(isset($order_table) && count($order_table)>0) {
         <?php
     }
     ?>
-<!--    --><?php /*echo form_close(); */?>
+</div>
