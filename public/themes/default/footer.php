@@ -101,7 +101,11 @@ echo Assets::js();
 
     });
 </script>
+<div id="error_file_popup">
 
+ </div>
+<div id="success_file_popup">
 
+</div>
 </body>
 </html>

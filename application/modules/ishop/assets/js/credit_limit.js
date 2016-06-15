@@ -161,6 +161,7 @@ $(document).on('submit', '#upload_credit_limit_data', function (e) {
                      $('<div></div>').appendTo('body')
                         .html('<div><h4><b>The following data is incorrect Kindly upload correct data.</b></h4></br>'+t_data+'</div>')
                         .dialog({
+                            appendTo: "#error_file_popup",
                             modal: true,
                             title: 'Incorrect Data',
                             zIndex: 10000,
@@ -212,6 +213,7 @@ $(document).on('submit', '#upload_credit_limit_data', function (e) {
                      $('<div></div>').appendTo('body')
                         .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')
                         .dialog({
+                             appendTo: "#success_file_popup",
                             modal: true,
                             title: 'Save Data',
                             zIndex: 10000,

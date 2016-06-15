@@ -953,12 +953,12 @@ class Web_service extends Front_Controller
         $to_date = $this->input->get_post('to_date');
         $by_otn = $this->input->get_post('by_otn');
         $by_po_no = $this->input->get_post('by_po_no');
-        $order_status = $this->input->get_post('order_status'); // dispatched,pending,reject
+        $order_status = $this->input->get_post('order_status'); // dispatched,pending,reject,op_ackno,all
         $page_function = 'order_approval';
 
-        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) && !empty($order_status) && isset($order_status))
         {
-            $order_data = $this->ishop_model->get_order_data($role_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,$page_function,$order_status,'web_service');
+            $order_data = $this->ishop_model->get_order_data($role_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
 
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';

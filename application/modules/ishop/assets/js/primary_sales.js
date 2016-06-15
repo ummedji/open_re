@@ -157,7 +157,9 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
         month[10] = "Nov";
         month[11] = "Dec";
     
-    
+
+    var header_array = [];
+
     //file_data.push(dir_name);
 
     $.ajax({
@@ -196,15 +198,22 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                             t_data += "<tr>";
                             $.each( des_value5, function( key2, header_desc_value ){
                                 $.each( header_desc_value, function( key6, header_desc_value6 ){
-                                    t_data += "<th style='border:1px solid;text-align:center;'>"+header_desc_value6+"</th>";
+                                    t_data += "<th style='/*border:1px solid;*/text-align:center;'>"+header_desc_value6+"<span class='rts_bordet'></span></th>";
+
+                                    header_array.push(header_desc_value6);
+
                                 });
                             });
-                            t_data += "<th style='border:1px solid;text-align:center;'>Error Description</th></tr>";
+                            t_data += "<th style='/*border:1px solid;*/text-align:center;'>Error Description</th></tr>";
+
+                            header_array.push('Error Description');
 
                             t_data += "</thead><tbody>";
                         }
                     });
 
+
+                    console.log(header_array);
 
                     $.each( value, function( key1, des_value ) {
 
@@ -227,7 +236,7 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                                         }
                                     }
                                 
-                                t_data += "<td style='border:1px solid;text-align:center;'>"+desc_data+"</td>";
+                                t_data += "<td style='border:1px solid;text-align:center;' data-title='"+header_array[key3]+"'>"+desc_data+"</td>";
                             });
 
                             t_data += "</tr>";
@@ -236,15 +245,16 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                     t_data += "</tbody></table>";
 
 
-                    $('<div></div>').appendTo('body')
-                        .html('<div><h4><b>The following data is incorrect Kindly upload correct data.</b></h4></br>'+t_data+'</div>')
+                    $('<div id="no-more-tables"></div>').appendTo('body')
+                        .html('<div><h4><b></b></h4></br>'+t_data+'</div>')
                         .dialog({
+                            appendTo: "#error_file_popup",
                             modal: true,
-                            title: 'Incorrect Data',
+                            title: 'The following data is incorrect Kindly upload correct data.',
                             zIndex: 10000,
                             autoOpen: true,
                             width: 'auto',
-                            resizable: false,
+                            resizable: true,
                             buttons: {
                                 Download: function () {
 
@@ -290,12 +300,13 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                     $('<div></div>').appendTo('body')
                         .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')
                         .dialog({
+                            appendTo: "#success_file_popup",
                             modal: true,
                             title: 'Save Data',
                             zIndex: 10000,
                             autoOpen: true,
                             width: 'auto',
-                            resizable: false,
+                            resizable: true,
                             buttons: {
                                 Save: function () {
 

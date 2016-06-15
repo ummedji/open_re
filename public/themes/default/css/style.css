@@ -603,6 +603,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
 .full-height {
     min-height: 95.6%;
 }
+@media (max-width: 1366px) {.full-height {min-height: 93%;}}
 .content{
     overflow: auto;
     position: relative;
@@ -1504,4 +1505,163 @@ nav {
 .error{
     color: #ff0000 !important;
 }
+
+/*deta popup*/
+#error_file_popup {
+    margin: 0 auto;
+}
+#error_file_popup .ui-widget-content:first-child {
+    width: 900px !important;
+    position: relative !important;
+    display: inherit !important;
+    left: inherit !important;
+    margin: 0 auto;
+    z-index: 999 !important;
+    border-radius: 0 !important;
+    border: solid 1px #bfbfbf !important;
+    padding: 0 !important;
+}
+@media screen and (max-width: 991px){
+    #error_file_popup .ui-widget-content:first-child { width: auto !important; margin: 0 20px !important;}
+}
+#error_file_popup .ui-draggable .ui-dialog-titlebar {
+    background: #fff;
+    border: none;
+    text-align: center;
+    padding: 8px 0;
+    color: #e42456;
+    font-family: 'Exo2-SemiBold';
+    font-size: 16px;
+    border-bottom: solid 1px #e0e0e0 !important;
+    border-radius: 0;
+}
+#error_file_popup .ui-dialog .ui-dialog-titlebar-close {
+    height: 43px;
+    width: 43px;
+    top: 8px;
+    right: 0;
+    border: none;
+    border-radius: 0;
+}
+#error_file_popup .ui-dialog .ui-dialog-titlebar-close:after {
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    display: block;
+    height: 18px;
+    width: 18px;
+    background: url(../images/close_i.png) no-repeat 0 0;
+}
+#error_file_popup .ui-dialog .ui-dialog-content {
+    background-color: #e7ebee;
+    padding: 20px 30px;
+}
+#error_file_popup .ui-dialog #no-more-tables {
+    overflow-x: inherit !important;
+    margin-bottom: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+#error_file_popup .ui-dialog #no-more-tables tr th { min-width: 150px !important;}
+#error_file_popup .ui-dialog .ui-dialog-content div {
+    box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
+    overflow-x: scroll;
+    background-color: #fff;
+}
+#error_file_popup .ui-dialog .ui-dialog-content h4, #error_file_popup .ui-dialog .ui-dialog-content br{ display: none; }
+#error_file_popup .ui-dialog .ui-dialog-buttonpane {
+    margin-top: 0;
+    border: none;
+    background: #e7ebee;
+    text-align: center;
+}
+#error_file_popup .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { float: none;}
+#error_file_popup .ui-dialog .ui-dialog-buttonpane button {
+    font-family: 'Exo2-Medium';
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 7px 30px;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
+    margin: 0 5px 10px 5px;
+    outline: none;
+}
+/*end deta popup*/
+/*success_file_popup css*/
+#success_file_popup {
+    margin: 0 auto;
+}
+#success_file_popup .ui-widget-content:first-child {
+    width: 600px !important;
+    position: relative !important;
+    display: inherit !important;
+    left: inherit !important;
+    margin: 0 auto;
+    z-index: 999 !important;
+    border-radius: 0 !important;
+    border: solid 1px #bfbfbf !important;
+    padding: 0 !important;
+    box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+}
+@media screen and (max-width: 991px){
+    #success_file_popup .ui-widget-content:first-child { width: auto !important; margin: 0 20px !important;}
+}
+#success_file_popup .ui-draggable .ui-dialog-titlebar {
+    background: #fff;
+    border: none;
+    text-align: center;
+    padding: 8px 0;
+    color: #e42456;
+    font-family: 'Exo2-SemiBold';
+    font-size: 16px;
+    border-bottom: none;
+    border-radius: 0;
+}
+#success_file_popup .ui-dialog .ui-dialog-title { display: none;}
+#success_file_popup .ui-dialog .ui-dialog-titlebar-close {
+    height: 43px;
+    width: 43px;
+    top: 8px;
+    right: 0;
+    border: none;
+    border-radius: 0;
+}
+#success_file_popup .ui-dialog .ui-dialog-titlebar-close:after {
+    content: '';
+    position: absolute;
+    top: 13px;
+    left: 13px;
+    display: block;
+    height: 18px;
+    width: 18px;
+    background: url(../images/close_i.png) no-repeat 0 0;
+}
+#success_file_popup .ui-dialog .ui-dialog-content {
+    text-align: center;
+    font-family: 'Exo2-SemiBold';
+    font-size: 22px;
+    color: #4d4e4e;
+    margin-top: 30px;
+}
+#success_file_popup .ui-dialog .ui-dialog-buttonpane {
+    margin-top: 0;
+    border: none;
+    background: #ffffff;
+    text-align: center;
+}
+#success_file_popup .ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset { float: none;}
+#success_file_popup .ui-dialog .ui-dialog-buttonpane button {
+    font-family: 'Exo2-Medium';
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 7px 30px;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
+    margin: 15px 5px 10px 5px;
+    outline: none;
+}
+/*end success_file_popup css*/
 

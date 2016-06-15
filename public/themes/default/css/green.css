@@ -147,3 +147,13 @@ ul.listslider li{
 }
 .extra_btn a { background-color: #00793a;}
 .extra_btn a:hover, .extra_btn a:focus { background-color: #65ac1e;}
+#error_file_popup .ui-dialog .ui-dialog-titlebar-close {  background-color: #00793a;}
+#error_file_popup .ui-dialog .ui-dialog-buttonpane button { background-color: #00793a;}
+#error_file_popup .ui-dialog .ui-dialog-buttonpane button:hover {
+    background-color: #65ac1e;
+}
+#success_file_popup .ui-dialog .ui-dialog-titlebar-close {  background-color: #00793a;}
+#success_file_popup .ui-dialog .ui-dialog-buttonpane button { background-color: #00793a;}
+#success_file_popup .ui-dialog .ui-dialog-buttonpane button:hover {
+    background-color: #65ac1e;
+}
