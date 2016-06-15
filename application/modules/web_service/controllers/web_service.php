@@ -365,8 +365,9 @@ class Web_service extends Front_Controller
                 $final_array = array();
                 foreach($primary_sales_details as $k => $psd)
                 {
-                    $primary_sales_id = $psd['primary_sales_id'];
+                    $primary_sales_id = $psd['id'];
                     $primary_sales_product_details = $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id,'web_service');
+                    echo $this->db->last_query();
                     print_r($primary_sales_product_details);
                     $psd["details"]=$primary_sales_product_details;
                     $final_array[] = $psd;
