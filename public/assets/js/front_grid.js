@@ -8,23 +8,6 @@ $(document).ready(function () {
     $('body [effect=tooltip]').tooltip();
 
 });
-/* $('.paging').click(function (e) {
- /!*  var page = $(this).attr("value");
- alert(page);*!/
- var param = $("#form_ddreport").serializeArray();
- param.push({name: "page_no", value: $(this).attr("value")});
- // console.log(param);
- $.ajax({
- type: 'POST',
- url: "<?php //echo base_url().'reports/device_data_detail_report';?>"  ,
- data: param,
- success: function(resp){
- $("#middle_container").html(resp);
- }
- });
-
- }
- );*/
 
 $(document).delegate(".report-box .pagination_link", "click", function (e) {
     var page = $(this).attr("value");
@@ -88,7 +71,7 @@ function submitForm() {
     var uri = $(location).attr('href');
     //alert(uri);
     var lm = uri.split('/').reverse()[0];
-
+    var val='';
     switch(lm)
     {
         case'primary_sales_view_details': val = $("#primary_sales_view");break;
@@ -100,6 +83,13 @@ function submitForm() {
         case'invoice_received_confirmation': val = $("#invoice_confirmation");break;
         case'sales_view': val = $("#view_ishop_sales");break;
         case'schemes_view': val = $("#view_schemes");break;
+        case'all': val = $("#order_approval");break;
+        case'dispatched': val = $("#order_approval");break;
+        case'pending': val = $("#order_approval");break;
+        case'reject': val = $("#order_approval");break;
+        case'order_status': val = $("#order_status");break;
+        case'po_acknowledgement': val = $("#po_acknowledgement");break;
+        case'prespective_order': val = $("#prespective_order");break;
        /* default  : val = $("#form_ntfdetails");break;*/
     }
 
@@ -107,6 +97,8 @@ function submitForm() {
     var pages = $("input#page").val();
 
     var data = val.serializeArray();
+
+    //console.log(data);
     data.push({name: "page", value:pages});
 
     var url = val.attr("action");

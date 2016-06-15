@@ -182,8 +182,8 @@ $config['assets.js_combine']  = false;
 
 // The 'assets.css_minify' and 'assets.js_minify' settings are used to tell the
 // Assets library to minify the combined css and js files, respectively
-$config['assets.css_minify'] = true;
-$config['assets.js_minify']  = true;
+$config['assets.css_minify'] = false;
+$config['assets.js_minify']  = false;
 
 // The 'assets.encrypt' setting will mask the app structure by encrypting the
 // filename of the combined files.

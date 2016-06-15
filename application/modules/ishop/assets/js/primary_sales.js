@@ -287,13 +287,9 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                             }
                         });
 
-
-
                 }
                 else
                 {
-
-
 
                     $('<div></div>').appendTo('body')
                         .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')

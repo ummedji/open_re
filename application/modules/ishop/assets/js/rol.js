@@ -426,7 +426,7 @@ $(document).ready(function(){
                 data: param,
 
                 success: function(resp){
-
+                    location.reload();
                 }
             });
         }
@@ -564,7 +564,9 @@ $(document).on('submit', '#upload_rol_data', function (e) {
      
      var file_data = new FormData(this);
      var dir_name = "rol";
-     
+
+    var header_array = [];
+
      //file_data.push(dir_name);
      
      $.ajax({
@@ -603,11 +605,12 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                                 t_data += "<tr>";
                                     $.each( des_value5, function( key2, header_desc_value ){
                                         $.each( header_desc_value, function( key6, header_desc_value6 ){
-                                            t_data += "<th style='border:1px solid;text-align:center;'>"+header_desc_value6+"</th>";
+                                            t_data += "<th style='text-align:center;'>"+header_desc_value6+"<span class='rts_bordet'></span></th>";
+                                            header_array.push(header_desc_value6);
                                         });
                                     });
-                                t_data += "<th style='border:1px solid;text-align:center;'>Error Description</th></tr>";
-                                
+                                t_data += "<th style='text-align:center;'>Error Description</th></tr>";
+                                header_array.push('Error Description');
                                 t_data += "</thead><tbody>";
                             }
                         });
@@ -621,7 +624,7 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                                 var des_data = des_value.split("~");
                                 
                                 $.each( des_data, function( key3, desc_data ){
-                                    t_data += "<td style='border:1px solid;text-align:center;'>"+desc_data+"</td>";
+                                    t_data += "<td style='border:1px solid;text-align:center;' data-title='"+header_array[key3]+"'>"+desc_data+"</td>";
                                 });
                                 
                                 t_data += "</tr>";
@@ -631,15 +634,15 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                     
                      
                      $('<div></div>').appendTo('body')
-                        .html('<div><h4><b>The following data is incorrect Kindly upload correct data.</b></h4></br>'+t_data+'</div>')
+                        .html('<div>'+t_data+'</div>')
                         .dialog({
-                             appendTo: "#error_file_popup",
+                            appendTo: "#error_file_popup",
                             modal: true,
-                            title: 'Incorrect Data',
+                            title: 'The following data is incorrect Kindly upload correct data.',
                             zIndex: 10000,
                             autoOpen: true,
                             width: 'auto',
-                            resizable: false,
+                            resizable: true,
                             buttons: {
                                 Download: function () {
                                     
@@ -673,15 +676,10 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                                 $(this).remove();
                             }
                         });
-                     
-                     
-                     
                  }
                  else
                  {
-                     
-                     
-                     
+
                      $('<div></div>').appendTo('body')
                         .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')
                         .dialog({
@@ -691,7 +689,7 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                             zIndex: 10000,
                             autoOpen: true,
                             width: 'auto',
-                            resizable: false,
+                            resizable: true,
                             buttons: {
                                 Save: function () {
                                     

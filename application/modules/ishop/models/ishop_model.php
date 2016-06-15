@@ -3752,12 +3752,12 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
              * IF LOGIN USER IS HO
              */
 
-            //testdata($_POST);
+        //    testdata($_POST);
 
-            $distributor_id = $this->input->post("distributor_id");
-            $retailer_id = $this->input->post("retailer_id");
+            $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
+            $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
 
-            if(!isset($retailer_id) && empty($retailer_id)){
+            if($retailer_id==0){
                 $customer_id_from = $distributor_id;
                 $customer_id_to = 0;
                 $order_taken_by_id = $user_id;
@@ -3804,7 +3804,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             'status' => '1',
             'created_on' => date('Y-m-d H:i:s')
         );
-        
+      //  testdata($order_place_data);
         
         if ($this->db->insert('bf_ishop_orders', $order_place_data)) {
             $insert_id = $this->db->insert_id();
@@ -3835,7 +3835,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             $random_no = 'E'.mt_rand(100000, 999999);
         }
 
-        $check_data = $this->check_unique_random_data($table,$random_no);
+        $check_data = $this->check_unique_random_data($rand_type,$table,$random_no);
         if($check_data == 1){
             $this->get_random_no($rand_type,$table);
         }
@@ -3845,7 +3845,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     }
 
-    public function check_unique_random_data($rand_type,$rand_type,$table,$random_no){
+    public function check_unique_random_data($rand_type,$table,$random_no){
 
         $this->db->select('*');
         $this->db->from($table);
