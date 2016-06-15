@@ -885,6 +885,10 @@ class Web_service extends Front_Controller
                             $final_array2[$k3]['slabs'][] = $get_slab; // Add Geo Level 2 Into Final Array2
                         }
                     }
+                    else
+                    {
+                        $final_array2[$k3]['slabs'] = array();
+                    }
                 }
             }
 
@@ -985,6 +989,38 @@ class Web_service extends Front_Controller
             {
                 $result['status'] = true;
                 $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : saveOrderPlace
+     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
+     * @ Function Purpose    : Save Primary Sales Data
+     * */
+    public function saveOrderPlace()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->add_order_place_details($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
             }
             else
             {

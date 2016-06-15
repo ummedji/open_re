@@ -436,7 +436,7 @@ $(document).ready(function(){
     
   $("#order_place_add_row").click(function() {
 
-        
+
         $('#prod_sku').removeClass('ignore');
         $('#units').removeClass('ignore');
         $('#quantity').removeClass('ignore');
@@ -462,6 +462,7 @@ $("#order_place").on("submit",function(){
     $('#quantity').addClass('ignore');
 
     var param = $("#order_place").serializeArray();
+    console.log(param);
 
     var validator = order_place_validators;
 

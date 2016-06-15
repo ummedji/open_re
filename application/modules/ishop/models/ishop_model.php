@@ -1103,6 +1103,11 @@ class Ishop_model extends BF_Model
             $amount = $this->input->post("amount");
             $total_amount=array_sum($amount);
 
+             $rand_type = 'etn';
+             $table = 'ishop_secondary_sales';
+
+             $rand_data = $this->get_random_no($rand_type,$table);
+            
             $secondary_sales_data = array(
                 'customer_id_to' => (isset($customer_id) && !empty($customer_id)) ? $customer_id : '',
                 'customer_id_from' => $user_id,
@@ -1110,6 +1115,7 @@ class Ishop_model extends BF_Model
                 'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
                 'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
                 'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
+                'etn_no' => $rand_data,
                 'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
                 'invoice_recived_status' => '0',
                 'country_id' => $country_id,
@@ -1164,6 +1170,12 @@ class Ishop_model extends BF_Model
                     // testdata($qty_kgl);
                     $validat = $this->check_valid_secondary_sales_data($invoice_no, $order_tracking_no, $PO_no);
 
+                    $rand_type = 'etn';
+                    $table = 'ishop_secondary_sales';
+
+                    $rand_data = $this->get_random_no($rand_type,$table);
+            
+                    
                     if ($validat == 0) {
 
                         $total_amount = $amount;
@@ -1175,6 +1187,7 @@ class Ishop_model extends BF_Model
                             'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
                             'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
                             'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
+                            'etn_no' => $rand_data,
                             'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
                             'invoice_recived_status' => '0',
                             'country_id' => $country_id,
@@ -3699,12 +3712,17 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         $quantity = $this->input->post("quantity");
         $Qty = $this->input->post("Qty");
         
+        $rand_type = 'otn';
+        $table = 'bf_ishop_orders';
+        
+        $rand_data = $this->get_random_no($rand_type,$table);
+        
         $order_place_data = array(
             'customer_id_from' => $customer_id_from,
             'customer_id_to' => $customer_id_to,
             'order_taken_by_id' => $order_taken_by_id,
             'order_date' => $order_date,
-            'order_tracking_no' => mt_rand(100000, 999999),
+            'order_tracking_no' => $rand_data,
             'PO_no'=>$po_no,
             'order_status' => $order_status,
             'created_by_user' => $user_id,
@@ -3730,6 +3748,47 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
            $this->db->insert('bf_ishop_product_order', $order_data);
         }
         return $order_id;
+        
+    }
+    
+    public function get_random_no($rand_type,$table){
+        
+        if($rand_type == 'otn'){
+            $random_no = 'O'.mt_rand(100000, 999999);
+        }
+        elseif($rand_type == 'etn'){
+            $random_no = 'E'.mt_rand(100000, 999999);
+        }
+       
+        $check_data = $this->check_unique_random_data($table,$random_no);
+        if($check_data == 1){
+            $this->get_random_no($rand_type,$table);
+        }
+        else{
+            return $random_no;
+        }
+        
+    }
+    
+    public function check_unique_random_data($rand_type,$rand_type,$table,$random_no){
+        
+        $this->db->select('*');
+        $this->db->from($table);
+        
+        if(($table == 'bf_ishop_orders') && $rand_type == 'otn'){
+            $this->db->where('order_tracking_no',$random_no);
+        }
+        elseif($table == 'bf_ishop_secondary_sales' && $rand_type == 'etn'){
+            $this->db->where('etn_no',$random_no);
+        }
+       
+        $rand_data = $this->db->get()->result_array();
+        
+        if(isset($rand_data) && !empty($rand_data)) {
+            return 1;
+        } else{
+            return 0;
+        }
         
     }
     
