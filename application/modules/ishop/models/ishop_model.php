@@ -284,7 +284,6 @@ class Ishop_model extends BF_Model
             $limit = 10;
             $pagenum = $this->input->get_post('page');
             $page = !empty($pagenum) ? $pagenum : 1;
-            $page = !empty($pagenum) ? $pagenum : 1;
             $offset = $page*$limit-$limit;
             $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
@@ -348,7 +347,7 @@ class Ishop_model extends BF_Model
 
     public function primary_sales_product_details_view_by_id($primary_sales_id,$web_service = null)
     {
-        $sql ='SELECT ipsp.primary_sales_product_id AS id,ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
+        $sql ='SELECT ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
         $sql .= 'FROM bf_ishop_primary_sales_product AS ipsp ';
         $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = ipsp.product_sku_id) ';
         $sql .= 'JOIN bf_master_product_sku_regional AS psr ON (psr.product_sku_id = psc.product_sku_id) ';
@@ -365,7 +364,7 @@ class Ishop_model extends BF_Model
         }
         else
         {
-            //$info = $this->db->query($sql);
+            echo $sql;
             $product_detail = $this->grid->get_result_res($sql);
             /* $primary_sales_product_detail = $info->result_array();
              $product_detail = array('result'=>$primary_sales_product_detail);*/
