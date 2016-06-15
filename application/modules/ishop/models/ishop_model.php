@@ -4169,7 +4169,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * @ Function Return 	: array
      * */
     
-    public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null,$web_service=null) {
+    public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null,$page_function=null,$order_status=null,$web_service=null) {
 
 
         $sql ='SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
@@ -4188,7 +4188,15 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         $sql .= 'WHERE 1 ';
 
         $action_data = $this->uri->segment(2);
+        if(isset($page_function) && !empty($page_function))
+        {
+            $action_data = $page_function;
+        }
         $sub_action_data = $this->uri->segment(3);
+        if(isset($order_status) && !empty($order_status))
+        {
+            $sub_action_data = $order_status;
+        }
 
         if($action_data != "order_approval"){
 
@@ -4243,8 +4251,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         $sql .= ' ORDER BY bio.order_date DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-            // testdata($orderdata);
-            $order_data = $this->db->get()->result_array();
+            $info = $this->db->query($sql);
+            $order_data = $info->result_array();
             return $order_data;
             //$orderdata = array('result'=>$order_data);
             // var_dump($product_detail);die;
@@ -5026,9 +5034,14 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * */
     
     
-    public function update_order_data($orderdata){
-        
+    public function update_order_data($orderdata,$web_service=null){
+
          if(!empty($orderdata)){
+
+             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                 $orderdata["order_data"] = explode(',',$orderdata["order_data"]);
+                 $orderdata["change_order_status"] = explode(',',$orderdata["change_order_status"]);
+             }
              
              foreach ($orderdata["order_data"] as $key => $value) {
                  
@@ -5064,7 +5077,8 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 
                  if(!empty($update_array)){
                     $this->db->where('order_id', $value);
-                    $this->db->update('bf_ishop_orders', $update_array); 
+                    $id = $this->db->update('bf_ishop_orders', $update_array);
+                     return $id;
                  }
                  
              }

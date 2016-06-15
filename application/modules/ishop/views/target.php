@@ -444,17 +444,6 @@ else{
 
 <?php echo form_close(); ?>
 
-<?php }elseif($login_customer_type == 9){ ?>
-
-<div class="col-md-12 table_bottom">
-    <div class="row">
-        <div class="col-md-3 save_btn">
-            <button type="submit" class="btn btn-primary">Email</button>
-        </div>
-        
-    </div>
-</div>
-
 <?php } ?>
 <div class="clearfix"></div>
 

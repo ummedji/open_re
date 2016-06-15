@@ -2013,7 +2013,7 @@ class Ishop extends Front_Controller
         
         public function update_order_approval_status() {
            $detail_data = $_POST;
-           
+
            $detail_update = $this->ishop_model->update_order_data($detail_data);
          //  redirect("ishop/order_approval");
            die;

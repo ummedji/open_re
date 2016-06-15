@@ -935,7 +935,6 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
-
     /**
      * @ Function Name        : getOrderApproval
      * @ Function Params    : user_id,country_id (POST)
@@ -950,14 +949,48 @@ class Web_service extends Front_Controller
         $to_date = $this->input->get_post('to_date');
         $by_otn = $this->input->get_post('by_otn');
         $by_po_no = $this->input->get_post('by_po_no');
+        $order_status = $this->input->get_post('order_status'); // dispatched,pending,reject
+        $page_function = 'order_approval';
 
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
-            $order_data = $this->ishop_model->get_order_data($role_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,'web_service');
+            $order_data = $this->ishop_model->get_order_data($role_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,$page_function,$order_status,'web_service');
 
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = !empty($order_data) ? $order_data : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : saveOrderStatus
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function saveOrderStatus()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $id = $this->ishop_model->update_order_data($this->input->post(),'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
         }
         else
         {
