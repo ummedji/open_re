@@ -3813,16 +3813,16 @@ class Ishop extends Front_Controller
                                 }
                                 elseif($_POST["dirname"] == "secondary_sales"){
 
-										if($j == 3 && ($row_data[$j] != "")){
+								   if($j == 3 && ($row_data[$j] != "")){
 											$date_data = explode("-",$row_data[$j]);
                                             
                                             $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
                                             $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
                                             
 											//$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
-										}
-
-									else{
+								    }
+									else
+                                    {
 										if($j == 2 && ($row_data[$j] != "")){
 											$date_data = explode("-",$row_data[$j]);
                                             
