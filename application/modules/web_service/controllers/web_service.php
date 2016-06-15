@@ -904,7 +904,7 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : savePrimarySales
+     * @ Function Name        : saveTarget
      * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
      * @ Function Purpose    : Save Primary Sales Data
      * */
@@ -913,9 +913,8 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
 
-        if(isset($user_id))
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
-            $id = $this->ishop_model->add_primary_sales_details($user_id,$country_id,'web_service');
             $id = $this->ishop_model->add_target_data($this->input->get_post());
             if($id)
             {
@@ -927,6 +926,38 @@ class Web_service extends Front_Controller
                 $result['status'] = false;
                 $result['message'] = 'Fail';
             }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    /**
+     * @ Function Name        : getOrderApproval
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getOrderApproval()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $by_otn = $this->input->get_post('by_otn');
+        $by_po_no = $this->input->get_post('by_po_no');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $order_data = $this->ishop_model->get_order_data($role_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($order_data) ? $order_data : array();
         }
         else
         {

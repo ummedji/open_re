@@ -263,58 +263,10 @@ else{
                             </div>
                     </div>
                 </div>
-                <div class="col-md-6 col-sm-6 tp_form">
-                    
-                        <!--<div class="form-group">
-                        <?php /*if($action_data == "target_view"){ */?>
-                            <label>Province</label>
-                        <?php /*}else{ */?>
-                            <label>Geo L1</label>
-                        <?php /*} */?>
-                        
-                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                            <?php /*if($action_data == "target_view"){ */?>
-                           <option value="0">Select Province</option>
-                        <?php /*}else{ */?>
-                            <option value="0">Select Geo Level</option>
-                        <?php /*} */?>
-                           
-                                <?php
-/*                                if(isset($geo_level_data) && !empty($geo_level_data))
-                                {
-                                    foreach($geo_level_data as $key=>$val_geo_level_data)
-                                    {
-                                        */?>
-                                        <option value="<?php /*echo $val_geo_level_data['political_geo_id']; */?>"><?php /*echo $val_geo_level_data['political_geography_name']; */?></option>
-                                        <?php
-/*                                    }
-                                }
-                                */?>
-                        </select>
-                    
-                    </div>-->
-                </div>
-                
-                <div class="col-md-6 col-sm-6 tp_form">
-                   
-                       <!--<div class="form-group">
-                       <label>Distributor Name</label>
-                       <select class="selectpicker" id="fo_distributor_data" name="distributor_data" data-live-search="true">
-                           
-                       </select>
-                   </div>-->
-                   
-               </div>
-
-
-
                 
             </div>
             
-            
             <?php } ?>
-            
-            
             
             <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $login_customer_type; ?>" /> 
             <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $login_customer_id; ?>" /> 
@@ -491,6 +443,17 @@ else{
 </div>
 
 <?php echo form_close(); ?>
+
+<?php }elseif($login_customer_type == 9){ ?>
+
+<div class="col-md-12 table_bottom">
+    <div class="row">
+        <div class="col-md-3 save_btn">
+            <button type="submit" class="btn btn-primary">Email</button>
+        </div>
+        
+    </div>
+</div>
 
 <?php } ?>
 <div class="clearfix"></div>

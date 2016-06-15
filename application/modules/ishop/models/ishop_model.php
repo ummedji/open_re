@@ -2620,7 +2620,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
        // testdata($_POST);
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $product_sku_id = explode(',',$this->input->get_post("product_sku_id"));
-            $cur_date = explode(',',$this->input->get_post("cur_date"));
+            /*$cur_date = explode(',',$this->input->get_post("cur_date"));*/
             $stock_id = explode(',',$this->input->get_post("stock_id"));
             $int_qty = explode(',',$this->input->get_post("int_qty"));
             $unrtd_qty = explode(',',$this->input->get_post("unrtd_qty"));
@@ -2631,7 +2631,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         else
         {
             $product_sku_id = $this->input->post("product_sku_id");
-            $cur_date = $this->input->post("cur_date");
+            /*$cur_date = $this->input->post("cur_date");*/
             $stock_id = $this->input->post("stock_id");
             $int_qty = $this->input->post("int_qty");
             $unrtd_qty = $this->input->post("unrtd_qty");
@@ -2661,7 +2661,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                 $stock_add =array(
                     'stock_id'=>$stock_id[$k],
                     'product_sku_id'=>$product_sku_id[$k],
-                    'date'=>$cur_date[$k],
+                    /*'date'=>$cur_date[$k],*/
                     'intransit_quantity'=>$int_qty[$k],
                     'unrestricted_quantity'=>$unrtd_qty[$k],
                     'batch'=>$batch[$k],
@@ -4169,7 +4169,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * @ Function Return 	: array
      * */
     
-    public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null) {
+    public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null,$web_service=null) {
 
 
         $sql ='SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
@@ -4242,129 +4242,189 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         }
         $sql .= ' ORDER BY bio.order_date DESC ';
 
-        $orderdata =  $this->grid->get_result_res($sql);
-       // testdata($orderdata);
-        //$order_data = $this->db->get()->result_array();
-       // $orderdata = array('result'=>$order_data);
-       // var_dump($product_detail);die;
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // testdata($orderdata);
+            $order_data = $this->db->get()->result_array();
+            return $order_data;
+            //$orderdata = array('result'=>$order_data);
+            // var_dump($product_detail);die;
+        } else {
+            $orderdata =  $this->grid->get_result_res($sql);
 
             if(isset($orderdata['result']) && !empty($orderdata['result']))
             {
-                
+
                 if($loginusertype == 7){
-            
+
                     //FOR HO
-                    
-                        if($action_data == "order_approval"){
 
-                            $order_view['head'] =array('','Sr. No.','Distributor Code','Distributor Name','PO No.','Order Tracking No.','Credit Limit','Amount','Status');
-                            $order_view['count'] = count($order_view['head']);
-                            $i=1;
+                    if($action_data == "order_approval"){
 
-                            foreach($orderdata['result'] as $od )
-                            {
-                                
-                                if($od['order_status'] == 0){
-                                    $order_status = "Pending";
-                                }
-                                elseif($od['order_status'] == 1){
-                                    $order_status = "Dispatched";
-                                }
-                                elseif($od['order_status'] == 3){
-                                    $order_status = "Rejected";
-                                }
-                                elseif($od['order_status'] == 4){
-                                    $order_status = "op_ackno";
-                                }
-                                
-                                $order_data =  '<input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input id="check_data_'.$od['order_id'].'" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
-                               
-                                $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
-                                
-                                $checkbox = $order_data.'<input id="order_status_'.$od['order_id'].'" type="checkbox" name="change_order_status1[]" class="order_status" />';
-
-                                $order_view['row'][]= array($checkbox,$i,$od['f_u_code'],$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['PO_no'],$otn,$od['credit_limit'],$od['total_amount'],$order_status);
-                                $i++;
-                            }
-                            $order_view['eye'] ='';
-
-                        }
-                        else
-                        {
-
-                            $order_view['head'] =array('Sr. No.','Remove','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
-                            $order_view['count'] = count($order_view['head']);
-                            $i=1;
-
-                            foreach($orderdata['result'] as $od )
-                            {
-                                
-                                if($od['order_status'] == 0){
-                                    $order_status = "Pending";
-                                }
-                                elseif($od['order_status'] == 1){
-                                    $order_status = "Dispatched";
-                                }
-                                elseif($od['order_status'] == 3){
-                                    $order_status = "Rejected";
-                                }
-                                elseif($od['order_status'] == 4){
-                                    $order_status = "op_ackno";
-                                }
-                                
-                                $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
-
-                                $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$od['PO_no'],$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$order_status);
-                                $i++;
-                                
-                                
-                                if($od['order_status'] == 4){
-                                        $order_view['delete'][] ='';
-                                    }
-                                else {
-                                     $order_view['delete'][] ='is_idelete';
-                                }
-                                
-                                
-                            }
-                            $order_view['eye'] ='';
-                            
-
-                        }
-                   }
-                   else if($loginusertype == 8){
-            
-                        //FOR FO
-
-                        if($radio_checked == "farmer"){
-                            
-                            $order_view['head'] =array('Sr. No.','','Farmer Name','Retailer Name','Order Tracking No.','Entered By','Read');
-                            $order_view['count'] = count($order_view['head']);
-                        }
-                        elseif($radio_checked == "retailer"){
-                            
-                            $order_view['head'] =array('Sr. No.','Action','Retailer Code','Retailer Name','Distributor Name','Order Date','PO NO.','Order Tracking No.','EDD','Amount','Entered By', 'Status');
-                            $order_view['count'] = count($order_view['head']);
-                        }
-                        elseif($radio_checked == "distributor"){
-                            
-                            $order_view['head'] =array('Sr. No.','Action','Distributor Code','Distributor Name','Order Date','PO NO.','Order Tracking No.','EDD','Amount','Entered By', 'Status');
-                            $order_view['count'] = count($order_view['head']);
-                        }
-                        
+                        $order_view['head'] =array('','Sr. No.','Distributor Code','Distributor Name','PO No.','Order Tracking No.','Credit Limit','Amount','Status');
+                        $order_view['count'] = count($order_view['head']);
                         $i=1;
 
                         foreach($orderdata['result'] as $od )
                         {
-                            
-                            if($od['read_status'] == 0){
-                                $read_status = "<a class='read_".$od['order_id']."' href='javascript:void(0);' onclick = 'mark_as_read(".$od['order_id'].");' >Mark as Read</a>";
+
+                            if($od['order_status'] == 0){
+                                $order_status = "Pending";
                             }
-                            else{
-                                $read_status = "<a class='unread_".$od['order_id']."'  href='javascript:void(0);'  onclick = 'mark_as_unread(".$od['order_id'].");'>Mark as Unread</a>";
+                            elseif($od['order_status'] == 1){
+                                $order_status = "Dispatched";
                             }
-                            
-                            
+                            elseif($od['order_status'] == 3){
+                                $order_status = "Rejected";
+                            }
+                            elseif($od['order_status'] == 4){
+                                $order_status = "op_ackno";
+                            }
+
+                            $order_data =  '<input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input id="check_data_'.$od['order_id'].'" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
+
+                            $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                            $checkbox = $order_data.'<input id="order_status_'.$od['order_id'].'" type="checkbox" name="change_order_status1[]" class="order_status" />';
+
+                            $order_view['row'][]= array($checkbox,$i,$od['f_u_code'],$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['PO_no'],$otn,$od['credit_limit'],$od['total_amount'],$order_status);
+                            $i++;
+                        }
+                        $order_view['eye'] ='';
+
+                    }
+                    else
+                    {
+
+                        $order_view['head'] =array('Sr. No.','Remove','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
+                        $order_view['count'] = count($order_view['head']);
+                        $i=1;
+
+                        foreach($orderdata['result'] as $od )
+                        {
+
+                            if($od['order_status'] == 0){
+                                $order_status = "Pending";
+                            }
+                            elseif($od['order_status'] == 1){
+                                $order_status = "Dispatched";
+                            }
+                            elseif($od['order_status'] == 3){
+                                $order_status = "Rejected";
+                            }
+                            elseif($od['order_status'] == 4){
+                                $order_status = "op_ackno";
+                            }
+
+                            $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                            $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$od['PO_no'],$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$order_status);
+                            $i++;
+
+
+                            if($od['order_status'] == 4){
+                                $order_view['delete'][] ='';
+                            }
+                            else {
+                                $order_view['delete'][] ='is_idelete';
+                            }
+
+
+                        }
+                        $order_view['eye'] ='';
+
+
+                    }
+                }
+                else if($loginusertype == 8){
+
+                    //FOR FO
+
+                    if($radio_checked == "farmer"){
+
+                        $order_view['head'] =array('Sr. No.','','Farmer Name','Retailer Name','Order Tracking No.','Entered By','Read');
+                        $order_view['count'] = count($order_view['head']);
+                    }
+                    elseif($radio_checked == "retailer"){
+
+                        $order_view['head'] =array('Sr. No.','Action','Retailer Code','Retailer Name','Distributor Name','Order Date','PO NO.','Order Tracking No.','EDD','Amount','Entered By', 'Status');
+                        $order_view['count'] = count($order_view['head']);
+                    }
+                    elseif($radio_checked == "distributor"){
+
+                        $order_view['head'] =array('Sr. No.','Action','Distributor Code','Distributor Name','Order Date','PO NO.','Order Tracking No.','EDD','Amount','Entered By', 'Status');
+                        $order_view['count'] = count($order_view['head']);
+                    }
+
+                    $i=1;
+
+                    foreach($orderdata['result'] as $od )
+                    {
+
+                        if($od['read_status'] == 0){
+                            $read_status = "<a class='read_".$od['order_id']."' href='javascript:void(0);' onclick = 'mark_as_read(".$od['order_id'].");' >Mark as Read</a>";
+                        }
+                        else{
+                            $read_status = "<a class='unread_".$od['order_id']."'  href='javascript:void(0);'  onclick = 'mark_as_unread(".$od['order_id'].");'>Mark as Unread</a>";
+                        }
+
+
+                        if($od['order_status'] == 0){
+                            $order_status = "Pending";
+                        }
+                        elseif($od['order_status'] == 1){
+                            $order_status = "Dispatched";
+                        }
+                        elseif($od['order_status'] == 2){
+                            $order_status = "";
+                        }
+                        elseif($od['order_status'] == 3){
+                            $order_status = "Rejected";
+                        }
+                        elseif($od['order_status'] == 4){
+                            $order_status = "op_ackno";
+                        }
+
+
+                        $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+
+                        if($radio_checked == "farmer"){
+
+                            $order_view['row'][]= array($i,"",$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$otn,$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$read_status);
+
+                        }
+                        elseif($radio_checked == "retailer"){
+
+                            $order_view['row'][]= array($i,$od['order_id'],'',$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$od["order_date"],$od["PO_no"],$otn,$od["estimated_delivery_date"],$od["total_amount"],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$order_status);
+
+                        }
+                        elseif($radio_checked == "distributor"){
+
+                            $order_view['row'][]= array($i,$od['order_id'],'',$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od["order_date"],$od["PO_no"],$otn,$od["estimated_delivery_date"],$od["total_amount"],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$order_status);
+
+                        }
+
+                        $i++;
+                    }
+                    $order_view['eye'] ='';
+
+
+                }
+                else if($loginusertype == 9){
+
+                    //FOR DISTRIBUTOR
+
+                    $action_data = $this->uri->segment(2);
+
+                    if($action_data != "po_acknowledgement"){
+
+                        $order_view['head'] =array('Sr. No.','','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
+                        $order_view['count'] = count($order_view['head']);
+                        $i=1;
+
+                        foreach($orderdata['result'] as $od )
+                        {
+
                             if($od['order_status'] == 0){
                                 $order_status = "Pending";
                             }
@@ -4380,107 +4440,50 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                             elseif($od['order_status'] == 4){
                                 $order_status = "op_ackno";
                             }
-                            
-                            
-                            $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
 
-                            
-                            if($radio_checked == "farmer"){
-                            
-                                $order_view['row'][]= array($i,"",$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$otn,$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$read_status);
 
-                            }
-                            elseif($radio_checked == "retailer"){
-                                
-                                 $order_view['row'][]= array($i,$od['order_id'],'',$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$od["order_date"],$od["PO_no"],$otn,$od["estimated_delivery_date"],$od["total_amount"],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$order_status);
 
-                            }
-                            elseif($radio_checked == "distributor"){
-                                
-                                 $order_view['row'][]= array($i,$od['order_id'],'',$od['fr_fname']." ".$od['fr_mname']." ".$od['fr_lname'],$od["order_date"],$od["PO_no"],$otn,$od["estimated_delivery_date"],$od["total_amount"],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'] ,$order_status);
-                                
-                            }
-                            
+                            $otn = '<div prdid ="'.$od['order_id'].'"><a data-toggle="modal" onclick="show_po_popup('.trim($od['order_id']).','.trim($od['PO_no']).');"  class="set_pono" href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                            $po_no = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['PO_no'].'</a></div>';
+
+                            $order_view['row'][]= array($i,'',$od['order_date'],$po_no,$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$order_status);
                             $i++;
                         }
                         $order_view['eye'] ='';
-                       
+                    }
+                    else{
+
+                        //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
+
+                        $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Entered By','Enter PO No.');
+                        $order_view['count'] = count($order_view['head']);
+                        $i=1;
+
+                        foreach($orderdata['result'] as $od )
+                        {
+
+
+                            $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+
+                            $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
+
+                            $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$otn,$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$po_no);
+                            $i++;
+                        }
+                        $order_view['eye'] ='';
 
                     }
-                    else if($loginusertype == 9){
-
-                        //FOR DISTRIBUTOR
-
-                        $action_data = $this->uri->segment(2);
-                        
-                        if($action_data != "po_acknowledgement"){
-                        
-                                $order_view['head'] =array('Sr. No.','','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
-                                $order_view['count'] = count($order_view['head']);
-                                $i=1;
-
-                                foreach($orderdata['result'] as $od )
-                                {
-
-                                    if($od['order_status'] == 0){
-                                        $order_status = "Pending";
-                                    }
-                                    elseif($od['order_status'] == 1){
-                                        $order_status = "Dispatched";
-                                    }
-                                    elseif($od['order_status'] == 2){
-                                        $order_status = "";
-                                    }
-                                    elseif($od['order_status'] == 3){
-                                        $order_status = "Rejected";
-                                    }
-                                    elseif($od['order_status'] == 4){
-                                        $order_status = "op_ackno";
-                                    }
 
 
+                }
+                else if($loginusertype == 10){
 
-                                    $otn = '<div prdid ="'.$od['order_id'].'"><a data-toggle="modal" onclick="show_po_popup('.trim($od['order_id']).','.trim($od['PO_no']).');"  class="set_pono" href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
-                                    
-                                    $po_no = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['PO_no'].'</a></div>';
+                    //FOR RETAILER
 
-                                    $order_view['row'][]= array($i,'',$od['order_date'],$po_no,$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$order_status);
-                                    $i++;
-                                }
-                                $order_view['eye'] ='';
-                        }
-                        else{
-                            
-                            //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
-                            
-                            $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Entered By','Enter PO No.');
-                            $order_view['count'] = count($order_view['head']);
-                                $i=1;
+                    $action_data = $this->uri->segment(2);
 
-                                foreach($orderdata['result'] as $od )
-                                {
-
-
-                                    $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
-
-                                    $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
-
-                                    $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$otn,$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$po_no);
-                                    $i++;
-                                }
-                                $order_view['eye'] ='';
-                            
-                        }
-                        
-
-                    }
-                    else if($loginusertype == 10){
-
-                        //FOR RETAILER
-                        
-                        $action_data = $this->uri->segment(2);
-                        
-                        if($action_data != "po_acknowledgement"){
+                    if($action_data != "po_acknowledgement"){
 
                         $order_view['head'] =array('Sr. No.','','Distributor Name','Order Date','PO No.','Order Tracking No.','EDD','Amount','Entered By','Status');
                         $order_view['count'] = count($order_view['head']);
@@ -4488,7 +4491,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
 
                         foreach($orderdata['result'] as $od )
                         {
-                            
+
                             if($od['order_status'] == 0){
                                 $order_status = "Pending";
                             }
@@ -4504,48 +4507,51 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                             elseif($od['order_status'] == 4){
                                 $order_status = "op_ackno";
                             }
-                            
-                            
-                            
+
+
+
                             $otn = '<div prdid ="'.$od['order_id'].'"><a class="set_pono" onClick="show_po_popup('.trim($od['order_id']).','.trim($od['PO_no']).');" href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
-                            
+
                             $po_no = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['PO_no'].'</a></div>';
 
                             $order_view['row'][]= array($i,'',$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$od['order_date'],$po_no,$otn,$od['estimated_delivery_date'] ,$od['total_amount'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$order_status);
                             $i++;
                         }
                         $order_view['eye'] ='';
-                        
+
                     }
                     else{
-                            
-                            //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
-                            
-                            $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Distributor','Entered By','Enter PO No.');
-                            $order_view['count'] = count($order_view['head']);
-                                $i=1;
 
-                                foreach($orderdata['result'] as $od )
-                                {
+                        //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
+
+                        $order_view['head'] =array('Sr. No.','Action','Order Date','Order Tracking No.','Distributor','Entered By','Enter PO No.');
+                        $order_view['count'] = count($order_view['head']);
+                        $i=1;
+
+                        foreach($orderdata['result'] as $od )
+                        {
 
 
-                                    $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
+                            $otn = '<div class="eye_i" prdid ="'.$od['order_id'].'"><a href="javascript:void(0);">'.$od['order_tracking_no'].'</a></div>';
 
-                                    $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
+                            $po_no = '<div  prdid ="'.$od['order_id'].'"><input type="hidden" name="order_data[]" value="'.$od['order_id'].'" /><input type="text" name="po_no[]" value="'.$od['PO_no'].'" /></div>';
 
-                                    $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$otn,$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$po_no);
-                                    $i++;
-                                }
-                                $order_view['eye'] ='';
-                            
+                            $order_view['row'][]= array($i,$od['order_id'],$od['order_date'],$otn,$od['to_fname']." ".$od['to_mname']." ".$od['to_lname'],$od['ot_fname']." ".$od['ot_mname']." ".$od['ot_lname'],$po_no);
+                            $i++;
                         }
-                        
+                        $order_view['eye'] ='';
 
                     }
+
+
+                }
 
                 $order_view['pagination'] = $orderdata['pagination'];
                 return $order_view;
             }
+        }
+
+
         
     }
     
@@ -5105,7 +5111,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
     }
     
     public function add_target_data($target_data) {
-        
+
         $user= $this->auth->user();
         $logined_user_id = $user->id;
         
