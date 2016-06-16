@@ -525,8 +525,8 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
         month[9] = "Oct";
         month[10] = "Nov";
         month[11] = "Dec";
-    
-    //file_data.push(dir_name);
+
+    var header_array = [];
 
     $.ajax({
         url: site_url+"ishop/upload_data", // Url to which the request is send
@@ -541,34 +541,27 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
             console.log(data);
             $.each( data, function( key, value ) {
 
-                //alert(key+"==="+ value);
-
                 if(key == "error"){
 
                     var value_data = JSON.stringify(value);
 
-                    //alert("ERROR");
                     var error_message = "";
 
                     var t_data = "<table><thead>";
 
-                    //   console.log(value);
-
                     $.each( value, function( key5, des_value5 ) {
 
-
                         if(key5 == "header"){
-
-                            //  console.log(key5+"==="+des_value5);
 
                             t_data += "<tr>";
                             $.each( des_value5, function( key2, header_desc_value ){
                                 $.each( header_desc_value, function( key6, header_desc_value6 ){
-                                    t_data += "<th style='border:1px solid;text-align:center;'>"+header_desc_value6+"</th>";
+                                    t_data += "<th style='/*border:1px solid;*/text-align:center;'>"+header_desc_value6+"<span class='rts_bordet'></span></th>";
+                                    header_array.push(header_desc_value6);
                                 });
                             });
-                            t_data += "<th style='border:1px solid;text-align:center;'>Error Description</th></tr>";
-
+                            t_data += "<th style='/*border:1px solid;*/text-align:center;'>Error Description</th></tr>";
+                            header_array.push('Error Description');
                             t_data += "</thead><tbody>";
                         }
                     });
@@ -595,7 +588,7 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                                     }
                                 }
                                 
-                                t_data += "<td style='border:1px solid;text-align:center;'>"+desc_data+"</td>";
+                                t_data += "<td style='border:1px solid;text-align:center;' data-title='"+header_array[key3]+"'>"+desc_data+"</td>";
                             });
 
                             t_data += "</tr>";
@@ -604,16 +597,16 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                     t_data += "</tbody></table>";
 
 
-                    $('<div></div>').appendTo('body')
-                        .html('<div><h4><b>The following data is incorrect Kindly upload correct data.</b></h4></br>'+t_data+'</div>')
+                    $('<div id="no-more-tables"></div>').appendTo('body')
+                        .html('<div>'+t_data+'</div>')
                         .dialog({
                             appendTo: "#error_file_popup",
                             modal: true,
-                            title: 'Incorrect Data',
+                            title: 'The following data is incorrect Kindly upload correct data.',
                             zIndex: 10000,
                             autoOpen: true,
                             width: 'auto',
-                            resizable: false,
+                            resizable: true,
                             buttons: {
                                 Download: function () {
 
@@ -635,8 +628,6 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
 
                                         window.open(site_url+"assets/uploads/Uploads/"+dir_name+"/"+file_name,'_blank' );
                                     }
-                                    // return false;
-                                    //console.log(file_data);
                                     $(this).dialog("close");
                                 },
                                 Decline: function () {
@@ -647,15 +638,9 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                                 $(this).remove();
                             }
                         });
-
-
-
                 }
                 else
                 {
-
-
-
                     $('<div></div>').appendTo('body')
                         .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')
                         .dialog({
@@ -665,26 +650,16 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                             zIndex: 10000,
                             autoOpen: true,
                             width: 'auto',
-                            resizable: false,
+                            resizable: true,
                             buttons: {
                                 Save: function () {
-
-
                                     $.ajax({
                                         url: site_url+"ishop/add_xl_data", // Url to which the request is send
                                         type: "POST",             // Type of request to be send, called as method
                                         data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
                                         success: function(data)   // A function to be called if request succeeds
-                                        {
-                                            console.log(data)
-                                            //file_name = data;
-                                        }
+                                        {}
                                     });
-
-                                    // window.open(site_url+"assets/uploads/Uploads/target/"+file_name,'_blank' );
-
-                                    // return false;
-                                    //console.log(file_data);
                                     $(this).dialog("close");
                                 },
                                 Decline: function () {
@@ -695,19 +670,12 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                                 $(this).remove();
                             }
                         });
-
-
                 }
-
             })
-
         },
         dataType: 'json'
     });
-
-
     return false;
-
 });
 
 

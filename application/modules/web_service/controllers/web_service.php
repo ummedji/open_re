@@ -919,7 +919,7 @@ class Web_service extends Front_Controller
 
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
-            $id = $this->ishop_model->add_target_data($this->input->get_post());
+            $id = $this->ishop_model->add_target_data($this->input->post(),$user_id,'web_service');
             if($id)
             {
                 $result['status'] = true;
@@ -1010,7 +1010,6 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
-
 
     /**
      * @ Function Name        : getOrderStatus
@@ -1177,7 +1176,6 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
-
 
     /**
      * @ Function Name        : getConversion

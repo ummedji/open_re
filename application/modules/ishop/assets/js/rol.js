@@ -633,7 +633,7 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                         t_data += "</tbody></table>";
                     
                      
-                     $('<div></div>').appendTo('body')
+                     $('<div id="no-more-tables"></div>').appendTo('body')
                         .html('<div>'+t_data+'</div>')
                         .dialog({
                             appendTo: "#error_file_popup",

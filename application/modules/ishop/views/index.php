@@ -8,9 +8,9 @@ echo form_open('',$attributes); ?>
         <div class="row">
             <div class="col-md-12 text-center tp_form">
                 <div class="form-group">
-                    <label>Distributor Name</label>
-                    <select class="selectpicker" name="customer_id" data-live-search="true">
-                        <option value="">Select Distributor Name<span style="color: red">*</span></option>
+                    <label>Distributor Name<span style="color: red">*</span></label>
+                    <select class="selectpicker" id="customer_id" name="customer_id" data-live-search="true">
+                        <option value="">Select Distributor Name</option>
                         <?php
                         if(isset($distributor) && !empty($distributor))
                         {
@@ -29,6 +29,7 @@ echo form_open('',$attributes); ?>
                 <div class="form-group">
                     <label for="invoice_no">Invoice No.<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
+                    <label id="invoice_no_error" class="error" for="invoice_no"></label>
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
@@ -139,28 +140,13 @@ echo form_open('',$attributes); ?>
 </div>
 
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
-<div class="col-md-12 table_bottom">
-    <div class="row">
-        <div class="col-md-3 save_btn">
-            <!--  <div><input type="submit" class="btn btn-primary" value="Save" /></div>-->
-            <button type="submit" class="btn btn-primary">Save</button>
-        </div>
-        <!--<div class="col-md-9">
-            <div class="row">
-                <div class="col-md-3 upload_file_space">
-                    <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
-                                            Browse <input type="file" multiple>
-                                        </span>
-                                    </span>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-9 chech_data"><button type="button" class="btn btn-default">Check Data</button> <button type="button" class="btn btn-default">Download Templates</button></div>
+<div class="save_button" style="display: none">
+    <div class="col-md-12 table_bottom">
+        <div class="row">
+            <div class="col-md-3 save_btn">
+                <button type="submit" class="btn btn-primary">Save</button>
             </div>
-        </div>-->
+        </div>
     </div>
 </div>
 <?php echo form_close(); ?>

@@ -66,6 +66,23 @@ class Ishop extends Front_Controller
 		redirect('ishop/index');
 	}
 
+	public function check_duplicate_data_primary_sales()
+	{
+		$customer_id = $this->input->post("customer_id");
+		$invoice_no = $this->input->post("invoice_no");
+
+		 $check= $this->ishop_model->check_duplicate_data_for_primary_sales($customer_id,$invoice_no);
+		 echo $check;
+		 die;
+	}
+	public function get_data_primary_sales_by_invoice()
+	{
+		$invoice_no = $this->input->post("invoice_no");
+
+		$check= $this->ishop_model->get_data_primary_sales_by_invoice_no($invoice_no);
+		echo json_encode($check);
+		die;
+	}
 	/**
 	 * @ Function Name        : primary_sales_view_details
 	 * @ Function Params    :
@@ -2157,7 +2174,9 @@ class Ishop extends Front_Controller
         public function add_target_data() {
             
             $target_data = $_POST;
-            $set_target_data = $this->ishop_model->add_target_data($target_data);
+            $user= $this->auth->user();
+            $logined_user_id = $user->id;
+            $set_target_data = $this->ishop_model->add_target_data($target_data,$logined_user_id);
             redirect("ishop/target");
         }
         
@@ -3917,7 +3936,7 @@ class Ishop extends Front_Controller
             
             
             if($_POST["dirname"] == "target"){
-                $target_data = $this->ishop_model->add_target_data($_POST["val"]);
+                $target_data = $this->ishop_model->add_target_data($_POST["val"],$user_id);
             }
             elseif($_POST["dirname"] == "budget"){
                 $budget_data = $this->ishop_model->add_budget_data($_POST["val"]);

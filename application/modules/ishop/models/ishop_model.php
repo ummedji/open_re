@@ -88,6 +88,41 @@ class Ishop_model extends BF_Model
         }
     }
 
+    public function check_duplicate_data_for_primary_sales($customer_id,$invoice_no)
+    {
+        $this->db->select('*');
+        $this->db->from('ishop_primary_sales');
+        $this->db->where('invoice_no',$invoice_no);
+        $this->db->where_not_in('customer_id',$customer_id);
+        $check=$this->db->get()->result_array();
+       // testdata($check);
+        if(isset($check) && !empty($check))
+        {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function get_data_primary_sales_by_invoice_no($invoice_no)
+    {
+        $this->db->select('*');
+        $this->db->from('ishop_primary_sales');
+        $this->db->where('invoice_no',$invoice_no);
+        $data=$this->db->get()->row_array();
+
+        //testdata($data);
+
+        if(isset($data) && !empty($data))
+        {
+            return $data;
+        }
+        else{
+            return false;
+        }
+    }
+
     /**
      * @ Function Name		: get_product_sku_by_user_id
      * @ Function Params	:
@@ -5327,10 +5362,13 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
     }
     
-    public function add_target_data($target_data) {
-        
-        $user= $this->auth->user();
-        $logined_user_id = $user->id;
+    public function add_target_data($target_data,$logined_user_id,$web_service=null) {
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $target_data["customer_data"] = explode(',',$target_data["customer_data"]);
+            $target_data["product_sku_id"] = explode(',',$target_data["product_sku_id"]);
+            $target_data["quantity"] = explode(',',$target_data["quantity"]);
+        }
         
        // $month_data = explode("/",$target_data["month_data"]);
             
@@ -5357,8 +5395,9 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 else{
 
                     $this->db->where('ishop_target_id', $check_already_data);
-                    $this->db->update('bf_ishop_target',$target_array);
+                    $id = $this->db->update('bf_ishop_target',$target_array);
 
+                    return $id;
                 }
             }
         }
@@ -5377,9 +5416,9 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 
                 $target_array["created_on"] = date("Y-m-d h:i:s");
                 $target_array["created_by_user"] = $logined_user_id;
-                        
-                $this->db->insert('bf_ishop_target', $target_array);
-                
+
+                $id = $this->db->insert('bf_ishop_target', $target_array);
+                return $id;
             } 
             
         }
