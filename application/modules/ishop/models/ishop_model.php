@@ -1119,7 +1119,7 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function add_secondary_sales_details_data($user_id,$country_id,$xl_data=null,$xl_flag=null)
+    public function add_secondary_sales_details_data($user_id,$country_id,$xl_data=null,$xl_flag=null,$web_service=null)
     {
         if($xl_flag == null)
         {
@@ -1129,12 +1129,21 @@ class Ishop_model extends BF_Model
             $order_tracking_no = $this->input->post("order_tracking_no");
             $PO_no = $this->input->post("PO_no");
 
-            $product_sku_id = $this->input->post("product_sku_id");
-            $dispatched_quantity = $this->input->post("dis_quantity");
-            $quantity = $this->input->post("quantity");
-            $units = $this->input->post("units");
-            $qty_kgl = $this->input->post("qty_kgl");
-            $amount = $this->input->post("amount");
+            if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                $product_sku_id = explode(',', $this->input->post("product_sku_id"));
+                $dispatched_quantity = explode(',', $this->input->post("dis_quantity"));
+                $quantity = explode(',', $this->input->post("quantity"));
+                $units = explode(',', $this->input->post("units"));
+                $qty_kgl = explode(',', $this->input->post("qty_kgl"));
+                $amount = explode(',', $this->input->post("amount"));
+            } else {
+                $product_sku_id = $this->input->post("product_sku_id");
+                $dispatched_quantity = $this->input->post("dis_quantity");
+                $quantity = $this->input->post("quantity");
+                $units = $this->input->post("units");
+                $qty_kgl = $this->input->post("qty_kgl");
+                $amount = $this->input->post("amount");
+            }
             $total_amount=array_sum($amount);
 
             $rand_type = 'etn';
@@ -1288,9 +1297,9 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-    public function secondary_sales_details_data_view($form_date,$to_date,$by_retailer,$by_invoice_no,$user_id,$country_id,$sales_view=null,$from_month=null,$to_month=null,$geo_level=null,$distributor_id=null,$page=null)
+    public function secondary_sales_details_data_view($form_date,$to_date,$by_retailer,$by_invoice_no,$user_id,$country_id,$sales_view=null,$from_month=null,$to_month=null,$geo_level=null,$distributor_id=null,$page=null,$web_service=null)
     {
-        $sql ='SELECT bu1.display_name as entry_by,iss.etn_no,iss.created_on,iss.invoice_no,iss.invoice_date,bu.user_code,bu.display_name,iss.PO_no,iss.order_tracking_no,iss.total_amount,iss.secondary_sales_id ';
+        $sql ='SELECT iss.secondary_sales_id as id,bu1.display_name as entry_by,iss.etn_no,iss.created_on,iss.invoice_no,iss.invoice_date,bu.user_code,bu.display_name,iss.PO_no,iss.order_tracking_no,iss.total_amount,iss.secondary_sales_id ';
         $sql .= 'FROM bf_ishop_secondary_sales AS iss ';
         $sql .= 'JOIN bf_users AS bu  ON (bu.id = iss.customer_id_to) ';
         $sql .= 'JOIN bf_users AS bu1 ON (bu1.id = iss.created_by_user) ';
@@ -1323,43 +1332,46 @@ class Ishop_model extends BF_Model
         $sql .= 'AND iss.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY iss.secondary_sales_id DESC ';
 
-      /*  $info = $this->db->query($sql);
-        $secondary_sales_product_detail = $info->result_array();
-        $secondary_sales = array('result'=>$secondary_sales_product_detail);*/
-        $secondary_sales =  $this->grid->get_result_res($sql);
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+              $info = $this->db->query($sql);
+            $secondary_sales_product_detail = $info->result_array();
+            return $secondary_sales_product_detail;
+        } else {
+            $secondary_sales =  $this->grid->get_result_res($sql);
 
-        if(isset($secondary_sales['result']) && !empty($secondary_sales['result']))
-        {
-            $secondary['head'] =array('Sr. No.','Action','Entry By','Entry Date','ENT','Invoice No','Invoice Date','Retailer Code','Retailer Name','PO No.','Order Tracking No.','Dispatch Amount');
-            $secondary['count'] = count($secondary['head']);
-            if($page != null || $page != ""){
-
-                $i = $page*10 - 9;
-
-            }
-            else{
-                $i=1;
-            }
-
-            foreach($secondary_sales['result'] as $ss )
+            if(isset($secondary_sales['result']) && !empty($secondary_sales['result']))
             {
-                $invoice_no ='<div class="invoice_no_'.$ss["secondary_sales_id"].'"><span class="invoice_no">'.$ss['invoice_no'].'</span></div>';
-                $invoice_date ='<div class="invoice_date_'.$ss["secondary_sales_id"].'"><span class="invoice_date">'.$ss['invoice_date'].'</span></div>';
+                $secondary['head'] =array('Sr. No.','Action','Entry By','Entry Date','ENT','Invoice No','Invoice Date','Retailer Code','Retailer Name','PO No.','Order Tracking No.','Dispatch Amount');
+                $secondary['count'] = count($secondary['head']);
+                if($page != null || $page != ""){
 
-                $PO_no = '<div class="PO_no_'.$ss["secondary_sales_id"].'"><span class="PO_no">'.$ss['PO_no'].'</span></div>';
+                    $i = $page*10 - 9;
 
-                $order_tracking_no = '<div class="order_tracking_no_'.$ss["secondary_sales_id"].'"><span class="order_tracking_no">'.$ss['order_tracking_no'].'</span></div>';
+                }
+                else{
+                    $i=1;
+                }
 
-                $secondary['row'][]= array($i,$ss['secondary_sales_id'],$ss['entry_by'],$ss['created_on'],$ss['etn_no'],$invoice_no,$invoice_date,$ss['user_code'],$ss['display_name'],$PO_no,$order_tracking_no,$ss['total_amount']);
-                $i++;
+                foreach($secondary_sales['result'] as $ss )
+                {
+                    $invoice_no ='<div class="invoice_no_'.$ss["secondary_sales_id"].'"><span class="invoice_no">'.$ss['invoice_no'].'</span></div>';
+                    $invoice_date ='<div class="invoice_date_'.$ss["secondary_sales_id"].'"><span class="invoice_date">'.$ss['invoice_date'].'</span></div>';
+
+                    $PO_no = '<div class="PO_no_'.$ss["secondary_sales_id"].'"><span class="PO_no">'.$ss['PO_no'].'</span></div>';
+
+                    $order_tracking_no = '<div class="order_tracking_no_'.$ss["secondary_sales_id"].'"><span class="order_tracking_no">'.$ss['order_tracking_no'].'</span></div>';
+
+                    $secondary['row'][]= array($i,$ss['secondary_sales_id'],$ss['entry_by'],$ss['created_on'],$ss['etn_no'],$invoice_no,$invoice_date,$ss['user_code'],$ss['display_name'],$PO_no,$order_tracking_no,$ss['total_amount']);
+                    $i++;
+                }
+                $secondary['eye']=1;
+                $secondary['action'] ='is_action';
+                $secondary['edit'] ='is_edit';
+                $secondary['delete'] ='is_delete';
+                $secondary['pagination'] = $secondary_sales['pagination'];
+
+                return $secondary;
             }
-            $secondary['eye']=1;
-            $secondary['action'] ='is_action';
-            $secondary['edit'] ='is_edit';
-            $secondary['delete'] ='is_delete';
-            $secondary['pagination'] = $secondary_sales['pagination'];
-
-            return $secondary;
         }
     }
 
@@ -1370,63 +1382,79 @@ class Ishop_model extends BF_Model
      * @ Function Return 	: Array
      * */
 
-   public function secondary_sales_product_details_view_by_id($secondary_sales_id)
+   public function secondary_sales_product_details_view_by_id($secondary_sales_id,$web_service=null)
    {
-       $sql ='SELECT issp.secondary_sales_product_id,psr.product_sku_code,psc.product_sku_name,issp.quantity,issp.amount,issp.unit,issp.qty_kgl, issp.product_sku_id ';
+       $sql ='SELECT issp.secondary_sales_product_id as id,issp.secondary_sales_product_id,psr.product_sku_code,psc.product_sku_name,issp.quantity,issp.amount,issp.unit,issp.qty_kgl, issp.product_sku_id ';
        $sql .= 'FROM bf_ishop_secondary_sales_product AS issp ';
        $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = issp.product_sku_id) ';
        $sql .= 'JOIN bf_master_product_sku_regional AS psr ON (psr.product_sku_id = psc.product_sku_id) ';
        $sql .= 'WHERE 1 ';
        $sql .= 'AND issp.secondary_sales_id ='.$secondary_sales_id.' ';
        $sql .= 'ORDER BY issp.secondary_sales_product_id DESC ';
-     /*  $info = $this->db->query($sql);
-       $secondary_sales_product_detail = $info->result_array();
-       $product_detail = array('result'=>$secondary_sales_product_detail);*/
-       $product_detail =  $this->grid->get_result_res($sql);
-      // var_dump($product_detail);die;
 
-       if(isset($product_detail['result']) && !empty($product_detail['result']))
-       {
-           $product_view['head'] =array('Sr. No.','Action','Product SKU Code','Product SKU Name','Qty.','Unit','Qty Kg/Ltr','Amount');
-           $product_view['count'] = count($product_view['head']);
-           $i=1;
+       if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+             $info = $this->db->query($sql);
+            $secondary_sales_product_detail = $info->result_array();
+            return $secondary_sales_product_detail;
+       } else {
+           $product_detail =  $this->grid->get_result_res($sql);
+           // var_dump($product_detail);die;
 
-           $secondary_id_data = '<input type="hidden" name="secondary_sales_id" value="'.$secondary_sales_id.'">';
-
-           foreach($product_detail['result'] as $pd )
+           if(isset($product_detail['result']) && !empty($product_detail['result']))
            {
-               $product_sku_id= $secondary_id_data.'<div class="prd_'.$pd["secondary_sales_product_id"].'"><span class="prd_sku" style="display:none;" >'.$pd['product_sku_id'].'</span></div>';
-               $units = $product_sku_id.'<div class="units_'.$pd["secondary_sales_product_id"].'"><span class="units">'.$pd['unit'].'</span></div>';
-               $quantity = '<div class="quantity_'.$pd["secondary_sales_product_id"].'"><span class="quantity">'.$pd['quantity'].'</span></div>';
+               $product_view['head'] =array('Sr. No.','Action','Product SKU Code','Product SKU Name','Qty.','Unit','Qty Kg/Ltr','Amount');
+               $product_view['count'] = count($product_view['head']);
+               $i=1;
 
-               $amount = '<div class="amount_'.$pd["secondary_sales_product_id"].'"><input  type="hidden"  name="amount[]" value="'.$pd['amount'].'"/><span class="amount">'.$pd['amount'].'</span></div>';
-               $qty_kgl = '<div class="rol_quantity_kg_ltr_'.$pd["secondary_sales_product_id"].'"><span class="rol_quantity_kg_ltr">'.$pd['qty_kgl'].'</span></div>';
+               $secondary_id_data = '<input type="hidden" name="secondary_sales_id" value="'.$secondary_sales_id.'">';
 
-               $product_view['row'][]= array($i,$pd['secondary_sales_product_id'],$pd['product_sku_code'],$pd['product_sku_name'],$quantity,$units,$qty_kgl,$amount);
-               $i++;
+               foreach($product_detail['result'] as $pd )
+               {
+                   $product_sku_id= $secondary_id_data.'<div class="prd_'.$pd["secondary_sales_product_id"].'"><span class="prd_sku" style="display:none;" >'.$pd['product_sku_id'].'</span></div>';
+                   $units = $product_sku_id.'<div class="units_'.$pd["secondary_sales_product_id"].'"><span class="units">'.$pd['unit'].'</span></div>';
+                   $quantity = '<div class="quantity_'.$pd["secondary_sales_product_id"].'"><span class="quantity">'.$pd['quantity'].'</span></div>';
+
+                   $amount = '<div class="amount_'.$pd["secondary_sales_product_id"].'"><input  type="hidden"  name="amount[]" value="'.$pd['amount'].'"/><span class="amount">'.$pd['amount'].'</span></div>';
+                   $qty_kgl = '<div class="rol_quantity_kg_ltr_'.$pd["secondary_sales_product_id"].'"><span class="rol_quantity_kg_ltr">'.$pd['qty_kgl'].'</span></div>';
+
+                   $product_view['row'][]= array($i,$pd['secondary_sales_product_id'],$pd['product_sku_code'],$pd['product_sku_name'],$quantity,$units,$qty_kgl,$amount);
+                   $i++;
+               }
+               $product_view['eye'] ='';
+               $product_view['action'] ='is_action';
+               $product_view['edit'] ='is_edit';
+               $product_view['delete'] ='is_delete';
+               $product_view['pagination'] = $product_detail['pagination'];
+               return $product_view;
            }
-           $product_view['eye'] ='';
-           $product_view['action'] ='is_action';
-           $product_view['edit'] ='is_edit';
-           $product_view['delete'] ='is_delete';
-           $product_view['pagination'] = $product_detail['pagination'];
-           return $product_view;
        }
    }
 
 
-    public function update_secondary_sales_detail($user_id,$country_id)
+    public function update_secondary_sales_detail($user_id,$country_id,$web_service=null)
     {
 
-        $secondary_sales_id = $this->input->post("secondary_sales_detail");
-        $invoice_no = $this->input->post("invoice_no");
-        $PO_no = $this->input->post("PO_no");
-        $order_tracking_no = $this->input->post("order_tracking_no");
-        $secondary_sales_product_id = $this->input->post("secondary_sales_product");
-        $quantity = $this->input->post("quantity");
-        $units = $this->input->post("units");
-        $qty_kgl = $this->input->post("qty_kgl");
-        $amount = $this->input->post("amount");
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $secondary_sales_id = explode(',', $this->input->post("secondary_sales_detail"));
+            $invoice_no = explode(',', $this->input->post("invoice_no"));
+            $PO_no = explode(',', $this->input->post("PO_no"));
+            $order_tracking_no = explode(',', $this->input->post("order_tracking_no"));
+            $secondary_sales_product_id = explode(',', $this->input->post("secondary_sales_product"));
+            $quantity = explode(',', $this->input->post("quantity"));
+            $units = explode(',', $this->input->post("units"));
+            $qty_kgl = explode(',', $this->input->post("qty_kgl"));
+            $amount = explode(',', $this->input->post("amount"));
+        } else {
+            $secondary_sales_id = $this->input->post("secondary_sales_detail");
+            $invoice_no = $this->input->post("invoice_no");
+            $PO_no = $this->input->post("PO_no");
+            $order_tracking_no = $this->input->post("order_tracking_no");
+            $secondary_sales_product_id = $this->input->post("secondary_sales_product");
+            $quantity = $this->input->post("quantity");
+            $units = $this->input->post("units");
+            $qty_kgl = $this->input->post("qty_kgl");
+            $amount = $this->input->post("amount");
+        }
         $total_amt=array_sum($amount);
 
         if(isset($secondary_sales_product_id) && !empty($secondary_sales_product_id))
@@ -3891,12 +3919,11 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         if(($table == 'bf_ishop_orders') && $rand_type == 'otn'){
             $this->db->where('order_tracking_no',$random_no);
         }
-        elseif($table == 'bf_ishop_secondary_sales' && $rand_type == 'etn'){
+        elseif($table == 'ishop_secondary_sales' && $rand_type == 'etn'){
             $this->db->where('etn_no',$random_no);
         }
 
         $rand_data = $this->db->get()->result_array();
-
         if(isset($rand_data) && !empty($rand_data)) {
             return 1;
         } else{

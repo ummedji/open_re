@@ -238,6 +238,9 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+
+    /* ---------------------------------------------- HO --------------------------------------------------- */
     /**
      * @ Function Name        : savePrimarySales
      * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
@@ -1240,6 +1243,118 @@ class Web_service extends Front_Controller
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = !empty($orders_count) ? $orders_count : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+
+    /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */
+    /**
+     * @ Function Name        : saveSecondarySales
+     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
+     * @ Function Purpose    : Save Primary Sales Data
+     * */
+    public function saveSecondarySales()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->add_secondary_sales_details_data($user_id,$country_id,null,null,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getPrimarySalesInvoices
+     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * */
+    public function getSecondarySalesInvoices()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $by_retailer = $this->input->get_post('by_retailer');
+        $by_invoice_no = $this->input->get_post('by_invoice_no');
+
+        if(isset($user_id))
+        {
+            $secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no,$user_id,$country_id,null,null,null,null,null,null,'web_service');
+            if(!empty($secondary_sales_details))
+            {
+                $final_array = array();
+                foreach($secondary_sales_details as $k => $ssd)
+                {
+                    $secondary_sales_id = $ssd['secondary_sales_id'];
+                    $secondary_sales_product_details = $this->ishop_model->secondary_sales_product_details_view_by_id($secondary_sales_id,'web_service');
+                    $ssd["details"]=$secondary_sales_product_details;
+                    $final_array[] = $ssd;
+                }
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $final_array;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : editSecondarySalesInvoice
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function editSecondarySalesInvoice()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $update_sales_details = $this->ishop_model->update_secondary_sales_detail($user_id,$country_id,'web_service');
+            if(!empty($update_sales_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
         }
         else
         {

@@ -48,83 +48,92 @@
                     <div class="col-md-12">
                         <div class="nav-parent-div">
                             <ul class="nav nav-tabs" role="tablist">
-                                <?php if($current_user->role_id == 7){
+                                <?php if($segment=='ishop'){
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop') ?>">PRIMARY SALES</a></li>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='primary_sales_view_details') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/primary_sales_view_details') ?>">PRIMARY SALES INVOICE</a></li>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='order_approval' && $segment2=='order_approval') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval/all') ?>">ORDER APPROVAL</a></li>
-                                <?php
-                                } ?>
+                                    <?php if($current_user->role_id == 7){
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop') ?>">PRIMARY SALES</a></li>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='primary_sales_view_details') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/primary_sales_view_details') ?>">PRIMARY SALES INVOICE</a></li>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='order_approval' && $segment2=='order_approval') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_approval/all') ?>">ORDER APPROVAL</a></li>
+                                        <?php
+                                    } ?>
 
-                                <?php if($current_user->role_id == 9){
+                                    <?php if($current_user->role_id == 9){
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='secondary_sales_details') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/secondary_sales_details') ?>">SECONDARY SALES</a></li>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='secondary_sales_details_view') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/secondary_sales_details_view') ?>">SECONDARY SALES INVOICE</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='secondary_sales_details') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/secondary_sales_details') ?>">SECONDARY SALES</a></li>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='secondary_sales_details_view') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/secondary_sales_details_view') ?>">SECONDARY SALES INVOICE</a></li>
-                                <?php
-                                }
-                                ?>
-                                <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='order_place') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_place') ?>">ORDER PLACE</a></li>
+                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='order_place') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_place') ?>">ORDER PLACE</a></li>
 
-                                <?php if($current_user->role_id == 7 || $current_user->role_id == 9 || $current_user->role_id == 10 ) {
+                                    <?php if($current_user->role_id == 7 || $current_user->role_id == 9 || $current_user->role_id == 10 ) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='set_rol') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/set_rol') ?>">ROL</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='set_rol') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/set_rol') ?>">ROL</a></li>
-                                    <?php
-                                }
-                                ?>
-                                <?php if($current_user->role_id == 7 || $current_user->role_id == 8 || $current_user->role_id == 9) {
+                                    <?php if($current_user->role_id == 7 || $current_user->role_id == 8 || $current_user->role_id == 9) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='target') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/target') ?>">TARGET</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='target') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/target') ?>">TARGET</a></li>
-                                    <?php
-                                }
-                                ?>
-                                <?php if($current_user->role_id == 9 || $current_user->role_id == 10) {
+                                    <?php if($current_user->role_id == 9 || $current_user->role_id == 10) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='physical_stock') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/physical_stock') ?>">PHYSICAL STOCK</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='physical_stock') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/physical_stock') ?>">PHYSICAL STOCK</a></li>
-                                    <?php
-                                }
-                                ?>
-                                <?php if($current_user->role_id == 7) {
+                                    <?php if($current_user->role_id == 7) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo (($segment=='ishop' && $segment2=='set_schemes') || ($segment=='ishop' && $segment2=='schemes_view')) ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/set_schemes') ?>">SCHEMES</a></li>
+                                        <?php
+                                    }
+                                    if($current_user->role_id == 8 || $current_user->role_id == 10)
+                                    {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='schemes_view') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/schemes_view') ?>">SCHEMES</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo (($segment=='ishop' && $segment2=='set_schemes') || ($segment=='ishop' && $segment2=='schemes_view')) ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/set_schemes') ?>">SCHEMES</a></li>
-                                    <?php
-                                }
-                                if($current_user->role_id == 8 || $current_user->role_id == 10)
-                                {
+                                    <?php if($current_user->role_id == 7 || $current_user->role_id == 9) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='') ? 'active' :'' ;?>"><a href="#">E-INVOICE / E-STATEMENT</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='schemes_view') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/schemes_view') ?>">SCHEMES</a></li>
-                                    <?php
-                                }
-                                ?>
-                                <?php if($current_user->role_id == 7 || $current_user->role_id == 9) {
+                                    <?php if($current_user->role_id == 7) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='company_current_stock') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/company_current_stock') ?>">COMPANY CURRENT STOCK</a></li>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='credit_limit') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/credit_limit') ?>">CREDIT LIMIT</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='') ? 'active' :'' ;?>"><a href="#">E-INVOICE / E-STATEMENT</a></li>
-                                    <?php
-                                }
-                                ?>
-                                <?php if($current_user->role_id == 7) {
+                                    <?php if($current_user->role_id == 9 || $current_user->role_id == 10) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='prespective_order') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/prespective_order') ?>">PERSPECTIVE ORDER</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='company_current_stock') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/company_current_stock') ?>">COMPANY CURRENT STOCK</a></li>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='credit_limit') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/credit_limit') ?>">CREDIT LIMIT</a></li>
-                                    <?php
-                                }
-                                ?>
-                                <?php if($current_user->role_id == 9 || $current_user->role_id == 10) {
+                                    <?php if($current_user->role_id == 9) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='invoice_received_confirmation') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/invoice_received_confirmation') ?>">INVOICE RECEIVED CONFIRMATION</a></li>
+                                        <?php
+                                    }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='prespective_order') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/prespective_order') ?>">PERSPECTIVE ORDER</a></li>
-                                    <?php
-                                }
-                                ?>
-                                <?php if($current_user->role_id == 9) {
-                                    ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='invoice_received_confirmation') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/invoice_received_confirmation') ?>">INVOICE RECEIVED CONFIRMATION</a></li>
-                                    <?php
-                                }
-                                ?>
 
-                                <?php if($current_user->role_id == 8) {
+                                    <?php if($current_user->role_id == 8) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='ishop_sales') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/ishop_sales') ?>">SALES UPDATE</a></li>
+                                        <?php
+                                    }
+                                }
+                                elseif($segment=='esp'){
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='ishop_sales') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/ishop_sales') ?>">SALES UPDATE</a></li>
-                                    <?php
+                                    <li role="presentation" class=""><a href="<?php echo base_url('/esp') ?>">Forecast</a></li>
+                                    <li role="presentation" class=""><a href="#">Budget</a></li>
+                              <?php
                                 }
                                 ?>
                             </ul>
