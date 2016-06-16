@@ -4760,7 +4760,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * */
     
     
-    public function order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data=null) {
+    public function order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data=null,$web_service=null) {
 
         $sql ='SELECT bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity ';
         $sql .= ' FROM bf_ishop_product_order as bipo ';
@@ -4773,281 +4773,289 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
 
         $sql .= ' AND bipo.order_id ='.$order_id.' ';
 
-        $order_detail =  $this->grid->get_result_res($sql);
-
-       // $order_detail = $this->db->get()->result_array();
-        
-     //   $order_detail = array('result'=>$order_details);
-     
-        if(isset($order_detail['result']) && !empty($order_detail['result']))
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $order_detail = $info->result_array();
+            return $order_detail;
+        }
+        else
         {
-            
-            if($logincustomertype == 7){
-            
-            
-                if($radiochecked == "distributor"){
-                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
-                    $product_view['count'] = count($product_view['head']);
-                }
-                elseif($action_data == "order_approval"){
-                     $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Current Stock','Dispatched Quantity');
-                    $product_view['count'] = count($product_view['head']);
-                }
-                else
-                {
-                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
-                    $product_view['count'] = count($product_view['head']);
-                }
+            $order_detail =  $this->grid->get_result_res($sql);
 
-                $order_id_data = '<input type="hidden" name="order_id" value="'.$order_id.'">';
-                
-                $i=1;
-                foreach($order_detail['result'] as $od )
-                {
-                    
-                    $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+            // $order_detail = $this->db->get()->result_array();
 
-                    
-                    
-                    $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
-                    
-                    
-                    
-                    
-                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
-                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
-                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
-                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
-                    $amount = '<div class="amount_'.$od["product_order_id"].'"><input type="hidden" class="amount_data" name="amount[]" value="'.$od['amount'].'" /><span class="amount">'.$od['amount'].'</span></div>';
-                    
-                    if($action_data == "order_approval"){
-                        $dub_dispatched_data = '<input type="text" name="dispatched_quantity[]" class="dispatched_quantity" value="'.$od['dispatched_quantity'].'" />';
-                    }
-                    else{
-                         $dub_dispatched_data = '<span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span>';
-                    }
-                    
-                    $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'">'.$dub_dispatched_data.'</div>';
-                    
-                    
+            //   $order_detail = array('result'=>$order_details);
+
+            if(isset($order_detail['result']) && !empty($order_detail['result']))
+            {
+
+                if($logincustomertype == 7){
+
+
                     if($radiochecked == "distributor"){
-
-                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$dispatched_quantity);
-
+                        $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
+                        $product_view['count'] = count($product_view['head']);
                     }
                     elseif($action_data == "order_approval"){
-                        
-                      $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$od['intrum_quantity'],$dispatched_quantity);
-                      
-
+                        $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Current Stock','Dispatched Quantity');
+                        $product_view['count'] = count($product_view['head']);
                     }
                     else
                     {
-
-                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount);
-
+                        $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
+                        $product_view['count'] = count($product_view['head']);
                     }
-                    $i++;
-            }
-            $product_view['eye'] ='';
-           
-            
-        }
-        elseif($logincustomertype == 8){
-            
-            
-                if($radiochecked == "farmer"){
-                    $product_view['head'] =array('Sr. No.',"",'Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
-                    $product_view['count'] = count($product_view['head']);
-                }
-                elseif($radiochecked == "retailer"){
-                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
-                    $product_view['count'] = count($product_view['head']);
-                }
-                elseif($radiochecked == "distributor")
-                {
-                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
-                    $product_view['count'] = count($product_view['head']);
-                }
 
-                
+                    $order_id_data = '<input type="hidden" name="order_id" value="'.$order_id.'">';
 
-                $i=1;
-                foreach($order_detail['result'] as $od )
-                {
-
-                    if($radiochecked == "farmer"){
-
-                        $product_view['row'][]= array($i,"",$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr']);
-
-                    }
-                    elseif($radiochecked == "retailer"){
-
-                        
-                        
-                    $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
-
-                    
-                    
-                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
-                    
-                    
-                    
-                    
-                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
-                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
-                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
-                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
-                    $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
-                    
-                    $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
-                        
-                        
-                        
-                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data,$quantity_kg_ltr,$amount,$dispatched_quantity);
-
-                    }
-                    elseif($radiochecked == "distributor"){
-
-                        
-                              
-                    $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
-
-                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
-                    
-                    
-                    
-                    
-                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
-                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
-                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
-                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
-                    $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
-                    
-                    $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
-                        
-                        
-                        
-                        $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$dispatched_quantity);
-
-                    }
-                    $i++;
-            }
-            $product_view['eye'] ='';
-            
-        }
-        elseif($logincustomertype == 9){
-            
-                if($action_data == "po_acknowledgement"){
-                    
-                    
-                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
-                    $product_view['count'] = count($product_view['head']);
                     $i=1;
                     foreach($order_detail['result'] as $od )
                     {
-                        
-                        
-                        
-                             $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
 
-                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
-                    
-                    
-                    
-                    
-                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
-                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
-                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
-                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
-                   
-                        
-                        
+                        $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+
+
+
+                        $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+
+
+
+
+                        $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                        $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                        $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                        $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                        $amount = '<div class="amount_'.$od["product_order_id"].'"><input type="hidden" class="amount_data" name="amount[]" value="'.$od['amount'].'" /><span class="amount">'.$od['amount'].'</span></div>';
+
+                        if($action_data == "order_approval"){
+                            $dub_dispatched_data = '<input type="text" name="dispatched_quantity[]" class="dispatched_quantity" value="'.$od['dispatched_quantity'].'" />';
+                        }
+                        else{
+                            $dub_dispatched_data = '<span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span>';
+                        }
+
+                        $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'">'.$dub_dispatched_data.'</div>';
+
+
+                        if($radiochecked == "distributor"){
+
+                            $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$dispatched_quantity);
+
+                        }
+                        elseif($action_data == "order_approval"){
+
+                            $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$od['intrum_quantity'],$dispatched_quantity);
+
+
+                        }
+                        else
+                        {
+
+                            $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount);
+
+                        }
+                        $i++;
+                    }
+                    $product_view['eye'] ='';
+
+
+                }
+                elseif($logincustomertype == 8){
+
+
+                    if($radiochecked == "farmer"){
+                        $product_view['head'] =array('Sr. No.',"",'Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
+                        $product_view['count'] = count($product_view['head']);
+                    }
+                    elseif($radiochecked == "retailer"){
+                        $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
+                        $product_view['count'] = count($product_view['head']);
+                    }
+                    elseif($radiochecked == "distributor")
+                    {
+                        $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
+                        $product_view['count'] = count($product_view['head']);
+                    }
+
+
+
+                    $i=1;
+                    foreach($order_detail['result'] as $od )
+                    {
+
+                        if($radiochecked == "farmer"){
+
+                            $product_view['row'][]= array($i,"",$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr']);
+
+                        }
+                        elseif($radiochecked == "retailer"){
+
+
+
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+
+
+
+                            $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+
+
+
+
+                            $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                            $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                            $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                            $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                            $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
+
+                            $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
+
+
+
+                            $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data,$quantity_kg_ltr,$amount,$dispatched_quantity);
+
+                        }
+                        elseif($radiochecked == "distributor"){
+
+
+
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+
+                            $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+
+
+
+
+                            $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                            $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                            $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                            $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+                            $amount = '<div class="amount_'.$od["product_order_id"].'"><span class="amount">'.$od['amount'].'</span></div>';
+
+                            $dispatched_quantity = '<div class="dispatched_quantity_'.$od["product_order_id"].'"><span class="dispatched_quantity">'.$od['dispatched_quantity'].'</span></div>';
+
+
+
+                            $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr,$amount,$dispatched_quantity);
+
+                        }
+                        $i++;
+                    }
+                    $product_view['eye'] ='';
+
+                }
+                elseif($logincustomertype == 9){
+
+                    if($action_data == "po_acknowledgement"){
+
+
+                        $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
+                        $product_view['count'] = count($product_view['head']);
+                        $i=1;
+                        foreach($order_detail['result'] as $od )
+                        {
+
+
+
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+
+                            $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+
+
+
+
+                            $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                            $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                            $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                            $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+
+
+
 
                             $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr);
 
-                        $i++;
+                            $i++;
                         }
-                    $product_view['eye'] ='';
-                    
-                    
-                }else{
-                    
-                    
+                        $product_view['eye'] ='';
+
+
+                    }else{
+
+
                         $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount','Approved Quantity');
                         $product_view['count'] = count($product_view['head']);
                         $i=1;
                         foreach($order_detail['result'] as $od )
                         {
 
-                                $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount'],$od['dispatched_quantity']);
+                            $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount'],$od['dispatched_quantity']);
 
                             $i++;
                         }
                         $product_view['eye'] ='';
-                    
-                }
-            
-           
-        }
-        elseif($logincustomertype == 10){
-            
-            
-                
-                if($action_data == "po_acknowledgement"){
-                    
-                    
-                    $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
-                    $product_view['count'] = count($product_view['head']);
-                    $i=1;
-                    foreach($order_detail['result'] as $od )
-                    {
-                        
-                        
-                        
-                             $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
 
-                    $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
-                    
-                    
-                    
-                    
-                    $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
-                    $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
-                    $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
-                    $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
-                   
-                        
-                        
+                    }
+
+
+                }
+                elseif($logincustomertype == 10){
+
+
+
+                    if($action_data == "po_acknowledgement"){
+
+
+                        $product_view['head'] =array('Sr. No.','Action','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr');
+                        $product_view['count'] = count($product_view['head']);
+                        $i=1;
+                        foreach($order_detail['result'] as $od )
+                        {
+
+
+
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_'.$od["product_order_id"].'" type="hidden" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'">';
+
+                            $product_order_id = '<input type="hidden" name="order_product_id[]" value="'.$od["product_order_id"].'">';
+
+
+
+
+                            $product_sku_data = '<input id="sku_'.$od["product_order_id"].'" name="product_sku_id" type="hidden" value="'.$od['product_sku_id'].'" />';
+                            $unit_data = $product_order_id.$product_sku_data.'<div class="unit_'.$od["product_order_id"].'"><span class="unit">'.$od['unit'].'</span></div>';
+                            $qty_data = '<div class="qty_'.$od["product_order_id"].'"><span class="qty">'.$od['quantity'].'</span></div>';
+                            $quantity_kg_ltr = $qty_kg_ltr.'<div class="quantity_kg_ltr_'.$od["product_order_id"].'"><span class="quantity_kg_ltr">'.$od['quantity_kg_ltr'].'</span></div>';
+
+
+
 
                             $product_view['row'][]= array($i,$od['product_order_id'],$od['product_sku_code'],$od['product_sku_name'],$unit_data,$qty_data ,$quantity_kg_ltr);
 
-                        $i++;
+                            $i++;
                         }
-                    $product_view['eye'] ='';
-                    
-                    
-                }else{
-            
+                        $product_view['eye'] ='';
+
+
+                    }else{
+
                         $product_view['head'] =array('Sr. No.','','Product Code','Product Name','Unit','Quantity','Qty. Kg/Ltr','Amount');
                         $product_view['count'] = count($product_view['head']);
                         $i=1;
                         foreach($order_detail['result'] as $od )
                         {
 
-                                $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount']);
+                            $product_view['row'][]= array($i,'',$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'] ,$od['quantity_kg_ltr'],$od['amount']);
 
                             $i++;
+                        }
+                        $product_view['eye'] ='';
+
+
                     }
-                    $product_view['eye'] ='';
 
+                }
 
-              }
-           
-        }
-
-           // $product_view['pagination'] = $order_detail['pagination'];
-            return $product_view;
+                // $product_view['pagination'] = $order_detail['pagination'];
+                return $product_view;
+            }
         }
         
     }
@@ -5090,7 +5098,12 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * @ Function Return 	: array
      * */
     
-    public function update_order_detail_data($detail_data) {
+    public function update_order_detail_data($detail_data,$web_service=null) {
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $detail_data["order_product_id"] = explode(',',$detail_data["order_product_id"]);
+            $detail_data["dispatched_quantity"] = explode(',',$detail_data["dispatched_quantity"]);
+        }
         
         if(!empty($detail_data["order_product_id"])){
             
@@ -5154,8 +5167,9 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                     'total_amount' => $total_amount
                  );
                 
-                $this->db->update('bf_ishop_orders', $amount_data, array('order_id' => $detail_data["order_id"]));
-                
+                $id = $this->db->update('bf_ishop_orders', $amount_data, array('order_id' => $detail_data["order_id"]));
+
+                return $id;
             }
             
         }

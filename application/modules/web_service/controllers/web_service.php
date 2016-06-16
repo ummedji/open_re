@@ -955,13 +955,11 @@ class Web_service extends Front_Controller
         $by_otn = $this->input->get_post('by_otn');
         $by_po_no = $this->input->get_post('by_po_no');
         $order_status = $this->input->get_post('order_status'); // dispatched,pending,reject,op_ackno,all
-        $customer_id = $this->input->get_post('customer_id');
-        $page_function = $this->input->get_post('page_function');
+        $page_function = 'order_approval';
 
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) && !empty($order_status) && isset($order_status))
         {
-            $customer_id = !empty($customer_id) ? $customer_id : $user_id;
-            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
+            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
 
             $order_array = array();
             if (!empty($order_data)) {
@@ -983,6 +981,9 @@ class Web_service extends Front_Controller
                     {
                         $order_status = "op_ackno";
                     }
+
+                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
+
                     $ord = array(
                         "id" => $order['order_id'],
                         "distributor_code" => $order['f_u_code'],
@@ -992,6 +993,7 @@ class Web_service extends Front_Controller
                         "credit_limit" => $order['credit_limit'],
                         "amount" => $order['total_amount'],
                         "order_status" => $order_status,
+                        "details" => !empty($order_details) ? $order_details : array()
                     );
                     array_push($order_array, $ord);
                 }
@@ -1000,6 +1002,109 @@ class Web_service extends Front_Controller
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = !empty($order_array) ? $order_array : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    /**
+     * @ Function Name        : getOrderStatus
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getOrderStatus()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $customer_id = $this->input->get_post('customer_id');
+        $page_function = 'order_status';
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
+
+            $order_array = array();
+            if (!empty($order_data)) {
+                foreach ($order_data as $order)
+                {
+                    if($order['order_status'] == 0)
+                    {
+                        $order_status = "Pending";
+                    }
+                    elseif($order['order_status'] == 1)
+                    {
+                        $order_status = "Dispatched";
+                    }
+                    elseif($order['order_status'] == 3)
+                    {
+                        $order_status = "Rejected";
+                    }
+                    elseif($order['order_status'] == 4)
+                    {
+                        $order_status = "op_ackno";
+                    }
+
+                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
+
+                    $ord = array(
+                        "id" => $order['order_id'],
+                        "distributor_code" => $order['f_u_code'],
+                        "distributor_name" => $order['fr_fname'].' '.$order['fr_mname'].' '.$order['fr_lname'],
+                        "po_no" => $order['PO_no'],
+                        "order_tracking_no" => $order['order_tracking_no'],
+                        "credit_limit" => $order['credit_limit'],
+                        "amount" => $order['total_amount'],
+                        "order_status" => $order_status,
+                        "details" => !empty($order_details) ? $order_details : array()
+                    );
+                    array_push($order_array, $ord);
+                }
+            }
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($order_array) ? $order_array : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : saveOrderApproval
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function saveOrderApproval()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $id = $this->ishop_model->update_order_detail_data($this->input->post(),'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
         }
         else
         {
