@@ -960,9 +960,43 @@ class Web_service extends Front_Controller
         {
             $order_data = $this->ishop_model->get_order_data($role_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
 
+            $order_array = array();
+            if (!empty($order_data)) {
+                foreach ($order_data as $order)
+                {
+                    if($order['order_status'] == 0)
+                    {
+                        $order_status = "Pending";
+                    }
+                    elseif($order['order_status'] == 1)
+                    {
+                        $order_status = "Dispatched";
+                    }
+                    elseif($order['order_status'] == 3)
+                    {
+                        $order_status = "Rejected";
+                    }
+                    elseif($order['order_status'] == 4)
+                    {
+                        $order_status = "op_ackno";
+                    }
+                    $ord = array(
+                        "id" => $order['order_id'],
+                        "distributor_code" => $order['f_u_code'],
+                        "distributor_name" => $order['fr_fname'].' '.$order['fr_mname'].' '.$order['fr_lname'],
+                        "po_no" => $order['PO_no'],
+                        "order_tracking_no" => $order['order_tracking_no'],
+                        "credit_limit" => $order['credit_limit'],
+                        "amount" => $order['total_amount'],
+                        "order_status" => $order_status,
+                    );
+                    array_push($order_array, $ord);
+                }
+            }
+
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($order_data) ? $order_data : array();
+            $result['data'] = !empty($order_array) ? $order_array : array();
         }
         else
         {
