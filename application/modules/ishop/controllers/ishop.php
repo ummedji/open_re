@@ -1063,7 +1063,11 @@ class Ishop extends Front_Controller
         public function order_place_details(){
             
             $user_id = $this->session->userdata('user_id');
-            $order_data = $this->ishop_model->add_order_place_details($user_id);
+
+            $user= $this->auth->user();
+            $user_country_id = $user->country_id;
+
+            $order_data = $this->ishop_model->add_order_place_details($user_id,$user_country_id);
            // echo $order_data;die;
             
             Template::set_message('Your order has been placed. Please note your Order No: '.$order_data,'success');
@@ -1613,7 +1617,7 @@ class Ishop extends Front_Controller
                 $distributor_id = $_POST["distributor_id"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
                 
                 
                 
@@ -1628,7 +1632,7 @@ class Ishop extends Front_Controller
                 $customer_id = $_POST["retailer_id"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
                 
                 
          }
@@ -1665,7 +1669,7 @@ class Ishop extends Front_Controller
                 $page_function = $_POST["page_function"];
                 
                 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$farmer_data,$from_date,$todate,$order_tracking_no);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$farmer_data,$from_date,$todate,$order_tracking_no);
                 
                 
                 
@@ -1681,7 +1685,7 @@ class Ishop extends Front_Controller
                 $distributor_id = $_POST["distributor_data"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
                 
                 
                 
@@ -1696,7 +1700,7 @@ class Ishop extends Front_Controller
                 $customer_id = $_POST["retailer_data"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
                 
                 //echo "<pre>";
                 //print_r($order_data);
@@ -1717,7 +1721,7 @@ class Ishop extends Front_Controller
             $radio_checked = "";
             $customer_id = $loginuserid;
             
-            $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+            $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
             
         }
         else if($loginusertype == 10){
@@ -1731,7 +1735,7 @@ class Ishop extends Front_Controller
             $radio_checked = "";
             $customer_id = $loginuserid;
             
-            $order_data = $this->ishop_model->get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+            $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
             
             
         }
@@ -1893,7 +1897,7 @@ class Ishop extends Front_Controller
             Assets::add_module_js('ishop', 'po_acknowledgement.js');
             
             $user= $this->auth->user();
-            
+            $logined_user_countryid = $user->country_id;
             $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
             
             $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
@@ -1926,7 +1930,7 @@ class Ishop extends Front_Controller
             $customer_id = $logined_user_id;
 
 
-            $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page);
+            $order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page);
             
             Template::set('po_ack_table', $order_data);
 			Template::set('td', $order_data['count']);
@@ -1990,7 +1994,7 @@ class Ishop extends Front_Controller
                    $radio_checked = "";
                    $customer_id = $logined_user_id;
                 
-                  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
+                  $order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
                   
             }
             

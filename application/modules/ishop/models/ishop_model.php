@@ -3659,7 +3659,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
      * @ Function Return 	: Array
      * */
     
-    public function add_order_place_details($user_id,$web_service=null) {
+    public function add_order_place_details($user_id,$user_country_id,$web_service=null) {
         
        // echo "<pre>";
        // print_r($_POST);
@@ -3792,6 +3792,8 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
         $rand_data = $this->get_random_no($rand_type,$table);
 
+
+
         $order_place_data = array(
             'customer_id_from' => $customer_id_from,
             'customer_id_to' => $customer_id_to,
@@ -3800,6 +3802,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             'order_tracking_no' => $rand_data,
             'PO_no'=>$po_no,
             'order_status' => $order_status,
+            'country_id' => $user_country_id,
             'created_by_user' => $user_id,
             'status' => '1',
             'created_on' => date('Y-m-d H:i:s')
@@ -4301,7 +4304,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
         return $this->db->affected_rows();
     }
-    
+
     /*
      * GET ORDER FOR ORDER STATUS
      */
@@ -4313,7 +4316,9 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * @ Function Return 	: array
      * */
     
-    public function get_order_data($loginusertype,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null,$page=null,$page_function=null,$order_status=null,$web_service=null) {
+    public function get_order_data($loginusertype,$user_country_id,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null,$page=null,$page_function=null,$order_status=null,$web_service=null) {
+
+
         $sql ='SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
@@ -4399,7 +4404,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
             }
 
         }
-        $sql .= ' ORDER BY bio.order_date DESC ';
+        $sql .= ' AND bio.country_id = "'.$user_country_id.'" ORDER BY bio.order_date DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);

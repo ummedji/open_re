@@ -1680,7 +1680,7 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     margin: 0 auto;
 }
 #error_file_popup .ui-widget-content:first-child {
-    width: 900px !important;
+    width: 1000px !important;
     position: relative !important;
     display: inherit !important;
     left: inherit !important;
@@ -1729,6 +1729,7 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 #error_file_popup .ui-dialog .ui-dialog-content div {
     box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.5);
     overflow-x: scroll;
+    max-height: 250px;
 }
 #error_file_popup .ui-dialog .ui-dialog-content h4, #error_file_popup .ui-dialog .ui-dialog-content br{ display: none; }
 #error_file_popup .ui-dialog .ui-dialog-buttonpane {
@@ -1749,6 +1750,15 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     margin: 0 5px 10px 5px;
     outline: none;
 }
+#error_file_popup .ui-dialog #no-more-tables {
+    overflow: hidden;
+    box-shadow: none;
+    margin-bottom: 0;
+}
+#error_file_popup #no-more-tables tr th {
+    min-width: 130px;
+}
+#error_file_popup .ui-dialog #no-more-tables table{ background-color: #fff;}
 /*end deta popup*/
 /*success_file_popup css*/
 #success_file_popup {
