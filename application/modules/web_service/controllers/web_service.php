@@ -960,7 +960,7 @@ class Web_service extends Front_Controller
 
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) && !empty($order_status) && isset($order_status))
         {
-            $customer_id = isset($customer_id) ? $customer_id : $user_id;
+            $customer_id = !empty($customer_id) ? $customer_id : $user_id;
             $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
 
             $order_array = array();
