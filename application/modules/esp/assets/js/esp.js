@@ -25,7 +25,7 @@ $(document).ready(function(){
         $.ajax({
                 type: 'POST',
                 url: site_url+"esp/get_user_level_data",
-                data: {loginuserid:user_id},
+                data: {userid:user_id},
                 success: function(resp){
                     console.log(resp);
                 }

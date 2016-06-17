@@ -51,8 +51,13 @@ class Esp extends Front_Controller
     
     public function get_user_level_data(){
         
-        $loginuserid = $_POST["loginuserid"];
-        echo $loginuserid;die;
+        $userid = $_POST["userid"];
+        
+        $user_data = $this->esp_model->get_user_data($userid);
+        
+        testdata($user_data);
+        
+       // echo $loginuserid;die;
         
     }
     

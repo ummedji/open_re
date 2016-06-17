@@ -365,6 +365,11 @@ class Web_service extends Front_Controller
             $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
             if(!empty($primary_sales_details))
             {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                // For Pagination
+
                 $final_array = array();
                 foreach($primary_sales_details as $k => $psd)
                 {
@@ -376,11 +381,7 @@ class Web_service extends Front_Controller
                 $result['status'] = true;
                 $result['message'] = 'Success';
                 $result['data'] = $final_array;
-                // For Pagination
-                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
-                $total_rows = $count->result()[0]->total_rows;
                 $result['total_rows'] = $total_rows;
-                // For Pagination
             }
             else
             {
