@@ -44,9 +44,16 @@ class Esp extends Front_Controller
 	 */
 	public function index()
 	{
-        
 		$user = $this->auth->user();
+        Template::set('current_user', $user);
 		Template::render();
 	}
+    
+    public function get_user_level_data(){
+        
+        $loginuserid = $_POST["loginuserid"];
+        echo $loginuserid;die;
+        
+    }
     
 }

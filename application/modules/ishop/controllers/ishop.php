@@ -75,12 +75,55 @@ class Ishop extends Front_Controller
 		 echo $check;
 		 die;
 	}
+
 	public function get_data_primary_sales_by_invoice()
 	{
 		$invoice_no = $this->input->post("invoice_no");
 
 		$check= $this->ishop_model->get_data_primary_sales_by_invoice_no($invoice_no);
 		echo json_encode($check);
+		die;
+	}
+
+	public function get_data_primary_sales_product_by_invoice()
+	{
+		$primary_sales_id = $this->input->post("primary_sales_id");
+		$check= $this->ishop_model->get_data_primary_sales_product_by_invoice($primary_sales_id);
+
+		$html='';
+		if(isset($check) && !empty($check))
+		{
+			$i=1;
+			foreach($check as $k=>$val)
+			{
+				$html .="<tr>";
+				$html .="<td data-title='Sr. No.' class='numeric'>";
+				$html .="<input class='input_remove_border'  type='text' value=".$i." readonly/>";
+				$html .="</td>";
+				$html .="<td  data-title='Action' class='numeric'>";
+				$html .="<div class='delete_i primary_sls' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>";
+				$html .="</td>";
+				$html .="<td data-title='Product SKU Code' class='numeric'>";
+				$html .="<input class='input_remove_border' type='text' value=".$val['product_sku_code']." readonly>";
+				$html .="</td>";
+				$html .="<td data-title='Product SKU Name'>";
+				$html .="<input class='input_remove_border' type='text' value=".$val['product_sku_name']." readonly>";
+				$html .="<input type='hidden' name='product_sku_id[]' value=".$val['product_sku_id'].">";
+				$html .="</td>";
+				$html .="<td data-title='PO Qty'>";
+				$html .="<input type='text' name='quantity[]' value=".$val['quantity'].">";
+				$html .="</td>";
+				$html .="<td data-title='Dispatched Qty'>";
+				$html .="<input type='text' name='dispatched_quantity[]' value=".$val['dispatched_quantity'].">";
+				$html .="</td>";
+				$html .="<td data-title='Amount'>";
+				$html .="<input type='text' name='amount[]' value=".$val['amount'].">";
+				$html .="</td>";
+				$html .="</tr>";
+				$i++;
+			}
+		}
+		echo $html;
 		die;
 	}
 	/**
@@ -3977,8 +4020,8 @@ class Ishop extends Front_Controller
         
         
         public function copy_data(){
-            
-             $copy_data = $this->ishop_model->copy_data($_POST);
+            $user= $this->auth->user();
+             $copy_data = $this->ishop_model->copy_data($_POST,$user->id);
             echo $copy_data;
            
             die;

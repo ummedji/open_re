@@ -31,6 +31,14 @@ var primary_sales_view_validators = $("#primary_sales_view").validate({
         to_date:{
             required: true
         }
+    },
+    messages: {
+        form_date: {
+            required: "Please Enter From Date."
+        },
+        to_date: {
+            required: "Please Enter To Date."
+        }
     }
 });
 // END ::: Added By Vishal Malaviya For Validation

@@ -376,6 +376,11 @@ class Web_service extends Front_Controller
                 $result['status'] = true;
                 $result['message'] = 'Success';
                 $result['data'] = $final_array;
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $result['total_rows'] = $total_rows;
+                // For Pagination
             }
             else
             {
@@ -1215,6 +1220,31 @@ class Web_service extends Front_Controller
     }
 
     /**
+     * @ Function Name        : copyTarget
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function copyTarget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id))
+        {
+            $copy = $this->ishop_model->copy_data($this->input->post(),$user_id,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Copied Successfully.';
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
      * @ Function Name        : getAllOrdersCount
      * @ Function Params    : user_id,country_id (POST)
      * @ Function Purpose    : Get Rol and Drop Down Data
@@ -1243,6 +1273,127 @@ class Web_service extends Front_Controller
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = !empty($orders_count) ? $orders_count : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getRol
+     * @ Function Params    : user_id,country_id,role_id,radio_type (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getOrderPlace()
+    {
+        $action_data = 'set_rol';
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $radio_type = $this->input->get_post('radio_type'); // farmer,retailer,distributor
+
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && isset($role_id) && !empty($role_id)
+            && isset($radio_type) && !empty($radio_type)
+        )
+        {
+            // Role Check
+            if($radio_type == "farmer"){
+                $default_type = 11;
+            }
+            else if($radio_type == "retailer"){
+                $default_type = 10;
+            }
+            else if($radio_type == "distributor"){
+                $default_type = 9;
+            }
+
+            //Get Data
+            $final_array = array();
+            if($default_type == 10)
+            {
+                $geolevels3 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,null,$default_type,$action_data);
+                if(!empty($geolevels3))
+                {
+                    foreach($geolevels3 as $k3 => $geolevel3)
+                    {
+                        $g3 = array(
+                            "id"=>$geolevel3['political_geo_id'],
+                            "political_geography_name"=>$geolevel3['political_geography_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
+                        $parent_geo_id3 = $geolevel3['political_geo_id'];
+                        $geolevels2 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,$parent_geo_id3,$default_type,$action_data);
+                        if(!empty($geolevels2))
+                        {
+                            foreach ($geolevels2 as $k2 => $geolevel2)
+                            {
+                                $g2 = array(
+                                    "id"=>$geolevel2['political_geo_id'],
+                                    "political_geography_name"=>$geolevel2['political_geography_name'],
+                                );
+                                $final_array[$k3]['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
+                                $parent_geo_id2 = $geolevel2['political_geo_id'];
+                                $retailers_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id2, $country_id, $radio_type, null);
+                                $retailers_names = json_decode($retailers_names, true);
+                                if(!empty($retailers_names))
+                                {
+                                    foreach ($retailers_names as $k1 => $retailers_name)
+                                    {
+                                        $final_array[$k3]['geolevel2'][$k2]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                        $retailer_id = $retailers_name['id'];
+                                        $distributors = $this->ishop_model->get_distributor_by_retailer($country_id,$retailer_id);
+                                        $distributors = json_decode($distributors, true);
+                                        if(!empty($distributors))
+                                        {
+                                            foreach ($distributors as $k0 => $distributor)
+                                            {
+                                                $final_array[$k3]['geolevel2'][$k2]['retailers'][$k1]['distributors'][] = $distributor; // Add Geo Level 0 Into Final Array
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if($default_type == 9)
+            {
+                $geolevels3 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,null,$default_type,$action_data);
+                if(!empty($geolevels3))
+                {
+                    foreach($geolevels3 as $k3 => $geolevel3)
+                    {
+                        $g3 = array(
+                            "id"=>$geolevel3['political_geo_id'],
+                            "political_geography_name"=>$geolevel3['political_geography_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
+                        $parent_geo_id3 = $geolevel3['political_geo_id'];
+                        $distibutors_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id3, $country_id, $radio_type, null);
+                        $distibutors_names = json_decode($distibutors_names, true);
+                        if(!empty($distibutors_names))
+                        {
+                            foreach ($distibutors_names as $k1 => $distibutors_name)
+                            {
+                                $final_array[$k3]['distributors'][] = $distibutors_name; // Add Geo Level 1 Into Final Array
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Get ROL Data
+            $rol = $this->ishop_model->get_all_rol_by_user($user_id,$country_id,$role_id,$radio_type,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = array("dp_data"=>$final_array,"rol_data"=>!empty($rol) ? $rol : array());
         }
         else
         {

@@ -7,51 +7,151 @@ $(function () {
         autoclose: true
         });
 
-});
+
 
 // START ::: Added By Vishal Malaviya For Validation
-var primary_sales_validators = $("#primary_sales").validate({
-    ignore: ".ignore",
-    rules: {
-        customer_id:{
-            required: true
+    var primary_sales_validators = $("#primary_sales").validate({
+        ignore: ".ignore",
+        rules: {
+            customer_id:{
+                required: true
+            },
+            invoice_no:{
+                required: true
+            },
+            invoice_date:{
+                required: true
+            },
+            prod_sku:{
+                required: true
+            },
+            dispatched_qty:{
+                required: true
+            },
+            amt:{
+                required: true
+            }
         },
-        invoice_no:{
-            required: true
-        },
-        invoice_date:{
-            required: true
-        },
-        prod_sku:{
-            required: true
-        },
-        dispatched_qty:{
-            required: true
-        },
-        amt:{
-            required: true
+        messages: {
+            customer_id: {
+                required: "Please Select Customer Name."
+            },
+            invoice_no: {
+                required: "Please Enter Invoice Number."
+                //remote: "Invoice Number already exist!"
+            },
+            invoice_date:{
+                required:  "Please Enter Invoice Date."
+            },
+            prod_sku:{
+                required:  "Please Select Product SKU."
+            },
+            dispatched_qty:{
+                required:  "Please Enter Dispached Qty."
+            },
+            amt:{
+                required:  "Please Enter Amt."
+            }
         }
-    }
-});
-$("#add_row").click(function() {
-    $('#prod_sku').removeClass('ignore');
-    $('#dispatched_qty').removeClass('ignore');
-    $('#amt').removeClass('ignore');
 
-    var $valid = $("#primary_sales").valid();
-    if(!$valid) {
-        primary_sales_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        add_row();
-    }
+
+    });
+
+    var already_assign_error = 0;
+
+    $( "#invoice_no" ).focusout(function() {
+        var customer_id=$('#customer_id').val();
+        var invoice_no=$('#invoice_no').val();
+
+        if(customer_id != '' && invoice_no !=''){
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ishop/check_duplicate_data_primary_sales",
+                data: {customer_id:customer_id,invoice_no:invoice_no},
+                //dataType : 'json',
+                success: function (resp) {
+                    if(resp == 1){
+                        already_assign_error = 1;
+                        $('.error').css('display','block');
+                        $('#invoice_no_error').html('Invoice Number already Assign!');
+                    }
+                    else{
+                        already_assign_error = 0;
+                        $('.error').css('display','none');
+                        $('#invoice_no_error').empty();
+                    }
+                }
+            });
+        }
+        else if(invoice_no !=''){
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ishop/get_data_primary_sales_by_invoice",
+                data: {invoice_no:invoice_no},
+                //dataType : 'json',
+                success: function (resp) {
+                    if(resp){
+                        var obj = jQuery.parseJSON(resp);
+                        console.log(obj);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: site_url + "ishop/get_data_primary_sales_product_by_invoice",
+                            data: {primary_sales_id:obj.primary_sales_id},
+                            dataType : 'html',
+                            success: function (resp) {
+                                $("#primary_sls").append(resp)
+                            }
+                        });
+
+                        $('#customer_id').selectpicker('val', obj.customer_id);
+                        $('#invoice_date').val(obj.invoice_date);
+                        $('#order_traking_no').val(obj.order_tracking_no);
+                        $('#po_no').val(obj.PO_no);
+                    }
+                }
+            });
+        }
+    });
+
+    $('#customer_id').on('change',function(){
+        $('#invoice_no').val('');
+    });
+
+
+    $("#add_row").click(function() {
+        $('#prod_sku').removeClass('ignore');
+        $('#dispatched_qty').removeClass('ignore');
+        $('#amt').removeClass('ignore');
+       // alert(already_assign_error);
+        var $valid = $("#primary_sales").valid();
+        if(!$valid || already_assign_error == 1) {
+
+            primary_sales_validators.focusInvalid();
+            if(already_assign_error == 1) {
+                $('.error').css('display', 'block');
+                $('#invoice_no_error').html('Invoice Number already Assign!');
+            }
+            else{
+                already_assign_error = 0;
+                $('.error').css('display','none');
+                $('#invoice_no_error').empty();
+            }
+            return false;
+        }
+        else
+        {
+            add_row();
+        }
+    });
+
 });
+
 // END ::: Added By Vishal Malaviya For Validation
 
 function add_row()
 {
+
     var sku_code = $('#prod_sku option:selected').attr('attr-code');
     var sku_name = $('#prod_sku option:selected').attr('attr-name');
     var sku_id = $('#prod_sku option:selected').val();
@@ -86,10 +186,12 @@ function add_row()
             "</td>"+
         "</tr>"
     );
+    $('.save_button').css("display","block");
     $('#prod_sku').selectpicker('val', '0');
     $('#po_qty').val('');
     $('#dispatched_qty').val('');
     $('#amt').val('');
+
 }
 
 $(document).on('click', 'div.primary_sls', function () { // <-- changes
@@ -161,8 +263,6 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
 
     var header_array = [];
 
-    //file_data.push(dir_name);
-
     $.ajax({
         url: site_url+"ishop/upload_data", // Url to which the request is send
         type: "POST",             // Type of request to be send, called as method
@@ -172,29 +272,19 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
         processData:false,        // To send DOMDocument or non processed data file it is set to false
         success: function(data)   // A function to be called if request succeeds
         {
-
-            console.log(data);
             $.each( data, function( key, value ) {
-
-                //alert(key+"==="+ value);
 
                 if(key == "error"){
 
                     var value_data = JSON.stringify(value);
 
-                    //alert("ERROR");
                     var error_message = "";
 
                     var t_data = "<table><thead>";
 
-                    //   console.log(value);
-
                     $.each( value, function( key5, des_value5 ) {
 
-
                         if(key5 == "header"){
-
-                            //  console.log(key5+"==="+des_value5);
 
                             t_data += "<tr>";
                             $.each( des_value5, function( key2, header_desc_value ){
@@ -274,8 +364,6 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
 
                                         window.open(site_url+"assets/uploads/Uploads/"+dir_name+"/"+file_name,'_blank' );
                                     }
-                                    // return false;
-                                    //console.log(file_data);
                                     $(this).dialog("close");
                                 },
                                 Decline: function () {
@@ -286,11 +374,9 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                                 $(this).remove();
                             }
                         });
-
                 }
                 else
                 {
-
                     $('<div></div>').appendTo('body')
                         .html('<div><h4><b>The file is correct. Please click on save button.</b></h4></div>')
                         .dialog({
@@ -330,17 +416,10 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                                 $(this).remove();
                             }
                         });
-
-
                 }
-
             })
-
         },
         dataType: 'json'
     });
-
-
     return false;
-
 });

@@ -112,8 +112,25 @@ class Ishop_model extends BF_Model
         $this->db->where('invoice_no',$invoice_no);
         $data=$this->db->get()->row_array();
 
-        //testdata($data);
+        if(isset($data) && !empty($data))
+        {
+            return $data;
+        }
+        else{
+            return false;
+        }
 
+    }
+
+    public function get_data_primary_sales_product_by_invoice($primary_sales_id)
+    {
+        $this->db->select('psr.product_sku_code,psc.product_sku_name,ipsp.dispatched_quantity,ipsp.quantity,ipsp.amount,ipsp.product_sku_id');
+        $this->db->from('ishop_primary_sales_product as ipsp');
+        $this->db->join('master_product_sku_country as psc', 'psc.product_sku_id = ipsp.product_sku_id');
+        $this->db->join('master_product_sku_regional as psr', 'psr.product_sku_id = psc.product_sku_id');
+        $this->db->where('primary_sales_id',$primary_sales_id);
+        $data=$this->db->get()->result_array();
+       // testdata($data);
         if(isset($data) && !empty($data))
         {
             return $data;
@@ -5729,9 +5746,11 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
     }
     
-    public function copy_data($copy_data) {
-        
-        $user= $this->auth->user();
+    public function copy_data($copy_data,$userid,$web_service) {
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $copy_data['checkbox_popup_month_data'] = explode(',', $copy_data['checkbox_popup_month_data']);
+        }
         
         //GET FROM USER DATA FOR SELECTED USER AND MONTH
         
@@ -5791,7 +5810,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                             'customer_id' => $to_user_id,
                             'product_sku_id' => $product_sku_id,
                             'quantity' => $quantity,
-                            'created_by_user' => $user->id,
+                            'created_by_user' => $userid,
                             'modified_on' => date("Y-m-d h:i:s")
                          );
 
@@ -5808,7 +5827,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                             'customer_id' => $to_user_id,
                             'product_sku_id' => $product_sku_id,
                             'quantity' => $quantity,
-                            'created_by_user' => $user->id,
+                            'created_by_user' => $userid,
                             'created_on' => date("Y-m-d h:i:s")
                          );
 
