@@ -368,6 +368,8 @@ class Web_service extends Front_Controller
                 // For Pagination
                 $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
                 $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/2;
+                $pages = ceil($pages);
                 // For Pagination
 
                 $final_array = array();
@@ -382,6 +384,7 @@ class Web_service extends Front_Controller
                 $result['message'] = 'Success';
                 $result['data'] = $final_array;
                 $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
             }
             else
             {
@@ -419,6 +422,76 @@ class Web_service extends Front_Controller
             {
                 $result['status'] = false;
                 $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : deletePrimarySalesInvoice
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function deletePrimarySalesInvoice()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $mode = $this->input->get_post('mode');
+        $id = $this->input->get_post('id');
+
+        if(isset($user_id) && !empty($user_id) && isset($id) && !empty($id) && isset($mode) && !empty($mode))
+        {
+            if($mode == "sale_invoice")
+            {
+                $id = $this->ishop_model->delete_sales_detail($id);
+            }
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Deleted Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Something Went Wrong.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : deletePrimarySalesProductInvoice
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function deletePrimarySalesProductInvoice()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $product_sales_id = $this->input->get_post('product_sales_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($product_sales_id) && !empty($product_sales_id))
+        {
+            $id = $this->ishop_model->delete_sales_product_detail($product_sales_id);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Deleted Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Something Went Wrong.';
             }
         }
         else
@@ -1222,7 +1295,7 @@ class Web_service extends Front_Controller
 
     /**
      * @ Function Name        : copyTarget
-     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Params    : user_id,country_id,popup_page(target,budget) (POST)
      * @ Function Purpose    : Get Rol and Drop Down Data
      * */
     public function copyTarget()

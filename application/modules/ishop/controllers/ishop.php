@@ -310,6 +310,94 @@ class Ishop extends Front_Controller
 		Template::render();
 	}
 
+	public function check_duplicate_data_secondary_sales()
+	{
+		//testdata($_POST);
+		$customer_id = $this->input->post("customer_id");
+		$invoice_no = $this->input->post("invoice_no");
+
+		$check= $this->ishop_model->check_duplicate_data_for_secondary_sales($customer_id,$invoice_no);
+		echo $check;
+		die;
+	}
+
+	public function get_data_secondary_sales_by_invoice()
+	{
+		$invoice_no = $this->input->post("invoice_no");
+
+		$check= $this->ishop_model->get_data_secondary_sales_by_invoice_no($invoice_no);
+		echo json_encode($check);
+		die;
+	}
+
+	public function get_data_secondary_sales_product_by_invoice()
+	{
+		$secondary_sales_id = $this->input->post("secondary_sales_id");
+		$check= $this->ishop_model->get_data_secondary_sales_product_by_invoice($secondary_sales_id);
+		//testdata($check);
+		$html='';
+		if(isset($check) && !empty($check))
+		{
+			$i=1;
+			foreach($check as $k=>$val)
+			{
+				$html .="<tr id=".$i.">";
+				$html .="<td data-title='Sr. No.' class='numeric'>";
+				$html .="<input class='input_remove_border'  type='text' value=".$i." readonly/>";
+				$html .="</td>";
+				$html .="<td  data-title='Action' class='numeric'>";
+				$html .="<div class='delete_i secondary_sal' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>";
+				$html .="</td>";
+				$html .="<td data-title='Retailer Name' class='numeric'>";
+				$html .="<input class='input_remove_border'  type='text' value=".$val['display_name']." readonly/>";
+				$html .="</td>";
+				$html .="<td data-title='Product SKU Code' class='numeric'>";
+				$html .="<input class='input_remove_border' type='text' value=".$val['product_sku_code']." readonly>";
+				$html .="</td>";
+				$html .="<td data-title='Product SKU Name'>";
+				$html .="<input class='input_remove_border' type='text' value=".$val['product_sku_name']." readonly>";
+				$html .="<input type='hidden' class='sku_".$i."' name='product_sku_id[]' value=".$val['product_sku_id'].">";
+				$html .="</td>";
+				$html .="<td data-title=' Qty'>";
+				$html .="<input type='text' class='quantity_data numeric' name='quantity[]' value=".$val['quantity'].">";
+				$html .="</td>";
+				$html .="<td data-title='Units'>";
+
+				$box_select = "";
+				$packages_select = "";
+				$kg_per_ltr_select = "";
+				if($val["unit"] == 'box'){
+					$box_select = "selected='selected'";
+				}
+				if($val["unit"] == 'packages'){
+					$packages_select = "selected='selected'";
+				}
+				if($val["unit"] == 'kg/ltr'){
+					$kg_per_ltr_select = "selected='selected'";
+				}
+
+				$html .="<select name='units[]' class='select_unitdata' id='unit_id' >";
+				$html .="<option ".$box_select." value='box'>Box</option>";
+				$html .="<option ".$packages_select."  value='packages'>Packages</option>";
+				$html .="<option ".$kg_per_ltr_select."  value='kg/ltr'>Kg/Ltr</option>";
+				$html .="</select>";
+
+
+				$html .="</td>";
+				$html .="<td data-title='Amount'>";
+				$html .="<input type='text' name='amount[]' value=".$val['amount'].">";
+				$html .="</td>";
+				$html .="<td data-title='Qty Kg/Ltr'>";
+				$html .="<input class='input_remove_border qty_".$i."' type='text' name='qty_kgl[]' value=".$val['qty_kgl'].">";
+				$html .="</td>";
+				$html .="</tr>";
+				$i++;
+			}
+		}
+		echo $html;
+		die;
+	}
+
 	/**
 	 * @ Function Name        : add_secondary_sales_details
 	 * @ Function Params    :

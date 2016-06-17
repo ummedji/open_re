@@ -333,7 +333,7 @@ class Ishop_model extends BF_Model
         if(!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
         {
             // For Pagination
-            $limit = 10;
+            $limit = 2;
             $pagenum = $this->input->get_post('page');
             $page = !empty($pagenum) ? $pagenum : 1;
             $offset = $page*$limit-$limit;
@@ -529,7 +529,8 @@ class Ishop_model extends BF_Model
     public function delete_sales_detail($sales_id)
     {
         $this->db->where('primary_sales_id', $sales_id);
-        $this->db->delete('ishop_primary_sales');
+        $id = $this->db->delete('ishop_primary_sales');
+        return $id;
 
     }
     public function delete_sales_product_detail($product_sales_id)
@@ -563,7 +564,8 @@ class Ishop_model extends BF_Model
         $this->db->update('ishop_primary_sales',$update_data);
 
         $this->db->where('primary_sales_product_id', $product_sales_id);
-        $this->db->delete('ishop_primary_sales_product');
+        $id = $this->db->delete('ishop_primary_sales_product');
+        return $id;
 
     }
     /*--------------------------------------------------------------------------------------------------------------------*/
@@ -1305,6 +1307,64 @@ class Ishop_model extends BF_Model
         }
 
         return 1;
+    }
+
+
+
+    public function check_duplicate_data_for_secondary_sales($customer_id,$invoice_no)
+    {
+
+        $this->db->select('*');
+        $this->db->from('ishop_secondary_sales');
+        $this->db->where('invoice_no',$invoice_no);
+        $this->db->where_not_in('customer_id_to',$customer_id);
+        $check=$this->db->get()->result_array();
+        // testdata($check);
+        if(isset($check) && !empty($check))
+        {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function get_data_secondary_sales_by_invoice_no($invoice_no)
+    {
+        $this->db->select('*');
+        $this->db->from('ishop_secondary_sales');
+        $this->db->where('invoice_no',$invoice_no);
+        $data=$this->db->get()->row_array();
+
+        if(isset($data) && !empty($data))
+        {
+            return $data;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    public function get_data_secondary_sales_product_by_invoice($secondary_sales_id)
+    {
+        $this->db->select('issp.secondary_sales_id,issp.product_sku_id,issp.quantity,issp.amount,issp.unit,issp.qty_kgl,psc.product_sku_name,psr.product_sku_code,bu.display_name');
+        //$this->db->select('*');
+        $this->db->from('ishop_secondary_sales_product as issp');
+        $this->db->join('ishop_secondary_sales as iss', 'iss.secondary_sales_id = issp.secondary_sales_id');
+        $this->db->join('master_product_sku_country as psc', 'psc.product_sku_id = issp.product_sku_id');
+        $this->db->join('master_product_sku_regional as psr', 'psr.product_sku_id = psc.product_sku_id');
+        $this->db->join('users as bu', 'bu.id = iss.customer_id_to');
+        $this->db->where('issp.secondary_sales_id',$secondary_sales_id);
+        $data=$this->db->get()->result_array();
+        // testdata($data);
+        if(isset($data) && !empty($data))
+        {
+            return $data;
+        }
+        else{
+            return false;
+        }
     }
 
     /**

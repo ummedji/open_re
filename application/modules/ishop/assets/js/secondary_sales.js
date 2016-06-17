@@ -6,55 +6,187 @@ $(function () {
         format: "yyyy-mm-dd"
     });
 
-});
 
-// START ::: Added By Vishal Malaviya For Validation
-var secondary_sales_validators = $("#add_secondary_sales").validate({
-    ignore: ".ignore",
-    rules: {
-        customer_id:{
-            required: true
+    var secondary_sales_validators = $("#add_secondary_sales").validate({
+        ignore: ".ignore",
+        rules: {
+            customer_id:{
+                required: true
+            },
+            invoice_no:{
+                required: true
+            },
+            invoice_date:{
+                required: true
+            },
+            sec_prod_sku:{
+                required: true
+            },
+            sec_sel_unit:{
+                required: true
+            },
+            sec_qty:{
+                required: true
+            },
+            sec_amt:{
+                required: true
+            }
         },
-        invoice_no:{
-            required: true
-        },
-        invoice_date:{
-            required: true
-        },
-        sec_prod_sku:{
-            required: true
-        },
-        sec_sel_unit:{
-            required: true
-        },
-        sec_qty:{
-            required: true
-        },
-        sec_amt:{
-            required: true
+        messages: {
+            customer_id: {
+                required: "Please Select Customer Name."
+            },
+            invoice_no: {
+                required: "Please Enter Invoice Number."
+            },
+            invoice_date:{
+                required:  "Please Enter Invoice Date."
+            },
+            sec_prod_sku:{
+                required:  "Please Select SKU."
+            },
+            sec_qty:{
+                required:  "Please Enter Qty."
+            },
+            sec_sel_unit:{
+                required:  "Please Select Unit."
+            },
+            amt:{
+                required:  "Please Enter Amt."
+            }
         }
-    }
-});
-$("#sec_add_row").click(function() {
+    });
 
-    $('#sec_prod_sku').removeClass('ignore');
-    $('#sec_sel_unit').removeClass('ignore');
-    $('#sec_qty').removeClass('ignore');
-    $('#sec_amt').removeClass('ignore');
+    var already_assign_error = 0;
 
-    var $valid = $("#add_secondary_sales").valid();
-    if(!$valid) {
-        secondary_sales_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        add_sec_sales_row();
-    }
-});
+    $( "#invoice_no" ).focusout(function() {
+
+        var customer_id=$('#reta_id').val();
+        var invoice_no=$('#invoice_no').val();
+
+        if(customer_id != '' && invoice_no !=''){
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ishop/check_duplicate_data_secondary_sales",
+                data: {customer_id:customer_id,invoice_no:invoice_no},
+                //dataType : 'json',
+                success: function (resp) {
+                    if(resp == 1){
+                        already_assign_error = 1;
+                        $('.error').css('display','block');
+                        $('#invoice_no_error').html('Invoice Number already Assign!');
+                    }
+                    else{
+                        already_assign_error = 0;
+                        $('.error').css('display','none');
+                        $('#invoice_no_error').empty();
+                    }
+                }
+            });
+        }
+        else if(invoice_no !=''){
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ishop/get_data_secondary_sales_by_invoice",
+                data: {invoice_no:invoice_no},
+                //dataType : 'json',
+                success: function (resp) {
+                    if(resp){
+                        var obj = jQuery.parseJSON(resp);
+                      //  console.log(obj);
+
+                        $.ajax({
+                            type: 'POST',
+                            url: site_url + "ishop/get_data_secondary_sales_product_by_invoice",
+                            data: {secondary_sales_id:obj.secondary_sales_id},
+                            dataType : 'html',
+                            success: function (resp) {
+                                $("#secondary_sls").append(resp)
+                            }
+                        });
+
+                        $('#reta_id').selectpicker('val', obj.customer_id_to);
+                        $('#invoice_date').val(obj.invoice_date);
+                        $('#order_traking_no').val(obj.order_tracking_no);
+                        $('#po_no').val(obj.PO_no);
+                    }
+                }
+            });
+        }
+    });
+
+    $('#customer_id').on('change',function(){
+        $('#invoice_no').val('');
+    });
+
+    $("#sec_add_row").click(function() {
+
+        $('#sec_prod_sku').removeClass('ignore');
+        $('#sec_sel_unit').removeClass('ignore');
+        $('#sec_qty').removeClass('ignore');
+        $('#sec_amt').removeClass('ignore');
+
+        var $valid = $("#add_secondary_sales").valid();
+        if(!$valid || already_assign_error == 1) {
+
+            secondary_sales_validators.focusInvalid();
+            if(already_assign_error == 1) {
+                $('.error').css('display', 'block');
+                $('#invoice_no_error').html('Invoice Number already Assign!');
+            }
+            else{
+                already_assign_error = 0;
+                $('.error').css('display','none');
+                $('#invoice_no_error').empty();
+            }
+            return false;
+        }
+        else
+        {
+            add_sec_sales_row();
+        }
+    });
 // END ::: Added By Vishal Malaviya For Validation
 
 
+
+    $("#add_secondary_sales").on("submit",function(){
+
+        $('#sec_prod_sku').addClass('ignore');
+        $('#sec_sel_unit').addClass('ignore');
+        $('#sec_qty').addClass('ignore');
+        $('#sec_amt').addClass('ignore');
+
+        var param = $("#add_secondary_sales").serializeArray();
+
+        var $valid = $("#add_secondary_sales").valid();
+        if(!$valid) {
+            secondary_sales_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            if($("#add_secondary_sales").children().length <= 0)
+            {
+                alert('No Product Selected');
+                return false;
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: site_url+"ishop/add_secondary_sales_details",
+                    data: param,
+                    //dataType : 'json',
+                    success: function(resp){
+                        if(resp==1){
+                            site_url+"ishop/secondary_sales_details";
+                        }
+                    }
+                });
+            }
+        }
+    });
+});
 
 function add_sec_sales_row()
 {
@@ -137,42 +269,7 @@ $(document).on('click', 'div.secondary_sal', function () { // <-- changes
     return false;
 });
 
-$("#add_secondary_sales").on("submit",function(){
 
-    $('#sec_prod_sku').addClass('ignore');
-    $('#sec_sel_unit').addClass('ignore');
-    $('#sec_qty').addClass('ignore');
-    $('#sec_amt').addClass('ignore');
-
-    var param = $("#add_secondary_sales").serializeArray();
-
-    var $valid = $("#add_secondary_sales").valid();
-    if(!$valid) {
-        secondary_sales_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        if($("#add_secondary_sales").children().length <= 0)
-        {
-            alert('No Product Selected');
-            return false;
-        }
-        else {
-            $.ajax({
-                type: 'POST',
-                url: site_url+"ishop/add_secondary_sales_details",
-                data: param,
-                //dataType : 'json',
-                success: function(resp){
-                    if(resp==1){
-                        site_url+"ishop/secondary_sales_details";
-                    }
-                }
-            });
-        }
-    }
-});
 
 function get_data_conversion(sku_id,quantity,units){
 

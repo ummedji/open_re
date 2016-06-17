@@ -55,9 +55,25 @@ class Esp extends Front_Controller
         
         $user_data = $this->esp_model->get_user_data($userid);
         
-        testdata($user_data);
+        $html = "";
         
-       // echo $loginuserid;die;
+        if($user_data != 0){
+            
+            $html .= '<div class="form-group">';
+                    $html .= '<label>Level<span style="color: red">*</span></label>';
+                    $html .= '<select class="employee_data"  id="employee_data" name="employee_data" data-live-search="true">';
+                    $html .= '<option value="">Select Employee</option>';
+                    foreach($user_data as $key=>$value){ 
+                        $html .= '<option value="'.$value['id'].'">'.$value['display_name'].'</option>';
+                    }
+                    $html .= '</select>';
+            $html .= '</div>';
+            
+        }
+        
+        echo $html;
+        die;
+        
         
     }
     

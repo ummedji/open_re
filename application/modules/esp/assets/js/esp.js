@@ -21,17 +21,34 @@ $(document).ready(function(){
     $("a#exeute").on("click",function(){
         
         var user_id = $("input#login_user_id").val();
-        
-        $.ajax({
-                type: 'POST',
-                url: site_url+"esp/get_user_level_data",
-                data: {userid:user_id},
-                success: function(resp){
-                    console.log(resp);
-                }
-        });
-        
+        $("div#user_level_data div.form-group").remove();
+        get_user_level_data(user_id);
         
     });
     
 });
+
+$(document).on("change","select.employee_data",function(){
+        
+        var user_id = $(this).val();
+        $(this).parent().nextAll("div.form-group").remove();
+        get_user_level_data(user_id);
+    
+        
+        
+    });
+
+function get_user_level_data(user_id){
+    
+    $.ajax({
+                type: 'POST',
+                url: site_url+"esp/get_user_level_data",
+                data: {userid:user_id},
+                success: function(resp){
+                    if(resp != ""){
+                        $("div#user_level_data").append(resp);
+                    }
+                }
+        });
+    
+}
