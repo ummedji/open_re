@@ -446,43 +446,38 @@ class Web_service extends Front_Controller
 
         if(isset($user_id) && !empty($user_id) && isset($id) && !empty($id) && isset($mode) && !empty($mode))
         {
-            if($mode == "sale_invoice")
+            if($mode == "sales_invoice")
             {
                 $id = $this->ishop_model->delete_sales_detail($id);
             }
-            if($id)
+            elseif($mode == "sales_invoice_product")
             {
-                $result['status'] = true;
-                $result['message'] = 'Deleted Successfully.';
+                $id = $this->ishop_model->delete_sales_product_detail($id);
             }
-            else
+            elseif($mode == "rol")
             {
-                $result['status'] = false;
-                $result['message'] = 'Something Went Wrong.';
+                $id = $this->ishop_model->delete_rol_limit_detail($id);
             }
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
-     * @ Function Name        : deletePrimarySalesProductInvoice
-     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
-     * @ Function Purpose    : Edit Primary Sales Invoice
-     * */
-    public function deletePrimarySalesProductInvoice()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-        $product_sales_id = $this->input->get_post('product_sales_id');
-
-        if(isset($user_id) && !empty($user_id) && isset($product_sales_id) && !empty($product_sales_id))
-        {
-            $id = $this->ishop_model->delete_sales_product_detail($product_sales_id);
+            elseif($mode == "secondary_sales")
+            {
+                $id = $this->ishop_model->delete_secondary_sales_detail($id);
+            }
+            elseif($mode == "secondary_sales_product")
+            {
+                $id = $this->ishop_model->delete_secondary_sales_product_detail($id);
+            }
+            elseif($mode == "physical_stock")
+            {
+                $id = $this->ishop_model->delete_physical_stock_details($id);
+            }
+            elseif($mode == "schemes")
+            {
+                $id = $this->ishop_model->delete_schemes_by_id($id);
+            }
+            elseif($mode == "order")
+            {
+                $id = $this->ishop_model->delete_order_detail_data($id);
+            }
             if($id)
             {
                 $result['status'] = true;
