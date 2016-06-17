@@ -131,12 +131,12 @@ $(function () {
 
             secondary_sales_validators.focusInvalid();
             if(already_assign_error == 1) {
-                $('.error').css('display', 'block');
+                $('.errors').css('display', 'block');
                 $('#invoice_no_error').html('Invoice Number already Assign!');
             }
             else{
                 already_assign_error = 0;
-                $('.error').css('display','none');
+                $('.errors').css('display','none');
                 $('#invoice_no_error').empty();
             }
             return false;

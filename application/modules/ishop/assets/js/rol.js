@@ -82,23 +82,9 @@ $("input.select_customer_type").on("click",function(){
     }
 });
 
-
-
-/*$("select#geo_level_rol").on("change",function(){
-
-    var selected_geo_data = $(this).val();
-
-    $("select#retailer_rol").empty();
-    $("select#retailer_rol").selectpicker('refresh');
-
-    get_user_by_geo_data(selected_geo_data);
-
-});*/
-
 $("select#distributor_geo_level").on("change",function(){
 
     var selected_geo_data = $(this).val();
-
     get_user_by_geo_data(selected_geo_data);
 
 });
@@ -153,8 +139,6 @@ function get_user_by_geo_data(selected_geo_data){
     });
 
 }
-
-
 
 function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
@@ -290,84 +274,6 @@ $("select#geo_level_1").on("change",function(){
     get_user_by_geo_data(selected_geo_data);
 
 });
-
-function add_rol_row()
-{
-    var distr_name =  $('#distributor_rol option:selected').attr('attr-dstname');
-    var distr_code =  $('#distributor_rol option:selected').attr('attr-dstcode');
-    var distr_id =  $('#distributor_rol option:selected').val();
-    var retailer_name =  $('#retailer_rol option:selected').attr('attr-rtname');
-    var retailer_code =  $('#retailer_rol option:selected').attr('attr-rtcode');
-    var retailer_id =  $('#retailer_rol option:selected').val();
-    var sku_name = $('#prod_sku option:selected').attr('attr-name');
-    var sku_id = $('#prod_sku option:selected').val();
-    var pbg = $('#prod_sku option:selected').attr('attr-pbg');
-    var unit = $('#unit_id option:selected').val();
-    var rol_qty = $('#rol_qty').val();
-  /*  var rol_kgl = $('#rol_qty').val();*/
-    var sr_no =$("#rol_list > tr").length + 1;
-
-    var box_selected = "";
-    var package_selected = "";
-    var kg_ltr_selected = "";
-
-    //var unit_data = get_data_conversion(sku_id,rol_qty,unit);
-
-
-    if(unit == 'box'){
-        box_selected = "selected = 'selected'"
-    }
-    if(unit == 'packages'){
-        package_selected = "selected = 'selected'"
-    }
-    if(unit == 'kg/ltr'){
-        kg_ltr_selected = "selected = 'selected'"
-    }
-
-
-    $("#rol_list").append(
-        "<tr id='"+sr_no+"'>"+
-        "<td data-title='Sr. No.' class='numeric'>" +
-        "<input class='input_remove_border'  type='text' value='"+sr_no+"' readonly/>" +
-        "</td>"+
-        "<td  data-title='Action' class='numeric'>" +
-        "<div class='delete_i rol_del' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
-        "</td>"+
-        "<td data-title='Distributor Code'>" +
-        "<input class='input_remove_border' type='text' value='"+distr_code+"' readonly/>" +
-        "</td>"+
-        "<td data-title='Distributor Name'>" +
-        "<input class='input_remove_border' type='text' value='"+distr_name+"' readonly/>" +
-        "</td>"+
-        "<td data-title='PBG'>" +
-        "<input class='input_remove_border' type='text' value='"+ pbg +"' readonly/>" +
-        "</td>"+
-        "<td data-title='Product SKU Name'>" +
-        "<input  class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
-        "<input class='sku_"+sr_no+"' type='hidden' value='"+sku_id+"' readonly/>"+
-        "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
-        "</td>"+
-        "<td data-title='Units'>" +
-
-        "<select name='units[]' class='select_unitdata' id='unit_id' >"+
-        " <option  "+box_selected+" value='box'>Box</option>"+
-        "  <option  "+package_selected+" value='packages'>Packages</option>"+
-        "   <option  "+kg_ltr_selected+" value='kg/ltr'>Kg/Ltr</option>"+
-        "  </select>" +
-        "</td>"+
-        "<td data-title='ROL Quantity'>" +
-        "<input class='quantity_data numeric' type='text'class='quantity_data numeric' name='rol_qty[]' value='"+rol_qty+"'/>" +
-        "</td>"+
-        "<td data-title='ROL Qty Kg/Ltr'>" +
-        "<input class='input_remove_border qty_"+sr_no+"' type='text' name='rol_qty_kgl[]' value='"+unit_data+"' readonly/>" +
-        "</td>"+
-        "</tr>"
-    );
-
-    $('#prod_sku').selectpicker('val', '0');
-    $('#unit_id').selectpicker('val', '0');
-    $('#rol_qty').val('');
-}
 
 $(document).on('click', 'div.rol_del', function () {
     if (confirm("Are you sure?")) {

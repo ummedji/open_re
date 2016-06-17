@@ -437,7 +437,7 @@ class Web_service extends Front_Controller
      * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
      * @ Function Purpose    : Edit Primary Sales Invoice
      * */
-    public function deletePrimarySalesInvoice()
+    public function deleteData()
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
@@ -481,7 +481,7 @@ class Web_service extends Front_Controller
             if($id)
             {
                 $result['status'] = true;
-                $result['message'] = 'Deleted Successfully.';
+                $result['message'] = 'Deleted Successfully ('.$mode.')';
             }
             else
             {
@@ -1413,7 +1413,11 @@ class Web_service extends Front_Controller
                                 {
                                     foreach ($retailers_names as $k1 => $retailers_name)
                                     {
-                                        $final_array[$k3]['geolevel2'][$k2]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                        $ret = array(
+                                            "id"=>$retailers_name['id'],
+                                            "display_name"=>$retailers_name['display_name'],
+                                        );
+                                        $final_array[$k3]['geolevel2'][$k2]['retailers'][] = $ret; // Add Geo Level 1 Into Final Array
                                         $retailer_id = $retailers_name['id'];
                                         $distributors = $this->ishop_model->get_distributor_by_retailer($country_id,$retailer_id);
                                         $distributors = json_decode($distributors, true);
@@ -1421,7 +1425,11 @@ class Web_service extends Front_Controller
                                         {
                                             foreach ($distributors as $k0 => $distributor)
                                             {
-                                                $final_array[$k3]['geolevel2'][$k2]['retailers'][$k1]['distributors'][] = $distributor; // Add Geo Level 0 Into Final Array
+                                                $dist = array(
+                                                    "id"=>$distributor['id'],
+                                                    "display_name"=>$distributor['display_name'],
+                                                );
+                                                $final_array[$k3]['geolevel2'][$k2]['retailers'][$k1]['distributors'][] = $dist; // Add Geo Level 0 Into Final Array
                                             }
                                         }
                                     }
@@ -1457,12 +1465,9 @@ class Web_service extends Front_Controller
                 }
             }
 
-            // Get ROL Data
-            $rol = $this->ishop_model->get_all_rol_by_user($user_id,$country_id,$role_id,$radio_type,'web_service');
-
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = array("dp_data"=>$final_array,"rol_data"=>!empty($rol) ? $rol : array());
+            $result['data'] = array("dp_data"=>$final_array);
         }
         else
         {
@@ -1574,6 +1579,38 @@ class Web_service extends Front_Controller
             {
                 $result['status'] = false;
                 $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : savePhysicalStock
+     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
+     * @ Function Purpose    : Save Primary Sales Data
+     * */
+    public function savePhysicalStock()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->add_physical_stock_detail($user_id,$country_id,null,null,null,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
             }
         }
         else
