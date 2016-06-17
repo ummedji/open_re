@@ -25,6 +25,26 @@ class Esp_model extends BF_Model
         } else{
             return 0;
         }
+    }
+    
+    public function get_pbg_data($user_country){
+        
+        $this->db->select('bmptnc.product_country_id,bmptnc.product_country_name');
+        $this->db->from("bf_master_product_type_name_country as bmptnc");
+        $this->db->join("bf_master_product_type_name_regional as bmptnr","bmptnr.product_regional_id = bmptnc.product_regional_id");
+        
+        $this->db->join("bf_master_product_type_label_country as bmptlc","bmptlc.product_type_label_country_id = bmptnr.product_type_label_regional_id ");
+        
+        $this->db->where("bmptnc.country_id",$user_country);
+        $this->db->where("bmptlc.PBG",1);
+        $pbg_data = $this->db->get()->result_array();
+        
+        if(isset($pbg_data) && !empty($pbg_data)) {
+            return $pbg_data;
+        } else{
+            return 0;
+        }
         
     }
+    
 }

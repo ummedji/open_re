@@ -1130,14 +1130,13 @@ class Web_service extends Front_Controller
                     }
 
                     $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
-
                     $ord = array(
                         "id" => $order['order_id'],
-                        "distributor_code" => $order['f_u_code'],
-                        "distributor_name" => $order['fr_fname'].' '.$order['fr_mname'].' '.$order['fr_lname'],
+                        "entered_by" => $order['ot_fname'].' '.$order['ot_mname'].' '.$order['ot_lname'],
                         "po_no" => $order['PO_no'],
                         "order_tracking_no" => $order['order_tracking_no'],
-                        "credit_limit" => $order['credit_limit'],
+                        "order_date" => $order['order_date'],
+                        "edd" => $order['estimated_delivery_date'],
                         "amount" => $order['total_amount'],
                         "order_status" => $order_status,
                         "details" => !empty($order_details) ? $order_details : array()
@@ -1601,7 +1600,7 @@ class Web_service extends Front_Controller
 
         if(isset($user_id))
         {
-            $id = $this->ishop_model->add_physical_stock_detail($user_id,$country_id,null,null,null,'web_service');
+            $id = $this->ishop_model->add_physical_stock_detail($user_id,$country_id,null,null,null);
             if($id)
             {
                 $result['status'] = true;
@@ -1612,6 +1611,142 @@ class Web_service extends Front_Controller
                 $result['status'] = false;
                 $result['message'] = 'Fail';
             }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getPhysicalStock
+     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * */
+    public function getPhysicalStock()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+
+        if(isset($user_id))
+        {
+            $physical_stock = $this->ishop_model->get_all_physical_stock_by_user($user_id,$country_id,$role_id,null,null,'web_service');
+            if(!empty($physical_stock))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $physical_stock;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : editPhysicalStock
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function editPhysicalStock()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->update_physical_stock_detail($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Something Went Wrong.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getPerspectiveOrder
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getPerspectiveOrder()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+
+        $from_date = $this->input->get_post('from_date');
+        $to_date = $this->input->get_post('to_date');
+
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && !empty($from_date) && isset($from_date)
+            && !empty($to_date) && isset($to_date)
+        )
+        {
+            $prespective_order = $this->ishop_model->get_prespective_order($from_date,$to_date,$role_id,$user_id,null,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($prespective_order) ? $prespective_order : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getInvoiceReceived
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getInvoiceReceived()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+
+        $invoice_no = $this->input->get_post('invoice_no');
+        $po_no = $this->input->get_post('po_no');
+        $invoice_month = $this->input->get_post('month');
+
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && !empty($from_date) && isset($from_date)
+            && !empty($to_date) && isset($to_date)
+        )
+        {
+            $invoice_receved = $this->ishop_model->invoice_confirmation_received_by_distributor($invoice_month,$po_no,$invoice_no,$user_id,$country_id,null,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($invoice_receved) ? $invoice_receved : array();
         }
         else
         {

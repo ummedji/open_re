@@ -77,4 +77,32 @@ class Esp extends Front_Controller
         
     }
     
+    public function get_pbg_data(){
+        
+        $user = $this->auth->user();
+        $user_country = $user->country_id;
+        
+        $pbg_data = $this->esp_model->get_pbg_data($user_country);
+        
+        $html = "";
+        
+        if($pbg_data != 0){
+            
+            $html .= '<div class="form-group">';
+                    $html .= '<label>Select PBG <span style="color: red">*</span></label>';
+                    $html .= '<select class="pbg_data"  id="pbg_data" name="pbg_data" data-live-search="true">';
+                    $html .= '<option value="">Select PBG</option>';
+                    foreach($pbg_data as $key=>$value){ 
+                        $html .= '<option value="'.$value['product_country_id'].'">'.$value['product_country_name'].'</option>';
+                    }
+                    $html .= '</select>';
+            $html .= '</div>';
+            
+        }
+        
+        echo $html;
+        die;
+        
+    }
+    
 }

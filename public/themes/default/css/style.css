@@ -806,7 +806,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
 }
 
 .middle_form .form-control {
-    display: inline-block;
+    display: inline-block !important;
     width: 130px;
 }
 .middle_form .form-group .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
@@ -1833,6 +1833,10 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
     margin: 15px 5px 10px 5px;
     outline: none;
+}
+.tp_form .errors{
+    float: right;
+    color: red !important;
 }
 /*end success_file_popup css*/
 

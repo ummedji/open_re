@@ -1637,7 +1637,7 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function get_all_physical_stock_by_user($user_id,$country_id,$role_id,$checked_type=null,$page=null)
+    public function get_all_physical_stock_by_user($user_id,$country_id,$role_id,$checked_type=null,$page=null,$web_service=null)
     {
         $sql ='SELECT bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.product_sku_id,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
         $sql .= 'FROM bf_ishop_physical_stock AS ips ';
@@ -1661,81 +1661,88 @@ class Ishop_model extends BF_Model
         $sql .= 'AND ips.country_id ='.$country_id.' ';
         $sql .= 'ORDER BY ips.stock_id DESC ';
 
-        //echo $sql;die;
-
-       /* $info = $this->db->query($sql);
-        $phy_detail = $info->result_array();
-        $pyh_stock_details = array('result'=>$phy_detail);*/
-        $pyh_stock_details =  $this->grid->get_result_res($sql);
-
-        //echo $user_id."==".$country_id."==".$role_id."==".$checked_type; die;
-
-        if(isset($pyh_stock_details['result']) && !empty($pyh_stock_details['result']))
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+             $info = $this->db->query($sql);
+            $phy_detail = $info->result_array();
+            return $phy_detail;
+        }
+        else
         {
-            if($role_id == 10 || ( $role_id == 8 && $checked_type == 'retailer'))
+
+            //echo $sql;die;
+
+
+            $pyh_stock_details =  $this->grid->get_result_res($sql);
+
+            //echo $user_id."==".$country_id."==".$role_id."==".$checked_type; die;
+
+            if(isset($pyh_stock_details['result']) && !empty($pyh_stock_details['result']))
             {
-                //echo "aaaaa";die;
-                $pyh_stock['head'] =array('Sr. No.','Action','Month Year','Product SKU Code','Product SKU Name','Quantity','Units','Qty Kg/Ltr');
-                $pyh_stock['count'] = count($pyh_stock['head']);
-
-                if($page != null || $page != ""){
-
-                    $i = $page*10 - 9;
-
-                }
-                else{
-                    $i=1;
-                }
-
-                foreach($pyh_stock_details['result'] as $rd )
+                if($role_id == 10 || ( $role_id == 8 && $checked_type == 'retailer'))
                 {
+                    //echo "aaaaa";die;
+                    $pyh_stock['head'] =array('Sr. No.','Action','Month Year','Product SKU Code','Product SKU Name','Quantity','Units','Qty Kg/Ltr');
+                    $pyh_stock['count'] = count($pyh_stock['head']);
 
-                    $product_sku_id='<div class="prd_'.$rd["stock_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
-                    $units = $product_sku_id.'<div class="units_'.$rd["stock_id"].'"><span class="units">'.$rd['unit'].'</span></div>';
-                    $quantity = '<div class="rol_quantity_'.$rd["stock_id"].'"><span class="rol_quantity">'.$rd['quantity'].'</span></div>';
-                    $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["stock_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['qty_kgl'].'</span></div>';
+                    if($page != null || $page != ""){
 
-                    $month=strtotime($rd['stock_month']);
-                    $month=date('F - Y',$month);
-                    $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['product_sku_code'],$rd['product_sku_name'],$quantity,$units,$quantity_kg_ltr);
-                    $i++;
+                        $i = $page*10 - 9;
+
+                    }
+                    else{
+                        $i=1;
+                    }
+
+                    foreach($pyh_stock_details['result'] as $rd )
+                    {
+
+                        $product_sku_id='<div class="prd_'.$rd["stock_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
+                        $units = $product_sku_id.'<div class="units_'.$rd["stock_id"].'"><span class="units">'.$rd['unit'].'</span></div>';
+                        $quantity = '<div class="rol_quantity_'.$rd["stock_id"].'"><span class="rol_quantity">'.$rd['quantity'].'</span></div>';
+                        $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["stock_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['qty_kgl'].'</span></div>';
+
+                        $month=strtotime($rd['stock_month']);
+                        $month=date('F - Y',$month);
+                        $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['product_sku_code'],$rd['product_sku_name'],$quantity,$units,$quantity_kg_ltr);
+                        $i++;
+                    }
                 }
+                elseif($role_id == 9 ||( $role_id == 8 && $checked_type == 'distributor')){
+
+
+                    $pyh_stock['head'] =array('Sr. No.','Action','Month Year','Latest Updated By','Entry Date','Product SKU Code','Product SKU Name','Quantity','Units','Qty Kg/Ltr');
+                    $pyh_stock['count'] = count($pyh_stock['head']);
+
+                    if($page != null || $page != ""){
+
+                        $i = $page*10 - 9;
+
+                    }
+                    else{
+                        $i=1;
+                    }
+
+                    foreach($pyh_stock_details['result'] as $rd )
+                    {
+                        $product_sku_id='<div class="prd_'.$rd["stock_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
+                        $units = $product_sku_id.'<div class="units_'.$rd["stock_id"].'"><span class="units">'.$rd['unit'].'</span></div>';
+                        $quantity = '<div class="rol_quantity_'.$rd["stock_id"].'"><span class="rol_quantity">'.$rd['quantity'].'</span></div>';
+                        $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["stock_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['qty_kgl'].'</span></div>';
+
+
+                        $month=strtotime($rd['stock_month']);
+                        $month=date('F - Y',$month);
+
+                        $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['display_name'],$rd['created_on'],$rd['product_sku_code'],$rd['product_sku_name'],$quantity,$units,$quantity_kg_ltr);
+                        $i++;
+                    }
+                }
+                $pyh_stock['action'] ='is_action';
+                $pyh_stock['edit'] ='is_edit';
+                $pyh_stock['delete'] ='is_delete';
+                $pyh_stock['pagination'] = $pyh_stock_details['pagination'];
+                return $pyh_stock;
             }
-            elseif($role_id == 9 ||( $role_id == 8 && $checked_type == 'distributor')){
-
-
-                $pyh_stock['head'] =array('Sr. No.','Action','Month Year','Latest Updated By','Entry Date','Product SKU Code','Product SKU Name','Quantity','Units','Qty Kg/Ltr');
-                $pyh_stock['count'] = count($pyh_stock['head']);
-
-                if($page != null || $page != ""){
-
-                    $i = $page*10 - 9;
-
-                }
-                else{
-                    $i=1;
-                }
-
-                foreach($pyh_stock_details['result'] as $rd )
-                {
-                    $product_sku_id='<div class="prd_'.$rd["stock_id"].'"><span class="prd_sku" style="display:none;" >'.$rd['product_sku_id'].'</span></div>';
-                    $units = $product_sku_id.'<div class="units_'.$rd["stock_id"].'"><span class="units">'.$rd['unit'].'</span></div>';
-                    $quantity = '<div class="rol_quantity_'.$rd["stock_id"].'"><span class="rol_quantity">'.$rd['quantity'].'</span></div>';
-                    $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_'.$rd["stock_id"].'"><span class="rol_quantity_kg_ltr">'.$rd['qty_kgl'].'</span></div>';
-
-
-                    $month=strtotime($rd['stock_month']);
-                    $month=date('F - Y',$month);
-
-                    $pyh_stock['row'][]= array($i,$rd['stock_id'],$month,$rd['display_name'],$rd['created_on'],$rd['product_sku_code'],$rd['product_sku_name'],$quantity,$units,$quantity_kg_ltr);
-                    $i++;
-                }
-            }
-            $pyh_stock['action'] ='is_action';
-            $pyh_stock['edit'] ='is_edit';
-            $pyh_stock['delete'] ='is_delete';
-            $pyh_stock['pagination'] = $pyh_stock_details['pagination'];
-            return $pyh_stock;
         }
     }
 
@@ -1835,7 +1842,8 @@ class Ishop_model extends BF_Model
                     );
                 }
                 $this->db->where('stock_id',$product[0]['stock_id']);
-                $this->db->update('ishop_physical_stock', $physical_stock_update_data);
+
+                $id = $this->db->update('ishop_physical_stock', $physical_stock_update_data);
             }
             else{
                 if($login_customer_role == 8)
@@ -1901,8 +1909,9 @@ class Ishop_model extends BF_Model
                     );
                 }
 
-                $this->db->insert('ishop_physical_stock', $physical_stock_data);
+                $id = $this->db->insert('ishop_physical_stock', $physical_stock_data);
             }
+            return $id;
         }
         else{
             if($xl_data !='' || $xl_data != null)
@@ -2092,13 +2101,22 @@ class Ishop_model extends BF_Model
         }
     }
 
-    public function update_physical_stock_detail($user_id,$country_id)
+    public function update_physical_stock_detail($user_id,$country_id,$web_service=null)
     {
-        $stock_id = $this->input->post("stock_id");
-        $units = $this->input->post("units");
-        $quantity = $this->input->post("quantity");
-        $qty_kg_ltr = $this->input->post("rol_quantity_kg_ltr");
-
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
+        {
+            $stock_id = explode(',',$this->input->post("stock_id"));
+            $units = explode(',',$this->input->post("units"));
+            $quantity = explode(',',$this->input->post("quantity"));
+            $qty_kg_ltr = explode(',',$this->input->post("rol_quantity_kg_ltr"));
+        }
+        else
+        {
+            $stock_id = $this->input->post("stock_id");
+            $units = $this->input->post("units");
+            $quantity = $this->input->post("quantity");
+            $qty_kg_ltr = $this->input->post("rol_quantity_kg_ltr");
+        }
 
         if(isset($stock_id) && !empty($stock_id))
         {
@@ -2113,9 +2131,10 @@ class Ishop_model extends BF_Model
                 );
 
                 $this->db->where('stock_id',$stock_id[$k]);
-                $this->db->update('ishop_physical_stock',$stock_update);
+                $id = $this->db->update('ishop_physical_stock',$stock_update);
             }
         }
+        return $id;
     }
 
     public function delete_physical_stock_details($stock_id)
@@ -4278,7 +4297,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
      * @ Function Return 	: Json
      * */
     
-    public function get_prespective_order($from_date,$todate,$loginusertype,$loginuserid,$page=null) {
+    public function get_prespective_order($from_date,$todate,$loginusertype,$loginuserid,$page=null,$web_service=null) {
 
         $sql ='SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1 ';
         $sql .= ' FROM bf_ishop_orders as bio ';
@@ -4297,41 +4316,41 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
 
         $sql .= 'ORDER BY order_date DESC ';
 
-        $prespective_order =  $this->grid->get_result_res($sql);
-       // testdata($prespective_order);
-      //  $prespective_order = $this->db->get()->result_array();
-        
-      //  echo $this->db->last_query();
-        
-     //   echo "<pre>";
-     //   print_r($prespective_order);//die;
-        
-        if(isset($prespective_order['result']) && !empty($prespective_order['result']))
-        {
-            
-            if($loginusertype == 9){
-                $head_data = "Retailer Name";
-            }
-            else{
-                $head_data = "Farmer Name";
-            }
-            
-            $prespective['head'] =array('Sr. No.','Entered By','PO No','OTN','Date Of Entry',$head_data,'Address','Mobile No.','Read');
-            $prespective['count'] = count($prespective['head']);
-            if($page != null || $page != ""){
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $prespective_order_data = $info->result_array();
+            return $prespective_order_data;
+            //$orderdata = array('result'=>$order_data);
+            // var_dump($product_detail);die;
+        } else {
+            $prespective_order =  $this->grid->get_result_res($sql);
 
-                $i = $page*10 - 9;
-
-            }
-            else{
-                $i=1;
-            }
-
-            foreach($prespective_order['result'] as $po )
+            if(isset($prespective_order['result']) && !empty($prespective_order['result']))
             {
-                //$read_status = "";
-               // if($loginusertype == 9){
-                
+
+                if($loginusertype == 9){
+                    $head_data = "Retailer Name";
+                }
+                else{
+                    $head_data = "Farmer Name";
+                }
+
+                $prespective['head'] =array('Sr. No.','Entered By','PO No','OTN','Date Of Entry',$head_data,'Address','Mobile No.','Read');
+                $prespective['count'] = count($prespective['head']);
+                if($page != null || $page != ""){
+
+                    $i = $page*10 - 9;
+
+                }
+                else{
+                    $i=1;
+                }
+
+                foreach($prespective_order['result'] as $po )
+                {
+                    //$read_status = "";
+                    // if($loginusertype == 9){
+
                     if($po['read_status'] == 0){
                         $read_status = "<a class='read_".$po['order_id']."' href='javascript:void(0);' onclick = 'mark_as_read(".$po['order_id'].");' >Mark as Read</a>";
                     }
@@ -4339,27 +4358,28 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         $read_status = "<a class='unread_".$po['order_id']."'  href='javascript:void(0);'  onclick = 'mark_as_unread(".$po['order_id'].");'>Mark as Unread</a>";
                     }
 
-               // }
-              //  else if($loginusertype == 10){
-              //
-              //      if($po['read_status'] == 0){
-              //          $read_status = "Unread";
-              //      }
-             //       else{
-             //           $read_status = "Read";
-              //      }
+                    // }
+                    //  else if($loginusertype == 10){
+                    //
+                    //      if($po['read_status'] == 0){
+                    //          $read_status = "Unread";
+                    //      }
+                    //       else{
+                    //           $read_status = "Read";
+                    //      }
 
-              //  }
+                    //  }
 
-                $otn = '<div class="eye_i" prdid ="'.$po['order_id'].'"><a href="javascript:void(0);">'.$po['order_tracking_no'].'</a></div>';
-                
-                
-                $prespective['row'][]= array($i,$po['ot_from_fname1']." ".$po['ot_from_mname1']." ".$po['ot_from_lname1'],$po['PO_no'],$otn,date("Y-m-d",strtotime($po['order_date'])),$po['from_fname']." ".$po['from_mname']." ".$po['from_lname'],$po['address'],$po['primary_mobile_no'],$read_status);
-                $i++;
+                    $otn = '<div class="eye_i" prdid ="'.$po['order_id'].'"><a href="javascript:void(0);">'.$po['order_tracking_no'].'</a></div>';
+
+
+                    $prespective['row'][]= array($i,$po['ot_from_fname1']." ".$po['ot_from_mname1']." ".$po['ot_from_lname1'],$po['PO_no'],$otn,date("Y-m-d",strtotime($po['order_date'])),$po['from_fname']." ".$po['from_mname']." ".$po['from_lname'],$po['address'],$po['primary_mobile_no'],$read_status);
+                    $i++;
+                }
+                $prespective['eye']= "";
+                $prespective['pagination'] = $prespective_order['pagination'];
+                return $prespective;
             }
-            $prespective['eye']= "";
-            $prespective['pagination'] = $prespective_order['pagination'];
-            return $prespective;
         }
        
     }

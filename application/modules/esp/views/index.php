@@ -43,12 +43,7 @@ echo form_open('',$attributes); ?>
             <div class="clearfix"></div>
             
             <div class="col-md-2_ tp_form" id="pbg_data">
-                <div class="form-group">
-                    <label>PBG Grown<span style="color: red">*</span></label>
-                    <select class="selectpicker" id="pbg_id" name="pbg_data" data-live-search="true">
-
-                    </select>
-                </div>
+                
             </div>
             
             
