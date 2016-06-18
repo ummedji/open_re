@@ -73,9 +73,15 @@
                                         <?php
                                     }
                                     ?>
-                                    <?php if($current_user->role_id == 7 || $current_user->role_id == 8 || $current_user->role_id == 9) {
+                                    <?php if($current_user->role_id == 7 || $current_user->role_id == 8) {
                                         ?>
                                         <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='target') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/target') ?>">TARGET</a></li>
+                                        <?php
+                                    }
+                                    if($current_user->role_id == 9)
+                                    {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='target_view') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/target_view') ?>">TARGET</a></li>
                                         <?php
                                     }
                                     ?>

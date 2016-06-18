@@ -90,6 +90,7 @@ function submitForm() {
         case'order_status': val = $("#order_status");break;
         case'po_acknowledgement': val = $("#po_acknowledgement");break;
         case'prespective_order': val = $("#prespective_order");break;
+        case'target': val = $("#target");break;
        /* default  : val = $("#form_ntfdetails");break;*/
     }
 

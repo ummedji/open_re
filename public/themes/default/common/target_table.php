@@ -1,13 +1,14 @@
 <?php
+//testdata($target_data);
 $action_data = $this->uri->segment(2);
 
-if(isset($target_data) && count($target_data)>0) { ?>
-        
+if(isset($target_data) && count($target_data)>0) {
+
+    ?>
+
 <table class="col-md-12 table-bordered table-striped table-condensed cf">
         <thead class="cf target_head_show_data">
-           <tr> 
-
-
+           <tr>
                 <th>Sr. No. <span class="rts_bordet"></span></th>
 
                 <th class="numeric">SKU Code <span class="rts_bordet"></span></th>
@@ -18,14 +19,17 @@ if(isset($target_data) && count($target_data)>0) { ?>
                         <th class="numeric"><?php echo date("Y-M",strtotime($value)); ?><span class="rts_bordet">(Kg/Ltr)</span></th>
                     <?php } ?>
                 <?php } ?>
-            
-
            </tr>
         </thead>
         <tbody id="target_data">
-            <?php 
-                $i = 1;
-                
+            <?php
+              /*  if($page != null || $page != ""){
+                    $i = $page*10 - 9;
+                }
+                else{
+                    $i=1;
+                }*/
+            $i=1;
                 foreach($target_data as $key=>$data){
                     $product_data = explode("-",$key);
                     ?>
@@ -36,18 +40,24 @@ if(isset($target_data) && count($target_data)>0) { ?>
                        <?php foreach($data as $k=>$q_data){ ?>
                             <td><?php echo $q_data; ?></td>
                        <?php } ?>
-                        
-                        
                     </tr>
                  <?php   
                     $i++;
                 }
-
             ?>
         </tbody>
+      <!--  <tfoot>
+        <tr>
+            <td colspan='<?php /*echo $td*/?>'>
+                <?php
+/*                if (isset($pagination)) {
+                    echo $pagination;
+                }
+                */?>
+            </td>
+        </tr>
+        </tfoot>-->
     </table>
-
-
 <?php }
     else{
         ?>

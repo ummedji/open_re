@@ -86,6 +86,82 @@ class Web_service extends Front_Controller
         $this->session->set_userdata('site_lang', $default_language);
     }
 
+    /**
+     * @ Function Name        : getPrimarySalesInvoices
+     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * */
+    public function getPrimarySalesInvoices2()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $by_distributor = $this->input->get_post('by_distributor');
+        $by_invoice_no = $this->input->get_post('by_invoice_no');
+
+        if(isset($user_id))
+        {
+            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
+            if(!empty($primary_sales_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $primary_sales_details;
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $result['total_rows'] = $total_rows;
+                // For Pagination
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getPrimarySalesProductDetails
+     * @ Function Params    : primary_sales_id (POST)
+     * @ Function Purpose    : Get Primary Sales Product Details Data
+     * */
+    public function getPrimarySalesProductDetails2()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $primary_sales_id = $this->input->get_post('primary_sales_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($primary_sales_id) && !empty($primary_sales_id))
+        {
+            $primary_sales_product_details = $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id,'web_service');
+            if(!empty($primary_sales_product_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $primary_sales_product_details;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+
 
     /**
      * @ Function Name      : login
@@ -274,9 +350,9 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : getPrimarySalesInvoices
-     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
-     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * @ Function Name        : getPrimarySalesProductDetailsMix
+     * @ Function Params    : primary_sales_id (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice and Product Details Data
      * */
     public function getPrimarySalesInvoices()
     {
@@ -291,85 +367,13 @@ class Web_service extends Front_Controller
             $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
             if(!empty($primary_sales_details))
             {
-                $result['status'] = true;
-                $result['message'] = 'Success';
-                $result['data'] = $primary_sales_details;
                 // For Pagination
                 $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
                 $total_rows = $count->result()[0]->total_rows;
-                $result['total_rows'] = $total_rows;
-                // For Pagination
-            }
-            else
-            {
-                $result['status'] = false;
-                $result['message'] = 'No Records Found.';
-            }
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
-     * @ Function Name        : getPrimarySalesProductDetails
-     * @ Function Params    : primary_sales_id (POST)
-     * @ Function Purpose    : Get Primary Sales Product Details Data
-     * */
-    public function getPrimarySalesProductDetails()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $primary_sales_id = $this->input->get_post('primary_sales_id');
-
-        if(isset($user_id) && !empty($user_id) && isset($primary_sales_id) && !empty($primary_sales_id))
-        {
-            $primary_sales_product_details = $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id,'web_service');
-            if(!empty($primary_sales_product_details))
-            {
-                $result['status'] = true;
-                $result['message'] = 'Success';
-                $result['data'] = $primary_sales_product_details;
-            }
-            else
-            {
-                $result['status'] = false;
-                $result['message'] = 'No Records Found.';
-            }
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
-     * @ Function Name        : getPrimarySalesProductDetailsMix
-     * @ Function Params    : primary_sales_id (POST)
-     * @ Function Purpose    : Get Primary Sales Invoice and Product Details Data
-     * */
-    public function getPrimarySalesInvoicesMix()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
-        $by_distributor = $this->input->get_post('by_distributor');
-        $by_invoice_no = $this->input->get_post('by_invoice_no');
-
-        if(isset($user_id))
-        {
-            $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
-            if(!empty($primary_sales_details))
-            {
-                // For Pagination
-                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
-                $total_rows = $count->result()[0]->total_rows;
-                $pages = $total_rows/2;
+                $pages = $total_rows/10;
                 $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
                 // For Pagination
 
                 $final_array = array();
@@ -383,8 +387,6 @@ class Web_service extends Front_Controller
                 $result['status'] = true;
                 $result['message'] = 'Success';
                 $result['data'] = $final_array;
-                $result['total_rows'] = $total_rows;
-                $result['pages'] = $pages;
             }
             else
             {
@@ -985,38 +987,6 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : saveTarget
-     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
-     * @ Function Purpose    : Save Primary Sales Data
-     * */
-    public function saveTarget()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-
-        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
-        {
-            $id = $this->ishop_model->add_target_data($this->input->post(),$user_id,'web_service');
-            if($id)
-            {
-                $result['status'] = true;
-                $result['message'] = 'Saved Successfully.';
-            }
-            else
-            {
-                $result['status'] = false;
-                $result['message'] = 'Fail';
-            }
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
      * @ Function Name        : getOrderApproval
      * @ Function Params    : user_id,country_id (POST)
      * @ Function Purpose    : Get Rol and Drop Down Data
@@ -1476,6 +1446,135 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+    /**
+     * @ Function Name        : getTarget
+     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * */
+    public function getTarget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $checked_type = $this->input->get_post('checked_type');
+
+        if(isset($user_id))
+        {
+            $target_data = $this->ishop_model->get_target_details($user_id,$country_id,$checked_type,null,'web_service');
+            if(!empty($target_data))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $target_data;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : saveTarget
+     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
+     * @ Function Purpose    : Save Primary Sales Data
+     * */
+    public function saveTarget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $id = $this->ishop_model->add_target_data($this->input->post(),$user_id,'web_service',$country_id);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : editTarget
+     * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
+     * @ Function Purpose    : Save ROL Data
+     * */
+    public function editTarget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->update_target_detail($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    /**
+     * @ Function Name        : addUploadData
+     * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
+     * @ Function Purpose    : Save ROL Data
+     * */
+    /*public function addUploadData()
+    {
+        $user_id = $this->input->get_post('user_id');
+        if(isset($user_id))
+        {
+            $id = modules::run('ishop/ishop/upload_data', 'web_service',$_POST);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }*/
 
 
     /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */

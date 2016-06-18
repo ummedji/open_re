@@ -40,11 +40,7 @@
     
      if(isset($target_data))
     {
-        $action_segment = $this->uri->segment(2);
-       
-        if($action_segment == "target"){
-            echo theme_view('common/target_table');
-        }
+        echo theme_view('common/target_table');
     }
     
     if(isset($prespective_order_data))

@@ -333,7 +333,7 @@ class Ishop_model extends BF_Model
         if(!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
         {
             // For Pagination
-            $limit = 2;
+            $limit = 10;
             $pagenum = $this->input->get_post('page');
             $page = !empty($pagenum) ? $pagenum : 1;
             $offset = $page*$limit-$limit;
@@ -5486,43 +5486,64 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
     }
     
-    public function add_target_data($target_data,$logined_user_id,$web_service=null) {
+    public function add_target_data($target_data,$user_id,$web_service=null,$country_id=null,$role_id=null) {
 
-        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-            $target_data["customer_data"] = explode(',',$target_data["customer_data"]);
-            $target_data["product_sku_id"] = explode(',',$target_data["product_sku_id"]);
-            $target_data["quantity"] = explode(',',$target_data["quantity"]);
-        }
-        
-       // $month_data = explode("/",$target_data["month_data"]);
-            
-        if(isset($target_data["customer_data"]) && !empty($target_data["customer_data"])){
-            
-            $month_data = $target_data["month_data"]."-01";
-            
-            foreach($target_data["customer_data"] as $key => $value){
-                
-                $target_array = array();
-                
-                $target_array["month_data"] = $month_data;
-                $target_array["customer_id"] = $value;
-                $target_array["product_sku_id"] = $target_data["product_sku_id"][$key];
-                $target_array["quantity"] = $target_data["quantity"][$key];
-                
-                $target_array["created_on"] = date("Y-m-d h:i:s");
-                $target_array["created_by_user"] = $logined_user_id;
 
-                $check_already_data = $this->check_target_data($target_array["product_sku_id"],$target_array["month_data"],$target_array["customer_id"]);
-                if($check_already_data == 0){
-                    $this->db->insert('bf_ishop_target', $target_array);
+        if(isset($target_data) && !empty($target_data)){
+            //testdata($target_data);
+            if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                $month_data = $target_data["month"]."-01";
+                $customers_id = $target_data['customer_id'];
+            }
+            else
+            {
+                if($role_id== 8 ){
+                    $target_data['radio1'] = 'distributor';
                 }
-                else{
-
-                    $this->db->where('ishop_target_id', $check_already_data);
-                    $id = $this->db->update('bf_ishop_target',$target_array);
-
-                    return $id;
+                if($target_data['radio1'] == 'distributor'){
+                    $month_data = $target_data["month_data"]."-01";
+                    $customers_id = isset($target_data['distributor_distributor_id']) ? $target_data['distributor_distributor_id'] : '';
                 }
+                elseif($target_data['radio1'] == 'retailer'){
+                    $month_data = $target_data["ret_month_data"]."-01";
+                    $customers_id = $target_data['retailer_id'];
+                }
+            }
+
+            $prod_sku=$target_data['prod_sku'];
+            $quantity=$target_data['quantity'];
+
+
+            $target = array(
+                'month_data'=>$month_data,
+                'customer_id' => (isset($customers_id) && !empty($customers_id)) ? $customers_id :'',
+                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
+                'created_by_user' => $user_id,
+                'country_id' => $country_id,
+                'status' => '1',
+                'created_on' => date('Y-m-d H:i:s')
+            );
+
+            $check_already_data = $this->check_target_data($prod_sku,$month_data,$customers_id);
+            if($check_already_data == 0){
+                $this->db->insert('ishop_target', $target);
+            }
+            else{
+                $target_update_data = array(
+                    'month_data'=>$month_data,
+                    'customer_id' => $customers_id,
+                    'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                    'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
+                    'modified_by_user' => $user_id,
+                    'country_id' => $country_id,
+                    'status' => '1',
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+
+                $this->db->where('ishop_target_id', $check_already_data);
+                $id = $this->db->update('bf_ishop_target',$target_update_data);
+                return $id;
             }
         }
         else{
@@ -5539,7 +5560,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 $target_array["quantity"] = $value[3];
                 
                 $target_array["created_on"] = date("Y-m-d h:i:s");
-                $target_array["created_by_user"] = $logined_user_id;
+                $target_array["created_by_user"] = $user_id;
 
                 $id = $this->db->insert('bf_ishop_target', $target_array);
                 return $id;
@@ -5548,59 +5569,180 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         }
         
     }
-    
+
     public function get_target_data($selecteddata) {
-        
+
         $month_data = $selecteddata["month_data"]."-01";
-        
+
         $month_data = date("m",strtotime($selecteddata["month_data"]));
-        
+
         $customer_data = $selecteddata['distributor_data'];
         $geo_level_data = $selecteddata['geo_level_1_data'];
-        
-        
+
+
         $this->db->select('bmpgd.political_geography_name, bu.user_code, bmupd.first_name, bmupd.middle_name, bmupd.last_name, bmpsc.product_sku_name,bit.quantity, SUM(bipsp.dispatched_quantity) as total_qty');
         $this->db->from('bf_ishop_target as bit');
-        
+
         $this->db->join("bf_users as bu","bu.id = bit.customer_id");
         $this->db->join("bf_master_user_personal_details as bmupd","bmupd.user_id = bu.id");
         $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id");
-        
+
         $this->db->join("bf_master_political_geography_details as bmpgd","bmpgd.political_geo_id = bmucd.geo_level_id1");
         $this->db->join("bf_master_product_sku_country as bmpsc","bmpsc.product_sku_country_id = bit.product_sku_id");
-        
+
         $this->db->join("bf_ishop_primary_sales as bips","bips.customer_id = bit.customer_id");
-         
+
         $this->db->join("bf_ishop_primary_sales_product as bipsp","bipsp.primary_sales_id = bips.primary_sales_id AND `bipsp`.`product_sku_id` = `bit`.`product_sku_id` ");
-        
+
         $this->db->where('DATE_FORMAT(bips.invoice_date,"%m")',$month_data);
-        
+
         $this->db->where('DATE_FORMAT(bit.month_data,"%m")',$month_data);
-        
-        
+
+
         $this->db->where('bit.customer_id',$customer_data);
-       
-        $this->db->group_by("bit.product_sku_id"); 
-        
+
+        $this->db->group_by("bit.product_sku_id");
+
         $target_data = $this->db->get()->result_array();
-        
-       // echo $this->db->last_query();die;
-        
+
+        // echo $this->db->last_query();die;
+
         if(isset($target_data) && !empty($target_data)) {
             return $target_data;
         } else{
             return false;
         }
-        
+
     }
     
-    public function get_target_monthly_data($data) {
+    public function get_target_details($user_id,$country_id,$checked_type=null,$page=null,$web_service=null) {
+        //$sql =' SELECT * ';
+        $sql =' SELECT mpgd.political_geography_name,it.ishop_target_id,bu.user_code,bu.display_name,mpsc.product_sku_name,it.quantity ';
+        $sql .= ' FROM bf_ishop_target AS it ';
+        $sql .= ' JOIN bf_users AS bu  ON (bu.id = it.customer_id) ';
+        $sql .= ' JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = it.product_sku_id) ';
+        $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
+        $sql .= ' JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = mucd.geo_level_id1) ';
+        $sql .= 'WHERE 1 ';
+        if($checked_type == "retailer") {
+            $sql .= ' AND bu.role_id =10 ';
+        }
+        if($checked_type == "distributor") {
+            $sql .= ' AND bu.role_id =9 ';
+        }
+       /* if($logined_user_role == 10 || $logined_user_role== 9)
+        {
+            $sql .= 'AND ir.customer_id ='.$user_id.' ';
+        }*/
+
+        //   $sql .= 'AND ir.created_by_user ='.$user_id.' ';
+        $sql .= 'AND it.country_id ='.$country_id.' ';
+        $sql .= 'ORDER BY it.ishop_target_id DESC ';
+
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $target_details = $info->result_array();
+            return $target_details;
+        }
+        else
+        {
+            $target_details =  $this->grid->get_result_res($sql);
+            //testdata($target_details);
+
+            if(isset($target_details['result']) && !empty($target_details['result']))
+            {
+                if($checked_type == 'retailer'){
+                    $target['head'] =array('Sr. No.','Action','Geo','Retailer Code','Retailer Name','Product SKU Name','Quantity');
+                    $target['count'] = count($target['head']);
+                }
+                else{
+                    $target['head'] =array('Sr. No.','Action','Geo','Distributor Code','Distributor Name','Product SKU Name','Quantity');
+                    $target['count'] = count($target['head']);
+                }
+
+                if($page != null || $page != ""){
+
+                    $i = $page*10 - 9;
+
+                }
+                else{
+                    $i=1;
+                }
+                foreach($target_details['result'] as $rd )
+                {
+                    $quantity = '<div class="quantity_'.$rd["ishop_target_id"].'"><span class="quantity">'.$rd['quantity'].'</span></div>';
+
+                    $target['row'][]= array($i,$rd['ishop_target_id'],$rd['political_geography_name'],$rd['user_code'],$rd['display_name'],$rd['product_sku_name'],$quantity,);
+                    $i++;
+                }
+
+            }
+            $target['pagination'] = $target_details['pagination'];
+            $target['action'] ='is_action';
+            $target['edit'] ='is_edit';
+            $target['delete'] ='is_delete';
+            //   testdata($target);
+            return $target;
+        }
+
+    }
+
+
+    public function update_target_detail($user_id,$country_id,$web_service=null)
+    {
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
+        {
+            $target_id = explode(',',$this->input->post("target_id"));
+            $quantity = explode(',',$this->input->post("quantity"));
+        }
+        else
+        {
+            $target_id = $this->input->post("target_id");
+            $quantity = $this->input->post("quantity");
+        }
+
+        if(isset($target_id) && !empty($target_id))
+        {
+            foreach($target_id as $k=>$ti)
+            {
+                $target_updates = array(
+                    'quantity'=>$quantity[$k],
+                    'modified_by_user' => $user_id,
+                    'country_id' => $country_id,
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+
+                $this->db->where('ishop_target_id',$target_id[$k]);
+                $id = $this->db->update('ishop_target',$target_updates);
+            }
+        }
+        return $id;
+    }
+
+    public function delete_target_detail($target_id)
+    {
+        $this->db->where('ishop_target_id', $target_id);
+        $this->db->delete('ishop_target');
+    }
+    
+    public function get_target_monthly_data($data,$page=null) {
         
         $from_date = $data['from_month_data']."-01";
         $to_date = $data['to_month_data']."-01";
         $login_user_id = $data['login_customer_id'];
-        
-        $this->db->select('*');
+
+
+        $sql =' SELECT * ';
+        $sql .= ' FROM bf_ishop_target as bit ';
+        $sql .= ' JOIN bf_master_product_sku_country as bmpsc ON (bmpsc.product_sku_country_id = bit.product_sku_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND month_data BETWEEN '.'"'.$from_date.'"'.' AND '.'"'.$to_date.'"'.' ';
+        $sql .= ' AND customer_id ='.$login_user_id.' ';
+        $target_data =  $this->grid->get_result_res($sql);
+
+       /* $this->db->select('*');
         $this->db->from('bf_ishop_target as bit');
         $this->db->join("bf_master_product_sku_country as bmpsc","bmpsc.product_sku_country_id = bit.product_sku_id");
         
@@ -5609,7 +5751,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
         $this->db->where('customer_id',$login_user_id);
      
-        $target_data = $this->db->get()->result_array();
+        $target_data = $this->db->get()->result_array();*/
        // echo $this->db->last_query();
       //  echo "<pre>";print_r($target_data);//die;
         
@@ -5627,11 +5769,6 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                 $month = date('Y-m', $time);
                 $total = date('t', $time);
 
-               /* $output[] = array(
-                    'month' => $month,
-                    'total' => $total,
-                );*/
-
                 $month_output[$month."-01"] = "";
                         
                 $time = strtotime('+1 month', $time);
@@ -5642,10 +5779,10 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         
       //  dumpme($target_data);
         
-        if(isset($target_data) && !empty($target_data)) 
+        if(isset($target_data['result']) && !empty($target_data['result']))
         {            
             $final_array = array();            
-            foreach($target_data as $key=>$data)
+            foreach($target_data['result'] as $key=>$data)
             {
                 foreach($month_output as $k =>$val)
                     {
@@ -5659,11 +5796,14 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
                         $final_array[$data['product_sku_id']."-".$data['product_sort_name']."-".$data['product_sku_name']][$k] = $data['quantity'];
                     }                    
                 }                
-            }           
-            
+            }
+           // $final_array['pagination'] = $target_data['pagination'];
+          //  $final_array['page'] = $page;
+
         }
-        
+        //testdata($final_array);
         if(isset($final_array) && !empty($final_array)) {
+
             return $final_array;
         } else{
             return 0;

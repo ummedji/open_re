@@ -2189,84 +2189,31 @@ class Ishop extends Front_Controller
             Assets::add_module_js('ishop', 'target.js');
             
             $user= $this->auth->user();
-            
-            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
-            
-            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
-            
             $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
             
             $logined_user_type = $user->role_id;
-            $logined_user_id = $user->id;
-            $logined_user_countryid = $user->country_id;
-            
             $get_geo_level_data = "";
             $action_data = $this->uri->segment(2);
-            
-            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
-            
-            if($logined_user_type == 7){
-                
-                //FOR HO
-                $default_type_selected = 9;
-                
-                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            
-                
-            }
-            elseif($logined_user_type == 8){
-            
-                //FOR FO
-                $default_type_selected = 9; 
-                
-                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            
-            }
-            elseif($logined_user_type == 9){
-            
-                //FOR DISTRIBUTOR
-                $default_type_selected = null; 
-                
-                if(isset($_POST) && !empty($_POST)){
-                    
-                     $target_data = $this->ishop_model->get_target_monthly_data($_POST);
-                     
-                      $target_month_data = $this->ishop_model->get_monthly_data($_POST);
-                    
-                       Template::set('target_data',$target_data);
-                       Template::set('month_data',$target_month_data);
-                      
-              /*
-                    echo "<pre>";
-                    print_r($_POST);
-                    print_r($target_data);
-                    print_r($target_month_data);
-                    
-                    die; */
-                }
-                
-            }
-            elseif($logined_user_type == 10){
-            
-                //FOR RETAILER
-                $default_type_selected = null; 
-                
-            }
-           
-          //  echo "<pre>";
-          //  print_r($get_geo_level_data);
-          //  die;
-            
-		  //var_dump($distributor);die;
+
+			$checked_type=null;
+
+			$checked_type = (isset($_POST['checked_type']) && !empty($_POST['checked_type']) ) ? $_POST['checked_type'] :'distributor';
+
+			$default_type_selected = 9;
+			$get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+
+			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$target_data= $this->ishop_model->get_target_details($user->id,$user->country_id,$checked_type,$page);
+
+			Template::set('td', $target_data['count']);
+			Template::set('pagination', (isset($target_data['pagination']) && !empty($target_data['pagination'])) ? $target_data['pagination'] : '' );
+
+			Template::set('table', $target_data);
+
             Template::set('login_customer_type',$logined_user_type);
-            Template::set('login_customer_id',$logined_user_id);
-            Template::set('login_customer_countryid',$logined_user_countryid);
-            
-            Template::set('distributor',$distributor);
-            Template::set('retailer',$retailer);
+
+            Template::set('current_user',$user);
             Template::set('product_sku',$product_sku);
-            
-            
             Template::set('geo_level_data',$get_geo_level_data);
             
             Template::set_view('ishop/target');
@@ -2274,7 +2221,29 @@ class Ishop extends Front_Controller
             
             
         }
-        
+
+		public function update_target_details()
+		{
+			//testdata($_POST);
+			$user = $this->auth->user();
+			$this->ishop_model->update_target_detail($user->id,$user->country_id);
+		}
+
+		public function add_target_data() {
+
+
+			$target_data = $_POST;
+			$user= $this->auth->user();
+			$set_target_data = $this->ishop_model->add_target_data($target_data,$user->id,null,$user->country_id,$user->role_id);
+			redirect("ishop/target");
+		}
+		public function delete_target_details()
+		{
+			//testdata($_POST);
+			$target_id = isset($_POST['target_id']) ? $_POST['target_id'] : '';
+			$this->ishop_model->delete_target_detail($target_id);
+		}
+
         public function get_customer_code() {
             
             $id = $_POST["id"];
@@ -2302,25 +2271,48 @@ class Ishop extends Front_Controller
             die;
         }
         
-        public function add_target_data() {
-            
-            $target_data = $_POST;
-            $user= $this->auth->user();
-            $logined_user_id = $user->id;
-            $set_target_data = $this->ishop_model->add_target_data($target_data,$logined_user_id);
-            redirect("ishop/target");
-        }
+
+
+	public function target_view()
+	{
+		Assets::add_module_js('ishop', 'target_view.js');
+		$user= $this->auth->user();
+
+		Template::set('current_user',$user);
+		Template::set_view('ishop/target_view');
+		Template::render();
+	}
+
+	public function get_target_view()
+	{
+		$user= $this->auth->user();
+		if(isset($_POST) && !empty($_POST)){
+		//	testdata($_POST);
+			$target_data = $this->ishop_model->get_target_monthly_data($_POST);
+			$target_month_data = $this->ishop_model->get_monthly_data($_POST);
+			//dumpme($target_month_data);
+			//testdata($target_data);
+			Template::set('td', 6);
+			Template::set('pagination', (isset($target_data['pagination']) && !empty($target_data['pagination'])) ? $target_data['pagination'] : '' );
+
+
+			Template::set('target_data',$target_data);
+			Template::set('month_data',$target_month_data);
+
+		}
+		Template::set('current_user',$user);
+		Template::set_view('ishop/target_view');
+		Template::render();
+	}
         
-        public function target_view() {
+       /* public function target_view() {
             
-            Assets::add_module_js('ishop', 'target.js');
+            Assets::add_module_js('ishop', 'target_view.js');
             
             $user= $this->auth->user();
             
             $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
-            
-            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
-            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id);
             $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
             
             $logined_user_type = $user->role_id;
@@ -2336,22 +2328,15 @@ class Ishop extends Front_Controller
                 
                 //FOR HO
                 $default_type_selected = 9;
-                
                 $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            
-                
             }
             elseif($logined_user_type == 8){
             
                 //FOR FO
-                $default_type_selected = 9; 
-                
+                $default_type_selected = 9;
                 $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            
-                
             }
             elseif($logined_user_type == 9){
-            
                 //FOR DISTRIBUTOR
                 $default_type_selected = null; 
             }
@@ -2389,7 +2374,7 @@ class Ishop extends Front_Controller
             Template::render();
             
             
-        }
+        }*/
         
         //BUDGET
         

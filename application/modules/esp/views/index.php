@@ -72,6 +72,9 @@ echo form_open('',$attributes); ?>
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
+        <div id="forecast_data">
+            
+        </div>
         
     </div>
 </div>

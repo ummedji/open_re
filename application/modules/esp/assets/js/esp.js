@@ -79,7 +79,16 @@ function get_pbg_product_sku_data(pbg_id){
     
     var from_month = $("input#from_month").val();
     var to_month = $("input#to_month").val();
-        
-    alert(pbg_id+"=="+from_month+"==="+to_month);
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+"esp/get_pbg_sku_data",
+        data: {pbgid:pbg_id,frommonth:from_month,tomonth:to_month},
+        success: function(res){
+            console.log(res);
+            $("div#forecast_data").empty();
+           $("div#forecast_data").html(res); 
+        }
+    });
     
 }

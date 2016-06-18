@@ -10,7 +10,6 @@ if(login_customer_type == 7){
 
 
 $("input.select_customer_type").on("click",function(){
-
     var validator = $( "#rol_limit" ).validate();
     validator.resetForm();
 

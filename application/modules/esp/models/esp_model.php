@@ -47,4 +47,25 @@ class Esp_model extends BF_Model
         
     }
     
+    public function get_pbg_sku_data($pbgid){
+        
+        $this->db->select('bmpsc.product_sku_name,bmpsc.product_sku_country_id');
+        $this->db->from("bf_master_product_sku_country as bmpsc");
+        
+        $this->db->or_where("bmpsc.product_regional_id1",$pbgid);
+        $this->db->or_where("bmpsc.product_regional_id2",$pbgid);
+        $this->db->or_where("bmpsc.product_regional_id3",$pbgid);
+        $this->db->or_where("bmpsc.product_regional_id4",$pbgid);
+        $this->db->or_where("bmpsc.product_regional_id5",$pbgid);
+        $this->db->or_where("bmpsc.product_regional_id6",$pbgid);
+        
+        $pbg_sku_data = $this->db->get()->result_array();
+        
+        if(isset($pbg_sku_data) && !empty($pbg_sku_data)) {
+            return $pbg_sku_data;
+        } else{
+            return 0;
+        }
+    }
+    
 }
