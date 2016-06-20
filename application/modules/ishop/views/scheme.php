@@ -26,7 +26,7 @@ echo form_open('',$attributes); ?>
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                             <label>Geo Level 3<span style="color: red">*</span></label>
-                            <select class="selectpicker" name="region" id="geo_level_rol">
+                            <select class="selectpicker" name="region" id="geo_level_rol" data-live-search="true">
                                 <option value="">Select Geo Location</option>
                             </select>
                         </div>
@@ -34,7 +34,7 @@ echo form_open('',$attributes); ?>
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                             <label>Geo Level 2<span style="color: red">*</span></label>
-                            <select class="selectpicker" name="territory" id="geo_level_1">
+                            <select class="selectpicker" name="territory" id="geo_level_1" data-live-search="true">
                                 <option value="">Select Geo Location</option>
                             </select>
                         </div>
@@ -58,7 +58,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Retailer Name<span style="color: red">*</span></label>
-                        <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme">
+                        <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme" data-live-search="true">
                             <option value="">Select Retailer</option>
                         </select>
                     </div>
@@ -66,7 +66,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Schemes<span style="color: red">*</span></label>
-                        <select class="selectpicker" name="schemes" id="schemes">
+                        <select class="selectpicker" name="schemes" id="schemes" data-live-search="true">
                             <option value="">Select Schemes</option>
                         </select>
                     </div>

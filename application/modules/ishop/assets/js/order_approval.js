@@ -10,6 +10,25 @@ $(document).ready(function(){
     });
 
 
+    var order_approval_view_validators = $("#order_approval").validate({
+        ignore: ".ignore",
+        rules: {
+            form_date:{
+                required: true
+            },
+            to_date:{
+                required: true
+            }
+        },
+        messages: {
+            form_date: {
+                required: "Please Enter From Date."
+            },
+            to_date: {
+                required: "Please Enter To Date."
+            }
+        }
+    });
 
 
     $("#order_approval").on("submit",function(e){
@@ -18,26 +37,22 @@ $(document).ready(function(){
 
         var param = $("#order_approval").serializeArray();
 
-       /* var $valid = $("#order_approval").valid();
+        var $valid = $("#order_approval").valid();
         if(!$valid) {
-            rol_validators.focusInvalid();
+            order_approval_view_validators.focusInvalid();
             return false;
         }
         else
-        {*/
+        {
             $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/order_approval",
                 data: param,
-
                 success: function(resp){
-                    //location.reload();
-
                     $("#middle_container").html(resp);
-
                 }
             });
-       // }
+       }
     });
 
 });

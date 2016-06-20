@@ -184,6 +184,9 @@ class Esp extends Front_Controller
                 $html1 .= '<th>';
                    $html1 .= '<td></td>';
                    foreach($month_data as $monthkey => $monthvalue){
+                       
+                       $html1 .= '<input type="hidden" name="month_data[]" value="'.$monthvalue.'" />';
+                       
                          $html1 .= '<td>Assumption</td><td>Probability</td>';
                    }
             
@@ -197,7 +200,7 @@ class Esp extends Front_Controller
              for($a = 1; $a<=3; $a++){
                 
                 $html1 .= '<tr>';
-                $html1 .= '<td><input type="hidden" name="month_data[]" value="'.$monthvalue.'" /></td><td></td>';
+                $html1 .= '<td></td><td></td>';
                 $j = 1;
                     foreach($month_data as $monthkey => $monthvalue){
                 

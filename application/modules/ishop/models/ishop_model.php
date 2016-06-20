@@ -163,6 +163,7 @@ class Ishop_model extends BF_Model
             $total_amount = array_sum($amount);
 
             $validat = $this->check_valid_primary_sales_data($invoice_no, $order_tracking_no, $PO_no);
+
             if ($validat == 0) {
                 $primary_sales_data = array(
                     'customer_id' => (isset($customer_id) && !empty($customer_id)) ? $customer_id : '',
@@ -4698,6 +4699,19 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     }
 
+
+    public function get_all_pending_data($user_id,$country_id)
+    {
+        $this->db->select('*');
+        $this->db->from('bf_ishop_orders');
+        $this->db->where('order_status');
+        $this->db->where('country_id',$country_id);
+        $this->db->where('order_status','0');
+        $query = $this->db->get();
+        $pending_order = $query->num_rows();
+        return $pending_order;
+    }
+
     /**
      * @ Function Name        : order_status_product_details_view_by_id
      * @ Function Params    : login user type, radio checked(farmer, retailer, distributor), page url, order id
@@ -5005,6 +5019,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $detail_data["order_product_id"] = explode(',', $detail_data["order_product_id"]);
             $detail_data["dispatched_quantity"] = explode(',', $detail_data["dispatched_quantity"]);
+            $detail_data["units"] = explode(',', $detail_data["units"]);
+            $detail_data["quantity"] = explode(',', $detail_data["quantity"]);
+            $detail_data["quantity_kg_ltr"] = explode(',', $detail_data["quantity_kg_ltr"]);
+            $detail_data["amount"] = explode(',', $detail_data["amount"]);
         }
 
         if (!empty($detail_data["order_product_id"])) {

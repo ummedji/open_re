@@ -124,6 +124,7 @@ $(document).on('click', 'div.current_stock_container .edit_i', function () {
     $("div.batch_mfg_date_"+id).empty();
     $("div.batch_mfg_date_"+id).append('<input id="batch_mfg_date_'+id+'"  class="mfg_date" type="text" name="batch_mfg_date[]" value="'+batch_mfg_date+'"/>');
 
+    $(this).prop("disabled",true);
     return false;
 });
 

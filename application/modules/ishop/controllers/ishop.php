@@ -2148,9 +2148,10 @@ class Ishop extends Front_Controller
                   $order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
                   
             }
-            
-             
-            
+
+			$pending_count=$this->ishop_model->get_all_pending_data($user->id,$user->country_id);
+			Template::set('pending_count',$pending_count);
+
           //  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
             if($order_data != ""){
 
@@ -2167,7 +2168,9 @@ class Ishop extends Front_Controller
             Template::render();
            
         }
-        
+
+
+
         public function update_order_approval_detail_data() {
             
             $detail_data = $_POST;

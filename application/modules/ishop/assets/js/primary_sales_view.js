@@ -118,6 +118,7 @@ $(document).on('click', 'div.primary_cont .edit_i', function () {
     $("div.primary_cont div.order_tracking_no_"+id).empty();
     $("div.primary_cont div.order_tracking_no_"+id).append('<input id="order_tracking_no_'+id+'" type="text" name="order_tracking_no[]" value="'+order_tracking_no+'"/>');
 
+    $(this).prop("disabled",true);
     return false;
 });
 
@@ -143,6 +144,7 @@ $(document).on('click', 'div.primary_products .edit_i', function () {
     $("div.primary_products div.dispatched_quantity_"+id).empty();
     $("div.primary_products div.dispatched_quantity_"+id).append('<input id="dispatched_quantity_'+id+'" type="text" name="dispatched_quantity[]" value="'+dispatched_quantity_value+'"/>');
 
+    $(this).prop("disabled",true);
     return false;
 });
 

@@ -4,6 +4,7 @@
     </div>
 <?php
 $action_data = $this->uri->segment(2);
+$action_data1 = $this->uri->segment(3);
 
 $user= $this->auth->user();
 $login_customer_type = $user->role_id;
@@ -160,23 +161,13 @@ if(isset($order_approval_table) && count($order_approval_table)>0) {
                     if($action_data == "get_order_status_data_details"){        
                         
                 ?>
-                <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                        <div class="col-md-2 save_btn">
+                            <button type="submit"  id="update_order_details"  class="btn btn-primary gren_btn" style="margin-top: 3px; margin-bottom: 20px; ">Save</button>
+                            <br/>
+                        </div>
                     <?php
                     }
-                    if($action_data == "order_approval")
-                    {
-                    ?>
-                        <input class="selected_action" type="hidden" name="selected_action" id="" value="" /> 
-                        <div class="col-md-12 extra_btn text-center" style="margin-top: 20px; margin-bottom: 10px;">
-                            <a rel="dispatch" class="update_order_status btn btn-primary">Dispatch</a>
-                            <a rel="pending" class="update_order_status btn btn-primary">Pending</a>
-                            <a rel="reject" class="update_order_status btn btn-primary">Reject</a>
-                        </div>
-
-                        <div class="clearfix"></div>
-                  <?php      
-                    }
-                        echo form_close();
+                echo form_close();
                     
                 
                 
