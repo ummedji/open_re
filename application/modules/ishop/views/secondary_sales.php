@@ -109,6 +109,7 @@ echo form_open('',$attributes); ?>
         <div class="clearfix"></div>
     </div>
 </div>
+<input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $current_user->id; ?>" />
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
@@ -145,25 +146,8 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12 table_bottom">
     <div class="row">
         <div class="col-md-3 save_btn">
-            <!--  <div><input type="submit" class="btn btn-primary" value="Save" /></div>-->
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
-        <!--<div class="col-md-9">
-            <div class="row">
-                <div class="col-md-3 upload_file_space">
-                    <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
-                                            Browse <input type="file" multiple>
-                                        </span>
-                                    </span>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-9 chech_data"><button type="button" class="btn btn-default">Check Data</button> <button type="button" class="btn btn-default">Download Templates</button></div>
-            </div>
-        </div>-->
     </div>
 </div>
 <?php echo form_close(); ?>

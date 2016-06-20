@@ -2027,17 +2027,67 @@ class Web_service extends Front_Controller
         $po_no = $this->input->get_post('po_no');
         $invoice_month = $this->input->get_post('month');
 
-        if(isset($user_id) && !empty($user_id)
-            && isset($country_id) && !empty($country_id)
-            && !empty($from_date) && isset($from_date)
-            && !empty($to_date) && isset($to_date)
-        )
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
-            $invoice_receved = $this->ishop_model->invoice_confirmation_received_by_distributor($invoice_month,$po_no,$invoice_no,$user_id,$country_id,null,'web_service');
+            $invoice_received = $this->ishop_model->invoice_confirmation_received_by_distributor($invoice_month,$po_no,$invoice_no,$user_id,$country_id,null,'web_service');
 
+            if(!empty($invoice_received))
+            {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                $final_array = array();
+                foreach($invoice_received as $k => $ir)
+                {
+                    $primary_sales_id = $ir['primary_sales_id'];
+                    $invoice_product = $this->ishop_model->invoice_sales_product_details($primary_sales_id,'web_service');
+                    $ir["details"]=$invoice_product;
+                    $final_array[] = $ir;
+                }
+            }
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($invoice_receved) ? $invoice_receved : array();
+            $result['data'] = !empty($final_array) ? $final_array : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : confirmInvoiceReceived
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function confirmInvoiceReceived()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $sales_id = $this->input->get_post('sales_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->update_invoice_confirmation_received_by_distributor($sales_id,$user_id,$country_id);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Something Went Wrong.';
+            }
         }
         else
         {

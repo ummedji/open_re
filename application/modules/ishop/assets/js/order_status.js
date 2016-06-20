@@ -227,12 +227,12 @@ $(document).on('click', 'div.order_status .edit_i', function () {
                  //   alert(resp);
                     //$("div#middle_container").empty();
                     $("div#middle_container").html(resp);
-                    
+
                 }
             });
             return false;
      //   }
-        
+
     });
     
 });

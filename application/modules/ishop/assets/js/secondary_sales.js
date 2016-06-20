@@ -63,18 +63,21 @@ $(function () {
 
         var customer_id=$('#reta_id').val();
         var invoice_no=$('#invoice_no').val();
-
+        var login_customer_id = $("input#login_customer_id").val();
         if(customer_id != '' && invoice_no !=''){
             $.ajax({
                 type: 'POST',
                 url: site_url + "ishop/check_duplicate_data_secondary_sales",
-                data: {customer_id:customer_id,invoice_no:invoice_no},
+                data: {customer_id:customer_id,invoice_no:invoice_no,login_id:login_customer_id},
                 //dataType : 'json',
                 success: function (resp) {
                     if(resp == 1){
                         already_assign_error = 1;
                         $('.error').css('display','block');
                         $('#invoice_no_error').html('Invoice Number already Assign!');
+                    }
+                    else if(resp == 2){
+                        get_dscondary_sales_data(invoice_no,login_customer_id);
                     }
                     else{
                         already_assign_error = 0;
@@ -85,37 +88,39 @@ $(function () {
             });
         }
         else if(invoice_no !=''){
-            $.ajax({
-                type: 'POST',
-                url: site_url + "ishop/get_data_secondary_sales_by_invoice",
-                data: {invoice_no:invoice_no},
-                //dataType : 'json',
-                success: function (resp) {
-                    if(resp){
-                        var obj = jQuery.parseJSON(resp);
-                      //  console.log(obj);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: site_url + "ishop/get_data_secondary_sales_product_by_invoice",
-                            data: {secondary_sales_id:obj.secondary_sales_id},
-                            dataType : 'html',
-                            success: function (resp) {
-                                $("#secondary_sls").append(resp)
-                            }
-                        });
-
-                        $('#reta_id').selectpicker('val', obj.customer_id_to);
-                        $('#invoice_date').val(obj.invoice_date);
-                        $('#order_traking_no').val(obj.order_tracking_no);
-                        $('#po_no').val(obj.PO_no);
-                    }
-                }
-            });
+            get_dscondary_sales_data(invoice_no,login_customer_id);
         }
     });
 
-    $('#customer_id').on('change',function(){
+    function get_dscondary_sales_data(invoice_no,login_customer_id){
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ishop/get_data_secondary_sales_by_invoice",
+            data: {invoice_no:invoice_no,login_id:login_customer_id},
+            //dataType : 'json',
+            success: function (resp) {
+                if(resp){
+                    var obj = jQuery.parseJSON(resp);
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url + "ishop/get_data_secondary_sales_product_by_invoice",
+                        data: {secondary_sales_id:obj.secondary_sales_id},
+                        dataType : 'html',
+                        success: function (resp) {
+                            $("#secondary_sls").append(resp)
+                        }
+                    });
+
+                    $('#reta_id').selectpicker('val', obj.customer_id_to);
+                    $('#invoice_date').val(obj.invoice_date);
+                    $('#order_traking_no').val(obj.order_tracking_no);
+                    $('#po_no').val(obj.PO_no);
+                }
+            }
+        });
+    }
+
+    $('#reta_id').on('change',function(){
         $('#invoice_no').val('');
     });
 

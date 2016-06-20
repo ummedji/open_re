@@ -3,7 +3,6 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-               <!-- <h4 class="modal-title">Header title</h4> -->
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -13,7 +12,6 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <!--<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>-->
                 <button id="save_po_data" type="button" class="btn btn-primary">Save</button>
             </div>
         </div>
@@ -70,7 +68,7 @@
                         <div class="col-md-6 col-sm-6 tp_form">
                     
                             <div class="form-group">
-                            <label>Geo L1</label>
+                            <label>Geo L1<span style="color: red">*</span></label>
                             <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="dis_distributor_geo_level_1_data" data-live-search="true">
                                 <option value="0">Select Geo Level</option>
                                 <?php
@@ -92,20 +90,8 @@
                         <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group">
                                 <div class="form-group">
-                                <label>Distributor Name</label>
+                                <label>Distributor Name<span style="color: red">*</span></label>
                                 <select class="selectpicker" id="distributor_distributor_id" name="distributor_id" data-live-search="true">
-                                   <!-- <option value="0">Select Distributor Name</option> -->
-                                    <?php
-                                  /*  if(isset($distributor) && !empty($distributor))
-                                    {
-                                        foreach($distributor as $key=>$val_distributor)
-                                        {
-                                            ?>
-                                            <option value="<?php echo $val_distributor['id']; ?>"><?php echo $val_distributor['display_name']; ?></option>
-                                            <?php
-                                        }
-                                    }*/
-                                    ?> 
                                 </select>
                             </div>
                             </div>
@@ -116,11 +102,9 @@
                 <div class="row">
                     
                      <div class="col-md-4 col-sm-4 tp_form">
-
                              <div class="form-group">
-                                <label>Geo L2</label>
+                                <label>Geo L2<span style="color: red">*</span></label>
                                 <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="retailer_geo_level_1_data" data-live-search="true">
-
                                 </select>
 
                             </div>
@@ -129,53 +113,30 @@
                     <div class="col-md-4 col-sm-4 tp_form">
                     
                         <div class="form-group">
-                            <label>Geo L1</label>
+                            <label>Geo L1<span style="color: red">*</span></label>
                             <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="retailer_geo_level_2_data" data-live-search="true">
-
                             </select>
-                    
                         </div>
                     </div>
                 
                     
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
-                                <label>Retailer Name</label>
+                                <label>Retailer Name<span style="color: red">*</span></label>
                                 <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
-                                 <!--   <option value="0">Select Retailer Name</option> -->
-                                    <?php
-                                   /* if(isset($retailer) && !empty($retailer))
-                                    {
-                                        foreach($retailer as $key=>$val_retailer)
-                                        {
-                                            ?>
-                                            <option value="<?php echo $val_retailer['id']; ?>"><?php echo $val_retailer['display_name']; ?></option>
-                                            <?php
-                                        }
-                                    }*/
-                                    ?>
                                 </select>
                             </div>
                     </div>
-                    
-                  <!--  <div class="col-md-4 col-sm-4 tp_form">
-                        <div class="form-group">
-                                <label>Distributor Name</label>
-                                <select class="selectpicker" id="retailer_distributor_id" name="distributor_id" data-live-search="true">
-                                    
-                                </select>
-                            </div>
-                    </div> -->
                 </div>
             </div>
 
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
-                            <label>From Date</label>
+                            <label>From Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
                         </div>
                         <div class="form-group">
-                            <label>TO Date</label>
+                            <label>TO Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
@@ -184,18 +145,17 @@
         <?php }
         else if($login_customer_type == 9){
         ?>
-            
             <div class="col-md-6 text-center radio_space">
                 <div class="clearfix"></div>
             </div>
 
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
-                    <label>From Date</label>
+                    <label>From Date<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label>TO Date</label>
+                    <label>TO Date<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
@@ -209,22 +169,19 @@
                     
                 </div>
 
-
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
-                    <label>From Date</label>
+                    <label>From Date<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
                 </div>
                 <div class="form-group">
-                    <label>TO Date</label>
+                    <label>TO Date<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>
             
             <?php } ?>
-            
-            
             <?php 
                 if($login_customer_type == 8){
             ?>
@@ -265,38 +222,14 @@
             <div class="clearfix"></div></br>
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
-                        <label>Geo L2</label>
+                        <label>Geo L2<span style="color: red">*</span></label>
                         <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                            <!--  <option value="0">Select Geo Level</option> -->
-                            <?php
-                            /*  if(isset($geo_level_data) && !empty($geo_level_data))
-                              {
-                                  foreach($geo_level_data as $key=>$val_geo_level_data)
-                                  {
-                                      ?>
-                                      <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                      <?php
-                                  }
-                              } */
-                            ?>
                         </select>
 
                     </div>
                     <div class="form-group">
-                        <label>Geo L1</label>
+                        <label>Geo L1<span style="color: red">*</span></label>
                         <select class="selectpicker geo_level_2_data" class="" id="geo_level_2_data" name="geo_level_1_data" data-live-search="true">
-                            <!--  <option value="0">Select Geo Level</option> -->
-                            <?php
-                            /*   if(isset($geo_level_data) && !empty($geo_level_data))
-                                 {
-                                     foreach($geo_level_data as $key=>$val_geo_level_data)
-                                     {
-                                         ?>
-                                         <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                         <?php
-                                     }
-                                 } */
-                            ?>
                         </select>
 
                     </div>
@@ -307,26 +240,20 @@
                         </select>
                     </div>
                 </div>
-
-            
-                 
-                
-                
-            
             </div>
             
             <div class="retailer_checked" id="retailer_checked" style="display:none;">
                 
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
-                        <label>Geo L3</label>
+                        <label>Geo L3<span style="color: red">*</span></label>
                         <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
 
                         </select>
 
                     </div>
                     <div class="form-group">
-                        <label>Geo L2</label>
+                        <label>Geo L2<span style="color: red">*</span></label>
                         <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
 
                         </select>
@@ -334,20 +261,12 @@
                     </div>
 
                     <div class="form-group">
-                        <label>Retailer Name</label>
+                        <label>Retailer Name<span style="color: red">*</span></label>
                         <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" >
 
                         </select>
-
                     </div>
-
                 </div>
-
-                
-                
-
-                
-                
             </div>
             
             <div class="distributor_checked" id="distributor_checked" style="display:none;">
@@ -355,95 +274,47 @@
                 
                 <div class="col-md-12 text-center tp_form inline-parent">
                     
-                        <div class="form-group">
-                        <label>Geo L2</label>
+                    <div class="form-group">
+                        <label>Geo L2<span style="color: red">*</span></label>
                         <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
-                          <!--  <option value="0">Select Geo Level</option> -->
-                            <?php
-                         /*   if(isset($geo_level_data) && !empty($geo_level_data))
-                            {
-                                foreach($geo_level_data as $key=>$val_geo_level_data)
-                                {
-                                    ?>
-                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                    <?php
-                                }
-                            } */
-                            ?>
                         </select>
-                    
                     </div>
 
-                    
-                        <div class="form-group">
-                        <label>Geo L1</label>
+                    <div class="form-group">
+                        <label>Geo L1<span style="color: red">*</span></label>
                         <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
                             
                         </select>
                     
                     </div>
 
-                   
                        <div class="form-group">
-                       <label>Distributor Name</label>
+                       <label>Distributor Name<span style="color: red">*</span></label>
                        <select class="selectpicker" id="fo_distributor_data" name="distributor_data" data-live-search="true">
 
                        </select>
                    </div>
-                   
                </div>
-                
-                
             </div>
 
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
-                            <label>From Date</label>
+                            <label>From Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
                         </div>
                         <div class="form-group">
-                            <label>TO Date</label>
+                            <label>TO Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
                     </div>
-
-
-            
             <?php } ?>
-            
-            
-            
+
             <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $login_customer_type; ?>" /> 
             <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $login_customer_id; ?>" /> 
             <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $login_customer_countryid; ?>" /> 
             
             <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" /> 
-            
-            
-            <!--<div class="col-md-8 col-md-offset-2 tp_form">
-                    <div class="row">
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label>From Date 1</label>
-                                <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-5">
-                            <div class="form-group">
-                                <label>TO Date</label>
-                                <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
-                            </div>
-                        </div>
-                        <div class="col-md-2 save_btn">
-                            <label>&nbsp;</label>
-                            <button id="order_status" type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important;">Execute</button>
-                        </div>
-                    </div>
-                </div>-->
-
-            
-            
 
             <?php echo form_close(); ?>
         </div>

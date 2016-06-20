@@ -308,6 +308,7 @@ class Ishop extends Front_Controller
 		$retailer = $this->ishop_model->get_retailer_by_distributor_id($user->id, $user->country_id);
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
 
+		Template::set('current_user', $user);
 		Template::set('retailer', $retailer);
 		Template::set('product_sku', $product_sku);
 		Template::set_view('ishop/secondary_sales');
@@ -319,8 +320,9 @@ class Ishop extends Front_Controller
 		//testdata($_POST);
 		$customer_id = $this->input->post("customer_id");
 		$invoice_no = $this->input->post("invoice_no");
+		$login_id = $this->input->post("login_id");
 
-		$check= $this->ishop_model->check_duplicate_data_for_secondary_sales($customer_id,$invoice_no);
+		$check= $this->ishop_model->check_duplicate_data_for_secondary_sales($customer_id,$invoice_no,$login_id);
 		echo $check;
 		die;
 	}
@@ -328,8 +330,9 @@ class Ishop extends Front_Controller
 	public function get_data_secondary_sales_by_invoice()
 	{
 		$invoice_no = $this->input->post("invoice_no");
+		$login_id = $this->input->post("login_id");
 
-		$check= $this->ishop_model->get_data_secondary_sales_by_invoice_no($invoice_no);
+		$check= $this->ishop_model->get_data_secondary_sales_by_invoice_no($invoice_no,$login_id);
 		echo json_encode($check);
 		die;
 	}
@@ -3937,7 +3940,10 @@ class Ishop extends Front_Controller
 
                 $web_service = @$_POST['flag'];
                 if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-                    echo base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
+                    $result['status'] = true;
+                    $result['message'] = 'Retrieved Successfully.';
+                    $result['data'] = base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
+                    echo json_encode($result);
                 }
                 else
                 {

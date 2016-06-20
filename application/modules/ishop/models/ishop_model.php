@@ -1133,43 +1133,87 @@ class Ishop_model extends BF_Model
 
             $rand_data = $this->get_random_no($rand_type, $table);
 
-            $secondary_sales_data = array(
-                'customer_id_to' => (isset($customer_id) && !empty($customer_id)) ? $customer_id : '',
-                'customer_id_from' => $user_id,
-                'invoice_no' => (isset($invoice_no) && !empty($invoice_no)) ? $invoice_no : '',
-                'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
-                'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
-                'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
-                'etn_no' => $rand_data,
-                'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
-                'invoice_recived_status' => '0',
-                'country_id' => $country_id,
-                'created_by_user' => $user_id,
-                'status' => '1',
-                'created_on' => date('Y-m-d H:i:s')
-            );
+            $validat = $this->check_valid_secondary_sales_data($invoice_no, $order_tracking_no, $PO_no);
 
-            if ($this->db->insert('ishop_secondary_sales', $secondary_sales_data)) {
-                $insert_id = $this->db->insert_id();
-            }
-
-            $secondary_sales_id = $insert_id;
-            foreach ($product_sku_id as $key => $prd_sku) {
-                $secondary_sales_product_data = array(
-
-                    'secondary_sales_id' => $secondary_sales_id,
-                    'product_sku_id' => $prd_sku,
-                    'quantity' => $quantity[$key],
-                    'dispatched_quantity' => $dispatched_quantity[$key],
-                    'amount' => $amount[$key],
-                    'unit' => $units[$key],
-                    'qty_kgl' => $qty_kgl[$key],
-                    'customer_id' => $customer_id,
+            if($validat == 0){
+                $secondary_sales_data = array(
+                    'customer_id_to' => (isset($customer_id) && !empty($customer_id)) ? $customer_id : '',
+                    'customer_id_from' => $user_id,
+                    'invoice_no' => (isset($invoice_no) && !empty($invoice_no)) ? $invoice_no : '',
+                    'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
+                    'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
+                    'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
+                    'etn_no' => $rand_data,
+                    'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
+                    'invoice_recived_status' => '0',
+                    'country_id' => $country_id,
+                    'created_by_user' => $user_id,
+                    'status' => '1',
+                    'created_on' => date('Y-m-d H:i:s')
                 );
-                // testdata($secondary_sales_product_data);
-                $this->db->insert('ishop_secondary_sales_product', $secondary_sales_product_data);
+
+                if ($this->db->insert('ishop_secondary_sales', $secondary_sales_data)) {
+                    $insert_id = $this->db->insert_id();
+                }
+
+                $secondary_sales_id = $insert_id;
+                foreach ($product_sku_id as $key => $prd_sku) {
+                    $secondary_sales_product_data = array(
+
+                        'secondary_sales_id' => $secondary_sales_id,
+                        'product_sku_id' => $prd_sku,
+                        'quantity' => $quantity[$key],
+                        'dispatched_quantity' => $dispatched_quantity[$key],
+                        'amount' => $amount[$key],
+                        'unit' => $units[$key],
+                        'qty_kgl' => $qty_kgl[$key],
+                        'customer_id' => $customer_id,
+                    );
+                    $this->db->insert('ishop_secondary_sales_product', $secondary_sales_product_data);
+                }
             }
-        } else {
+            else{
+                $secondary_sales_data = array(
+                    'customer_id_to' => (isset($customer_id) && !empty($customer_id)) ? $customer_id : '',
+                    'customer_id_from' => $user_id,
+                    'invoice_no' => (isset($invoice_no) && !empty($invoice_no)) ? $invoice_no : '',
+                    'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
+                    'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
+                    'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
+                    'etn_no' => $rand_data,
+                    'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
+                    'invoice_recived_status' => '0',
+                    'country_id' => $country_id,
+                    'modified_by_user' => $user_id,
+                    'status' => '1',
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+
+                $this->db->where('secondary_sales_id', $validat[0]['secondary_sales_id']);
+                $this->db->update('bf_ishop_secondary_sales', $secondary_sales_data);
+
+                $this->db->where('secondary_sales_id', $validat[0]['secondary_sales_id']);
+                $this->db->delete('bf_ishop_secondary_sales_product');
+
+
+                foreach ($product_sku_id as $key => $prd_sku) {
+                    $secondary_sales_product_data = array(
+
+                        'secondary_sales_id' => $validat[0]['secondary_sales_id'],
+                        'product_sku_id' => $prd_sku,
+                        'quantity' => $quantity[$key],
+                        'dispatched_quantity' => $dispatched_quantity[$key],
+                        'amount' => $amount[$key],
+                        'unit' => $units[$key],
+                        'qty_kgl' => $qty_kgl[$key],
+                        'customer_id' => $customer_id,
+                    );
+                    $this->db->insert('ishop_secondary_sales_product', $secondary_sales_product_data);
+                }
+            }
+        }
+        else
+        {
             if ($xl_data != '') {
                 foreach ($xl_data as $key => $value) {
 
@@ -1267,27 +1311,37 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function check_duplicate_data_for_secondary_sales($customer_id, $invoice_no)
+    public function check_duplicate_data_for_secondary_sales($customer_id, $invoice_no,$login_id)
     {
-
         $this->db->select('*');
         $this->db->from('ishop_secondary_sales');
         $this->db->where('invoice_no', $invoice_no);
         $this->db->where_not_in('customer_id_to', $customer_id);
-        $check = $this->db->get()->result_array();
-        // testdata($check);
+        $this->db->where('customer_id_from', $login_id);
+        $check = $this->db->get()->row_array();
         if (isset($check) && !empty($check)) {
             return 1;
         } else {
-            return 0;
+            $this->db->select('*');
+            $this->db->from('ishop_secondary_sales');
+            $this->db->where('customer_id_to', $customer_id);
+            $data = $this->db->get()->row_array();
+            if(isset($data) && !empty($data)){
+                return 2;
+            }
+            else{
+                return 0;
+            }
+
         }
     }
 
-    public function get_data_secondary_sales_by_invoice_no($invoice_no)
+    public function get_data_secondary_sales_by_invoice_no($invoice_no,$login_id)
     {
         $this->db->select('*');
         $this->db->from('ishop_secondary_sales');
         $this->db->where('invoice_no', $invoice_no);
+        $this->db->where('customer_id_from', $login_id);
         $data = $this->db->get()->row_array();
 
         if (isset($data) && !empty($data)) {
@@ -1301,7 +1355,6 @@ class Ishop_model extends BF_Model
     public function get_data_secondary_sales_product_by_invoice($secondary_sales_id)
     {
         $this->db->select('issp.secondary_sales_id,issp.product_sku_id,issp.quantity,issp.amount,issp.unit,issp.qty_kgl,psc.product_sku_name,psr.product_sku_code,bu.display_name');
-        //$this->db->select('*');
         $this->db->from('ishop_secondary_sales_product as issp');
         $this->db->join('ishop_secondary_sales as iss', 'iss.secondary_sales_id = issp.secondary_sales_id');
         $this->db->join('master_product_sku_country as psc', 'psc.product_sku_id = issp.product_sku_id');
@@ -3461,7 +3514,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         $this->db->delete('bf_ishop_scheme_allocation');
     }
 
-    public function invoice_confirmation_received_by_distributor($invoice_month, $po_no, $invoice_no, $user_id, $country_id, $page = null)
+    public function invoice_confirmation_received_by_distributor($invoice_month, $po_no, $invoice_no, $user_id, $country_id, $page = null,$web_service=null)
     {
         $sql = 'SELECT * ';
         $sql .= 'FROM bf_ishop_primary_sales AS ips ';
@@ -3484,38 +3537,56 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         /*  $info = $this->db->query($sql);
         $limit = $info->result_array();
         $invoice_confirmation = array('result'=>$limit);*/
-        $invoice_confirmation = $this->grid->get_result_res($sql);
-        // testdata($invoice_confirmation);
 
-        if (isset($invoice_confirmation['result']) && !empty($invoice_confirmation['result'])) {
-            if ($page != null || $page != "") {
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
-                $i = $page * 10 - 9;
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
+            $info = $this->db->query($sql);
+            // For Pagination
 
-            } else {
-                $i = 1;
-            }
+            $invoice_confirmation = $info->result_array();
+            return $invoice_confirmation;
+        } else {
+            $invoice_confirmation = $this->grid->get_result_res($sql);
+            // testdata($invoice_confirmation);
 
-            $invoice_confirmation_view['head'] = array('Sr. No.', 'View', 'PO No.', 'OTN', 'Invoice No.', 'Invoice Value', 'Received');
-            $invoice_confirmation_view['count'] = count($invoice_confirmation_view['head']);
-            foreach ($invoice_confirmation['result'] as $ic) {
-                if ($ic['invoice_recived_status'] == '0') {
-                    $received_status = '<select name="received_status" class="received_status" id="received_status" ><option value="0">Pending</option><option  value="1">Confirm</option></select>
-                                        <input type="hidden" id="sales_id" class="sales_id" name="sales_id" value="' . $ic['primary_sales_id'] . '">';
+            if (isset($invoice_confirmation['result']) && !empty($invoice_confirmation['result'])) {
+                if ($page != null || $page != "") {
+
+                    $i = $page * 10 - 9;
+
                 } else {
-                    $received_status = 'Confirm';
+                    $i = 1;
                 }
-                $invoice_confirmation_view['row'][] = array($i, $ic['primary_sales_id'], $ic['PO_no'], $ic['order_tracking_no'], $ic['invoice_no'], $ic['total_amount'], $received_status);
-                $i++;
+
+                $invoice_confirmation_view['head'] = array('Sr. No.', 'View', 'PO No.', 'OTN', 'Invoice No.', 'Invoice Value', 'Received');
+                $invoice_confirmation_view['count'] = count($invoice_confirmation_view['head']);
+                foreach ($invoice_confirmation['result'] as $ic) {
+                    if ($ic['invoice_recived_status'] == '0') {
+                        $received_status = '<select name="received_status" class="received_status" id="received_status" ><option value="0">Pending</option><option  value="1">Confirm</option></select>
+                                        <input type="hidden" id="sales_id" class="sales_id" name="sales_id" value="' . $ic['primary_sales_id'] . '">';
+                    } else {
+                        $received_status = 'Confirm';
+                    }
+                    $invoice_confirmation_view['row'][] = array($i, $ic['primary_sales_id'], $ic['PO_no'], $ic['order_tracking_no'], $ic['invoice_no'], $ic['total_amount'], $received_status);
+                    $i++;
+                }
+                $invoice_confirmation_view['eye'] = 'eye';
+                $invoice_confirmation_view['action'] = 'is_action';
+                $invoice_confirmation_view['radio'] = '';
+                $invoice_confirmation_view['no_margin'] = '';
+                $invoice_confirmation_view['pagination'] = $invoice_confirmation['pagination'];
+                return $invoice_confirmation_view;
+
             }
-            $invoice_confirmation_view['eye'] = 'eye';
-            $invoice_confirmation_view['action'] = 'is_action';
-            $invoice_confirmation_view['radio'] = '';
-            $invoice_confirmation_view['no_margin'] = '';
-            $invoice_confirmation_view['pagination'] = $invoice_confirmation['pagination'];
-            return $invoice_confirmation_view;
 
         }
+
 
     }
 
@@ -3529,12 +3600,13 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         );
 
         $this->db->where('primary_sales_id', $sales_id);
-        $this->db->update('ishop_primary_sales', $primary_sales);
+        $id = $this->db->update('ishop_primary_sales', $primary_sales);
+        return $id;
     }
 
-    public function invoice_sales_product_details($sales_id)
+    public function invoice_sales_product_details($sales_id,$web_service=null)
     {
-        $sql = 'SELECT mpsr.product_sku_code,mpsc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
+        $sql = 'SELECT ipsp.primary_sales_product_id as id,mpsr.product_sku_code,mpsc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
         $sql .= 'FROM bf_ishop_primary_sales_product AS ipsp ';
         $sql .= 'JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_country_id = ipsp.product_sku_id) ';
         $sql .= 'JOIN bf_master_product_sku_regional AS mpsr ON (mpsr.product_sku_id = mpsc.product_sku_id) ';
@@ -3542,23 +3614,28 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         $sql .= 'AND ipsp.primary_sales_id=' . $sales_id . ' ';
         $info = $this->db->query($sql);
         $limit = $info->result_array();
-        $invoice_product = array('result' => $limit);
 
-        if (isset($invoice_product['result']) && !empty($invoice_product['result'])) {
-            $i = 1;
-            $invoice_product_view['head'] = array('Sr. No.', 'SKU Code', 'SKU Name', 'PO Qty', 'Dispatched Qty', 'Amount');
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            return $limit;
+        } else {
+            $invoice_product = array('result' => $limit);
 
-            foreach ($invoice_product['result'] as $ip) {
-                $invoice_product_view['row'][] = array($i, $ip['product_sku_code'], $ip['product_sku_name'], $ip['quantity'], $ip['dispatched_quantity'], $ip['amount']);
-                $i++;
+            if (isset($invoice_product['result']) && !empty($invoice_product['result'])) {
+                $i = 1;
+                $invoice_product_view['head'] = array('Sr. No.', 'SKU Code', 'SKU Name', 'PO Qty', 'Dispatched Qty', 'Amount');
+
+                foreach ($invoice_product['result'] as $ip) {
+                    $invoice_product_view['row'][] = array($i, $ip['product_sku_code'], $ip['product_sku_name'], $ip['quantity'], $ip['dispatched_quantity'], $ip['amount']);
+                    $i++;
+                }
+                $invoice_product_view['eye'] = '';
+                $invoice_product_view['action'] = '';
+                $invoice_product_view['radio'] = '';
+                $invoice_product_view['no_margin'] = '';
+                // $product_view['pagination'] = $report_details['pagination'];
+                return $invoice_product_view;
+
             }
-            $invoice_product_view['eye'] = '';
-            $invoice_product_view['action'] = '';
-            $invoice_product_view['radio'] = '';
-            $invoice_product_view['no_margin'] = '';
-            // $product_view['pagination'] = $report_details['pagination'];
-            return $invoice_product_view;
-
         }
     }
 
