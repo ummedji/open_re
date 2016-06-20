@@ -403,28 +403,78 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : editPrimarySalesInvoice
-     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
-     * @ Function Purpose    : Edit Primary Sales Invoice
+     * @ Function Name        : getOrderApproval
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
      * */
-    public function editPrimarySalesInvoice()
+    public function getOrderApproval()
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
 
-        if(isset($user_id))
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $by_otn = $this->input->get_post('by_otn');
+        $by_po_no = $this->input->get_post('by_po_no');
+        $order_status = $this->input->get_post('order_status'); // dispatched,pending,reject,op_ackno,all
+        $page_function = 'order_approval';
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) && !empty($order_status) && isset($order_status))
         {
-            $update_sales_details = $this->ishop_model->update_sales_detail($user_id,$country_id,'web_service');
-            if(!empty($update_sales_details))
-            {
-                $result['status'] = true;
-                $result['message'] = 'Updated Successfully.';
+            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
+
+            $order_array = array();
+            if (!empty($order_data)) {
+
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                foreach ($order_data as $order)
+                {
+                    if($order['order_status'] == 0)
+                    {
+                        $order_status = "Pending";
+                    }
+                    elseif($order['order_status'] == 1)
+                    {
+                        $order_status = "Dispatched";
+                    }
+                    elseif($order['order_status'] == 3)
+                    {
+                        $order_status = "Rejected";
+                    }
+                    elseif($order['order_status'] == 4)
+                    {
+                        $order_status = "op_ackno";
+                    }
+
+                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
+
+                    $ord = array(
+                        "id" => $order['order_id'],
+                        "distributor_code" => $order['f_u_code'],
+                        "distributor_name" => $order['fr_fname'].' '.$order['fr_mname'].' '.$order['fr_lname'],
+                        "po_no" => $order['PO_no'],
+                        "order_tracking_no" => $order['order_tracking_no'],
+                        "credit_limit" => $order['credit_limit'],
+                        "amount" => $order['total_amount'],
+                        "order_status" => $order_status,
+                        "details" => !empty($order_details) ? $order_details : array()
+                    );
+                    array_push($order_array, $ord);
+                }
             }
-            else
-            {
-                $result['status'] = false;
-                $result['message'] = 'No Records Found.';
-            }
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($order_array) ? $order_array : array();
         }
         else
         {
@@ -435,61 +485,75 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : deletePrimarySalesInvoice
-     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
-     * @ Function Purpose    : Edit Primary Sales Invoice
+     * @ Function Name        : getOrderStatus
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
      * */
-    public function deleteData()
+    public function getOrderStatus()
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
-        $mode = $this->input->get_post('mode');
-        $id = $this->input->get_post('id');
+        $role_id = $this->input->get_post('role_id');
 
-        if(isset($user_id) && !empty($user_id) && isset($id) && !empty($id) && isset($mode) && !empty($mode))
+        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');
+        $customer_id = $this->input->get_post('customer_id');
+        $page_function = 'order_status';
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
-            if($mode == "sales_invoice")
-            {
-                $id = $this->ishop_model->delete_sales_detail($id);
+            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
+
+            $order_array = array();
+            if (!empty($order_data)) {
+
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                foreach ($order_data as $order)
+                {
+                    if($order['order_status'] == 0)
+                    {
+                        $order_status = "Pending";
+                    }
+                    elseif($order['order_status'] == 1)
+                    {
+                        $order_status = "Dispatched";
+                    }
+                    elseif($order['order_status'] == 3)
+                    {
+                        $order_status = "Rejected";
+                    }
+                    elseif($order['order_status'] == 4)
+                    {
+                        $order_status = "op_ackno";
+                    }
+
+                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
+                    $ord = array(
+                        "id" => $order['order_id'],
+                        "entered_by" => $order['ot_fname'].' '.$order['ot_mname'].' '.$order['ot_lname'],
+                        "po_no" => $order['PO_no'],
+                        "order_tracking_no" => $order['order_tracking_no'],
+                        "order_date" => $order['order_date'],
+                        "edd" => $order['estimated_delivery_date'],
+                        "amount" => $order['total_amount'],
+                        "order_status" => $order_status,
+                        "details" => !empty($order_details) ? $order_details : array()
+                    );
+                    array_push($order_array, $ord);
+                }
             }
-            elseif($mode == "sales_invoice_product")
-            {
-                $id = $this->ishop_model->delete_sales_product_detail($id);
-            }
-            elseif($mode == "rol")
-            {
-                $id = $this->ishop_model->delete_rol_limit_detail($id);
-            }
-            elseif($mode == "secondary_sales")
-            {
-                $id = $this->ishop_model->delete_secondary_sales_detail($id);
-            }
-            elseif($mode == "secondary_sales_product")
-            {
-                $id = $this->ishop_model->delete_secondary_sales_product_detail($id);
-            }
-            elseif($mode == "physical_stock")
-            {
-                $id = $this->ishop_model->delete_physical_stock_details($id);
-            }
-            elseif($mode == "schemes")
-            {
-                $id = $this->ishop_model->delete_schemes_by_id($id);
-            }
-            elseif($mode == "order")
-            {
-                $id = $this->ishop_model->delete_order_detail_data($id);
-            }
-            if($id)
-            {
-                $result['status'] = true;
-                $result['message'] = 'Deleted Successfully ('.$mode.')';
-            }
-            else
-            {
-                $result['status'] = false;
-                $result['message'] = 'Something Went Wrong.';
-            }
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($order_array) ? $order_array : array();
         }
         else
         {
@@ -598,9 +662,282 @@ class Web_service extends Front_Controller
             // Get ROL Data
             $rol = $this->ishop_model->get_all_rol_by_user($user_id,$country_id,$role_id,$radio_type,'web_service');
 
+            if(!empty($rol))
+            {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+            }
+
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = array("dp_data"=>$final_array,"rol_data"=>!empty($rol) ? $rol : array());
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getTarget
+     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * */
+    public function getTarget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $checked_type = $this->input->get_post('checked_type');
+
+        if(isset($user_id))
+        {
+            $target_data = $this->ishop_model->get_target_details($user_id,$country_id,$checked_type,null,'web_service');
+            if(!empty($target_data))
+            {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $target_data;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : viewSchemes
+     * @ Function Params    : user_id,country_id,role_id,year,region,territory (POST)
+     * @ Function Purpose    : Get Credit Limit Data
+     * */
+    public function viewSchemes()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $year = $this->input->get_post("year");
+        $region = $this->input->get_post("region");
+        $territory = $this->input->get_post("territory");
+        $retailer = $this->input->get_post("fo_retailer_id");
+
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && isset($role_id) && !empty($role_id)
+            && isset($year) && !empty($year)
+            && isset($region) && !empty($region)
+            && isset($territory) && !empty($territory)
+            && isset($region) && !empty($region)
+        )
+        {
+            $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer,null,'web_service');
+            if(!empty($scheme_view))
+            {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+            }
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($scheme_view) ? $scheme_view : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getCompanyCurrentStock
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Rol and Drop Down Data
+     * */
+    public function getCompanyCurrentStock()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $current_stock = $this->ishop_model->get_all_company_current_stock($country_id,'web_service');
+            if(!empty($current_stock))
+            {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+            }
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($current_stock) ? $current_stock : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : getCreditLimit
+     * @ Function Params    : user_id,country_id (POST)
+     * @ Function Purpose    : Get Credit Limit Data
+     * */
+    public function getCreditLimit()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $credit_limit= $this->ishop_model->get_all_distributors_credit_limit($country_id,'web_service');
+            if(!empty($credit_limit))
+            {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+            }
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($credit_limit) ? $credit_limit : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : editPrimarySalesInvoice
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function editPrimarySalesInvoice()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $update_sales_details = $this->ishop_model->update_sales_detail($user_id,$country_id,'web_service');
+            if(!empty($update_sales_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : deletePrimarySalesInvoice
+     * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
+     * @ Function Purpose    : Edit Primary Sales Invoice
+     * */
+    public function deleteData()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $mode = $this->input->get_post('mode');
+        $id = $this->input->get_post('id');
+
+        if(isset($user_id) && !empty($user_id) && isset($id) && !empty($id) && isset($mode) && !empty($mode))
+        {
+            if($mode == "sales_invoice")
+            {
+                $id = $this->ishop_model->delete_sales_detail($id);
+            }
+            elseif($mode == "sales_invoice_product")
+            {
+                $id = $this->ishop_model->delete_sales_product_detail($id);
+            }
+            elseif($mode == "rol")
+            {
+                $id = $this->ishop_model->delete_rol_limit_detail($id);
+            }
+            elseif($mode == "secondary_sales")
+            {
+                $id = $this->ishop_model->delete_secondary_sales_detail($id);
+            }
+            elseif($mode == "secondary_sales_product")
+            {
+                $id = $this->ishop_model->delete_secondary_sales_product_detail($id);
+            }
+            elseif($mode == "physical_stock")
+            {
+                $id = $this->ishop_model->delete_physical_stock_details($id);
+            }
+            elseif($mode == "schemes")
+            {
+                $id = $this->ishop_model->delete_schemes_by_id($id);
+            }
+            elseif($mode == "order")
+            {
+                $id = $this->ishop_model->delete_order_detail_data($id);
+            }
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Deleted Successfully ('.$mode.')';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Something Went Wrong.';
+            }
         }
         else
         {
@@ -675,32 +1012,6 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : getCompanyCurrentStock
-     * @ Function Params    : user_id,country_id (POST)
-     * @ Function Purpose    : Get Rol and Drop Down Data
-     * */
-    public function getCompanyCurrentStock()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-
-        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
-        {
-            $current_stock = $this->ishop_model->get_all_company_current_stock($country_id,'web_service');
-
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($current_stock) ? $current_stock : array();
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
      * @ Function Name        : saveCompanyCurrentStock
      * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
      * @ Function Purpose    : Save ROL Data
@@ -765,32 +1076,6 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : getCreditLimit
-     * @ Function Params    : user_id,country_id (POST)
-     * @ Function Purpose    : Get Credit Limit Data
-     * */
-    public function getCreditLimit()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-
-        if(isset($user_id))
-        {
-            $credit_limit= $this->ishop_model->get_all_distributors_credit_limit($country_id,'web_service');
-
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($credit_limit) ? $credit_limit : array();
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
      * @ Function Name        : saveCreditLimit
      * @ Function Params    : user_id,country_id,dist_limit,credit_limit,curr_outstanding,curr_date (POST)
      * @ Function Purpose    : Save Credit Limit Data
@@ -813,44 +1098,6 @@ class Web_service extends Front_Controller
                 $result['status'] = false;
                 $result['message'] = 'Fail';
             }
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
-     * @ Function Name        : viewSchemes
-     * @ Function Params    : user_id,country_id,role_id,year,region,territory (POST)
-     * @ Function Purpose    : Get Credit Limit Data
-     * */
-    public function viewSchemes()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-        $role_id = $this->input->get_post('role_id');
-        $year = $this->input->get_post("year");
-        $region = $this->input->get_post("region");
-        $territory = $this->input->get_post("territory");
-        $retailer = $this->input->get_post("fo_retailer_id");
-
-        if(isset($user_id) && !empty($user_id)
-            && isset($country_id) && !empty($country_id)
-            && isset($role_id) && !empty($role_id)
-            && isset($year) && !empty($year)
-            && isset($region) && !empty($region)
-            && isset($territory) && !empty($territory)
-            && isset($region) && !empty($region)
-        )
-        {
-            $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer,null,'web_service');
-
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($scheme_view) ? $scheme_view : array();
         }
         else
         {
@@ -977,147 +1224,6 @@ class Web_service extends Front_Controller
                 "geo_data" => !empty($final_array) ? $final_array : array(),
                 "schema_data" => !empty($final_array2) ? $final_array2 : array()
             );
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
-     * @ Function Name        : getOrderApproval
-     * @ Function Params    : user_id,country_id (POST)
-     * @ Function Purpose    : Get Rol and Drop Down Data
-     * */
-    public function getOrderApproval()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-        $role_id = $this->input->get_post('role_id');
-
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
-        $by_otn = $this->input->get_post('by_otn');
-        $by_po_no = $this->input->get_post('by_po_no');
-        $order_status = $this->input->get_post('order_status'); // dispatched,pending,reject,op_ackno,all
-        $page_function = 'order_approval';
-
-        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) && !empty($order_status) && isset($order_status))
-        {
-            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
-
-            $order_array = array();
-            if (!empty($order_data)) {
-                foreach ($order_data as $order)
-                {
-                    if($order['order_status'] == 0)
-                    {
-                        $order_status = "Pending";
-                    }
-                    elseif($order['order_status'] == 1)
-                    {
-                        $order_status = "Dispatched";
-                    }
-                    elseif($order['order_status'] == 3)
-                    {
-                        $order_status = "Rejected";
-                    }
-                    elseif($order['order_status'] == 4)
-                    {
-                        $order_status = "op_ackno";
-                    }
-
-                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
-
-                    $ord = array(
-                        "id" => $order['order_id'],
-                        "distributor_code" => $order['f_u_code'],
-                        "distributor_name" => $order['fr_fname'].' '.$order['fr_mname'].' '.$order['fr_lname'],
-                        "po_no" => $order['PO_no'],
-                        "order_tracking_no" => $order['order_tracking_no'],
-                        "credit_limit" => $order['credit_limit'],
-                        "amount" => $order['total_amount'],
-                        "order_status" => $order_status,
-                        "details" => !empty($order_details) ? $order_details : array()
-                    );
-                    array_push($order_array, $ord);
-                }
-            }
-
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($order_array) ? $order_array : array();
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
-     * @ Function Name        : getOrderStatus
-     * @ Function Params    : user_id,country_id (POST)
-     * @ Function Purpose    : Get Rol and Drop Down Data
-     * */
-    public function getOrderStatus()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-        $role_id = $this->input->get_post('role_id');
-
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
-        $customer_id = $this->input->get_post('customer_id');
-        $page_function = 'order_status';
-
-        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
-        {
-            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
-
-            $order_array = array();
-            if (!empty($order_data)) {
-                foreach ($order_data as $order)
-                {
-                    if($order['order_status'] == 0)
-                    {
-                        $order_status = "Pending";
-                    }
-                    elseif($order['order_status'] == 1)
-                    {
-                        $order_status = "Dispatched";
-                    }
-                    elseif($order['order_status'] == 3)
-                    {
-                        $order_status = "Rejected";
-                    }
-                    elseif($order['order_status'] == 4)
-                    {
-                        $order_status = "op_ackno";
-                    }
-
-                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
-                    $ord = array(
-                        "id" => $order['order_id'],
-                        "entered_by" => $order['ot_fname'].' '.$order['ot_mname'].' '.$order['ot_lname'],
-                        "po_no" => $order['PO_no'],
-                        "order_tracking_no" => $order['order_tracking_no'],
-                        "order_date" => $order['order_date'],
-                        "edd" => $order['estimated_delivery_date'],
-                        "amount" => $order['total_amount'],
-                        "order_status" => $order_status,
-                        "details" => !empty($order_details) ? $order_details : array()
-                    );
-                    array_push($order_array, $ord);
-                }
-            }
-
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($order_array) ? $order_array : array();
         }
         else
         {
@@ -1447,41 +1553,6 @@ class Web_service extends Front_Controller
     }
 
     /**
-     * @ Function Name        : getTarget
-     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
-     * @ Function Purpose    : Get Primary Sales Invoice Data
-     * */
-    public function getTarget()
-    {
-        $user_id = $this->input->get_post('user_id');
-        $country_id = $this->input->get_post('country_id');
-        $role_id = $this->input->get_post('role_id');
-        $checked_type = $this->input->get_post('checked_type');
-
-        if(isset($user_id))
-        {
-            $target_data = $this->ishop_model->get_target_details($user_id,$country_id,$checked_type,null,'web_service');
-            if(!empty($target_data))
-            {
-                $result['status'] = true;
-                $result['message'] = 'Success';
-                $result['data'] = $target_data;
-            }
-            else
-            {
-                $result['status'] = false;
-                $result['message'] = 'No Records Found.';
-            }
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = "All Fields are Required.";
-        }
-        $this->do_json($result);
-    }
-
-    /**
      * @ Function Name        : saveTarget
      * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
      * @ Function Purpose    : Save Primary Sales Data
@@ -1545,28 +1616,18 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
-
     /**
      * @ Function Name        : addUploadData
      * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
      * @ Function Purpose    : Save ROL Data
      * */
-    /*public function addUploadData()
+    public function uploadData()
     {
         $user_id = $this->input->get_post('user_id');
         if(isset($user_id))
         {
-            $id = modules::run('ishop/ishop/upload_data', 'web_service',$_POST);
-            if($id)
-            {
-                $result['status'] = true;
-                $result['message'] = 'Updated Successfully.';
-            }
-            else
-            {
-                $result['status'] = false;
-                $result['message'] = 'Fail';
-            }
+            $_POST['flag'] = 'web_service';
+            modules::run('ishop/ishop/upload_data', $_POST);
         }
         else
         {
@@ -1574,7 +1635,30 @@ class Web_service extends Front_Controller
             $result['message'] = "All Fields are Required.";
         }
         $this->do_json($result);
-    }*/
+    }
+
+    /**
+     * @ Function Name        : addUploadData
+     * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
+     * @ Function Purpose    : Save ROL Data
+     * */
+    public function downloadData()
+    {
+        $user_id = $this->input->get_post('user_id');
+        if(isset($user_id))
+        {
+            $_POST['flag'] = 'web_service';
+            $_POST['val'] = json_decode($_POST['val'],true);
+            $_POST['val'] = array_pop($_POST['val']);
+            modules::run('ishop/ishop/create_data_xl', $_POST);
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
 
 
     /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */

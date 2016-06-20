@@ -1,7 +1,7 @@
 <?php
-$attributes = array('class' => '', 'id' => 'forecast','name'=>'forecast');
+$attributes = array('class' => '', 'id' => 'add_forecast','name'=>'add_forecast');
 //echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('',$attributes); ?>
+echo form_open('esp/add_forecast',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
 <div class="col-md-12">
     <div class="top_form">

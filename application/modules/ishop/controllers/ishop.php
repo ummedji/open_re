@@ -19,7 +19,10 @@ class Ishop extends Front_Controller
 	{
 		parent::__construct();
 		$this->load->library('users/auth');
-		$this->auth->restrict($this->permissionView);
+        $web_service = @$_POST['flag'];
+        if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
+            $this->auth->restrict($this->permissionView);
+        }
 		$this->load->helper('application');
 		$this->load->library('Template');
 		$this->load->library('Assets');
@@ -2491,11 +2494,12 @@ class Ishop extends Front_Controller
         //TARGET DATA UPLOAD
         
         public function upload_data() {
-            
-         //   testdata($_POST);
-            
-            $user= $this->auth->user();
-            $logined_user_type = $user->role_id;
+
+            $web_service = @$_POST['flag'];
+            if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
+                $user= $this->auth->user();
+                $logined_user_type = $user->role_id;
+            }
             
             
             if(isset($_POST["upload_file_data"]) && !empty($_POST["upload_file_data"]))
@@ -3867,7 +3871,7 @@ class Ishop extends Front_Controller
             
             
             
-			$user= $this->auth->user();
+			//$user= $this->auth->user();
             //$req_data = json_decode($_GET["data"],true);
             
           // testdata($_POST['val']);
@@ -4033,8 +4037,15 @@ class Ishop extends Front_Controller
                 }
                 
                 $objWriter->save($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
-                
-                echo $filename;
+
+                $web_service = @$_POST['flag'];
+                if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                    echo base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
+                }
+                else
+                {
+                    echo $filename;
+                }
                 
                 //$objWriter->save('php://output');
                 exit();

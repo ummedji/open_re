@@ -942,7 +942,7 @@ class Ishop_model extends BF_Model
     public function get_all_rol_by_user($user_id,$country_id,$logined_user_role,$checked_type=null,$web_service=null,$page=null)
     {
        // echo $user_id;die;
-        $sql ='SELECT ir.rol_id as id,ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
+        $sql ='SELECT SQL_CALC_FOUND_ROWS ir.rol_id as id,ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
         $sql .= 'FROM bf_ishop_rol AS ir ';
         $sql .= 'JOIN bf_users AS bu  ON (bu.id = ir.customer_id) ';
         $sql .= 'JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ir.product_sku_id) ';
@@ -964,7 +964,15 @@ class Ishop_model extends BF_Model
         $sql .= 'ORDER BY ir.rol_id DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
+
             $rol_detail = $info->result_array();
             return $rol_detail;
         }
@@ -2955,7 +2963,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     public function get_all_company_current_stock($country_id,$web_service=null,$page=null)
     {
-        $sql ='SELECT iccs.stock_id AS id,iccs.stock_id,iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
+        $sql ='SELECT SQL_CALC_FOUND_ROWS iccs.stock_id AS id,iccs.stock_id,iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
         $sql .= 'FROM bf_ishop_company_current_stock AS iccs ';
         $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = iccs.product_sku_id) ';
         $sql .= 'WHERE 1 ';
@@ -2964,7 +2972,14 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
             $stock = $info->result_array();
             return $stock;
         } else {
@@ -3219,7 +3234,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     public function get_all_distributors_credit_limit($country_id,$web_service=null,$page=null)
     {
-        $sql ='SELECT icl.credit_limit_id as id,bu.display_name,icl.credit_limit,icl.current_outstanding_limit,icl.date ';
+        $sql ='SELECT SQL_CALC_FOUND_ROWS icl.credit_limit_id as id,bu.display_name,icl.credit_limit,icl.current_outstanding_limit,icl.date ';
         $sql .= 'FROM bf_ishop_credit_limit AS icl ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = icl.customer_id) ';
         $sql .= 'WHERE 1 ';
@@ -3228,7 +3243,14 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
             $limit = $info->result_array();
             return $limit;
         } else {
@@ -3380,7 +3402,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     public function view_schemes_detail($user_id,$country_id,$year,$region,$territory,$login_user,$retailer=null,$page=null,$web_service=null)
     {
-        $sql ='SELECT isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
+        $sql ='SELECT SQL_CALC_FOUND_ROWS isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
         if($login_user== 8)
         {
             $sql .= ' ,SUM(isp.quantity) as qty ';
@@ -3425,8 +3447,14 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             $sql .= ' GROUP BY isa.allocation_id ';
         }
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-            // echo $sql;die;
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
             $limit = $info->result_array();
             return $limit;
             // testdata($scheme_allocation);
@@ -4478,7 +4506,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
     public function get_order_data($loginusertype,$user_country_id,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,$order_tracking_no=null,$order_po_no=null,$page=null,$page_function=null,$order_status=null,$web_service=null) {
 
 
-        $sql ='SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
+        $sql ='SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
         $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd ON (bmupd.user_id = bu.id) '; // FOR GETTING USER NAME AND OTHER DATA
@@ -4566,7 +4594,16 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
         $sql .= ' AND bio.country_id = "'.$user_country_id.'" ORDER BY bio.order_date DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
+
             $order_data = $info->result_array();
             return $order_data;
             //$orderdata = array('result'=>$order_data);
@@ -5617,7 +5654,7 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
     
     public function get_target_details($user_id,$country_id,$checked_type=null,$page=null,$web_service=null) {
         //$sql =' SELECT * ';
-        $sql =' SELECT mpgd.political_geography_name,it.ishop_target_id,bu.user_code,bu.display_name,mpsc.product_sku_name,it.quantity ';
+        $sql =' SELECT SQL_CALC_FOUND_ROWS it.ishop_target_id as id,mpgd.political_geography_name,it.ishop_target_id,bu.user_code,bu.display_name,mpsc.product_sku_name,it.quantity ';
         $sql .= ' FROM bf_ishop_target AS it ';
         $sql .= ' JOIN bf_users AS bu  ON (bu.id = it.customer_id) ';
         $sql .= ' JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = it.product_sku_id) ';
@@ -5641,7 +5678,16 @@ WHERE `bu`.`role_id` = ".$default_type." AND `bu`.`type` = 'Customer' AND `bu`.`
 
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
+
             $target_details = $info->result_array();
             return $target_details;
         }

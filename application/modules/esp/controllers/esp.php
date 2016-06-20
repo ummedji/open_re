@@ -117,6 +117,8 @@ class Esp extends Front_Controller
       //  testdata($pbg_sku_data);
         
         $html = "";
+        $html1 = "";
+        $html2 = "";
         
         if($pbg_sku_data != 0){
             
@@ -125,56 +127,126 @@ class Esp extends Front_Controller
                     $html .= '<tr>';
                         $html .= '<th></th>';
                         foreach($month_data as $monthkey => $monthvalue){
-                            $html .= '<th colspan="2">'.$monthvalue.'</th>';
+                            
+                            $time=strtotime($monthvalue);
+                            $month=date("F",$time);
+                            $year=date("Y",$time);
+                            
+                            $html .= '<th colspan="2">'.$month.'-'.$year.'</th>';
                         }
                        
-                   $html .= ' </tr>';
-                   $html .= ' <tr>';
-                       $html .= ' <th>';
-                        $html .= '    PBG';
-                       $html .= ' </th>';
-                       $html .= ' <th>';
-                       $html .= '     Forecast Qty';
-                       $html .= ' </th>';
-                      $html .= '  <th>';
-                        $html .= '    Forecast Value';
-                      $html .= '  </th>';
-                      $html .= '  <th>';
-                      $html .= '      Forecast Qty';
-                      $html .= '  </th>';
-                     $html .= '   <th>';
-                     $html .= '       Forecast Value';
-                     $html .= '   </th>';
-                     $html .= '   <th>';
-                      $html .= '      Forecast Qty';
-                     $html .= '   </th>';
-                    $html .= '    <th>';
-                    $html .= '        Forecast Value';
-                    $html .= '    </th>';
-                    $html .= '    <th>';
-                    $html .= '        Yearly';
-                    $html .= '    </th>';
-                   $html .= ' </tr>';
+                   $html .= '</tr>';
+                   $html .= '<tr>';
+                   $html .= '<th>';
+                   $html .= 'PBG';
+                   $html .= '</th>';
+             foreach($month_data as $monthkey => $monthvalue){
+                $html .= '<th>';
+                $html .= 'Forecast Qty';
+                $html .= '</th>';
+                $html .= '<th>';
+                $html .= 'Forecast Value';
+                $html .= '</th>';
+             }
+                $html .= '<th>';
+                $html .= 'Yearly';
+                $html .= '</th>';
+                $html .= '</tr>';
                 $html .= '</thead>';
-           $html .= ' <tbody>';
+           $html .= '<tbody>';
+            $i = 1;
             foreach($pbg_sku_data as $skukey => $skuvalue){
-              $html .= '  <tr>';
-                 $html .= '   <td>'.$skuvalue['product_sku_name'].'</td>';
+              $html .= '<tr>';
+              $html .= '<td><input type="hidden" name="product_sku_id[]" value="'.$skuvalue['product_sku_country_id'].'" />'.$skuvalue['product_sku_name'].'</td>';
+                
+                $l = 1;
+                
                 foreach($month_data as $monthkey => $monthvalue){
-                    $html .= '<td><input type="text" name="forecast_qty[]" /></td>';
-                    $html .= '<td><input type="text" name="forecast_value[]"  readonly /></td>';
+                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" /></td>';
+                    
+                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]"  readonly /></td>';
+                    
+                    $l++;
+                    
                 }
-               $html .= '     <td>8</td>';
-               $html .= ' </tr>';
+               $html .= '<td></td>';
+               $html .= '</tr>';
             }
+           
+            $html1 .= '</tbody>';
+       $html1 .= '</table>';
             
-            $html .= '</tbody>';
-       $html .= ' </table>';
+            $html1 .= '<table>';
+            $html1 .= '<thead>';
+            $html1 .= '<tr>';
+                $html1 .= '<th>';
+                   $html1 .= '<td></td>';
+                   foreach($month_data as $monthkey => $monthvalue){
+                         $html1 .= '<td>Assumption</td><td>Probability</td>';
+                   }
+            
+                $html1 .= '</th>';
+            $html1 .= '</tr>';
+            $html1 .= '</thead>';
+            
+            $html1 .= '<tbody>';
+             $k = 1;
+            foreach($month_data as $monthkey => $monthvalue){
+                $html1 .= '<tr>';
+                $html1 .= '<td><input type="hidden" name="month_data[]" value="'.$monthvalue.'" /></td><td></td>';
+                $j = 1;
+                    foreach($month_data as $monthkey => $monthvalue){
+                        $html1 .= '<td><input type="text" name="assumption'.$j.'[]" /></td><td><input type="text" name="probablity'.$j.'[]" /></td>';
+                        $j++;
+                    }
+                $html1 .= '</tr>';
+                    $k++;
+            }
+            $html1 .= '</tbody>';
+            $html1 .= '</table>';
+            
+            $html2 .= '<div class="col-md-12 table_bottom text-center">
+                <div class="row">
+                    <div class="save_btn">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                    </div>
+                </div>
+            </div>';
+                
             
         }
         
-        echo $html;
+        echo $html.$html1.$html2;
         die;
+        
+    }
+    
+    public function get_forecast_value_data(){
+        
+        $relattrval = $_POST['relattrval'];
+        
+        $forecast_data = explode("_",$relattrval);
+        
+        $product_sku_id = $forecast_data[1];
+        $month_data = $forecast_data[2];
+        
+        $forecastdata = $_POST['forecastdata'];
+        
+        
+        $forecase_value = $this->esp_model->get_forecast_data($product_sku_id,$month_data);
+        
+        testdata($forecase_value);
+        
+        $final_forecast_value  = $forecastdata*$forecase_value;
+        
+        return $final_forecast_value;
+        
+    }
+    
+    public function add_forecast(){
+        testdata($_POST);
+   //     $forecast_data = $this->esp_model->add_forecast_data();
         
     }
     

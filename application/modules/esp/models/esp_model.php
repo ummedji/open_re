@@ -68,4 +68,33 @@ class Esp_model extends BF_Model
         }
     }
     
+    public function add_forecast_data(){
+        
+        if(isset($_POST) && !empty($_POST)){
+            
+            
+            
+        }
+        
+    }
+    
+    public function get_forecast_data($product_sku_id,$month_data){
+        
+        $this->db->select("bmp.price");
+        $this->db->from("bf_master_price as bmp");
+        $this->db->where("bmp.product_sku_country_id",$product_sku_id);
+        
+        $this->db->where('bmp.from_date >=', $month_data);
+        $this->db->where('bmp.to_date <=', $month_data);
+        
+        $master_forecast_data = $this->db->get()->result_array();
+        
+        if(isset($master_forecast_data) && !empty($master_forecast_data)) {
+            return $master_forecast_data[0][price];
+        } else{
+            return 0;
+        }
+        
+    }
+    
 }

@@ -27,6 +27,7 @@ $(document).ready(function(){
         
     });
     
+    
 });
 
 $(document).on("change","select.employee_data",function(){
@@ -46,6 +47,20 @@ $(document).on("change","select.pbg_data",function(){
    // $("div#pbg_data").empty();
     get_pbg_product_sku_data(pbg_id);
 
+});
+
+$(document).on("focusout",".forecast_qty",function(){
+    
+    var rel_attr_val = $(this).attr("rel");
+    var forecast_data = $(this).val();
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+"esp/get_forecast_value_data",
+        data: {relattrval:rel_attr_val,forecastdata:forecast_data},
+        success: function(resp){}
+    });
+    
 });
 
 function get_user_level_data(user_id){
