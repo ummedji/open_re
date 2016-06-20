@@ -56,9 +56,9 @@ echo form_open('ishop/primary_sales_details_view',$attributes); ?>
 </div>
 <?php }?>
 <?php
-if ($this->input->is_ajax_request()) {
+/*if ($this->input->is_ajax_request()) {*/
 echo theme_view('common/middle');
-}
+/*}*/
 ?>
 <?php if (!$this->input->is_ajax_request()) {
     ?>

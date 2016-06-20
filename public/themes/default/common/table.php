@@ -1,5 +1,4 @@
 <div class='report-box'>
-
     <div id='ajax_loader'>
     </div>
     <?php
@@ -118,9 +117,7 @@ if(isset($table) && count($table)>0) { ?>
         <h1 align="center" class="on_data">NO Data Available</h1>
         <?php
     }
-    ?>
-
-                </div>
+    ?></div>
     </div>
 
 
