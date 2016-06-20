@@ -93,7 +93,7 @@ if(isset($table) && count($table)>0) { ?>
                             </tr>
                         <?php } ?>
                         </tbody>
-                            <?php if(isset($td) && isset($pagination)) {?>
+                            <?php if(isset($td) && isset($pagination)) { ?>
                             <tfoot>
                             <tr>
                                 <td colspan='<?php echo $td; ?>'>
@@ -105,7 +105,7 @@ if(isset($table) && count($table)>0) { ?>
                                 </td>
                             </tr>
                             </tfoot>
-                        <?php}
+                        <?php  }
                         } ?>
                     </table>
                     <div class="clearfix"></div>
