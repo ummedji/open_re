@@ -5654,7 +5654,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $check_already_data = $this->check_budget_data($prod_sku, $month_data, $customers_id);
             // testdata($check_already_data);
             if ($check_already_data == 0) {
-                $this->db->insert('ishop_budget', $budget);
+                $id = $this->db->insert('ishop_budget', $budget);
             } else {
                 $budget_update_data = array(
                     'month_data' => $month_data,
@@ -5669,8 +5669,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 $this->db->where('ishop_budget_id', $check_already_data);
                 $id = $this->db->update('ishop_budget', $budget_update_data);
-                return $id;
             }
+            return $id;
         } else {
 
             //INSERT USING FILE UPLOAD

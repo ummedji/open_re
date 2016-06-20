@@ -88,8 +88,6 @@ function get_user_level_data(user_id){
                             }
                         });
                         
-                         $("select.selectpicker").selectpicker('refresh');
-                        
                     }
                 }
         });

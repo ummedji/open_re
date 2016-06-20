@@ -198,15 +198,19 @@ class Esp extends Front_Controller
                 $html1 .= '<td><input type="hidden" name="month_data[]" value="'.$monthvalue.'" /></td><td></td>';
                 $j = 1;
                     foreach($month_data as $monthkey => $monthvalue){
-                        $html1 .= '<td>';
-                        $html1 .= '<select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" ><option value= "">Select Assumption</option>';
+                        $html1 .= '<td><div class="col-md-3 col-sm-3 tp_form">
+	<div class="form-group">';
+                        $html1 .= '<select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+                        
+                        <option value= "">Select Assumption</option>';
                         foreach($assumption_data as $assumption_key => $assumption)
                         {
                             $html1 .= '<option value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
                         }
                         $html1 .= '</select>';
                         
-                        $html1 .= '</td><td><input type="text" name="probablity'.$j.'[]" /></td>';
+                        $html1 .= '</div>
+</div></td><td><input type="text" name="probablity'.$j.'[]" /></td>';
                         $j++;
                     }
                 $html1 .= '</tr>';

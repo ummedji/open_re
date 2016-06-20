@@ -731,6 +731,50 @@ class Web_service extends Front_Controller
     }
 
     /**
+     * @ Function Name        : getBudget
+     * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
+     * @ Function Purpose    : Get Primary Sales Invoice Data
+     * */
+    public function getBudget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $checked_type = $this->input->get_post('checked_type');
+
+        if(isset($user_id))
+        {
+            $budget_data = $this->ishop_model->get_budget_details($user_id,$country_id,$checked_type,null,'web_service');
+            if(!empty($budget_data))
+            {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $budget_data;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
      * @ Function Name        : viewSchemes
      * @ Function Params    : user_id,country_id,role_id,year,region,territory (POST)
      * @ Function Purpose    : Get Credit Limit Data
@@ -1585,6 +1629,38 @@ class Web_service extends Front_Controller
     }
 
     /**
+     * @ Function Name        : saveBudget
+     * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
+     * @ Function Purpose    : Save Primary Sales Data
+     * */
+    public function saveBudget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $id = $this->ishop_model->add_budget_data($this->input->post(),$user_id,'web_service',$country_id);
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
      * @ Function Name        : editTarget
      * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
      * @ Function Purpose    : Save ROL Data
@@ -1597,6 +1673,38 @@ class Web_service extends Front_Controller
         if(isset($user_id))
         {
             $id = $this->ishop_model->update_target_detail($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    /**
+     * @ Function Name        : editBudget
+     * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
+     * @ Function Purpose    : Save ROL Data
+     * */
+    public function editBudget()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id))
+        {
+            $id = $this->ishop_model->update_budget_detail($user_id,$country_id,'web_service');
             if($id)
             {
                 $result['status'] = true;
