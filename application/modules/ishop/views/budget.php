@@ -26,7 +26,7 @@ echo form_open('',$attributes);
                 if($login_customer_type == 7){
                     ?>
                     <div class="copy_btn">
-                        <a href="javascript:void(0);" id="target_copy"  data-toggle="modal" data-target="#TargetCopyModal">Copy</a>
+                        <a href="javascript:void(0);" id="target_copy"  data-toggle="modal" data-target="#BudgetCopyModal">Copy</a>
                     </div>
 
                 <?php } ?>
@@ -425,6 +425,5 @@ if (!$this->input->is_ajax_request()) {
           </div>
       </div>
     </div>
-
   </div>
 </div>

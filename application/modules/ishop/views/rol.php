@@ -32,7 +32,7 @@ echo form_open('ishop/set_rol',$attributes); ?>
                                 <div class="col-md-4 col-sm-6 tp_form">
                                     <div class="form-group">
                                         <label>Geo Level 3<span style="color: red">*</span></label>
-                                        <select class="selectpicker" name="geo_level_rol" id="geo_level_rol">
+                                        <select class="selectpicker" name="geo_level_rol" id="geo_level_rol" data-live-search="true">
                                             <option value="">Select Geo Location</option>
                                             <?php
                                             if(isset($geo_data) && !empty($geo_data))
@@ -51,7 +51,7 @@ echo form_open('ishop/set_rol',$attributes); ?>
                                 <div class="col-md-4 col-sm-6 tp_form">
                                     <div class="form-group">
                                         <label>Geo Level 2<span style="color: red">*</span></label>
-                                        <select class="selectpicker" name="geo_level_1" id="geo_level_1">
+                                        <select class="selectpicker" name="geo_level_1" id="geo_level_1" data-live-search="true">
                                             <option value="">Select Geo Location</option>
                                         </select>
                                     </div>
@@ -59,7 +59,7 @@ echo form_open('ishop/set_rol',$attributes); ?>
                                 <div class="col-md-4 col-sm-6 tp_form">
                                     <div class="form-group">
                                         <label>Retailer Name<span style="color: red">*</span></label>
-                                        <select class="selectpicker" name="fo_retailer_id" id="retailer_rol">
+                                        <select class="selectpicker" name="fo_retailer_id" id="retailer_rol" data-live-search="true">
                                             <option value="">Select Retailer</option>
                                         </select>
                                     </div>
@@ -112,9 +112,9 @@ echo form_open('ishop/set_rol',$attributes); ?>
                 <div class="row">
                     <div class="col-md-4_ tp_form">
                         <div class="form-group">
-                            <label>Product SKU Name</label>
+                            <label>Product SKU Name<span style="color: red">*</span></label>
                             <select class="selectpicker" name="prod_sku" id="prod_sku" data-live-search="true" >
-                                <option value="">Product Name<span style="color: red">*</span></option>
+                                <option value="">Product Name</option>
                                 <?php
                                 if(isset($product_sku) && !empty($product_sku))
                                 {

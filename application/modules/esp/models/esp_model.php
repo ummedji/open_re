@@ -96,4 +96,19 @@ class Esp_model extends BF_Model
         
     }
     
+    public function get_assumption_data(){
+        
+        $sql = "SELECT assumption_id,assumption_name from bf_master_assumptions";
+        
+        $master_assumption_data = $this->db->query($sql)->result_array();
+        
+        if(isset($master_assumption_data) && !empty($master_assumption_data)) {
+            return $master_assumption_data;
+        } else{
+            return 0;
+        }         
+
+        
+    }
+    
 }
