@@ -1080,10 +1080,6 @@ class Ishop extends Front_Controller
 		if(isset($primary_sales_id) && !empty($primary_sales_id))
 		{
 			$primary_sales_details= $this->ishop_model->primary_sales_product_details_view_by_id($primary_sales_id);
-
-			/*Template::set('td', $primary_sales_details['count']);
-			Template::set('pagination', (isset($primary_sales_details['pagination']) && !empty($primary_sales_details['pagination'])) ? $primary_sales_details['pagination'] : '' );*/
-
 			Template::set('table',$primary_sales_details);
 		}
 		Template::set_view('ishop/primary_sales');

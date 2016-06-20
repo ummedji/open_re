@@ -419,26 +419,20 @@ class Ishop_model extends BF_Model
         $sql .= 'WHERE 1 ';
         $sql .= 'AND ipsp.primary_sales_id =' . $primary_sales_id . ' ';
         $sql .= 'ORDER BY ipsp.primary_sales_product_id DESC ';
-
-
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);
             $primary_sales_product_detail = $info->result_array();
             return $primary_sales_product_detail;
         } else {
-            //$info = $this->db->query($sql);
+            $product_view=array();
             $product_detail = $this->grid->get_result_res($sql);
-            /* $primary_sales_product_detail = $info->result_array();
-             $product_detail = array('result'=>$primary_sales_product_detail);*/
-
-
-            if (isset($product_detail['result']) && !empty($product_detail['result'])) {
+            if (isset($product_detail['result']) && !empty($product_detail['result']))
+            {
                 $product_view['head'] = array('Sr. No.', 'Action', 'Product SKU Code', 'Product SKU Name', 'PO Qty. Kg/Ltr', 'Dispatched Qty. Kg/Ltr', 'Amount');
                 // $product_view['count'] = count($product_view['head']);
                 $i = 1;
                 foreach ($product_detail['result'] as $pd) {
                     $qty_data = '<div class="qty_' . $pd["primary_sales_product_id"] . '"><span class="qty">' . $pd['quantity'] . '</span></div>';
-
                     $dispatched_quantity = '<div class="dispatched_quantity_' . $pd["primary_sales_product_id"] . '"><span class="dispatched_quantity">' . $pd['dispatched_quantity'] . '</span></div>';
                     $amount = '<div class="amount_' . $pd["primary_sales_product_id"] . '"><input  type="hidden"  name="amount[]" value="' . $pd['amount'] . '"/><span class="amount">' . $pd['amount'] . '</span></div>';
                     $product_view['row'][] = array($i, $pd['primary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $qty_data, $dispatched_quantity, $amount);
@@ -448,10 +442,8 @@ class Ishop_model extends BF_Model
                 $product_view['action'] = 'is_action';
                 $product_view['edit'] = 'is_edit';
                 $product_view['delete'] = 'is_delete';
-                //$product_view['pagination'] = $product_detail['pagination'];
-                // $product_view['pagination'] = $report_details['pagination'];
-                return $product_view;
             }
+            return $product_view;
         }
     }
 

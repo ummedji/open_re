@@ -72,7 +72,7 @@ class Esp_model extends BF_Model
         
         if(isset($_POST) && !empty($_POST)){
             
-            testdata($_POST);
+         //   testdata($_POST);
             
             if(!isset($_POST['employee_data']))
             {
@@ -90,15 +90,15 @@ class Esp_model extends BF_Model
             $created_user_id = $_POST['login_user_id'];
             
             $data = array( 
-                'pbg_id'	= >  $pbg_id, 
-                'created_by_user'= > $created_user_id, 
-                'business_code'	= >  $user_business_code,
-                'modified_by_user'	= >  $_POST['login_user_id'],
-                'created_on'	= >  date("Y-m-d h:i:s")
+                'pbg_id'	=>  $pbg_id, 
+                'created_by_user'=> $created_user_id, 
+                'business_code'	=>  $user_business_code,
+                'modified_by_user'	=>  $_POST['login_user_id'],
+                'created_on'	=>  date("Y-m-d h:i:s")
             );
             $this-> db->insert('bf_esp_forecast', $data);
-            
-            
+            echo $insert_id = $this->db->insert_id();
+            die;
         }
         
     }
