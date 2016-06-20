@@ -233,14 +233,12 @@ class Esp extends Front_Controller
         
         $forecastdata = $_POST['forecastdata'];
         
-        
         $forecase_value = $this->esp_model->get_forecast_data($product_sku_id,$month_data);
-        
-        testdata($forecase_value);
         
         $final_forecast_value  = $forecastdata*$forecase_value;
         
-        return $final_forecast_value;
+        echo $final_forecast_value;
+        die;
         
     }
     

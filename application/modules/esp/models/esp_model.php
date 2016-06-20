@@ -80,17 +80,16 @@ class Esp_model extends BF_Model
     
     public function get_forecast_data($product_sku_id,$month_data){
         
-        $this->db->select("bmp.price");
-        $this->db->from("bf_master_price as bmp");
-        $this->db->where("bmp.product_sku_country_id",$product_sku_id);
+        $sql = "SELECT `bmp`.`price` FROM `bf_master_price` as bmp ";
         
-        $this->db->where('bmp.from_date >=', $month_data);
-        $this->db->where('bmp.to_date <=', $month_data);
+        $sql .= " WHERE `bmp`.`product_sku_country_id` =  '".$product_sku_id."' ";
+        $sql .= " AND `bmp`.`price_type` =  'forecast' ";
+        $sql .= " AND ('".$month_data."' BETWEEN from_date AND to_date)";
         
-        $master_forecast_data = $this->db->get()->result_array();
+        $master_forecast_data = $this->db->query($sql)->result_array();
         
         if(isset($master_forecast_data) && !empty($master_forecast_data)) {
-            return $master_forecast_data[0][price];
+            return $master_forecast_data[0]['price'];
         } else{
             return 0;
         }

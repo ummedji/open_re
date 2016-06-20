@@ -2307,178 +2307,75 @@ class Ishop extends Front_Controller
 		Template::set_view('ishop/target_view');
 		Template::render();
 	}
-        
-       /* public function target_view() {
-            
-            Assets::add_module_js('ishop', 'target_view.js');
-            
-            $user= $this->auth->user();
-            
-            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
-            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id);
-            $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
-            
-            $logined_user_type = $user->role_id;
-            $logined_user_id = $user->id;
-            $logined_user_countryid = $user->country_id;
-            
-            $get_geo_level_data = "";
-            $action_data = $this->uri->segment(2);
-            
-            //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
-            
-            if($logined_user_type == 7){
-                
-                //FOR HO
-                $default_type_selected = 9;
-                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            }
-            elseif($logined_user_type == 8){
-            
-                //FOR FO
-                $default_type_selected = 9;
-                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            }
-            elseif($logined_user_type == 9){
-                //FOR DISTRIBUTOR
-                $default_type_selected = null; 
-            }
-            elseif($logined_user_type == 10){
-            
-                //FOR RETAILER
-                $default_type_selected = null; 
-            }
-           
-            if(isset($_POST) && !empty($_POST)){
-                
-                $view_target_data = $this->ishop_model->get_target_data($_POST);
-                
-                 Template::set('view_target_data',$view_target_data);
-                
-            }
-            
-          //  echo "<pre>";
-          //  print_r($get_geo_level_data);
-          //  die;
-            
-		  //var_dump($distributor);die;
-            Template::set('login_customer_type',$logined_user_type);
-            Template::set('login_customer_id',$logined_user_id);
-            Template::set('login_customer_countryid',$logined_user_countryid);
-            
-            Template::set('distributor',$distributor);
-            Template::set('retailer',$retailer);
-            Template::set('product_sku',$product_sku);
-            
-            
-            Template::set('geo_level_data',$get_geo_level_data);
-            
-            Template::set_view('ishop/target');
-            Template::render();
-            
-            
-        }*/
+
         
         //BUDGET
-        
-        public function budget() {
-            
+
+	public function budget() {
+
             Assets::add_module_js('ishop', 'budget.js');
             
             $user= $this->auth->user();
-            
-            $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
-            
-            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
-            
+
             $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
             
             $logined_user_type = $user->role_id;
-            $logined_user_id = $user->id;
-            $logined_user_countryid = $user->country_id;
-            
             $get_geo_level_data = "";
-            $action_data = $this->uri->segment(2);
+			$action_data = $this->uri->segment(2);
             
             //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
-            
-            if($logined_user_type == 7){
-                
-                //FOR HO
-                $default_type_selected = 9;
-                
-                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            
-                
-            }
-            elseif($logined_user_type == 8){
-            
-                //FOR FO
-                $default_type_selected = 9; 
-                
-                $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            
-            }
-            elseif($logined_user_type == 9){
-            
-                //FOR DISTRIBUTOR
-                $default_type_selected = null; 
-                
-                if(isset($_POST) && !empty($_POST)){
-                    
-                     $target_data = $this->ishop_model->get_target_monthly_data($_POST);
-                     
-                      $target_month_data = $this->ishop_model->get_monthly_data($_POST);
-                    
-                       Template::set('target_data',$target_data);
-                       Template::set('month_data',$target_month_data);
-                      
-              /*
-                    echo "<pre>";
-                    print_r($_POST);
-                    print_r($target_data);
-                    print_r($target_month_data);
-                    
-                    die; */
-                }
-                
-            }
-            elseif($logined_user_type == 10){
-            
-                //FOR RETAILER
-                $default_type_selected = null; 
-                
-            }
-           
-          //  echo "<pre>";
-          //  print_r($get_geo_level_data);
-          //  die;
-            
-		  //var_dump($distributor);die;
-            Template::set('login_customer_type',$logined_user_type);
-            Template::set('login_customer_id',$logined_user_id);
-            Template::set('login_customer_countryid',$logined_user_countryid);
-            
-            Template::set('distributor',$distributor);
-            Template::set('retailer',$retailer);
-            Template::set('product_sku',$product_sku);
-            
-            
-            Template::set('geo_level_data',$get_geo_level_data);
-            
+
+
+			$checked_type=null;
+
+			$checked_type = (isset($_POST['checked_type']) && !empty($_POST['checked_type']) ) ? $_POST['checked_type'] :'distributor';
+
+			$default_type_selected = 9;
+			$get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+
+			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$budget_data= $this->ishop_model->get_budget_details($user->id,$user->country_id,$checked_type,$page);
+
+
+			Template::set('td', $budget_data['count']);
+			Template::set('pagination', (isset($budget_data['pagination']) && !empty($budget_data['pagination'])) ? $budget_data['pagination'] : '' );
+
+			Template::set('table', $budget_data);
+
+			Template::set('login_customer_type',$logined_user_type);
+
+			Template::set('current_user',$user);
+			Template::set('product_sku',$product_sku);
+			Template::set('geo_level_data',$get_geo_level_data);
+
             Template::set_view('ishop/budget');
             Template::render();
             
         }
         
         public function add_budget_data() {
-            
+
+			//testdata($_POST);
             $budget_data = $_POST;
-            $set_budget_data = $this->ishop_model->add_budget_data($budget_data);
+			$user= $this->auth->user();
+
+            $set_budget_data = $this->ishop_model->add_budget_data($budget_data,$user->id,null,$user->country_id);
             redirect("ishop/budget");
         }
-        
-        public function check_budget_data_status() {
+
+	public function update_budget_details()
+	{
+		$user = $this->auth->user();
+		$this->ishop_model->update_budget_detail($user->id,$user->country_id);
+	}
+
+	public function delete_budget_details()
+	{
+		$budget_id = isset($_POST['budget_id']) ? $_POST['budget_id'] : '';
+		$this->ishop_model->delete_budget_detail($budget_id);
+	}
+
+	public function check_budget_data_status() {
             
             $product_sku_id = $_POST["product_sku_id"];
            // $month_data = explode("/",$_POST["month_data"]);

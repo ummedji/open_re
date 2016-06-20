@@ -58,7 +58,11 @@ $(document).on("focusout",".forecast_qty",function(){
         type: 'POST',
         url: site_url+"esp/get_forecast_value_data",
         data: {relattrval:rel_attr_val,forecastdata:forecast_data},
-        success: function(resp){}
+        success: function(resp){
+            
+            $("input#forecast_value_"+rel_attr_val).val(resp);
+            
+        }
     });
     
 });
