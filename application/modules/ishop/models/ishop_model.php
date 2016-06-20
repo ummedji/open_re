@@ -5011,10 +5011,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $detail_data["order_product_id"] = explode(',', $detail_data["order_product_id"]);
             $detail_data["dispatched_quantity"] = explode(',', $detail_data["dispatched_quantity"]);
-            $detail_data["units"] = explode(',', $detail_data["units"]);
-            $detail_data["quantity"] = explode(',', $detail_data["quantity"]);
-            $detail_data["quantity_kg_ltr"] = explode(',', $detail_data["quantity_kg_ltr"]);
-            $detail_data["amount"] = explode(',', $detail_data["amount"]);
+            $detail_data["units"] = explode(',', @$detail_data["units"]);
+            $detail_data["quantity"] = explode(',', @$detail_data["quantity"]);
+            $detail_data["quantity_kg_ltr"] = explode(',', @$detail_data["quantity_kg_ltr"]);
+            $detail_data["amount"] = explode(',', @$detail_data["amount"]);
         }
 
         if (!empty($detail_data["order_product_id"])) {
