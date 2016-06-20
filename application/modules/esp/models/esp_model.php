@@ -97,7 +97,79 @@ class Esp_model extends BF_Model
                 'created_on'	=>  date("Y-m-d h:i:s")
             );
             $this-> db->insert('bf_esp_forecast', $data);
-            echo $insert_id = $this->db->insert_id();
+            
+            $forecast_insert_id = $this->db->insert_id();
+            
+            foreach($_POST['month_data'] as $month_key=>$month_value){
+                
+                foreach($_POST['forecast_qty'] as $forecast_qty_key => $forecast_qty_value){
+                    
+                    foreach($forecast_qty_value as $qty=>$forecast_qty){
+                        
+                        //FORECAST QTY COMES FOR EACH MONTH
+                        
+                    }
+                    
+                    //FORECAST PRODUCT SKU FROM QTY KEY
+                    
+                    
+                }
+                
+                
+                foreach($_POST['forecast_value'] as $forecast_value_key => $forecast_value){
+                    
+                    foreach($forecast_value as $val_key=>$forecastvalue){
+                        
+                        //FORECAST VALUE COMES FOR EACH MONTH
+                        
+                    }
+                }
+                
+                //===================================================
+                
+                foreach($_POST['assumption1'] as $assumption1_key => $assumption1_value){
+                    
+                        //FORECAST VALUE COMES FOR EACH MONTH
+                       
+                }
+                
+                foreach($_POST['assumption2'] as $assumption2_key => $assumption2_value){
+                    
+                        //FORECAST VALUE COMES FOR EACH MONTH
+                       
+                }
+                
+                foreach($_POST['assumption3'] as $assumption3_key => $assumption3_value){
+                    
+                        //FORECAST VALUE COMES FOR EACH MONTH
+                       
+                }
+                
+                //=====================================================
+                
+                foreach($_POST['probablity1'] as $probablity1_key => $probablity1_value){
+                    
+                        //FORECAST VALUE COMES FOR EACH MONTH
+                       
+                }
+                
+                foreach($_POST['probablity2'] as $probablity2_key => $probablity2_value){
+                    
+                        //FORECAST VALUE COMES FOR EACH MONTH
+                       
+                }
+                
+                foreach($_POST['probablity3'] as $probablity3_key => $probablity3_value){
+                    
+                        //FORECAST VALUE COMES FOR EACH MONTH
+                       
+                }
+                
+                
+                
+                
+            }
+            
             die;
         }
         

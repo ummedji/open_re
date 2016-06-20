@@ -5080,11 +5080,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 );
 
                 $id = $this->db->update('bf_ishop_orders', $amount_data, array('order_id' => $detail_data["order_id"]));
-
-                return $id;
             }
 
         }
+
+
+        return $id;
 
     }
 
