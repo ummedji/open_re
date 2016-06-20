@@ -7,6 +7,8 @@ $(document).ready(function(){
       buttonImageOnly: true,
       buttonText: "Select date",
       autoclose: true
+        
+        
     });
     
     $( "#to_month" ).datepicker({

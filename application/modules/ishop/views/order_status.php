@@ -462,7 +462,7 @@ if (!$this->input->is_ajax_request()) { ?>
 <div id="middle_container" class="order_status">
 
 </div>
-<div id="middle_container_product">
+<div id="middle_container_product" class="order_status">
 
 </div>
 <div class="clearfix"></div>

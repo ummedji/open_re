@@ -72,9 +72,40 @@ class Esp_model extends BF_Model
         
         if(isset($_POST) && !empty($_POST)){
             
+            //testdata($_POST);
+            
+            if(!isset($_POST['employee_data']))
+            {
+                $forecast_user_id = $_POST['login_user_id'];
+            }
+            else{
+                $forecast_user_id = $_POST['employee_data'];
+            }
+            
+            $businss_data = $this->get_business_code($forecast_user_id);
+            
+            $user_business_code = $businss_data;
+            
+            $pbg_id = $_POST['pbg_data'];
+            $created_user_id = $_POST['login_user_id'];
+            
             
             
         }
+        
+    }
+    
+    public function get_business_code($forecast_user_id){
+        
+        $sql = "SELECT bussiness_code FROM `bf_users` where id='".$forecast_user_id."'";
+        
+        $business_code_data = $this->db->query($sql)->result_array();
+        
+        if(isset($business_code_data) && !empty($business_code_data)){
+            return $business_code_data[0]['bussiness_code'];
+        }else{
+            return 0;
+        }      
         
     }
     
@@ -107,8 +138,6 @@ class Esp_model extends BF_Model
         } else{
             return 0;
         }         
-
-        
     }
     
 }

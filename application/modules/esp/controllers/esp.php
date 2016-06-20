@@ -193,11 +193,15 @@ class Esp extends Front_Controller
             
             $html1 .= '<tbody>';
              $k = 1;
-            foreach($month_data as $monthkey => $monthvalue){
+           // foreach($month_data as $monthkey => $monthvalue){
+             for($a = 1; $a<=3; $a++){
+                
                 $html1 .= '<tr>';
                 $html1 .= '<td><input type="hidden" name="month_data[]" value="'.$monthvalue.'" /></td><td></td>';
                 $j = 1;
                     foreach($month_data as $monthkey => $monthvalue){
+                
+               
                         $html1 .= '<td><div class="col-md-3 col-sm-3 tp_form">
 	<div class="form-group">';
                         $html1 .= '<select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -213,6 +217,7 @@ class Esp extends Front_Controller
 </div></td><td><input type="text" name="probablity'.$j.'[]" /></td>';
                         $j++;
                     }
+          
                 $html1 .= '</tr>';
                     $k++;
             }
@@ -257,8 +262,8 @@ class Esp extends Front_Controller
     }
     
     public function add_forecast(){
-        testdata($_POST);
-   //     $forecast_data = $this->esp_model->add_forecast_data();
+      //  testdata($_POST);
+        $forecast_data = $this->esp_model->add_forecast_data();
         
     }
     
