@@ -63,8 +63,9 @@ class Ishop extends Front_Controller
 
 	public function primary_sales_details()
 	{
-		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_primary_sales_details($user_id);
+		$user = $this->auth->user();
+
+		$this->ishop_model->add_primary_sales_details($user->id,$user->country_id);
 		Template::set_message('Insert Data successful', 'success');
 		redirect('ishop/index');
 	}
