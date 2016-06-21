@@ -134,7 +134,9 @@ class Esp extends Front_Controller
                             $month=date("F",$time);
                             $year=date("Y",$time);
                             
-                            $html .= '<th colspan="2">'.$month.'-'.$year.'</th>';
+                            $lock_data = "<a href='javascript:void(0);' class='lock_data' />Lock</a>";
+                            
+                            $html .= '<th colspan="2">'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
                         }
                        
                    $html .= '</tr>';
@@ -157,14 +159,6 @@ class Esp extends Front_Controller
                 $html .= '</thead>';
            $html .= '<tbody>';
             $i = 1;
-            
-            $assumption1 = "";
-            $assumption2 = "";
-            $assumption3 = "";
-            
-            $probablity1 = "";
-            $probablity2 = "";
-            $probablity3 = "";
             
             $forecast_id = "";
             
@@ -199,13 +193,9 @@ class Esp extends Front_Controller
                     $l++;
                    
                     
-                    
-                    
                 }
                $html .= '<td></td>';
                $html .= '</tr>';
-                
-               
                 
             }
             
@@ -248,13 +238,7 @@ class Esp extends Front_Controller
                 }
 
             }
-           /* 
-            echo "<pre>";
-            print_r($asumption);
-            print_r($probablity);
-            print_r($assumption_month);
-            print_r($probablity_month);
-            */
+           
             $k = 1;
             
              for($a = 1; $a<=3; $a++){
@@ -325,10 +309,11 @@ class Esp extends Front_Controller
            
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
+                <input type="hidden" id="forecast_id" name="forecast_id" value="'.$forecast_id.'" />
                 <div class="row">
                     <div class="save_btn">
                         <button type="submit" class="btn btn-primary">Save</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary" id="freeze_data">Submit</button>
                     </div>
                 </div>
             </div>';
@@ -372,6 +357,17 @@ class Esp extends Front_Controller
         $business_data = $this->esp_model->get_business_code(NULL);
         echo $business_data;
         die;
+    }
+    
+    public function update_forecast_freeze_status(){
+        
+        $user = $this->auth->user();
+        $forecast_id = $_POST["forecastid"];
+        $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user->id,$forecast_id);
+        
+        echo $freeze_data;
+        die;
+        
     }
     
     public function get_monthly_data($from_month,$to_month) {

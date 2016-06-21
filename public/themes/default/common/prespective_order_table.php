@@ -64,15 +64,19 @@ if(isset($prespective_order_data) && count($prespective_order_data)>0) { ?>
                             </tr>
                         <?php } ?>
                         </tbody>
-                            <tr>
-                                <td colspan='<?php echo $td?>'>
-                                    <?php
-                                    if (isset($pagination)) {
-                                        echo $pagination;
-                                    }
-                                    ?>
-                                </td>
-                            </tr>
+                            <?php if(isset($td) && isset($pagination)){ ?>
+                                <tfoot>
+                                <tr>
+                                    <td colspan='<?php echo $td?>'>
+                                        <?php
+                                        if (isset($pagination)) {
+                                            echo $pagination;
+                                        }
+                                        ?>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            <?php } ?>
                         <?php } ?>
                     </table>
                     <div class="clearfix"></div>

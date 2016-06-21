@@ -172,7 +172,7 @@ $(document).ready(function(){
     $("select.geo_level_1_data").on("change",function(){
        
        var selected_geo_id = $(this).val();
-       alert(selected_geo_id);
+      // alert(selected_geo_id);
        get_lower_geo_by_parent_geo(selected_geo_id);
        
       // console.log(selected_user_id +"===="+selected_user_geo_location);
@@ -1073,7 +1073,7 @@ $("body").on("keyup","input.quantity_data",function(){
             
             var unit_data = get_data_conversion(sku_id,quantity,units);
             
-            alert(sku_id+"==="+units+"==="+quantity+"==="+unit_data);
+          //  alert(sku_id+"==="+units+"==="+quantity+"==="+unit_data);
             
             $("input#qty_kg_ltr_"+$.trim(product_row_id)).val(unit_data);
             $("div.quantity_kg_ltr_"+$.trim(product_row_id) +" span.quantity_kg_ltr").text(unit_data);

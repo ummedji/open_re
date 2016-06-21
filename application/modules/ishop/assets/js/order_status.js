@@ -152,6 +152,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
             $("#order_status_table_container").html(resp);
         }
     });*/
+    $(this).prop("disabled",true);
     return false;
 });
 

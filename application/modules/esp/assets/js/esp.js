@@ -44,12 +44,51 @@ $(document).on("change","select.employee_data",function(){
 $(document).on("change","select.pbg_data",function(){
         
     var pbg_id = $(this).val();
-    
-   // $(this).parent().nextAll("div.form-group").remove();
-   // $("div#pbg_data").empty();
     get_pbg_product_sku_data(pbg_id);
 
 });
+
+$(document).on("click","button#freeze_data",function(e){
+    
+    e.preventDefault();
+   
+    var forecast_id = $("input#forecast_id").val();
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+"esp/update_forecast_freeze_status",
+        data: {forecastid:forecast_id},
+        success: function(resp){
+            
+            var message = "";
+            if(resp == 1){
+                message += 'Data freezed successfully.';
+            }
+            else{
+                message += 'Data not freezed.';
+            }
+            
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    //appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                    }
+                });
+            
+        }
+    });
+    
+    return false;
+
+});
+
 
 $(document).on("focusout",".forecast_qty",function(){
     

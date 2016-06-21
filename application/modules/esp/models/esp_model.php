@@ -281,4 +281,23 @@ class Esp_model extends BF_Model
         
     }
     
+    public function update_forecast_freeze_status_data($user_id,$forecast_id){
+        
+        $data = array(
+            'freeze_status'	=>1,
+            'freeze_user_id' =>$user_id
+        );
+            
+        $this->db->where('forecast_id', $forecast_id);
+        $this->db->update('bf_esp_forecast' ,$data);
+        
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+        
+    }
+    
 }

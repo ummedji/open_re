@@ -1719,6 +1719,32 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+    public function getTargetbyDistributor()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $target_data = $this->ishop_model->get_target_monthly_data($_POST,'web_service');
+            $target_month_data = $this->ishop_model->get_monthly_data($_POST,'web_service');
+
+            $target_data_array=array(
+                "target_data" => $target_data,
+                "target_month_data" =>$target_month_data
+                );
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = $target_data_array;
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
     /**
      * @ Function Name        : saveBudget
      * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)
