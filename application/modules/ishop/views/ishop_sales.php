@@ -202,14 +202,14 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="sales_qty" id="sales_qty" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="sales_qty" id="sales_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Amount<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="amt" id="amt" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="amt" id="amt" placeholder="">
                     </div>
                 </div>
                 <div class="plus_btn"><a href="#" id="add_sales_stock_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
@@ -258,22 +258,6 @@ echo form_open('',$attributes); ?>
             <!--  <div><input type="submit" class="btn btn-primary" value="Save" /></div>-->
             <button type="submit" class="btn btn-primary">Save</button>
         </div>
-        <!--<div class="col-md-9">
-            <div class="row">
-                <div class="col-md-3 upload_file_space">
-                    <div class="input-group">
-                                    <span class="input-group-btn">
-                                        <span class="btn btn-primary btn-file">
-                                            Browse <input type="file" multiple>
-                                        </span>
-                                    </span>
-                        <input type="text" class="form-control" readonly>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="col-md-9 chech_data"><button type="button" class="btn btn-default">Check Data</button> <button type="button" class="btn btn-default">Download Templates</button></div>
-            </div>
-        </div>-->
     </div>
 </div>
 <?php echo form_close(); ?>

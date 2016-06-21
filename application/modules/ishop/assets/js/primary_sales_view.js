@@ -20,7 +20,6 @@ $(function () {
 });
 /*Date Picker*/
 
-
 // START ::: Added By Vishal Malaviya For Validation
 var primary_sales_view_validators = $("#primary_sales_view").validate({
     ignore: ".ignore",
@@ -118,6 +117,7 @@ $(document).on('click', 'div.primary_cont .edit_i', function () {
     $("div.primary_cont div.order_tracking_no_"+id).empty();
     $("div.primary_cont div.order_tracking_no_"+id).append('<input id="order_tracking_no_'+id+'" type="text" name="order_tracking_no[]" value="'+order_tracking_no+'"/>');
 
+
     $(this).prop("disabled",true);
     return false;
 });
@@ -130,19 +130,19 @@ $(document).on('click', 'div.primary_products .edit_i', function () {
 
     var qty_value = $("div.primary_products div.qty_"+id+" span.qty").text();
     $("div.primary_products div.qty_"+id).empty();
-    $("div.primary_products div.qty_"+id).append('<input type="hidden" name="primary_sales_product_detail[]" value="'+id+'" /><input id="quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty_value+'"/>');
+    $("div.primary_products div.qty_"+id).append('<input type="hidden" name="primary_sales_product_detail[]" value="'+id+'" /><input id="quantity_'+id+'" type="text" class="quantity_data allownumericwithdecimal" name="quantity[]" value="'+qty_value+'"/>');
 
     //AMOUNT
 
     var amount_value = $("div.primary_products div.amount_"+id+" span.amount").text();
     $("div.primary_products div.amount_"+id).empty();
-    $("div.primary_products div.amount_"+id).append('<input id="amount_'+id+'" type="text" name="amount[]" value="'+amount_value+'"/>');
+    $("div.primary_products div.amount_"+id).append('<input id="amount_'+id+'" class="allownumericwithdecimal" type="text" name="amount[]" value="'+amount_value+'"/>');
 
     //APPROVED QUANTITY
 
     var dispatched_quantity_value = $("div.primary_products div.dispatched_quantity_"+id+" span.dispatched_quantity").text();
     $("div.primary_products div.dispatched_quantity_"+id).empty();
-    $("div.primary_products div.dispatched_quantity_"+id).append('<input id="dispatched_quantity_'+id+'" type="text" name="dispatched_quantity[]" value="'+dispatched_quantity_value+'"/>');
+    $("div.primary_products div.dispatched_quantity_"+id).append('<input id="dispatched_quantity_'+id+'" type="text" class="allownumericwithdecimal" name="dispatched_quantity[]" value="'+dispatched_quantity_value+'"/>');
 
     $(this).prop("disabled",true);
     return false;

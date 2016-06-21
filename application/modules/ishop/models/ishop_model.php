@@ -4214,7 +4214,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     public function get_prespective_order($from_date, $todate, $loginusertype, $loginuserid, $page = null, $web_service = null)
     {
 
-        $sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1 ';
+        $sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1,bu.display_name as bu_dn,u.display_name as b_dn ';
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.customer_id_from) ';
         $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd ON (bmupd.user_id = bu.id) ';
@@ -4231,6 +4231,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $sql .= 'ORDER BY order_date DESC ';
 
+        //echo $sql;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);
             $prespective_order_data = $info->result_array();
@@ -4239,7 +4240,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             // var_dump($product_detail);die;
         } else {
             $prespective_order = $this->grid->get_result_res($sql);
-
+           // testdata($prespective_order);
             if (isset($prespective_order['result']) && !empty($prespective_order['result'])) {
 
                 if ($loginusertype == 9) {
@@ -4268,22 +4269,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $read_status = "<a class='unread_" . $po['order_id'] . "'  href='javascript:void(0);'  onclick = 'mark_as_unread(" . $po['order_id'] . ");'>Mark as Unread</a>";
                     }
 
-                    // }
-                    //  else if($loginusertype == 10){
-                    //
-                    //      if($po['read_status'] == 0){
-                    //          $read_status = "Unread";
-                    //      }
-                    //       else{
-                    //           $read_status = "Read";
-                    //      }
-
-                    //  }
-
                     $otn = '<div class="eye_i" prdid ="' . $po['order_id'] . '"><a href="javascript:void(0);">' . $po['order_tracking_no'] . '</a></div>';
 
 
-                    $prespective['row'][] = array($i, $po['ot_from_fname1'] . " " . $po['ot_from_mname1'] . " " . $po['ot_from_lname1'], $po['PO_no'], $otn, date("Y-m-d", strtotime($po['order_date'])), $po['from_fname'] . " " . $po['from_mname'] . " " . $po['from_lname'], $po['address'], $po['primary_mobile_no'], $read_status);
+                    $prespective['row'][] = array($i, $po['b_dn'], $po['PO_no'], $otn, date("Y-m-d", strtotime($po['order_date'])), $po['bu_dn'], $po['address'], $po['primary_mobile_no'], $read_status);
                     $i++;
                 }
                 $prespective['eye'] = "";

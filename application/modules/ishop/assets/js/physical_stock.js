@@ -458,7 +458,7 @@ $(document).on('click', '.edit_i', function () {
 
     var qty = $(" div.rol_quantity_"+id+" span.rol_quantity").text();
     $("div.rol_quantity_"+id).empty();
-    $("div.rol_quantity_"+id).append('<input id="rol_quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty+'"/>');
+    $("div.rol_quantity_"+id).append('<input id="rol_quantity_'+id+'" type="text" class="quantity_data allownumericwithdecimal" name="quantity[]" value="'+qty+'"/>');
 
     var qty_kg_ltr = $(" div.rol_quantity_kg_ltr_"+id+" span.rol_quantity_kg_ltr").text();
     $("div.rol_quantity_kg_ltr_"+id).empty();

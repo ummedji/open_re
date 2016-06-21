@@ -18,7 +18,6 @@ $(function () {
 });
 /*Date Picker*/
 
-
 // START ::: Added By Vishal Malaviya For Validation
 var secondary_sales_view_validators = $("#secondary_sales_view").validate({
     ignore: ".ignore",
@@ -148,7 +147,7 @@ $(document).on('click', 'div.secondary_product .edit_i', function () {
 
     var qty = $(" div.quantity_"+id+" span.quantity").text();
     $("div.quantity_"+id).empty();
-    $("div.quantity_"+id).append('<input id="quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty+'"/>');
+    $("div.quantity_"+id).append('<input id="quantity_'+id+'" type="text" class="quantity_data allownumericwithdecimal" name="quantity[]" value="'+qty+'"/>');
 
     var qty_kg_ltr = $(" div.rol_quantity_kg_ltr_"+id+" span.rol_quantity_kg_ltr").text();
     $("div.rol_quantity_kg_ltr_"+id).empty();
@@ -156,7 +155,7 @@ $(document).on('click', 'div.secondary_product .edit_i', function () {
 
     var amount = $(" div.amount_"+id+" span.amount").text();
     $("div.amount_"+id).empty();
-    $("div.amount_"+id).append('<input id="amount_'+id+'" type="text"  name="amount[]" value="'+amount+'"/>');
+    $("div.amount_"+id).append('<input id="amount_'+id+'" type="text" class="allownumericwithdecimal"  name="amount[]" value="'+amount+'"/>');
 
 
     $(this).prop("disabled",true);

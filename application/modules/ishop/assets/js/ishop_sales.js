@@ -1,13 +1,14 @@
 
 $(function () {
     $('#stock_month').datepicker({
-        format: "yyyy-mm"
+        format: "yyyy-mm",
+        autoclose: true
+
     });
     $('#invoice_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
     });
-
-
 });
 
 var login_customer_type = $("input#login_customer_role").val();
@@ -459,13 +460,13 @@ function add_sales_stock_row()
         "  </select>" +
         "</td>"+
         "<td data-title='PO Qty'>" +
-        "<input class='quantity_data numeric' type='text' name='quantity[]' value='"+po_qty+"'/>" +
+        "<input class='quantity_data numeric allownumericwithdecimal' type='text' name='quantity[]' value='"+po_qty+"'/>" +
         "</td>"+
         "<td data-title='Qty Kg/Ltr'>" +
         "<input class='input_remove_border qty_"+sr_no+"' type='text' name='qty_kgl[]' value='"+unit_data+"' readonly/>" +
         "</td>"+
         "<td data-title='Amount'>" +
-        "<input type='text' name='amount[]' value='"+amt+"'/>" +
+        "<input type='text' class = 'allownumericwithdecimal' name='amount[]' value='"+amt+"'/>" +
         "</td>"+
         "</tr>"
     );

@@ -107,6 +107,9 @@ class Esp extends Front_Controller
     
     public function get_pbg_sku_data(){
         
+        $user = $this->auth->user();
+        $login_user_id = $user->id;
+        
         $pbgid = $_POST["pbgid"];
         $from_month = $_POST["frommonth"];
         $to_month = $_POST["tomonth"];
@@ -144,7 +147,8 @@ class Esp extends Front_Controller
                    $html .= '<th>';
                    $html .= 'PBG';
                    $html .= '</th>';
-             foreach($month_data as $monthkey => $monthvalue){
+             foreach($month_data as $monthkey => $monthvalue)
+             {
                 $html .= '<th>';
                 $html .= 'Forecast Qty';
                 $html .= '</th>';
@@ -186,10 +190,96 @@ class Esp extends Front_Controller
                         
                     }
                     
-                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    //CHECK DATA FREEZED OR NOT
                     
-                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                    $forecast_freeze_data = $this->esp_model->get_forecast_freeze_status($forecast_id);
                     
+                   // echo "<pre>";print_r($forecast_freeze_data);
+                    
+                    if($forecast_freeze_data != 0)
+                    {
+                        if($forecast_freeze_data['freeze_status'] == 1){
+                            //DATA FREEZED
+                            
+                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                                
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    
+                                $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                
+                                
+                            }else{
+                                
+                                
+                            $freeze_user_parent_data = $this->esp_model->get_freeze_user_parent_data($forecast_freeze_data['freeze_user_id']);
+                            
+                            if($freeze_user_parent_data != 0){
+                                
+                                if($login_user_id == $freeze_user_parent_data){
+                                    
+                                    //SHOW FREEZEED DATA
+                                    
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    
+                                     $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                    
+                                }
+                                else{
+                                    
+                                    //NOT SHOW FREEZED DATA
+                                    
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
+                    
+                                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                    
+                                }
+                            }
+                            else{
+                                
+                                //NOT SHOW FREEZED DATA
+                                    
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
+                    
+                                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                
+                            }
+                                
+                                
+                            }
+                            
+                            
+                        }
+                        else{
+                            
+                            
+                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                                
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    
+                                $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                
+                                
+                            }else{
+                                
+                                //NOT SHOW FREEZED DATA
+                                    
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
+                    
+                                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                
+                            }
+                        }
+                    }
+                    else{
+                        
+                         $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
+                    
+                        $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                    
+                        
+                    }
+                    
+                        
                     $l++;
                    
                     

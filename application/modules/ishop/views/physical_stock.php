@@ -180,7 +180,7 @@ echo form_open('ishop/physical_stock',$attributes); ?>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="phy_qty" id="phy_qty" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="phy_qty" id="phy_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>

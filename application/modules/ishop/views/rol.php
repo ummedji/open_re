@@ -143,7 +143,7 @@ echo form_open('ishop/set_rol',$attributes); ?>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
                             <label for="po_qty">ROL Quantity<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="rol_qty" id="rol_qty" placeholder="">
+                            <input type="text" class="form-control allownumericwithdecimal" name="rol_qty" id="rol_qty" placeholder="">
                         </div>
                         <label id="rol_qty-error" class="error" for="rol_qty"></label>
                     </div>

@@ -449,7 +449,7 @@ $(document).on('click', '.edit_i', function () {
 
     var qty = $(" div.quantity_"+id+" span.quantity").text();
     $("div.quantity_"+id).empty();
-    $("div.quantity_"+id).append('<input type="hidden" name="target_id[]" value="'+id+'" /><input id="quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty+'"/>');
+    $("div.quantity_"+id).append('<input type="hidden" name="target_id[]" value="'+id+'" /><input id="quantity_'+id+'" type="text" class="quantity_data allownumericwithdecimal" name="quantity[]" value="'+qty+'"/>');
 
     $(this).prop("disabled",true);
     return false;

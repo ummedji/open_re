@@ -82,7 +82,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">PO Qty.</label>
-                        <input type="text" class="form-control" id="po_qty" name="po_qty" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" id="po_qty" name="po_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                     <label id="po_qty-error" class="error" for="po_qty"></label>
@@ -90,7 +90,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Dispatched Qty.<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" id="dispatched_qty" name="dispatched_qty" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" id="dispatched_qty" name="dispatched_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                     <label id="dispatched_qty-error" class="error" for="dispatched_qty"></label>
@@ -98,7 +98,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Amount<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" id="amt" name="amt" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" id="amt" name="amt" placeholder="">
                     </div>
                     <label id="amt-error" class="error" for="amt"></label>
                 </div>

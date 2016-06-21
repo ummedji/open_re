@@ -34,13 +34,13 @@ echo form_open('ishop/company_current_stock',$attributes); ?>
                 <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group">
                         <label for="intransist_qty">Intransist Qty.<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="intransist_qty" id="intransist_qty" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="intransist_qty" id="intransist_qty" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 tp_form">
                     <div class="form-group">
                         <label for="unrusticted_qty">Unrusticted Qty.<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="unrusticted_qty" id="unrusticted_qty" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="unrusticted_qty" id="unrusticted_qty" placeholder="">
                     </div>
                 </div>
         </div>

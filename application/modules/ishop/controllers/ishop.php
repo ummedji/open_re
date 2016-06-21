@@ -116,13 +116,13 @@ class Ishop extends Front_Controller
 				$html .="<input type='hidden' name='product_sku_id[]' value=".$val['product_sku_id'].">";
 				$html .="</td>";
 				$html .="<td data-title='PO Qty'>";
-				$html .="<input type='text' name='quantity[]' value=".$val['quantity'].">";
+				$html .="<input type='text' class='allownumericwithdecimal' name='quantity[]' value=".$val['quantity'].">";
 				$html .="</td>";
 				$html .="<td data-title='Dispatched Qty'>";
-				$html .="<input type='text' name='dispatched_quantity[]' value=".$val['dispatched_quantity'].">";
+				$html .="<input type='text' class='allownumericwithdecimal' name='dispatched_quantity[]' value=".$val['dispatched_quantity'].">";
 				$html .="</td>";
 				$html .="<td data-title='Amount'>";
-				$html .="<input type='text' name='amount[]' value=".$val['amount'].">";
+				$html .="<input type='text' class='allownumericwithdecimal' name='amount[]' value=".$val['amount'].">";
 				$html .="</td>";
 				$html .="</tr>";
 				$i++;
@@ -367,7 +367,7 @@ class Ishop extends Front_Controller
 				$html .="<input type='hidden' class='sku_".$i."' name='product_sku_id[]' value=".$val['product_sku_id'].">";
 				$html .="</td>";
 				$html .="<td data-title=' Qty'>";
-				$html .="<input type='text' class='quantity_data numeric' name='quantity[]' value=".$val['quantity'].">";
+				$html .="<input type='text' class='quantity_data numeric allownumericwithdecimal' name='quantity[]' value=".$val['quantity'].">";
 				$html .="</td>";
 				$html .="<td data-title='Units'>";
 
@@ -393,7 +393,7 @@ class Ishop extends Front_Controller
 
 				$html .="</td>";
 				$html .="<td data-title='Amount'>";
-				$html .="<input type='text' name='amount[]' value=".$val['amount'].">";
+				$html .="<input type='text' name='amount[]' class='allownumericwithdecimal' value=".$val['amount'].">";
 				$html .="</td>";
 				$html .="<td data-title='Qty Kg/Ltr'>";
 				$html .="<input class='input_remove_border qty_".$i."' type='text' name='qty_kgl[]' value=".$val['qty_kgl']." readonly>";
@@ -1515,7 +1515,8 @@ class Ishop extends Front_Controller
         * */
         
         public function get_prespective_order() {
-            
+
+			//var_dump($_POST);
             $from_date = $_POST["form_date"];
             $todate = $_POST["to_date"];
             $loginusertype = $_POST["login_customer_type"];

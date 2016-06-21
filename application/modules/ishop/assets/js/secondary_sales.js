@@ -3,7 +3,8 @@
  */
 $(function () {
     $('#invoice_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
     });
 
 
@@ -246,7 +247,7 @@ function add_sec_sales_row()
         "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
         "</td>"+
         "<td data-title='Qty'>" +
-        "<input type='text' class='quantity_data numeric' name='quantity[]' value='"+qty+"'/>" +
+        "<input type='text' class='quantity_data numeric allownumericwithdecimal' name='quantity[]' value='"+qty+"'/>" +
         "</td>"+
         "<td data-title='Units'>" +
         "<select name='units[]' class='select_unitdata' id='unit_id' >"+
@@ -256,7 +257,7 @@ function add_sec_sales_row()
         "  </select>" +
         "</td>"+
         "<td data-title='Amount'>" +
-        "<input type='text' name='amount[]' value='"+amt+"'/>" +
+        "<input type='text' name='amount[]' class='allownumericwithdecimal' value='"+amt+"'/>" +
         "</td>"+
         "<td data-title='Qty Kg/Ltr'>" +
         "<input class='input_remove_border qty_"+sr_no+"'name='qty_kgl[]' type='text' value='"+unit_data+"'readonly/>" +

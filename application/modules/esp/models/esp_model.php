@@ -285,7 +285,7 @@ class Esp_model extends BF_Model
         
         $data = array(
             'freeze_status'	=>1,
-            'freeze_user_id' =>$user_id
+            'modified_by_user' =>$user_id
         );
             
         $this->db->where('forecast_id', $forecast_id);
@@ -295,6 +295,48 @@ class Esp_model extends BF_Model
             return 1;
         }
         else{
+            return 0;
+        }
+        
+    }
+    
+    public function get_forecast_freeze_status($forecast_id){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast as bef");
+        
+        $this->db->where("bef.forecast_id",$forecast_id);
+        
+        $forecast_data = $this->db->get()->result_array();
+        
+        $forecast_array = array();
+        
+        if(!empty($forecast_data)){
+            $forecast_array["forecast_id"] = $forecast_data[0]['forecast_id'];
+            $forecast_array["freeze_status"] = $forecast_data[0]['freeze_status'];
+            $forecast_array["freeze_user_id"] = $forecast_data[0]['modified_by_user'];
+        }
+        if(isset($forecast_array) && !empty($forecast_array)) {
+            return $forecast_array;
+        } else{
+            return 0;
+        }
+        
+    }
+    
+    public function get_freeze_user_parent_data($freeze_user_id){
+        
+        
+        $this->db->select("bu.id,bu.display_name,bmerp.reporting_user_id");
+        $this->db->from("bf_master_employee_reporting_person as bmerp");
+        $this->db->join("bf_users as bu",'bu.id = bmerp.user_id');
+        $this->db->where("bmerp.user_id",$freeze_user_id);
+        $this->db->where("bmerp.to_date",NULL);
+        $user_level_data = $this->db->get()->result_array();
+        
+        if(isset($user_level_data) && !empty($user_level_data)) {
+            return $user_level_data[0]['reporting_user_id'];
+        } else{
             return 0;
         }
         

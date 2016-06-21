@@ -395,6 +395,7 @@ $(document).on('click', 'div.sales_cont .eye_i', function () {
  $("div.order_tracking_no_"+id).empty();
  $("div.order_tracking_no_"+id).append('<input id="order_tracking_no_'+id+'" type="text" name="order_tracking_no[]" value="'+order_tracking_no+'"/>');
 
+     $(this).prop("disabled",true);
  return false;
  });
 
@@ -433,7 +434,7 @@ $(document).on('click', 'div.sales_product .edit_i', function () {
 
     var qty = $(" div.quantity_"+id+" span.quantity").text();
     $("div.quantity_"+id).empty();
-    $("div.quantity_"+id).append('<input id="quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty+'"/>');
+    $("div.quantity_"+id).append('<input id="quantity_'+id+'" type="text" class="quantity_data allownumericwithdecimal" name="quantity[]" value="'+qty+'"/>');
 
     var qty_kg_ltr = $(" div.rol_quantity_kg_ltr_"+id+" span.rol_quantity_kg_ltr").text();
     $("div.rol_quantity_kg_ltr_"+id).empty();
@@ -441,8 +442,9 @@ $(document).on('click', 'div.sales_product .edit_i', function () {
 
     var amount = $(" div.amount_"+id+" span.amount").text();
     $("div.amount_"+id).empty();
-    $("div.amount_"+id).append('<input id="amount_'+id+'" type="text"  name="amount[]" value="'+amount+'"/>');
+    $("div.amount_"+id).append('<input id="amount_'+id+'" type="text" calss="allownumericwithdecimal" name="amount[]" value="'+amount+'"/>');
 
+    $(this).prop("disabled",true);
     return false;
 });
 

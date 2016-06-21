@@ -98,13 +98,13 @@ $(document).on('click', 'div.current_stock_container .edit_i', function () {
 
     var int_qty_value = $("div.int_qty_"+id+" span.int_qty").text();
     $("div.int_qty_"+id).empty();
-    $("div.int_qty_"+id).append('<input type="hidden" name="stock_id[]" value="'+id+'" /><input id="int_qty_'+id+'" type="text" class="int_qty" name="int_qty[]" value="'+int_qty_value+'"/>');
+    $("div.int_qty_"+id).append('<input type="hidden" name="stock_id[]" value="'+id+'" /><input id="int_qty_'+id+'" type="text" class="int_qty allownumericwithdecimal" name="int_qty[]" value="'+int_qty_value+'"/>');
 
     //unrestricted_quantity
 
     var unrtd_qty = $("div.unrtd_qty_"+id+" span.unrtd_qty").text();
     $("div.unrtd_qty_"+id).empty();
-    $("div.unrtd_qty_"+id).append('<input id="unrtd_qty_'+id+'" type="text" name="unrtd_qty[]" value="'+unrtd_qty+'"/>');
+    $("div.unrtd_qty_"+id).append('<input id="unrtd_qty_'+id+'" type="text" class="allownumericwithdecimal" name="unrtd_qty[]" value="'+unrtd_qty+'"/>');
 
     //batch
 

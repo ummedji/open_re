@@ -92,14 +92,14 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="sec_qty" id="sec_qty" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="sec_qty" id="sec_qty" placeholder="">
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Amount<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="sec_amt" id="sec_amt" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="sec_amt" id="sec_amt" placeholder="">
                     </div>
                 </div>
                 <div class="plus_btn"><a href="#"id="sec_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
@@ -196,13 +196,8 @@ echo form_open('',$attributes); ?>
                                 <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/secondary_sales/secondarysales_data.xlsx","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
                     
                         <?php }elseif($current_user->role_id == 9){ ?>
-                                
                                      <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/secondary_sales/secondarysales_distributor.xlsx","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
-                                     
                         <?php } ?>
-                    
-                                     
-                        
                     </div>
                 
                 <?php echo form_close(); ?>

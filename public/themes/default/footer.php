@@ -46,6 +46,14 @@ echo Assets::js();
     })(jQuery);
 </script>
 <script>
+
+    $(document).on("keypress keyup blur",".allownumericwithdecimal",function (event) {
+        //this.value = this.value.replace(/[^0-9\.]/g,'');
+        $(this).val($(this).val().replace(/[^0-9\.]/g,''));
+        if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
+            event.preventDefault();
+        }
+    });
  /*   $(document).on('change', '.btn-file :file', function() {
         var input = $(this),
             numFiles = input.get(0).files ? input.get(0).files.length : 1,

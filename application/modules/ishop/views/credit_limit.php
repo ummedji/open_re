@@ -37,13 +37,13 @@ echo form_open('',$attributes); ?>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
                             <label for="credit_limit">Credit Limit<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="credit_limit" id="credit_limit" placeholder="">
+                            <input type="text" class="form-control allownumericwithdecimal" name="credit_limit" id="credit_limit" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
                             <label for="invoice_date">Current Outstanding<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="curr_outstanding" id="curr_outstanding" placeholder="">
+                            <input type="text" class="form-control allownumericwithdecimal" name="curr_outstanding" id="curr_outstanding" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-2_ tp_form">
