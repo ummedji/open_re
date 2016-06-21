@@ -270,6 +270,13 @@ class Esp extends Front_Controller
         
     }
     
+    public function get_business_code(){
+        
+        $business_data = $this->esp_model->get_business_code(NULL);
+        echo $business_data;
+        die;
+    }
+    
     public function get_monthly_data($from_month,$to_month) {
         
             $from_date = $from_month."-01";

@@ -1838,5 +1838,8 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     float: right;
     color: red !important;
 }
+.input_remove_border{
+    border: none;
+}
 /*end success_file_popup css*/
 

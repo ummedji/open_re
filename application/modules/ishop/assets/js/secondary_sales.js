@@ -259,7 +259,7 @@ function add_sec_sales_row()
         "<input type='text' name='amount[]' value='"+amt+"'/>" +
         "</td>"+
         "<td data-title='Qty Kg/Ltr'>" +
-        "<input class='input_remove_border qty_"+sr_no+"'name='qty_kgl[]' type='text' value='"+unit_data+"'/>" +
+        "<input class='input_remove_border qty_"+sr_no+"'name='qty_kgl[]' type='text' value='"+unit_data+"'readonly/>" +
         "</td>"+
         "</tr>"
     );

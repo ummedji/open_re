@@ -396,7 +396,7 @@ class Ishop extends Front_Controller
 				$html .="<input type='text' name='amount[]' value=".$val['amount'].">";
 				$html .="</td>";
 				$html .="<td data-title='Qty Kg/Ltr'>";
-				$html .="<input class='input_remove_border qty_".$i."' type='text' name='qty_kgl[]' value=".$val['qty_kgl'].">";
+				$html .="<input class='input_remove_border qty_".$i."' type='text' name='qty_kgl[]' value=".$val['qty_kgl']." readonly>";
 				$html .="</td>";
 				$html .="</tr>";
 

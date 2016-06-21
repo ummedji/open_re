@@ -109,12 +109,24 @@ function get_pbg_product_sku_data(pbg_id){
         var employee_business_code = $("input#login_user_id").val();
     }
     
-   // alert(employee_business_code);
+    //GET USER BUSINESS CODE
+    
+    var business_code = "";
+    
+     $.ajax({
+        type: 'POST',
+        url: site_url+"esp/get_business_code",
+        data: {forecast_user_id:employee_business_code},
+        success: function(res){
+            business_code = res;
+        },
+         async:false
+    });
     
     $.ajax({
         type: 'POST',
         url: site_url+"esp/get_pbg_sku_data",
-        data: {pbgid:pbg_id,frommonth:from_month,tomonth:to_month},
+        data: {pbgid:pbg_id,frommonth:from_month,tomonth:to_month,businesscode:business_code},
         success: function(res){
             console.log(res);
             $("div.forecast_data").empty();
