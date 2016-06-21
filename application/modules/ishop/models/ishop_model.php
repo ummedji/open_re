@@ -1128,7 +1128,6 @@ class Ishop_model extends BF_Model
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
                 $product_sku_id = explode(',', $this->input->post("product_sku_id"));
-                $dispatched_quantity = explode(',', $this->input->post("dis_quantity"));
                 $quantity = explode(',', $this->input->post("quantity"));
                 $units = explode(',', $this->input->post("units"));
                 $qty_kgl = explode(',', $this->input->post("qty_kgl"));
@@ -1178,7 +1177,7 @@ class Ishop_model extends BF_Model
                         'secondary_sales_id' => $secondary_sales_id,
                         'product_sku_id' => $prd_sku,
                         'quantity' => $quantity[$key],
-                        'dispatched_quantity' => $dispatched_quantity[$key],
+                       // 'dispatched_quantity' => $dispatched_quantity[$key],
                         'amount' => $amount[$key],
                         'unit' => $units[$key],
                         'qty_kgl' => $qty_kgl[$key],
@@ -5242,7 +5241,15 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
                 $orderdata["order_data"] = explode(',', $orderdata["order_data"]);
-                $orderdata["change_order_status"] = explode(',', $orderdata["change_order_status"]);
+                if(isset($orderdata["change_order_status"])){
+                    $orderdata["change_order_status"] = explode(',', $orderdata["change_order_status"]);
+                }
+                if(isset($orderdata["confirm_ack"])){
+                    $orderdata["confirm_ack"]= explode(',',$orderdata["confirm_ack"]);
+                }
+                if(isset($orderdata["po_no"])){
+                    $orderdata["po_no"]= explode(',',$orderdata["po_no"]);
+                }
             }
 
             foreach ($orderdata["order_data"] as $key => $value) {
@@ -5568,6 +5575,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql = ' SELECT * ';
         $sql .= ' FROM bf_ishop_target as bit ';
         $sql .= ' JOIN bf_master_product_sku_country as bmpsc ON (bmpsc.product_sku_country_id = bit.product_sku_id) ';
+        $sql .= ' JOIN bf_master_product_sku_regional as bmpsr ON (bmpsr.product_sku_id = bmpsc.product_sku_id) ';
 
         $sql .= 'WHERE 1 ';
         $sql .= ' AND month_data BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
@@ -5601,12 +5609,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $final_array = array();
             foreach ($target_data['result'] as $key => $data) {
                 foreach ($month_output as $k => $val) {
-                    if (!isset($final_array[$data['product_sku_id'] . "-" . $data['product_sort_name'] . "-" . $data['product_sku_name']][$k])) {
-                        $final_array[$data['product_sku_id'] . "-" . $data['product_sort_name'] . "-" . $data['product_sku_name']][$k] = "";
+                    if (!isset($final_array[$data['product_sku_id'] . "-" . $data['product_sku_code'] . "-" . $data['product_sku_name']][$k])) {
+                        $final_array[$data['product_sku_id'] . "-" . $data['product_sku_code'] . "-" . $data['product_sku_name']][$k] = "";
                     }
 
                     if ($data['month_data'] == $k) {
-                        $final_array[$data['product_sku_id'] . "-" . $data['product_sort_name'] . "-" . $data['product_sku_name']][$k] = $data['quantity'];
+                        $final_array[$data['product_sku_id'] . "-" . $data['product_sku_code'] . "-" . $data['product_sku_name']][$k] = $data['quantity'];
                     }
                 }
             }

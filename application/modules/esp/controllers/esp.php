@@ -224,71 +224,99 @@ class Esp extends Front_Controller
                 $html .= '</th>';
             $html .= '</tr>';
             
+            $assumption_month = array();
+            $probablity_month = array();
             
+            foreach($month_data as $monthkey => $monthvalue){
+                     
+                $month_assumption_forecast_data = $this->esp_model->get_month_assumption_forecast_data($forecast_id,$monthvalue);
+                //testdata($month_assumption_forecast_data);
+                
+                if($month_assumption_forecast_data != 0)
+                {
+                    $cur_month = $month_assumption_forecast_data[0]['month_data'];
+
+                    $assumption_month[$cur_month] = array($month_assumption_forecast_data[0]["assumption1_id"],$month_assumption_forecast_data[0]["assumption2_id"],$month_assumption_forecast_data[0]["assumption3_id"]);
+
+                    $probablity_month[$cur_month] = array($month_assumption_forecast_data[0]["probability1"],$month_assumption_forecast_data[0]["probability2"],$month_assumption_forecast_data[0]["probability3"]);
+
+                }
+                else
+                {
+                    $assumption_month[$monthvalue] = array();
+                    $probablity_month[$monthvalue] = array();
+                }
+
+            }
+           /* 
+            echo "<pre>";
+            print_r($asumption);
+            print_r($probablity);
+            print_r($assumption_month);
+            print_r($probablity_month);
+            */
+            $k = 1;
             
-            
-           
-                         $k = 1;
-           // foreach($month_data as $monthkey => $monthvalue){
              for($a = 1; $a<=3; $a++){
                 
                 $html .= '<tr>';
                 $html .= '<td></td>';
+                 
                 $j = 1;
+                 
                     foreach($month_data as $monthkey => $monthvalue){
-                        
-                        if($a == 1){
-                        $month_assumption_forecast_data = $this->esp_model->get_month_assumption_forecast_data($forecast_id,$monthvalue);
-                        
-                        if($month_assumption_forecast_data != 0){
-
-                            $assumption1 = $month_assumption_forecast_data[0]["assumption1_id"];
-                            $assumption2 = $month_assumption_forecast_data[0]["assumption2_id"];
-                            $assumption3 = $month_assumption_forecast_data[0]["assumption3_id"];
-
-                            $probablity1 = $month_assumption_forecast_data[0]["probability1"];
-                            $probablity2 = $month_assumption_forecast_data[0]["probability2"];
-                            $probablity3 = $month_assumption_forecast_data[0]["probability3"];
-
-                        }
-                        
-                         $html .= $assumption1."=".$assumption2."=".$assumption3."=".$probablity1."=".$probablity2."=".$probablity3."</br>";
-
-                    }
-                        
-                      // $html .= implode("=",$assumption)."===".implode("=",$probablity); 
+                       
                         
                         $html .= '<td><div class="col-md-3 col-sm-3 tp_form">
 	<div class="form-group">';
                         $html .= '<select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
                         
                         <option value= "">Select Assumption</option>';
-                        foreach($assumption_data as $assumption_key => $assumption)
+
+                       
+                        
+                        if(isset($assumption_month[$monthvalue][$a-1]) && !empty($assumption_month[$monthvalue][$a-1])){
+                            $assumptiondata = $assumption_month[$monthvalue][$a-1];
+      
+                            }
+                        else{
+                            $assumptiondata = "";
+                        }
+                        
+                      //  echo $assumptiondata; die;
+                         foreach($assumption_data as $assumption_key => $assumption)
                         {
-                            $html .= '<option value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                          
+                             if($assumption['assumption_id'] == $assumptiondata){
+                                 $selected = "selected='selected'";
+                             }
+                             else
+                             {
+                                 $selected = "";
+                             }
+                             
+                            $html .= '<option '.$selected.' value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
                         }
                         $html .= '</select>';
                         
-                        if($a == 1){
-                            $probablity = $probablity1;
-                        }
-                        if($a == 2){
-                            $probablity = $probablity2;
-                        }
-                        if($a == 3){
-                            $probablity = $probablity3;
-                        }
-                                                
-
                         
+                        if(isset($probablity_month[$monthvalue][$a-1]) && !empty($probablity_month[$monthvalue][$a-1])){
+                            $probablitydata = $probablity_month[$monthvalue][$a-1];
+                        }
+                        else{
+                            $probablitydata = "";
+                        }
                         
                         $html .= '</div>
-</div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$a.'" /></td>';
+</div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'" /></td>';
+                        
                         $j++;
+                        
                     }
           
                 $html .= '</tr>';
                     $k++;
+                 
             }
             
             
