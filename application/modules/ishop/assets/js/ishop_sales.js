@@ -32,7 +32,6 @@ $("input.select_customer_type").on("click",function(){
         $("div.distributor_checked_sales").css("display","none");
         $("div.retailer_checked_sales").css("display","block");
         $("div.upload_sales_data").css("display","none");
-       // $("#add_sales_stock_row").empty();
 
         if(login_customer_type == 8){
 
@@ -51,7 +50,6 @@ $("input.select_customer_type").on("click",function(){
         $("div.retailer_checked_sales").css("display","none");
         $("div.upload_sales_data").css("display","block");
 
-       // $("#add_sales_stock_row").empty();
         if(login_customer_type == 8){
 
             var customer_selected = $("input#login_customer_id").val();
@@ -114,10 +112,7 @@ function get_user_by_geo_data(selected_geo_data){
 
         }
     });
-
 }
-
-
 
 function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
@@ -153,7 +148,6 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                     $("div#distributor_checked_sales select.distributor_geo_level").selectpicker('refresh');
 
                 }
-
             }
 
             if(customer_type_selected == "retailer"){
@@ -176,7 +170,6 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
         }
     });
 }
-
 
 $("select#geo_level_0").on("change",function(){
 
@@ -378,10 +371,8 @@ $(document).ready(function(){
 
         var validator = ishop_sales_validators;
 
-
         var $valid = $("#add_ishop_sales").valid();
         if(!$valid) {
-            alert('focusInvalid');
             validator.focusInvalid();
             return false;
         }

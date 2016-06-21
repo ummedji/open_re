@@ -72,7 +72,7 @@ echo form_open('esp/add_forecast',$attributes); ?>
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
-        <div id="forecast_data">
+        <div class="forecast_data" id="no-more-tables">
             
         </div>
         

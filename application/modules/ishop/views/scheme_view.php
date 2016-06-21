@@ -87,7 +87,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                         <div class="form-group">
                             <!--<div class="row">-->
                                 <div class="inl_button save_btn">
-                                    <button type="submit" class="btn btn-primary gren_btn">Save</button>
+                                    <button type="submit" class="btn btn-primary gren_btn">Execute</button>
                                 </div>
                             </div>
                         </div>

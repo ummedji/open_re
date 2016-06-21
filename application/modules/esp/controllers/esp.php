@@ -116,15 +116,13 @@ class Esp extends Front_Controller
         
         $assumption_data = $this->esp_model->get_assumption_data();
         
-      //  testdata($pbg_sku_data);
-        
         $html = "";
         $html1 = "";
         $html2 = "";
         
         if($pbg_sku_data != 0){
             
-            $html .= '<table>';
+            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
                 $html .= '<thead>';
                     $html .= '<tr>';
                         $html .= '<th></th>';
@@ -164,6 +162,10 @@ class Esp extends Front_Controller
                 $l = 1;
                 
                 foreach($month_data as $monthkey => $monthvalue){
+                    
+                    
+                    
+                    
                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" /></td>';
                     
                     $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]"  readonly /></td>';
@@ -174,58 +176,56 @@ class Esp extends Front_Controller
                $html .= '<td></td>';
                $html .= '</tr>';
             }
-           
-            $html1 .= '</tbody>';
-       $html1 .= '</table>';
             
-            $html1 .= '<table>';
-            $html1 .= '<thead>';
-            $html1 .= '<tr>';
-                $html1 .= '<th>';
-                   $html1 .= '<td></td>';
+            
+            $html .= '<tr>';
+                $html .= '<th>';
+                 //  $html .= '';
                    foreach($month_data as $monthkey => $monthvalue){
                        
-                       $html1 .= '<input type="hidden" name="month_data[]" value="'.$monthvalue.'" />';
+                       $html .= '<input type="hidden" name="month_data[]" value="'.$monthvalue.'" />';
                        
-                         $html1 .= '<td>Assumption</td><td>Probability</td>';
+                         $html .= '<td>Assumption</td><td>Probability</td>';
                    }
             
-                $html1 .= '</th>';
-            $html1 .= '</tr>';
-            $html1 .= '</thead>';
+                $html .= '</th>';
+            $html .= '</tr>';
             
-            $html1 .= '<tbody>';
-             $k = 1;
+           
+                         $k = 1;
            // foreach($month_data as $monthkey => $monthvalue){
              for($a = 1; $a<=3; $a++){
                 
-                $html1 .= '<tr>';
-                $html1 .= '<td></td><td></td>';
+                $html .= '<tr>';
+                $html .= '<td></td>';
                 $j = 1;
                     foreach($month_data as $monthkey => $monthvalue){
                 
                
-                        $html1 .= '<td><div class="col-md-3 col-sm-3 tp_form">
+                        $html .= '<td><div class="col-md-3 col-sm-3 tp_form">
 	<div class="form-group">';
-                        $html1 .= '<select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+                        $html .= '<select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
                         
                         <option value= "">Select Assumption</option>';
                         foreach($assumption_data as $assumption_key => $assumption)
                         {
-                            $html1 .= '<option value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                            $html .= '<option value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
                         }
-                        $html1 .= '</select>';
+                        $html .= '</select>';
                         
-                        $html1 .= '</div>
+                        $html .= '</div>
 </div></td><td><input type="text" name="probablity'.$j.'[]" /></td>';
                         $j++;
                     }
           
-                $html1 .= '</tr>';
+                $html .= '</tr>';
                     $k++;
             }
-            $html1 .= '</tbody>';
-            $html1 .= '</table>';
+            
+            
+            $html .= '</tbody>';
+       $html .= '</table>';
+           
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
                 <div class="row">
@@ -239,7 +239,7 @@ class Esp extends Front_Controller
             
         }
         
-        echo $html.$html1.$html2;
+        echo $html.$html2;
         die;
         
     }

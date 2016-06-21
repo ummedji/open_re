@@ -46,11 +46,14 @@ echo form_open('ishop/invoice_confirmation_received',$attributes); ?>
 if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
-?>
+
+
+if (!$this->input->is_ajax_request()) { ?>
 <div id="middle_container" class="middle_container_received">
 
 </div>
 <div id="middle_container_product">
 
 </div>
+ <?php } ?>
 <?php echo form_close(); ?>

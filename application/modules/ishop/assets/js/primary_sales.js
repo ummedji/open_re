@@ -75,6 +75,10 @@ $(function () {
                         $('.error').css('display','block');
                         $('#invoice_no_error').html('Invoice Number already Assign!');
                     }
+                    else if(resp == 2)
+                    {
+                        get_primary_sales_data(invoice_no,customer_id);
+                    }
                     else{
                         already_assign_error = 0;
                         $('.error').css('display','none');
@@ -84,35 +88,39 @@ $(function () {
             });
         }
         else if(invoice_no !=''){
-            $.ajax({
-                type: 'POST',
-                url: site_url + "ishop/get_data_primary_sales_by_invoice",
-                data: {invoice_no:invoice_no},
-                //dataType : 'json',
-                success: function (resp) {
-                    if(resp){
-                        var obj = jQuery.parseJSON(resp);
-                        console.log(obj);
-
-                        $.ajax({
-                            type: 'POST',
-                            url: site_url + "ishop/get_data_primary_sales_product_by_invoice",
-                            data: {primary_sales_id:obj.primary_sales_id},
-                            dataType : 'html',
-                            success: function (resp) {
-                                $("#primary_sls").append(resp)
-                            }
-                        });
-
-                        $('#customer_id').selectpicker('val', obj.customer_id);
-                        $('#invoice_date').val(obj.invoice_date);
-                        $('#order_traking_no').val(obj.order_tracking_no);
-                        $('#po_no').val(obj.PO_no);
-                    }
-                }
-            });
+            get_primary_sales_data(invoice_no,customer_id);
         }
     });
+
+    function get_primary_sales_data(invoice_no,customer_id){
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ishop/get_data_primary_sales_by_invoice",
+            data: {invoice_no:invoice_no,customer_id:customer_id},
+            success: function (resp) {
+                if(resp){
+                    var obj = jQuery.parseJSON(resp);
+                    console.log(obj);
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url + "ishop/get_data_primary_sales_product_by_invoice",
+                        data: {primary_sales_id:obj.primary_sales_id},
+                        dataType : 'html',
+                        success: function (resp) {
+                            $("#primary_sls").append(resp);
+                            $('.save_button').css("display","block");
+                        }
+                    });
+
+                    $('#customer_id').selectpicker('val', obj.customer_id);
+                    $('#invoice_date').val(obj.invoice_date);
+                    $('#order_traking_no').val(obj.order_tracking_no);
+                    $('#po_no').val(obj.PO_no);
+                }
+            }
+        });
+    }
 
     $('#customer_id').on('change',function(){
         $('#invoice_no').val('');

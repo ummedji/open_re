@@ -77,7 +77,7 @@ $(function () {
                         $('#invoice_no_error').html('Invoice Number already Assign!');
                     }
                     else if(resp == 2){
-                        get_dscondary_sales_data(invoice_no,login_customer_id);
+                        get_scondary_sales_data(invoice_no,login_customer_id);
                     }
                     else{
                         already_assign_error = 0;
@@ -88,11 +88,11 @@ $(function () {
             });
         }
         else if(invoice_no !=''){
-            get_dscondary_sales_data(invoice_no,login_customer_id);
+            get_scondary_sales_data(invoice_no,login_customer_id);
         }
     });
 
-    function get_dscondary_sales_data(invoice_no,login_customer_id){
+    function get_scondary_sales_data(invoice_no,login_customer_id){
         $.ajax({
             type: 'POST',
             url: site_url + "ishop/get_data_secondary_sales_by_invoice",
@@ -107,7 +107,9 @@ $(function () {
                         data: {secondary_sales_id:obj.secondary_sales_id},
                         dataType : 'html',
                         success: function (resp) {
-                            $("#secondary_sls").append(resp)
+                            $("#secondary_sls").append(resp);
+                            $('.save_button').css("display","block");
+
                         }
                     });
 
@@ -261,6 +263,8 @@ function add_sec_sales_row()
         "</td>"+
         "</tr>"
     );
+
+    $('.save_button').css("display","block");
     $('#sec_prod_sku').selectpicker('val', '');
     $('#sec_sel_unit').selectpicker('val', '');
     $('#sec_qty').val('');

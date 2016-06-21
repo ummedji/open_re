@@ -83,8 +83,9 @@ class Ishop extends Front_Controller
 	public function get_data_primary_sales_by_invoice()
 	{
 		$invoice_no = $this->input->post("invoice_no");
+		$customer_id = $this->input->post("customer_id");
 
-		$check= $this->ishop_model->get_data_primary_sales_by_invoice_no($invoice_no);
+		$check= $this->ishop_model->get_data_primary_sales_by_invoice_no($invoice_no,$customer_id);
 		echo json_encode($check);
 		die;
 	}
@@ -398,6 +399,7 @@ class Ishop extends Front_Controller
 				$html .="<input class='input_remove_border qty_".$i."' type='text' name='qty_kgl[]' value=".$val['qty_kgl'].">";
 				$html .="</td>";
 				$html .="</tr>";
+
 				$i++;
 			}
 		}
@@ -637,8 +639,6 @@ class Ishop extends Front_Controller
 		Template::set_view('ishop/invoice_received_confirmation');
 		Template::render();
 	}
-
-
 
 	/**
 	 * @ Function Name        : ishop_sales

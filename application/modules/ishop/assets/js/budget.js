@@ -439,6 +439,7 @@ $(document).on('click', '.edit_i', function () {
     $("div.quantity_"+id).empty();
     $("div.quantity_"+id).append('<input type="hidden" name="budget_id[]" value="'+id+'" /><input id="quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty+'"/>');
 
+    $(this).prop("disabled",true);
     return false;
 });
 

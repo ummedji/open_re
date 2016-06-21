@@ -102,134 +102,51 @@ class Esp_model extends BF_Model
             
             $final_array = array();
             
-            foreach($_POST['month_data'] as $month_key=>$month_value){
-                
-                $initial_array = array();
-                
-                 
+            $i = 1;
+            
+            if(!empty($_POST['month_data'])){
+                foreach($_POST['month_data'] as $month_key=>$month_value){
+
+                    $initial_array = array();
+
+                        foreach($_POST['product_sku_id'] as $pkey=>$product_data){
+
+                            $final_array[$month_value]['productid'][$product_data]['forecast_qty'] = $_POST['forecast_qty'][$product_data][$month_key];
+
+                            $final_array[$month_value]['productid'][$product_data]['forecast_value'] = $_POST['forecast_value'][$product_data][$month_key];
+
+                        }
+
+                    $final_array[$month_value]['assumption'] = $_POST['assumption'.$i];
+                    $final_array[$month_value]['probablity'] = $_POST['probablity'.$i];
+
+                    $i++;
+                }
+            }
+            
+            if(!empty($final_array)){
+                foreach($final_array as $key_data => $data){
                     
-                    foreach($_POST['product_sku_id'] as $pkey=>$product_data){
-                       
-                        $final_array[$month_value]['productid'][$product_data]['forecast_qty'] = $_POST['forecast_qty'][$product_data][$month_key];
+                    $month_data = $key_data;
+                    
+                    foreach($data["productid"] as $product_id => $product_data){
                         
-                         $final_array[$month_value]['productid'][$product_data]['forecast_value'] = $_POST['forecast_value'][$product_data][$month_key];
+                        $forecast_qty = $product_data["forecast_qty"];
+                        $forecast_value = $product_data["forecast_value"];
+                        
+                        $this->insert_forecast_product_details($forecast_insert_id,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value);
                         
                     }
-                
-                 
-                
-                foreach($_POST['forecast_qty'] as $forecast_qty_key => $forecast_qty_value){
                     
+                    $asumption = "";
+                    $probablity = "";
                     
+                    $assumption_data = implode("~",$data["assumption"]);
+                    $probablity_data = implode("~",$data["probablity"]);
                     
-                  //  foreach($forecast_qty_value as $qty=>$forecast_qty){
-                        //FORECAST QTY COMES FOR EACH MONTH
-                        
-                    
-                        
-                  //  } 
-                    
-                    //FORECAST PRODUCT SKU FROM QTY KEY
+                    $this->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data);
                     
                 }
-                
-                
-                foreach($_POST['forecast_value'] as $forecast_value_key => $forecast_value){
-                    
-                   
-                    
-                   // foreach($forecast_value as $val_key=>$forecastvalue){
-                        //FORECAST VALUE COMES FOR EACH MONTH
-                        
-                        // $forecastvalue[] = $forecast_value[$month_key];
-                    
-                   
-                        
-                    //}
-                }
-                
-                //===================================================
-                
-               /* 
-                
-                foreach($_POST['assumption1'] as $assumption1_key => $assumption1_value){
-                        //FORECAST VALUE COMES FOR EACH MONTH
-                    
-                    $assumption1[] = $assumption1_value[$month_key];
-                    
-                } 
-                
-               // $assumption2 = $_POST['assumption2'][$month_key];
-                
-                foreach($_POST['assumption2'] as $assumption2_key => $assumption2_value){
-                        //FORECAST VALUE COMES FOR EACH MONTH
-                    
-                    $assumption2[] = $assumption2_value[$month_key];
-                    
-                } 
-                
-              //  $assumption3 = $_POST['assumption3'][$month_key];
-                
-                foreach($_POST['assumption3'] as $assumption3_key => $assumption3_value){
-                        //FORECAST VALUE COMES FOR EACH MONTH
-                    
-                    $assumption3[] = $assumption3_value[$month_key];
-                    
-                } 
-                
-                //=====================================================
-                
-               // $probablity1 = $_POST['probablity1'][$month_key];
-                
-                foreach($_POST['probablity1'] as $probablity1_key => $probablity1_value){
-                        //FORECAST VALUE COMES FOR EACH MONTH
-                    
-                    $probablity1[] = $probablity1_value[$month_key];
-                    
-                } 
-                
-               // $probablity2 = $_POST['probablity2'][$month_key];
-                
-                foreach($_POST['probablity2'] as $probablity2_key => $probablity2_value){
-                        //FORECAST VALUE COMES FOR EACH MONTH
-                    
-                    $probablity2[] = $probablity2_value[$month_key];
-                    
-                } 
-                
-               // $probablity3 = $_POST['probablity3'][$month_key];
-                
-                foreach($_POST['probablity3'] as $probablity3_key => $probablity3_value){
-                        //FORECAST VALUE COMES FOR EACH MONTH
-                    
-                    $probablity3[] = $probablity3_value[$month_key];
-                    
-                } 
-                */
-                
-           /* echo "</br>FORECAST QTY : <pre>";
-                print_r($forecast_qty);
-                
-            echo "</br>FORECAST VALUE : <pre>";
-                print_r($forecastvalue);
-                
-            echo "</br>ASSUMPTION1 : <pre>";
-                print_r($assumption1);
-                
-            echo "</br>ASSUMPTION2 : <pre>";
-                print_r($assumption2);
-                
-            echo "</br>ASSUMPTION3 : <pre>";
-                print_r($assumption3);
-                
-            echo "</br>PROBABILITY1 : <pre>";
-                print_r($probablity1);
-                
-            echo "</br>PROBABILITY2 : <pre>";
-                print_r($probablity2);
-                
-            echo "</br>PROBABILITY3 : <pre>";
-                print_r($probablity3); */
                 
             }
             
@@ -241,7 +158,44 @@ class Esp_model extends BF_Model
         
     }
     
-    public function get_business_code($forecast_user_id){
+    public function insert_forecast_product_details($forecast_insert_id,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value){
+        
+        $data = array( 
+            'forecast_id'	=>  $forecast_insert_id, 
+            'business_code'=> $businss_data, 
+            'product_sku_id'	=>  $product_id,
+            'forecast_month'	=>  $month_data,
+            'forecast_quantity'	=>  $forecast_qty,
+            'forecast_value'	=>  $forecast_value,
+            'created_on'	=>  date("Y-m-d h:i:s")
+        );
+        $this-> db->insert('bf_esp_forecast_product_details', $data);
+        
+    }
+    
+    public function insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data){
+        
+        $asumption = explode("~",$assumption_data);
+        $probablity = explode("~",$probablity_data);
+        
+        $data = array( 
+            'forecast_id'	=>  $forecast_insert_id, 
+            'assumption1_id'=> $asumption[0], 
+            'assumption2_id'=>  $asumption[1],
+            'assumption3_id'=>  $asumption[2],
+            'probability1'	=>  $probablity[0],
+            'probability2'	=>  $probablity[1],
+            'probability3'	=>  $probablity[2]
+        );
+        $this-> db->insert('bf_esp_forecast_assumption', $data);
+        
+    }
+    
+    public function get_business_code($forecast_user_id=NULL){
+        
+        if($forecast_user_id == NULL){
+            $forecast_user_id = $_POST["forecast_user_id"];
+        }
         
         $sql = "SELECT bussiness_code FROM `bf_users` where id='".$forecast_user_id."'";
         

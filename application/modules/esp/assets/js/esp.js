@@ -101,14 +101,24 @@ function get_pbg_product_sku_data(pbg_id){
     var from_month = $("input#from_month").val();
     var to_month = $("input#to_month").val();
     
+    if($("select.employee_data").length > 0){
+        var employee_business_code = $("#user_level_data select.employee_data:last").val();
+    }
+    else{
+        //LOGIN USER DATA
+        var employee_business_code = $("input#login_user_id").val();
+    }
+    
+   // alert(employee_business_code);
+    
     $.ajax({
         type: 'POST',
         url: site_url+"esp/get_pbg_sku_data",
         data: {pbgid:pbg_id,frommonth:from_month,tomonth:to_month},
         success: function(res){
             console.log(res);
-            $("div#forecast_data").empty();
-           $("div#forecast_data").html(res); 
+            $("div.forecast_data").empty();
+           $("div.forecast_data").html(res); 
         }
     });
     

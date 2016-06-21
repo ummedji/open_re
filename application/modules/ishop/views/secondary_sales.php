@@ -143,10 +143,12 @@ echo form_open('',$attributes); ?>
 </div>
 
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
-<div class="col-md-12 table_bottom">
-    <div class="row">
-        <div class="col-md-3 save_btn">
-            <button type="submit" class="btn btn-primary">Save</button>
+<div class="save_button" style="display: none">
+    <div class="col-md-12 table_bottom" >
+        <div class="row">
+            <div class="col-md-3 save_btn">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
         </div>
     </div>
 </div>

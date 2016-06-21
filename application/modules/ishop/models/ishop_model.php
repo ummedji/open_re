@@ -92,19 +92,34 @@ class Ishop_model extends BF_Model
         $this->db->where('invoice_no', $invoice_no);
         $this->db->where_not_in('customer_id', $customer_id);
         $check = $this->db->get()->result_array();
-        // testdata($check);
+       // testdata($check);
         if (isset($check) && !empty($check)) {
             return 1;
         } else {
-            return 0;
+            $this->db->select('*');
+            $this->db->from('ishop_primary_sales');
+            $this->db->where('invoice_no', $invoice_no);
+            $this->db->where('customer_id', $customer_id);
+            $data = $this->db->get()->row_array();
+          //  testdata($data);
+            if(isset($data) && !empty($data))
+            {
+                return 2;
+            }
+            else{
+                return 0;
+            }
         }
     }
 
-    public function get_data_primary_sales_by_invoice_no($invoice_no)
+    public function get_data_primary_sales_by_invoice_no($invoice_no,$customer_id)
     {
         $this->db->select('*');
         $this->db->from('ishop_primary_sales');
         $this->db->where('invoice_no', $invoice_no);
+        if(isset($customer_id) && !empty($customer_id)){
+            $this->db->where('customer_id', $customer_id);
+        }
         $data = $this->db->get()->row_array();
 
         if (isset($data) && !empty($data)) {
@@ -3517,7 +3532,8 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
     public function invoice_confirmation_received_by_distributor($invoice_month, $po_no, $invoice_no, $user_id, $country_id, $page = null,$web_service=null)
     {
         $sql = 'SELECT * ';
-        $sql .= 'FROM bf_ishop_primary_sales AS ips ';
+        $sql .= ' FROM bf_ishop_primary_sales AS ips ';
+        //$sql .= " LEFT JOIN `bf_ishop_orders` as bio ON (`bio`.`user_id` = `bu`.`id`)  ";
         $sql .= 'WHERE 1 ';
 
         if (isset($invoice_month) && !empty($invoice_month) && $invoice_month != '') {
@@ -3737,17 +3753,11 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     public function add_order_place_details($user_id, $user_country_id, $web_service = null)
     {
-
-        // echo "<pre>";
-        // print_r($_POST);
-
-
         if ($this->input->post("login_customer_type") == 9) {
 
             /*
              * IF LOGIN USER IS DISTRIBUTOR
              */
-
             $customer_id_from = $user_id;
             $customer_id_to = 0;
             $order_taken_by_id = $user_id;
@@ -3877,7 +3887,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             'status' => '1',
             'created_on' => date('Y-m-d H:i:s')
         );
-        //  testdata($order_place_data);
+          //testdata($order_place_data);
 
         if ($this->db->insert('bf_ishop_orders', $order_place_data)) {
             $insert_id = $this->db->insert_id();

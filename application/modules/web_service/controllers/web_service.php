@@ -269,6 +269,8 @@ class Web_service extends Front_Controller
         if(isset($user_id) && isset($country_id) && !empty($user_id) && !empty($country_id))
         {
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
+            $retailers = $this->ishop_model->get_retailer_by_distributor_id($user_id, $country_id);
+           // $retailer = $this->ishop_model->get_distributor_by_user_id($country_id);
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
 
             $dist_array = array();
@@ -279,6 +281,17 @@ class Web_service extends Front_Controller
                         "display_name" => $distributor['display_name'],
                     );
                     array_push($dist_array, $dist);
+                }
+            }
+
+            $ret_array = array();
+            if (!empty($retailers)) {
+                foreach ($retailers as $retailer) {
+                    $ret = array(
+                        "id" => $retailer['id'],
+                        "display_name" => $retailer['display_name'],
+                    );
+                    array_push($ret_array, $ret);
                 }
             }
 
@@ -301,7 +314,8 @@ class Web_service extends Front_Controller
                 array("name"=>"Kg/Ltr","value"=>"kg/ltr")
             );
 
-            $data = array("distributors" => $dist_array, "products_skus" => $sku_array, "units" => $units);
+            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units);
+        //  testdata($data);
             $result['status'] = true;
             $result['message'] = 'Success';
             $result['data'] = $data;

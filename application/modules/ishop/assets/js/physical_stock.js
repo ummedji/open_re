@@ -464,6 +464,7 @@ $(document).on('click', '.edit_i', function () {
     $("div.rol_quantity_kg_ltr_"+id).empty();
     $("div.rol_quantity_kg_ltr_"+id).append('<input id="rol_quantity_kg_ltr_'+id+'" type="text" class="input_remove_border" name="rol_quantity_kg_ltr[]" value="'+qty_kg_ltr+'" readonly/>');
 
+    $(this).prop("disabled",true);
     return false;
 });
 
