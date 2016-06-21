@@ -111,6 +111,8 @@ class Esp extends Front_Controller
         $from_month = $_POST["frommonth"];
         $to_month = $_POST["tomonth"];
         
+        $businesscode = $_POST["businesscode"];
+        
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
         
@@ -155,6 +157,17 @@ class Esp extends Front_Controller
                 $html .= '</thead>';
            $html .= '<tbody>';
             $i = 1;
+            
+            $assumption1 = "";
+            $assumption2 = "";
+            $assumption3 = "";
+            
+            $probablity1 = "";
+            $probablity2 = "";
+            $probablity3 = "";
+            
+            $forecast_id = "";
+            
             foreach($pbg_sku_data as $skukey => $skuvalue){
               $html .= '<tr>';
               $html .= '<td><input type="hidden" name="product_sku_id[]" value="'.$skuvalue['product_sku_country_id'].'" />'.$skuvalue['product_sku_name'].'</td>';
@@ -164,18 +177,38 @@ class Esp extends Front_Controller
                 foreach($month_data as $monthkey => $monthvalue){
                     
                     
+                    $employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
                     
+                    $forecast_qty = "";
+                    $forecast_value = "";
                     
-                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" /></td>';
+                    if($employee_month_product_forecast_data != 0){
+                        
+                        $forecast_qty = $employee_month_product_forecast_data[0]['forecast_quantity'];
+                        $forecast_value = $employee_month_product_forecast_data[0]['forecast_value'];
+                        
+                        $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
+                        
+                        
+                    }
                     
-                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]"  readonly /></td>';
+                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    
+                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                     
                     $l++;
+                   
+                    
+                    
                     
                 }
                $html .= '<td></td>';
                $html .= '</tr>';
+                
+               
+                
             }
+            
             
             
             $html .= '<tr>';
@@ -191,6 +224,9 @@ class Esp extends Front_Controller
                 $html .= '</th>';
             $html .= '</tr>';
             
+            
+            
+            
            
                          $k = 1;
            // foreach($month_data as $monthkey => $monthvalue){
@@ -200,8 +236,28 @@ class Esp extends Front_Controller
                 $html .= '<td></td>';
                 $j = 1;
                     foreach($month_data as $monthkey => $monthvalue){
-                
-               
+                        
+                        if($a == 1){
+                        $month_assumption_forecast_data = $this->esp_model->get_month_assumption_forecast_data($forecast_id,$monthvalue);
+                        
+                        if($month_assumption_forecast_data != 0){
+
+                            $assumption1 = $month_assumption_forecast_data[0]["assumption1_id"];
+                            $assumption2 = $month_assumption_forecast_data[0]["assumption2_id"];
+                            $assumption3 = $month_assumption_forecast_data[0]["assumption3_id"];
+
+                            $probablity1 = $month_assumption_forecast_data[0]["probability1"];
+                            $probablity2 = $month_assumption_forecast_data[0]["probability2"];
+                            $probablity3 = $month_assumption_forecast_data[0]["probability3"];
+
+                        }
+                        
+                         $html .= $assumption1."=".$assumption2."=".$assumption3."=".$probablity1."=".$probablity2."=".$probablity3."</br>";
+
+                    }
+                        
+                      // $html .= implode("=",$assumption)."===".implode("=",$probablity); 
+                        
                         $html .= '<td><div class="col-md-3 col-sm-3 tp_form">
 	<div class="form-group">';
                         $html .= '<select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -213,8 +269,21 @@ class Esp extends Front_Controller
                         }
                         $html .= '</select>';
                         
+                        if($a == 1){
+                            $probablity = $probablity1;
+                        }
+                        if($a == 2){
+                            $probablity = $probablity2;
+                        }
+                        if($a == 3){
+                            $probablity = $probablity3;
+                        }
+                                                
+
+                        
+                        
                         $html .= '</div>
-</div></td><td><input type="text" name="probablity'.$j.'[]" /></td>';
+</div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$a.'" /></td>';
                         $j++;
                     }
           

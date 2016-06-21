@@ -22,9 +22,7 @@ $(document).ready(function(){
       buttonText: "Select date",
       autoclose: true
     });
-    
-    
-    
+
     $(document).on('click', 'div.order_status .eye_i', function () {
         var id = $(this).attr('prdid');
         var radio_checked = $('input[name=radio1]:checked').val();
@@ -41,8 +39,6 @@ $(document).ready(function(){
         });
         return false;
     });
-
-
 
 $(document).on('submit','#order_status_data_details',function(){
         
@@ -224,8 +220,6 @@ $(document).on('click', 'div.order_status .edit_i', function () {
                 dataType : 'html',
                 success: function(resp){
                     console.log(resp);
-                 //   alert(resp);
-                    //$("div#middle_container").empty();
                     $("div#middle_container").html(resp);
 
                 }
@@ -328,7 +322,4 @@ $(document).on("click","#save_po_data",function(){
              
         }
     });
-    
-    
-    
 });

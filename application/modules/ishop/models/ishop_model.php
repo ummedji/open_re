@@ -4393,7 +4393,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
 
-        $sql ='SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
+        $sql ='SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name ';
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
         $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd ON (bmupd.user_id = bu.id) '; // FOR GETTING USER NAME AND OTHER DATA
@@ -4426,7 +4426,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
                 if ($action_data != "po_acknowledgement") {
+
                     $sql .= ' AND bio.order_date BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $todate . '"' . ' ';
+
                 }
                 if ($action_data == "po_acknowledgement") {
 
@@ -4478,20 +4480,14 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $offset = $page*$limit-$limit;
             $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
-            // For Pagination
 
             $order_data = $info->result_array();
             return $order_data;
-            //$orderdata = array('result'=>$order_data);
-            // var_dump($product_detail);die;
+
         } else {
 
 
             $orderdata = $this->grid->get_result_res($sql);
-            // testdata($orderdata);
-            //$order_data = $this->db->get()->result_array();
-            // $orderdata = array('result'=>$order_data);
-            // var_dump($product_detail);die;
 
             if (isset($orderdata['result']) && !empty($orderdata['result'])) {
 
@@ -4527,7 +4523,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $checkbox = $order_data . '<input id="order_status_' . $od['order_id'] . '" type="checkbox" name="change_order_status1[]" class="order_status" />';
 
-                            $order_view['row'][] = array($checkbox, $i, $od['f_u_code'], $od['fr_fname'] . " " . $od['fr_mname'] . " " . $od['fr_lname'], $od['PO_no'], $otn, $od['credit_limit'], $od['total_amount'], $order_status);
+                            $order_view['row'][] = array($checkbox, $i, $od['f_u_code'],$od['display_name'] , $od['PO_no'], $otn, $od['credit_limit'], $od['total_amount'], $order_status);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -4556,7 +4552,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
-                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
                             $i++;
 
 
@@ -4619,15 +4615,15 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         if ($radio_checked == "farmer") {
 
-                            $order_view['row'][] = array($i, "", $od['fr_fname'] . " " . $od['fr_mname'] . " " . $od['fr_lname'], $od['to_fname'] . " " . $od['to_mname'] . " " . $od['to_lname'], $otn, $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $read_status);
+                            $order_view['row'][] = array($i, "", $od['display_name'] , $od['display_name'], $otn, $od['display_name'], $read_status);
 
                         } elseif ($radio_checked == "retailer") {
 
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['fr_fname'] . " " . $od['fr_mname'] . " " . $od['fr_lname'], $od['to_fname'] . " " . $od['to_mname'] . " " . $od['to_lname'], $od["order_date"], $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], '', $od['fr_fname'] . " " . $od['fr_mname'] . " " . $od['fr_lname'], $od['to_fname'] . " " . $od['to_mname'] . " " . $od['to_lname'], $od["order_date"], $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
 
                         } elseif ($radio_checked == "distributor") {
 
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['fr_fname'] . " " . $od['fr_mname'] . " " . $od['fr_lname'], $od["order_date"], $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], '', $od['fr_fname'] . " " . $od['fr_mname'] . " " . $od['fr_lname'], $od["order_date"], $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
 
                         }
 
@@ -4671,7 +4667,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
 
-                            $order_view['row'][] = array($i, '', $od['order_date'], $po_no, $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $order_status);
+                            $order_view['row'][] = array($i, '', $od['order_date'], $po_no, $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -4694,7 +4690,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
 
-                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $otn, $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $po_no);
+                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $otn, $od['display_name'], $po_no);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -4737,7 +4733,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
 
-                            $order_view['row'][] = array($i, '', $od['to_fname'] . " " . $od['to_mname'] . " " . $od['to_lname'], $od['order_date'], $po_no, $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $order_status);
+                            $order_view['row'][] = array($i, '', $od['display_name'], $od['order_date'], $po_no, $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -4761,7 +4757,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
 
-                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $otn, $od['to_fname'] . " " . $od['to_mname'] . " " . $od['to_lname'], $od['ot_fname'] . " " . $od['ot_mname'] . " " . $od['ot_lname'], $po_no);
+                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $otn, $od['display_name'], $od['display_name'], $po_no);
                             $i++;
                         }
                         $order_view['eye'] = '';

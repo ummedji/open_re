@@ -474,7 +474,7 @@ class Web_service extends Front_Controller
                     $ord = array(
                         "id" => $order['order_id'],
                         "distributor_code" => $order['f_u_code'],
-                        "distributor_name" => $order['fr_fname'].' '.$order['fr_mname'].' '.$order['fr_lname'],
+                        "distributor_name" => $order['display_name'],
                         "po_no" => $order['PO_no'],
                         "order_tracking_no" => $order['order_tracking_no'],
                         "credit_limit" => $order['credit_limit'],
@@ -577,6 +577,65 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+    public function getPOAcknowledgment()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $page_function = 'po_acknowledgement';
+            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$user_id,null,null,null,null,null,$page_function,null,'web_service');
+           // testdata($order_data);
+            $order_array = array();
+            if (!empty($order_data)) {
+
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                foreach ($order_data as $order)
+                {
+
+                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
+                    $ord = array(
+                        "id" => $order['order_id'],
+                        "entered_by" => $order['display_name'],
+                        "po_no" => $order['PO_no'],
+                        "order_tracking_no" => $order['order_tracking_no'],
+                        "order_date" => $order['order_date'],
+                        "details" => !empty($order_details) ? $order_details : array()
+                    );
+                    array_push($order_array, $ord);
+                }
+            }
+            //testdata($order_array);
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = !empty($order_array) ? $order_array : array();
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function savePOAcknowledgment()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $confirm = $this->input->get_post('confirm');
+        $po_no = $this->input->get_post('po_no');
+
+    }
     /**
      * @ Function Name        : getRol
      * @ Function Params    : user_id,country_id,role_id,radio_type (POST)

@@ -144,7 +144,7 @@ class Esp_model extends BF_Model
                     $assumption_data = implode("~",$data["assumption"]);
                     $probablity_data = implode("~",$data["probablity"]);
                     
-                    $this->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data);
+                    $this->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
                     
                 }
                 
@@ -173,7 +173,7 @@ class Esp_model extends BF_Model
         
     }
     
-    public function insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data){
+    public function insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data){
         
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
@@ -185,7 +185,8 @@ class Esp_model extends BF_Model
             'assumption3_id'=>  $asumption[2],
             'probability1'	=>  $probablity[0],
             'probability2'	=>  $probablity[1],
-            'probability3'	=>  $probablity[2]
+            'probability3'	=>  $probablity[2],
+            'month_data'	=>  $month_data
         );
         $this-> db->insert('bf_esp_forecast_assumption', $data);
         
@@ -238,6 +239,46 @@ class Esp_model extends BF_Model
         } else{
             return 0;
         }         
+    }
+    
+    public function get_employee_month_product_forecast_data($businesscode,$product_sku_country_id,$monthvalue){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast as bef");
+        
+        $this->db->join("bf_esp_forecast_product_details as befpd","befpd.forecast_id = bef.forecast_id");
+        
+        $this->db->where("bef.business_code",$businesscode);
+        $this->db->where("befpd.business_code",$businesscode);
+        $this->db->where("befpd.product_sku_id",$product_sku_country_id);
+        $this->db->where("befpd.forecast_month",$monthvalue);
+        
+        $forecast_data = $this->db->get()->result_array();
+        
+        if(isset($forecast_data) && !empty($forecast_data)) {
+            return $forecast_data;
+        } else{
+            return 0;
+        }
+        
+    }
+    
+    public function get_month_assumption_forecast_data($forecast_id,$monthvalue){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast_assumption as befa");
+        
+        $this->db->where("befa.forecast_id",$forecast_id);
+        $this->db->where("befa.month_data",$monthvalue);
+       
+        $forecast_assumption_data = $this->db->get()->result_array();
+        
+        if(isset($forecast_assumption_data) && !empty($forecast_assumption_data)) {
+            return $forecast_assumption_data;
+        } else{
+            return 0;
+        }
+        
     }
     
 }
