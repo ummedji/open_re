@@ -391,9 +391,27 @@ $(document).ready(function(){
                     data: param,
                     //dataType : 'json',
                     success: function(resp){
-                        if(resp==1){
-                            // site_url+"ishop/physical_stock";
+                        var message = "";
+                        if(resp == 1){
+                            message += 'Data Inserted successfully.';
                         }
+                        else{
+                            message += 'Data not Inserted.';
+                        }
+                        $('<div></div>').appendTo('body')
+                            .html('<div><b>'+message+'</b></div>')
+                            .dialog({
+                                appendTo: "#success_file_popup",
+                                modal: true,
+                                zIndex: 10000,
+                                autoOpen: true,
+                                width: 'auto',
+                                resizable: true,
+                                close: function (event, ui) {
+                                    $(this).remove();
+                                    location.reload()
+                                }
+                            });
                     }
                 });
             }

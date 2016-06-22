@@ -465,6 +465,30 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         //data: {sales_data:sales_data,checked_type:checked_type},
         data: sales_data,
         success: function(resp){
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Updated successfully.';
+            }
+            else{
+
+                message += 'Data not Updated.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+
         }
     });
     //return false;

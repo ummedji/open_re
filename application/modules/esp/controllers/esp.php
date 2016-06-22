@@ -227,19 +227,26 @@ class Esp extends Front_Controller
                             
                             if($freeze_user_parent_data != 0){
                                 
-                                if($forecast_freeze_data['freeze_user_id'] == $freeze_user_parent_data){
+                                if($login_user_id == $freeze_user_parent_data){
                                     
                                     //If login user is parent of freezed user than he will able to see the forecast data entered by juinor else not
                                     
                                     //SHOW FREEZEED DATA
                                     
-                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" readonly /></td>';
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  /></td>';
+                    
+                                     $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                    
+                                }
+                                elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                                    
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  /></td>';
                     
                                      $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                     
                                 }
                                 else{
-                                    //if(($login_user_id == $forecast_freeze_data['freeze_user_id']) && )
+                                    
                                     //SHOW FREEZED DATA BUT READONLY
                                     
                                      $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""  /></td>';
@@ -409,10 +416,37 @@ class Esp extends Front_Controller
                             
                             if($freeze_user_parent_data != 0){
                                 
-                                if($login_user_id == $freeze_user_parent_data){
+                                if($login_user_id  == $freeze_user_parent_data){
                                     
                                     //SHOW FREEZEED DATA
                                     
+                                        $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                    <option value= "">Select Assumption</option>';
+                                    foreach($assumption_data as $assumption_key => $assumption)
+                                    {
+
+                                         if($assumption['assumption_id'] == $assumptiondata){
+                                             $selected = "selected='selected'";
+                                         }
+                                         else
+                                         {
+                                             $selected = "";
+                                         }
+
+                                        $html .= '<option '.$selected.' value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                    }
+                                    $html .= '</select>';
+
+                                    $html .= '</div>
+            </div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
+                                     
+                                    
+                                }
+                                elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                                    
+                                   
                                         $html .= '<div class="col-md-3 col-sm-3 tp_form">
                 <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 

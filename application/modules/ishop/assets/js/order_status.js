@@ -49,8 +49,29 @@ $(document).on('submit','#order_status_data_details',function(){
             url: site_url+"ishop/update_order_status_detail_data",
             data: param,
             success: function(resp){
-               // console.log(resp);
-                location.reload();
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Updated successfully.';
+                }
+                else{
+
+                    message += 'Data not Updated.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
             }
         });
     return false;

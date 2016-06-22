@@ -150,9 +150,33 @@ $(document).ready(function(){
                 url: site_url + "ishop/add_schemes_details",
                 data: param,
                 success: function (resp) {
+                    var message = "";
+                    if(resp == 1){
+
+                        message += 'Data Inserted successfully.';
+                    }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+                                location.reload()
+                            }
+                        });
 
                 }
             });
+            return false;
         }
     });
 });

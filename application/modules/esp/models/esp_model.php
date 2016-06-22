@@ -313,6 +313,7 @@ class Esp_model extends BF_Model
         
         if(!empty($forecast_data)){
             $forecast_array["forecast_id"] = $forecast_data[0]['forecast_id'];
+            $forecast_array["created_by_user"] = $forecast_data[0]['created_by_user'];
             $forecast_array["freeze_status"] = $forecast_data[0]['freeze_status'];
             $forecast_array["freeze_user_id"] = $forecast_data[0]['modified_by_user'];
         }

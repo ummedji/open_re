@@ -107,11 +107,29 @@ $(document).on('click', 'a.update_order_status', function () {
         url: site_url+'ishop/update_order_approval_status',
         data: param,
         success: function(resp){
-            console.log(resp);
-            //setTimeout(function(){
-                location.reload();
-           // }, 2000);
-            
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Updated successfully.';
+            }
+            else{
+
+                message += 'Data not Updated.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
         }
     });
     return false;

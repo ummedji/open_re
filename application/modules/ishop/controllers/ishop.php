@@ -417,9 +417,9 @@ class Ishop extends Front_Controller
 	public function add_secondary_sales_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->add_secondary_sales_details_data($user->id, $user->country_id);
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/secondary_sales_details');
+		$add = $this->ishop_model->add_secondary_sales_details_data($user->id, $user->country_id);
+		echo $add;
+		die;
 	}
 
 	/**
@@ -494,8 +494,9 @@ class Ishop extends Front_Controller
 	public function update_secondary_sales_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->update_secondary_sales_detail($user->id,$user->country_id);
-		redirect('ishop/secondary_sales_view_details');
+		$update =$this->ishop_model->update_secondary_sales_detail($user->id,$user->country_id);
+		echo $update;
+		die;
 	}
 
 	public function delete_secondary_sales_details()
@@ -565,18 +566,18 @@ class Ishop extends Front_Controller
 	public function add_physical_stock_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->add_physical_stock_detail($user->id,$user->country_id);
-
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/physical_stock');
+		$add = $this->ishop_model->add_physical_stock_detail($user->id,$user->country_id);
+		echo $add;
+		die;
 	}
 
 
 	public function update_physical_stock_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->update_physical_stock_detail($user->id,$user->country_id);
-		redirect('ishop/physical_stock');
+		$update = $this->ishop_model->update_physical_stock_detail($user->id,$user->country_id);
+		echo $update;
+		die;
 	}
 
 
@@ -626,7 +627,9 @@ class Ishop extends Front_Controller
 		//testdata($_POST['sales']);
 		$user = $this->auth->user();
 		$sales_id=  (isset($_POST['sales']) ? $_POST['sales'] : '');
-		$this->ishop_model->update_invoice_confirmation_received_by_distributor($sales_id,$user->id,$user->country_id);
+		$update = $this->ishop_model->update_invoice_confirmation_received_by_distributor($sales_id,$user->id,$user->country_id);
+		echo $update;
+		die;
 	}
 
 	public function invoice_sales_product_details_view()
@@ -699,10 +702,9 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
 
-		$this->ishop_model->add_ishop_sales_detail($user->id,$user->country_id);
-
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/ishop_sales');
+		$add = $this->ishop_model->add_ishop_sales_detail($user->id,$user->country_id);
+		echo $add;
+		die;
 	}
 
 
@@ -793,8 +795,9 @@ class Ishop extends Front_Controller
 	{
 		//testdata($_POST);
 		$user = $this->auth->user();
-		$this->ishop_model->update_ishop_sales_detail($user->id,$user->country_id);
-	//	redirect('ishop/secondary_sales_view_details');
+		$sales = $this->ishop_model->update_ishop_sales_detail($user->id,$user->country_id);
+		echo $sales;
+		die;
 	}
 
 
@@ -851,10 +854,9 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_company_current_stock_detail($user_id,$user->country_id);
-
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/company_current_stock');
+		$add = $this->ishop_model->add_company_current_stock_detail($user_id,$user->country_id);
+		echo $add;
+		die;
 	}
 
 
@@ -910,10 +912,9 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_user_credit_limit_datail($user_id,$user->country_id);
-
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/credit_limit');
+		$add = $this->ishop_model->add_user_credit_limit_datail($user_id,$user->country_id);
+		echo $add;
+		die;
 	}
 
 	public function set_schemes()
@@ -974,10 +975,9 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
-		$this->ishop_model->add_schemes_detail($user_id,$user->country_id);
-
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/set_schemes');
+		$add = $this->ishop_model->add_schemes_detail($user_id,$user->country_id);
+		echo $add;
+		die;
 	}
 
 	public function get_schemes_by_selected_cur_year()
@@ -1219,10 +1219,9 @@ class Ishop extends Front_Controller
             $user_country_id = $user->country_id;
 
             $order_data = $this->ishop_model->add_order_place_details($user_id,$user_country_id);
-           // echo $order_data;die;
-            
-            Template::set_message('Your order has been placed. Please note your Order No: '.$order_data,'success');
-            redirect('ishop/order_place');
+
+			echo $order_data;
+			die;
             
         }
         
@@ -1989,7 +1988,7 @@ class Ishop extends Front_Controller
             $detail_data = $_POST;
             
             $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
-            
+            echo $detail_update;
             die;
         }
         
@@ -2184,8 +2183,8 @@ class Ishop extends Front_Controller
            $detail_data = $_POST;
 
            $detail_update = $this->ishop_model->update_order_data($detail_data);
-         //  redirect("ishop/order_approval");
-           die;
+			echo $detail_update;
+            die;
            
         }
         
@@ -2231,9 +2230,10 @@ class Ishop extends Front_Controller
 
 		public function update_target_details()
 		{
-			//testdata($_POST);
 			$user = $this->auth->user();
-			$this->ishop_model->update_target_detail($user->id,$user->country_id);
+			$update = $this->ishop_model->update_target_detail($user->id,$user->country_id);
+			echo $update;
+			die;
 		}
 
 		public function add_target_data() {
@@ -2242,7 +2242,8 @@ class Ishop extends Front_Controller
 			$target_data = $_POST;
 			$user= $this->auth->user();
 			$set_target_data = $this->ishop_model->add_target_data($target_data,$user->id,null,$user->country_id,$user->role_id);
-			redirect("ishop/target");
+			echo $set_target_data;
+			die;
 		}
 		public function delete_target_details()
 		{
@@ -2359,18 +2360,21 @@ class Ishop extends Front_Controller
         
         public function add_budget_data() {
 
-			//testdata($_POST);
             $budget_data = $_POST;
-			$user= $this->auth->user();
 
+			$user= $this->auth->user();
             $set_budget_data = $this->ishop_model->add_budget_data($budget_data,$user->id,null,$user->country_id);
-            redirect("ishop/budget");
+			echo $set_budget_data;
+			die;
+
         }
 
 	public function update_budget_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->update_budget_detail($user->id,$user->country_id);
+		$update = $this->ishop_model->update_budget_detail($user->id,$user->country_id);
+		echo $update;
+		die;
 	}
 
 	public function delete_budget_details()

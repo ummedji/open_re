@@ -247,7 +247,29 @@ $(document).ready(function(){
                 data: param,
                 //dataType : 'json',
                 success: function(resp){
-                    location.reload();
+                    var message = "";
+                    if(resp == 1){
+
+                        message += 'Data Inserted successfully.';
+                    }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+                                location.reload()
+                            }
+                        });
                 }
             });
             return false;
@@ -455,10 +477,32 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         url: site_url+'ishop/update_budget_details',
         data: budget_data,
         success: function(resp){
-            location.reload();
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Updated successfully.';
+            }
+            else{
+
+                message += 'Data not Updated.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
         }
     });
-    //return false;
+    return false;
 });
 
 $(document).on('click', 'div.budget_container .delete_i', function () {

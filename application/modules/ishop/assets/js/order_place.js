@@ -485,12 +485,35 @@ $("#order_place").on("submit",function(){
             data: param,
             //dataType : 'json',
             success: function(resp){
-                location.reload();
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
+
             }
         });
    /*   }
     }*/
-  //  return false;
+    return false;
 });
 
 
@@ -706,15 +729,8 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                         $("div#retailer_checked select#retailer_geo_level_1_data").selectpicker('refresh');
 
                     }
-                    
                 }
-                
-               
-                
             }
-            
-            
-           
         }
     });
     

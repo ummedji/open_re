@@ -371,11 +371,34 @@ $("#add_physical_stock").on("submit",function(e){
             data: param,
             //dataType : 'json',
             success: function(resp){
-                location.reload();
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
+
             }
         });
     }
-   // return false;
+    return false;
 });
 
 });
@@ -482,9 +505,32 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         url: site_url+'ishop/update_physical_stock_details',
         data: physical_data,
         success: function(resp){
-            location.reload();
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Updated successfully.';
+            }
+            else{
+
+                message += 'Data not Updated.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
         }
     });
+    return false;
 
 });
 

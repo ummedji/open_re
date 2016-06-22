@@ -1342,8 +1342,12 @@ class Ishop_model extends BF_Model
                 }
             }
         }
-
-        return 1;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
 
@@ -1601,7 +1605,12 @@ class Ishop_model extends BF_Model
                 $this->db->update('ishop_secondary_sales', $secondary__sales_update);
             }
         }
-        return true;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function get_sales_id_by_secondary_sales_product_id($secondary_sales_product_id)
@@ -2065,8 +2074,12 @@ class Ishop_model extends BF_Model
                 }
             }
         }
-
-
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function check_products_phy_stock($stock_month, $product_sku_id, $unit, $cust_id)
@@ -2114,7 +2127,12 @@ class Ishop_model extends BF_Model
                 $id = $this->db->update('ishop_physical_stock', $stock_update);
             }
         }
-        return $id;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function delete_physical_stock_details($stock_id)
@@ -2303,6 +2321,12 @@ class Ishop_model extends BF_Model
 
                 }
             }
+        }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
         }
     }
 
@@ -2556,8 +2580,12 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             }
 
         }
-
-        return true;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function get_sales_id_by_tertiary_sales_product_id($tertiary_sales_product_id)
@@ -2789,12 +2817,15 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                         );
                         $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
                     }
-
-
                 }
             }
         }
-
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
 
@@ -3129,7 +3160,12 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                     }
                 }
             }
-
+        }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
         }
 
     }
@@ -3319,8 +3355,13 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
         );
         //   testdata($schemes_list);
-        $id = $this->db->insert('ishop_scheme_allocation', $schemes_list);
-        return $id;
+        $this->db->insert('ishop_scheme_allocation', $schemes_list);
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
 
     }
 
@@ -3637,8 +3678,13 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
         );
 
         $this->db->where('primary_sales_id', $sales_id);
-        $id = $this->db->update('ishop_primary_sales', $primary_sales);
-        return $id;
+        $this->db->update('ishop_primary_sales', $primary_sales);
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function invoice_sales_product_details($sales_id,$web_service=null)
@@ -3925,8 +3971,13 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             );
             $this->db->insert('bf_ishop_product_order', $order_data);
         }
-        return $order_id;
 
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function get_random_no($rand_type, $table)
@@ -5176,9 +5227,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             }
 
         }
-
-
-        return $id;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
 
     }
 
@@ -5296,13 +5350,17 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 if (!empty($update_array)) {
                     $this->db->where('order_id', $value);
                     $id = $this->db->update('bf_ishop_orders', $update_array);
-                    return $id;
+
                 }
-
             }
-
         }
 
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function get_user_data($id)
@@ -5398,7 +5456,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 $this->db->where('ishop_target_id', $check_already_data);
                 $id = $this->db->update('bf_ishop_target', $target_update_data);
-                return $id;
+
             }
         } else {
 
@@ -5417,9 +5475,15 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $target_array["created_by_user"] = $user_id;
 
                 $id = $this->db->insert('bf_ishop_target', $target_array);
-                return $id;
+
             }
 
+        }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
         }
 
     }
@@ -5563,10 +5627,15 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 );
 
                 $this->db->where('ishop_target_id', $target_id[$k]);
-                $id = $this->db->update('ishop_target', $target_updates);
+                $this->db->update('ishop_target', $target_updates);
             }
         }
-        return $id;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function delete_target_detail($target_id)
@@ -5577,7 +5646,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function get_target_monthly_data($data, $web_service=null,$page = null)
     {
-      //  testdata('in');
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service'){
             $from_date = $data['from_month_data'] . "-01";
             $to_date = $data['to_month_data'] . "-01";
@@ -5812,9 +5880,13 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $budget_array["created_by_user"] = $user_id;
 
                 $this->db->insert('bf_ishop_budget', $budget_array);
-
             }
-
+        }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
         }
     }
 
@@ -5841,7 +5913,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $id = $this->db->update('ishop_budget', $budget_updates);
             }
         }
-        return $id;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function delete_budget_detail($budget_id)

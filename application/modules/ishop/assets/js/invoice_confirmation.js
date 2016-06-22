@@ -46,13 +46,37 @@ $(document).on("change",".received_status",function(){
 
 function update_invoice_confirmation_received(sales_id)
 {
-
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/update_invoice_confirmation_received",
         data: {sales:sales_id},
-        success: function(resp){}
+        success: function(resp){
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Updated successfully.';
+            }
+            else{
+
+                message += 'Data not Updated.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+        }
     });
+    return false;
 }
 
 /*Get Product Data*/
@@ -65,7 +89,6 @@ $(document).on('click', 'div.middle_container_received .eye_i', function () {
         data: {id: id},
         success: function(resp){
             $("#middle_container_product").html(resp);
-
         }
     });
     return false;
