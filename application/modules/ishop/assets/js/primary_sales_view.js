@@ -163,11 +163,11 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
             var message = "";
             if(resp == 1){
 
-                message += 'Data Edit successfully.';
+                message += 'Data Updated successfully.';
             }
             else{
 
-                message += 'Data not Edited.';
+                message += 'Data not Updated.';
             }
             $('<div></div>').appendTo('body')
                 .html('<div><b>'+message+'</b></div>')

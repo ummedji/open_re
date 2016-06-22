@@ -12,8 +12,7 @@ $login_customer_type = $user->role_id;
  $_POST['radio1'] =  (isset($_POST['radio1']) ? $_POST['radio1'] : '');
  
  //echo "<pre>";print_r($order_approval_table);die;
-
-if(isset($order_approval_table) && count($order_approval_table)>0) {
+if(isset($order_approval_table) && count($order_approval_table)>0 && $order_approval_table != false) {
     
         if($action_data == "order_approval"){
             $formname = "update_order_approval_data";
@@ -180,7 +179,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0) {
     <?php }
     else{
         ?>
-        <h1 align="center" class="on_data">NO Data Available</h1>
+        <h1 align="center" class="on_data">No Data Available</h1>
         <?php
     }
     ?>

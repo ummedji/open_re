@@ -4,7 +4,7 @@
     </div>
 <?php
 $action_data = $this->uri->segment(2);
-if(isset($prespective_order_data) && count($prespective_order_data)>0) { ?>
+if(isset($prespective_order_data) && count($prespective_order_data)>0 && $prespective_order_data !=false ) { ?>
         <?php if(isset($prespective_order_data['no_margin']) && !empty($prespective_order_data['no_margin']) )
         { ?>
                 <div class="col-md-12">

@@ -110,6 +110,16 @@ $(document).on("focusout",".forecast_qty",function(){
     
 });
 
+$('body').on("click","a.lock_data",function(){
+    
+    alert("UMMED");
+    var month_val = $(this).attr("rel");
+    var forecast_id = $("input#forecast_id").val();
+    
+    alert(month_val+"==="+forecast_id);
+    
+});
+
 function get_user_level_data(user_id){
     
     $.ajax({

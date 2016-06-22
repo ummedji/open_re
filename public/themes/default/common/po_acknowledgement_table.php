@@ -12,7 +12,7 @@ $login_customer_type = $user->role_id;
  
 //echo "<pre>";print_r($_POST);
 
-if(isset($po_ack_table) && count($po_ack_table)>0) {
+if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
     if($login_customer_type == 9 || $login_customer_type == 10){
         if($action_data == "po_acknowledgement"){
 

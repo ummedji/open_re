@@ -421,6 +421,9 @@ class Ishop_model extends BF_Model
                 $primary['pagination'] = $primary_sales['pagination'];
                 return $primary;
             }
+            else{
+                return false;
+            }
         }
     }
 
@@ -463,8 +466,11 @@ class Ishop_model extends BF_Model
                 $product_view['action'] = 'is_action';
                 $product_view['edit'] = 'is_edit';
                 $product_view['delete'] = 'is_delete';
+                return $product_view;
             }
-            return $product_view;
+            else{
+                return false;
+            }
         }
     }
 
@@ -937,8 +943,6 @@ class Ishop_model extends BF_Model
 
     public function get_all_rol_by_user($user_id, $country_id, $logined_user_role, $checked_type = null, $web_service = null, $page = null)
     {
-
-
         //$sql = 'SELECT ir.rol_id as id,ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
 
         $sql ='SELECT SQL_CALC_FOUND_ROWS ir.rol_id as id,ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
@@ -1034,6 +1038,9 @@ class Ishop_model extends BF_Model
                 $rol['edit'] = 'is_edit';
                 $rol['delete'] = 'is_delete';
                 return $rol;
+            }
+            else{
+                return false;
             }
         }
     }
@@ -1483,6 +1490,9 @@ class Ishop_model extends BF_Model
 
                 return $secondary;
             }
+            else{
+                return false;
+            }
         }
     }
 
@@ -1535,6 +1545,9 @@ class Ishop_model extends BF_Model
                 $product_view['delete'] = 'is_delete';
                 $product_view['pagination'] = $product_detail['pagination'];
                 return $product_view;
+            }
+            else{
+                return false;
             }
         }
     }
@@ -1764,6 +1777,10 @@ class Ishop_model extends BF_Model
                 $pyh_stock['pagination'] = $pyh_stock_details['pagination'];
                 return $pyh_stock;
             }
+            else{
+                return false;
+            }
+
         }
     }
 
@@ -2452,6 +2469,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             $sales_view['pagination'] = $sales_detail['pagination'];
             return $sales_view;
         }
+        else{
+            return false;
+        }
     }
 
 
@@ -2492,6 +2512,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             $sales_view['delete'] = 'is_delete';
             //$sales_view['pagination'] = $sales_detail['pagination'];
             return $sales_view;
+        }
+        else{
+            return false;
         }
     }
 
@@ -2994,6 +3017,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                 //testdata($stock_view);
                 return $stock_view;
             }
+            else{
+                return false;
+            }
         }
     }
 
@@ -3246,6 +3272,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                 $credit_limit_view['pagination'] = $credit_limit_detail['pagination'];
                 return $credit_limit_view;
             }
+            else{
+                return false;
+            }
         }
     }
 
@@ -3311,6 +3340,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                 $slab_view['no_margin'] = 'is_margin';
                 // $product_view['pagination'] = $report_details['pagination'];
                 return $slab_view;
+            }
+            else{
+                return false;
             }
         }
     }
@@ -3488,6 +3520,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
                 return $scheme_allocation_view;
             }
+            else{
+                return false;
+            }
         }
     }
 
@@ -3662,6 +3697,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                 return $invoice_confirmation_view;
 
             }
+            else{
+                return false;
+            }
 
         }
 
@@ -3718,6 +3756,9 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
                 // $product_view['pagination'] = $report_details['pagination'];
                 return $invoice_product_view;
 
+            }
+            else{
+                return false;
             }
         }
     }
@@ -4352,6 +4393,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $prespective['pagination'] = $prespective_order['pagination'];
                 return $prespective;
             }
+            else{
+                return false;
+            }
         }
 
     }
@@ -4395,6 +4439,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $product_view['eye'] = '';
             //  $product_view['pagination'] = $order_detail['pagination'];
             return $product_view;
+        }
+        else{
+            return false;
         }
 
     }
@@ -4831,6 +4878,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $order_view['pagination'] = $orderdata['pagination'];
                 return $order_view;
             }
+            else{
+                return false;
+            }
         }
 
     }
@@ -5104,6 +5154,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 // $product_view['pagination'] = $order_detail['pagination'];
                 return $product_view;
+            }
+            else{
+                return false;
             }
         }
 
@@ -5594,16 +5647,18 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $target['row'][] = array($i, $rd['ishop_target_id'], $rd['political_geography_name'], $rd['user_code'], $rd['display_name'], $rd['product_sku_name'], $quantity,);
                     $i++;
                 }
-
+                $target['pagination'] = $target_details['pagination'];
+                $target['action'] = 'is_action';
+                $target['edit'] = 'is_edit';
+                $target['delete'] = 'is_delete';
+                //   testdata($target);
+                return $target;
             }
-            $target['pagination'] = $target_details['pagination'];
-            $target['action'] = 'is_action';
-            $target['edit'] = 'is_edit';
-            $target['delete'] = 'is_delete';
-            //   testdata($target);
-            return $target;
-        }
+            else{
+                return false;
+            }
 
+        }
     }
 
 
@@ -5801,14 +5856,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $budget['row'][] = array($i, $rd['ishop_budget_id'], $rd['political_geography_name'], $rd['user_code'], $rd['display_name'], $rd['product_sku_name'], $quantity,);
                     $i++;
                 }
-
+                $budget['pagination'] = $budget_details['pagination'];
+                $budget['action'] = 'is_action';
+                $budget['edit'] = 'is_edit';
+                $budget['delete'] = 'is_delete';
+                // testdata($budget);
+                return $budget;
             }
-            $budget['pagination'] = $budget_details['pagination'];
-            $budget['action'] = 'is_action';
-            $budget['edit'] = 'is_edit';
-            $budget['delete'] = 'is_delete';
-            // testdata($budget);
-            return $budget;
+            else{
+                return false;
+            }
         }
     }
 

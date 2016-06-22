@@ -3,7 +3,7 @@
     <div id='ajax_loader'>
     </div>
 <?php
-if(isset($scheme_table) && count($scheme_table)>0) { ?>
+if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
     <div class="col-md-12" style="margin-top: 24px">
         <div class="row">
             <div class="zoom_space">

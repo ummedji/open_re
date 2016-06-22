@@ -12,7 +12,7 @@ $login_customer_type = $user->role_id;
  
 //echo "<pre>";print_r($order_table);die;
 
-if(isset($order_table) && count($order_table)>0) {
+if(isset($order_table) && count($order_table)>0 && $order_table != false) {
     if($login_customer_type != 9 && $login_customer_type != 10){
         if($action_data == "get_order_status_data_details"){
 

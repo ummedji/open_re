@@ -1929,7 +1929,6 @@ class Ishop extends Front_Controller
 		if(isset($order_id) && !empty($order_id))
 		{
 			$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
-			
 		}
                
                 //echo $action_data;die;

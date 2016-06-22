@@ -2,7 +2,7 @@
 //testdata($target_data);
 $action_data = $this->uri->segment(2);
 
-if(isset($target_data) && count($target_data)>0) {
+if(isset($target_data) && count($target_data)>0 && $target_data !=false) {
 
     ?>
 

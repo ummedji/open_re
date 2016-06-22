@@ -147,7 +147,7 @@ class Esp extends Front_Controller
                             $month=date("F",$time);
                             $year=date("Y",$time);
                             
-                            $lock_data = "<a href='javascript:void(0);' class='lock_data' />Lock</a>";
+                            $lock_data = "<a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' >Lock</a>";
                             
                             $html .= '<th colspan="2">'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
                         }

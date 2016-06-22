@@ -3,7 +3,9 @@
     </div>
     <?php
 $action_data = $this->uri->segment(2);
-if(isset($table) && count($table)>0) { ?>
+
+if(isset($table) && count($table)>0 && $table != false) {
+    ?>
         <?php if(isset($table['no_margin']) && !empty($table['no_margin']) )
         { ?>
                 <div class="col-md-12">
@@ -113,10 +115,12 @@ if(isset($table) && count($table)>0) { ?>
             </div>
         </div>
 
-    <?php }
-    else{
+    <?php
+    }
+    else
+    {
         ?>
-        <h1 align="center" class="on_data">NO Data Available</h1>
+        <h1 align="center" class="on_data">No Data Available</h1>
         <?php
     }
     ?></div>
