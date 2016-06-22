@@ -3,6 +3,7 @@
 /**
  * Esp controller
  */
+
 class Esp extends Front_Controller
 {
     protected $permissionCreate = 'Esp.Esp.Create';
@@ -104,6 +105,15 @@ class Esp extends Front_Controller
         die;
         
     }
+    
+    /*
+    * Function Name : get_pbg_sku_data
+    * Function Description : Logic For Freeze / Edit / Visiblity of of Forecast data
+    *       
+    *       check login user equal to freezed user if equal than make data visible and editable else not for   *       login user
+    *       If login user is parent of freezed user than he will able to see the forecast data entered by       *       juinor else not        
+    */
+    
     
     public function get_pbg_sku_data(){
         
@@ -219,6 +229,8 @@ class Esp extends Front_Controller
                                 
                                 if($login_user_id == $freeze_user_parent_data){
                                     
+                                    //If login user is parent of freezed user than he will able to see the forecast data entered by juinor else not
+                                    
                                     //SHOW FREEZEED DATA
                                     
                                      $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
@@ -244,22 +256,18 @@ class Esp extends Front_Controller
                     
                                     $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                 
-                            }
+                              }
                                 
-                                
-                            }
-                            
+                           }
                             
                         }
                         else{
-                            
                             
                             if($login_user_id == $forecast_freeze_data['freeze_user_id']){
                                 
                                 $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
                     
                                 $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
-                                
                                 
                             }else{
                                 
@@ -278,12 +286,9 @@ class Esp extends Front_Controller
                     
                         $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                     
-                        
                     }
-                    
                         
                     $l++;
-                   
                     
                 }
                $html .= '<td></td>';
@@ -291,16 +296,13 @@ class Esp extends Front_Controller
                 
             }
             
-            
-            
             $html .= '<tr>';
                 $html .= '<th>';
                  //  $html .= '';
                    foreach($month_data as $monthkey => $monthvalue){
                        
                        $html .= '<input type="hidden" name="month_data[]" value="'.$monthvalue.'" />';
-                       
-                         $html .= '<td>Assumption</td><td>Probability</td>';
+                       $html .= '<td>Assumption</td><td>Probability</td>';
                    }
             
                 $html .= '</th>';

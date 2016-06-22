@@ -22,7 +22,7 @@ echo form_open('',$attributes);
                         </div>
                     </div>
                 </div>
-                <div class="col-md-3 save_btn">
+                <div class="col-md-3 save_btn ex_btn">
                     <button type="submit" class="btn btn-primary">Execute</button>
                 </div>
             <div class="clearfix"></div>

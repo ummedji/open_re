@@ -62,16 +62,18 @@ $(document).on("click","button#freeze_data",function(e){
             
             var message = "";
             if(resp == 1){
+                
                 message += 'Data freezed successfully.';
             }
             else{
+                
                 message += 'Data not freezed.';
             }
             
             $('<div></div>').appendTo('body')
                 .html('<div><b>'+message+'</b></div>')
                 .dialog({
-                    //appendTo: "#success_file_popup",
+                    appendTo: "#success_file_popup",
                     modal: true,
                     zIndex: 10000,
                     autoOpen: true,

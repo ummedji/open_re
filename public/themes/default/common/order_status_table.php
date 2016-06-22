@@ -148,7 +148,9 @@ if(isset($order_table) && count($order_table)>0) {
                 if($login_customer_type != 9 && $login_customer_type != 10){
                     if($action_data == "get_order_status_data_details"){                   
                 ?>
-                <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                <div class="col-md-12 save_btn save_btn_bottom">
+                        <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                </div>
                     <?php
                         echo form_close();
                 } 

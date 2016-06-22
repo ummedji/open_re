@@ -1843,3 +1843,103 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 }
 /*end success_file_popup css*/
 
+.ex_btn{
+    margin-top: 28px;
+}
+.ex_btn button{
+    padding: 4px 30px;
+}
+.form-group .error,.tp_form .error{
+    font-size: 10px !important;
+    font-weight: normal !important;
+    text-align: left !important;
+}
+.save_btn_bottom{
+    margin-bottom: 10px;
+}
+.bootstrap-select.btn-group .dropdown-menu.inner{
+    max-height: 100px !important;
+}
+/*@media screen and (max-width: 767px){
+    #sec_qty-error, #sec_amt-error {
+        padding-left: inherit !important;
+    }
+    #form_date-error {
+        padding-left: inherit !important;
+    }
+    #to_date-error{
+        padding-left: inherit !important;
+    }
+    #rol_qty-error{
+        padding-left: 0px !important;
+    }
+    #phy_qty-error {
+        padding-left: inherit !important;
+    }
+    #stock_month-error{
+        text-align: center!important;
+    }
+    #prod_sku-error,#amt-error,#dispatched_qty-error{
+        padding-left: 0px !important;
+    }
+}*/
+@media screen and (min-width: 1366px) and (max-width: 1920px) {
+
+    #sec_qty-error,#sec_amt-error{
+        padding-left: 60px;
+    }
+    #form_date-error{
+        padding-left: 75px;
+    }
+    #to_date-error{
+        padding-left: 60px;
+    }
+    #rol_qty-error{
+        font-weight: normal;
+        font-size: 10px;
+        text-align: left;
+        padding-left: 90px;
+    }
+    #phy_qty-error{
+        padding-left: 63px;
+    }
+    #prod_sku-error{
+        padding-left: 0px;
+    }
+    #dispatched_qty-error{
+        padding-left: 100px;
+    }
+    #amt-error{
+        padding-left: 57px;
+    }
+    #quantity-error{
+        padding-left: 60px;
+    }
+    #year-error{
+        padding-left: 35px;
+    }
+    #current_date-error{
+        padding-left: 40px;
+    }
+    #batch-error{
+        padding-left: 45px;
+    }
+    #batch_expiry_date-error{
+        padding-left: 118px;
+    }
+    #batch_mfg_date-error{
+        padding-left: 104px;
+    }
+    #credit_limit-error{
+        padding-left: 80px;
+    }
+    #curr_outstanding-error{
+        padding-left: 132px;
+    }
+    #curr_date-error{
+        padding-left: 40px;
+    }
+    #sales_qty-error{
+        padding-left: 60px;
+    }
+}
