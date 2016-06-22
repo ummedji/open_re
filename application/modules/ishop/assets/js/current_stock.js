@@ -4,19 +4,16 @@
 
 $(function () {
     $('#current_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
     });
     $('#batch_expiry_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
     });
     $('#batch_mfg_date').datepicker({
-        format: "yyyy-mm-dd"
-    });
-    $('.expiry_date').datepicker({
-        format: "yyyy-mm-dd"
-    });
-    $('.mfg_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
     });
 });
 
@@ -98,6 +95,19 @@ $(document).ready(function(){
 });
 
 
+$(document).on('focus',".expiry_date", function(){
+    $(this).datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    });
+});
+
+$(document).on('focus',".mfg_date", function(){
+    $(this).datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    });
+});
 
 $(document).on('click', 'div.current_stock_container .edit_i', function () {
     var id = $(this).attr('prdid');

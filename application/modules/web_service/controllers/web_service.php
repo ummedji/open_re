@@ -2158,10 +2158,21 @@ class Web_service extends Front_Controller
         {
             $prespective_order = $this->ishop_model->get_prespective_order($from_date,$to_date,$role_id,$user_id,null,'web_service');
 
-
+            $final_array = array();
+            foreach($prespective_order as $k => $po)
+            {
+                $order_id = $po['order_id'];
+                $prespective_order_details = $this->ishop_model->order_product_details_view_by_id($order_id,'web_service');
+                $po["details"]=$prespective_order_details;
+                $final_array[] = $po;
+            }
             $result['status'] = true;
+            $result['message'] = 'Success';
+            $result['data'] = $final_array;
+
+           /* $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($prespective_order) ? $prespective_order : array();
+            $result['data'] = !empty($prespective_order) ? $prespective_order : array();*/
         }
         else
         {

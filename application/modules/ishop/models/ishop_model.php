@@ -4407,7 +4407,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
      * @ Function Return    : array
      * */
 
-    public function order_product_details_view_by_id($order_id)
+    public function order_product_details_view_by_id($order_id,$web_service=null)
     {
 
         $sql = 'SELECT bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit ';
@@ -4421,29 +4421,34 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql .= 'AND bipo.order_id =' . $order_id . ' ';
 
         //$sql .= 'ORDER BY order_date DESC ';
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $order_detail = $info->result_array();
+            return $order_detail;
 
-        $order_detail = $this->grid->get_result_res($sql);
+        } else {
+
+            $order_detail = $this->grid->get_result_res($sql);
 
 
-        //  $order_detail = array('result'=>$prespective_order_details);
+            //  $order_detail = array('result'=>$prespective_order_details);
 
-        if (isset($order_detail['result']) && !empty($order_detail['result'])) {
-            $product_view['head'] = array('Sr. No.', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
+            if (isset($order_detail['result']) && !empty($order_detail['result'])) {
+                $product_view['head'] = array('Sr. No.', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
 
-            // $product_view['count'] = count($product_view['head']);
-            $i = 1;
-            foreach ($order_detail['result'] as $od) {
-                $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['quantity_kg_ltr']);
-                $i++;
+                // $product_view['count'] = count($product_view['head']);
+                $i = 1;
+                foreach ($order_detail['result'] as $od) {
+                    $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['quantity_kg_ltr']);
+                    $i++;
+                }
+                $product_view['eye'] = '';
+                //  $product_view['pagination'] = $order_detail['pagination'];
+                return $product_view;
+            } else {
+                return false;
             }
-            $product_view['eye'] = '';
-            //  $product_view['pagination'] = $order_detail['pagination'];
-            return $product_view;
         }
-        else{
-            return false;
-        }
-
     }
 
     /**
