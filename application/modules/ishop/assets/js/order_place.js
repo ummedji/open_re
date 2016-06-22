@@ -978,7 +978,7 @@ function order_place_add_row()
                 +
             "</td>"+
             "<td data-title='Quantity'>" +
-                "<input class='quantity_data' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
+                "<input class='quantity_data allownumericwithdecimal' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
             "</td>"
             +
             "<td data-title='Qty'>" +

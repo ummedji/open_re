@@ -659,7 +659,9 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                                         type: "POST",             // Type of request to be send, called as method
                                         data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
                                         success: function(data)   // A function to be called if request succeeds
-                                        {}
+                                        {
+                                            location.reload();
+                                        }
                                     });
                                     $(this).dialog("close");
                                 },

@@ -325,7 +325,7 @@ $(document).on('submit', '#upload_current_stock_data', function (e) {
                                         data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs 
                                         success: function(data)   // A function to be called if request succeeds
                                         {
-
+                                            location.reload();
                                         }
                                     });
                                    // window.open(site_url+"assets/uploads/Uploads/target/"+file_name,'_blank' );

@@ -160,7 +160,29 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
         url: site_url+'ishop/update_sales_details',
         data: primary_sales_data,
         success: function(resp){
-            location.reload();
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Edit successfully.';
+            }
+            else{
+
+                message += 'Data not Edited.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
         }
     });
     //return false;

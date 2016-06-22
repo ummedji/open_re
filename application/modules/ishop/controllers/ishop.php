@@ -64,10 +64,9 @@ class Ishop extends Front_Controller
 	public function primary_sales_details()
 	{
 		$user = $this->auth->user();
-
-		$this->ishop_model->add_primary_sales_details($user->id,$user->country_id);
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/index');
+		$insert=$this->ishop_model->add_primary_sales_details($user->id,$user->country_id);
+		echo $insert;
+		die;
 	}
 
 	public function check_duplicate_data_primary_sales()
@@ -185,7 +184,8 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 		$update_sales_details = $this->ishop_model->update_sales_detail($user->id,$user->country_id);
-		redirect('ishop/primary_sales_view_details');
+		echo $update_sales_details;
+		die;
 	}
 
 	public function delete_sales_details()
@@ -251,8 +251,9 @@ class Ishop extends Front_Controller
 	public function update_rol_limit_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->update_rol_limit_detail($user->id,$user->country_id);
-		redirect('ishop/set_rol');
+		$update = $this->ishop_model->update_rol_limit_detail($user->id,$user->country_id);
+		echo $update;
+		die;
 	}
 
 	public function delete_rol_details()
@@ -289,10 +290,9 @@ class Ishop extends Front_Controller
 	public function add_rol_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->add_rol_detail($user->id,$user->country_id);
-
-		Template::set_message('Insert Data successful', 'success');
-		redirect('ishop/set_rol');
+		$add = $this->ishop_model->add_rol_detail($user->id,$user->country_id);
+		echo $add;
+		die;
 	}
 
 	/**
@@ -3104,53 +3104,68 @@ class Ishop extends Front_Controller
 						  if($user_data != 0 && $product_data != 0)
 						  {
 							  //ADD DATA TO DATA ARRAY
+							  $check_invoice_data = $this->ishop_model->check_invoice_data($invoice_no,$user_data);
+							//  $check_otn_data = $this->ishop_model->check_otn_data($otn);
 
-									   if(!isset($dist_invoice_otn_mapp_data_array[$invoice_no][$otn])){
+							  if($check_invoice_data == 1)
+							  {
+								  $error_message = "";
+								  if($check_invoice_data == 1) {
+									  $error_message = "Invoice data already exist in DB";
+								  }
 
-										   $dist_invoice_otn_mapp_data_array[$invoice_no][$otn] = $user_data;
-                                           
-                                              $inner_array[] = $user_data;
-                                              $inner_array[] = $invoice_no;
-                                              $inner_array[] = $invoice_date;
-                                              $inner_array[] = $otn;
-                                              $inner_array[] = $po_no;
-                                              $inner_array[] = $product_data;
-                                              $inner_array[] = $po_qty;
-                                              $inner_array[] = $dispatch_qty;
-                                              $inner_array[] = $amt;
+								  if(!isset($error_array["error"]["header"])){
+									  $error_array["error"]["header"] = $header;
+								  }
 
-                                              $final_array["success"][] = $inner_array;
+								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
+							  }
+							  else{
+								  if(!isset($dist_invoice_otn_mapp_data_array[$invoice_no][$otn])){
 
-                                           
-									   }
-									   else{
-										   if($dist_invoice_otn_mapp_data_array[$invoice_no][$otn] != $user_data){
+									  $dist_invoice_otn_mapp_data_array[$invoice_no][$otn] = $user_data;
 
-											   //SAME INVOICE ASSIGNED TO OTHER RETAILER
+									  $inner_array[] = $user_data;
+									  $inner_array[] = $invoice_no;
+									  $inner_array[] = $invoice_date;
+									  $inner_array[] = $otn;
+									  $inner_array[] = $po_no;
+									  $inner_array[] = $product_data;
+									  $inner_array[] = $po_qty;
+									  $inner_array[] = $dispatch_qty;
+									  $inner_array[] = $amt;
 
-											   if(!isset($error_array["error"]["header"])){
-												   $error_array["error"]["header"] = $header;
-											   }
-											   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Same invoice assigned to other Distributor";
+									  $final_array["success"][] = $inner_array;
 
-										   }
-										   else{
 
-											   
-                                              $inner_array[] = $user_data;
-                                              $inner_array[] = $invoice_no;
-                                              $inner_array[] = $invoice_date;
-                                              $inner_array[] = $otn;
-                                              $inner_array[] = $po_no;
-                                              $inner_array[] = $product_data;
-                                              $inner_array[] = $po_qty;
-                                              $inner_array[] = $dispatch_qty;
-                                              $inner_array[] = $amt;
+								  }
+								  else{
+									  if($dist_invoice_otn_mapp_data_array[$invoice_no][$otn] != $user_data){
 
-                                              $final_array["success"][] = $inner_array;
+										  //SAME INVOICE ASSIGNED TO OTHER RETAILER
 
-										   }
-									   }
+										  if(!isset($error_array["error"]["header"])){
+											  $error_array["error"]["header"] = $header;
+										  }
+										  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Same invoice assigned to other Distributor";
+
+									  }
+									  else{
+										  $inner_array[] = $user_data;
+										  $inner_array[] = $invoice_no;
+										  $inner_array[] = $invoice_date;
+										  $inner_array[] = $otn;
+										  $inner_array[] = $po_no;
+										  $inner_array[] = $product_data;
+										  $inner_array[] = $po_qty;
+										  $inner_array[] = $dispatch_qty;
+										  $inner_array[] = $amt;
+
+										  $final_array["success"][] = $inner_array;
+
+									  }
+								  }
+							  }
 
 						  }
 						  else{
@@ -3295,6 +3310,7 @@ class Ishop extends Front_Controller
 
 								   if($distributor_retailer_mapping_data == 1){
 
+
 									   if(!isset($dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no]) ){
 
 										   $dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] = $user_retailer_data;
@@ -3305,38 +3321,23 @@ class Ishop extends Front_Controller
 										   }
 
 
+										   $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no,$user_retailer_data,$user_distributor_data);
 
-										   if(!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no]) && !in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
+										  	if($invoice_retailer_data == 1){
 
-											   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+												$error_message = "Invoice No for Retailer already exist in DB. ";
 
-											   $inner_array[] = $user_distributor_data;
-											   $inner_array[] = $user_retailer_data;
-											   $inner_array[] = $invoice_no;
-											   $inner_array[] = $invoice_date;
-											   $inner_array[] = $po_no;
-											   $inner_array[] = $otn;
-											   $inner_array[] = $product_data;
-											   $inner_array[] = $unit;
-											   $inner_array[] = $quantity;
-											   $inner_array[] = $amount;
+												if(!isset($error_array["error"]["header"])){
+													$error_array["error"]["header"] = $header;
+												}
 
-											   $final_array["success"][] = $inner_array;
+												$error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
 
-										   }
+											}
 										   else{
-											   if(in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
+											   if(!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no]) && !in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
 
-												   //DUPLICATE DATA IN FILE ERROR
-
-												   if(!isset($error_array["error"]["header"])){
-													   $error_array["error"]["header"] = $header;
-												   }
-												   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate product data";
-
-											   }
-											   else{
-                                                   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+												   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
 
 												   $inner_array[] = $user_distributor_data;
 												   $inner_array[] = $user_retailer_data;
@@ -3352,7 +3353,36 @@ class Ishop extends Front_Controller
 												   $final_array["success"][] = $inner_array;
 
 											   }
+											   else{
+												   if(in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
 
+													   //DUPLICATE DATA IN FILE ERROR
+
+													   if(!isset($error_array["error"]["header"])){
+														   $error_array["error"]["header"] = $header;
+													   }
+													   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate product data";
+
+												   }
+												   else{
+													   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+
+													   $inner_array[] = $user_distributor_data;
+													   $inner_array[] = $user_retailer_data;
+													   $inner_array[] = $invoice_no;
+													   $inner_array[] = $invoice_date;
+													   $inner_array[] = $po_no;
+													   $inner_array[] = $otn;
+													   $inner_array[] = $product_data;
+													   $inner_array[] = $unit;
+													   $inner_array[] = $quantity;
+													   $inner_array[] = $amount;
+
+													   $final_array["success"][] = $inner_array;
+
+												   }
+
+											   }
 										   }
 
 									   }
@@ -3511,84 +3541,42 @@ class Ishop extends Front_Controller
 							   if($product_data != 0 &&  $user_retailer_data != 0)
 							   {
 
-								 /*  $check_invoice_data = $this->ishop_model->check_secondary_invoice_data($invoice_no);
-								   $check_otn_data = $this->ishop_model->check_secondary_otn_data($otn);
 
-								   if($check_invoice_data == 1 || $check_otn_data == 1){
-
-									   $error_message = "";
-									   if($check_invoice_data == 1) {
+								   $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no, $user_retailer_data, $user->id);
+								   if ($invoice_retailer_data == 1) {
 										   $error_message = "Invoice data already exist in DB";
-									   }
-									   elseif($check_otn_data == 1){
-										   $error_message = "OTN already exist in DB";
-									   }
-									   elseif($check_invoice_data == 1 && $check_otn_data == 1){
-										   $error_message = "Invoice data and OTN already exist in DB";
-									   }
 
-									   if(!isset($error_array["error"]["header"])){
-										   $error_array["error"]["header"] = $header;
-									   }
+										   if (!isset($error_array["error"]["header"])) {
+											   $error_array["error"]["header"] = $header;
+										   }
 
-									   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
-								   }
-								   else{ */
-									   //CHECK DISTRIBUTOR RETAILER ASSOCATION
+										   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
+									   } else {
+										   //CHECK DISTRIBUTOR RETAILER ASSOCATION
 
-									   $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user->id,$user_retailer_data);
+										   $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user->id, $user_retailer_data);
 
-									   // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
+										   // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
 
-									   //  dumpme($dist_invoice_ret_mapp_data_array);
+										   //  dumpme($dist_invoice_ret_mapp_data_array);
 
 
-									   if($distributor_retailer_mapping_data == 1){
+										   if ($distributor_retailer_mapping_data == 1) {
 
-										   if(!isset($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no]) ){
+											   if (!isset($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no])) {
 
-											   $dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] = $user_retailer_data;
-
-
-											   if(!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no])){
-												   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no] = array();
-											   }
+												   $dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] = $user_retailer_data;
 
 
-
-											   if(!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no]) && !in_array($product_data,$dist_invoice_product_mapp_data_array[$user->id][$invoice_no])){
-
-												   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no][] = $product_data;
-
-
-												   $inner_array[] = $user_retailer_data;
-												   $inner_array[] = $invoice_no;
-												   $inner_array[] = $invoice_date;
-												   $inner_array[] = $po_no;
-												   $inner_array[] = $otn;
-												   $inner_array[] = $product_data;
-												   $inner_array[] = $unit;
-												   $inner_array[] = $quantity;
-												   $inner_array[] = $amount;
-
-												   $final_array["success"][] = $inner_array;
-
-											   }
-											   else{
-
-												   if(in_array($product_data,$dist_invoice_product_mapp_data_array[$user->id][$invoice_no])){
-
-													   //DUPLICATE DATA IN FILE ERROR
-
-													   if(!isset($error_array["error"]["header"])){
-														   $error_array["error"]["header"] = $header;
-													   }
-													   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate product data";
-													   //$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate data";
+												   if (!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
+													   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no] = array();
 												   }
-												   else{
+
+
+												   if (!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no]) && !in_array($product_data, $dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
 
 													   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no][] = $product_data;
+
 
 													   $inner_array[] = $user_retailer_data;
 													   $inner_array[] = $invoice_no;
@@ -3602,49 +3590,73 @@ class Ishop extends Front_Controller
 
 													   $final_array["success"][] = $inner_array;
 
+												   } else {
+
+													   if (in_array($product_data, $dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
+
+														   //DUPLICATE DATA IN FILE ERROR
+
+														   if (!isset($error_array["error"]["header"])) {
+															   $error_array["error"]["header"] = $header;
+														   }
+														   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate product data";
+														   //$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate data";
+													   } else {
+
+														   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no][] = $product_data;
+
+														   $inner_array[] = $user_retailer_data;
+														   $inner_array[] = $invoice_no;
+														   $inner_array[] = $invoice_date;
+														   $inner_array[] = $po_no;
+														   $inner_array[] = $otn;
+														   $inner_array[] = $product_data;
+														   $inner_array[] = $unit;
+														   $inner_array[] = $quantity;
+														   $inner_array[] = $amount;
+
+														   $final_array["success"][] = $inner_array;
+
+													   }
+
+
 												   }
 
+											   } else {
+												   if ($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] == $user_retailer_data) {
 
+													   //DUPLICATE DATA IN FILE ERROR
+
+													   if (!isset($error_array["error"]["header"])) {
+														   $error_array["error"]["header"] = $header;
+													   }
+													   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate data";
+
+												   } else {
+
+													   //SAME INVOICE ASSIGNED TO OTHER RETAILER
+
+													   if (!isset($error_array["error"]["header"])) {
+														   $error_array["error"]["header"] = $header;
+													   }
+													   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Same invoice assigned to other Retailer";
+
+												   }
 											   }
+
+										   } else {
+
+											   //DISTRIBUTOR RETAILER MAPPING ERROR
+
+											   if (!isset($error_array["error"]["header"])) {
+												   $error_array["error"]["header"] = $header;
+											   }
+											   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Distributor and Retailer not correctly mapped.";
 
 										   }
-										   else{
-											   if($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] == $user_retailer_data){
 
-												   //DUPLICATE DATA IN FILE ERROR
-
-												   if(!isset($error_array["error"]["header"])){
-													   $error_array["error"]["header"] = $header;
-												   }
-												   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate data";
-
-											   }
-											   else{
-
-												   //SAME INVOICE ASSIGNED TO OTHER RETAILER
-
-												   if(!isset($error_array["error"]["header"])){
-													   $error_array["error"]["header"] = $header;
-												   }
-												   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Same invoice assigned to other Retailer";
-
-											   }
-										   }
 
 									   }
-									   else{
-
-										   //DISTRIBUTOR RETAILER MAPPING ERROR
-
-										   if(!isset($error_array["error"]["header"])){
-											   $error_array["error"]["header"] = $header;
-										   }
-										   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Distributor and Retailer not correctly mapped.";
-
-									   }
-
-
-								 //  }
 							   }
 							   else{
 

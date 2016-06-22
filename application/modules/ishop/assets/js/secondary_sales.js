@@ -125,6 +125,7 @@ $(function () {
 
     $('#reta_id').on('change',function(){
         $('#invoice_no').val('');
+        $("#secondary_sls").empty();
     });
 
     $("#sec_add_row").click(function() {

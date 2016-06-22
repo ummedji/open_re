@@ -124,6 +124,7 @@ $(function () {
 
     $('#customer_id').on('change',function(){
         $('#invoice_no').val('');
+        $("#primary_sls").empty();
     });
 
 
@@ -236,14 +237,34 @@ $("#primary_sales").on("submit",function(){
                 data: param,
                 //dataType : 'json',
                 success: function (resp) {
-                    if (resp == 1) {
-                        site_url + "ishop";
+                    var message = "";
+                    if(resp == 1){
+
+                        message += 'Data Inserted successfully.';
                     }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+                                location.reload()
+                            }
+                        });
                 }
             });
         }
     }
-    /*return false;*/
+    return false;
 });
 
 

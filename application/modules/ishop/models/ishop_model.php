@@ -59,11 +59,14 @@ class Ishop_model extends BF_Model
         }
     }
 
-    public function check_invoice_data($invoice_no)
+    public function check_invoice_data($invoice_no,$user_data =null)
     {
         $this->db->select('*');
         $this->db->from('ishop_primary_sales');
         $this->db->where('invoice_no', $invoice_no);
+        if($user_data != null){
+            $this->db->where('customer_id !=', $user_data);
+        }
         $invoice_data = $this->db->get()->result_array();
         if (isset($invoice_data) && !empty($invoice_data)) {
             return 1;
@@ -245,8 +248,6 @@ class Ishop_model extends BF_Model
                 }
             }
         } else {
-
-
             if ($xl_data != "") {
                 foreach ($xl_data as $key => $value) {
 
@@ -322,7 +323,12 @@ class Ishop_model extends BF_Model
             }
 
         }
-        return 1;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function check_valid_primary_sales_data($invoice_no, $order_tracking_no, $PO_no)
@@ -523,7 +529,12 @@ class Ishop_model extends BF_Model
                 $this->db->update('ishop_primary_sales', $primary_sales_update);
             }
         }
-        return true;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
 
@@ -897,6 +908,12 @@ class Ishop_model extends BF_Model
             }
 
         }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
 
     }
 
@@ -1050,7 +1067,12 @@ class Ishop_model extends BF_Model
                 $id = $this->db->update('ishop_rol', $rol_update);
             }
         }
-        return $id;
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function delete_rol_limit_detail($rol_id)
@@ -5661,9 +5683,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         } while ($month != $last);
 
         return $month_output;
-
-
-
     }
 
     public function get_budget_details($user_id, $country_id, $checked_type = null, $page = null, $web_service = null)
@@ -6064,13 +6083,13 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     }
 
-    function check_secondary_invoice_retailer_data($invoice_no, $user_retailer_data)
+    function check_secondary_invoice_retailer_data($invoice_no, $user_retailer_data,$user_id)
     {
-
         $this->db->select('*');
         $this->db->from('bf_ishop_secondary_sales');
         $this->db->where('invoice_no', $invoice_no);
-        $this->db->where('customer_id_to', $user_retailer_data);
+        $this->db->where('customer_id_to !=', $user_retailer_data);
+        $this->db->where('customer_id_from', $user_id);
 
         $invoice_retailer_data = $this->db->get()->result_array();
 

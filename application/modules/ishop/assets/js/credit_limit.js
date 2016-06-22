@@ -218,9 +218,7 @@ $(document).on('submit', '#upload_credit_limit_data', function (e) {
                                         data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs 
                                         success: function(data)   // A function to be called if request succeeds
                                         {
-                                            //return false;
-                                            console.log(data)
-                                            //file_name = data;
+                                            location.reload();
                                         }
                                     });
                                     
