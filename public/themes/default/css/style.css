@@ -1850,7 +1850,7 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     padding: 4px 30px;
 }
 .form-group .error,.tp_form .error{
-    font-size: 10px !important;
+    font-size: 12px !important;
     font-weight: normal !important;
     text-align: left !important;
 }

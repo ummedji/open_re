@@ -112,11 +112,45 @@ $(document).on("focusout",".forecast_qty",function(){
 
 $('body').on("click","a.lock_data",function(){
     
-    alert("UMMED");
+    var parent_data = $(this);
+    
+    var text_data = $(this).text();
+    
+    alert(text_data);
+    
     var month_val = $(this).attr("rel");
     var forecast_id = $("input#forecast_id").val();
     
-    alert(month_val+"==="+forecast_id);
+    $.ajax({
+        type: 'POST',
+        url: site_url+"esp/set_forecast_lock_data",
+        data: {textdata:text_data,monthval:month_val,forecastid:forecast_id},
+        success: function(resp){
+            
+            if(resp == 1){
+                
+                alert("1");
+                
+                alert(text_data);
+                
+                if(text_data == "Lock"){
+                    
+                    alert("INNN");
+                    
+                    parent_data.parent("div.lock_unlock_data").empty();
+                    parent_data.parent("div.lock_unlock_data").html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' >Unlock</a>");
+                }
+                else{
+                     alert("2");
+                    parent_data.parent("div.lock_unlock_data").empty();
+                    parent_data.parent("div.lock_unlock_data").html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' >Lock</a>");
+                    
+                }
+                
+            }
+            
+        }
+    });
     
 });
 

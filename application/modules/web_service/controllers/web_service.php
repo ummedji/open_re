@@ -2158,6 +2158,7 @@ class Web_service extends Front_Controller
         {
             $prespective_order = $this->ishop_model->get_prespective_order($from_date,$to_date,$role_id,$user_id,null,'web_service');
 
+
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = !empty($prespective_order) ? $prespective_order : array();
@@ -2168,6 +2169,32 @@ class Web_service extends Front_Controller
             $result['message'] = "All Fields are Required.";
         }
         $this->do_json($result);
+    }
+
+    public function updatePerspectiveOrder()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $read_status = $this->input->get_post('read_status');
+        $order_id = $this->input->get_post('order_id');
+
+        if(isset($user_id)&& !empty($user_id) && isset($read_status) && !empty($read_status) && isset($order_id) && !empty($order_id)){
+
+            if($read_status == 1){
+                $this->ishop_model->order_mark_as_read($order_id);
+            }
+            else{
+                $this->ishop_model->order_mark_as_unread($order_id);
+            }
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = '';
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
     }
 
     /**

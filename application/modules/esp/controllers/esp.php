@@ -147,7 +147,7 @@ class Esp extends Front_Controller
                             $month=date("F",$time);
                             $year=date("Y",$time);
                             
-                            $lock_data = "<a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' >Lock</a>";
+                            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' >Lock</a></div>";
                             
                             $html .= '<th colspan="2">'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
                         }
@@ -695,6 +695,21 @@ class Esp extends Front_Controller
         $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user->id,$forecast_id);
         
         echo $freeze_data;
+        die;
+        
+    }
+    
+    public function set_forecast_lock_data(){
+        
+        $user = $this->auth->user();
+        $forecast_id = $_POST["forecastid"];
+        $monthval = $_POST["monthval"];
+        
+        $text_data = $_POST["textdata"];
+        
+        $lock_data = $this->esp_model->update_forecast_lock_status_data($user->id,$forecast_id,$monthval,$text_data);
+        
+        echo $lock_data;
         die;
         
     }

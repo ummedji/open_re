@@ -343,4 +343,32 @@ class Esp_model extends BF_Model
         
     }
     
+    public function update_forecast_lock_status_data($user_id,$forecast_id,$monthval,$text_data){
+        
+        if($text_data == 'Lock'){
+            $status = 1;
+        }
+        else{
+            $status = 0;
+        }
+        
+        $data = array(
+            'lock_status'	=>$status,
+            'lock_by_id' => $user_id
+        );
+            
+        $this->db->where('forecast_id', $forecast_id);
+        $this->db->where('forecast_month', $monthval);
+        
+        $this->db->update('bf_esp_forecast_product_details' ,$data);
+        
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+        
+    }
+    
 }
