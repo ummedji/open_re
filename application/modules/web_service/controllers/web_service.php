@@ -2188,12 +2188,12 @@ class Web_service extends Front_Controller
         $read_status = $this->input->get_post('read_status');
         $order_id = $this->input->get_post('order_id');
 
-        if(isset($user_id)&& !empty($user_id) && isset($read_status) && !empty($read_status) && isset($order_id) && !empty($order_id)){
+        if(isset($user_id)&& !empty($user_id) && isset($order_id) && !empty($order_id)){
 
             if($read_status == 1){
                 $this->ishop_model->order_mark_as_read($order_id);
             }
-            else{
+            if($read_status == 0){
                 $this->ishop_model->order_mark_as_unread($order_id);
             }
             $result['status'] = true;

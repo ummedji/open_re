@@ -190,10 +190,20 @@ class Esp extends Front_Controller
                     $forecast_qty = "";
                     $forecast_value = "";
                     
+                     $lock_status = "";
+                     $lock_by_id = "";
+                    
+                //    echo "<pre>";
+                //    print_r($employee_month_product_forecast_data);
+                    
                     if($employee_month_product_forecast_data != 0){
                         
                         $forecast_qty = $employee_month_product_forecast_data[0]['forecast_quantity'];
                         $forecast_value = $employee_month_product_forecast_data[0]['forecast_value'];
+                        
+                        
+                        $lock_status = $employee_month_product_forecast_data[0]['lock_status'];
+                        $lock_by_id = $employee_month_product_forecast_data[0]['lock_by_id'];
                         
                         $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
                         
@@ -240,7 +250,16 @@ class Esp extends Front_Controller
                                 }
                                 elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                     
-                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  /></td>';
+                                    //GET LOCK STATUS
+                                    
+                                    if($lock_status == 1){
+                                        $editable = "readonly";
+                                    }
+                                    else{
+                                        $editable = "";
+                                    }
+                                    
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
                     
                                      $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                     
@@ -446,9 +465,22 @@ class Esp extends Front_Controller
                                 }
                                 elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                     
+                                    //GET LOCK STATUS
+                                    
+                                    echo $lock_status."</br>";
+                                    
+                                    if($lock_status == 1){
+                                        $assumption_editable = "disabled";
+                                        $probablity_editable = "readonly";
+                                    }
+                                    else{
+                                        $assumption_editable = "";
+                                        $probablity_editable = "";
+                                    }
+                                    
                                    
                                         $html .= '<div class="col-md-3 col-sm-3 tp_form">
-                <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+                <div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                     <option value= "">Select Assumption</option>';
                                     foreach($assumption_data as $assumption_key => $assumption)
@@ -467,7 +499,7 @@ class Esp extends Front_Controller
                                     $html .= '</select>';
 
                                     $html .= '</div>
-            </div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
+            </div></td><td><input type="text" '.$probablity_editable.' name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
                                      
                                     
                                 }
