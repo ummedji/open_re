@@ -1727,16 +1727,57 @@ class Web_service extends Front_Controller
 
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
-            $target_data = $this->ishop_model->get_target_monthly_data($_POST,'web_service');
-            $target_month_data = $this->ishop_model->get_monthly_data($_POST,'web_service');
+            if(!empty($_POST['from_month_data']) && !empty($_POST['to_month_data'])){
+                $target_data = $this->ishop_model->get_target_monthly_data($_POST,'web_service');
+                $target_month_data = $this->ishop_model->get_monthly_data($_POST,'web_service');
 
-            $target_data_array=array(
-                "target_data" => $target_data,
-                "target_month_data" =>$target_month_data
-                );
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = $target_data_array;
+
+                $target_month= array();
+                if(isset($target_month_data) && !empty($target_month_data)) {
+                    foreach ($target_month_data as $key => $value) {
+                        $target_month[] = date("Y-M", strtotime($value)) . '(Kg/Ltr)';
+                    }
+                }
+
+                //  testdata($target_month);
+
+                $final_array = array();
+
+                $final_array["target_data"]["month_data"] = "";
+                $final_array["target_data"]["data"] = "";
+
+                if(!empty($target_data) && !empty($target_month_data)){
+
+                    $final_array["target_data"]["month_data"] = $target_month;
+
+                    foreach($target_data as $target_key => $target_value){
+
+                        $inner_array = array();
+                        $product_detail_data = explode("-",$target_key);
+
+                        $inner_array['id'] = $product_detail_data[0];
+                        $inner_array['code'] = $product_detail_data[1];
+                        $inner_array['name'] = $product_detail_data[2];
+
+                        foreach($target_value as $data_key => $target_monthlydata){
+                            $inner_array['detail'][] = $target_monthlydata;
+                        }
+
+                        $final_array["target_data"]["data"][] = $inner_array;
+
+                    }
+                }
+                //testdata($final_array);
+
+                $result['status'] = true;
+                $result['message'] = 'Retrieved Successfully.';
+                $result['data'] = $final_array;
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = "All Fields are Required.";
+            }
+
         }
         else
         {

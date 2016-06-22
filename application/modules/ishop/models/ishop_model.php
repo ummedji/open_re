@@ -5660,8 +5660,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $time = strtotime('+1 month', $time);
         } while ($month != $last);
 
-
         return $month_output;
+
+
 
     }
 
