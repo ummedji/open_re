@@ -179,6 +179,45 @@ class Esp_model extends BF_Model
         $this->db->update('bf_esp_forecast_product_details' ,$data);        
     }
     
+    public function get_forecast_assumption_details($old_forecast_id,$month_data){
+        
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast_assumption as befa");
+
+        $this->db->where("befa.forecast_id",$old_forecast_id);
+        $this->db->where("befa.month_data",$month_data);
+
+        $forecast_assumption_data = $this->db->get()->result_array();
+
+        if(isset($forecast_assumption_data) && !empty($forecast_assumption_data)) {
+            return $forecast_assumption_data;
+        } else{
+            return 0;
+        } 
+        
+    }
+    
+    public function update_forecast_assumption_details($forecast_assumption_id,$assumption_data,$probablity_data){
+        
+        $asumption = explode("~",$assumption_data);
+        $probablity = explode("~",$probablity_data);
+       
+        $data = array( 
+            'assumption1_id'=> $asumption[0], 
+            'assumption2_id'=>  $asumption[1],
+            'assumption3_id'=>  $asumption[2],
+            'probability1'	=>  $probablity[0],
+            'probability2'	=>  $probablity[1],
+            'probability3'	=>  $probablity[2]
+        );
+            
+        $this->db->where('forecast_assumption_id', $forecast_assumption_id);
+        $this->db->update('bf_esp_forecast_assumption' ,$data); 
+        
+    }
+    
+    
     public function get_business_code($forecast_user_id=NULL){
         
         if($forecast_user_id == NULL){

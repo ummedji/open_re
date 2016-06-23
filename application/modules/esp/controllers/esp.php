@@ -818,7 +818,7 @@ class Esp extends Front_Controller
     }
     
     public function add_forecast(){
-        testdata($_POST);
+       // testdata($_POST);
       //  $forecast_data = $this->esp_model->add_forecast_data();
         
         if(isset($_POST) && !empty($_POST)){
@@ -886,9 +886,16 @@ class Esp extends Front_Controller
 
                     }
 
-                        $initial_array_assumption = $_POST['assumption'.$i];
+                        if(isset($_POST['assumption'.$i])){
+                            $initial_array_assumption = $_POST['assumption'.$i];
+                        }
+                        else{
+                            $initial_array_assumption = array();
+                        }
                         $initial_array_probablity = $_POST['probablity'.$i];
-                            
+                    
+                       // if($initial_array_assumption != "")
+                    
                         $final_array[$month_value]['assumption'] = $initial_array_assumption;
                         $final_array[$month_value]['probablity'] = $initial_array_probablity;
                     
@@ -897,7 +904,7 @@ class Esp extends Front_Controller
                 }
             }
              
-            testdata($final_array);
+           // testdata($final_array);
             
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
@@ -929,30 +936,33 @@ class Esp extends Front_Controller
                         }
                         
                     }
+                   
+                    $assumption_data = "";
+                    $probablity_data = "";
                     
-                    $asumption = "";
-                    $probablity = "";
-                    
-                    $assumption_data = implode("~",$data["assumption"]);
-                    $probablity_data = implode("~",$data["probablity"]);
-                    
-                    
-                    echo $old_forecast_id."</br>";
-                    
-                  /*  $get_assumption_old_data = this->esp_model->get_forecast_assumption_details($businss_data,$product_id,$month_data);
+                    if(!empty($data["assumption"])){
                         
-                    if($get_product_old_data != 0){
+                        $assumption_data = implode("~",$data["assumption"]);
+                        $probablity_data = implode("~",$data["probablity"]);
 
-                        //UPDATE MAIN TABLE RECORD
 
-                        $forecast_product_id = $get_product_old_data[0]['forecast_product_id'];
+                        echo $old_forecast_id."</br>";
 
-                        $update_status = $this->esp_model->update_forecast_product_details($forecast_product_id,$forecast_qty,$forecast_value);
+                        $get_assumption_old_data = this->esp_model->get_forecast_assumption_details($old_forecast_id,$month_data);
 
-                    }else{ */
+                        if($get_product_old_data != 0){
 
-                  //      $this->esp_model->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
-                   // }
+                            //UPDATE MAIN TABLE RECORD
+
+                            $forecast_assumption_id = $get_assumption_old_data[0]['forecast_assumption_id'];
+
+                            $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id,$assumption_data,$probablity_data);
+
+                        }else{ 
+
+                           $this->esp_model->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
+                        }
+                    }
 
                 }
                 
@@ -963,6 +973,8 @@ class Esp extends Front_Controller
             
             die;
         }
+        
+        redirect('esp/');
         
     }
     
