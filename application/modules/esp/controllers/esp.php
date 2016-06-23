@@ -168,16 +168,23 @@ class Esp extends Front_Controller
                                     
                                  $employee_month_product_forecast_data1 = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
                     
-                                 $lock_status = "";
+                                 $lock_status = 0;
                                  $lock_by_id = "";
+                                 $check_lock_forecast_id = "";
 
                             //    echo "<pre>";
                             //    print_r($employee_month_product_forecast_data);
 
                                 if($employee_month_product_forecast_data1 != 0){
 
-                                    $lock_status = $employee_month_product_forecast_data1[0]['lock_status'];
-                                    $lock_by_id = $employee_month_product_forecast_data1[0]['lock_by_id'];
+                                   // $lock_status = $employee_month_product_forecast_data1[0]['lock_status'];
+                                   // $lock_by_id = $employee_month_product_forecast_data1[0]['lock_by_id'];
+                                    $check_lock_forecast_id = $employee_month_product_forecast_data1[0]['forecast_id'];
+
+                                   $forecast_lock_history_data =  $this->esp_model->get_employee_month_product_forecast_lock_data($login_user_id,$check_lock_forecast_id,$monthvalue);
+                                    if(!empty($forecast_lock_history_data)){
+                                        $lock_status = $forecast_lock_history_data[0]['lock_status'];
+                                    }
                                 
                                 }
                                     
@@ -187,7 +194,7 @@ class Esp extends Front_Controller
                                     }
                                     else{
                                         $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' >Unlock</a></div>";
-                                    }
+                                    } 
                             
                                 }
                             }
@@ -270,7 +277,6 @@ class Esp extends Front_Controller
                             if($login_user_id == $forecast_freeze_data['freeze_user_id']){
                                 
                                 
-                               // echo $login_user_id." == ".$forecast_freeze_data['freeze_user_id']."==".$lock_by_id;
                                 
                                 $editable = "";
                                 

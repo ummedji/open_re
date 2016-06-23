@@ -54,6 +54,7 @@ $("#secondary_sales_view").on("submit",function(e){
             data: param,
             success: function(resp){
                 console.log(resp);
+                $("#middle_container_product").empty();
                 $("#middle_container").html(resp);
             }
         });

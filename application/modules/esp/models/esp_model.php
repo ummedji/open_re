@@ -407,6 +407,21 @@ class Esp_model extends BF_Model
         return $forecast_freeze_history_data;
     }
     
+    public function get_employee_month_product_forecast_lock_data($login_user_id,$check_lock_forecast_id,$monthvalue){
+        
+        $this->db->select('*');
+        $this->db->from("bf_forecast_lock_status_history as bflsh");
+        
+        $this->db->where("bflsh.forecast_id",$check_lock_forecast_id);
+        $this->db->where("bflsh.lock_by_id",$login_user_id);
+        $this->db->where("bflsh.month_data",$monthvalue);
+        
+        $forecast_lock_history_data = $this->db->get()->result_array();
+        return $forecast_lock_history_data;
+        
+    }
+    
+    
     public function get_forecast_freeze_status($forecast_id){
         
         $this->db->select('*');

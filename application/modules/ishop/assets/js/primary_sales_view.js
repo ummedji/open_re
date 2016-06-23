@@ -64,6 +64,7 @@ $("#primary_sales_view").on("submit",function(e){
             success: function(resp){
                 // console.log(resp);
                 $('#middle_container').html(resp);
+                $("#middle_container_product").empty();
             }
         });
         return false;

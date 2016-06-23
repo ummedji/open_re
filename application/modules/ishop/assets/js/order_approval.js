@@ -50,6 +50,7 @@ $(document).ready(function(){
                 data: param,
                 success: function(resp){
                     $("#middle_container").html(resp);
+                    $("#middle_container_product").empty();
                 }
             });
        }

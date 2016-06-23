@@ -46,6 +46,7 @@ $(document).ready(function(){
                 success: function(resp){
                     console.log(resp);
                     $("div#middle_container").html(resp);
+                    $("#middle_container_product").empty();
 
                 }
             });

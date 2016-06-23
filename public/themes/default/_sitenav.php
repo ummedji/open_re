@@ -105,7 +105,7 @@
                                     ?>
                                     <?php if($current_user->role_id == 7 || $current_user->role_id == 9) {
                                         ?>
-                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='') ? 'active' :'' ;?>"><a href="#">E-INVOICE / E-STATEMENT</a></li>
+                                        <li role="presentation" class="<?php echo ($segment=='' && $segment2=='') ? 'active' :'' ;?>"><a href="#">E-INVOICE / E-STATEMENT</a></li>
                                         <?php
                                     }
                                     ?>

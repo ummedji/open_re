@@ -337,6 +337,7 @@ $(document).ready(function(){
                 data: param,
                 dataType : 'html',
                 success: function(resp){
+                    $("#middle_container_product").empty();
                     $("#middle_container").html(resp);
                 }
             });
