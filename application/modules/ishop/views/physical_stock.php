@@ -24,11 +24,11 @@ echo form_open('ishop/physical_stock',$attributes); ?>
                 </div>
                 <div class="col-md-12 text-center radio_space">
                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="retailer" value="retailer" checked>
+                        <input class="select_customer_type" type="radio" name="checked_type" id="retailer" value="retailer" checked>
                         <label for="radio1">Retailer</label>
                     </div>
                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="distributor" value="distributor">
+                        <input class="select_customer_type" type="radio" name="checked_type" id="distributor" value="distributor">
                         <label for="radio2">Distributor</label>
                     </div>
                     <div class="clearfix"></div>
