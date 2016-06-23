@@ -100,6 +100,9 @@ class Esp_model extends BF_Model
     
     public function insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data){
         
+        echo "<pre>";
+        print_r($assumption_data);
+        
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
        

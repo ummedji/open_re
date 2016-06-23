@@ -4892,7 +4892,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     {
         $this->db->select('*');
         $this->db->from('bf_ishop_orders');
-        $this->db->where('order_status');
         $this->db->where('country_id',$country_id);
         $this->db->where('order_status','0');
         $query = $this->db->get();

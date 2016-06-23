@@ -2149,6 +2149,7 @@ class Ishop extends Front_Controller
             }
 
 			$pending_count=$this->ishop_model->get_all_pending_data($user->id,$user->country_id);
+			//testdata($pending_count);
 			Template::set('pending_count',$pending_count);
 
           //  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
