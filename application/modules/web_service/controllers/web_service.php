@@ -1977,6 +1977,13 @@ class Web_service extends Front_Controller
      * */
     public function uploadData()
     {
+        $file = fopen("api_req.txt","w");
+        $param = json_encode($_GET);
+        $param .= json_encode($_POST);
+        $param .= json_encode($_REQUEST);
+        $param .= json_encode($_FILES);
+        fwrite($file,$param);
+        fclose($file);
         $user_id = $this->input->get_post('user_id');
         if(isset($user_id))
         {

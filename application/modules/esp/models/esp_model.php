@@ -149,12 +149,12 @@ class Esp_model extends BF_Model
       
     }
     
-    public function get_forecast_product_details($old_forecast_id,$businss_data,$product_id,$month_data){
+    public function get_forecast_product_details($businss_data,$product_id,$month_data){
         
         $this->db->select('*');
         $this->db->from("bf_esp_forecast_product_details as befpd");
 
-        $this->db->where("befpd.forecast_id",$old_forecast_id);
+       // $this->db->where("befpd.forecast_id",$old_forecast_id);
         $this->db->where("befpd.business_code",$businss_data);
         $this->db->where("befpd.forecast_month",$month_data);
         $this->db->where("befpd.product_sku_id",$product_id);
