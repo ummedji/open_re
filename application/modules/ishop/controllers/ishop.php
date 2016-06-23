@@ -3097,12 +3097,12 @@ class Ishop extends Front_Controller
 					  if($distributor_code == "" || $distributor_name == "" || $invoice_no == "" || $invoice_date == "" || $otn == "" || $po_no=="" || $product_code =="" || $product_name == "" || $po_qty == "" || $dispatch_qty =="" || $amt=="")
 					  {
 						  //CHECK DATA BLANK
-
-						  if(!isset($error_array["error"]["header"])){
+						  $error_array["error"] = 'asdasdasa';
+						 /* if(!isset($error_array["error"]["header"])){
 							  $error_array["error"]["header"] = $header;
 						  }
 
-						  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Some row data blank";
+						  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Some row data blank";*/
 					  }
 					  else
 					  {
@@ -3122,8 +3122,9 @@ class Ishop extends Front_Controller
 
 							  if($check_invoice_data == 1)
 							  {
+								  $error_array["error"][]='dsfsdfasdfadsfa';
 								  $error_message = "";
-								  if($check_invoice_data == 1) {
+								/*  if($check_invoice_data == 1) {
 									  $error_message = "Invoice data already exist in DB";
 								  }
 
@@ -3131,7 +3132,7 @@ class Ishop extends Front_Controller
 									  $error_array["error"]["header"] = $header;
 								  }
 
-								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
+								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;*/
 							  }
 							  else{
 								  if(!isset($dist_invoice_otn_mapp_data_array[$invoice_no][$otn])){

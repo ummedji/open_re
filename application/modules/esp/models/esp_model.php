@@ -138,6 +138,47 @@ class Esp_model extends BF_Model
         
     }
     
+    public function update_forecast_data($forecast_id,$created_user_id){
+        
+        $data = array(
+            'modified_by_user'	=>$created_user_id
+        );
+            
+        $this->db->where('forecast_id', $forecast_id);
+        $this->db->update('bf_esp_forecast' ,$data);
+      
+    }
+    
+    public function get_forecast_product_details($old_forecast_id,$businss_data,$product_id,$month_data){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast_product_details as befpd");
+
+        $this->db->where("befpd.forecast_id",$old_forecast_id);
+        $this->db->where("befpd.business_code",$businss_data);
+        $this->db->where("befpd.forecast_month",$month_data);
+        $this->db->where("befpd.product_sku_id",$product_id);
+
+        $forecast_product_data = $this->db->get()->result_array();
+
+        if(isset($forecast_product_data) && !empty($forecast_product_data)) {
+            return $forecast_product_data;
+        } else{
+            return 0;
+        } 
+    }
+    
+    public function update_forecast_product_details($forecast_product_id,$forecast_qty,$forecast_value){
+        
+        $data = array(
+            'forecast_quantity'	=>$forecast_qty,
+            'forecast_value'	=>$forecast_value
+        );
+            
+        $this->db->where('forecast_product_id', $forecast_product_id);
+        $this->db->update('bf_esp_forecast_product_details' ,$data);        
+    }
+    
     public function get_business_code($forecast_user_id=NULL){
         
         if($forecast_user_id == NULL){
