@@ -189,7 +189,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
  });
  
  var order_status_validators = $("#order_status").validate({
-        ignore: ".ignore",
+       // ignore: ".ignore",
         rules: {
             dis_distributor_geo_level_1_data :{
                 required: true
@@ -225,16 +225,16 @@ $(document).on('click', 'div.order_status .edit_i', function () {
         e.preventDefault();
         var param = $("form#order_status").serializeArray();
         
-     /*   var validator = order_status_validators;
+        var validator = order_status_validators;
 
     var $valid = $("#order_status").valid();
     if(!$valid) {
-        alert('focusInvalid');
+        //alert('focusInvalid');
         validator.focusInvalid();
         return false;
     }
     else
-    {*/
+    {
         $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/get_order_status_data",
@@ -247,7 +247,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
                 }
             });
             return false;
-     //   }
+        }
 
     });
     

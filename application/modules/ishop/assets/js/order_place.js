@@ -330,7 +330,7 @@ $(document).ready(function(){
 
                 $.each(resp, function(key, value) {
 
-                    $('div#farmer_checked select#farmer_data').append('<option selected="selected" value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                    $('div#farmer_checked select#farmer_data').append('<option selected="selected" value="' + value.id + '" >' +value.display_name+ '</option>');
                     
                      selected_customer_data = value.id;
 
@@ -360,7 +360,41 @@ $(document).ready(function(){
    });
 
   /*  var order_place_validators = $("#order_place").validate({
-        ignore: ".ignore",
+        ignore: '.ignore',
+        rules:{
+            geo_level_1_data:{
+                required: true
+            },
+            distributor_id:{
+                required: true
+            },
+            prod_sku:{
+                required: true
+            },
+            units:{
+                required: true
+            },
+            quantity:{
+                required: true
+            },
+
+            retailer_geo_level_1_data:{
+                required: true
+            },
+            retailer_geo_level_2_data:{
+                required: true
+            },
+            retailer_id:{
+                required: true
+            },
+            retailer_distributor_id:{
+                required: true
+            },
+        }
+    });
+
+    var order_place_validatorsddd = $("#order_placeddd").validate({
+       // ignore: ".ignore",
         rules: {
             distributor_geo_level_1_data :{
                 required: true
@@ -368,7 +402,7 @@ $(document).ready(function(){
             distributor_geo_level_1 :{
                 required: true
             },
-            distributor_distributor_id :{
+            distributor_id :{
                 required: true
             },
             retailer_geo_level_1_data:{
@@ -431,36 +465,61 @@ $(document).ready(function(){
         }
     });*/
 
-  $("#order_place_add_row").click(function() {
-
-/*
-        $('#prod_sku').removeClass('ignore');
+    $("#order_place_add_row").click(function()
+    {
+      /*  $('#prod_sku').removeClass('ignore');
         $('#units').removeClass('ignore');
         $('#quantity').removeClass('ignore');
-      
+
         var $valid = $("#order_place").valid();
         var checked_type = $('input[name=radio1]:checked').val();
-        if(!$valid) {
+
+        if($valid==false)
+        {
             order_place_validators.focusInvalid();
             return false;
         }
         else
-        {
-            alert('in');*/
-            order_place_add_row();
+        {*/
+           order_place_add_row();
        /* }*/
   });
 
 
 $("#order_place").on("submit",function(){
 
-
-   /* $('#prod_sku').addClass('ignore');
+    /*$('#prod_sku').addClass('ignore');
     $('#units').addClass('ignore');
-    $('#quantity').addClass('ignore');*/
+    $('#quantity').addClass('ignore');
 
+    var $valid = $("#order_place").valid();
+    if($valid != false)
+    {
+        if($("#order_place_data").children().length <= 0)
+        {
+            alert('No data added');
+            return false;
+        }
+        else
+        {*/
+            var param = $("#order_place").serializeArray();
+            $.ajax({
+                type: 'POST',
+                url: site_url+"ishop/order_place_details",
+                data: param,
+                success: function(resp){
+                    location.reload();
+                }
+            });
+       /* }*/
+   /* }
+    else
+    {
+        alert('focusInvalid');
+        //validator.focusInvalid();
+        return false;
+    }*/
 
-    var param = $("#order_place").serializeArray();
 
     /*var validator = order_place_validators;
 
@@ -479,41 +538,10 @@ $("#order_place").on("submit",function(){
             return false;
         }
         else {*/
-        $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/order_place_details",
-            data: param,
-            //dataType : 'json',
-            success: function(resp){
-                var message = "";
-                if(resp == 1){
 
-                    message += 'Data Inserted successfully.';
-                }
-                else{
-
-                    message += 'Data not Inserted.';
-                }
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                            location.reload()
-                        }
-                    });
-
-            }
-        });
    /*   }
     }*/
-    return false;
+  //  return false;
 });
 
 
@@ -729,8 +757,15 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                         $("div#retailer_checked select#retailer_geo_level_1_data").selectpicker('refresh');
 
                     }
+
                 }
+
+
+
             }
+
+
+
         }
     });
     
@@ -767,7 +802,7 @@ function get_user_by_geo_data(selected_geo_data){
                     $("select#fo_retailer_data").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#fo_retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select#fo_retailer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                     });
 
                     $("select#fo_retailer_data").selectpicker('refresh');
@@ -780,7 +815,7 @@ function get_user_by_geo_data(selected_geo_data){
                     $("select#fo_distributor_data").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#fo_distributor_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select#fo_distributor_data').append('<option value="' + value.id + '" >' + value.display_name + '</option>');
                     });
 
                     $("select#fo_distributor_data").selectpicker('refresh');
@@ -793,7 +828,7 @@ function get_user_by_geo_data(selected_geo_data){
                     $("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                     });
 
                     $("select#distributor_distributor_id").selectpicker('refresh');
@@ -806,7 +841,7 @@ function get_user_by_geo_data(selected_geo_data){
                     $("select#retailer_id").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#retailer_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select#retailer_id').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                     });
 
                     $("select#retailer_id").selectpicker('refresh');
@@ -819,7 +854,7 @@ function get_user_by_geo_data(selected_geo_data){
                     $("select#farmer_data").append('<option value="">Select Farmer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#farmer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select#farmer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                     });
 
                     $("select#farmer_data").selectpicker('refresh');
@@ -853,7 +888,7 @@ function get_retailer_by_user(selected_user_id){
                         $("select#distributor_data").append('<option value="">Select Distributor Name</option>');
 
                         $.each(resp, function(key, value) {
-                            $('select#distributor_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                            $('select#distributor_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                         });
 
                         $("select#distributor_data").selectpicker('refresh');
@@ -865,7 +900,7 @@ function get_retailer_by_user(selected_user_id){
                     $("select.retailer_data").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select.retailer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        $('select.retailer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                     });
 
                     $("select.retailer_data").selectpicker('refresh');
@@ -994,7 +1029,7 @@ function order_place_add_row()
                 +
             "</td>"+
             "<td data-title='Quantity'>" +
-                "<input class='quantity_data allownumericwithdecimal' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
+                "<input class='quantity_data' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
             "</td>"
             +
             "<td data-title='Qty'>" +

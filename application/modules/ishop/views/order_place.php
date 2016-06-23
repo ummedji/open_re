@@ -68,7 +68,7 @@ echo form_open('',$attributes); ?>
                                 <div class="form-group">
                                 <label>Distributor Name<span style="color: red">*</span></label>
                                 <select class="selectpicker" id="distributor_distributor_id" name="distributor_id" data-live-search="true">
-
+                                    <option value="">Select Distributor</option>
                                 </select>
                             </div>
                             </div>
