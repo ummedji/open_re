@@ -324,10 +324,17 @@ class Esp_model extends BF_Model
         
     }
     
-    public function update_forecast_freeze_status_data($user_id,$forecast_id){
+    public function update_forecast_freeze_status_data($user_id,$forecast_id,$text_data){
+        
+        if($text_data == "Freeze"){
+            $freeze_status = 1;
+        }
+        else{
+            $freeze_status = 0;
+        }
         
         $data = array(
-            'freeze_status'	=>1,
+            'freeze_status'	=>$freeze_status,
             'freeze_by_id' =>$user_id
         );
             
@@ -335,12 +342,69 @@ class Esp_model extends BF_Model
         $this->db->update('bf_esp_forecast' ,$data);
         
         if($this->db->affected_rows() > 0){
+            
+            $this->db->select('*');
+            $this->db->from("bf_forecast_freeze_status_history as bffsh");
+
+            $this->db->where("bffsh.forecast_id",$forecast_id);
+            $this->db->where("bffsh.freeze_by_id",$user_id);
+
+            $freeze_data = $this->db->get()->result_array();
+            
+            if(empty($freeze_data)){
+                
+                //INSERT TO FREEZE HISTORY TABLE
+                
+                $freeze_data = array( 
+                    'forecast_id'	=> $forecast_id, 
+                    'freeze_by_id'  => $user_id, 
+                    'freeze_status'	=>  1
+                );
+                $this-> db->insert('bf_forecast_freeze_status_history', $freeze_data);
+                
+            }
+            else{
+                
+                //UPDATE TO FREEZE HISTORY TABLE
+                
+                $freeze_history_id = $freeze_data[0]['id'];
+                
+                if($text_data == "Freeze"){
+                    $freeze_status = 1;
+                }
+                else{
+                    $freeze_status = 0;
+                }
+                
+                $update_history_data = array(
+                    'freeze_status'	=>$freeze_status,
+                    'freeze_by_id' =>$user_id
+                );
+
+                $this->db->where('id', $freeze_history_id);
+                $this->db->update('bf_forecast_freeze_status_history' ,$update_history_data);
+                
+                
+            }
+            
             return 1;
         }
         else{
             return 0;
         }
         
+    }
+    
+    public function get_freeze_history_user_status_data($login_user_id,$forecast_id){
+        
+        $this->db->select('*');
+        $this->db->from("bf_forecast_freeze_status_history as bffsh");
+        
+        $this->db->where("bffsh.forecast_id",$forecast_id);
+        $this->db->where("bffsh.freeze_by_id",$login_user_id);
+        
+        $forecast_freeze_history_data = $this->db->get()->result_array();
+        return $forecast_freeze_history_data;
     }
     
     public function get_forecast_freeze_status($forecast_id){
@@ -406,6 +470,53 @@ class Esp_model extends BF_Model
         $this->db->update('bf_esp_forecast_product_details' ,$data);
         
         if($this->db->affected_rows() > 0){
+            
+            
+            
+            $this->db->select('*');
+            $this->db->from("bf_forecast_lock_status_history as bflsh");
+
+            $this->db->where("bflsh.forecast_id",$forecast_id);
+            $this->db->where("bflsh.month_data",$monthval);
+            $this->db->where("bflsh.lock_by_id",$user_id);
+
+            $lock_data = $this->db->get()->result_array();
+            
+            if(empty($lock_data)){
+                
+                //INSERT TO LOCK HISTORY TABLE
+                
+                $lock_data = array( 
+                    'forecast_id'	=> $forecast_id, 
+                    'month_data'  => $monthval, 
+                    'lock_status'	=>  1,
+                    'lock_by_id'	=>  $user_id
+                );
+                $this-> db->insert('bf_forecast_lock_status_history', $lock_data);
+                
+            }
+            else{
+                
+                //UPDATE TO LOCK HISTORY TABLE
+                
+                $lock_history_id = $lock_data[0]['id'];
+                
+                if($text_data == "Lock"){
+                    $lock_status = 1;
+                }
+                else{
+                    $lock_status = 0;
+                }
+                
+                $update_history_data = array(
+                    'lock_status'	=>$lock_status
+                );
+
+                $this->db->where('id', $lock_history_id);
+                $this->db->update('bf_forecast_lock_status_history' ,$update_history_data);
+                
+            }
+
             return 1;
         }
         else{

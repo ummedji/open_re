@@ -512,11 +512,27 @@ class Web_service extends Front_Controller
         $form_date = $this->input->get_post('form_date');
         $to_date = $this->input->get_post('to_date');
         $customer_id = $this->input->get_post('customer_id');
+        $order_tracking_no = $this->input->get_post('otn');
+       // $check_type = $this->input->get_post('check_type');
         $page_function = 'order_status';
+
+      /*  if(isset($check_type) && !empty($check_type)){
+            $radio = $check_type;
+        }
+        else{
+            $radio = null;
+        }*/
 
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
-            $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
+            if(isset($order_tracking_no) && !empty($order_tracking_no)){
+              //  testdata('in');
+                $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,null,null,null,$order_tracking_no,null,null,$page_function,null,'web_service');
+            }
+            else{
+                $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
+            }
+
 
             $order_array = array();
             if (!empty($order_data)) {

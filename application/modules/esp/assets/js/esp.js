@@ -53,17 +53,30 @@ $(document).on("click","button#freeze_data",function(e){
     e.preventDefault();
    
     var forecast_id = $("input#forecast_id").val();
+    var text_data = $(this).text();
     
     $.ajax({
         type: 'POST',
         url: site_url+"esp/update_forecast_freeze_status",
-        data: {forecastid:forecast_id},
+        data: {forecastid:forecast_id,textdata:text_data},
         success: function(resp){
             
             var message = "";
             if(resp == 1){
                 
-                message += 'Data freezed successfully.';
+                if(text_data == "Freeze"){
+                    $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
+                    
+                     message += 'Data freezed successfully.';
+                    
+                }
+                else{
+                    $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
+                    
+                     message += 'Data Unfreezed successfully.';
+                    
+                }
+                
             }
             else{
                 

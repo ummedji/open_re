@@ -1,5 +1,6 @@
 <div class='report-box'>
     <div id='ajax_loader'>
+
     </div>
     <?php
 $action_data = $this->uri->segment(2);

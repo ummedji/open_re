@@ -288,7 +288,7 @@ class Esp extends Front_Controller
                                 }
                                 
                                 
-                                echo "1";
+                             //   echo "1";
                                 
                                 //check login user equal to freezed user if equal than make data visible and editable else not for login user
                                 
@@ -312,7 +312,7 @@ class Esp extends Front_Controller
                                     
                                     //SHOW FREEZEED DATA
                                     
-                                    echo "2";
+                                  //  echo "2";
                                     
                                     
                                      $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
@@ -324,7 +324,7 @@ class Esp extends Front_Controller
                                     
                                     //GET LOCK STATUS
                                     
-                                    echo "3";
+                                  //  echo "3";
                                     
                                     if($lock_status == 1){
                                         $editable = "readonly";
@@ -342,7 +342,7 @@ class Esp extends Front_Controller
                                     
                                     //SHOW FREEZED DATA BUT READONLY
                                     
-                                    echo "4";
+                                  //  echo "4";
                                     
                                      $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" '.$editable.' /></td>';
                     
@@ -354,7 +354,7 @@ class Esp extends Front_Controller
                                 
                                 //NOT SHOW FREEZED DATA
                                 
-                                echo "5";
+                             //   echo "5";
                                     
                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     
@@ -369,7 +369,7 @@ class Esp extends Front_Controller
                             
                             if($login_user_id == $forecast_freeze_data['freeze_user_id']){
                                 
-                                echo "6";
+                            //    echo "6";
                                 
                                 $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
                     
@@ -776,7 +776,26 @@ class Esp extends Front_Controller
            
             $freeze_button = "";
             if($login_user_parent_data != 0){
-                $freeze_button = '<button type="submit" class="btn btn-primary" id="freeze_data">Submit</button>';
+                
+                $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$forecast_id);
+                
+                if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
+                    
+                
+                    if($freeze_history_user_status_data[0]['freeze_status'] == 0){
+                    
+                        $freeze_button = '<div id="freeze_area"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                    }
+                    else{
+                        $freeze_button = '<div id="freeze_area"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
+                    }
+                    
+                }
+                else{
+                    
+                    $freeze_button = '<div id="freeze_area"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                    
+                }
             }
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
@@ -946,9 +965,9 @@ class Esp extends Front_Controller
                         $probablity_data = implode("~",$data["probablity"]);
 
 
-                        echo $old_forecast_id."</br>";
+                       // echo $old_forecast_id."</br>";
 
-                        $get_assumption_old_data = this->esp_model->get_forecast_assumption_details($old_forecast_id,$month_data);
+                        $get_assumption_old_data = $this->esp_model->get_forecast_assumption_details($old_forecast_id,$month_data);
 
                         if($get_product_old_data != 0){
 
@@ -989,7 +1008,8 @@ class Esp extends Front_Controller
         
         $user = $this->auth->user();
         $forecast_id = $_POST["forecastid"];
-        $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user->id,$forecast_id);
+        $text_data = $_POST["textdata"];
+        $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user->id,$forecast_id,$text_data);
         
         echo $freeze_data;
         die;
