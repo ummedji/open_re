@@ -4295,7 +4295,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         }
 
-        $this->db->select('bu.id,bmupd.first_name,bmupd.middle_name,bmupd.last_name');
+      //  $this->db->select('bu.id,bmupd.first_name,bmupd.middle_name,bmupd.last_name');
+        $this->db->select('bu.id,bu.display_name');
         $this->db->from('bf_master_customer_to_customer_mapping as bmctcm');
 
         $this->db->join('bf_users as bu', 'bu.id = bmctcm.from_customer_id');
