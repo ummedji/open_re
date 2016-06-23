@@ -877,13 +877,13 @@ class Web_service extends Front_Controller
         $role_id = $this->input->get_post('role_id');
         $year = $this->input->get_post("year");
         $retailer = $this->input->get_post("fo_retailer_id");
+        $region = $this->input->get_post("region");
+        $territory = $this->input->get_post("territory");
 
         if(isset($user_id) && !empty($user_id)  && isset($country_id) && !empty($country_id) && isset($role_id) && !empty($role_id))
         {
            if($role_id == 7)
            {
-               $region = $this->input->get_post("region");
-               $territory = $this->input->get_post("territory");
                if( isset($year) && !empty($year) && isset($region) && !empty($region) && isset($territory) && !empty($territory)
                    && isset($region) && !empty($region))
                {
@@ -913,6 +913,32 @@ class Web_service extends Front_Controller
                 if( isset($year) && !empty($year))
                 {
                     $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,'','',$role_id,'',null,'web_service');
+                    if(!empty($scheme_view))
+                    {
+                        // For Pagination
+                        $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                        $total_rows = $count->result()[0]->total_rows;
+                        $pages = $total_rows/10;
+                        $pages = ceil($pages);
+                        $result['total_rows'] = $total_rows;
+                        $result['pages'] = $pages;
+                        // For Pagination
+                    }
+                    $result['status'] = true;
+                    $result['message'] = 'Retrieved Successfully.';
+                    $result['data'] = !empty($scheme_view) ? $scheme_view : array();
+                }
+                else
+                {
+                    $result['status'] = false;
+                    $result['message'] = "All Fields are Required.";
+                }
+            }
+            elseif($role_id == 8){
+                if( isset($year) && !empty($year) && isset($territory) && !empty($territory))
+                {
+                   // testdata('in');
+                    $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,'',$territory,$role_id,$retailer,null,'web_service');
                     if(!empty($scheme_view))
                     {
                         // For Pagination
@@ -1317,78 +1343,109 @@ class Web_service extends Front_Controller
         $logined_user_role = $this->input->get_post('role_id');
         $country_id = $this->input->get_post('country_id');
 
-        if(isset($user_id) && !empty($user_id)
-            && isset($year) && !empty($year)
-            && isset($logined_user_role) && !empty($logined_user_role)
-            && isset($country_id) && !empty($country_id)
-        )
+        if(isset($user_id) && !empty($user_id) && isset($year) && !empty($year) && isset($logined_user_role) && !empty($logined_user_role)
+            && isset($country_id) && !empty($country_id))
         {
-            //Get Data
-            $final_array = array();
-            $geolevels3 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,null,$year,$logined_user_role);
-            if(!empty($geolevels3))
-            {
-                foreach($geolevels3 as $k3 => $geolevel3)
+            if($logined_user_role == 7){
+                //Get Data
+                $final_array = array();
+                $geolevels3 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,null,$year,$logined_user_role);
+                if(!empty($geolevels3))
                 {
-                    $g3 = array(
-                        "id"=>$geolevel3['business_geo_id'],
-                        "business_georaphy_name"=>$geolevel3['business_georaphy_name'],
-                    );
-                    $final_array[] = $g3; // Add Geo Level 3 Into Final Array
-                    $parent_geo_id3 = $geolevel3['business_geo_id'];
-                    $geolevels2 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,$parent_geo_id3,$year,$logined_user_role);
-                    if(!empty($geolevels2))
+                    foreach($geolevels3 as $k3 => $geolevel3)
                     {
-                        foreach ($geolevels2 as $k2 => $geolevel2)
+                        $g3 = array(
+                            "id"=>$geolevel3['business_geo_id'],
+                            "business_georaphy_name"=>$geolevel3['business_georaphy_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
+                        $parent_geo_id3 = $geolevel3['business_geo_id'];
+                        $geolevels2 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,$parent_geo_id3,$year,$logined_user_role);
+                        if(!empty($geolevels2))
                         {
-                            $g2 = array(
-                                "id"=>$geolevel2['business_geo_id'],
-                                "business_georaphy_name"=>$geolevel2['business_georaphy_name'],
-                            );
-                            $final_array[$k3]['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
-                            $parent_geo_id2 = $geolevel2['business_geo_id'];
-                            $retailers_names = $this->ishop_model->get_business_geo_data_to_retailer($parent_geo_id2,$country_id);
-                            if(!empty($retailers_names))
+                            foreach ($geolevels2 as $k2 => $geolevel2)
                             {
-                                foreach ($retailers_names as $k1 => $retailers_name)
+                                $g2 = array(
+                                    "id"=>$geolevel2['business_geo_id'],
+                                    "business_georaphy_name"=>$geolevel2['business_georaphy_name'],
+                                );
+                                $final_array[$k3]['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
+                                $parent_geo_id2 = $geolevel2['business_geo_id'];
+                                $retailers_names = $this->ishop_model->get_business_geo_data_to_retailer($parent_geo_id2,$country_id);
+                                if(!empty($retailers_names))
                                 {
-                                    $final_array[$k3]['geolevel2'][$k2]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                    foreach ($retailers_names as $k1 => $retailers_name)
+                                    {
+                                        $final_array[$k3]['geolevel2'][$k2]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                    }
                                 }
                             }
                         }
                     }
                 }
-            }
 
-            $final_array2 = array();
-            $schemes = $this->ishop_model->get_schemes_by_selected_year($year,$country_id);
-            if(!empty($schemes))
-            {
-                foreach($schemes as $k3 => $scheme)
+                $final_array2 = array();
+                $schemes = $this->ishop_model->get_schemes_by_selected_year($year,$country_id);
+                if(!empty($schemes))
                 {
-                    $final_array2[] = $scheme; // Add Geo Level 3 Into Final Array2
-                    $scheme_id = $scheme['scheme_id'];
-                    $get_slabs = $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id,'web_service');
-                    if(!empty($get_slabs))
+                    foreach($schemes as $k3 => $scheme)
                     {
-                        foreach ($get_slabs as $k2 => $get_slab)
+                        $final_array2[] = $scheme; // Add Geo Level 3 Into Final Array2
+                        $scheme_id = $scheme['scheme_id'];
+                        $get_slabs = $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id,'web_service');
+                        if(!empty($get_slabs))
                         {
-                            $final_array2[$k3]['slabs'][] = $get_slab; // Add Geo Level 2 Into Final Array2
+                            foreach ($get_slabs as $k2 => $get_slab)
+                            {
+                                $final_array2[$k3]['slabs'][] = $get_slab; // Add Geo Level 2 Into Final Array2
+                            }
+                        }
+                        else
+                        {
+                            $final_array2[$k3]['slabs'] = array();
                         }
                     }
-                    else
+                }
+
+                $result['status'] = true;
+                $result['message'] = 'Retrieved Successfully.';
+                $result['data'] = array(
+                    "geo_data" => !empty($final_array) ? $final_array : array(),
+                    "schema_data" => !empty($final_array2) ? $final_array2 : array()
+                );
+            }
+            elseif($logined_user_role == 8)
+            {
+                $final_array = array();
+                $geolevels3 = $this->ishop_model->get_business_geo_data($user_id,$country_id,$default_retailer_role,null,$year,$logined_user_role);
+
+                if(!empty($geolevels3))
+                {
+                    foreach($geolevels3 as $k3 => $geolevel3)
                     {
-                        $final_array2[$k3]['slabs'] = array();
+                        $g3 = array(
+                            "id"=>$geolevel3['business_geo_id'],
+                            "business_georaphy_name"=>$geolevel3['business_georaphy_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
+                        $parent_geo_id3 = $geolevel3['business_geo_id'];
+
+                        $retailers_names = $this->ishop_model->get_business_geo_data_to_retailer($parent_geo_id3,$country_id);
+                                if(!empty($retailers_names))
+                                {
+                                    foreach ($retailers_names as $k1 => $retailers_name)
+                                    {
+                                        $final_array[$k3]['geolevel2']['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                    }
+                                }
                     }
                 }
+                $result['status'] = true;
+                $result['message'] = 'Retrieved Successfully.';
+                $result['data'] = array(
+                    "geo_data" => !empty($final_array) ? $final_array : array(),
+                );
             }
-
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = array(
-                "geo_data" => !empty($final_array) ? $final_array : array(),
-                "schema_data" => !empty($final_array2) ? $final_array2 : array()
-            );
         }
         else
         {

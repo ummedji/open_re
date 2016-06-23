@@ -847,39 +847,54 @@ class Esp extends Front_Controller
             $final_array = array();
 
             $i = 1;
+            
+            $forecast_insert_id = '';
 
             if(!empty($_POST['month_data'])){
                 foreach($_POST['month_data'] as $month_key=>$month_value){
             
                     $check_record_exist = $this->esp_model->check_forecast_data($pbg_id,$user_business_code,$month_value);
                     
-                    if($check_record_exist == 0){
+                    if($check_record_exist != 0){
+                        
+                        
+                        
+                        
+                    }else{
                     
                         //INSERT
+                        if($forecast_insert_id == ""){
+                        
+                                $forecast_insert_id = $this->esp_model->insert_forecast_data($pbg_id,$created_user_id,$user_business_code,$_POST['login_user_id']);
 
-                        $forecast_insert_id = $this->esp_model->insert_forecast_data($pbg_id,$created_user_id,$user_business_code,$_POST['login_user_id']);
-
-
+                        }
                         $initial_array = array();
 
                             foreach($_POST['product_sku_id'] as $pkey=>$product_data){
 
-                                $final_array[$month_value]['productid'][$product_data]['forecast_qty'] = $_POST['forecast_qty'][$product_data][$month_key];
+                                $initial_array_forecastqty = $_POST['forecast_qty'][$product_data][$month_key];
 
-                                $final_array[$month_value]['productid'][$product_data]['forecast_value'] = $_POST['forecast_value'][$product_data][$month_key];
-
+                                $initial_array_forecastvalue = $_POST['forecast_value'][$product_data][$month_key];
+                                
+                                $final_array[$month_value]['productid'][$product_data]['forecast_qty'] = $initial_array_forecastqty;
+                        
+                                $final_array[$month_value]['productid'][$product_data]['forecast_value'] = $initial_array_forecastvalue;
+                                
                             }
 
-                        $final_array[$month_value]['assumption'] = $_POST['assumption'.$i];
-                        $final_array[$month_value]['probablity'] = $_POST['probablity'.$i];
-
-                        $i++;
-
+                        $initial_array_assumption = $_POST['assumption'.$i];
+                        $initial_array_probablity = $_POST['probablity'.$i];
+                            
+                        $final_array[$month_value]['assumption'] = $initial_array_assumption;
+                        $final_array[$month_value]['probablity'] = $initial_array_probablity;
+                        
+                       
                     }
-            
+                     $i++;
                 }
             }
-                 
+               echo "<pre>";
+            print_r($final_array);
             
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
@@ -900,6 +915,8 @@ class Esp extends Front_Controller
                     
                     $assumption_data = implode("~",$data["assumption"]);
                     $probablity_data = implode("~",$data["probablity"]);
+                    
+                    echo $forecast_insert_id."==".$assumption_data."==".$probablity_data."==".$month_data."</br>";
                     
                     $this->esp_model->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
                     

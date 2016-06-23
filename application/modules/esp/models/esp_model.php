@@ -102,7 +102,7 @@ class Esp_model extends BF_Model
         
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
-        
+       
         $data = array( 
             'forecast_id'	=>  $forecast_insert_id, 
             'assumption1_id'=> $asumption[0], 
@@ -124,9 +124,9 @@ class Esp_model extends BF_Model
         
         $this->db->join("bf_esp_forecast_product_details as befpd","befpd.forecast_id = bef.forecast_id");
         
-        $this->db->where("bef.pbg_id",$forecast_id);
+        $this->db->where("bef.pbg_id",$pbg_id);
         $this->db->where("bef.business_code",$user_business_code);
-        $this->db->where("befpd.forecast_month",$user_business_code);
+        $this->db->where("befpd.forecast_month",$month_data);
        
         $forecast_lock_data = $this->db->get()->result_array();
         
