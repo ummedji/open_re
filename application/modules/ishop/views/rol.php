@@ -11,11 +11,11 @@ echo form_open('ishop/set_rol',$attributes); ?>
                     <div class="col-md-12 text-center radio_space">
                         <div class="col-md-12 text-center radio_space">
                             <div class="radio">
-                                <input class="select_customer_type" type="radio" name="radio1" id="retailer" value="retailer" checked>
+                                <input class="select_customer_type" type="radio" name="checked_type" id="retailer" value="retailer" checked>
                                 <label for="radio1">Retailer</label>
                             </div>
                             <div class="radio">
-                                <input class="select_customer_type" type="radio" name="radio1" id="distributor" value="distributor">
+                                <input class="select_customer_type" type="radio" name="checked_type" id="distributor" value="distributor">
                                 <label for="radio2">Distributor</label>
                             </div>
                             <div class="clearfix"></div>
@@ -237,11 +237,8 @@ if (!$this->input->is_ajax_request()) {
                         <?php }elseif($current_user->role_id == 10){ ?>
 
                                       <a id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/rol/rol_retailer.xlsx","_blank" );' class="btn btn-default retailer_xl">Download Templates</a>
-
                         <?php } ?>
-
                     <!--</div>-->
-
                 <?php echo form_close(); ?>
 
             </div>

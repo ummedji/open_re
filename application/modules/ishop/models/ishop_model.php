@@ -3397,7 +3397,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
 
     }
 
-    public function view_schemes_detail($user_id, $country_id, $year, $region, $territory, $login_user, $retailer = null, $page = null, $web_service = null)
+    public function view_schemes_detail($user_id, $country_id, $year, $region = null, $territory = null, $login_user, $retailer = null, $page = null, $web_service = null)
     {
 
        /* $sql = 'SELECT isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';

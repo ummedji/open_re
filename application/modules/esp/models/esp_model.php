@@ -68,93 +68,18 @@ class Esp_model extends BF_Model
         }
     }
     
-    public function add_forecast_data(){
+    public function insert_forecast_data($pbg_id,$created_user_id,$user_business_code,$login_user_id){
         
-        if(isset($_POST) && !empty($_POST)){
-            
-         //   testdata($_POST);
-            
-            if(!isset($_POST['employee_data']))
-            {
-                $forecast_user_id = $_POST['login_user_id'];
-            }
-            else{
-                $forecast_user_id = $_POST['employee_data'];
-            }
-            
-            $businss_data = $this->get_business_code($forecast_user_id);
-            
-            $user_business_code = $businss_data;
-            
-            $pbg_id = $_POST['pbg_data'];
-            $created_user_id = $_POST['login_user_id'];
-            
-            $data = array( 
+        $data = array( 
                 'pbg_id'	=>  $pbg_id, 
                 'created_by_user'=> $created_user_id, 
                 'business_code'	=>  $user_business_code,
-                'modified_by_user'	=>  $_POST['login_user_id'],
+                'modified_by_user'	=>  $login_user_id,
                 'created_on'	=>  date("Y-m-d h:i:s")
             );
             $this-> db->insert('bf_esp_forecast', $data);
             
-            $forecast_insert_id = $this->db->insert_id();
-            
-            $final_array = array();
-            
-            $i = 1;
-            
-            if(!empty($_POST['month_data'])){
-                foreach($_POST['month_data'] as $month_key=>$month_value){
-
-                    $initial_array = array();
-
-                        foreach($_POST['product_sku_id'] as $pkey=>$product_data){
-
-                            $final_array[$month_value]['productid'][$product_data]['forecast_qty'] = $_POST['forecast_qty'][$product_data][$month_key];
-
-                            $final_array[$month_value]['productid'][$product_data]['forecast_value'] = $_POST['forecast_value'][$product_data][$month_key];
-
-                        }
-
-                    $final_array[$month_value]['assumption'] = $_POST['assumption'.$i];
-                    $final_array[$month_value]['probablity'] = $_POST['probablity'.$i];
-
-                    $i++;
-                }
-            }
-            
-            if(!empty($final_array)){
-                foreach($final_array as $key_data => $data){
-                    
-                    $month_data = $key_data;
-                    
-                    foreach($data["productid"] as $product_id => $product_data){
-                        
-                        $forecast_qty = $product_data["forecast_qty"];
-                        $forecast_value = $product_data["forecast_value"];
-                        
-                        $this->insert_forecast_product_details($forecast_insert_id,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value);
-                        
-                    }
-                    
-                    $asumption = "";
-                    $probablity = "";
-                    
-                    $assumption_data = implode("~",$data["assumption"]);
-                    $probablity_data = implode("~",$data["probablity"]);
-                    
-                    $this->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
-                    
-                }
-                
-            }
-            
-            echo "<pre>";
-            print_r($final_array);
-            
-            die;
-        }
+            return $forecast_insert_id = $this->db->insert_id();
         
     }
     
@@ -189,6 +114,27 @@ class Esp_model extends BF_Model
             'month_data'	=>  $month_data
         );
         $this-> db->insert('bf_esp_forecast_assumption', $data);
+        
+    }
+    
+    public function check_forecast_data($pbg_id,$user_business_code,$month_data){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast as bef");
+        
+        $this->db->join("bf_esp_forecast_product_details as befpd","befpd.forecast_id = bef.forecast_id");
+        
+        $this->db->where("bef.pbg_id",$forecast_id);
+        $this->db->where("bef.business_code",$user_business_code);
+        $this->db->where("befpd.forecast_month",$user_business_code);
+       
+        $forecast_lock_data = $this->db->get()->result_array();
+        
+        if(isset($forecast_lock_data) && !empty($forecast_lock_data)) {
+            return $forecast_lock_data;
+        } else{
+            return 0;
+        } 
         
     }
     
@@ -277,7 +223,24 @@ class Esp_model extends BF_Model
             return $forecast_assumption_data;
         } else{
             return 0;
-        }
+        } 
+    }
+    
+    public function get_month_assumption_forecast_lock_data($forecast_id,$monthvalue){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast_product_details as befpd");
+        
+        $this->db->where("befpd.forecast_id",$forecast_id);
+        $this->db->where("befpd.forecast_month",$monthvalue);
+       
+        $forecast_lock_data = $this->db->get()->result_array();
+        
+        if(isset($forecast_lock_data) && !empty($forecast_lock_data)) {
+            return $forecast_lock_data;
+        } else{
+            return 0;
+        } 
         
     }
     
@@ -285,7 +248,7 @@ class Esp_model extends BF_Model
         
         $data = array(
             'freeze_status'	=>1,
-            'modified_by_user' =>$user_id
+            'freeze_by_id' =>$user_id
         );
             
         $this->db->where('forecast_id', $forecast_id);
@@ -315,7 +278,7 @@ class Esp_model extends BF_Model
             $forecast_array["forecast_id"] = $forecast_data[0]['forecast_id'];
             $forecast_array["created_by_user"] = $forecast_data[0]['created_by_user'];
             $forecast_array["freeze_status"] = $forecast_data[0]['freeze_status'];
-            $forecast_array["freeze_user_id"] = $forecast_data[0]['modified_by_user'];
+            $forecast_array["freeze_user_id"] = $forecast_data[0]['freeze_by_id'];
         }
         if(isset($forecast_array) && !empty($forecast_array)) {
             return $forecast_array;

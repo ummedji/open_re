@@ -876,34 +876,64 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         $role_id = $this->input->get_post('role_id');
         $year = $this->input->get_post("year");
-        $region = $this->input->get_post("region");
-        $territory = $this->input->get_post("territory");
         $retailer = $this->input->get_post("fo_retailer_id");
 
-        if(isset($user_id) && !empty($user_id)
-            && isset($country_id) && !empty($country_id)
-            && isset($role_id) && !empty($role_id)
-            && isset($year) && !empty($year)
-            && isset($region) && !empty($region)
-            && isset($territory) && !empty($territory)
-            && isset($region) && !empty($region)
-        )
+        if(isset($user_id) && !empty($user_id)  && isset($country_id) && !empty($country_id) && isset($role_id) && !empty($role_id))
         {
-            $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer,null,'web_service');
-            if(!empty($scheme_view))
-            {
-                // For Pagination
-                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
-                $total_rows = $count->result()[0]->total_rows;
-                $pages = $total_rows/10;
-                $pages = ceil($pages);
-                $result['total_rows'] = $total_rows;
-                $result['pages'] = $pages;
-                // For Pagination
+           if($role_id == 7)
+           {
+               $region = $this->input->get_post("region");
+               $territory = $this->input->get_post("territory");
+               if( isset($year) && !empty($year) && isset($region) && !empty($region) && isset($territory) && !empty($territory)
+                   && isset($region) && !empty($region))
+               {
+                   $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer,null,'web_service');
+                   if(!empty($scheme_view))
+                   {
+                       // For Pagination
+                       $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                       $total_rows = $count->result()[0]->total_rows;
+                       $pages = $total_rows/10;
+                       $pages = ceil($pages);
+                       $result['total_rows'] = $total_rows;
+                       $result['pages'] = $pages;
+                       // For Pagination
+                   }
+                   $result['status'] = true;
+                   $result['message'] = 'Retrieved Successfully.';
+                   $result['data'] = !empty($scheme_view) ? $scheme_view : array();
+               }
+               else
+               {
+                   $result['status'] = false;
+                   $result['message'] = "All Fields are Required.";
+               }
+           }
+            elseif($role_id == 10){
+                if( isset($year) && !empty($year))
+                {
+                    $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,'','',$role_id,'',null,'web_service');
+                    if(!empty($scheme_view))
+                    {
+                        // For Pagination
+                        $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                        $total_rows = $count->result()[0]->total_rows;
+                        $pages = $total_rows/10;
+                        $pages = ceil($pages);
+                        $result['total_rows'] = $total_rows;
+                        $result['pages'] = $pages;
+                        // For Pagination
+                    }
+                    $result['status'] = true;
+                    $result['message'] = 'Retrieved Successfully.';
+                    $result['data'] = !empty($scheme_view) ? $scheme_view : array();
+                }
+                else
+                {
+                    $result['status'] = false;
+                    $result['message'] = "All Fields are Required.";
+                }
             }
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($scheme_view) ? $scheme_view : array();
         }
         else
         {
@@ -1892,6 +1922,7 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         if(isset($user_id))
         {
+            testdata($_POST);
             $_POST['flag'] = 'web_service';
             modules::run('ishop/ishop/upload_data', $_POST);
         }
