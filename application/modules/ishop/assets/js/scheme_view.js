@@ -115,18 +115,36 @@ $(document).on('click','#delete_schemes',function(e){
         $. each($("input[name='del_scheme']:checked"), function(){
             checked_schemes. push($(this).attr('attr-check'));
         });
-            console.log(checked_schemes);
-            console.log(param);
-           // return false;
             $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/delete_schemes",
                 data: {checked_schemes:checked_schemes,param:param},
                 dataType : 'html',
                 success: function(resp){
-                    $("#scheme_view_middle_container").html(resp);
+                    $("#middle_container").html(resp);
                 }
             });
+    }
+    return false;
+
+});
+
+
+$(document).on('click','.delete_i',function(e){
+    e.preventDefault();
+    var id = $(this).attr('prdid');
+    var param = $("#view_schemes").serializeArray();
+
+    if (confirm("Are you sure?")) {
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/delete_schemes",
+            data: {checked_schemes:id,param:param},
+            dataType : 'html',
+            success: function(resp){
+                $("#middle_container").html(resp);
+            }
+        });
     }
     return false;
 

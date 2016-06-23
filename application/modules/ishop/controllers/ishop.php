@@ -1046,7 +1046,12 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
 		$this->ishop_model->delete_schemes_by_id($checked_schemes);
-		$scheme_view=$this->ishop_model->view_schemes_details($user_id,$user->country_id,$year,$region,$territory);
+
+		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$scheme_view=$this->ishop_model->view_schemes_detail($user_id,$user->country_id,$year,$region,$territory,$user->role_id,null,$page);
+		Template::set('td', $scheme_view['count']);
+		Template::set('pagination', (isset($scheme_view['pagination']) && !empty($scheme_view['pagination'])) ? $scheme_view['pagination'] : '' );
+
 		Template::set('scheme_table',$scheme_view);
 		Template::set_view('ishop/scheme_view');
 		Template::render();

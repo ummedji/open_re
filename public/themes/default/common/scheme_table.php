@@ -56,7 +56,8 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
                             </tr>
                         <?php } ?>
                         </tbody>
-                        <?php if(isset($td) && isset($pagination)){ ?>
+                        <?php
+                        if(isset($td) && isset($pagination)){ ?>
                             <tfoot>
                             <tr>
                                 <td colspan='<?php echo $td?>'>
