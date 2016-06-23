@@ -857,6 +857,8 @@ class Esp extends Front_Controller
                     
                     if($check_record_exist != 0){
                         
+                        //UPDATE 
+                        
                         
                         
                         
@@ -893,9 +895,7 @@ class Esp extends Front_Controller
                      $i++;
                 }
             }
-               echo "<pre>";
-            print_r($final_array);
-            
+             
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
                     
@@ -915,8 +915,6 @@ class Esp extends Front_Controller
                     
                     $assumption_data = implode("~",$data["assumption"]);
                     $probablity_data = implode("~",$data["probablity"]);
-                    
-                    echo $forecast_insert_id."==".$assumption_data."==".$probablity_data."==".$month_data."</br>";
                     
                     $this->esp_model->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
                     

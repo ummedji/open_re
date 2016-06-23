@@ -939,6 +939,7 @@ class Web_service extends Front_Controller
                 {
                    // testdata('in');
                     $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,'',$territory,$role_id,$retailer,null,'web_service');
+
                     if(!empty($scheme_view))
                     {
                         // For Pagination
@@ -1435,7 +1436,7 @@ class Web_service extends Front_Controller
                                 {
                                     foreach ($retailers_names as $k1 => $retailers_name)
                                     {
-                                        $final_array[$k3]['geolevel2']['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                        $final_array[$k3]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
                                     }
                                 }
                     }
@@ -1981,7 +1982,7 @@ class Web_service extends Front_Controller
         {
            // testdata($_POST);
             $_POST['flag'] = 'web_service';
-            modules::run('ishop/ishop/upload_data', $_POST);
+            modules::run('ishop/ishop/upload_data', $_POST,$_FILES);
         }
         else
         {

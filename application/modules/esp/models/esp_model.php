@@ -128,10 +128,10 @@ class Esp_model extends BF_Model
         $this->db->where("bef.business_code",$user_business_code);
         $this->db->where("befpd.forecast_month",$month_data);
        
-        $forecast_lock_data = $this->db->get()->result_array();
+        $forecast_data = $this->db->get()->result_array();
         
-        if(isset($forecast_lock_data) && !empty($forecast_lock_data)) {
-            return $forecast_lock_data;
+        if(isset($forecast_data) && !empty($forecast_data)) {
+            return $forecast_data;
         } else{
             return 0;
         } 
