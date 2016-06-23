@@ -1922,7 +1922,7 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         if(isset($user_id))
         {
-            testdata($_POST);
+           // testdata($_POST);
             $_POST['flag'] = 'web_service';
             modules::run('ishop/ishop/upload_data', $_POST);
         }

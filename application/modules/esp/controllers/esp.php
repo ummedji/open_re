@@ -843,41 +843,43 @@ class Esp extends Front_Controller
             
             //CHECK FOR EMMPLOYEE AND PBG RECORD ALREADY EXIST
             
+            
+            $final_array = array();
+
+            $i = 1;
+
             if(!empty($_POST['month_data'])){
                 foreach($_POST['month_data'] as $month_key=>$month_value){
             
                     $check_record_exist = $this->esp_model->check_forecast_data($pbg_id,$user_business_code,$month_value);
-            
-                }
-            }
                     
-            //INSERT
+                    if($check_record_exist == 0){
+                    
+                        //INSERT
+
+                        $forecast_insert_id = $this->esp_model->insert_forecast_data($pbg_id,$created_user_id,$user_business_code,$_POST['login_user_id']);
+
+
+                        $initial_array = array();
+
+                            foreach($_POST['product_sku_id'] as $pkey=>$product_data){
+
+                                $final_array[$month_value]['productid'][$product_data]['forecast_qty'] = $_POST['forecast_qty'][$product_data][$month_key];
+
+                                $final_array[$month_value]['productid'][$product_data]['forecast_value'] = $_POST['forecast_value'][$product_data][$month_key];
+
+                            }
+
+                        $final_array[$month_value]['assumption'] = $_POST['assumption'.$i];
+                        $final_array[$month_value]['probablity'] = $_POST['probablity'.$i];
+
+                        $i++;
+
+                    }
             
-            $forecast_insert_id = $this->esp_model->insert_forecast_data($pbg_id,$created_user_id,$user_business_code,$_POST['login_user_id']);
-            
-            $final_array = array();
-            
-            $i = 1;
-            
-            if(!empty($_POST['month_data'])){
-                foreach($_POST['month_data'] as $month_key=>$month_value){
-
-                    $initial_array = array();
-
-                        foreach($_POST['product_sku_id'] as $pkey=>$product_data){
-
-                            $final_array[$month_value]['productid'][$product_data]['forecast_qty'] = $_POST['forecast_qty'][$product_data][$month_key];
-
-                            $final_array[$month_value]['productid'][$product_data]['forecast_value'] = $_POST['forecast_value'][$product_data][$month_key];
-
-                        }
-
-                    $final_array[$month_value]['assumption'] = $_POST['assumption'.$i];
-                    $final_array[$month_value]['probablity'] = $_POST['probablity'.$i];
-
-                    $i++;
                 }
             }
+                 
             
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
