@@ -100,8 +100,8 @@ class Esp_model extends BF_Model
     
     public function insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data){
         
-        echo "<pre>";
-        print_r($assumption_data);
+        //echo "<pre>";
+        //print_r($assumption_data);
         
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
@@ -543,4 +543,41 @@ class Esp_model extends BF_Model
         
     }
     
+	public function insert_forecast_product_details_history($forecast_insert_id,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$update_status){
+		
+		$data = array( 
+            'forecast_id'	=>  $forecast_insert_id, 
+            'business_code'=> $businss_data, 
+            'pbg_id'=> $pbg_id,
+            'sku_id'	=>  $product_id,
+            'month_data'	=>  $month_data,
+            'forecast_qty'	=>  $forecast_qty,
+            'forecast_value'	=>  $forecast_value,
+            'update_status'	=>  $update_status
+        );
+        $this-> db->insert('bf_forecast_product_detail_history', $data);
+		
+	}
+	
+	public function insert_forecast_assumption_data_history($forecast_insert_id,$assumption_data,$probablity_data,$month_data,$history_update_status){
+		
+		$asumption = explode("~",$assumption_data);
+        $probablity = explode("~",$probablity_data);
+       
+        $data = array( 
+            'forecast_id'	=>  $forecast_insert_id, 
+            'assumption1_id'=> $asumption[0], 
+            'assumption2_id'=>  $asumption[1],
+            'assumption3_id'=>  $asumption[2],
+            'probablity1'	=>  $probablity[0],
+            'probablity2'	=>  $probablity[1],
+            'probablity3'	=>  $probablity[2],
+            'month_data'	=>  $month_data,
+            'update_status'	=>  $history_update_status,
+        );
+        $this-> db->insert('bf_forecast_assumption_history', $data);
+        
+		
+	}
+	
 }

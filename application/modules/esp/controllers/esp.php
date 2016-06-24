@@ -994,11 +994,26 @@ class Esp extends Front_Controller
 
                             $update_status = $this->esp_model->update_forecast_product_details($forecast_product_id,$forecast_qty,$forecast_value);
 
+							$history_status_data = 1;
+							
+							//ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
+							
+							 $this->esp_model->insert_forecast_product_details_history($old_forecast_id,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$history_status_data);
+							
+
                         }else{
 
                             $this->esp_model->insert_forecast_product_details($forecast_insert_id,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value);
-
+							
+							$history_status_data = 0;
+							
+							//ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
+							
+							 $this->esp_model->insert_forecast_product_details_history($forecast_insert_id,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$history_status_data);
+							
                         }
+						
+							
                         
                     }
                    
@@ -1022,21 +1037,31 @@ class Esp extends Front_Controller
                             $forecast_assumption_id = $get_assumption_old_data[0]['forecast_assumption_id'];
 
                             $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id,$assumption_data,$probablity_data);
+							
+							$history_update_status = 1;
+							
+							//ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
+							
+							 $this->esp_model->insert_forecast_assumption_data_history($old_forecast_id,$assumption_data,$probablity_data,$month_data,$history_update_status);
 
                         }else{ 
 
                            $this->esp_model->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
+                           
+						   $history_update_status = 0;
+						   
+						   //ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
+							
+							 $this->esp_model->insert_forecast_assumption_data_history($forecast_insert_id,$assumption_data,$probablity_data,$month_data,$history_update_status);
+						   
                         }
+						
                     }
 
                 }
                 
             }
             
-            echo "<pre>";
-            print_r($final_array);
-            
-            die;
         }
         
         redirect('esp/');

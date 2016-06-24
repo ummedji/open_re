@@ -2166,21 +2166,31 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function add_ishop_sales_detail($user_id, $country_id, $xl_data = null, $xl_flag = null)
+    public function add_ishop_sales_detail($user_id, $country_id, $xl_data = null, $xl_flag = null,$web_service = null)
     {
         if ($xl_flag == null) {
+
             $radio_data = $this->input->post("radio1");
             $stock_month = $this->input->post("stock_month");
             $customer_id = $this->input->post("fo_retailer_id");
             $invoice_no = $this->input->post("invoice_no");
-            $invoice_date = $this->input->post("invoice_date");
+            $invoice_date = date("Y-m-d", strtotime($this->input->post("invoice_date")));
             $otn = $this->input->post("order_tracking_no");
             $PO_no = $this->input->post("PO_no");
-            $product_sku_id = $this->input->post("product_sku_id");
-            $units = $this->input->post("units");
-            $quantity = $this->input->post("quantity");
-            $qty_kgl = $this->input->post("qty_kgl");
-            $amount = $this->input->post("amount");
+            if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                $product_sku_id = explode(',', $this->input->post("product_sku_id"));
+                $quantity = explode(',', $this->input->post("quantity"));
+                $units = explode(',', $this->input->post("units"));
+                $qty_kgl = explode(',', $this->input->post("qty_kgl"));
+                $amount = explode(',', $this->input->post("amount"));
+            }
+            else{
+                $product_sku_id = $this->input->post("product_sku_id");
+                $units = $this->input->post("units");
+                $quantity = $this->input->post("quantity");
+                $qty_kgl = $this->input->post("qty_kgl");
+                $amount = $this->input->post("amount");
+            }
             $distributor_sales = $this->input->post("distributor_sales");
             $retailer_id = $this->input->post("retailer_id");
             $total_amount = array_sum($amount);
@@ -2231,7 +2241,7 @@ class Ishop_model extends BF_Model
                     'status' => '1',
                     'created_on' => date('Y-m-d H:i:s')
                 );
-
+                //testdata($secondary_sales_data);
                 if ($this->db->insert('ishop_secondary_sales', $secondary_sales_data)) {
                     $insert_id = $this->db->insert_id();
                 }
@@ -2251,7 +2261,7 @@ class Ishop_model extends BF_Model
                     );
                     $this->db->insert('ishop_secondary_sales_product', $secondary_sales_product_data);
                 }
-                return 1;
+
             }
         } else {
             if ($xl_data != '') {
@@ -3983,9 +3993,7 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             }
 
             $order_status = 4;
-
             $po_no = NULL;
-
             $order_date = date("Y-m-d");
 
         }
