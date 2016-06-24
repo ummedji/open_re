@@ -1206,7 +1206,6 @@ class Ishop_model extends BF_Model
                         'secondary_sales_id' => $secondary_sales_id,
                         'product_sku_id' => $prd_sku,
                         'quantity' => $quantity[$key],
-                       // 'dispatched_quantity' => $dispatched_quantity[$key],
                         'amount' => $amount[$key],
                         'unit' => $units[$key],
                         'qty_kgl' => $qty_kgl[$key],
@@ -1223,7 +1222,6 @@ class Ishop_model extends BF_Model
                     'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
                     'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
                     'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
-                    'etn_no' => $rand_data,
                     'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
                     'invoice_recived_status' => '0',
                     'country_id' => $country_id,
@@ -1245,7 +1243,6 @@ class Ishop_model extends BF_Model
                         'secondary_sales_id' => $validat[0]['secondary_sales_id'],
                         'product_sku_id' => $prd_sku,
                         'quantity' => $quantity[$key],
-                        'dispatched_quantity' => $dispatched_quantity[$key],
                         'amount' => $amount[$key],
                         'unit' => $units[$key],
                         'qty_kgl' => $qty_kgl[$key],
@@ -1444,7 +1441,7 @@ class Ishop_model extends BF_Model
             if ((isset($from_month) && !empty($from_month)) && (isset($to_month) && !empty($to_month))) {
                 $sql .= 'AND DATE_FORMAT(iss.invoice_date,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
             }
-            if ((isset($geo_level) && !empty($geo_level)) && (isset($distributor_id) && !empty($distributor_id))) {
+            if ((isset($geo_level) && !empty($geo_level)) || (isset($distributor_id) && !empty($distributor_id))) {
                 $sql .= 'AND iss.customer_id_from =' . $distributor_id . ' ';
             }
         }
@@ -2195,6 +2192,9 @@ class Ishop_model extends BF_Model
             $retailer_id = $this->input->post("retailer_id");
             $total_amount = array_sum($amount);
 
+
+
+
             if ($radio_data == 'retailer') {
                 $tertiary_sales = array(
 
@@ -2227,41 +2227,87 @@ class Ishop_model extends BF_Model
                 return 1;
 
             } elseif ($radio_data == 'distributor') {
-                $secondary_sales_data = array(
-                    'customer_id_to' => (isset($retailer_id) && !empty($retailer_id)) ? $retailer_id : '',
-                    'customer_id_from' => (isset($distributor_sales) && !empty($distributor_sales)) ? $distributor_sales : '',
-                    'invoice_no' => (isset($invoice_no) && !empty($invoice_no)) ? $invoice_no : '',
-                    'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
-                    'order_tracking_no' => (isset($otn) && !empty($otn)) ? $otn : '',
-                    'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
-                    'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
-                    'invoice_recived_status' => '0',
-                    'created_by_user' => $user_id,
-                    'country_id' => $country_id,
-                    'status' => '1',
-                    'created_on' => date('Y-m-d H:i:s')
-                );
-                //testdata($secondary_sales_data);
-                if ($this->db->insert('ishop_secondary_sales', $secondary_sales_data)) {
-                    $insert_id = $this->db->insert_id();
-                }
 
-                $secondary_sales_id = $insert_id;
-                foreach ($product_sku_id as $key => $prd_sku) {
-                    $secondary_sales_product_data = array(
+                $rand_type = 'etn';
+                $table = 'ishop_secondary_sales';
 
-                        'secondary_sales_id' => $secondary_sales_id,
-                        'product_sku_id' => $prd_sku,
-                        'quantity' => $quantity[$key],
-                        'amount' => $amount[$key],
-                        'unit' => $units[$key],
-                        'qty_kgl' => $qty_kgl[$key],
-                        'customer_id' => $retailer_id,
+                $rand_data = $this->get_random_no($rand_type, $table);
 
+                $validat = $this->check_valid_secondary_sales_data($invoice_no, $otn, $PO_no);
+
+                if($validat == 0){
+
+                    $secondary_sales_data = array(
+                        'customer_id_to' => (isset($retailer_id) && !empty($retailer_id)) ? $retailer_id : '',
+                        'customer_id_from' => (isset($distributor_sales) && !empty($distributor_sales)) ? $distributor_sales : '',
+                        'invoice_no' => (isset($invoice_no) && !empty($invoice_no)) ? $invoice_no : '',
+                        'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
+                        'order_tracking_no' => (isset($otn) && !empty($otn)) ? $otn : '',
+                        'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
+                        'etn_no' => $rand_data,
+                        'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
+                        'invoice_recived_status' => '0',
+                        'created_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'created_on' => date('Y-m-d H:i:s')
                     );
-                    $this->db->insert('ishop_secondary_sales_product', $secondary_sales_product_data);
-                }
+                    if ($this->db->insert('ishop_secondary_sales', $secondary_sales_data)) {
+                        $insert_id = $this->db->insert_id();
+                    }
 
+                    $secondary_sales_id = $insert_id;
+                    foreach ($product_sku_id as $key => $prd_sku) {
+                        $secondary_sales_product_data = array(
+
+                            'secondary_sales_id' => $secondary_sales_id,
+                            'product_sku_id' => $prd_sku,
+                            'quantity' => $quantity[$key],
+                            'amount' => $amount[$key],
+                            'unit' => $units[$key],
+                            'qty_kgl' => $qty_kgl[$key],
+                            'customer_id' => $retailer_id,
+
+                        );
+                        $this->db->insert('ishop_secondary_sales_product', $secondary_sales_product_data);
+                    }
+                }
+                else{
+                    $secondary_sales_data = array(
+                        'customer_id_to' => (isset($retailer_id) && !empty($retailer_id)) ? $retailer_id : '',
+                        'customer_id_from' => (isset($distributor_sales) && !empty($distributor_sales)) ? $distributor_sales : '',
+                        'invoice_no' => (isset($invoice_no) && !empty($invoice_no)) ? $invoice_no : '',
+                        'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
+                        'order_tracking_no' => (isset($otn) && !empty($otn)) ? $otn : '',
+                        'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
+                        'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
+                        'invoice_recived_status' => '0',
+                        'country_id' => $country_id,
+                        'modified_by_user' => $user_id,
+                        'status' => '1',
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
+
+                    $this->db->where('secondary_sales_id', $validat[0]['secondary_sales_id']);
+                    $this->db->update('bf_ishop_secondary_sales', $secondary_sales_data);
+
+                    $this->db->where('secondary_sales_id', $validat[0]['secondary_sales_id']);
+                    $this->db->delete('bf_ishop_secondary_sales_product');
+
+
+                    foreach ($product_sku_id as $key => $prd_sku) {
+                        $secondary_sales_product_data = array(
+                            'secondary_sales_id' => $validat[0]['secondary_sales_id'],
+                            'product_sku_id' => $prd_sku,
+                            'quantity' => $quantity[$key],
+                            'amount' => $amount[$key],
+                            'unit' => $units[$key],
+                            'qty_kgl' => $qty_kgl[$key],
+                            'customer_id' => $retailer_id,
+                        );
+                        $this->db->insert('ishop_secondary_sales_product', $secondary_sales_product_data);
+                    }
+                }
             }
         } else {
             if ($xl_data != '') {
@@ -2372,65 +2418,6 @@ class Ishop_model extends BF_Model
             return 0;
         }
     }
-
-    /*$validat = $this->check_valid_primary_sales_data($invoice_no, $order_tracking_no, $PO_no);
-
-if ($validat == 0) {
-    //  echo 'in';die;
-$total_amount = $amount;
-$primary_sales_data = array(
-'customer_id' => (isset($customer_id) && !empty($customer_id)) ? $customer_id : '',
-'invoice_no' => (isset($invoice_no) && !empty($invoice_no)) ? $invoice_no : '',
-'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
-'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
-'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
-'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
-'invoice_recived_status' => '0',
-'created_by_user' => $user_id,
-'country_id' => $country_id,
-'status' => '1',
-'created_on' => date('Y-m-d H:i:s')
-);
-
-if ($this->db->insert('ishop_primary_sales', $primary_sales_data)) {
-$insert_id = $this->db->insert_id();
-}
-
-$primary_sales_id = $insert_id;
-
-$primary_sales_product_data = array(
-
-    'primary_sales_id' => $primary_sales_id,
-    'product_sku_id' => $product_sku_id,
-    'quantity' =>$quantity,
-    'dispatched_quantity' => $dispatched_quantity,
-    'amount' =>$amount,
-);
-$this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
-
-
-}
- else
-{
-    // echo 'sachin';die;
-    $total_amount = $validat[0]['total_amount'] + $amount;
-    $primary_sales_product_data = array(
-
-        'primary_sales_id' => $validat[0]['primary_sales_id'],
-        'product_sku_id' => $product_sku_id,
-        'quantity' =>$quantity,
-        'dispatched_quantity' => $dispatched_quantity,
-        'amount' =>$amount,
-    );
-
-    $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
-
-    $update_amt=array(
-        'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '0',
-    );
-    $this->db->where('primary_sales_id',  $validat[0]['primary_sales_id']);
-    $this->db->update('ishop_primary_sales', $update_amt);
-}*/
 
 
     public function view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null)

@@ -10,7 +10,7 @@
                         <a href="#">
                             <span class="ecp_icon">
                             </span>
-                            <div class="li_title pr_title">ECP</div>
+                            <div class="li_title pr_title">Activity Planner</div>
                         </a>
                     </span>
                     <div class="clearfix"></div>
@@ -19,13 +19,13 @@
                     <span>
                         <a href="<?php echo base_url('/ishop') ?>">
                             <span class="i_shop_icon"></span>
-                            <div class="li_title pr_title">I Shop</div>
+                            <div class="li_title pr_title">Channel Sales</div>
                         </a></span>
                     <div class="clearfix"></div>
                 </li>
                 <li class="<?php echo ($segment=='esp') ? 'active' :'' ;?>">
                     <span>
-                        <a href="<?php echo base_url('/esp') ?>"><span class="esp_icon"></span><div class="li_title pr_title">ESP</div></a>
+                        <a href="<?php echo base_url('/esp') ?>"><span class="esp_icon"></span><div class="li_title pr_title">Sales Planner</div></a>
                     </span>
                     <div class="clearfix"></div>
                 </li>

@@ -34,8 +34,6 @@ class Esp extends Front_Controller
 		$this->load->model('esp_model');
 		$this->set_current_user();
         
-
-		Assets::add_module_js('esp', 'esp.js');
 	}
 
 	/**
@@ -45,6 +43,8 @@ class Esp extends Front_Controller
 	 */
 	public function index()
 	{
+		Assets::add_module_js('esp', 'esp.js');
+		
 		$user = $this->auth->user();
         Template::set('current_user', $user);
 		Template::render();
@@ -1132,4 +1132,90 @@ class Esp extends Front_Controller
         
     }
     
+	public function impact_entry(){
+		
+		Assets::add_module_js('esp', 'impact_entry.js');
+		
+		$user = $this->auth->user();
+        Template::set('current_user', $user);
+		Template::render();
+		
+	}
+	
+	public function get_forecast_impact_data(){
+		
+		
+		$monthdata = $_POST['selectedmonth']."-01"; 
+		
+		$user = $this->auth->user();
+		$login_bussiness_code = $user->bussiness_code;
+		
+		$impact_data = $this->esp_model->get_user_impact_data($login_bussiness_code,$monthdata);
+		
+		$html = "";
+        
+		if($impact_data != 0){
+			
+			//CREATE HTML FOR DATA
+			
+            
+			$html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
+				$html .= '<thead>';
+					$html .= '<tr>';
+						$html .= '<th>Product SKU Code</th>';
+						$html .= '<th>Product SKU Name</th>';
+						$html .= '<th>Assumption 1</th>';
+						$html .= '<th>Probability 1</th>';
+						$html .= '<th>Impact 1</th>';
+						$html .= '<th>Assumption 2</th>';
+						$html .= '<th>Probability 2</th>';
+						$html .= '<th>Impact 2</th>';
+						$html .= '<th>Assumption 3</th>';
+						$html .= '<th>Probability 3</th>';
+						$html .= '<th>Impact 3</th>';
+					$html .= '</tr>';
+				$html .= '</thead>';
+				$html .= '<tbody>';
+				
+					foreach($impact_data as $impact_key=>$impact_value){
+				
+						$html .= '<tr>';
+							
+							$html .= '<td>'.$impact_value['product_sku_code'].'</td>';
+							$html .= '<td>'.$impact_value['product_sku_name'].'</td>';
+							
+							$html .= '<td>'.$impact_value['assumption1_name'].'</td>';
+							$html .= '<td>'.$impact_value['probability1'].'</td>';
+							$html .= '<td>'.$impact_value['impact1'].'</td>';
+							
+							$html .= '<td>'.$impact_value['assumption2_name'].'</td>';
+							$html .= '<td>'.$impact_value['probability2'].'</td>';
+							$html .= '<td>'.$impact_value['impact2'].'</td>';
+							
+							$html .= '<td>'.$impact_value['assumption3_name'].'</td>';
+							$html .= '<td>'.$impact_value['probability3'].'</td>';
+							$html .= '<td>'.$impact_value['impact3'].'</td>';
+							
+						$html .= '</tr>';
+					
+					}
+					
+				$html .= '</tbody>';
+						
+
+			
+			
+			
+		}
+		else{
+			
+			//CREATE NO DATA FOUND HTML
+			
+		}
+		
+		testdata($impact_data);
+		
+	}
+	
+	
 }

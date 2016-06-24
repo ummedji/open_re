@@ -15,10 +15,10 @@
     -o-transition: 0.5s all;
 }
 .sid_button li a .ecp_icon {
-    background: url(../images/menu_icon.png) no-repeat 0 3px;
+    background: url(../images/menu_icon.png) no-repeat 0 0px;
 }
 .sid_button li:hover .ecp_icon, .sid_button li.active a .ecp_icon {
-    background: url(../images/white_menu_icon.png) no-repeat 0 3px;
+    background: url(../images/white_menu_icon.png) no-repeat 0 0px;
 }
 .sid_button li a .i_shop_icon {
     background: url(../images/menu_icon.png) no-repeat 0px -50px;

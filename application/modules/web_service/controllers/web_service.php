@@ -793,6 +793,137 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+    public function getSlaes()
+    {
+        $action_data = 'ishop_sales';
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $radio_type = $this->input->get_post('radio_type'); // farmer,retailer,distributor
+
+        if(isset($user_id) && !empty($user_id)
+            && isset($country_id) && !empty($country_id)
+            && isset($role_id) && !empty($role_id)
+            && isset($radio_type) && !empty($radio_type)
+        )
+        {
+            // Role Check
+            if($radio_type == "retailer"){
+                $default_type = 10;
+            }
+            else if($radio_type == "distributor"){
+                $default_type = 9;
+            }
+
+            //Get Data
+            $final_array = array();
+            if($default_type == 10)
+            {
+                $geolevels3 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,null,$default_type,$action_data);
+                if(!empty($geolevels3))
+                {
+                    foreach($geolevels3 as $k3 => $geolevel3)
+                    {
+                        $g3 = array(
+                            "id"=>$geolevel3['political_geo_id'],
+                            "political_geography_name"=>$geolevel3['political_geography_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
+                        $parent_geo_id3 = $geolevel3['political_geo_id'];
+                        $geolevels2 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,$parent_geo_id3,$default_type,$action_data);
+                        if(!empty($geolevels2))
+                        {
+                            foreach ($geolevels2 as $k2 => $geolevel2)
+                            {
+                                $g2 = array(
+                                    "id"=>$geolevel2['political_geo_id'],
+                                    "political_geography_name"=>$geolevel2['political_geography_name'],
+                                );
+                                $final_array[$k3]['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
+                                $parent_geo_id2 = $geolevel2['political_geo_id'];
+                                $retailers_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id2, $country_id, $radio_type, null);
+                                $retailers_names = json_decode($retailers_names, true);
+                                if(!empty($retailers_names))
+                                {
+                                    foreach ($retailers_names as $k1 => $retailers_name)
+                                    {
+                                        $final_array[$k3]['geolevel2'][$k2]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else if($default_type == 9)
+            {
+                $geolevels3 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,null,$default_type,$action_data);
+                if(!empty($geolevels3))
+                {
+                    foreach($geolevels3 as $k3 => $geolevel3)
+                    {
+                        $g3 = array(
+                            "id"=>$geolevel3['political_geo_id'],
+                            "political_geography_name"=>$geolevel3['political_geography_name'],
+                        );
+                        $final_array[] = $g3; // Add Geo Level 3 Into Final Array
+                        $parent_geo_id3 = $geolevel3['political_geo_id'];
+                        $distibutors_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id3, $country_id, $radio_type, null);
+                        $distibutors_names = json_decode($distibutors_names, true);
+                        if(!empty($distibutors_names))
+                        {
+                            foreach ($distibutors_names as $k1 => $distibutors_name)
+                            {
+
+                                $dist = array(
+                                    "id"=>$distibutors_name['id'],
+                                    "display_name"=>$distibutors_name['display_name'],
+                                );
+                                $final_array[$k3]['distributors'][] = $dist; // Add Geo Level 1 Into Final Array
+                                //$final_array[$k3]['distributors'][] = $distibutors_name; // Add Geo Level 1 Into Final Array
+                                $distibutor_id = $distibutors_name['id'];
+
+                               $retailers = $this->ishop_model->get_retailer_by_distributor_id($distibutor_id,$country_id);
+
+                              //  dumpme($retailers);
+
+                                $retailer_array = array();
+
+                                if(!empty($retailers))
+                                {
+                                    foreach ($retailers as $k0 => $retailer)
+                                    {
+                                        $ret = array(
+                                            "id"=>$retailer['id'],
+                                            "display_name"=>$retailer['display_name'],
+                                        );
+
+                                        $retailer_array[] = $ret;
+                                        // Add Geo Level 0 Into Final Array
+
+                                    }
+                                    $final_array[$k3]['distributors'][$k1]['retailer'] = $retailer_array;
+                                }
+
+                            }
+                        }
+                    }
+                }
+
+            }
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = array("dp_data"=>$final_array);
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
     /**
      * @ Function Name        : getTarget
      * @ Function Params    : form_date,to_date,by_distributor,by_invoice_no (POST)
@@ -2287,6 +2418,15 @@ class Web_service extends Front_Controller
             $secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no,$user_id,$country_id,null,null,null,null,null,null,'web_service');
             if(!empty($secondary_sales_details))
             {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
                 $final_array = array();
                 foreach($secondary_sales_details as $k => $ssd)
                 {
@@ -2346,6 +2486,107 @@ class Web_service extends Front_Controller
     }
 
 
+
+    public function getSalesInvoices()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $check_redio = $this->input->get_post('radio1');
+        $form_date = date("Y-m-d", strtotime($this->input->get_post("form_date")));
+        $to_date = date("Y-m-d", strtotime($this->input->get_post("to_date")));
+        $retailer_id = $this->input->get_post('retailer_id');
+        $by_invoice_no = $this->input->get_post('by_invoice_no');
+        $distributor_id = $this->input->get_post('distributor_id');
+        $to_month = $this->input->get_post('to_month');
+        $from_month = $this->input->get_post('from_month');
+
+        $sales_view = 'sales_view';
+
+        if(isset($user_id) && isset($check_redio))
+        {
+            if($check_redio == 'distributor'){
+                $secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, '', $by_invoice_no,$user_id,$country_id,$sales_view,null,null,null,$distributor_id,null,'web_service');
+                if(!empty($secondary_sales_details))
+                {
+
+                    // For Pagination
+                    $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                    $total_rows = $count->result()[0]->total_rows;
+                    $pages = $total_rows/10;
+                    $pages = ceil($pages);
+                    $result['total_rows'] = $total_rows;
+                    $result['pages'] = $pages;
+                    // For Pagination
+
+
+                    $final_array = array();
+                    foreach($secondary_sales_details as $k => $ssd)
+                    {
+                        $secondary_sales_id = $ssd['secondary_sales_id'];
+                        $secondary_sales_product_details = $this->ishop_model->secondary_sales_product_details_view_by_id($secondary_sales_id,'web_service');
+                        $ssd["details"]=$secondary_sales_product_details;
+                        $final_array[] = $ssd;
+                    }
+                    $result['status'] = true;
+                    $result['message'] = 'Success';
+                    $result['data'] = $final_array;
+                }
+                else
+                {
+                    $result['status'] = false;
+                    $result['message'] = 'No Records Found.';
+                }
+            }
+
+            elseif($check_redio == 'retailer'){
+
+                $tertiary_sales_details = $this->ishop_model->view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month,null,null, $retailer_id, $page = null,'web_service');
+                if(!empty($secondary_sales_details))
+                {
+
+                    // For Pagination
+                    $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                    $total_rows = $count->result()[0]->total_rows;
+                    $pages = $total_rows/10;
+                    $pages = ceil($pages);
+                    $result['total_rows'] = $total_rows;
+                    $result['pages'] = $pages;
+                    // For Pagination
+
+
+                    $final_array = array();
+                    foreach($secondary_sales_details as $k => $ssd)
+                    {
+                        $secondary_sales_id = $ssd['secondary_sales_id'];
+                        $secondary_sales_product_details = $this->ishop_model->secondary_sales_product_details_view_by_id($secondary_sales_id,'web_service');
+                        $ssd["details"]=$secondary_sales_product_details;
+                        $final_array[] = $ssd;
+                    }
+                    $result['status'] = true;
+                    $result['message'] = 'Success';
+                    $result['data'] = $final_array;
+                }
+                else
+                {
+                    $result['status'] = false;
+                    $result['message'] = 'No Records Found.';
+                }
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = "All Fields are Required.";
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
     public function saveSalesInvoice()
     {
         $user_id = $this->input->get_post('user_id');
@@ -2372,6 +2613,9 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
+
+
+
 
     /**
      * @ Function Name        : savePhysicalStock

@@ -580,4 +580,29 @@ class Esp_model extends BF_Model
 		
 	}
 	
+	public function get_user_impact_data($login_bussiness_code,$monthdata){
+		
+		$this->db->select('befa.forecast_assumption_id, bmpsr.product_sku_code, bmpsc.product_sku_name, befa.assumption1_id, befa.assumption2_id, befa.assumption3_id, befa.probability1, befa.probability2, befa.probability3, befa.impact1, befa.impact2, befa.impact3' );
+		$this->db->from('bf_esp_forecast_product_details as befpd');
+		
+		$this->db->join("bf_esp_forecast_assumption as befa","befa.forecast_id = befpd.forecast_id AND befa.month_data = befpd.forecast_month");
+		
+		$this->db->join("bf_master_product_sku_country as bmpsc","bmpsc.product_sku_country_id = befpd.product_sku_id");
+		
+		$this->db->join("bf_master_product_sku_regional as bmpsr","bmpsr.product_sku_id = bmpsc.product_sku_id");
+		
+		
+		$this->db->where("business_code",$login_bussiness_code);
+		$this->db->where("forecast_month",$monthdata);
+		
+		$impact_data = $this->db->get()->result_array();
+		
+		if(isset($impact_data) && !empty($impact_data)) {
+            return $impact_data;
+        } else{
+            return 0;
+        }
+		
+	}
+	
 }
