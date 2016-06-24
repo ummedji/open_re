@@ -3899,40 +3899,65 @@ $this->db->insert('ishop_primary_sales_product', $primary_sales_product_data);
             /*
              * IF LOGIN USER IS FEILD OFFICER
              */
-            if ($this->input->post("radio1") == "farmer") {
+            if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                if ($this->input->post("radio1") == "farmer") {
 
-                $farmer_id = $this->input->post("farmer_data");
-                $retailer_id = $this->input->post("farmer_retailer_data");
+                    $customer_id_from = $this->input->post("farmer_id");
+                    $customer_id_to = $this->input->post("retailer_id");
+                    $order_taken_by_id = $user_id;
+                    $order_date = date("Y-m-d", strtotime($this->input->post("order_date")));
 
-                $customer_id_from = $farmer_id;
-                $customer_id_to = $retailer_id;
-                $order_taken_by_id = $user_id;
+                } elseif ($this->input->post("radio1") == "retailer") {
 
-                $order_date = date("Y-m-d", strtotime($this->input->post("order_date")));
+                    $customer_id_to = $this->input->post("distributor_id");
+                    $customer_id_from = $this->input->post("retailer_id");
+                    $order_taken_by_id = $user_id;
+                    $order_date = date("Y-m-d");
 
-            } elseif ($this->input->post("radio1") == "retailer") {
+                } elseif ($this->input->post("radio1") == "distributor") {
 
-                $distributor_id = $this->input->post("distributor_data");
-                $retailer_id = $this->input->post("fo_retailer_data");
+                    $customer_id_from = $this->input->post("distributor_id");
+                    $customer_id_to = 0;
+                    $order_taken_by_id = $user_id;
+                    $order_date = date("Y-m-d");
 
-                $customer_id_from = $retailer_id;
-                $customer_id_to = $distributor_id;
-                $order_taken_by_id = $user_id;
-
-                $order_date = date("Y-m-d");
-
-            } elseif ($this->input->post("radio1") == "distributor") {
-
-                $distributor_id = $this->input->post("fo_distributor_data");
-
-                $customer_id_from = $distributor_id;
-                $customer_id_to = 0;
-                $order_taken_by_id = $user_id;
-
-                $order_date = date("Y-m-d");
-
+                }
             }
+            else{
+                if ($this->input->post("radio1") == "farmer") {
 
+                    $farmer_id = $this->input->post("farmer_data");
+                    $retailer_id = $this->input->post("farmer_retailer_data");
+
+                    $customer_id_from = $farmer_id;
+                    $customer_id_to = $retailer_id;
+                    $order_taken_by_id = $user_id;
+
+                    $order_date = date("Y-m-d", strtotime($this->input->post("order_date")));
+
+                } elseif ($this->input->post("radio1") == "retailer") {
+
+                    $distributor_id = $this->input->post("distributor_data");
+                    $retailer_id = $this->input->post("fo_retailer_data");
+
+                    $customer_id_from = $retailer_id;
+                    $customer_id_to = $distributor_id;
+                    $order_taken_by_id = $user_id;
+
+                    $order_date = date("Y-m-d");
+
+                } elseif ($this->input->post("radio1") == "distributor") {
+
+                    $distributor_id = $this->input->post("fo_distributor_data");
+
+                    $customer_id_from = $distributor_id;
+                    $customer_id_to = 0;
+                    $order_taken_by_id = $user_id;
+
+                    $order_date = date("Y-m-d");
+
+                }
+            }
             $order_status = 4;
             $po_no = NULL;
 
