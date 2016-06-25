@@ -71,7 +71,7 @@ echo form_open('esp/add_budget',$attributes); ?>
 <!--------------------------------------Table-------------------------------------------------->
 <div class="col-md-12">
     <div class="row">
-        <div class="forecast_data" id="no-more-tables">
+        <div class="budget_data" id="no-more-tables">
             
         </div>
         

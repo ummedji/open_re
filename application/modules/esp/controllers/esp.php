@@ -1250,5 +1250,745 @@ class Esp extends Front_Controller
 		Template::render();
 		
 	}
+
+	public function get_pbg_sku_budget_data(){
+        
+        $user = $this->auth->user();
+        $login_user_id = $user->id;
+        
+        $pbgid = $_POST["pbgid"];
+        $from_month = $_POST["frommonth"];
+        $to_month = $_POST["tomonth"];
+        
+        $businesscode = $_POST["businesscode"];
+        
+        $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
+        $month_data = $this->get_monthly_data($from_month,$to_month);
+        
+        $assumption_data = $this->esp_model->get_assumption_data();
+        
+        $lock_show_data = $this->get_user_level_data($login_user_id);
+        
+                
+        $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+        
+        $html = "";
+        $html1 = "";
+        $html2 = "";
+        
+        if($pbg_sku_data != 0){
+            
+            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
+                $html .= '<thead>';
+                    $html .= '<tr style="border-bottom: solid 1px #b1b1b1;">';
+                        $html .= '<th></th>';
+                        foreach($month_data as $monthkey => $monthvalue){
+                            
+                            $time=strtotime($monthvalue);
+                            $month=date("F",$time);
+                            $year=date("Y",$time);
+                            
+                            if($lock_show_data != 0){
+                                
+                                foreach($pbg_sku_data as $skukey => $skuvalue){
+                                    
+                                 $employee_month_product_forecast_data1 = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+                    
+                                 $lock_status = 0;
+                                 $lock_by_id = "";
+                                 $check_lock_forecast_id = "";
+
+                            //    echo "<pre>";
+                            //    print_r($employee_month_product_forecast_data);
+
+                                if($employee_month_product_forecast_data1 != 0){
+
+                                   // $lock_status = $employee_month_product_forecast_data1[0]['lock_status'];
+                                   // $lock_by_id = $employee_month_product_forecast_data1[0]['lock_by_id'];
+                                    $check_lock_forecast_id = $employee_month_product_forecast_data1[0]['forecast_id'];
+
+                                   $forecast_lock_history_data =  $this->esp_model->get_employee_month_product_forecast_lock_data($login_user_id,$check_lock_forecast_id,$monthvalue);
+                                    if(!empty($forecast_lock_history_data)){
+                                        $lock_status = $forecast_lock_history_data[0]['lock_status'];
+                                    }
+                                
+                                }
+                                    
+                                if($lock_status == 0){
+                                    
+                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i></a></div>";
+                                    }
+                                    else{
+                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i></a></div>";
+                                    } 
+                            
+                                }
+                            }
+                            else{
+                                $lock_data = "";
+                            }
+                            
+                            $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
+                        }
+                       
+                   $html .= '</tr>';
+                   $html .= '<tr>';
+                   $html .= '<th><span class="rts_bordet"></span>';
+                   $html .= 'PBG';
+                   $html .= '</th>';
+             foreach($month_data as $monthkey => $monthvalue)
+             {
+                $html .= '<th><span class="rts_bordet"></span>';
+                $html .= 'Budget Qty';
+                $html .= '</th>';
+                $html .= '<th><span class="rts_bordet"></span>';
+                $html .= 'Budget Value';
+                $html .= '</th>';
+             }
+                $html .= '<th><span class="rts_bordet"></span>';
+                $html .= 'Yearly';
+                $html .= '</th>';
+                $html .= '</tr>';
+                $html .= '</thead>';
+           $html .= '<tbody>';
+            $i = 1;
+            
+            $forecast_id = "";
+            
+            foreach($pbg_sku_data as $skukey => $skuvalue){
+              $html .= '<tr>';
+              $html .= '<td><input type="hidden" name="product_sku_id[]" value="'.$skuvalue['product_sku_country_id'].'" />'.$skuvalue['product_sku_name'].'</td>';
+                
+                $l = 1;
+                
+                foreach($month_data as $monthkey => $monthvalue){
+                    
+                    
+                    $employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+                    
+                    $forecast_qty = "";
+                    $forecast_value = "";
+                    
+                     $lock_status = "";
+                     $lock_by_id = "";
+                    
+                //    echo "<pre>";
+                //    print_r($employee_month_product_forecast_data);
+                    
+                    if($employee_month_product_forecast_data != 0){
+                        
+                        $forecast_qty = $employee_month_product_forecast_data[0]['forecast_quantity'];
+                        $forecast_value = $employee_month_product_forecast_data[0]['forecast_value'];
+                        
+                        
+                        $lock_status = $employee_month_product_forecast_data[0]['lock_status'];
+                        $lock_by_id = $employee_month_product_forecast_data[0]['lock_by_id'];
+                        
+                        $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
+                        
+                        
+                    }
+                    
+                    //CHECK DATA FREEZED OR NOT
+                    
+                    $forecast_freeze_data = $this->esp_model->get_forecast_freeze_status($forecast_id);
+                    
+                    if($forecast_freeze_data != 0)
+                    {
+                        //If data Freezed
+                        
+                        if($forecast_freeze_data['freeze_status'] == 1){
+                            //DATA FREEZED
+                            
+                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                                
+                                
+                                
+                                $editable = "";
+                                
+                                $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+                                
+                                if($login_user_parent_data == $lock_by_id){
+                                    
+                                    if($lock_status == 1){
+                                        $editable = "readonly";
+                                    }
+                                    else{
+                                        $editable = "";
+                                    }
+                                    
+                                }
+                                
+                                
+                               // echo "1";
+                                
+                                //check login user equal to freezed user if equal than make data visible and editable else not for login user
+                                
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  '.$editable.' /></td>';
+                    
+                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                
+                                
+                            }else{
+                                
+                                
+                            $freeze_user_parent_data = $this->esp_model->get_freeze_user_parent_data($forecast_freeze_data['freeze_user_id']);
+                            
+                            if($freeze_user_parent_data != 0){
+                                
+                              //  echo $login_user_id ."==". $freeze_user_parent_data;
+                                
+                                if($login_user_id == $freeze_user_parent_data){
+                                    
+                                    //If login user is parent of freezed user than he will able to see the forecast data entered by juinor else not
+                                    
+                                    //SHOW FREEZEED DATA
+                                    
+                                  //  echo "2";
+                                    
+                                    
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    
+                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                    
+                                }
+                                elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                                    
+                                    //GET LOCK STATUS
+                                    
+                                   // echo "3";
+                                    
+                                    if($lock_status == 1){
+                                        $editable = "readonly";
+                                    }
+                                    else{
+                                        $editable = "";
+                                    }
+                                    
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
+                    
+                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                    
+                                }
+                                else{
+                                    
+                                    //SHOW FREEZED DATA BUT READONLY
+                                    
+                                   // echo "4";
+                                    
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value=""  /></td>';
+                    
+                                    $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                    
+                                }
+                            }
+                            else{
+                                
+                                //NOT SHOW FREEZED DATA
+                                
+                               // echo "5";
+                                    
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
+                    
+                                    $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                
+                              }
+                                
+                           }
+                            
+                        }
+                        else{
+                            
+                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                                
+                              //  echo "6";
+                                
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    
+                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                
+                            }
+                            elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                                
+                               // echo "7";
+                                
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                    
+                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                
+                            }
+                            else{
+                                
+                               // echo "8";
+                                //NOT SHOW FREEZED DATA
+                                    
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
+                    
+                                    $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                
+                            }
+                        }
+                    }
+                    else{
+                        
+                       // echo "9";
+                        
+                         $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
+                    
+                        $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                    
+                    }
+                        
+                    $l++;
+                    
+                }
+               $html .= '<td></td>';
+               $html .= '</tr>';
+                
+            }
+            
+            $html .= '<tr>';
+                $html .= '<th>';
+                 //  $html .= '';
+                   foreach($month_data as $monthkey => $monthvalue){
+                       
+                       $html .= '<input type="hidden" name="month_data[]" value="'.$monthvalue.'" />';
+                       $html .= '<td>Assumption</td><td>Probability</td>';
+                   }
+            
+                $html .= '</th>';
+            $html .= '</tr>';
+            
+            $assumption_month = array();
+            $probablity_month = array();
+            
+            $lock_status_array = array();
+            
+            foreach($month_data as $monthkey => $monthvalue){
+                     
+                $month_assumption_forecast_data = $this->esp_model->get_month_assumption_forecast_data($forecast_id,$monthvalue);
+                //testdata($month_assumption_forecast_data);
+                
+                if($month_assumption_forecast_data != 0)
+                {
+                    $cur_month = $month_assumption_forecast_data[0]['month_data'];
+
+                    $assumption_month[$cur_month] = array($month_assumption_forecast_data[0]["assumption1_id"],$month_assumption_forecast_data[0]["assumption2_id"],$month_assumption_forecast_data[0]["assumption3_id"]);
+
+                    $probablity_month[$cur_month] = array($month_assumption_forecast_data[0]["probability1"],$month_assumption_forecast_data[0]["probability2"],$month_assumption_forecast_data[0]["probability3"]);
+
+                }
+                else
+                {
+                    $assumption_month[$monthvalue] = array();
+                    $probablity_month[$monthvalue] = array();
+                }
+                
+                $month_assumption_forecast_lock_data = $this->esp_model->get_month_assumption_forecast_lock_data($forecast_id,$monthvalue);
+                
+                if($month_assumption_forecast_lock_data != 0){
+                    $lock_status_array[$monthvalue] = $month_assumption_forecast_lock_data[0]["lock_status"];
+                }
+                else{
+                    $lock_status_array[$monthvalue] = "";
+                }
+
+            }
+           
+            $k = 1;
+            
+             for($a = 1; $a<=3; $a++){
+                
+                $html .= '<tr>';
+                $html .= '<td></td>';
+                 
+                $j = 1;
+                 
+                    foreach($month_data as $monthkey => $monthvalue){
+                       
+                        
+                        $html .= '<td>';
+                        
+                        //FOR GETTING ASSUMPTION DATA
+                        
+                         if(isset($assumption_month[$monthvalue][$a-1]) && !empty($assumption_month[$monthvalue][$a-1])){
+                                $assumptiondata = $assumption_month[$monthvalue][$a-1];
+
+                                }
+                            else{
+                                $assumptiondata = "";
+                            }
+                        
+                        //FOR GETTING PROBABLITY DATA
+                        
+                        if(isset($probablity_month[$monthvalue][$a-1]) && !empty($probablity_month[$monthvalue][$a-1])){
+                            $probablitydata = $probablity_month[$monthvalue][$a-1];
+                        }
+                        else{
+                            $probablitydata = "";
+                        }
+                        
+                        if($lock_status_array[$monthvalue] == 1){
+                            $assumption_editable = "disabled";
+                            $probablity_editable = "readonly";
+                        }
+                        else{
+                            $assumption_editable = "";
+                            $probablity_editable = "";
+                        }
+                        
+                        
+                        //CHECK DATA FREEZED OR NOT
+                    
+                    $forecast_freeze_data = $this->esp_model->get_forecast_freeze_status($forecast_id);
+                    
+                    if($forecast_freeze_data != 0)
+                    {
+                        if($forecast_freeze_data['freeze_status'] == 1){
+                            //DATA FREEZED
+                            
+                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                                
+                                
+                                 $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+                                
+                                if($login_user_parent_data == $lock_by_id){
+                                    
+                                    if($lock_status_array[$monthvalue] == 1){
+                                        $assumption_editable = "disabled";
+                                        $probablity_editable = "readonly";
+                                    }
+                                    else{
+                                        $assumption_editable = "";
+                                        $probablity_editable = "";
+                                    }
+                                    
+                                }
+                                
+                                
+                                
+                                
+                                $html .= '<div class="tp_form">
+	<div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+                        
+                        <option value= "">Select Assumption</option>';
+                        foreach($assumption_data as $assumption_key => $assumption)
+                        {
+                          
+                             if($assumption['assumption_id'] == $assumptiondata){
+                                 $selected = "selected='selected'";
+                             }
+                             else
+                             {
+                                 $selected = "";
+                             }
+                             
+                            $html .= '<option '.$selected.' value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                        }
+                        $html .= '</select>';
+                        
+                        $html .= '</div>
+</div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'" '.$probablity_editable.' />';
+                                
+                                
+                            }else{
+                                
+                                
+                            $freeze_user_parent_data = $this->esp_model->get_freeze_user_parent_data($forecast_freeze_data['freeze_user_id']);
+                            
+                            if($freeze_user_parent_data != 0){
+                                
+                                if($login_user_id  == $freeze_user_parent_data){
+                                    
+                                    //SHOW FREEZEED DATA
+                                    
+                                        $html .= '<div class="tp_form">
+                <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                    <option value= "">Select Assumption</option>';
+                                    foreach($assumption_data as $assumption_key => $assumption)
+                                    {
+
+                                         if($assumption['assumption_id'] == $assumptiondata){
+                                             $selected = "selected='selected'";
+                                         }
+                                         else
+                                         {
+                                             $selected = "";
+                                         }
+
+                                        $html .= '<option '.$selected.' value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                    }
+                                    $html .= '</select>';
+
+                                    $html .= '</div>
+            </div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
+                                     
+                                    
+                                }
+                                elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                                    
+                                    //GET LOCK STATUS
+                                    
+                                        $html .= '<div class="tp_form">
+                <div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                    <option value= "">Select Assumption</option>';
+                                    foreach($assumption_data as $assumption_key => $assumption)
+                                    {
+
+                                         if($assumption['assumption_id'] == $assumptiondata){
+                                             $selected = "selected='selected'";
+                                         }
+                                         else
+                                         {
+                                             $selected = "";
+                                         }
+
+                                        $html .= '<option '.$selected.' value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                    }
+                                    $html .= '</select>';
+
+                                    $html .= '</div>
+            </div></td><td><input type="text" '.$probablity_editable.' name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
+                                     
+                                    
+                                }
+                                else{
+                                    
+                                    //NOT SHOW FREEZED DATA
+                                    
+                                            $html .= '<div class="tp_form">
+            <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                <option value= "">Select Assumption</option>';
+                                foreach($assumption_data as $assumption_key => $assumption)
+                                {
+
+                                     if($assumption['assumption_id'] == $assumptiondata){
+                                         $selected = "selected='selected'";
+                                     }
+                                     else
+                                     {
+                                         $selected = "";
+                                     }
+
+                                    $html .= '<option  value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                }
+                                $html .= '</select>';
+
+                                $html .= '</div>
+        </div></td><td><input type="text" name="probablity'.$j.'[]" value="" />'; 
+                                    
+                                    
+                                }
+                            }
+                            else{
+                                
+                                //NOT SHOW FREEZED DATA
+                                   
+                                        $html .= '<div class="tp_form">
+            <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                <option value= "">Select Assumption</option>';
+                                foreach($assumption_data as $assumption_key => $assumption)
+                                {
+
+                                     if($assumption['assumption_id'] == $assumptiondata){
+                                         $selected = "selected='selected'";
+                                     }
+                                     else
+                                     {
+                                         $selected = "";
+                                     }
+
+                                    $html .= '<option  value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                }
+                                $html .= '</select>';
+
+                                $html .= '</div>
+        </div></td><td><input type="text" name="probablity'.$j.'[]" value="" />';
+                                
+                                
+                            }
+                                
+                                
+                            }
+                            
+                            
+                        }
+                        else{
+                            
+                            
+                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                                
+                                $html .= '<div class="tp_form">
+            <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                <option value= "">Select Assumption</option>';
+                                foreach($assumption_data as $assumption_key => $assumption)
+                                {
+
+                                     if($assumption['assumption_id'] == $assumptiondata){
+                                         $selected = "selected='selected'";
+                                     }
+                                     else
+                                     {
+                                         $selected = "";
+                                     }
+
+                                    $html .= '<option '.$selected.' value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                }
+                                $html .= '</select>';
+
+                                $html .= '</div>
+        </div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
+                                
+                                
+                            }
+                            elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                                
+                                $html .= '<div class="tp_form">
+            <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                <option value= "">Select Assumption</option>';
+                                foreach($assumption_data as $assumption_key => $assumption)
+                                {
+
+                                     if($assumption['assumption_id'] == $assumptiondata){
+                                         $selected = "selected='selected'";
+                                     }
+                                     else
+                                     {
+                                         $selected = "";
+                                     }
+
+                                    $html .= '<option '.$selected.' value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                }
+                                $html .= '</select>';
+
+                                $html .= '</div>
+        </div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
+
+                                
+                            }
+                            else{
+                                
+                                //NOT SHOW FREEZED DATA
+                                    
+                                
+                                        $html .= '<div class="tp_form">
+            <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                                <option value= "">Select Assumption</option>';
+                                foreach($assumption_data as $assumption_key => $assumption)
+                                {
+
+                                     if($assumption['assumption_id'] == $assumptiondata){
+                                         $selected = "selected='selected'";
+                                     }
+                                     else
+                                     {
+                                         $selected = "";
+                                     }
+
+                                    $html .= '<option value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                }
+                                $html .= '</select>';
+
+                                $html .= '</div>
+        </div></td><td><input type="text" name="probablity'.$j.'[]" value="" />';
+                                
+                                
+                            }
+                        }
+                    }
+                    else{
+                        
+                                $html .= '<div class="tp_form">
+        <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+
+                            <option value= "">Select Assumption</option>';
+                            foreach($assumption_data as $assumption_key => $assumption)
+                            {
+
+                                 if($assumption['assumption_id'] == $assumptiondata){
+                                     $selected = "selected='selected'";
+                                 }
+                                 else
+                                 {
+                                     $selected = "";
+                                 }
+
+                                $html .= '<option value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                            }
+                            $html .= '</select>';
+
+                            $html .= '</div>
+    </div></td><td><input type="text" name="probablity'.$j.'[]" value="" />';        
+                        
+                    }
+                       
+                        
+                    $html .= '</td>';
+                        
+                        
+                        $j++;
+                        
+                    }
+          
+                $html .= '</tr>';
+                    $k++;
+                 
+            }
+            
+            
+            $html .= '</tbody>';
+       $html .= '</table>';
+           
+            $freeze_button = "";
+            if($login_user_parent_data != 0){
+                
+                $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$forecast_id);
+                
+                if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
+                    
+                
+                    if($freeze_history_user_status_data[0]['freeze_status'] == 0){
+                    
+                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                    }
+                    else{
+                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
+                    }
+                    
+                }
+                else{
+                    
+                    $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                    
+                }
+            }
+            
+            $html2 .= '<div class="col-md-12 table_bottom text-center">
+                <input type="hidden" id="forecast_id" name="forecast_id" value="'.$forecast_id.'" />
+                <div class="row">
+                    <div class="save_btn">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        '.$freeze_button.'
+                    </div>
+                </div>
+            </div>';
+                
+            
+        }
+        
+        echo $html.$html2;
+        die;
+        
+    }
+   
+
+
 	
 }

@@ -208,12 +208,12 @@ function get_pbg_product_sku_data(pbg_id){
     
     $.ajax({
         type: 'POST',
-        url: site_url+"esp/get_pbg_sku_data",
+        url: site_url+"esp/get_pbg_sku_budget_data",
         data: {pbgid:pbg_id,frommonth:from_month,tomonth:to_month,businesscode:business_code},
         success: function(res){
            // console.log(res);
-            $("div.forecast_data").empty();
-           $("div.forecast_data").html(res); 
+            $("div.budget_data").empty();
+           $("div.budget_data").html(res); 
           // alert("sasa");
            $('select').selectpicker('refresh');
            
