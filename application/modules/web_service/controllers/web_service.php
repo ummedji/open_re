@@ -1267,6 +1267,9 @@ class Web_service extends Front_Controller
             {
                 $id = $this->ishop_model->delete_order_detail_data($id);
             }
+            elseif($mode == "budget"){
+                $id = $this->ishop_model->delete_budget_detail($id);
+            }
             if($id)
             {
                 $result['status'] = true;
@@ -2642,7 +2645,32 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+    public function editSalesInvoice()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
 
+        if(isset($user_id))
+        {
+            $update_sales_details = $this->ishop_model->update_ishop_sales_detail($user_id,$country_id,'web_service');
+            if(!empty($update_sales_details))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
 
 
     /**

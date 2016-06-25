@@ -665,4 +665,27 @@ class Esp_model extends BF_Model
 		
 	}
 	
+	public function get_employee_month_product_budget_data($businesscode,$product_sku_country_id,$monthvalue){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_budget as beb");
+        
+        $this->db->join("bf_esp_budget_product_details as bebpd","bebpd.budget_id = beb.budget_id");
+        
+        $this->db->where("beb.business_code",$businesscode);
+        $this->db->where("bebpd.business_code",$businesscode);
+        $this->db->where("bebpd.product_sku_id",$product_sku_country_id);
+        $this->db->where("bebpd.budget_month",$monthvalue);
+        
+        $budget_data = $this->db->get()->result_array();
+        
+        if(isset($budget_data) && !empty($budget_data)) {
+            return $budget_data;
+        } else{
+            return 0;
+        }
+        
+    }
+	
+	
 }

@@ -7,6 +7,8 @@ $(document).ready(function(){
     	minViewMode: "years"
 	}).on('changeDate', function (ev) {
 	
+		$("div.budget_data").empty();
+	
 		var user_id = $("input#login_user_id").val();
         $("div#user_level_data div.form-group").remove();
         $("div#pbg_data").empty();

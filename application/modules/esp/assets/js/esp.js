@@ -25,6 +25,9 @@ $(document).ready(function(){
         var user_id = $("input#login_user_id").val();
         $("div#user_level_data div.form-group").remove();
         $("div#pbg_data").empty();
+        
+        $("div.forecast_data").empty();
+        
         get_user_level_data(user_id);
         
     });

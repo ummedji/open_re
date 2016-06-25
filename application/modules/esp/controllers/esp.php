@@ -1575,7 +1575,7 @@ class Esp extends Front_Controller
             }
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
-                <input type="hidden" id="forecast_id" name="forecast_id" value="'.$forecast_id.'" />
+                <input type="hidden" id="budget_id" name="budget_id" value="'.$forecast_id.'" />
                 <div class="row">
                     <div class="save_btn">
                         <button type="submit" class="btn btn-primary">Save</button>
