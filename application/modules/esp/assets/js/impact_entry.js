@@ -27,8 +27,7 @@ $(document).ready(function(){
         data: {selectedmonth:selected_month},
         success: function(resp){
             
-            alert(resp);
-          //  $("input#forecast_value_"+rel_attr_val).val(resp);
+            $("div.impact_entry_data").html(resp);
             
         }
     });
@@ -38,6 +37,46 @@ $(document).ready(function(){
     
 });
 
-$(document).on("change","select.employee_data",function(){
+$(document).on("submit","#impact_entry",function(e){
+    
+    e.preventDefault();
+    
+    var param = $("#impact_entry").serializeArray();
+
+	 $.ajax({
+                type: 'POST',
+                url: site_url+"esp/add_impact_entry",
+                data: param,
+                success: function(resp){
+                	
+                	message = "";
+                	
+                	if(resp == 1){
+                		message += "Impact data add successfully.";
+                	}
+                	else{
+                		message += "Impact data not add successfully.";
+                	}
+                	
+                	$('<div></div>').appendTo('body')
+		                .html('<div><b>'+message+'</b></div>')
+		                .dialog({
+		                    appendTo: "#success_file_popup",
+		                    modal: true,
+		                    zIndex: 10000,
+		                    autoOpen: true,
+		                    width: 'auto',
+		                    resizable: true,
+		                    close: function (event, ui) {
+		                        $(this).remove();
+		                    }
+	                });
+            
+                	location.reload();
+                	
+                }
+                
+             });
+
     
 });

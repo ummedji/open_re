@@ -1152,18 +1152,21 @@ class Esp extends Front_Controller
 		
 		$impact_data = $this->esp_model->get_user_impact_data($login_bussiness_code,$monthdata);
 		
+		//testdata($impact_data);
+		
 		$html = "";
         
 		if($impact_data != 0){
 			
 			//CREATE HTML FOR DATA
 			
-            
+           
 			$html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
 				$html .= '<thead>';
 					$html .= '<tr>';
-						$html .= '<th>Product SKU Code</th>';
-						$html .= '<th>Product SKU Name</th>';
+						//$html .= '<th>Product SKU Code</th>';
+						//$html .= '<th>Product SKU Name</th>';
+						$html .= '<th>PBG Name</th>';
 						$html .= '<th>Assumption 1</th>';
 						$html .= '<th>Probability 1</th>';
 						$html .= '<th>Impact 1</th>';
@@ -1181,41 +1184,70 @@ class Esp extends Front_Controller
 				
 						$html .= '<tr>';
 							
-							$html .= '<td>'.$impact_value['product_sku_code'].'</td>';
-							$html .= '<td>'.$impact_value['product_sku_name'].'</td>';
+							$html .= '<td><input type="hidden" name="assumption_id[]" value="'.$impact_value['forecast_assumption_id'].'" />'.$impact_value['product_country_name'].'</td>';
+							
+						//	$html .= '<td>'.$impact_value['product_sku_name'].'</td>';
 							
 							$html .= '<td>'.$impact_value['assumption1_name'].'</td>';
 							$html .= '<td>'.$impact_value['probability1'].'</td>';
-							$html .= '<td>'.$impact_value['impact1'].'</td>';
+							$html .= '<td><input type="text" name="impact1[]" value="'.$impact_value['impact1'].'" /></td>';
 							
 							$html .= '<td>'.$impact_value['assumption2_name'].'</td>';
 							$html .= '<td>'.$impact_value['probability2'].'</td>';
-							$html .= '<td>'.$impact_value['impact2'].'</td>';
+							$html .= '<td><input type="text" name="impact2[]" value="'.$impact_value['impact2'].'" /></td>';
 							
 							$html .= '<td>'.$impact_value['assumption3_name'].'</td>';
 							$html .= '<td>'.$impact_value['probability3'].'</td>';
-							$html .= '<td>'.$impact_value['impact3'].'</td>';
+							$html .= '<td><input type="text" name="impact3[]" value="'.$impact_value['impact3'].'" /></td>';
 							
 						$html .= '</tr>';
 					
 					}
 					
 				$html .= '</tbody>';
+			$html .= '</table>';
+			
+			
+			$html .= '<div class="col-md-12 table_bottom text-center">
+                <div class="row">
+                    <div class="save_btn">
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>';
+			
 						
-
-			
-			
-			
 		}
 		else{
 			
 			//CREATE NO DATA FOUND HTML
-			
+
+			$html .= '<div><h4>No Data Found.</h4></div>';
+						
 		}
 		
-		testdata($impact_data);
+		echo $html;
+		die;
 		
 	}
+
+	public function add_impact_entry(){
 	
+	//testdata($_POST);
+	
+	$impact_data = $this->esp_model->add_impact_entry($_POST);
+	echo $impact_data;
+	die;
+}
+	
+	public function budget(){
+		
+		Assets::add_module_js('esp', 'esp.js');
+					
+		$user = $this->auth->user();
+        Template::set('current_user', $user);
+		Template::render();
+		
+	}
 	
 }

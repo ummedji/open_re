@@ -582,10 +582,16 @@ class Esp_model extends BF_Model
 	
 	public function get_user_impact_data($login_bussiness_code,$monthdata){
 		
-		$this->db->select('befa.forecast_assumption_id, bmpsr.product_sku_code, bmpsc.product_sku_name, befa.assumption1_id, befa.assumption2_id, befa.assumption3_id, befa.probability1, befa.probability2, befa.probability3, befa.impact1, befa.impact2, befa.impact3' );
+		/* //FOR PRODUCT SKU WISE
+		
+		$this->db->select('befa.forecast_assumption_id, bmpsr.product_sku_code, bmpsc.product_sku_name, bma1.assumption1_name as assumption1_name, bma2.assumption_name as assumption2_name, bma3.assumption_name as assumption3_name, befa.probability1, befa.probability2, befa.probability3, befa.impact1, befa.impact2, befa.impact3' );
 		$this->db->from('bf_esp_forecast_product_details as befpd');
 		
 		$this->db->join("bf_esp_forecast_assumption as befa","befa.forecast_id = befpd.forecast_id AND befa.month_data = befpd.forecast_month");
+		
+		$this->db->join(" bf_master_assumptions as bma1","bma1.assumption_id = befa.assumption1_id");
+		$this->db->join(" bf_master_assumptions as bma2","bma2.assumption_id = befa.assumption2_id");
+		$this->db->join(" bf_master_assumptions as bma3","bma3.assumption_id = befa.assumption3_id");
 		
 		$this->db->join("bf_master_product_sku_country as bmpsc","bmpsc.product_sku_country_id = befpd.product_sku_id");
 		
@@ -595,6 +601,25 @@ class Esp_model extends BF_Model
 		$this->db->where("business_code",$login_bussiness_code);
 		$this->db->where("forecast_month",$monthdata);
 		
+		*/
+		
+		//FOR PBG WISE
+		
+		$this->db->select('befa.forecast_assumption_id, bmptnc.product_country_name, bma1.assumption_name as assumption1_name, bma2.assumption_name as assumption2_name, bma3.assumption_name as assumption3_name, befa.probability1, befa.probability2, befa.probability3, befa.impact1, befa.impact2, befa.impact3');
+		$this->db->from('bf_esp_forecast as bef');
+		
+		$this->db->join("bf_esp_forecast_assumption as befa","befa.forecast_id = bef.forecast_id");
+		
+		$this->db->join("bf_master_assumptions as bma1","bma1.assumption_id = befa.assumption1_id");
+		$this->db->join("bf_master_assumptions as bma2","bma2.assumption_id = befa.assumption2_id");
+		$this->db->join("bf_master_assumptions as bma3","bma3.assumption_id = befa.assumption3_id");
+		
+		$this->db->join("bf_master_product_type_name_country as bmptnc","bmptnc.product_country_id = bef.pbg_id");
+		
+		$this->db->where("bef.business_code",$login_bussiness_code);
+		$this->db->where("befa.month_data",$monthdata);
+		
+		
 		$impact_data = $this->db->get()->result_array();
 		
 		if(isset($impact_data) && !empty($impact_data)) {
@@ -602,6 +627,41 @@ class Esp_model extends BF_Model
         } else{
             return 0;
         }
+		
+	}
+
+	public function add_impact_entry($assumption_data){
+		
+		if(!empty($assumption_data['assumption_id'])){
+			
+			foreach($assumption_data['assumption_id'] as $assumption_key => $impact_data){
+				
+				$impact1 = $assumption_data['impact1'][$assumption_key];
+				$impact2 = $assumption_data['impact2'][$assumption_key];
+				$impact3 = $assumption_data['impact3'][$assumption_key];
+				
+				$data = array(
+		            'impact1' => $impact1,
+		            'impact2' => $impact2,
+		            'impact3' => $impact3
+		        );
+		            
+		        $this->db->where('forecast_assumption_id', $impact_data);
+		        $this->db->update('bf_esp_forecast_assumption' ,$data);
+		        
+		        if($this->db->affected_rows() > 0){
+		        	return 1;
+		        }
+				else{
+					return 0;
+				}
+		        
+			}
+			
+		}
+		else{
+			return 0;
+		}
 		
 	}
 	

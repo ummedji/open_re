@@ -4,7 +4,7 @@
 $(document).ready(function(){
     
     
-    $( "#form_date" ).datepicker({
+    $("#form_date").datepicker({
       format: "yyyy-mm-dd",
       showOn: "button",
       buttonImage: site_url+"/public/themes/default/images/calendar.gif",
@@ -14,7 +14,7 @@ $(document).ready(function(){
     });
     
     
-    $( "#to_date" ).datepicker({
+    $("#to_date").datepicker({
       format: "yyyy-mm-dd",
       showOn: "button",
       buttonImage: site_url+"/public/themes/default/images/calendar.gif",
@@ -293,7 +293,7 @@ function mark_as_unread(order_id){
 } 
 
 function show_po_popup(order_id,PO_no){
-    
+
     $("div#myModal input#order_data").empty();
     $("div#myModal input#po_number_data").empty();
     

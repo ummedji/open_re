@@ -4547,8 +4547,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         } else {
             $action_data = $this->uri->segment(2);
         }
-
-
         //  echo $action_data.$sub_action_data;die;
 
         if ($action_data != "order_approval") {
@@ -4588,7 +4586,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             if ($order_po_no != null) {
                 $sql .= ' AND bio.PO_no =' . $order_po_no . ' ';
             }
-
             if ($sub_action_data == "dispatched") {
                 $sql .= ' AND bio.order_status = 1 ';
             } elseif ($sub_action_data == "pending") {
@@ -4596,11 +4593,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             } elseif ($sub_action_data == "reject") {
                 $sql .= ' AND bio.order_status = 3 ';
             }
+            $sql .= ' AND bio.order_status != 4 ';
 
         }
 
         $sql .= ' AND bio.country_id = "' . $user_country_id . ' " ORDER BY bio.order_date DESC ';
-
+        //echo $sql;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             // For Pagination
@@ -4793,7 +4791,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $order_status = "op_ackno";
                             }
 
-                            $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' . trim($od['PO_no']) . ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' ."'".trim($od['PO_no'])."'". ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
 
@@ -4828,12 +4826,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     }
 
 
-                } else if ($loginusertype == 10) {
-
+                } else if ($loginusertype == 10)
+                {
                     //FOR RETAILER
-
                     $action_data = $this->uri->segment(2);
-
                     if ($action_data != "po_acknowledgement") {
 
                         $order_view['head'] = array('Sr. No.', '', 'Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
@@ -4859,7 +4855,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
 
 
-                            $otn = '<div prdid ="' . $od['order_id'] . '"><a class="set_pono" onClick="show_po_popup(' . trim($od['order_id']) . ',' . trim($od['PO_no']) . ');" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div prdid ="' . $od['order_id'] . '"><a class="set_pono" onClick="show_po_popup(' . trim($od['order_id']) . ','."'".trim($od['PO_no'])."'".');" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
 

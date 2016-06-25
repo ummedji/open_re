@@ -2148,7 +2148,7 @@ class Ishop extends Front_Controller
 
                    $radio_checked = "";
                    $customer_id = $logined_user_id;
-                
+
                   $order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
                   
             }
@@ -3103,18 +3103,17 @@ class Ishop extends Front_Controller
 					  if($distributor_code == "" || $distributor_name == "" || $invoice_no == "" || $invoice_date == "" || $otn == "" || $po_no=="" || $product_code =="" || $product_name == "" || $po_qty == "" || $dispatch_qty =="" || $amt=="")
 					  {
 						  //CHECK DATA BLANK
-						  $error_array["error"] = 'asdasdasa';
-						 /* if(!isset($error_array["error"]["header"])){
+						  //$error_array["error"] = 'asdasdasa';
+						  if(!isset($error_array["error"]["header"])){
 							  $error_array["error"]["header"] = $header;
 						  }
 
-						  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Some row data blank";*/
+						  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Some row data blank";
 					  }
 					  else
 					  {
 
 						  //CHECK PROPER DATA
-
 						  //PRODUCT CHECK
 
 						  $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
@@ -3128,9 +3127,9 @@ class Ishop extends Front_Controller
 
 							  if($check_invoice_data == 1)
 							  {
-								  $error_array["error"][]='dsfsdfasdfadsfa';
+								 // $error_array["error"][]='dsfsdfasdfadsfa';
 								  $error_message = "";
-								/*  if($check_invoice_data == 1) {
+								  if($check_invoice_data == 1) {
 									  $error_message = "Invoice data already exist in DB";
 								  }
 
@@ -3138,13 +3137,12 @@ class Ishop extends Front_Controller
 									  $error_array["error"]["header"] = $header;
 								  }
 
-								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;*/
+								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
 							  }
 							  else{
 								  if(!isset($dist_invoice_otn_mapp_data_array[$invoice_no][$otn])){
 
 									  $dist_invoice_otn_mapp_data_array[$invoice_no][$otn] = $user_data;
-
 									  $inner_array[] = $user_data;
 									  $inner_array[] = $invoice_no;
 									  $inner_array[] = $invoice_date;
@@ -3163,7 +3161,6 @@ class Ishop extends Front_Controller
 									  if($dist_invoice_otn_mapp_data_array[$invoice_no][$otn] != $user_data){
 
 										  //SAME INVOICE ASSIGNED TO OTHER RETAILER
-
 										  if(!isset($error_array["error"]["header"])){
 											  $error_array["error"]["header"] = $header;
 										  }
@@ -3297,7 +3294,6 @@ class Ishop extends Front_Controller
 						   if($distributor_code == "" || $distributor_name == "" || $retailer_code == "" || $retailer_name == "" || $invoice_no == "" || $invoice_date == "" || $po_no == "" || $otn == "" || $product_code == "" || $product_name == "" || $unit == "" || $quantity == "" || $amount == "")
 						   {
 							   //CHECK DATA BLANK
-
 							   if(!isset($error_array["error"]["header"])){
 								   $error_array["error"]["header"] = $header;
 							   }
@@ -3306,27 +3302,20 @@ class Ishop extends Front_Controller
 						   }
 						   else
 						   {
-
 							   //CHECK PROPER DATA
-
 							   //PRODUCT CHECK
-
 							   $user_distributor_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
 							   $user_retailer_data = $this->ishop_model->check_user_data($retailer_code,$retailer_name);
 
 							   $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
 
-
 							   if($user_distributor_data != 0 && $product_data != 0 &&  $user_retailer_data != 0)
 							   {
 								   //CHECK DISTRIBUTOR RETAILER ASSOCATION
-
 								   $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user_distributor_data,$user_retailer_data);
 
 								   // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
-
 								   //  dumpme($dist_invoice_ret_mapp_data_array);
-
 
 								   if($distributor_retailer_mapping_data == 1){
 
@@ -3335,11 +3324,9 @@ class Ishop extends Front_Controller
 
 										   $dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] = $user_retailer_data;
 
-
 										   if(!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
 											   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no] = array();
 										   }
-
 
 										   $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no,$user_retailer_data,$user_distributor_data);
 
@@ -3350,7 +3337,6 @@ class Ishop extends Front_Controller
 												if(!isset($error_array["error"]["header"])){
 													$error_array["error"]["header"] = $header;
 												}
-
 												$error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
 
 											}
@@ -3399,9 +3385,7 @@ class Ishop extends Front_Controller
 													   $inner_array[] = $amount;
 
 													   $final_array["success"][] = $inner_array;
-
 												   }
-
 											   }
 										   }
 
@@ -3418,31 +3402,21 @@ class Ishop extends Front_Controller
 
 										   }
 										   else{
-
 											   //SAME INVOICE ASSIGNED TO OTHER RETAILER
-
 											   if(!isset($error_array["error"]["header"])){
 												   $error_array["error"]["header"] = $header;
 											   }
 											   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Same invoice assigned to other Retailer";
-
-
 										   }
 									   }
-
 								   }
 								   else{
-
 									   //DISTRIBUTOR RETAILER MAPPING ERROR
-
 									   if(!isset($error_array["error"]["header"])){
 										   $error_array["error"]["header"] = $header;
 									   }
 									   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Distributor and Retailer not correctly mapped.";
-
 								   }
-
-
 							   }
 							   else{
 
@@ -3451,7 +3425,6 @@ class Ishop extends Front_Controller
 								   }
 								   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel User or Product data not matched with DB data";
 							   }
-
 						   }
 					   }
 					   elseif($logined_user_type == 9)

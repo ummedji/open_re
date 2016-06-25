@@ -88,7 +88,7 @@ if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
                                            ?>
                                             
                                             
-                                            <div class="confirm_data" prdid ="<?php echo $row;?>"><input type="hidden" id="confirm_data_<?php echo $row;?>" name="confirm_ack[]" value="0" /><input class="confirm_data"  type="checkbox" name="" value="<?php echo $row;?>" /><a href="javascript:void(0);">Confirm</a></div>
+                                            <div class="confirm_data" prdid ="<?php echo $row;?>"><input type="hidden" id="confirm_data_<?php echo $row;?>" name="confirm_ack[]" value="0" /><input class="confirm_data"  type="checkbox" name="" value="<?php echo $row;?>" />Confirm</div>
                                            <?php } ?>
                                         </td>
                                     <?php 

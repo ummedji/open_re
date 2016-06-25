@@ -137,8 +137,8 @@
                                 }
                                 elseif($segment=='esp'){
                                     ?>
-                                    <li role="presentation" class=""><a href="<?php echo base_url('/esp') ?>">Forecast</a></li>
-                                    <li role="presentation" class=""><a href="#">Budget</a></li>
+                                    <li role="presentation" class=""><a href="<?php echo base_url('/esp'); ?>">Forecast</a></li>
+                                    <li role="presentation" class=""><a href="<?php echo base_url('/esp/budget'); ?>">Budget</a></li>
                               <?php
                                 }
                                 else{

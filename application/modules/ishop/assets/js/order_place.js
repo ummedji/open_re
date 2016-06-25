@@ -2,15 +2,15 @@
  * Created by webclues on 5/17/2016.
  */
 $(document).ready(function(){
-    
+
     
     $( "#order_date" ).datepicker({
-      dateFormat: "yy-mm-dd",
-      showOn: "button",
-      buttonImage: site_url+"/public/themes/default/images/calendar.gif",
-      buttonImageOnly: true,
-      buttonText: "Select date",
-      autoclose: true
+        dateFormat: "yy-mm-dd",
+        showOn: "button",
+        buttonImage: site_url + "/public/themes/default/images/calendar.gif",
+        buttonImageOnly: true,
+        buttonText: "Select date",
+        autoclose: true
     });
     
    
@@ -1132,6 +1132,4 @@ $("body").on("keyup","input.quantity_data",function(){
         }
        
 });
-   
-   
    
