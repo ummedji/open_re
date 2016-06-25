@@ -3,7 +3,8 @@
 $attributes = array('class' => '', 'id' => 'view_ishop_sales','name'=>'view_ishop_sales');
 echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
-<div class="col-md-12 od_approval">
+    <!--od_approval-->
+<div class="col-md-12 ">
     <div class="top_form">
         <div class="row">
             <?php
@@ -32,7 +33,7 @@ echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
                     </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="col-md-10 col-md-offset-1 distributore_form od_approval">
+                <div class="col-md-10 col-md-offset-1 distributore_form ">
                     <div class="row">
                         <div class="retailer_checked_sales fl_calender_i" id="retailer_checked_sales" >
                             <div class="col-md-4 col-sm-4 tp_form">
@@ -100,35 +101,34 @@ echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-10 col-md-offset-1 tp_form">
-                            <div class="col-md-4 col-sm-6">
+                        <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 20px;">
+
                                 <div class="form-group">
                                     <label>From Month<span style="color: red">*</span></label>
                                     <input type="text" class="form-control" name="from_month" id="form_month" placeholder="">
-                                    <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                    <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                         <a href="#">
                                             <i class="fa fa-calendar" aria-hidden="true">
                                             </i>
                                         </a>
-                                    </div>
+                                    </div>-->
 
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6">
+
+
                                 <div class="form-group">
                                     <label>TO Month<span style="color: red">*</span></label>
                                     <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
-                                    <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                    <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                         <a href="#">
                                             <i class="fa fa-calendar" aria-hidden="true">
                                             </i>
                                         </a>
-                                    </div>
+                                    </div>-->
                                 </div>
-                            </div>
-                            <div class="col-md-2 save_btn">
-                                <label>&nbsp;</label>
-                                <button type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important; margin-top: 2px;">Execute</button>
+
+                            <div class="inl_button save_btn">
+                                <button type="submit" class="btn btn-primary gren_btn">Execute</button>
                             </div>
                         </div>
 

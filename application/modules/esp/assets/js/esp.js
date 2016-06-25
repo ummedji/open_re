@@ -20,7 +20,7 @@ $(document).ready(function(){
       autoclose: true
     });
     
-    $("a#exeute").on("click",function(){
+    $("button#exeute").on("click",function(){
         
         var user_id = $("input#login_user_id").val();
         $("div#user_level_data div.form-group").remove();
@@ -30,6 +30,15 @@ $(document).ready(function(){
     });
     
     
+    $("#year_data").datepicker( {
+	    format: "yyyy-mm", // Notice the Extra space at the beginning
+	    autoclose: true
+	}).on('changeDate', function (ev) {
+		
+		alert($(this).val());
+	   // $('#date-daily').change();
+	});
+
 });
 
 $(document).on("change","select.employee_data",function(){
@@ -163,6 +172,8 @@ function get_user_level_data(user_id){
                 success: function(resp){
                     if(resp != ""){
                         $("div#user_level_data").append(resp);
+                        
+                         $("select").selectpicker('refresh');
                     }
                     else{
                         
@@ -172,6 +183,7 @@ function get_user_level_data(user_id){
                             data: {userid:user_id},
                             success: function(res){
                                $("div#pbg_data").html(res); 
+								  $("select").selectpicker('refresh');
                             }
                         });
                         
@@ -216,6 +228,9 @@ function get_pbg_product_sku_data(pbg_id){
             console.log(res);
             $("div.forecast_data").empty();
            $("div.forecast_data").html(res); 
+          // alert("sasa");
+           $('select').selectpicker('refresh');
+           
         }
     });
     

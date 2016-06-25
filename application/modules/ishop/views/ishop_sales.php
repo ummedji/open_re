@@ -39,13 +39,13 @@ echo form_open('',$attributes); ?>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
-                                    <div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
+                                    <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;">
+                                    <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                         <a href="#">
                                             <i class="fa fa-calendar" aria-hidden="true">
                                             </i>
                                         </a>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-6 tp_form">

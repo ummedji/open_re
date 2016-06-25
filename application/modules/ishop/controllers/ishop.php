@@ -2410,12 +2410,6 @@ class Ishop extends Front_Controller
                 $user= $this->auth->user();
                 $logined_user_type = $user->role_id;
             }
-		/*	echo ' POST ';
-            dumpme($_POST);
-			echo ' FILES ';
-            dumpme($_FILES);
-			echo ' GET ';
-            dumpme($_GET);die;*/
 			if(empty($web_service)&& !isset($web_service) && $web_service == null && $web_service != "web_service"){
 				$files = $_POST["upload_file_data"];
 			}
@@ -3112,10 +3106,8 @@ class Ishop extends Front_Controller
 					  }
 					  else
 					  {
-
 						  //CHECK PROPER DATA
 						  //PRODUCT CHECK
-
 						  $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
 						  $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
 
@@ -3123,6 +3115,7 @@ class Ishop extends Front_Controller
 						  {
 							  //ADD DATA TO DATA ARRAY
 							  $check_invoice_data = $this->ishop_model->check_invoice_data($invoice_no,$user_data);
+							//  testdata($check_invoice_data);
 							//  $check_otn_data = $this->ishop_model->check_otn_data($otn);
 
 							  if($check_invoice_data == 1)
@@ -3755,12 +3748,21 @@ class Ishop extends Front_Controller
                 
                 if(empty($error_array)){
                 // testdata($final_array);
-                    echo  json_encode($final_array); die;
+					if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
+						echo  json_encode($final_array); die;
+					}
+					else{
+						  return $final_array;
+					}
+
                 }
                 else{
-			//testdata($error_array);
-                		//testdata($error_array);
-                    echo json_encode($error_array); die;
+					if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
+						echo json_encode($error_array); die;
+					}
+					else{
+						return $error_array;
+					}
                 }
                 
             }

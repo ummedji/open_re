@@ -2328,11 +2328,41 @@ class Web_service extends Front_Controller
         fwrite($file,$param);
         fclose($file);
         $user_id = $this->input->get_post('user_id');
-        if(isset($user_id))
-        {
-           // testdata($_POST);
+        if(isset($user_id)) {
+            // testdata($_POST);
             $_POST['flag'] = 'web_service';
-            modules::run('ishop/ishop/upload_data', $_POST,$_FILES);
+            $data = modules::run('ishop/ishop/upload_data', $_POST, $_FILES);
+
+            //testdata($data);
+            if(isset($data['success']))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = '';
+            }
+
+            if(isset($data['error']))
+            {
+                $final_array = array();
+                foreach ($data as $key_data => $xl_data) {
+                    $final_array["header"] = $xl_data['header'][1];
+                    // $final_array["header"][] = 'Error Description';
+                    $initial_array = array();
+
+                    foreach($xl_data as $xlkey => $formate_data){
+                        if($xlkey !== 'header'){
+                           // $formet= explode('~',$formate_data);
+                            $initial_array[] = $formate_data;
+                        }
+                    }
+                    $final_array['error_data'] = $initial_array;
+                }
+
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $final_array;
+
+            }
         }
         else
         {
@@ -2497,15 +2527,15 @@ class Web_service extends Front_Controller
         $retailer_id = $this->input->get_post('retailer_id');
         $by_invoice_no = $this->input->get_post('by_invoice_no');
         $distributor_id = $this->input->get_post('distributor_id');
-        $to_month = $this->input->get_post('to_month');
-        $from_month = $this->input->get_post('from_month');
+        $to_month = date("Y-m", strtotime($this->input->get_post("to_month")));
+        $from_month =  date("Y-m", strtotime($this->input->get_post("from_month")));
 
         $sales_view = 'sales_view';
 
         if(isset($user_id) && isset($check_redio))
         {
             if($check_redio == 'distributor'){
-                $secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, '', $by_invoice_no,$user_id,$country_id,$sales_view,null,null,null,$distributor_id,null,'web_service');
+                $secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view('', '', '', $by_invoice_no,$user_id,$country_id,$sales_view,$from_month,$to_month,null,$distributor_id,null,'web_service');
                 if(!empty($secondary_sales_details))
                 {
 

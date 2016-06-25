@@ -5,25 +5,24 @@ echo form_open('',$attributes);
 <?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
     <div class="top_form">
-        <div class="row">
-                <div class="col-md-4 col-sm-4 tp_form">
+        <div class="col-md-12 text-center tp_form inline-parent">
+
                     <div class="form-group">
                         <div class="form-group">
                             <label>From Month<span style="color: red">*</span></label>
                             <input type="text" name="from_month_data" id="from_month_data" class="form-control" />
                         </div>
                     </div>
-                </div>
-                <div class="col-md-4 col-sm-4 tp_form">
+
                     <div class="form-group">
                         <div class="form-group">
                             <label>To Month<span style="color: red">*</span></label>
                             <input type="text" name="to_month_data" id="to_month_data" class="form-control" />
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3 save_btn ex_btn">
-                    <button type="submit" class="btn btn-primary">Execute</button>
+
+                <div class="inl_button save_btn">
+                    <button type="submit" class="btn btn-primary gren_btn">Execute</button>
                 </div>
             <div class="clearfix"></div>
 
@@ -32,7 +31,9 @@ echo form_open('',$attributes);
             <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $current_user->country_id; ?>" />
             <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" />
             <?php echo form_close(); ?>
+            <div class="clearfix"></div>
         </div>
+        <div class="clearfix"></div>
     </div>
     <div class="clearfix"></div>
 </div>

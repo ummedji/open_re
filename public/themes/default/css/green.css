@@ -97,7 +97,7 @@ ul.listslider li{
 #no-more-tables tr td .edit_i a {color: #00793a;}
 .upload_file_space .input-group-btn .btn-primary { background-color: #65ac1e;}
 .save_btn button { background-color: #00793a;}
-.save_btn button:hover, .save_btn button:focus { background-color: #00612f;}
+.save_btn button:hover, .save_btn button:focus { background-color: #65ac1e !important;}
 /*end scrollbar*/
 
 /*Budget Distributor*/

@@ -320,9 +320,7 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                             $.each( des_value5, function( key2, header_desc_value ){
                                 $.each( header_desc_value, function( key6, header_desc_value6 ){
                                     t_data += "<th style='/*border:1px solid;*/text-align:center;'>"+header_desc_value6+"<span class='rts_bordet'></span></th>";
-
                                     header_array.push(header_desc_value6);
-
                                 });
                             });
                             t_data += "<th style='/*border:1px solid;*/text-align:center;'>Error Description</th></tr>";
@@ -353,7 +351,6 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                                             desc_data = "";
                                         }
                                     }
-                                
                                 t_data += "<td style='border:1px solid;text-align:center;' data-title='"+header_array[key3]+"'>"+desc_data+"</td>";
                             });
 

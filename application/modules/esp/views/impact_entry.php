@@ -24,20 +24,23 @@ echo form_open('esp/add_impact_entry',$attributes); ?>
             
              <input class="login_user_role" type="hidden" name="login_user_role" id="login_user_role" value="<?php echo $current_user->role_id; ?>" /> 
             <input class="login_user_id" type="hidden" name="login_user_id" id="login_user_id" value="<?php echo $current_user->id; ?>" /> 
-            <input class="login_user_countryid" type="hidden" name="login_user_countryid" id="login_user_countryid" value="<?php echo $current_user->country_id; ?>" /> 
-            
-            <div class="col-md-3 col-sm-6 tp_form">
+            <input class="login_user_countryid" type="hidden" name="login_user_countryid" id="login_user_countryid" value="<?php echo $current_user->country_id; ?>" />
+
+            <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 20px;">
                 <div class="form-group">
                     <label for="From Month">From Month<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="from_month" id="from_month" placeholder="">
-                   
                 </div>
+                <div class="inl_button save_btn">
+                    <button type="button" id="view_impact_entry" href="javascript:void(0);" class="btn btn-primary gren_btn">View</button>
+                </div>
+            </div>
+            <div class="col-md-3 col-sm-6 tp_form">
+
             </div>
             
             <div class="col-md-3 col-sm-6 tp_form">
-                <div class="form-group">
-                    <a id="view_impact_entry" href="javascript:void(0);" class="btn btn-default">View</a>
-                </div>
+
             </div>
             
         </div>
