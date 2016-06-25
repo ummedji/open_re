@@ -2525,20 +2525,33 @@ class Ishop_model extends BF_Model
         }
     }
 
-    public function update_ishop_sales_detail($user_id, $country_id)
+    public function update_ishop_sales_detail($user_id, $country_id,$web_service = null)
     {
         // testdata($_POST);
-        $checked_type = $this->input->post("checked_type");
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
-        $secondary_sales_id = $this->input->post("secondary_sales_detail");
-        $invoice_no = $this->input->post("invoice_no");
-        $PO_no = $this->input->post("PO_no");
-        $order_tracking_no = $this->input->post("order_tracking_no");
-        $secondary_sales_product_id = $this->input->post("secondary_sales_product");
-        $quantity = $this->input->post("quantity");
-        $units = $this->input->post("units");
-        $qty_kgl = $this->input->post("qty_kgl");
-        $amount = $this->input->post("amount");
+            $checked_type = $this->input->post("radio1");
+            $secondary_sales_id = explode(',', $this->input->post("secondary_sales_detail"));
+            $invoice_no = explode(',', $this->input->post("invoice_no"));
+            $PO_no = explode(',', $this->input->post("PO_no"));
+            $order_tracking_no = explode(',', $this->input->post("order_tracking_no"));
+            $secondary_sales_product_id = explode(',', $this->input->post("secondary_sales_product"));
+            $quantity = explode(',', $this->input->post("quantity"));
+            $units = explode(',', $this->input->post("units"));
+            $qty_kgl = explode(',', $this->input->post("qty_kgl"));
+            $amount = explode(',', $this->input->post("amount"));
+        } else {
+            $secondary_sales_id = $this->input->post("secondary_sales_detail");
+            $invoice_no = $this->input->post("invoice_no");
+            $PO_no = $this->input->post("PO_no");
+            $order_tracking_no = $this->input->post("order_tracking_no");
+            $secondary_sales_product_id = $this->input->post("secondary_sales_product");
+            $quantity = $this->input->post("quantity");
+            $units = $this->input->post("units");
+            $qty_kgl = $this->input->post("qty_kgl");
+            $amount = $this->input->post("amount");
+            $checked_type = $this->input->post("checked_type");
+        }
 
         if ($checked_type == 'distributor') {
 

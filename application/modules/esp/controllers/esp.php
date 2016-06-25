@@ -1265,7 +1265,7 @@ class Esp extends Front_Controller
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
         
-        $assumption_data = $this->esp_model->get_assumption_data();
+        //$assumption_data = $this->esp_model->get_assumption_data();
         
         $lock_show_data = $this->get_user_level_data($login_user_id);
         
@@ -1292,7 +1292,7 @@ class Esp extends Front_Controller
                                 
                                 foreach($pbg_sku_data as $skukey => $skuvalue){
                                     
-                                 $employee_month_product_forecast_data1 = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+                                 $employee_month_product_budget_data1 = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
                     
                                  $lock_status = 0;
                                  $lock_by_id = "";
@@ -1328,7 +1328,7 @@ class Esp extends Front_Controller
                                 $lock_data = "";
                             }
                             
-                            $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
+                            $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;</th>';
                         }
                        
                    $html .= '</tr>';
@@ -1364,10 +1364,10 @@ class Esp extends Front_Controller
                 foreach($month_data as $monthkey => $monthvalue){
                     
                     
-                    $employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+                    $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
                     
-                    $forecast_qty = "";
-                    $forecast_value = "";
+                    $budget_qty = "";
+                    $budget_value = "";
                     
                      $lock_status = "";
                      $lock_by_id = "";
@@ -1375,32 +1375,32 @@ class Esp extends Front_Controller
                 //    echo "<pre>";
                 //    print_r($employee_month_product_forecast_data);
                     
-                    if($employee_month_product_forecast_data != 0){
+                    if($employee_month_product_budget_data != 0){
                         
-                        $forecast_qty = $employee_month_product_forecast_data[0]['forecast_quantity'];
-                        $forecast_value = $employee_month_product_forecast_data[0]['forecast_value'];
+                        $budget_qty = $employee_month_product_budget_data[0]['budget_quantity'];
+                        $budget_value = $employee_month_product_budget_data[0]['budget_value'];
                         
                         
-                        $lock_status = $employee_month_product_forecast_data[0]['lock_status'];
-                        $lock_by_id = $employee_month_product_forecast_data[0]['lock_by_id'];
+                        $lock_status = $employee_month_product_budget_data[0]['lock_status'];
+                        $lock_by_id = $employee_month_product_budget_data[0]['lock_by_id'];
                         
-                        $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
+                        $budget_id = $employee_month_product_budget_data[0]['budget_id'];
                         
                         
                     }
                     
                     //CHECK DATA FREEZED OR NOT
                     
-                    $forecast_freeze_data = $this->esp_model->get_forecast_freeze_status($forecast_id);
+                    $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id);
                     
-                    if($forecast_freeze_data != 0)
+                    if($budget_freeze_data != 0)
                     {
                         //If data Freezed
                         
-                        if($forecast_freeze_data['freeze_status'] == 1){
+                        if($budget_freeze_data['freeze_status'] == 1){
                             //DATA FREEZED
                             
-                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                            if($login_user_id == $budget_freeze_data['freeze_user_id']){
                                 
                                 
                                 
@@ -1424,15 +1424,15 @@ class Esp extends Front_Controller
                                 
                                 //check login user equal to freezed user if equal than make data visible and editable else not for login user
                                 
-                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  '.$editable.' /></td>';
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'"  '.$editable.' /></td>';
                     
-                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                 
                                 
                             }else{
                                 
                                 
-                            $freeze_user_parent_data = $this->esp_model->get_freeze_user_parent_data($forecast_freeze_data['freeze_user_id']);
+                            $freeze_user_parent_data = $this->esp_model->get_freeze_user_parent_data($budget_freeze_data['freeze_user_id']);
                             
                             if($freeze_user_parent_data != 0){
                                 
@@ -1447,12 +1447,12 @@ class Esp extends Front_Controller
                                   //  echo "2";
                                     
                                     
-                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
                     
-                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                     
                                 }
-                                elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                                elseif($login_user_id == $budget_freeze_data['created_by_user']){
                                     
                                     //GET LOCK STATUS
                                     
@@ -1465,9 +1465,9 @@ class Esp extends Front_Controller
                                         $editable = "";
                                     }
                                     
-                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
+                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.'  /></td>';
                     
-                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                     
                                 }
                                 else{
@@ -1499,22 +1499,22 @@ class Esp extends Front_Controller
                         }
                         else{
                             
-                            if($login_user_id == $forecast_freeze_data['freeze_user_id']){
+                            if($login_user_id == $budget_freeze_data['freeze_user_id']){
                                 
                               //  echo "6";
                                 
-                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
                     
-                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                 
                             }
-                            elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                            elseif($login_user_id == $budget_freeze_data['created_by_user']){
                                 
                                // echo "7";
                                 
-                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
                     
-                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                 
                             }
                             else{
@@ -1553,7 +1553,7 @@ class Esp extends Front_Controller
             $freeze_button = "";
             if($login_user_parent_data != 0){
                 
-                $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$forecast_id);
+                $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$budget_id);
                 
                 if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
                     
