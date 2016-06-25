@@ -2420,7 +2420,7 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null)
+    public function view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null,$web_service = null)
     {
         $sql = 'SELECT itsp.tertiary_sales_id,itsp.sales_month,bu.user_code,bu.display_name ';
         $sql .= 'FROM bf_ishop_tertiary_sales AS itsp ';
@@ -2435,44 +2435,49 @@ class Ishop_model extends BF_Model
         $sql .= 'AND itsp.created_by_user =' . $user_id . ' ';
         $sql .= 'AND itsp.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_id DESC ';
-        //echo $sql;
+       // echo $sql;
         /* $info = $this->db->query($sql);
         $tertiary_sales_detail = $info->result_array();
         $sales_detail = array('result'=>$tertiary_sales_detail);*/
-        $sales_detail = $this->grid->get_result_res($sql);
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $sales_detail = $info->result_array();
+            return $sales_detail;
+        } else {
+            $sales_detail = $this->grid->get_result_res($sql);
 
-        if (isset($sales_detail['result']) && !empty($sales_detail['result'])) {
-            $sales_view['head'] = array('Sr. No.', 'Action', 'Month', 'Retailer Code', 'Retailer Name');
+            if (isset($sales_detail['result']) && !empty($sales_detail['result'])) {
+                $sales_view['head'] = array('Sr. No.', 'Action', 'Month', 'Retailer Code', 'Retailer Name');
 
-            if ($page != null || $page != "") {
+                if ($page != null || $page != "") {
 
-                $i = $page * 10 - 9;
+                    $i = $page * 10 - 9;
 
+                } else {
+                    $i = 1;
+                }
+
+                $sales_view['count'] = count($sales_view['head']);
+                foreach ($sales_detail['result'] as $sd) {
+                    $month = strtotime($sd['sales_month']);
+                    $month = date('F - Y', $month);
+                    $sales_view['row'][] = array($i, $sd['tertiary_sales_id'], $month, $sd['user_code'], $sd['display_name']);
+                    $i++;
+                }
+                $sales_view['eye'] = 'is_action';
+                $sales_view['action'] = 'is_action';
+                $sales_view['edit'] = 'is_edit';
+                $sales_view['delete'] = 'is_delete';
+                $sales_view['pagination'] = $sales_detail['pagination'];
+                return $sales_view;
             } else {
-                $i = 1;
+                return false;
             }
-
-            $sales_view['count'] = count($sales_view['head']);
-            foreach ($sales_detail['result'] as $sd) {
-                $month = strtotime($sd['sales_month']);
-                $month = date('F - Y', $month);
-                $sales_view['row'][] = array($i, $sd['tertiary_sales_id'], $month, $sd['user_code'], $sd['display_name']);
-                $i++;
-            }
-            $sales_view['eye'] = 'is_action';
-            $sales_view['action'] = 'is_action';
-            $sales_view['edit'] = 'is_edit';
-            $sales_view['delete'] = 'is_delete';
-            $sales_view['pagination'] = $sales_detail['pagination'];
-            return $sales_view;
-        }
-        else{
-            return false;
         }
     }
 
 
-    public function tertiary_sales_product_details_view_by_id($tertiary_sales_id)
+    public function tertiary_sales_product_details_view_by_id($tertiary_sales_id,$web_service = null)
     {
         $sql = 'SELECT itsp.tertiary_sales_product_id,mpsr.product_sku_code,itsp.product_sku_id,mpsc.product_sku_name,itsp.unit,itsp.quantity,itsp.qty_kgl ';
         $sql .= 'FROM bf_ishop_tertiary_sales_products AS itsp ';
@@ -2485,33 +2490,38 @@ class Ishop_model extends BF_Model
         /* $info = $this->db->query($sql);
         $tertiary_sales_detail = $info->result_array();
         $sales_detail = array('result'=>$tertiary_sales_detail);*/
-        $sales_detail = $this->grid->get_result_res($sql);
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $info = $this->db->query($sql);
+            $sales_detail = $info->result_array();
+            return $sales_detail;
+        } else {
+            $sales_detail = $this->grid->get_result_res($sql);
 
-        if (isset($sales_detail['result']) && !empty($sales_detail['result'])) {
-            $sales_view['head'] = array('Sr. No.', 'Action', 'Product SKU Code', 'Product SKU Name', 'Unit', 'Qty.', 'Qty. Kg/Ltr');
-            $sales_view['count'] = count($sales_view['head']);
-            $i = 1;
+            if (isset($sales_detail['result']) && !empty($sales_detail['result'])) {
+                $sales_view['head'] = array('Sr. No.', 'Action', 'Product SKU Code', 'Product SKU Name', 'Unit', 'Qty.', 'Qty. Kg/Ltr');
+                $sales_view['count'] = count($sales_view['head']);
+                $i = 1;
 
-            foreach ($sales_detail['result'] as $sd) {
+                foreach ($sales_detail['result'] as $sd) {
 
-                $product_sku_id = '<div class="prd_' . $sd["tertiary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $sd['product_sku_id'] . '</span></div>';
-                $units = $product_sku_id . '<div class="units_' . $sd["tertiary_sales_product_id"] . '"><span class="units">' . $sd['unit'] . '</span></div>';
-                $quantity = '<div class="quantity_' . $sd["tertiary_sales_product_id"] . '"><span class="quantity">' . $sd['quantity'] . '</span></div>';
-                $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $sd["tertiary_sales_product_id"] . '"><span class="rol_quantity_kg_ltr">' . $sd['qty_kgl'] . '</span></div>';
+                    $product_sku_id = '<div class="prd_' . $sd["tertiary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $sd['product_sku_id'] . '</span></div>';
+                    $units = $product_sku_id . '<div class="units_' . $sd["tertiary_sales_product_id"] . '"><span class="units">' . $sd['unit'] . '</span></div>';
+                    $quantity = '<div class="quantity_' . $sd["tertiary_sales_product_id"] . '"><span class="quantity">' . $sd['quantity'] . '</span></div>';
+                    $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $sd["tertiary_sales_product_id"] . '"><span class="rol_quantity_kg_ltr">' . $sd['qty_kgl'] . '</span></div>';
 
 
-                $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'], $units, $quantity, $quantity_kg_ltr);
-                $i++;
+                    $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'], $units, $quantity, $quantity_kg_ltr);
+                    $i++;
+                }
+                $sales_view['eye'] = '';
+                $sales_view['action'] = 'is_action';
+                $sales_view['edit'] = 'is_edit';
+                $sales_view['delete'] = 'is_delete';
+                //$sales_view['pagination'] = $sales_detail['pagination'];
+                return $sales_view;
+            } else {
+                return false;
             }
-            $sales_view['eye'] = '';
-            $sales_view['action'] = 'is_action';
-            $sales_view['edit'] = 'is_edit';
-            $sales_view['delete'] = 'is_delete';
-            //$sales_view['pagination'] = $sales_detail['pagination'];
-            return $sales_view;
-        }
-        else{
-            return false;
         }
     }
 
@@ -4530,13 +4540,14 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn ';
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
-        $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd ON (bmupd.user_id = bu.id) '; // FOR GETTING USER NAME AND OTHER DATA
+
+        //$sql .= ' LEFT JOIN bf_users as bmupd ON (bmupd.id = bu.id) '; // FOR GETTING USER NAME AND OTHER DATA
 
         $sql .= ' LEFT JOIN bf_users as f_bu ON (f_bu.id = bio.customer_id_from) ';
-        $sql .= ' LEFT JOIN bf_master_user_personal_details as f_bmupd ON (f_bmupd.user_id = f_bu.id) ';
+      //  $sql .= ' LEFT JOIN bf_master_user_personal_details as f_bmupd ON (f_bmupd.user_id = f_bu.id) ';
 
         $sql .= ' LEFT JOIN bf_users as t_bu ON (t_bu.id = bio.customer_id_to) ';
-        $sql .= ' LEFT JOIN bf_master_user_personal_details as t_bmupd ON (t_bmupd.user_id = t_bu.id) ';
+      //  $sql .= ' LEFT JOIN bf_master_user_personal_details as t_bmupd ON (t_bmupd.user_id = t_bu.id) ';
 
         $sql .= ' LEFT JOIN bf_ishop_credit_limit as bicl ON (bicl.customer_id = bio.customer_id_from) ';
 
@@ -4593,12 +4604,13 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             } elseif ($sub_action_data == "reject") {
                 $sql .= ' AND bio.order_status = 3 ';
             }
-            $sql .= ' AND bio.order_status != 4 ';
-
+          //  else {
+                $sql .= ' AND bio.order_status != 4 ';
+           // }
         }
 
         $sql .= ' AND bio.country_id = "' . $user_country_id . ' " ORDER BY bio.order_date DESC ';
-        //echo $sql;
+        echo $sql;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             // For Pagination

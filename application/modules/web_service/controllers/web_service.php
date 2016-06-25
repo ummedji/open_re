@@ -2585,8 +2585,9 @@ class Web_service extends Front_Controller
                     foreach($tertiary_sales_details as $k => $tsd)
                     {
                         $tertiary_sales_id = $tsd['tertiary_sales_id'];
-                        $tertiary_sales_product_details = $this->ishop_model->secondary_sales_product_details_view_by_id($tertiary_sales_id,'web_service');
-                        $ssd["details"]=$tertiary_sales_product_details;
+                        $tertiary_sales_product_details = $this->ishop_model->tertiary_sales_product_details_view_by_id($tertiary_sales_id,'web_service');
+
+                        $tsd["details"]=$tertiary_sales_product_details;
                         $final_array[] = $tsd;
                     }
                     $result['status'] = true;
