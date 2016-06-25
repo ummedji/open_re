@@ -1966,3 +1966,5 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 }
 
 .pbg_data.selectpicker { display: inline-block !important;}
+.freeze_area_btn { display: inline-block;}
+.lock_unlock_data { display: inline-block;}

@@ -17,7 +17,7 @@ $(document).ready(function(){
     });
     
     
-    $("a#view_impact_entry").on("click",function(){
+    $("button#view_impact_entry").on("click",function(){
         
         var selected_month = $("input#from_month").val();
         

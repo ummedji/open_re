@@ -2345,14 +2345,15 @@ class Web_service extends Front_Controller
             {
                 $final_array = array();
                 foreach ($data as $key_data => $xl_data) {
-                    $final_array["header"] = $xl_data['header'][1];
+
+                    $final_array["header"][] = $xl_data['header'][1];
                     // $final_array["header"][] = 'Error Description';
                     $initial_array = array();
 
                     foreach($xl_data as $xlkey => $formate_data){
                         if($xlkey !== 'header'){
                            // $formet= explode('~',$formate_data);
-                            $initial_array[] = $formate_data;
+                            $initial_array[]['key'] = $formate_data;
                         }
                     }
                     $final_array['error_data'] = $initial_array;
@@ -2695,6 +2696,15 @@ class Web_service extends Front_Controller
             $physical_stock = $this->ishop_model->get_all_physical_stock_by_user($user_id,$country_id,$role_id,null,null,'web_service');
             if(!empty($physical_stock))
             {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows/10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
                 $result['status'] = true;
                 $result['message'] = 'Success';
                 $result['data'] = $physical_stock;

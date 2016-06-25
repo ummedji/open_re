@@ -154,7 +154,7 @@ class Esp extends Front_Controller
             
             $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
                 $html .= '<thead>';
-                    $html .= '<tr>';
+                    $html .= '<tr style="border-bottom: solid 1px #b1b1b1;">';
                         $html .= '<th></th>';
                         foreach($month_data as $monthkey => $monthvalue){
                             
@@ -190,10 +190,10 @@ class Esp extends Front_Controller
                                     
                                 if($lock_status == 0){
                                     
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' >Lock</a></div>";
+                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i></a></div>";
                                     }
                                     else{
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' >Unlock</a></div>";
+                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i></a></div>";
                                     } 
                             
                                 }
@@ -202,24 +202,24 @@ class Esp extends Front_Controller
                                 $lock_data = "";
                             }
                             
-                            $html .= '<th colspan="2">'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
+                            $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
                         }
                        
                    $html .= '</tr>';
                    $html .= '<tr>';
-                   $html .= '<th>';
+                   $html .= '<th><span class="rts_bordet"></span>';
                    $html .= 'PBG';
                    $html .= '</th>';
              foreach($month_data as $monthkey => $monthvalue)
              {
-                $html .= '<th>';
+                $html .= '<th><span class="rts_bordet"></span>';
                 $html .= 'Forecast Qty';
                 $html .= '</th>';
-                $html .= '<th>';
+                $html .= '<th><span class="rts_bordet"></span>';
                 $html .= 'Forecast Value';
                 $html .= '</th>';
              }
-                $html .= '<th>';
+                $html .= '<th><span class="rts_bordet"></span>';
                 $html .= 'Yearly';
                 $html .= '</th>';
                 $html .= '</tr>';
@@ -542,7 +542,7 @@ class Esp extends Front_Controller
                                 
                                 
                                 
-                                $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                $html .= '<div class="tp_form">
 	<div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
                         
                         <option value= "">Select Assumption</option>';
@@ -576,7 +576,7 @@ class Esp extends Front_Controller
                                     
                                     //SHOW FREEZEED DATA
                                     
-                                        $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                        $html .= '<div class="tp_form">
                 <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                     <option value= "">Select Assumption</option>';
@@ -604,7 +604,7 @@ class Esp extends Front_Controller
                                     
                                     //GET LOCK STATUS
                                     
-                                        $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                        $html .= '<div class="tp_form">
                 <div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                     <option value= "">Select Assumption</option>';
@@ -632,7 +632,7 @@ class Esp extends Front_Controller
                                     
                                     //NOT SHOW FREEZED DATA
                                     
-                                            $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                            $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                 <option value= "">Select Assumption</option>';
@@ -661,7 +661,7 @@ class Esp extends Front_Controller
                                 
                                 //NOT SHOW FREEZED DATA
                                    
-                                        $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                        $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                 <option value= "">Select Assumption</option>';
@@ -696,7 +696,7 @@ class Esp extends Front_Controller
                             
                             if($login_user_id == $forecast_freeze_data['freeze_user_id']){
                                 
-                                $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                 <option value= "">Select Assumption</option>';
@@ -722,7 +722,7 @@ class Esp extends Front_Controller
                             }
                             elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                 
-                                $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                 <option value= "">Select Assumption</option>';
@@ -751,7 +751,7 @@ class Esp extends Front_Controller
                                 //NOT SHOW FREEZED DATA
                                     
                                 
-                                        $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                        $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                 <option value= "">Select Assumption</option>';
@@ -779,7 +779,7 @@ class Esp extends Front_Controller
                     }
                     else{
                         
-                                $html .= '<div class="col-md-3 col-sm-3 tp_form">
+                                $html .= '<div class="tp_form">
         <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                             <option value= "">Select Assumption</option>';
@@ -830,16 +830,16 @@ class Esp extends Front_Controller
                 
                     if($freeze_history_user_status_data[0]['freeze_status'] == 0){
                     
-                        $freeze_button = '<div id="freeze_area"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
                     }
                     else{
-                        $freeze_button = '<div id="freeze_area"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
+                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
                     }
                     
                 }
                 else{
                     
-                    $freeze_button = '<div id="freeze_area"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                    $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
                     
                 }
             }
@@ -1242,7 +1242,8 @@ class Esp extends Front_Controller
 	
 	public function budget(){
 		
-		Assets::add_module_js('esp', 'esp.js');
+		//Assets::add_module_js('esp', 'esp.js');
+		Assets::add_module_js('esp', 'esp_budget.js');
 					
 		$user = $this->auth->user();
         Template::set('current_user', $user);
