@@ -1839,6 +1839,58 @@ class Esp extends Front_Controller
         
     }
    
+   
+    public function forecast_status(){
+
+		$user = $this->auth->user();
+		
+		$get_user_child_level_data = $this->get_user_level_data($user->id);
+		
+		//testdata($get_user_child_level_data);
+		
+		$html = "";
+
+		$year = date("Y"); // change this to another year
+		$row=0; // to set the number of rows and columns in yearly calendar 
+		$html .= "<table class='main'>"; // Outer table 
+		
+		for($m=1;$m<=12;$m++)
+		{
+			$month =date($m);  // Month 
+			$dateObject = DateTime::createFromFormat('!m', $m);
+			$monthName = $dateObject->format('F'); // Month name to display at top
+			
+			$no_of_days = cal_days_in_month(CAL_GREGORIAN, $month, $year);//calculate number of days in a month
+			
+			$j= date('w',mktime(0,0,0,$month,1,$year)); // This will calculate the week day of the first day of the month
+			
+			if(($row % 3)== 0)
+			{
+				$html .= "</tr><tr>";
+			}
+			
+			$html .= "<td><table class='main' ><td colspan='2' align=center> $monthName $year </td></tr>";
+			 
+			for($n=1;$n<=4;$n++){
+				$html.= "<tr>";
+					$html.= "<td>Sun</td><td>Mon</td>";
+				$html .= "</tr>";
+			}
+			
+			$html .= "</tr></table></td>";
+			
+			$row=$row+1;
+			
+		} // end of for loop for 12 months
+		
+		$html .= "</table>";
+		
+		Template::set('current_user', $user);
+		Template::set('calender_data', $html);
+		
+		Template::render();
+		
+    }
 
 
 	

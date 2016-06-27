@@ -543,7 +543,8 @@ class Ishop extends Front_Controller
 		//$checked_type= $_POST['checked_type'];
 		$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
-		$physical_stock= $this->ishop_model->get_all_physical_stock_by_user($user->id,$user->country_id,$user->role_id,$checked_type,$page);
+		$stock_month = (isset($_POST['stock_month']) ? $_POST['stock_month'] : '');
+		$physical_stock= $this->ishop_model->get_all_physical_stock_by_user($user->id,$user->country_id,$user->role_id,$checked_type,$page,null,$stock_month);
 
 		Template::set('td', $physical_stock['count']);
 		Template::set('pagination', (isset($physical_stock['pagination']) && !empty($physical_stock['pagination'])) ? $physical_stock['pagination'] : '' );

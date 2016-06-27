@@ -1679,7 +1679,7 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function get_all_physical_stock_by_user($user_id, $country_id, $role_id, $checked_type = null, $page = null, $web_service = null)
+    public function get_all_physical_stock_by_user($user_id, $country_id, $role_id, $checked_type = null, $page = null, $web_service = null,$stock_month=null)
     {
         $sql = 'SELECT bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.product_sku_id,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
         $sql .= 'FROM bf_ishop_physical_stock AS ips ';
@@ -1698,6 +1698,9 @@ class Ishop_model extends BF_Model
         }
         if ($role_id == 10 || $role_id == 9) {
             $sql .= 'AND ips.customer_id =' . $user_id . ' ';
+        }
+        if($stock_month != null){
+            $sql .= 'AND DATE_FORMAT(ips.stock_month,"%Y-%m") ="'.$stock_month  . '" ';
         }
         $sql .= 'AND ips.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY ips.stock_id DESC ';

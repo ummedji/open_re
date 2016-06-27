@@ -1,18 +1,19 @@
 
 $(function () {
     $('#stock_month').datepicker({
-        format: "yyyy-mm"
+        format: "yyyy-mm",
+        autoclose: true
     });
+
+
+
 
 });
 
-
 var login_customer_type = $("input#login_customer_role").val();
-
- if(login_customer_type == 8){
+if(login_customer_type == 8){
     var customer_selected = $("input#login_customer_id").val();
 }
-
 
 $("input.select_customer_type").on("click",function(){
 
@@ -82,6 +83,38 @@ $("select#distributor_geo_level").on("change",function(){
     get_user_by_geo_data(selected_geo_data);
 
 });
+
+$(document).on("change",'#stock_month',function(){
+    var stock_month = $('#stock_month').val();
+    var role_id = $("input#login_customer_role").val();
+    if( role_id == 8)
+    {
+        var checked_type = $('input.select_customer_type').val();
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/physical_stock',
+            data: {stock_month:stock_month,checked_type:checked_type},
+            success: function(resp){
+                $('#middle_container').html(resp);
+            }
+        });
+        return false;
+    }
+    if(role_id == 9 || role_id == 10)
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/physical_stock',
+            data: {stock_month:stock_month},
+            success: function(resp){
+                $('#middle_container').html(resp);
+            }
+        });
+        return false;
+    }
+});
+
+
 
 function get_user_by_geo_data(selected_geo_data){
 

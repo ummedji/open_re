@@ -11,7 +11,7 @@ echo form_open('esp/add_budget',$attributes); ?>
             <input class="login_user_id" type="hidden" name="login_user_id" id="login_user_id" value="<?php echo $current_user->id; ?>" /> 
             <input class="login_user_countryid" type="hidden" name="login_user_countryid" id="login_user_countryid" value="<?php echo $current_user->country_id; ?>" /> 
             
-            <div class="col-md-3 col-sm-6 tp_form">
+            <div class="col-md-12 text-center tp_form inline-parent">
                 <div class="form-group">
                     <label for="year">Year<span style="color: red">*</span></label>
                     <input type="text" class="form-control" name="year_data" id="year_data" placeholder="" />
@@ -32,19 +32,18 @@ echo form_open('esp/add_budget',$attributes); ?>
             
             
             <div class="clearfix"></div>
-    
-            <div class="col-md-4_ tp_form" id="user_level_data">            
-                <!--MULTIPLE LEVEL DROPDOWNS--->
-                
-                
-                
+            <div class="col-md-12 text-center tp_form inline-parent">
+                <div class="row">
+                    <div id="user_level_data">
+                        <!--MULTIPLE LEVEL DROPDOWNS--->
+                    </div>
+                    <div id="pbg_data">
+
+                    </div>
+                </div>
             </div>
 
-            <div class="clearfix"></div>
-            
-            <div class="col-md-2_ tp_form" id="pbg_data">
-                
-            </div>
+
             
             
         </div>
