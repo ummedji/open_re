@@ -4699,6 +4699,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $info = $this->db->query($sql);
 
             $order_data = $info->result_array();
+            //testdata($order_data);
             return $order_data;
 
         } else {

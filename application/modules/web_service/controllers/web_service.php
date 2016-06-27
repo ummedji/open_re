@@ -568,7 +568,7 @@ class Web_service extends Front_Controller
                     $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
                     $ord = array(
                         "id" => $order['order_id'],
-                        "entered_by" => $order['ot_fname'].' '.$order['ot_mname'].' '.$order['ot_lname'],
+                        "entered_by" => $order['display_name'],
                         "po_no" => $order['PO_no'],
                         "order_tracking_no" => $order['order_tracking_no'],
                         "order_date" => $order['order_date'],
