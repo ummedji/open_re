@@ -949,7 +949,7 @@ class Esp_model extends BF_Model
                     'lock_status'	=>  1,
                     'lock_by_id'	=>  $user_id
                 );
-                $this-> db->insert('bf_forecast_lock_status_history', $lock_data);
+                $this-> db->insert('bf_budget_lock_status_history', $lock_data);
                 
             }
             else{
