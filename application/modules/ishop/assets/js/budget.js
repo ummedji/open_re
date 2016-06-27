@@ -650,8 +650,6 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                             $("select#to_customer_data").selectpicker('refresh');
                         }
                     }
-
-
                 }
                 if(checked_type == "retailer" && login_customer_type == 7){
 
@@ -882,37 +880,75 @@ $(document).on('submit', '#upload_budget_data', function (e) {
     
 });
 
+var budget_pop_up_validators = $("#copy_popup").validate({
+    rules: {
+        from_popup_geo_data: {
+            required: true
+        },
+        from_customer_data :{
+            required: true
+        },
+        from_year_data:{
+            required: true
+        },
+        radio_from_popup_month_data:{
+            required: true
+        },
+        to_popup_geo_data:{
+            required: true
+        },
+        to_customer_data:{
+            required: true
+        },
+        to_year_data:{
+            required: true
+        },
+        'checkbox_popup_month_data[]':{
+            required: true
+        }
+    }
+});
+
 $(document).on("submit","#copy_popup",function(){
     
-    var popup_data = $("form#copy_popup").serializeArray();
-    
-    $.ajax({
-            url: site_url+"ishop/copy_data", // Url to which the request is send
+    var popup_data = $("form#copy_popup").serializeArray()
+
+    var $valid = $("#copy_popup").valid();
+    if(!$valid) {
+
+        budget_pop_up_validators.focusInvalid();
+        return false;
+    }
+    else {
+
+        $.ajax({
+            url: site_url + "ishop/copy_data", // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
             data: popup_data, // Data sent to server, a set of key/value pairs 
-            success: function(data)   // A function to be called if request succeeds
+            success: function (data)   // A function to be called if request succeeds
             {
-                if(data != 0){
+                if (data != 0) {
                     $("div.modal-body").append("<div class='success_message'><span style='color:green;font-size:12px;text-align:center;'>Data Copied Successfully.</span></div>");
-                    
-                    setTimeout(function(){
+
+                    setTimeout(function () {
                         $("div.success_message").remove();
-                     }, 1500);
-                    
-                }else{
+                    }, 1500);
+
+                } else {
                     $("div.modal-body").append("<div class='error_message'><span style='color:red;font-size:12px;text-align:center;'>No data found for selected Criteria.</span></div>");
-                    
-                    setTimeout(function(){
+
+                    setTimeout(function () {
                         $("div.error_message").remove();
-                     }, 1500);
+                    }, 1500);
                 }
-                
-                setTimeout(function(){
-                        $(".modal-header .close").trigger("click");
-                 }, 2500);
+
+                setTimeout(function () {
+                    $(".modal-header .close").trigger("click");
+                }, 2500);
             }
         });
+        return false;
+    }
     //console.log(popup_data);
-    return false;
     
 });

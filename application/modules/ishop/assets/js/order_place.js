@@ -508,9 +508,11 @@ $("#order_place").on("submit",function(){
                 url: site_url+"ishop/order_place_details",
                 data: param,
                 success: function(resp){
+
                     location.reload();
                 }
             });
+    //return false;
        /* }*/
    /* }
     else
@@ -757,15 +759,8 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                         $("div#retailer_checked select#retailer_geo_level_1_data").selectpicker('refresh');
 
                     }
-
                 }
-
-
-
             }
-
-
-
         }
     });
     

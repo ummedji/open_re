@@ -288,11 +288,8 @@ if (!$this->input->is_ajax_request()) {
                         <div class="col-md-6 col-sm-6 tp_form radio_pr">
                             <div class="form-group" id="geo_data">
                                 <label>Geo Level</label>
-                                <!--<select id="geo_data">
-                                    <option value="0">Select Geo Level</option>
-                                </select>-->
                                 <select class="selectpicker" name="from_popup_geo_data" id="from_popup_geo_data">
-                                    <option value="0">Select Geo Level</option>
+                                    <option value="">Select Geo Level</option>
                                     <?php
                                     if(isset($geo_level_data) && !empty($geo_level_data))
                                     {
@@ -308,11 +305,7 @@ if (!$this->input->is_ajax_request()) {
                             </div>
                             <div class="form-group" id="from_customer_data">
                                 <label>Customer Data</label>
-                                <!--<select id="customer_data">
-                                    <option value="0">Select Distributor</option>
-                                </select>-->
                                 <select class="selectpicker" name="from_customer_data" id="from_customer_data">
-                                    <!--<option value="0">Select Distributor</option>-->
                                 </select>
                             </div>
                             <div class="form-group" id="year_data">
@@ -325,7 +318,6 @@ if (!$this->input->is_ajax_request()) {
                                 <?php
                                 for ($m=1; $m<=12; $m++) {
                                     $month = date('M', mktime(0,0,0,$m, 1, date('Y')));
-
                                     $j = $m;
                                     if($j <=9){
                                         $j = "0".$j;
@@ -333,15 +325,15 @@ if (!$this->input->is_ajax_request()) {
                                     ?>
                                     <div class="col-md-2 col-sm-2 col-xs-3 text-center">
                                         <div class="radio_bb">
-                                            <input type="radio" class="radio_popup_month_data" name="radio_from_popup_month_data" id="<?php echo $j; ?>" value="<?php echo $j; ?>" />
+                                                <input type="radio" class="radio_popup_month_data" name="radio_from_popup_month_data" id="<?php echo $j; ?>" value="<?php echo $j; ?>" />
                                             <label for="<?php echo $j; ?>"><span><span></span></span><div class="llb_text"><?php echo $month; ?></div></label>
                                         </div>
                                     </div>
+
                                     <?php
                                 }
-
                                 ?>
-
+                                <label id="radio_from_popup_month_data-error" class="error" for="radio_from_popup_month_data"></label>
                                 <div class="clearfix"></div>
 
                             </div>
@@ -349,11 +341,8 @@ if (!$this->input->is_ajax_request()) {
                         <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group" id="geo_data">
                                 <label>Geo Level</label>
-                                <!--<select >
-                                    <option >Select Geo Level</option>
-                                </select>-->
                                 <select class="selectpicker" name="to_popup_geo_data" id="to_popup_geo_data">
-                                    <option value="0">Select Geo Level</option>
+                                    <option value="">Select Geo Level</option>
                                     <?php
                                     if(isset($geo_level_data) && !empty($geo_level_data))
                                     {
@@ -369,11 +358,8 @@ if (!$this->input->is_ajax_request()) {
                             </div>
                             <div class="form-group" id="to_customer_data">
                                 <label>Customer Data</label>
-                                <!--<select id="customer_data">
-                                    <option value="0">Select Distributor</option>>
-                                </select>-->
                                 <select class="selectpicker" name="to_customer_data" id="to_customer_data">
-                                    <option value="0">Select Distributor</option>
+                                    <option value="">Select Distributor</option>
                                 </select>
                             </div>
                             <div class="form-group" id="year_data">
@@ -401,8 +387,8 @@ if (!$this->input->is_ajax_request()) {
                                         </div>
                                         <?php
                                     }
-
                                     ?>
+                                    <label id="checkbox_popup_month_data[]-error" class="error" for="checkbox_popup_month_data[]"></label>
                                 </fieldset>
                             </div>
                         </div>
@@ -414,13 +400,9 @@ if (!$this->input->is_ajax_request()) {
                 <div class="col-md-12 text-center">
                     <input type="hidden" value="target" name="popup_page" />
                     <input type="submit" id="submit_copy_popup" value="Save" class="btn btn-primary save_default_bb" />
-
                     <?php echo form_close(); ?>
-
                     <button type="button" class="btn btn-default close_default_bb" data-dismiss="modal">Close</button>
                 </div>
             </div>
         </div>
-
     </div>
-</div>

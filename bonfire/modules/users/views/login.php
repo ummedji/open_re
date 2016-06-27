@@ -9,7 +9,7 @@
 			<div class="col-md-12 text-right"><a href="#"><img src="<?php echo Template::theme_url('images/setting_icon.png')?>" alt=""></a></div>
 		</div>
 		<div class="lg_form">
-			<?php echo form_open(LOGIN_URL, array('autocomplete' => 'off')); ?>
+			<?php echo form_open(LOGIN_URL, array('id' => "lg_form",'autocomplete' => 'off')); ?>
 
 				<div class="col-md-12 in_lg_form">
 					<h4>Login To Your Account</h4>

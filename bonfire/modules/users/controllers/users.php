@@ -50,6 +50,9 @@ class Users extends Front_Controller
             Assets::add_module_js('users', 'password_strength.js');
             Assets::add_module_js('users', 'jquery.strength.js');
         }
+        Assets::add_module_js('users', 'login.js');
+        Assets::add_module_js('users', 'forgot_password.js');
+
     }
 
     // -------------------------------------------------------------------------

@@ -995,7 +995,66 @@ class Esp_model extends BF_Model
         return $budget_lock_history_data;
         
     }
-    
+	
+	public function get_role_degination_data($user_role_id){
+		
+		$this->db->select('bmdre.regional_level');
+        $this->db->from("bf_master_designation_role as bmdr");
+		
+		$this->db->join("bf_master_designation_country as bmdc","bmdc.desigination_country_id = bmdr.desigination_id");
+        
+		$this->db->join("bf_master_designation_regional as bmdre","bmdre.desigination_regional_id = bmdc.desigination_regional_id");
+		
+        $this->db->where("bmdr.role_id",$user_role_id);
+        
+        $role_degigination_data = $this->db->get()->result_array();
+		
+		if(!empty($role_degigination_data)){
+				
+			$leveldata = explode("L",$role_degigination_data[0]['regional_level']);
+			$leveldata = $leveldata[1];
+			
+		}
+		else{
+			$leveldata = 1;
+		}
+        return $leveldata;
+		
+	}
+	
+	public function get_user_selected_level_data($userid,$level){
+		
+		
+		$sql = 'SELECT count(*) as tot, group_concat(`bu`.`id`) as level_users FROM (`bf_master_employee_reporting_person` as bmerp) JOIN `bf_users` as bu ON `bu`.`id` = `bmerp`.`user_id` WHERE `bmerp`.`reporting_user_id` IN ('.$userid.') AND `bmerp`.`to_date` IS NULL';
+		
+		$data = $this->db->query($sql)->row_array();
+       
+        return $data;
+     
+	}
+	
+	public function get_forecast_user_data($level_users){
+		
+		$user_data = explode(",",$level_users);
+		
+		$forecast_freeze_count = 0;
+		
+		foreach($user_data as $key => $userid){
+					
+			$freeze_data = $this->db->query("SELECT * from bf_forecast_freeze_status_history where freeze_by_id = '".$userid."' AND freeze_status=1")->row_array();
+			
+			if(!empty($freeze_data)){
+				$forecast_freeze_count = $forecast_freeze_count+1;
+			}
+			
+		}
+		
+		
+		return $forecast_freeze_count;
+		
+	}
+	
+	
 
 	
 }

@@ -1839,14 +1839,87 @@ class Esp extends Front_Controller
         
     }
    
+   /*
+   public function test_recuricive_func($get_level_user_data){
+   	
+	$final_array = array();
+	
+	if(!empty($get_level_user_data)){
+	
+	
+	$k = 1;
+		
+	foreach($get_level_user_data as $emp_keyid =>$empdata){
+		
+		if(!empty($empdata)){
+		$d = $this->get_user_level_data($empdata['id']);
+		
+		if(!empty($empdata)){
+			
+			$e = $this->test_recuricive_func($d);
+			
+			
+			$final_array["Level".$k][] = $get_level_user_data;
+			
+			//print_r($get_level_user_data);
+			
+		}
+		
+	}
+		
+		$k++;
+	}
+	
+   }
+	
+	echo "<pre>";
+	print_r($final_array);
+	
+   }
+   
+   */
+   
    
     public function forecast_status(){
+    	
+		
 
 		$user = $this->auth->user();
 		
-		$get_user_child_level_data = $this->get_user_level_data($user->id);
+		$role_degigination_data = $this->esp_model->get_role_degination_data($user->role_id);
 		
-		//testdata($get_user_child_level_data);
+		$final_array = array();
+		
+		$test_array = array();
+		
+		/*
+		if($role_degigination_data != 1){
+			
+			for($n=$role_degigination_data-1;$n>=1;$n--){
+				
+				$initial_array = array();
+				
+				$level = $n;
+				
+					$test_array[] = $n;
+					
+					$get_level_user_data = $this->get_user_selected_level_data($user->id,$level);
+					
+					//testdata($get_level_user_data);
+					
+					//$this->test_recuricive_func($get_level_user_data);
+					//die;
+				$initial_array = $get_level_user_data;
+				
+				$final_array[$user->id]["Level".$n] = $get_level_user_data;
+				
+			}
+			
+		}
+		
+		testdata($final_array);
+		
+		*/
 		
 		$html = "";
 
@@ -1871,11 +1944,30 @@ class Esp extends Front_Controller
 			
 			$html .= "<td><table class='main' ><td colspan='2' align=center> $monthName $year </td></tr>";
 			 
-			for($n=1;$n<=4;$n++){
-				$html.= "<tr>";
-					$html.= "<td>Sun</td><td>Mon</td>";
-				$html .= "</tr>";
+			if($role_degigination_data != 1){
+				
+				$level_user_id = $user->id;
+				for($n=1;$n<$role_degigination_data;$n++){
+				
+					$level = $n;
+				
+					$levle_data = $this->esp_model->get_user_selected_level_data($level_user_id,$level);
+					
+					
+					$level_user_id = $levle_data['level_users']; 
+					
+					$users_forecast_freeze_count_data = $this->esp_model->get_forecast_user_data($levle_data['level_users']);
+					
+					
+					$html.= "<tr>";
+						$html.= "<td>0</td><td>".$users_forecast_freeze_count_data."/".$levle_data['tot']."</td>";
+					$html .= "</tr>";
+				
+				}
+				
+				//die;
 			}
+			 
 			
 			$html .= "</tr></table></td>";
 			

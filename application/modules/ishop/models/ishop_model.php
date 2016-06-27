@@ -4129,16 +4129,31 @@ class Ishop_model extends BF_Model
         }
 
         $order_id = $insert_id;
+        $total = 0;
         foreach ($product_sku_id as $key => $prd_sku) {
+
+            $amt = $this->get_product_price_by_product($prd_sku,'ishop');
+
             $order_data = array(
                 'order_id' => $order_id,
                 'product_sku_id' => $prd_sku,
                 'quantity' => $quantity[$key],
                 'unit' => $units[$key],
                 'quantity_kg_ltr' => $Qty[$key],
+                'amount' => $amt,
             );
+
+            $total = $total + $amt;
+
             $this->db->insert('bf_ishop_product_order', $order_data);
         }
+
+        $total_array= array(
+            'total_amount' =>$total,
+        );
+
+        $this->db->where('order_id',$order_id);
+        $this->db->update('ishop_orders',$total_array);
 
         if($this->db->affected_rows() > 0){
             return 1;
@@ -4146,6 +4161,22 @@ class Ishop_model extends BF_Model
         else{
             return 0;
         }
+    }
+
+
+    public function get_product_price_by_product($prd_sku,$price_type)
+    {
+            $this->db->select('*');
+            $this->db->from('master_price');
+            $this->db->where('price_type',$price_type);
+            $this->db->where('product_sku_country_id',$prd_sku);
+            $price = $this->db->get()->row_array();
+
+            if(isset($price) && !empty($price)){
+              //  testdata($price['price']);
+                return $price['price'];
+            }
+
     }
 
     public function get_random_no($rand_type, $table)
