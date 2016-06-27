@@ -144,7 +144,7 @@ $(document).on("click","a.lock_data",function(){
     
     var parent_data = $(this);
     
-    var text_data = $(this).text();
+    var text_data = $(this).find("input.lock_status_data").val();
     
     var month_val = $(this).attr("rel");
     var forecast_id = $("input#forecast_id").val();
@@ -158,10 +158,10 @@ $(document).on("click","a.lock_data",function(){
             if(resp == 1){
                 
                 if($.trim(text_data) == "Lock"){
-                    parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i></a>");
+                    parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a>");
                 }
                 else{
-                     parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i></a>");
+                     parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
                 }
                 
             }

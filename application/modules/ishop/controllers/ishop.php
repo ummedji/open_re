@@ -946,7 +946,7 @@ class Ishop extends Front_Controller
 		$role=$_POST['role'];
 		$parent_geo_id=$_POST['parent_geo_id'];
 		$retailer_geo_data = $this->ishop_model->get_business_geo_data($user_id,$country_id,$role,$parent_geo_id,$year=null,$login_user_type);
-		echo json_encode($retailer_geo_data);;
+		echo json_encode($retailer_geo_data);
 		die;
 	}
 
@@ -963,8 +963,20 @@ class Ishop extends Front_Controller
 	public function get_slab_by_selected_schemes()
 	{
 		$scheme_id = $_POST['selected_schemes'];
+		$retailer_id = $_POST['selected_retailer'];
+		$selected_year = $_POST['selected_year'];
+		$user = $this->auth->user();
 
-		$get_slabs= $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id);
+		$get_scheme= $this->ishop_model->check_scheme_alocated_retailer($scheme_id,$retailer_id,$selected_year,$user->country_id);
+
+		if(isset($get_scheme) && !empty($get_scheme) && $get_scheme!='')
+		{
+
+			$get_slabs= $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id,null,$get_scheme);
+		}
+		else{
+			$get_slabs= $this->ishop_model->get_slab_by_selected_scheme_id($scheme_id,null);
+		}
 		Template::set('table',$get_slabs);
 		Template::set_view('ishop/scheme');
 		Template::render();
@@ -975,8 +987,9 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
-		$add = $this->ishop_model->check_schemes_detail($user_id,$user->country_id);
-		echo $add;
+		$allocation_id = $this->ishop_model->check_schemes_detail($user_id,$user->country_id);
+		//testdata($allocation_id);
+		echo json_encode($allocation_id);
 		die;
 	}
 
@@ -988,6 +1001,18 @@ class Ishop extends Front_Controller
 		echo $add;
 		die;
 	}
+
+	public function update_schemes_details()
+	{
+
+
+		$user = $this->auth->user();
+		$user_id = $this->session->userdata('user_id');
+		$add = $this->ishop_model->update_schemes_detail($user_id,$user->country_id);
+		echo $add;
+		die;
+	}
+
 
 	public function get_schemes_by_selected_cur_year()
 	{

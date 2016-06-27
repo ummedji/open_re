@@ -9,6 +9,8 @@ $(document).ready(function(){
 	
 		$("div.budget_data").empty();
 	
+		$("a#lock_data").attr("rel",$.trim($(this).val()));
+	
 		var user_id = $("input#login_user_id").val();
         $("div#user_level_data div.form-group").remove();
         $("div#pbg_data").empty();
@@ -113,24 +115,24 @@ $(document).on("click","a.lock_data",function(){
     
     var parent_data = $(this);
     
-    var text_data = $(this).text();
+    var text_data = $("input#lock_status_data").val();
     
-    var month_val = $(this).attr("rel");
-    var forecast_id = $("input#forecast_id").val();
+    var year_val = $(this).attr("rel");
+    var budget_id = $("input#budget_id").val();
     
     $.ajax({
         type: 'POST',
-        url: site_url+"esp/set_forecast_lock_data",
-        data: {textdata:text_data,monthval:month_val,forecastid:forecast_id},
+        url: site_url+"esp/set_budget_lock_data",
+        data: {textdata:text_data,yearval:year_val,budgetid:budget_id},
         success: function(resp){
             
             if(resp == 1){
                 
                 if($.trim(text_data) == "Lock"){
-                    parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i></a>");
+                    $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock /></a>");
                 }
                 else{
-                     parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i></a>");
+                     $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
                 }
                 
             }
@@ -219,6 +221,15 @@ function get_pbg_product_sku_data(pbg_id){
           // alert("sasa");
            $('select').selectpicker('refresh');
            
+        }
+    });
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+"esp/show_budget_lock",
+        data: {pbgid:pbg_id,frommonth:from_month,tomonth:to_month,businesscode:business_code,login_user_id : employee_business_code},
+        success: function(res){
+            $("div#lock_area").html(res);
         }
     });
     

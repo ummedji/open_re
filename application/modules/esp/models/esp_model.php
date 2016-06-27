@@ -909,7 +909,93 @@ class Esp_model extends BF_Model
         
     }
 
-	
+	 public function update_budget_lock_status_data($user_id,$budget_id,$monthval,$text_data){
+        
+        if($text_data == 'Lock'){
+            $status = 1;
+        }
+        else{
+            $status = 0;
+        }
+        
+        $data = array(
+            'lock_status'	=>$status,
+            'lock_by_id' => $user_id
+        );
+            
+        $this->db->where('budget_id', $budget_id);
+        $this->db->where('budget_month', $monthval);
+        
+        $this->db->update('bf_esp_budget_product_details' ,$data);
+        
+        if($this->db->affected_rows() > 0){
+            
+            $this->db->select('*');
+            $this->db->from("bf_budget_lock_status_history as bblsh");
+
+            $this->db->where("bblsh.budget_id",$budget_id);
+            $this->db->where("bblsh.month_data",$monthval);
+            $this->db->where("bblsh.lock_by_id",$user_id);
+
+            $lock_data = $this->db->get()->result_array();
+            
+            if(empty($lock_data)){
+                
+                //INSERT TO LOCK HISTORY TABLE
+                
+                $lock_data = array( 
+                    'budget_id'	=> $budget_id, 
+                    'month_data'  => $monthval, 
+                    'lock_status'	=>  1,
+                    'lock_by_id'	=>  $user_id
+                );
+                $this-> db->insert('bf_forecast_lock_status_history', $lock_data);
+                
+            }
+            else{
+                
+                //UPDATE TO LOCK HISTORY TABLE
+                
+                $lock_history_id = $lock_data[0]['id'];
+                
+                if($text_data == "Lock"){
+                    $lock_status = 1;
+                }
+                else{
+                    $lock_status = 0;
+                }
+                
+                $update_history_data = array(
+                    'lock_status'	=>$lock_status
+                );
+
+                $this->db->where('id', $lock_history_id);
+                $this->db->update('bf_budget_lock_status_history' ,$update_history_data);
+                
+            }
+
+            return 1;
+        }
+        else{
+            return 0;
+        }
+        
+    }
+
+	public function get_employee_month_product_budget_lock_data($login_user_id,$check_lock_budget_id,$monthvalue){
+        
+        $this->db->select('*');
+        $this->db->from("bf_budget_lock_status_history as bblsh");
+        
+        $this->db->where("bblsh.budget_id",$check_lock_budget_id);
+        $this->db->where("bblsh.lock_by_id",$login_user_id);
+        $this->db->where("bblsh.month_data",$monthvalue);
+        
+        $budget_lock_history_data = $this->db->get()->result_array();
+        return $budget_lock_history_data;
+        
+    }
+    
 
 	
 }

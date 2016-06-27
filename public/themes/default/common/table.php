@@ -3,6 +3,7 @@
 
     </div>
     <?php
+   // testdata($table);
 $action_data = $this->uri->segment(2);
 
 if(isset($table) && count($table)>0 && $table != false) {
@@ -37,14 +38,26 @@ if(isset($table) && count($table)>0 && $table != false) {
                             <?php } ?>
                         </tr>
                         </thead>
-                        <?php if(isset($table['row']) && count($table['row']) ) {?>
+                        <?php if(isset($table['row']) && count($table['row']) ) {
+
+                            $radio_checked_value = "";
+                            if(isset($table['radio_checked']) && !empty($table['radio_checked'])) {
+                                foreach ($table['radio_checked'] as $k => $radio) {
+                                    if($radio != ""){
+
+                                        $radio_checked_value = $radio;
+                                    }
+
+                                }
+                            }
+
+                            ?>
                         <tbody class="tbl_body_row">
                         <?php foreach($table['row'] as $rkey => $rowary) {
                             ?>
                             <tr>
                                 <?php
                                 foreach($rowary as $rwkey => $row) {
-
                                     ?>
                                     <?php if($rwkey==0   && ($action_data !="get_prespective_order_details")) {
                                         ?>
@@ -54,18 +67,29 @@ if(isset($table) && count($table)>0 && $table != false) {
                                             </div>
                                         </td>
                                     <?php }
-
-                                    //else if(($rwkey==1  && $action_data !="get_prespective_order_details")) {
                                     else if(($rwkey==1  && isset($table['action']) && !empty($table['action']))) {
-                                       // if($action_data != 'credit_limit'){
                                         ?>
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>" class="numeric">
                                             <?php
                                             if(isset($table['radio']) && !empty($table['radio']))
                                             {
-                                                ?>
-                                                <input type="radio" name="radio_scheme_slab" id="radio_scheme" value="<?php echo $row;?>">
-                                                <?php
+                                                if(isset($table['radio_checked']) && !empty($table['radio_checked'])){
+                                                    if($radio_checked_value == $row){
+                                                        $r_check = "checked";
+                                                    }
+                                                    else{
+                                                        $r_check = "";
+                                                    }
+                                                    ?>
+                                                    <input type="radio" <?php echo $r_check; ?> name="radio_scheme_slab" id="radio_scheme" value="<?php echo $row;?>">
+                                                    <?php
+                                                }
+                                                else{
+                                                    ?>
+                                                    <input type="radio" name="radio_scheme_slab" id="radio_scheme" value="<?php echo $row;?>">
+                                                    <?php
+                                                }
+
                                             }
                                             if(isset($table['eye']) && !empty($table['eye']))
                                             {
@@ -73,7 +97,6 @@ if(isset($table) && count($table)>0 && $table != false) {
                                                 <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
                                                 <?php
                                             }
-                                         //  if($action_data !="get_prespective_order" ){
                                            if(isset($table['edit']) && !empty($table['edit'])) {
                                                ?>
                                                <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
@@ -84,7 +107,7 @@ if(isset($table) && count($table)>0 && $table != false) {
                                                <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                            <?php } ?>
                                         </td>
-                                    <?php } //}
+                                    <?php }
                                     else
                                     { ?>
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>">

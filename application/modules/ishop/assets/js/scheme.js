@@ -90,17 +90,19 @@ function get_retailer_by_geo_data(selected_geo_data){
 $("select#schemes").on("change",function(){
 
     var selected_schemes = $(this).val();
-    get_slab_by_selected_schemes(selected_schemes);
+    var selected_retailer = $("select#retailer_scheme").val();
+    var selected_year = $("#cur_year").val();
+    get_slab_by_selected_schemes(selected_schemes,selected_retailer,selected_year);
 
 });
 
-function get_slab_by_selected_schemes(selected_schemes)
+function get_slab_by_selected_schemes(selected_schemes,selected_retailer,selected_year)
 {
 
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_slab_by_selected_schemes",
-        data: {selected_schemes:selected_schemes},
+        data: {selected_schemes:selected_schemes,selected_retailer:selected_retailer,selected_year:selected_year},
         dataType : 'html',
         success: function(resp){
             $("#scheme_middle_container").html(resp);
@@ -146,7 +148,6 @@ $(document).ready(function(){
         }
         else
         {
-
             $.ajax({
                 type: 'POST',
                 url: site_url + "ishop/check_schemes_details",
@@ -154,7 +155,7 @@ $(document).ready(function(){
                 success: function (resp) {
                     var message = "";
                     if (resp == 1) {
-
+                        alert('in');
                         $.ajax({
                             type: 'POST',
                             url: site_url + "ishop/add_schemes_details",
@@ -183,13 +184,44 @@ $(document).ready(function(){
                                             location.reload()
                                         }
                                     });
-
                             }
                         });
 
                     }
                     else {
-                        //Update Scheames
+                      //  alert('in1');
+                        var obj = jQuery.parseJSON(resp);
+                        var allocation_id = (obj.allocation_id);
+                        param.push({name: "allocation_id", value:allocation_id});
+
+                        $.ajax({
+                            type: 'POST',
+                            url: site_url + "ishop/update_schemes_details",
+                            data: param,
+                            success: function (resp) {
+                                var message = "";
+                                if (resp == 1) {
+                                    message += 'Data Updated successfully.';
+                                }
+                                else {
+                                    message += 'Data not Updated.';
+                                }
+                                $('<div></div>').appendTo('body')
+                                    .html('<div><b>' + message + '</b></div>')
+                                    .dialog({
+                                        appendTo: "#success_file_popup",
+                                        modal: true,
+                                        zIndex: 10000,
+                                        autoOpen: true,
+                                        width: 'auto',
+                                        resizable: true,
+                                        close: function (event, ui) {
+                                            $(this).remove();
+                                            location.reload()
+                                        }
+                                    });
+                            }
+                        });
                     }
                 }
             });
@@ -245,8 +277,6 @@ function get_schemes_by_selected_cur_year(selected_cur_year){
 
 function get_region_by_selected_cur_year(selected_cur_year){
 
-  //  alert('in');
-   // var login_user_countryid = $("input#login_customer_countryid").val();
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/get_region_by_selected_cur_year",

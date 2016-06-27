@@ -3322,6 +3322,21 @@ class Ishop_model extends BF_Model
         }
     }
 
+
+    public function check_scheme_alocated_retailer($scheme_id,$retailer_id,$selected_year,$country_id)
+    {
+        $this->db->select('slab_id');
+        $this->db->from('ishop_scheme_allocation');
+        $this->db->where("DATE_FORMAT(year,'%Y')",$selected_year);
+        $this->db->where('customer_id',$retailer_id);
+        $this->db->where('scheme_id',$scheme_id);
+        $this->db->where('country_id',$country_id);
+        $data = $this->db->get()->row_array();
+        // echo $this->db->last_query();
+         @$slab=$data['slab_id'];
+        return $slab;
+    }
+
     /**
      * @ Function Name        : get_slab_by_selected_scheme_id
      * @ Function Params    :
@@ -3329,7 +3344,7 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function get_slab_by_selected_scheme_id($scheme_id, $web_service = null)
+    public function get_slab_by_selected_scheme_id($scheme_id, $web_service = null,$slab_id=null)
     {
         $sql = 'SELECT mss.slab_id as id,mss.slab_id,mss.slab_no,psc.product_sku_name,mss.1point,mss.value_per_kg,mss.value_per_point,mss.target,mss.target_point,mss.target_value ';
         $sql .= 'FROM bf_master_scheme_slab AS mss ';
@@ -3344,13 +3359,20 @@ class Ishop_model extends BF_Model
             return $limit;
         } else {
             $slab_detail = array('result' => $limit);
-            // testdata($slab_detail);
 
             if (isset($slab_detail['result']) && !empty($slab_detail['result'])) {
                 $slab_view['head'] = array('Sr. No.', 'Select', 'Slab No.', 'Product SKU Name', '1 point:?kg/ltr', 'Value Per Kg. per Ltr', 'Value Per Point', 'Target Kg/Ltr', 'Target Points', 'Programme Value');
                 $i = 1;
 
                 foreach ($slab_detail['result'] as $sd) {
+                    if(isset($slab_id) && !empty($slab_id) && ($sd['slab_id'] == $slab_id ))
+                    {
+                        $slab_view['radio_checked'][] =$slab_id;
+                    }
+                    else{
+
+                        $slab_view['radio_checked'][] ='';
+                    }
                     $slab_view['row'][] = array($i, $sd['slab_id'], $sd['slab_no'], $sd['product_sku_name'], $sd['1point'], $sd['value_per_kg'], $sd['value_per_point'], $sd['target'], $sd['target_point'], $sd['target_value']);
                     $i++;
                 }
@@ -3359,7 +3381,6 @@ class Ishop_model extends BF_Model
                 $slab_view['radio'] = 'is_radio';
                 $slab_view['no_margin'] = '';
                 $slab_view['no_margin'] = 'is_margin';
-                // $product_view['pagination'] = $report_details['pagination'];
                 return $slab_view;
             }
             else{
@@ -3376,7 +3397,6 @@ class Ishop_model extends BF_Model
         $this->db->where('status', '1');
         $this->db->where('DATE_FORMAT(year,"%Y")', $selected_cur_year);
         $data = $this->db->get()->result_array();
-        //testdata($data);
         if (isset($data) && !empty($data)) {
             return $data;
         } else {
@@ -3386,32 +3406,27 @@ class Ishop_model extends BF_Model
 
     public function check_schemes_detail($user_id,$country_id)
     {
+
         $cur_year = $this->input->post("cur_year");
         $customer_id = $this->input->post("fo_retailer_id");
-        $schemes = $this->input->post("schemes");
-        $scheme_slab = $this->input->post("radio_scheme_slab");
-        $region = $this->input->post("region");
-        $territory = $this->input->post("territory");
-
-        $this->db->select('*');
+    //    $scheme_slab = $this->input->post("radio_scheme_slab");
+        $scheme_id = $this->input->post("schemes");
+        $this->db->select('allocation_id');
         $this->db->from('ishop_scheme_allocation');
         $this->db->where("DATE_FORMAT(year,'%Y')",$cur_year);
         $this->db->where('customer_id',$customer_id);
-        //$this->db->where('scheme_id',$schemes);
-        $this->db->where('slab_id',$scheme_slab);
-       // $this->db->where('geo_id2',$region);
-        //$this->db->where('geo_id1',$territory);
+        $this->db->where('scheme_id',$scheme_id);
+       // $this->db->where('slab_id',$scheme_slab);
         $this->db->where('country_id',$country_id);
-        $data = $this->db->get()->result_array();
-        // echo $this->db->last_query();
-        // testdata($data);
+        $data = $this->db->get()->row_array();
+        //$this->db->last_query();
+//testdata($data);
         if (!isset($data) && empty($data)) {
             return 1;
         } else {
-            return 0;
+           // @$allocation_id= $data['allocation_id'];
+            return $data;
         }
-
-
     }
 
     public function add_schemes_detail($user_id, $country_id)
@@ -3439,6 +3454,40 @@ class Ishop_model extends BF_Model
         );
         //   testdata($schemes_list);
         $this->db->insert('ishop_scheme_allocation', $schemes_list);
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+
+    }
+
+    public function update_schemes_detail($user_id, $country_id)
+    {
+        $cur_year = $this->input->post("cur_year");
+        $customer_id = $this->input->post("fo_retailer_id");
+        $schemes = $this->input->post("schemes");
+        $scheme_slab = $this->input->post("radio_scheme_slab");
+        $region = $this->input->post("region");
+        $territory = $this->input->post("territory");
+        $allocation_id = $this->input->post("allocation_id");
+
+        $schemes_list = array(
+            'year' => $cur_year . '-01-01',
+            'scheme_id' => $schemes,
+            'slab_id' => $scheme_slab,
+            'customer_id' => $customer_id,
+            'country_id' => $country_id,
+            'geo_id2' => $region,
+            'geo_id1' => $territory,
+            'modified_by_user' => $user_id,
+            'status' => '1',
+            'modified_on' => date('Y-m-d H:i:s')
+
+        );
+        $this->db->where('allocation_id',$allocation_id);
+        $this->db->update('ishop_scheme_allocation', $schemes_list);
         if($this->db->affected_rows() > 0){
             return 1;
         }

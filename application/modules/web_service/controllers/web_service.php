@@ -2350,12 +2350,10 @@ class Web_service extends Front_Controller
                 foreach ($data as $key_data => $xl_data) {
 
                     $final_array["header"][] = $xl_data['header'][1];
-                    // $final_array["header"][] = 'Error Description';
                     $initial_array = array();
 
                     foreach($xl_data as $xlkey => $formate_data){
                         if($xlkey !== 'header'){
-                           // $formet= explode('~',$formate_data);
                             $initial_array[]['key'] = $formate_data;
                         }
                     }

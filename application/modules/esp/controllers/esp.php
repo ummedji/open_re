@@ -190,10 +190,10 @@ class Esp extends Front_Controller
                                     
                                 if($lock_status == 0){
                                     
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i></a></div>";
+                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
                                     }
                                     else{
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i></a></div>";
+                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
                                     } 
                             
                                 }
@@ -1242,14 +1242,96 @@ class Esp extends Front_Controller
 	
 	public function budget(){
 		
-		//Assets::add_module_js('esp', 'esp.js');
 		Assets::add_module_js('esp', 'esp_budget.js');
-					
+		
 		$user = $this->auth->user();
+							
+		/*
+		$lock_show_data = $this->get_user_level_data($user->id);
+		
+		if($lock_show_data != 0){
+		
+			$lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+			}
+		else
+		{
+			$lock_data = "";
+	                                
+		}
+	
+	*/
+		
+		
         Template::set('current_user', $user);
 		Template::render();
 		
 	}
+
+	public function show_budget_lock(){
+		
+		$user = $this->auth->user();
+        $login_user_id = $user->id;
+        
+        $pbgid = $_POST["pbgid"];
+        $from_month = $_POST["frommonth"];
+        $to_month = $_POST["tomonth"];
+		
+		$selected_year = date("Y",strtotime($from_month));
+		
+        $businesscode = $_POST["businesscode"];
+        
+        $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
+        $month_data = $this->get_monthly_data($from_month,$to_month);
+        
+        $lock_show_data = $this->get_user_level_data($login_user_id);
+        
+        
+		if($lock_show_data != 0){
+		
+			foreach($month_data as $monthkey => $monthvalue){
+				foreach($pbg_sku_data as $skukey => $skuvalue){
+					
+					 $employee_month_product_budget_data1 = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+			
+					 $lock_status = 0;
+					 $lock_by_id = "";
+					 $check_lock_budget_id = "";
+			
+					if($employee_month_product_budget_data1 != 0){
+			
+						$check_lock_budget_id = $employee_month_product_budget_data1[0]['budget_id'];
+			
+					   $budget_lock_history_data =  $this->esp_model->get_employee_month_product_budget_lock_data($login_user_id,$check_lock_budget_id,$monthvalue);
+						if(!empty($budget_lock_history_data)){
+							$lock_status = $budget_lock_history_data[0]['lock_status'];
+						}
+					
+					}
+						
+					if($lock_status == 0){
+						
+							$lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+						}
+						else{
+							$lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+						} 
+			
+				}
+			}
+			
+			
+		}
+		else
+		{
+			$lock_data = "";
+	                                
+		}
+		
+		echo $lock_data;
+		die;
+		
+	}
+	
 
 	public function get_pbg_sku_budget_data(){
         
@@ -1267,7 +1349,7 @@ class Esp extends Front_Controller
         
         //$assumption_data = $this->esp_model->get_assumption_data();
         
-        $lock_show_data = $this->get_user_level_data($login_user_id);
+       // $lock_show_data = $this->get_user_level_data($login_user_id);
         
                 
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
@@ -1288,7 +1370,7 @@ class Esp extends Front_Controller
                             $month=date("F",$time);
                             $year=date("Y",$time);
                             
-                            if($lock_show_data != 0){
+                            /*if($lock_show_data != 0){
                                 
                                 foreach($pbg_sku_data as $skukey => $skuvalue){
                                     
@@ -1297,36 +1379,14 @@ class Esp extends Front_Controller
                                  $lock_status = 0;
                                  $lock_by_id = "";
                                  $check_lock_forecast_id = "";
-
-                            //    echo "<pre>";
-                            //    print_r($employee_month_product_forecast_data);
-
-                                if($employee_month_product_forecast_data1 != 0){
-
-                                   // $lock_status = $employee_month_product_forecast_data1[0]['lock_status'];
-                                   // $lock_by_id = $employee_month_product_forecast_data1[0]['lock_by_id'];
-                                    $check_lock_forecast_id = $employee_month_product_forecast_data1[0]['forecast_id'];
-
-                                   $forecast_lock_history_data =  $this->esp_model->get_employee_month_product_forecast_lock_data($login_user_id,$check_lock_forecast_id,$monthvalue);
-                                    if(!empty($forecast_lock_history_data)){
-                                        $lock_status = $forecast_lock_history_data[0]['lock_status'];
-                                    }
-                                
-                                }
-                                    
-                                if($lock_status == 0){
-                                    
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i></a></div>";
-                                    }
-                                    else{
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i></a></div>";
-                                    } 
                             
                                 }
                             }
                             else{
                                 $lock_data = "";
                             }
+							
+							*/
                             
                             $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;</th>';
                         }
@@ -1756,7 +1816,28 @@ class Esp extends Front_Controller
         
     }
     
-    
+    public function set_budget_lock_data(){
+        
+        $user = $this->auth->user();
+		
+        $budget_id = $_POST["budgetid"];
+        $yearval = $_POST["yearval"];
+        $text_data = $_POST["textdata"];
+		
+		for($i=1;$i<=12;$i++){
+				
+				if($i<= 9){
+					$i = "0".$i;
+				}
+				$monthval = $yearval."-".$i."-01";
+				$lock_data = $this->esp_model->update_budget_lock_status_data($user->id,$budget_id,$monthval,$text_data);
+		
+		}
+        
+        echo $lock_data;
+        die;
+        
+    }
    
 
 

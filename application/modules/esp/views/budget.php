@@ -18,9 +18,9 @@ echo form_open('esp/add_budget',$attributes); ?>
                     <label id="invoice_no_error" class="error" for="invoice_no"></label>
                 </div>
                 
-                <div class="form-group">
-                	<a href="javascript:void(0);" id="lock_data"><i class="fa fa-lock" aria-hidden="true"></i></a>
-                	<input type="hidden" name="lock_status" class="lock_status_data" value="Lock" />
+                <div class="form-group" id="lock_area">
+                <!--	<a rel="" href="javascript:void(0);" id="lock_data"><i class="fa fa-lock" aria-hidden="true"></i></a>
+                	<input type="hidden" name="lock_status" id="lock_status_data" class="lock_status_data" value="Lock" /> -->
                 </div>
             </div>
             
