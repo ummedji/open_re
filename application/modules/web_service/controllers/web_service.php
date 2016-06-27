@@ -2336,7 +2336,6 @@ class Web_service extends Front_Controller
             $_POST['flag'] = 'web_service';
             $data = modules::run('ishop/ishop/upload_data', $_POST, $_FILES);
 
-            //testdata($data);
             if(isset($data['success']))
             {
                 $result['status'] = true;

@@ -2439,13 +2439,15 @@ class Ishop extends Front_Controller
             if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
                 $user= $this->auth->user();
                 $logined_user_type = $user->role_id;
-            }
-			if(empty($web_service)&& !isset($web_service) && $web_service == null && $web_service != "web_service"){
 				$files = $_POST["upload_file_data"];
-			}
+            }
 			else{
+
+				$logined_user_type =$_POST["role_id"];
 				$files = $_FILES["upload_file_data"];
+
 			}
+
             if(isset($files) && !empty($files))
             {
             
