@@ -81,7 +81,7 @@
     if($this->uri->segment(2) == "order_approval")
     {
     ?>
-        <input class="selected_action" type="hidden" name="selected_action" id="" value="" />
+
         <div class="col-md-12 extra_btn text-center" style="margin-top: 20px; margin-bottom: 10px;">
             <?php
         if($this->uri->segment(3) == 'dispatched')

@@ -38,13 +38,13 @@ $(document).on("click","button#freeze_data",function(e){
     
     e.preventDefault();
    
-    var forecast_id = $("input#forecast_id").val();
+    var budget_id = $("input#budget_id").val();
     var text_data = $(this).text();
     
     $.ajax({
         type: 'POST',
-        url: site_url+"esp/update_forecast_freeze_status",
-        data: {forecastid:forecast_id,textdata:text_data},
+        url: site_url+"esp/update_budget_freeze_status",
+        data: {budgetid:budget_id,textdata:text_data},
         success: function(resp){
             
             var message = "";
@@ -91,18 +91,18 @@ $(document).on("click","button#freeze_data",function(e){
 });
 
 
-$(document).on("focusout",".forecast_qty",function(){
+$(document).on("focusout",".budget_qty",function(){
     
     var rel_attr_val = $(this).attr("rel");
-    var forecast_data = $(this).val();
+    var budget_data = $(this).val();
     
     $.ajax({
         type: 'POST',
-        url: site_url+"esp/get_forecast_value_data",
-        data: {relattrval:rel_attr_val,forecastdata:forecast_data},
+        url: site_url+"esp/get_budget_value_data",
+        data: {relattrval:rel_attr_val,budgetdata:budget_data},
         success: function(resp){
             
-            $("input#forecast_value_"+rel_attr_val).val(resp);
+            $("input#budget_value_"+rel_attr_val).val(resp);
             
         }
     });

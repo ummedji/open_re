@@ -157,6 +157,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                     </table>
                     <div class="clearfix"></div>
                 </div>
+                <input class="selected_action" type="hidden" name="selected_action" id="" value="" />
                 <?php 
                 
                     if($action_data == "get_order_status_data_details"){        
@@ -168,6 +169,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                         </div>
                     <?php
                     }
+
                 echo form_close();
                     
                 

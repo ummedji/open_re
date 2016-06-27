@@ -134,6 +134,7 @@ $(document).ready(function(){
     });
 
 
+
     $("#add_schemes").on("submit",function(){
 
         var param = $("#add_schemes").serializeArray();
@@ -145,37 +146,56 @@ $(document).ready(function(){
         }
         else
         {
+
             $.ajax({
                 type: 'POST',
-                url: site_url + "ishop/add_schemes_details",
+                url: site_url + "ishop/check_schemes_details",
                 data: param,
                 success: function (resp) {
                     var message = "";
-                    if(resp == 1){
+                    if (resp == 1) {
 
-                        message += 'Data Inserted successfully.';
-                    }
-                    else{
+                        $.ajax({
+                            type: 'POST',
+                            url: site_url + "ishop/add_schemes_details",
+                            data: param,
+                            success: function (resp) {
+                                var message = "";
+                                if (resp == 1) {
 
-                        message += 'Data not Inserted.';
-                    }
-                    $('<div></div>').appendTo('body')
-                        .html('<div><b>'+message+'</b></div>')
-                        .dialog({
-                            appendTo: "#success_file_popup",
-                            modal: true,
-                            zIndex: 10000,
-                            autoOpen: true,
-                            width: 'auto',
-                            resizable: true,
-                            close: function (event, ui) {
-                                $(this).remove();
-                                location.reload()
+                                    message += 'Data Inserted successfully.';
+                                }
+                                else {
+
+                                    message += 'Data not Inserted.';
+                                }
+                                $('<div></div>').appendTo('body')
+                                    .html('<div><b>' + message + '</b></div>')
+                                    .dialog({
+                                        appendTo: "#success_file_popup",
+                                        modal: true,
+                                        zIndex: 10000,
+                                        autoOpen: true,
+                                        width: 'auto',
+                                        resizable: true,
+                                        close: function (event, ui) {
+                                            $(this).remove();
+                                            location.reload()
+                                        }
+                                    });
+
                             }
                         });
 
+                    }
+                    else {
+                        //Update Scheames
+                    }
                 }
             });
+
+
+
             return false;
         }
     });

@@ -1338,6 +1338,8 @@ class Esp extends Front_Controller
                    $html .= '</th>';
              foreach($month_data as $monthkey => $monthvalue)
              {
+             	$html .= '<input type="hidden" name="month_data[]" value="'.$monthvalue.'" />';
+             	
                 $html .= '<th><span class="rts_bordet"></span>';
                 $html .= 'Budget Qty';
                 $html .= '</th>';
@@ -1353,7 +1355,7 @@ class Esp extends Front_Controller
            $html .= '<tbody>';
             $i = 1;
             
-            $forecast_id = "";
+            $budget_id = "";
             
             foreach($pbg_sku_data as $skukey => $skuvalue){
               $html .= '<tr>';
@@ -1512,7 +1514,7 @@ class Esp extends Front_Controller
                                 
                                // echo "7";
                                 
-                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
+                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
                     
                                 $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                 
@@ -1535,7 +1537,7 @@ class Esp extends Front_Controller
                         
                          $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     
-                        $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                        $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                     
                     }
                         
@@ -1553,7 +1555,7 @@ class Esp extends Front_Controller
             $freeze_button = "";
             if($login_user_parent_data != 0){
                 
-                $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$budget_id);
+                $freeze_history_user_status_data = $this->esp_model->get_budget_freeze_history_user_status_data($login_user_id,$budget_id);
                 
                 if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
                     
@@ -1575,7 +1577,7 @@ class Esp extends Front_Controller
             }
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
-                <input type="hidden" id="budget_id" name="budget_id" value="'.$forecast_id.'" />
+                <input type="hidden" id="budget_id" name="budget_id" value="'.$budget_id.'" />
                 <div class="row">
                     <div class="save_btn">
                         <button type="submit" class="btn btn-primary">Save</button>
@@ -1591,6 +1593,170 @@ class Esp extends Front_Controller
         die;
         
     }
+
+
+	public function add_budget(){
+       // testdata($_POST);
+      //  $forecast_data = $this->esp_model->add_forecast_data();
+        
+        if(isset($_POST) && !empty($_POST)){
+            
+         //   testdata($_POST);
+            
+            if(!isset($_POST['employee_data']))
+            {
+                $budget_user_id = $_POST['login_user_id'];
+            }
+            else{
+                $budget_user_id = $_POST['employee_data'];
+            }
+            
+            $businss_data = $this->esp_model->get_business_code($budget_user_id);
+            
+            $user_business_code = $businss_data;
+            
+            $pbg_id = $_POST['pbg_data'];
+            $created_user_id = $_POST['login_user_id'];
+            
+            
+            //CHECK FOR EMMPLOYEE AND PBG RECORD ALREADY EXIST
+            
+            
+            $final_array = array();
+
+            $i = 1;
+            
+            $budget_insert_id = '';
+
+            if(!empty($_POST['month_data'])){
+                foreach($_POST['month_data'] as $month_key=>$month_value){
+            
+                    $check_record_exist = $this->esp_model->check_budget_data($pbg_id,$user_business_code,$month_value);
+                    
+                    if($check_record_exist != 0){
+                        
+                        //UPDATE 
+                        
+                        $old_budget_id = $check_record_exist[0]['budget_id'];
+                        
+                        //UPDATE MAIN TABLE RECORD
+                        
+                        $update_status = $this->esp_model->update_budget_data($old_budget_id,$created_user_id);
+                        
+                    }else{
+                    
+                        //INSERT
+                        if($budget_insert_id == ""){
+                                $budget_insert_id = $this->esp_model->insert_budget_data($pbg_id,$created_user_id,$user_business_code,$_POST['login_user_id']);
+                        }
+                        
+                    }
+                    
+                    foreach($_POST['product_sku_id'] as $pkey=>$product_data){
+
+                        $initial_array_budgetqty = $_POST['budget_qty'][$product_data][$month_key];
+
+                        $initial_array_budgetvalue = $_POST['budget_value'][$product_data][$month_key];
+
+                        $final_array[$month_value]['productid'][$product_data]['budget_qty'] = $initial_array_budgetqty;
+
+                        $final_array[$month_value]['productid'][$product_data]['budget_value'] = $initial_array_budgetvalue;
+
+                    }
+
+                     $i++;
+                }
+            }
+             
+           // testdata($final_array);
+            
+            if(!empty($final_array)){
+                foreach($final_array as $key_data => $data){
+                    
+                    $old_budget_id = "";
+                    
+                    $month_data = $key_data;
+                    
+                    foreach($data["productid"] as $product_id => $product_data){
+                        
+                        $budget_qty = $product_data["budget_qty"];
+                        $budget_value = $product_data["budget_value"];
+                        
+                        $get_product_old_data = $this->esp_model->get_budget_product_details($businss_data,$product_id,$month_data);
+                        
+                        if($get_product_old_data != 0){
+
+                            //UPDATE MAIN TABLE RECORD
+                            
+                            $budget_product_id = $get_product_old_data[0]['budget_product_id'];
+                            $old_budget_id = $get_product_old_data[0]['budget_id'];
+
+                            $update_status = $this->esp_model->update_budget_product_details($budget_product_id,$budget_qty,$budget_value);
+
+							//$history_status_data = 1;
+							
+							//ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
+							
+						//	 $this->esp_model->insert_forecast_product_details_history($old_forecast_id,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$history_status_data);
+							
+
+                        }else{
+
+                            $this->esp_model->insert_budget_product_details($budget_insert_id,$businss_data,$product_id,$month_data,$budget_qty,$budget_value);
+							
+							//$history_status_data = 0;
+							
+							//ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
+							
+						//	 $this->esp_model->insert_forecast_product_details_history($forecast_insert_id,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$history_status_data);
+							
+                        }
+					   
+                    }
+
+                }
+                
+            }
+            
+        }
+        
+        redirect('esp/budget');
+        
+    }
+
+	public function update_budget_freeze_status(){
+        
+        $user = $this->auth->user();
+        $budget_id = $_POST["budgetid"];
+        $text_data = $_POST["textdata"];
+        $freeze_data = $this->esp_model->update_budget_freeze_status_data($user->id,$budget_id,$text_data);
+        
+        echo $freeze_data;
+        die;
+        
+    }
+	
+	public function get_budget_value_data(){
+        
+        $relattrval = $_POST['relattrval'];
+        
+        $budget_data = explode("_",$relattrval);
+        
+        $product_sku_id = $budget_data[1];
+        $month_data = $budget_data[2];
+        
+        $budgetdata = $_POST['budgetdata'];
+        
+        $budget_value = $this->esp_model->get_budget_data($product_sku_id,$month_data);
+        
+        $final_budget_value  = $budgetdata*$budget_value;
+        
+        echo $final_budget_value;
+        die;
+        
+    }
+    
+    
    
 
 

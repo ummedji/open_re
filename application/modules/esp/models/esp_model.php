@@ -687,5 +687,229 @@ class Esp_model extends BF_Model
         
     }
 	
+	public function get_budget_freeze_status($budget_id){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_budget as beb");
+        
+        $this->db->where("beb.budget_id",$budget_id);
+        
+        $budget_data = $this->db->get()->result_array();
+        
+        $budget_array = array();
+        
+        if(!empty($budget_data)){
+            $budget_array["budget_id"] = $budget_data[0]['budget_id'];
+            $budget_array["created_by_user"] = $budget_data[0]['created_by_user'];
+            $budget_array["freeze_status"] = $budget_data[0]['freeze_status'];
+            $budget_array["freeze_user_id"] = $budget_data[0]['freeze_by_id'];
+        }
+        if(isset($budget_array) && !empty($budget_array)) {
+            return $budget_array;
+        } else{
+            return 0;
+        }
+        
+    }
+	
+	public function get_budget_freeze_history_user_status_data($login_user_id,$budget_id){
+        
+        $this->db->select('*');
+        $this->db->from("bf_budget_freeze_status_history as bbfsh");
+        
+        $this->db->where("bbfsh.budget_id",$budget_id);
+        $this->db->where("bbfsh.freeze_by_id",$login_user_id);
+        
+        $budget_freeze_history_data = $this->db->get()->result_array();
+        return $budget_freeze_history_data;
+    }
+	
+	public function check_budget_data($pbg_id,$user_business_code,$month_data){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_budget as beb");
+        
+        $this->db->join("bf_esp_budget_product_details as bebpd","bebpd.budget_id = beb.budget_id");
+        
+        $this->db->where("beb.pbg_id",$pbg_id);
+        $this->db->where("beb.business_code",$user_business_code);
+        $this->db->where("bebpd.budget_month",$month_data);
+       
+        $budget_data = $this->db->get()->result_array();
+        
+        if(isset($budget_data) && !empty($budget_data)) {
+            return $budget_data;
+        } else{
+            return 0;
+        } 
+        
+    }
+	
+	public function update_budget_data($budget_id,$created_user_id){
+        
+        $data = array(
+            'modified_by_user'	=>$created_user_id
+        );
+            
+        $this->db->where('budget_id', $budget_id);
+        $this->db->update('bf_esp_budget' ,$data);
+      
+    }
+	
+	public function insert_budget_data($pbg_id,$created_user_id,$user_business_code,$login_user_id){
+        
+        $data = array( 
+            'pbg_id'	=>  $pbg_id, 
+            'created_by_user'=> $created_user_id, 
+            'business_code'	=>  $user_business_code,
+            'modified_by_user'	=>  $login_user_id,
+            'created_on'	=>  date("Y-m-d h:i:s")
+        );
+        $this-> db->insert('bf_esp_budget', $data);
+        
+        return $budget_insert_id = $this->db->insert_id();
+        
+    }
+	
+	public function get_budget_product_details($businss_data,$product_id,$month_data){
+        
+        $this->db->select('*');
+        $this->db->from("bf_esp_budget_product_details as bebpd");
+
+       // $this->db->where("befpd.forecast_id",$old_forecast_id);
+        $this->db->where("bebpd.business_code",$businss_data);
+        $this->db->where("bebpd.budget_month",$month_data);
+        $this->db->where("bebpd.product_sku_id",$product_id);
+
+        $budget_product_data = $this->db->get()->result_array();
+
+        if(isset($budget_product_data) && !empty($budget_product_data)) {
+            return $budget_product_data;
+        } else{
+            return 0;
+        } 
+    }
+	
+	public function update_budget_product_details($budget_product_id,$budget_qty,$budget_value){
+        
+        $data = array(
+            'budget_quantity'	=>$budget_qty,
+            'budget_value'	=>$budget_value
+        );
+            
+        $this->db->where('budget_product_id', $budget_product_id);
+        $this->db->update('bf_esp_budget_product_details' ,$data);        
+    }
+	
+	public function insert_budget_product_details($budget_insert_id,$businss_data,$product_id,$month_data,$budget_qty,$budget_value){
+        
+        $data = array( 
+            'budget_id'	=>  $budget_insert_id, 
+            'business_code'=> $businss_data, 
+            'product_sku_id'	=>  $product_id,
+            'budget_month'	=>  $month_data,
+            'budget_quantity'	=>  $budget_qty,
+            'budget_value'	=>  $budget_value,
+            'created_on'	=>  date("Y-m-d h:i:s")
+        );
+        $this-> db->insert('bf_esp_budget_product_details', $data);
+        
+    }
+	
+	    
+    public function update_budget_freeze_status_data($user_id,$budget_id,$text_data){
+        
+		//echo $user_id."-".$budget_id."-".$text_data;
+		//die;
+        if($text_data == "Freeze"){
+            $freeze_status = 1;
+        }
+        else{
+            $freeze_status = 0;
+        }
+        
+        $data = array(
+            'freeze_status'	=>$freeze_status,
+            'freeze_by_id' =>$user_id
+        );
+            
+        $this->db->where('budget_id', $budget_id);
+        $this->db->update('esp_budget' ,$data);
+        
+        if($this->db->affected_rows() > 0){
+        	
+            $this->db->select('*');
+            $this->db->from("budget_freeze_status_history");
+
+            $this->db->where("budget_id",$budget_id);
+            $this->db->where("freeze_by_id",$user_id);
+
+            $freeze_data = $this->db->get()->result_array();
+            
+            if(empty($freeze_data)){
+                
+                //INSERT TO FREEZE HISTORY TABLE
+                
+                $freeze_data = array( 
+                    'budget_id'	=> $budget_id, 
+                    'freeze_by_id'  => $user_id, 
+                    'freeze_status'	=>  1
+                );
+                $this-> db->insert('bf_budget_freeze_status_history', $freeze_data);
+                
+            }
+            else{
+            	
+                //UPDATE TO FREEZE HISTORY TABLE
+                
+                $freeze_history_id = $freeze_data[0]['id'];
+                
+                if($text_data == "Freeze"){
+                    $freeze_status = 1;
+                }
+                else{
+                    $freeze_status = 0;
+                }
+                
+                $update_history_data = array(
+                    'freeze_status'	=>$freeze_status,
+                    'freeze_by_id' =>$user_id
+                );
+
+                $this->db->where('id', $freeze_history_id);
+                $this->db->update('bf_budget_freeze_status_history' ,$update_history_data);
+                
+            }
+            
+            return 1;
+        }
+        else{
+        	
+			
+            return 0;
+        }
+        
+    }
+    
+	public function get_budget_data($product_sku_id,$month_data){
+        
+        $sql = "SELECT `bmp`.`price` FROM `bf_master_price` as bmp ";
+        
+        $sql .= " WHERE `bmp`.`product_sku_country_id` =  '".$product_sku_id."' ";
+        $sql .= " AND `bmp`.`price_type` =  'budget' ";
+        $sql .= " AND ('".$month_data."' BETWEEN from_date AND to_date)";
+        
+        $master_budget_data = $this->db->query($sql)->result_array();
+        
+        if(isset($master_budget_data) && !empty($master_budget_data)) {
+            return $master_budget_data[0]['price'];
+        } else{
+            return 0;
+        }
+        
+    }
+
+	
+
 	
 }

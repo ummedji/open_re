@@ -971,6 +971,15 @@ class Ishop extends Front_Controller
 	}
 
 
+	public function check_schemes_details()
+	{
+		$user = $this->auth->user();
+		$user_id = $this->session->userdata('user_id');
+		$add = $this->ishop_model->check_schemes_detail($user_id,$user->country_id);
+		echo $add;
+		die;
+	}
+
 	public function add_schemes_details()
 	{
 		$user = $this->auth->user();
@@ -2150,20 +2159,16 @@ class Ishop extends Front_Controller
                    $customer_id = $logined_user_id;
 
                   $order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
-                  
             }
 
 			$pending_count=$this->ishop_model->get_all_pending_data($user->id,$user->country_id);
 			//testdata($pending_count);
 			Template::set('pending_count',$pending_count);
-
           //  $order_data = $this->ishop_model->get_order_data($logined_user_type,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate);
             if($order_data != ""){
-
                 Template::set('order_approval_table', $order_data);
 				Template::set('td', $order_data['count']);
 				Template::set('pagination', (isset($order_data['pagination']) && !empty($order_data['pagination'])) ? $order_data['pagination'] : '' );
-
 			}
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);

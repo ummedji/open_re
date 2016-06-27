@@ -1574,7 +1574,7 @@ class Ishop_model extends BF_Model
             $qty_kgl = $this->input->post("qty_kgl");
             $amount = $this->input->post("amount");
         }
-        $total_amt = array_sum($amount);
+      //  $total_amt = array_sum($amount);
 
         if (isset($secondary_sales_product_id) && !empty($secondary_sales_product_id)) {
             foreach ($secondary_sales_product_id as $k => $pspi) {
@@ -1589,7 +1589,7 @@ class Ishop_model extends BF_Model
                 $this->db->update('ishop_secondary_sales_product', $secondary_sales_product_update);
             }
             $secondary_sales = $this->get_sales_id_by_secondary_sales_product_id($secondary_sales_product_id);
-
+            $total_amt = array_sum($amount);
             $secondary_sales_update_by_product = array(
                 'total_amount' => $total_amt,
                 'modified_by_user' => $user_id,
@@ -1606,7 +1606,7 @@ class Ishop_model extends BF_Model
                 $secondary__sales_update = array(
                     'invoice_no' => $invoice_no[$key],
                     'PO_no' => $PO_no[$key],
-                    'order_tracking_no' => $order_tracking_no[$key],
+                   // 'order_tracking_no' => $order_tracking_no[$key],
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
@@ -1615,6 +1615,7 @@ class Ishop_model extends BF_Model
                 $this->db->update('ishop_secondary_sales', $secondary__sales_update);
             }
         }
+      //  testdata($this->db->affected_rows());
         if($this->db->affected_rows() > 0){
             return 1;
         }
@@ -3383,6 +3384,36 @@ class Ishop_model extends BF_Model
         }
     }
 
+    public function check_schemes_detail($user_id,$country_id)
+    {
+        $cur_year = $this->input->post("cur_year");
+        $customer_id = $this->input->post("fo_retailer_id");
+        $schemes = $this->input->post("schemes");
+        $scheme_slab = $this->input->post("radio_scheme_slab");
+        $region = $this->input->post("region");
+        $territory = $this->input->post("territory");
+
+        $this->db->select('*');
+        $this->db->from('ishop_scheme_allocation');
+        $this->db->where("DATE_FORMAT(year,'%Y')",$cur_year);
+        $this->db->where('customer_id',$customer_id);
+        //$this->db->where('scheme_id',$schemes);
+        $this->db->where('slab_id',$scheme_slab);
+       // $this->db->where('geo_id2',$region);
+        //$this->db->where('geo_id1',$territory);
+        $this->db->where('country_id',$country_id);
+        $data = $this->db->get()->result_array();
+        // echo $this->db->last_query();
+        // testdata($data);
+        if (!isset($data) && empty($data)) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+
+    }
+
     public function add_schemes_detail($user_id, $country_id)
     {
 
@@ -3416,6 +3447,7 @@ class Ishop_model extends BF_Model
         }
 
     }
+
 
     public function view_schemes_detail($user_id, $country_id, $year, $region = null, $territory = null, $login_user, $retailer = null, $page = null, $web_service = null)
     {
@@ -4546,24 +4578,15 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function get_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null)
     {
-
-
         //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
 
-        $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn ';
+        $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn ';
+
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
-
-        //$sql .= ' LEFT JOIN bf_users as bmupd ON (bmupd.id = bu.id) '; // FOR GETTING USER NAME AND OTHER DATA
-
         $sql .= ' LEFT JOIN bf_users as f_bu ON (f_bu.id = bio.customer_id_from) ';
-      //  $sql .= ' LEFT JOIN bf_master_user_personal_details as f_bmupd ON (f_bmupd.user_id = f_bu.id) ';
-
         $sql .= ' LEFT JOIN bf_users as t_bu ON (t_bu.id = bio.customer_id_to) ';
-      //  $sql .= ' LEFT JOIN bf_master_user_personal_details as t_bmupd ON (t_bmupd.user_id = t_bu.id) ';
-
         $sql .= ' LEFT JOIN bf_ishop_credit_limit as bicl ON (bicl.customer_id = bio.customer_id_from) ';
-
         $sql .= 'WHERE 1 ';
 
         if (isset($page_function) && !empty($page_function)) {
@@ -4571,16 +4594,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         } else {
             $action_data = $this->uri->segment(2);
         }
-        //  echo $action_data.$sub_action_data;die;
-
         if ($action_data != "order_approval") {
-
             if ($order_tracking_no != null ) {
                 $sql .= ' AND bio.order_tracking_no =' .'"'. $order_tracking_no .'"'. ' ';
                 $sql .= ' AND f_bu.role_id = 11  ';
-
             } else {
-
                 if ($action_data != "po_acknowledgement") {
                     $sql .= ' AND bio.order_date BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $todate . '"' . ' ';
                 }
@@ -4599,9 +4617,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             }
 
             $sql .= ' AND bio.order_date BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $todate . '"' . ' ';
-
-            $sql .= ' AND bio.order_taken_by_id =' . $customer_id . ' ';
-
+           // $sql .= ' AND bio.order_taken_by_id =' . $customer_id . ' ';
             $sql .= ' AND f_bu.role_id = 9 ';
 
             if ($order_tracking_no != null) {
@@ -4617,13 +4633,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             } elseif ($sub_action_data == "reject") {
                 $sql .= ' AND bio.order_status = 3 ';
             }
-          //  else {
                 $sql .= ' AND bio.order_status != 4 ';
-           // }
+
         }
 
         $sql .= ' AND bio.country_id = "' . $user_country_id . ' " ORDER BY bio.order_date DESC ';
-        echo $sql;
+       // echo $sql;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             // For Pagination
@@ -4932,10 +4947,14 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     public function get_all_pending_data($user_id,$country_id)
     {
         $this->db->select('*');
-        $this->db->from('bf_ishop_orders');
-        $this->db->where('country_id',$country_id);
+        $this->db->from('ishop_orders as io');
+        $this->db->join('users as f_bu','f_bu.id = io.customer_id_from ');
+        $this->db->where('f_bu.role_id','9');
+        $this->db->where('io.country_id',$country_id);
         $this->db->where('order_status','0');
+      //  $query = $this->db->get()->result_array();
         $query = $this->db->get();
+       // testdata($query);
         $pending_order = $query->num_rows();
         return $pending_order;
     }
@@ -5396,7 +5415,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function update_order_data($orderdata, $web_service = null)
     {
-
+      //  testdata($orderdata);
         if (!empty($orderdata)) {
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
@@ -5404,6 +5423,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 if(isset($orderdata["change_order_status"])){
                     $orderdata["change_order_status"] = explode(',', $orderdata["change_order_status"]);
                 }
+
+
                 if(isset($orderdata["confirm_ack"])){
                     $orderdata["confirm_ack"]= explode(',',$orderdata["confirm_ack"]);
                 }
