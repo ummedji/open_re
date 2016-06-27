@@ -20,6 +20,7 @@ echo form_open('esp/add_budget',$attributes); ?>
                 
                 <div class="form-group">
                 	<a href="javascript:void(0);" id="lock_data"><i class="fa fa-lock" aria-hidden="true"></i></a>
+                	<input type="hidden" name="lock_status" class="lock_status_data" value="Lock" />
                 </div>
             </div>
             

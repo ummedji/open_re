@@ -2803,6 +2803,15 @@ class Web_service extends Front_Controller
         {
             $prespective_order = $this->ishop_model->get_prespective_order($from_date,$to_date,$role_id,$user_id,null,'web_service');
 
+            // For Pagination
+            $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+            $total_rows = $count->result()[0]->total_rows;
+            $pages = $total_rows/10;
+            $pages = ceil($pages);
+            $result['total_rows'] = $total_rows;
+            $result['pages'] = $pages;
+            // For Pagination
+
             $final_array = array();
             foreach($prespective_order as $k => $po)
             {
