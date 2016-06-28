@@ -1232,6 +1232,7 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         $mode = $this->input->get_post('mode');
         $id = $this->input->get_post('id');
+        $checked_type = $this->input->get_post('checked_type');
 
         if(isset($user_id) && !empty($user_id) && isset($id) && !empty($id) && isset($mode) && !empty($mode))
         {
@@ -1269,6 +1270,12 @@ class Web_service extends Front_Controller
             }
             elseif($mode == "budget"){
                 $id = $this->ishop_model->delete_budget_detail($id);
+            }
+            elseif($mode == "ishop_sales"){
+                $id = $this->delete_ishop_sales_detail($id, $checked_type);
+            }
+            elseif($mode == "ishop_sales_product"){
+                $id = $this->delete_ishop_sales_product_detail($id, $checked_type);
             }
             if($id)
             {
@@ -2340,7 +2347,7 @@ class Web_service extends Front_Controller
             {
                 $result['status'] = true;
                 $result['message'] = 'Success';
-                $result['data'] = '';
+                $result['data'] = $data;
             }
 
             if(isset($data['error']))
@@ -2366,6 +2373,65 @@ class Web_service extends Front_Controller
         }
         else
         {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function add_xl_data()
+    {
+        $user_id = $_POST['user_id'];
+        $country_id = $_POST['country_id'];
+        $role_id = $_POST['role_id'];
+        $dirname = $_POST["dirname"];
+        $value = json_decode($_POST['val']);
+        $xl_arr = $value->data->success;
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) && isset($role_id) && !empty($role_id) && isset($xl_arr) && !empty($xl_arr) && isset($dirname) && !empty($dirname))
+        {
+            if($dirname == "target"){
+                $target_data = $this->ishop_model->add_target_data($xl_arr,$user_id);
+            }
+            elseif($dirname == "budget"){
+                $budget_data = $this->ishop_model->add_budget_data($xl_arr);
+            }
+            elseif($dirname == "company_current_stock"){
+
+                $current_stock_data = $this->ishop_model->add_company_current_stock_detail($user_id,$country_id,$xl_arr,'excel');
+            }
+            elseif($dirname == "credit_limit"){
+
+                $credit_limit_data = $this->ishop_model->add_user_credit_limit_datail($user_id,$country_id,$xl_arr,'excel');
+            }
+            elseif($dirname == "rol"){
+
+                $rol_data = $this->ishop_model->add_rol_detail($user_id,$country_id,$xl_arr,'excel');
+            }
+            elseif($dirname == "primary_sales"){
+
+                $primary_sales = $this->ishop_model->add_primary_sales_details($user_id,$country_id,$web_service = null,$xl_arr,'excel');
+            }
+            elseif($dirname == "secondary_sales"){
+                if($role_id ==8)
+                {
+                    $secondary_sales = $this->ishop_model->add_ishop_sales_detail($user_id,$country_id,$xl_arr,'excel');
+                }
+                else{
+                    $secondary_sales = $this->ishop_model->add_secondary_sales_details_data($user_id,$country_id,$xl_arr,'excel');
+                }
+
+            }
+            elseif($dirname == "physical_stock"){
+
+                $physical_stock = $this->ishop_model->add_physical_stock_detail($user_id,$country_id,$role_id,$xl_arr,'excel');
+            }
+
+            $result['status'] = true;
+            $result['message'] = "Inserted Successfully.";
+
+        }
+        else{
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";
         }

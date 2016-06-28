@@ -1925,11 +1925,20 @@ class Esp extends Front_Controller
 
 		$year = date("Y"); // change this to another year
 		$row=0; // to set the number of rows and columns in yearly calendar 
-		$html .= "<table class='main'>"; // Outer table 
+		$html .= "<table class='main' style='width:70%;'>"; // Outer table 
 		
 		for($m=1;$m<=12;$m++)
 		{
 			$month =date($m);  // Month 
+			
+			$l = $m;
+			
+			if($l <= 9){
+				$l = "0".$l;
+			}
+			
+			$month_data = $year."-".$l."-01";
+			
 			$dateObject = DateTime::createFromFormat('!m', $m);
 			$monthName = $dateObject->format('F'); // Month name to display at top
 			
@@ -1942,28 +1951,40 @@ class Esp extends Front_Controller
 				$html .= "</tr><tr>";
 			}
 			
-			$html .= "<td><table class='main' ><td colspan='2' align=center> $monthName $year </td></tr>";
+			$html .= "<td><table class='inner_main' ><td colspan='2' align=center><input type='hidden' name='month_data' value='".$month_data."' id='month_data'/> $monthName $year </td></tr>";
 			 
 			if($role_degigination_data != 1){
 				
 				$level_user_id = $user->id;
+				
+				$html .= "<form id='user_data_form' name='user_data_form'>";
+				
 				for($n=1;$n<$role_degigination_data;$n++){
 				
 					$level = $n;
 				
 					$levle_data = $this->esp_model->get_user_selected_level_data($level_user_id,$level);
 					
-					
 					$level_user_id = $levle_data['level_users']; 
 					
-					$users_forecast_freeze_count_data = $this->esp_model->get_forecast_user_data($levle_data['level_users']);
+					$users_forecast_freeze_count_data = $this->esp_model->get_forecast_user_data($levle_data['level_users'],$month_data);
+					
+					$users_forecast_update_count_data = $this->esp_model->get_update_user_data($levle_data['level_users'],$month_data);
 					
 					
 					$html.= "<tr>";
-						$html.= "<td>0</td><td>".$users_forecast_freeze_count_data."/".$levle_data['tot']."</td>";
+						$html.= "<td>".$users_forecast_update_count_data."</td><td>
+						
+						<input type='hidden' name='user_level_data_".$n."[]' value='".$levle_data['level_users']."' id='user_level_data_".$n."'/>
+						
+						
+						
+						".$users_forecast_freeze_count_data."/".$levle_data['tot']."</td>";
 					$html .= "</tr>";
 				
 				}
+				
+				$html .= "</form>";
 				
 				//die;
 			}

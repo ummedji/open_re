@@ -1033,7 +1033,7 @@ class Esp_model extends BF_Model
      
 	}
 	
-	public function get_forecast_user_data($level_users){
+	public function get_forecast_user_data($level_users,$month_data){
 		
 		$user_data = explode(",",$level_users);
 		
@@ -1041,7 +1041,7 @@ class Esp_model extends BF_Model
 		
 		foreach($user_data as $key => $userid){
 					
-			$freeze_data = $this->db->query("SELECT * from bf_forecast_freeze_status_history where freeze_by_id = '".$userid."' AND freeze_status=1")->row_array();
+			$freeze_data = $this->db->query("SELECT * from bf_forecast_freeze_status_history as bffsh JOIN bf_forecast_product_detail_history as bfpdh ON bfpdh.forecast_id = bffsh.forecast_id where bffsh.freeze_by_id = '".$userid."' AND bffsh.freeze_status=1 AND bfpdh.month_data='".$month_data."' ")->row_array();
 			
 			if(!empty($freeze_data)){
 				$forecast_freeze_count = $forecast_freeze_count+1;
@@ -1049,9 +1049,26 @@ class Esp_model extends BF_Model
 			
 		}
 		
-		
 		return $forecast_freeze_count;
+	}
+	
+	public function get_update_user_data($level_users,$month_data){
+					
+		$user_data = explode(",",$level_users);
 		
+		$forecast_update_count = 0;
+		
+		foreach($user_data as $key => $userid){
+				
+			$update_data = $this->db->query("SELECT * from bf_forecast_lock_status_history as bflsh JOIN bf_forecast_product_detail_history as bfpdh ON bfpdh.forecast_id = bflsh.forecast_id where bflsh.lock_by_id = '".$userid."' AND bflsh.lock_status=1 AND bfpdh.month_data='".$month_data."' ")->row_array();
+			
+			if(!empty($update_data)){
+				$forecast_update_count = $forecast_update_count+1;
+			}
+			
+		}
+		
+		return $forecast_update_count;	
 	}
 	
 	

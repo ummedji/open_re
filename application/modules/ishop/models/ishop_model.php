@@ -4157,6 +4157,7 @@ class Ishop_model extends BF_Model
 
         if($this->db->affected_rows() > 0){
             return 1;
+
         }
         else{
             return 0;

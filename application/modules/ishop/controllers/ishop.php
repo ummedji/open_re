@@ -3998,8 +3998,7 @@ class Ishop extends Front_Controller
         }
         
         public function add_xl_data() {
-            
-            
+
             $user= $this->auth->user();
             
             $user_id = $user->id;

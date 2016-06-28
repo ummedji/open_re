@@ -439,9 +439,6 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                     }
 
                 }
-
-
-
             }
 
 
