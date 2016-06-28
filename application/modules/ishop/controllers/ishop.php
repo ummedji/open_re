@@ -43,6 +43,7 @@ class Ishop extends Front_Controller
 	 */
 	public function index()
 	{
+
 		Assets::add_module_js('ishop', 'primary_sales.js');
 		$user = $this->auth->user();
 		$distributor = $this->ishop_model->get_distributor_by_user_id($user->country_id);
@@ -3809,29 +3810,17 @@ class Ishop extends Front_Controller
         }
         
         public function create_data_xl() {
-            
-            
-            
-			//$user= $this->auth->user();
-            //$req_data = json_decode($_GET["data"],true);
-            
-          // testdata($_POST['val']);
+			//testdata($_POST['val']);
             
             if(!empty($_POST['val']))
             {
                 $this->load->library('excel');
 
-               // $result = $this->product_model->read($this->input->post());
                 $records=array();
-               // $records = (isset($result['result']) && !empty($result['result'])) ? $result['result'] : '';
-
                 $this->excel->setActiveSheetIndex(0);
                 //name the worksheet
                 $this->excel->getActiveSheet()->setTitle('Incorrect Data');
-                /*$this->excel->getActiveSheet()->setCellValue('A1','Sr. No.');*/
-                
                 $k = 1;
-                
                 $l = 1;
                 $first_data = 'A'.$l;
                 $last_data  = "";
@@ -3839,39 +3828,29 @@ class Ishop extends Front_Controller
                 foreach($_POST['val']["header"][1] as $key=> $col_data){
                 
                     $this->excel->getActiveSheet()->setCellValue($key.$l,$col_data);
-                    
                     $last_data = $key.$l;
-                    
                     $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setSize(12);
                     $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setBold(true);
-                    
                     $k++; 
                 }
-                
 
                 foreach(range($first_data,$last_data) as $columnID){
                     $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
                 }
-
-               // $records = $this->product_model->join("product_specificaion ps","ps.pid=product.product_id")->find_all();
 
                 $data_array = array();
                 
                     $m = 2;
                     foreach($_POST['val'] as $key1 => $value)
                     {
-                        
                         if((string)$key1 != 'header') {
-                           
                             $row_data = explode("~",$value);
-                            
                             $j = 0;
                             foreach($_POST['val']["header"][1] as $key2=> $col_data){
                 
                                 if($_POST["dirname"] == "target" || $_POST["dirname"] == "budget"){
                                     if($j == 0 && ($row_data[$j] != "")){
                                         $date_data = explode("-",$row_data[$j]);
-                                        
                                         $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
                                         $row_data[$j] = $monthName."-".$date_data[0];
                                   }
@@ -3889,20 +3868,15 @@ class Ishop extends Front_Controller
                                         $date_data = explode("-",$row_data[$j]);
                                         
                                         $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
-                                        
                                         $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
-                                        
-                                        //$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
                                     }
                                 }
                                 elseif($_POST["dirname"] == "primary_sales"){
                                         if($j == 3 && ($row_data[$j] != "")){
-                                            //echo $row_data[$j];die;
                                                 $date_data = explode("-",$row_data[$j]);
                                             
                                                 $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
                                                 $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
-                                                //$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
                                         }
                                 }
                                 elseif($_POST["dirname"] == "secondary_sales"){
@@ -3912,8 +3886,6 @@ class Ishop extends Front_Controller
                                             
                                             $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
                                             $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
-                                            
-											//$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
 								    }
 									else
                                     {
@@ -3922,8 +3894,6 @@ class Ishop extends Front_Controller
                                             
                                             $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
                                             $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
-                                            
-											//$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
 										}
 									}
                                 }
@@ -3933,23 +3903,14 @@ class Ishop extends Front_Controller
                                         
                                         $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
                                         $row_data[$j] = $monthName."-".$date_data[0];
-                                        
-										//$row_data[$j] = $date_data[1]."/".$date_data[0]."/".$date_data[2];
 									}
 								}
-                                
-
-                                
                                 $this->excel->getActiveSheet()->setCellValue($key2.$m, $row_data[$j]);
                                 $j++;
                             }
-                            
                         }
-                        
                          $m++;
-                        
                     }
-            
                 $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xlsx';
                 header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
                 header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
@@ -3963,24 +3924,27 @@ class Ishop extends Front_Controller
                 /*
                  * NEED TO CHANGE AS PER UPLOADED FILE 
                  */
-                
-                 if($_SERVER['SERVER_NAME'] == "localhost"){
+
+               /*  if($_SERVER['SERVER_NAME'] == "localhost"){
                        $folder = "open_re/trunk";
                    }
                    elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
                        $folder = "qa/re";
-                   }
-                
-                if(file_exists($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
-                    
-                    unlink($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                   }*/
+
+
+                //if(file_exists($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+                if(file_exists(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+
+                    unlink(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
                     
                 }
                 
-                $objWriter->save($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                $objWriter->save(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
 
                 $web_service = @$_POST['flag'];
                 if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
                     $result['status'] = true;
                     $result['message'] = 'Retrieved Successfully.';
                     $result['data'] = base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;

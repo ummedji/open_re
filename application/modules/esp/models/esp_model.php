@@ -1071,6 +1071,35 @@ class Esp_model extends BF_Model
 		return $forecast_update_count;	
 	}
 	
+	public function get_update_user_detail_data($level_users,$month_data){
+					
+		$user_data = explode(",",$level_users);
+		
+		
+		
+		$final_array = array();
+		
+		foreach($user_data as $key => $userid){
+				
+			$user_detail_data = $this->db->query("SELECT display_name from bf_users where id = '".$userid."'")->row_array();
+			
+			$user_name = $user_detail_data["display_name"];
+			
+			$forecast_update_status = "";
+			
+			$update_data = $this->db->query("SELECT * from bf_forecast_lock_status_history as bflsh JOIN bf_forecast_product_detail_history as bfpdh ON bfpdh.forecast_id = bflsh.forecast_id where bflsh.lock_by_id = '".$userid."' AND bflsh.lock_status=1 AND bfpdh.month_data='".$month_data."' ")->row_array();
+			
+			if(!empty($update_data)){
+				$forecast_update_status = "Yes";
+			}
+			
+			$final_array[$user_name] = $forecast_update_status;
+			
+		}
+		
+		return $final_array;	
+	}
+	
 	
 
 	

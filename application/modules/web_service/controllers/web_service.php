@@ -2379,6 +2379,44 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+    public function create_xl_data()
+    {
+
+        if(isset($_POST['user_id']) && !empty($_POST['user_id']) && isset($_POST['val']) && !empty($_POST['val']) && isset($_POST['dirname']) && !empty($_POST['dirname']))
+        {
+            $val_data = json_decode($_POST['val'],TRUE);
+            $final_array = array();
+            foreach($val_data as $key => $data){
+
+                if($key == 'error_data') {
+                    foreach($data as $inner_key => $inner_data) {
+                        $final_array[] = $inner_data['key'];
+                    }
+                }
+
+                if($key == 'header'){
+
+                    $final_array["header"][1] = $data[0];
+
+                }
+
+            }
+            $_POST['val'] = $final_array;
+            $_POST['flag'] = 'web_service';
+
+            modules::run('ishop/ishop/create_data_xl', $_POST);
+
+        }
+    else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
     public function add_xl_data()
     {
         $user_id = $_POST['user_id'];
@@ -2443,7 +2481,7 @@ class Web_service extends Front_Controller
      * @ Function Params    : user_id,country_id,prod_sku,unit,rol_qty,fo_retailer_id,distributor_rol (POST)
      * @ Function Purpose    : Save ROL Data
      * */
-    public function downloadData()
+  /*  public function downloadData()
     {
         $user_id = $this->input->get_post('user_id');
         if(isset($user_id))
@@ -2459,7 +2497,7 @@ class Web_service extends Front_Controller
             $result['message'] = "All Fields are Required.";
         }
         $this->do_json($result);
-    }
+    }*/
 
 
     /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */

@@ -1882,7 +1882,7 @@ class Esp extends Front_Controller
    
     public function forecast_status(){
     	
-		
+		Assets::add_module_js('esp', 'esp_budget.js');
 
 		$user = $this->auth->user();
 		
@@ -1892,34 +1892,6 @@ class Esp extends Front_Controller
 		
 		$test_array = array();
 		
-		/*
-		if($role_degigination_data != 1){
-			
-			for($n=$role_degigination_data-1;$n>=1;$n--){
-				
-				$initial_array = array();
-				
-				$level = $n;
-				
-					$test_array[] = $n;
-					
-					$get_level_user_data = $this->get_user_selected_level_data($user->id,$level);
-					
-					//testdata($get_level_user_data);
-					
-					//$this->test_recuricive_func($get_level_user_data);
-					//die;
-				$initial_array = $get_level_user_data;
-				
-				$final_array[$user->id]["Level".$n] = $get_level_user_data;
-				
-			}
-			
-		}
-		
-		testdata($final_array);
-		
-		*/
 		
 		$html = "";
 
@@ -1975,7 +1947,7 @@ class Esp extends Front_Controller
 					$html.= "<tr>";
 						$html.= "<td>".$users_forecast_update_count_data."</td><td>
 						
-						<input type='hidden' name='user_level_data_".$n."[]' value='".$levle_data['level_users']."' id='user_level_data_".$n."'/>
+						<input type='hidden' name='user_level_data_".$n."' value='".$levle_data['level_users']."' id='user_level_data_".$n."'/>
 						
 						
 						
@@ -2004,6 +1976,66 @@ class Esp extends Front_Controller
 		Template::render();
 		
     }
+
+	public function show_month_user_level_data(){
+		
+		$month_data = $_POST["monthval"];
+		
+		$html = "";
+		
+		if(!empty($_POST["userlevel_formdata"])){
+			
+			$html .= "<table><thead><tr>";
+			
+			foreach($_POST["userlevel_formdata"] as $user_data_key => $user_level_data){
+				
+				$level_data = $user_level_data["name"];
+				
+				$level_array  = explode("_",$level_data);
+				
+				$level_data = $level_array["3"];
+				
+				$html .= "<th>".$level_data."</th>";
+				
+			}
+			
+			$html .= "</tr></thead><tbody>";
+			
+			foreach($_POST["userlevel_formdata"] as $user_data_key1 => $user_level_data1){
+				
+				$level_user_data = $user_level_data1["value"];
+				
+				$users_forecast_update_status_data = $this->esp_model->get_update_user_detail_data($level_user_data,$month_data);
+				
+				$html .= "<tr>";
+				
+				if(!empty($users_forecast_update_status_data)){
+					
+					//$user_data = explode(",",$level_user_data);
+					
+					//echo "<pre>";
+					//print_r($users_forecast_update_status_data);
+					
+					foreach($users_forecast_update_status_data as $username => $user_value){
+					
+						$html .= "<td>".$username."==".$user_value."</td>";
+						
+					}
+				}
+				else{
+					$html .= "<td></td>";
+				}
+				$html .= "</tr>";
+			}
+			
+			$html .= "</tbody></tbody>";
+			
+		}
+		
+		echo $html;
+		die;
+		
+	}
 
 
 	
