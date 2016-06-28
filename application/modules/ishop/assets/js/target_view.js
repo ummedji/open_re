@@ -1,12 +1,23 @@
 $(document).ready(function() {
     $("#from_month_data").datepicker({
-        format: "yyyy-mm",
-        autoclose: true
+        format: "yyyy-mm", // Notice the Extra space at the beginning
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
+    }).on('changeDate', function(selected){
+        $('#to_month_data').val('');
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('#to_month_data').datepicker('setStartDate', startDate);
     });
 
     $("#to_month_data").datepicker({
-        format: "yyyy-mm",
-        autoclose: true
+        format: "yyyy-mm", // Notice the Extra space at the beginning
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
     });
 
     var target_view_validators = $("#target_view").validate({

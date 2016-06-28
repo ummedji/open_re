@@ -4,8 +4,11 @@
 
 $(function () {
     $('#invoice_month').datepicker({
-        format: "yyyy-mm",
-        autoclose: true
+        format: "yyyy-mm", // Notice the Extra space at the beginning
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
     });
 });
 

@@ -1897,7 +1897,7 @@ class Esp extends Front_Controller
 
 		$year = date("Y"); // change this to another year
 		$row=0; // to set the number of rows and columns in yearly calendar 
-		$html .= "<table class='main' style='width:70%;'>"; // Outer table 
+		$html .= "<table class='main' style='width:50%;float:left;'>"; // Outer table 
 		
 		for($m=1;$m<=12;$m++)
 		{
@@ -1931,6 +1931,10 @@ class Esp extends Front_Controller
 				
 				$html .= "<form id='user_data_form' name='user_data_form'>";
 				
+				//echo $role_degigination_data;
+				
+				
+				
 				for($n=1;$n<$role_degigination_data;$n++){
 				
 					$level = $n;
@@ -1953,6 +1957,7 @@ class Esp extends Front_Controller
 						
 						".$users_forecast_freeze_count_data."/".$levle_data['tot']."</td>";
 					$html .= "</tr>";
+				
 				
 				}
 				
@@ -1979,54 +1984,90 @@ class Esp extends Front_Controller
 
 	public function show_month_user_level_data(){
 		
+		//testdata($_POST["userlevel_formdata"]);
+		
 		$month_data = $_POST["monthval"];
 		
 		$html = "";
 		
+		$no_of_level = count($_POST["userlevel_formdata"]);
+		
 		if(!empty($_POST["userlevel_formdata"])){
 			
-			$html .= "<table><thead><tr>";
+			$html .= "<table id='table_user_data' style='width:50%;float:left;'><thead><tr>";
+			
+			$level_data_array = array();
 			
 			foreach($_POST["userlevel_formdata"] as $user_data_key => $user_level_data){
 				
 				$level_data = $user_level_data["name"];
+				$level_array  = explode("_",$level_data);
+				$level_data = $level_array["3"];
+				$level_data_array[] = $level_data;
+				
+			}
+			
+			$level_data_array = array_reverse($level_data_array);
+			
+			foreach($level_data_array as$l_key=>$l_data){
+				$html .= "<th>Level ".$l_data."</th>";
+			}
+			
+			$html .= "</tr></thead><tbody>";
+			
+			$data_array = array();
+			
+			$max_count = 0;
+			
+			foreach($_POST["userlevel_formdata"] as $user_data_key1 => $user_level_data1){
+				
+				$level_data = $user_level_data1["name"];
 				
 				$level_array  = explode("_",$level_data);
 				
 				$level_data = $level_array["3"];
 				
-				$html .= "<th>".$level_data."</th>";
-				
-			}
-			
-			$html .= "</tr></thead><tbody>";
-			
-			foreach($_POST["userlevel_formdata"] as $user_data_key1 => $user_level_data1){
-				
 				$level_user_data = $user_level_data1["value"];
 				
 				$users_forecast_update_status_data = $this->esp_model->get_update_user_detail_data($level_user_data,$month_data);
 				
-				$html .= "<tr>";
+				if($users_forecast_update_status_data > $max_count)
+				{
+					$max_count = count($users_forecast_update_status_data);
+				}
 				
-				if(!empty($users_forecast_update_status_data)){
-					
-					//$user_data = explode(",",$level_user_data);
-					
-					//echo "<pre>";
-					//print_r($users_forecast_update_status_data);
-					
-					foreach($users_forecast_update_status_data as $username => $user_value){
-					
-						$html .= "<td>".$username."==".$user_value."</td>";
-						
-					}
-				}
-				else{
-					$html .= "<td></td>";
-				}
-				$html .= "</tr>";
+				$data_array[$level_data] = $users_forecast_update_status_data;
+				
 			}
+			
+		//	dumpme($data_array);
+			
+			for($i=0;$i<$max_count;$i++)
+			{
+				$html .= '<tr>';
+				for($j=0;$j<count($data_array);$j++)
+				{
+					
+					
+					if(isset($data_array[$j+1][$i])){
+						$row_data = explode("|||",$data_array[$j+1][$i]);
+						if($row_data[1] != ""){
+							$row_data = $row_data[0]."  "."<b>&#8226;</b>";
+						}
+						else{
+							$row_data = $row_data[0];
+						}
+					}
+					else{
+						$row_data = "";
+					}
+					
+					$html .= '<td>'.$row_data.'</td>';
+					
+				}
+				$html .= '</tr>';
+			}
+			
 			
 			$html .= "</tbody></tbody>";
 			

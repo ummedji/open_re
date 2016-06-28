@@ -58,7 +58,7 @@ echo form_open('',$attributes);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" name="month_data" id="month_data" class="form-control month_data" />
+                                    <input type="text" name="month_data" id="month_data" class="form-control month_data" readonly/>
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ echo form_open('',$attributes);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" name="ret_month_data" id="ret_month_data" class="form-control month_data" />
+                                    <input type="text" name="ret_month_data" id="ret_month_data" class="form-control month_data" readonly/>
                                 </div>
                             </div>
                         </div>
@@ -248,18 +248,12 @@ if (!$this->input->is_ajax_request()) {
                 </span>
                         <input type="text" class="form-control" readonly>
                     </div>
+                    <label id="upload_file_data-error" class="error" for="upload_file_data"></label>
                     <div class="clearfix"></div>
                 </div>
 
-                <?php
-                if($_SERVER['SERVER_NAME'] == "localhost"){
-                    $folder = "open_re/trunk";
-                }
-                elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
-                    $folder = "qa/re";
-                }
-                ?>
-                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/target/target_distributor.xlsx","_blank" );' class="btn btn-default">Download Templates</a> <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/target/target_retailer.xlsx","_blank" );' class="btn btn-default">Download Templates</a></div>
+                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/target/target_distributor.xlsx'); ?>","_blank" );' class="btn btn-default">Download Templates</a>
+                    <a style="display:none;" id="retailer_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/target/target_retailer.xlsx'); ?>","_blank" );' class="btn btn-default">Download Templates</a></div>
                 <?php echo form_close(); ?>
             </div>
         </div>
@@ -364,7 +358,7 @@ if (!$this->input->is_ajax_request()) {
                             </div>
                             <div class="form-group" id="year_data">
                                 <label>Selecte Year</label>
-                                <input type="text" name="to_year_data"  class="form-control" id="to_copy_popup_datepicker" />
+                                <input type="text" name="to_year_data"  class="form-control" id="to_copy_popup_datepicker"  readonly/>
                             </div>
 
                             <div id="month_data">

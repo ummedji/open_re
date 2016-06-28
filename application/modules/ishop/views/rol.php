@@ -209,36 +209,27 @@ if (!$this->input->is_ajax_request()) {
                 </span>
                         <input type="text" class="form-control" readonly>
                     </div>
+                    <label id="upload_file_data-error" class="error" for="upload_file_data"></label>
                     <div class="clearfix"></div>
                 </div>
 
-                <?php
-                   if($_SERVER['SERVER_NAME'] == "localhost"){
-                       $folder = "open_re/trunk";
-                   }
-                   elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
-                       $folder = "qa/re";
-                   }
-
-                ?>
                     <div class="col-md-8 chech_data">
 
                         <button type="submit" class="btn btn-default">Check Data</button>
                   <?php  if($current_user->role_id == 7){ ?>
 
-                                <a  id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/rol/rol_retailer_HO.xlsx","_blank" );' class="btn btn-default retailer_xl">Download Templates</a>
+                                <a  id="retailer_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/rol/rol_retailer_HO.xlsx'); ?>","_blank" );' class="btn btn-default retailer_xl">Download Templates</a>
 
-                                <a style="display:none;" id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/rol/rol_distributor_HO.xlsx","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
+                                <a style="display:none;" id="distributor_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/rol/rol_distributor_HO.xlsx'); ?>","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
 
                         <?php }elseif($current_user->role_id == 9){ ?>
 
-                                     <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/rol/rol_distributor.xlsx","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
+                                     <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/rol/rol_distributor.xlsx'); ?>","_blank" );' class="btn btn-default distributor_xl">Download Templates</a>
 
                         <?php }elseif($current_user->role_id == 10){ ?>
 
-                                      <a id="retailer_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/rol/rol_retailer.xlsx","_blank" );' class="btn btn-default retailer_xl">Download Templates</a>
+                                      <a id="retailer_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/rol/rol_retailer.xlsx'); ?>","_blank" );' class="btn btn-default retailer_xl">Download Templates</a>
                         <?php } ?>
-                    <!--</div>-->
                 <?php echo form_close(); ?>
 
             </div>

@@ -105,7 +105,7 @@ echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
 
                                 <div class="form-group">
                                     <label>From Month<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="from_month" id="form_month" placeholder="">
+                                    <input type="text" class="form-control" name="from_month" id="form_month" placeholder="" readonly>
                                     <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                         <a href="#">
                                             <i class="fa fa-calendar" aria-hidden="true">
@@ -118,7 +118,7 @@ echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
 
                                 <div class="form-group">
                                     <label>TO Month<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
+                                    <input type="text" class="form-control" name="to_month" id="to_month" placeholder="" readonly>
                                     <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                         <a href="#">
                                             <i class="fa fa-calendar" aria-hidden="true">

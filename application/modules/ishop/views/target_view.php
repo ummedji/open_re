@@ -10,14 +10,14 @@ echo form_open('',$attributes);
                     <div class="form-group">
                         <div class="form-group">
                             <label>From Month<span style="color: red">*</span></label>
-                            <input type="text" name="from_month_data" id="from_month_data" class="form-control" />
+                            <input type="text" name="from_month_data" id="from_month_data" class="form-control" readonly/>
                         </div>
                     </div>
 
                     <div class="form-group">
                         <div class="form-group">
                             <label>To Month<span style="color: red">*</span></label>
-                            <input type="text" name="to_month_data" id="to_month_data" class="form-control" />
+                            <input type="text" name="to_month_data" id="to_month_data" class="form-control" readonly/>
                         </div>
                     </div>
 

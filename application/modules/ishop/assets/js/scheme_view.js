@@ -4,8 +4,11 @@
 
 $(function () {
     $('#year').datepicker({
-        format: "yyyy",
-        autoclose: true
+
+        format: "yyyy", // Notice the Extra space at the beginning
+        autoclose: true,
+        viewMode: "years",
+        minViewMode: "years"
     });
 });
 

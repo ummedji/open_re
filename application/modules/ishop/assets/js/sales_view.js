@@ -1,15 +1,26 @@
 $(function () {
     $('#form_month').datepicker({
-        format: "yyyy-mm",
-        autoclose: true
+        format: "yyyy-mm", // Notice the Extra space at the beginning
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
+    }).on('changeDate', function(selected){
+        $('#to_month').val('');
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('#to_month').datepicker('setStartDate', startDate);
     });
 
 });
 
 $(function () {
     $('#to_month').datepicker({
-        format: "yyyy-mm",
-        autoclose: true
+        format: "yyyy-mm", // Notice the Extra space at the beginning
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
     });
 });
 

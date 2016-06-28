@@ -22,11 +22,11 @@
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>From Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" readonly>
                     </div>
                     <div class="form-group">
-                        <label>TO Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                        <label>To Date<span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly>
                     </div>
                 </div>
                 <div class="col-md-10 col-md-offset-1">
@@ -49,13 +49,6 @@
                         <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo $login_customer_countryid; ?>" />
 
                         <input class="page_function" type="hidden" name="page_function" id="" value="<?php echo $this->uri->segment(2); ?>" />
-
-                        <?php
-
-                       // if(!isset($this->uri->segment(3)))
-
-                        ?>
-
                         <input class="renderdata" type="hidden" name="renderdata" id="" value="<?php echo $this->uri->segment(3); ?>" />
 
                         <div class="col-md-2 save_btn">

@@ -38,7 +38,7 @@ echo form_open('ishop/physical_stock',$attributes); ?>
                         <div class="col-md-3 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label>Month<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;">
+                                <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;" readonly>
                                 <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                     <a href="#">
                                         <i class="fa fa-calendar" aria-hidden="true">
@@ -119,7 +119,7 @@ echo form_open('ishop/physical_stock',$attributes); ?>
                     <div class="col-md-4 col-md-offset-4 tp_form text-center_form" >
                         <div class="form-group">
                             <label>Month<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="">
+                            <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" readonly>
                             <div class="cal_icon">
                                 <a href="#">
                                     <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -202,7 +202,7 @@ echo form_open('',$attributes); ?>
 <?php
 echo theme_view('common/middle');
 ?>
-</div>
+<!--</div>-->
 <?php echo form_close(); ?>
 
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
@@ -244,22 +244,15 @@ if($current_user->role_id != 8)
                 </span>
                                <input type="text" class="form-control" readonly>
                         </div>
+                        <label id="upload_file_data-error" class="error" for="upload_file_data"></label>
                         <div class="clearfix"></div>
                     </div>
 
-                    <?php
-                    if($_SERVER['SERVER_NAME'] == "localhost"){
-                        $folder = "open_re/trunk";
-                    }
-                    elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
-                        $folder = "qa/re";
-                    }
-                    ?>
-                    <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/physical_stock/physicalstock_data.xlsx","_blank" );' class="btn btn-default">Download Templates</a> </div>
+                    <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/physical_stock/physicalstock_data.xlsx'); ?>","_blank" );' class="btn btn-default">Download Templates</a> </div>
 
                     <?php echo form_close(); ?>
 
-                <!--</div>-->
+                </div>
             </div>
         </div>
     </div>

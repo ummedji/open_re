@@ -20,17 +20,11 @@ $(document).ready(function(){
 	
 });
 
-
-
-	
 $(document).on("click","table.inner_main",function(){
     
     var month_val = $(this).find("input#month_data").val();
     
     var user_level_form_data = $(this).find("form#user_data_form").serializeArray();
-    
-   // alert(user_level_form_data+"==="+month_val);
-   // console.log(user_level_form_data+"==="+month_val);
     
     $.ajax({
         type: 'POST',
@@ -38,15 +32,11 @@ $(document).on("click","table.inner_main",function(){
         data: {monthval:month_val,userlevel_formdata:user_level_form_data},
         success: function(resp){
             
-            alert(resp);
-            
-            return false;
-            $("div.main").after(resp);
-          //  $("input#budget_value_"+rel_attr_val).val(resp);
+            $("table#table_user_data").remove();
+            $("table.main").after(resp);
             
         }
     });
-    
     
 });
 

@@ -92,22 +92,14 @@ echo form_open('',$attributes); ?>
                 </span>
                        <input type="text" class="form-control" readonly> 
                     </div>
+                    <label id="upload_file_data-error" class="error" for="upload_file_data"></label>
                     <div class="clearfix"></div>
                 </div>
-               
-                <?php
-                   if($_SERVER['SERVER_NAME'] == "localhost"){
-                       $folder = "open_re/trunk";
-                   }
-                   elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
-                       $folder = "qa/re";
-                   }
-                ?>
-                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("http://<?php echo $_SERVER['SERVER_NAME']; ?>/<?php echo $folder; ?>/public/assets/uploads/Uploads/credit_limit/creditlimit_data.xlsx","_blank" );' class="btn btn-default">Download Templates</a> </div>
+
+                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button>
+                    <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/credit_limit/creditlimit_data.xlsx'); ?>","_blank" );' class="btn btn-default">Download Templates</a> </div>
                 
                 <?php echo form_close(); ?>
-                
-            <!--</div>-->
         </div>
     </div>
 </div>

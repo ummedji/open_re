@@ -1093,7 +1093,7 @@ class Esp_model extends BF_Model
 				$forecast_update_status = "Yes";
 			}
 			
-			$final_array[$user_name] = $forecast_update_status;
+			$final_array[] = $user_name."|||".$forecast_update_status;
 			
 		}
 		

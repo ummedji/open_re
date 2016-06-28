@@ -196,7 +196,7 @@ echo form_open('',$attributes); ?>
                 <div class="form-group">
                     <div class="form-group">
                         <label>Date<span style="color: red">*</span></label>
-                        <input type="text" name="order_date" class="order_date form-control" id="order_date" />
+                        <input type="text" name="order_date" class="order_date form-control" id="order_date"  readonly/>
                     </div>
                 </div>
                 <div class="form-group">

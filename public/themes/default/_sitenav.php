@@ -65,7 +65,7 @@
                                         <?php
                                     }
                                     ?>
-                                    <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='order_place') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_place') ?>">ORDER PLACE</a></li>
+                                    <li role="presentation" class="<?php echo ($segment=='ishop' && ($segment2=='order_place' || $segment2=='order_status')) ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/order_place') ?>">ORDER PLACE</a></li>
 
                                     <?php if($current_user->role_id == 7 || $current_user->role_id == 9 || $current_user->role_id == 10 ) {
                                         ?>
@@ -75,7 +75,7 @@
                                     ?>
                                     <?php if($current_user->role_id == 7 || $current_user->role_id == 8) {
                                         ?>
-                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='target') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/target') ?>">TARGET</a></li>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && ($segment2=='target' || $segment2=='budget' )) ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/target') ?>">TARGET</a></li>
                                         <?php
                                     }
                                     if($current_user->role_id == 9)
@@ -131,7 +131,7 @@
 
                                     <?php if($current_user->role_id == 8) {
                                         ?>
-                                        <li role="presentation" class="<?php echo ($segment=='ishop' && $segment2=='ishop_sales') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/ishop_sales') ?>">SALES UPDATE</a></li>
+                                        <li role="presentation" class="<?php echo ($segment=='ishop' && ($segment2=='ishop_sales' || $segment2=='physical_stock'  || $segment2=='sales_view')) ? 'active' :'' ;?>"><a href="<?php echo base_url('/ishop/ishop_sales') ?>">SALES UPDATE</a></li>
                                         <?php
                                     }
                                 }

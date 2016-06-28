@@ -10,11 +10,11 @@
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>From Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="">
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" readonly>
                     </div>
                     <div class="form-group">
-                        <label>TO Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                        <label>To Date<span style="color: red">*</span></label>
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly>
                     </div>
                 </div>
                 <div class="col-md-10 col-md-offset-1">

@@ -5,16 +5,22 @@
 /*Date Picker*/
 $(function () {
     $('#form_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
+    }).on('changeDate', function(selected){
+        $('#to_date').val('');
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('#to_date').datepicker('setStartDate', startDate);
     });
 
 });
 
 $(function () {
     $('#to_date').datepicker({
-        format: "yyyy-mm-dd"
+        format: "yyyy-mm-dd",
+        autoclose: true
     });
-
 });
 /*Date Picker*/
 

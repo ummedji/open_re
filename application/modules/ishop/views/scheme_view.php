@@ -24,7 +24,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                    <!-- <div class="col-md-4 col-sm-6 tp_form">-->
                         <div class="form-group">
                             <label>Year<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="year" id="year" placeholder="">
+                            <input type="text" class="form-control" name="year" id="year" placeholder="" readonly>
                         </div>
                     <!--</div>-->
                     <?php if($current_user->role_id == 7){

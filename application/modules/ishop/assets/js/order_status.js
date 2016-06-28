@@ -6,20 +6,17 @@ $(document).ready(function(){
     
     $("#form_date").datepicker({
       format: "yyyy-mm-dd",
-      showOn: "button",
-      buttonImage: site_url+"/public/themes/default/images/calendar.gif",
-      buttonImageOnly: true,
-      buttonText: "Select date",
       autoclose: true
+    }).on('changeDate', function(selected){
+        $('#to_date').val('');
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('#to_date').datepicker('setStartDate', startDate);
     });
     
     
     $("#to_date").datepicker({
       format: "yyyy-mm-dd",
-      showOn: "button",
-      buttonImage: site_url+"/public/themes/default/images/calendar.gif",
-      buttonImageOnly: true,
-      buttonText: "Select date",
       autoclose: true
     });
 
