@@ -74,6 +74,7 @@ class Auth
         // The users language file is needed for this to work from other modules.
 		$this->ci->lang->load('users/users');
 		$this->ci->load->model('users/user_model');
+		$this->ci->load->model('country_master/country_master_model');
 		$this->ci->load->library('session');
 
         // Try to log the user in from session/cookie data.
@@ -306,6 +307,12 @@ class Auth
             return false;
         }
 
+        //Add Country_local Date Formete
+
+        $local_date = $this->ci->country_master_model->find($user->country_id);
+        $user->local_date = $local_date->local_date_formet;
+
+
         // Load the security helper for the do_hash() function.
 				$this->ci->load->helper('security');
 
@@ -315,6 +322,8 @@ class Auth
         ) {
             return false;
 			}
+
+
 
         $this->user = $user;
 			$this->user->id = (int) $this->user->id;

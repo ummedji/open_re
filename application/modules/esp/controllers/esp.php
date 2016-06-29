@@ -125,17 +125,36 @@ class Esp extends Front_Controller
     */
     
     
-    public function get_pbg_sku_data(){
-        
-        $user = $this->auth->user();
-        $login_user_id = $user->id;
-        
-        $pbgid = $_POST["pbgid"];
-        $from_month = $_POST["frommonth"];
-        $to_month = $_POST["tomonth"];
-        
-        $businesscode = $_POST["businesscode"];
-        
+    public function get_pbg_sku_data($webservice_data=null){
+        		
+        	
+        if($webservice_data == NULL){
+        	
+			//IF NOT WEBSERVICE
+			
+	        $user = $this->auth->user();
+	        $login_user_id = $user->id;
+	        
+	        $pbgid = $_POST["pbgid"];
+	        $from_month = $_POST["frommonth"];
+	        $to_month = $_POST["tomonth"];
+	        
+	        $businesscode = $_POST["businesscode"];
+		}
+		else{
+			
+			//IF WEBSERVICE
+			
+			$login_user_id = $webservice_data['login_user_id'];
+	        
+	        $pbgid = $webservice_data['pbg_id'];
+	        $from_month = $webservice_data['from_month'];
+	        $to_month = $webservice_data['to_month'];
+	        
+	        $businesscode = $webservice_data['business_code'];
+			
+		}
+		
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
         
@@ -172,9 +191,7 @@ class Esp extends Front_Controller
                                  $lock_by_id = "";
                                  $check_lock_forecast_id = "";
 
-                            //    echo "<pre>";
-                            //    print_r($employee_month_product_forecast_data);
-
+                            
                                 if($employee_month_product_forecast_data1 != 0){
 
                                    // $lock_status = $employee_month_product_forecast_data1[0]['lock_status'];
@@ -1838,46 +1855,6 @@ class Esp extends Front_Controller
         die;
         
     }
-   
-   /*
-   public function test_recuricive_func($get_level_user_data){
-   	
-	$final_array = array();
-	
-	if(!empty($get_level_user_data)){
-	
-	
-	$k = 1;
-		
-	foreach($get_level_user_data as $emp_keyid =>$empdata){
-		
-		if(!empty($empdata)){
-		$d = $this->get_user_level_data($empdata['id']);
-		
-		if(!empty($empdata)){
-			
-			$e = $this->test_recuricive_func($d);
-			
-			
-			$final_array["Level".$k][] = $get_level_user_data;
-			
-			//print_r($get_level_user_data);
-			
-		}
-		
-	}
-		
-		$k++;
-	}
-	
-   }
-	
-	echo "<pre>";
-	print_r($final_array);
-	
-   }
-   
-   */
    
    
     public function forecast_status(){

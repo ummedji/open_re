@@ -44,6 +44,7 @@ class Ishop extends Front_Controller
 	public function index()
 	{
 
+
 		Assets::add_module_js('ishop', 'primary_sales.js');
 		$user = $this->auth->user();
 		$distributor = $this->ishop_model->get_distributor_by_user_id($user->country_id);
@@ -158,7 +159,8 @@ class Ishop extends Front_Controller
 
 	public function primary_sales_details_view()
 	{
-		//	$user_id = $this->session->userdata('user_id');
+		$user = $this->auth->user();
+
 		$form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
 		$to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
 		$by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
@@ -168,7 +170,7 @@ class Ishop extends Front_Controller
 
 
 
-		$primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,null,$page);
+		$primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,null,$page,$user->local_date);
 
 		Template::set('td', $primary_sales_details['count']);
 		Template::set('pagination', (isset($primary_sales_details['pagination']) && !empty($primary_sales_details['pagination'])) ? $primary_sales_details['pagination'] : '' );
@@ -460,7 +462,7 @@ class Ishop extends Front_Controller
 
 		$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
-		$secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no,$user->id,$user->country_id,$sales_view=null,null,null,null,null,$page);
+		$secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no,$user->id,$user->country_id,$sales_view=null,null,null,null,null,$page,null,$user->local_date);
 
 		Template::set('td', $secondary_sales_details['count']);
 		Template::set('pagination', (isset($secondary_sales_details['pagination']) && !empty($secondary_sales_details['pagination'])) ? $secondary_sales_details['pagination'] : '' );
@@ -831,9 +833,10 @@ class Ishop extends Front_Controller
 		Assets::add_module_js('ishop', 'current_stock.js');
 
 		$user = $this->auth->user();
+
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
 		$page = (isset($_POST['page']) ? $_POST['page'] : '');
-		$current_stock= $this->ishop_model->get_all_company_current_stock($user->country_id,null,$page);
+		$current_stock= $this->ishop_model->get_all_company_current_stock($user->country_id,null,$page,$user->local_date);
 
 		Template::set('td', $current_stock['count']);
 		Template::set('pagination', (isset($current_stock['pagination']) && !empty($current_stock['pagination'])) ? $current_stock['pagination'] : '' );
@@ -1809,7 +1812,7 @@ class Ishop extends Front_Controller
                 $distributor_id = $_POST["distributor_id"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate,null,null,null,null,null,null,$user->local_date);
                 
                 
                 
@@ -1824,7 +1827,7 @@ class Ishop extends Front_Controller
                 $customer_id = $_POST["retailer_id"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,null,null,null,null,null,null,$user->local_date);
                 
                 
          }
@@ -1861,7 +1864,7 @@ class Ishop extends Front_Controller
                 $page_function = $_POST["page_function"];
                 
                 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$farmer_data,$from_date,$todate,$order_tracking_no);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$farmer_data,$from_date,$todate,$order_tracking_no,null,null,null,null,null,$user->local_date);
                 
                 
                 
@@ -1877,7 +1880,7 @@ class Ishop extends Front_Controller
                 $distributor_id = $_POST["distributor_data"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate,null,null,null,null,null,null,$user->local_date);
                 
                 
                 
@@ -1892,7 +1895,7 @@ class Ishop extends Front_Controller
                 $customer_id = $_POST["retailer_data"];
                 $page_function = $_POST["page_function"];
 
-                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+                $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,null,null,null,null,null,null,$user->local_date);
                 
                 //echo "<pre>";
                 //print_r($order_data);
@@ -1913,7 +1916,7 @@ class Ishop extends Front_Controller
             $radio_checked = "";
             $customer_id = $loginuserid;
             
-            $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+            $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,null,null,null,null,null,null,$user->local_date);
             
         }
         else if($loginusertype == 10){
@@ -1927,7 +1930,7 @@ class Ishop extends Front_Controller
             $radio_checked = "";
             $customer_id = $loginuserid;
             
-            $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate);
+            $order_data = $this->ishop_model->get_order_data($loginusertype,$logined_user_countryid,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,null,null,null,null,null,null,$user->local_date);
             
             
         }

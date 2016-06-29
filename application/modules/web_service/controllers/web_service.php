@@ -28,6 +28,7 @@ class Web_service extends Front_Controller
         // Load Models
         $this->load->model('users/user_model');
         $this->load->model('ishop/ishop_model');
+		$this->load->model('esp/esp_model');
 
         // Load Languages
         $this->lang->load('web_service');
@@ -320,6 +321,48 @@ class Web_service extends Front_Controller
             $result['message'] = 'Success';
             $result['data'] = $data;
         }
+		elseif(isset($user_id) && !empty($user_id)) {
+			
+			//FOR GETTING USER LEVEL DATA
+			
+			$user_data = modules::run('esp/esp/get_user_level_data', $user_id);
+			
+            if(!empty($user_data))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Successfull';
+				$result['data'] = $user_data;
+				
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No data found';
+				$result['data'] = array();
+            }
+			
+			
+		}
+		elseif(isset($country_id) && !empty($country_id)) {
+			
+			//FOR GETTING PBG DATA
+			
+			$pbg_data = $this->esp_model->get_pbg_data($country_id);
+			
+            if(!empty($pbg_data))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Successfull';
+				$result['data'] = $pbg_data;
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No data found';
+				$result['data'] = array();
+            }
+			
+		}
         else
         {
             $result['status'] = false;
@@ -513,27 +556,27 @@ class Web_service extends Front_Controller
         $to_date = $this->input->get_post('to_date');
         $customer_id = $this->input->get_post('customer_id');
         $order_tracking_no = $this->input->get_post('otn');
-       // $check_type = $this->input->get_post('check_type');
+        $check_type = $this->input->get_post('check_type');
         $page_function = 'order_status';
 
-      /*  if(isset($check_type) && !empty($check_type)){
+        if(isset($check_type) && !empty($check_type)){
             $radio = $check_type;
         }
         else{
             $radio = null;
-        }*/
+        }
 
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
             if(isset($order_tracking_no) && !empty($order_tracking_no)){
               //  testdata('in');
-                $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,null,null,null,$order_tracking_no,null,null,$page_function,null,'web_service');
+                $order_data = $this->ishop_model->get_order_data($role_id,$country_id,$radio,$user_id,null,null,null,$order_tracking_no,null,null,$page_function,null,'web_service');
             }
             else{
-                $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
+                $order_data = $this->ishop_model->get_order_data($role_id,$country_id,$radio,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
             }
 
-
+//testdata($order_data);
             $order_array = array();
             if (!empty($order_data)) {
 
@@ -566,17 +609,112 @@ class Web_service extends Front_Controller
                     }
 
                     $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
-                    $ord = array(
-                        "id" => $order['order_id'],
-                        "entered_by" => $order['display_name'],
-                        "po_no" => $order['PO_no'],
-                        "order_tracking_no" => $order['order_tracking_no'],
-                        "order_date" => $order['order_date'],
-                        "edd" => $order['estimated_delivery_date'],
-                        "amount" => $order['total_amount'],
-                        "order_status" => $order_status,
-                        "details" => !empty($order_details) ? $order_details : array()
-                    );
+
+                    if($role_id == 7){
+                        if($radio == 'retailer')
+                        {
+                            $ord = array(
+                                "id" => $order['order_id'],
+                                "distributor_name" => $order['t_dn'],
+                                "entered_by" => $order['display_name'],
+                                "po_no" => $order['PO_no'],
+                                "order_tracking_no" => $order['order_tracking_no'],
+                                "order_date" => $order['order_date'],
+                                "edd" => $order['estimated_delivery_date'],
+                                "amount" => $order['total_amount'],
+                                "order_status" => $order_status,
+                                "details" => !empty($order_details) ? $order_details : array()
+                            );
+                        }
+                        if($radio == 'distributor')
+                        {
+                            $ord = array(
+                                "id" => $order['order_id'],
+                                "entered_by" => $order['display_name'],
+                                "po_no" => $order['PO_no'],
+                                "order_tracking_no" => $order['order_tracking_no'],
+                                "order_date" => $order['order_date'],
+                                "edd" => $order['estimated_delivery_date'],
+                                "amount" => $order['total_amount'],
+                                "order_status" => $order_status,
+                                "details" => !empty($order_details) ? $order_details : array()
+                            );
+                        }
+                    }
+
+                    if($role_id == 8)
+                    {
+                        if($radio == 'farmer')
+                        {
+                            $ord = array(
+                                "id" => $order['order_id'],
+                                "farmer_name" => $order['f_dn'],
+                                "retailer_name" => $order['t_dn'],
+                                "order_tracking_no" => $order['order_tracking_no'],
+                                "entered_by" => $order['display_name'],
+                                "read_status" => $order['read_status'],
+                                "details" => !empty($order_details) ? $order_details : array()
+                            );
+                        }
+                        if($radio == 'retailer')
+                        {
+                            $ord = array(
+                                "id" => $order['order_id'],
+                                "distributor_name" => $order['t_dn'],
+                                "entered_by" => $order['display_name'],
+                                "po_no" => $order['PO_no'],
+                                "order_tracking_no" => $order['order_tracking_no'],
+                                "order_date" => $order['order_date'],
+                                "edd" => $order['estimated_delivery_date'],
+                                "amount" => $order['total_amount'],
+                                "order_status" => $order_status,
+                                "details" => !empty($order_details) ? $order_details : array()
+                            );
+                        }
+                        if($radio == 'distributor')
+                        {
+                            $ord = array(
+                                "id" => $order['order_id'],
+                                "entered_by" => $order['display_name'],
+                                "po_no" => $order['PO_no'],
+                                "order_tracking_no" => $order['order_tracking_no'],
+                                "order_date" => $order['order_date'],
+                                "edd" => $order['estimated_delivery_date'],
+                                "amount" => $order['total_amount'],
+                                "order_status" => $order_status,
+                                "details" => !empty($order_details) ? $order_details : array()
+                            );
+                        }
+                    }
+                    if($role_id == 9)
+                    {
+                        $ord = array(
+                            "id" => $order['order_id'],
+                            "entered_by" => $order['display_name'],
+                            "po_no" => $order['PO_no'],
+                            "order_tracking_no" => $order['order_tracking_no'],
+                            "order_date" => $order['order_date'],
+                            "edd" => $order['estimated_delivery_date'],
+                            "amount" => $order['total_amount'],
+                            "order_status" => $order_status,
+                            "details" => !empty($order_details) ? $order_details : array()
+                        );
+                    }
+                    if($role_id == 10)
+                    {
+                        $ord = array(
+                            "id" => $order['order_id'],
+                            "distributor_name" => $order['t_dn'],
+                            "entered_by" => $order['display_name'],
+                            "po_no" => $order['PO_no'],
+                            "order_tracking_no" => $order['order_tracking_no'],
+                            "order_date" => $order['order_date'],
+                            "edd" => $order['estimated_delivery_date'],
+                            "amount" => $order['total_amount'],
+                            "order_status" => $order_status,
+                            "details" => !empty($order_details) ? $order_details : array()
+                        );
+                    }
                     array_push($order_array, $ord);
                 }
             }
@@ -3047,6 +3185,141 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
+
+
+	//ESP WEBSERVICE
+	
+	/*
+	 * FOR GETTING EMPLOYEE LEVEL DATA
+	 */
+	/*
+	public function get_employee_level_data(){
+		
+		$user_id = $this->input->get_post('user_id');
+		
+		if(isset($user_id) && $user_id != "")
+        {
+            
+			$user_data = modules::run('esp/esp/get_user_level_data', $user_id);
+			
+            if(!empty($user_data))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Successfull';
+				$result['data'] = $user_data;
+				
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'No data found';
+				$result['data'] = array();
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required";
+        }
+		
+        $this->do_json($result);
+		
+	}
+	*/
+	/*
+	 * FOR GETTING PBG DATA
+	 */
+	
+	public function get_assumption_data(){
+		
+    	$assumption_data = $this->esp_model->get_assumption_data();
+		
+        if(!empty($assumption_data))
+        {
+            $result['status'] = true;
+            $result['message'] = 'Successfull';
+			$result['data'] = $assumption_data;
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = 'No data found';
+			$result['data'] = array();
+        }
+       
+        $this->do_json($result);
+		
+	 }
+	
+	
+	
+	/*
+	 * FOR GETTING FORECAST DATA FOR EMPLOYEE, SELECTED MONTH, SELECTED PBG
+	 */
+	
+	public function forecast_plan(){
+		
+		$user_id = $this->input->get_post('user_id');
+		
+		$form_month = $this->input->get_post('from_month');
+		$to_month = $this->input->get_post('to_month');
+		
+		$pbg_data = $this->input->get_post('pbg_id');
+		
+		$selected_employee = $this->input->get_post('employee_id');
+		
+		$business_data = $this->esp_model->get_business_code($selected_employee);
+		
+		$webservice = "webservice";
+		
+		$data = array("login_user_id" => $user_id,
+					   "from_month" => $form_month,
+					   "to_month" => $to_month,
+					   "pbg_id" => $pbg_data,
+					   "business_code" => $business_data,
+					   "webservice" => $webservice
+					);
+		
+		$forecast_data = modules::run('esp/esp/get_pbg_sku_data', $data);
+		
+		testdata($forecast_data);
+		die;
+		
+	}
+	
+	
+	
+	/*
+	 * FOR GETTING HIREARCHYCIAL USER DATA
+	 */
+	 
+	/* public function test_data($user_id,$role_degigination_data)
+	{
+			$final_array = array();
+		
+			$w = $role_degigination_data-1;
+					
+			$level_user_data = modules::run('esp/esp/get_user_level_data', $user_id);
+			
+			$k = 1;
+			if(!empty($level_user_data))
+			{ 
+				//if(!isset($final_array[$user_id])){
+				//	$final_array[$user_id] = array();	
+				//}
+												
+				foreach($level_user_data as $k=>$d)
+				{
+					$d['child'] = $this->test_data($d["id"],$role_degigination_data);
+					$final_array[$user_id][] = $d;
+				}				
+			}
+		return $final_array;
+		
+	}
+
+*/
+
 
     /**
      * @ Function Name        : do_json

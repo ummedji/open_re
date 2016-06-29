@@ -353,7 +353,7 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no, $web_service = null, $page = null)
+    public function get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no, $web_service = null, $page = null,$local_date = null)
     {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS ips.primary_sales_id as id, ips.invoice_no,ips.invoice_date,bu.user_code,bu.display_name,ips.PO_no,ips.order_tracking_no,ips.total_amount,ips.primary_sales_id ';
         $sql .= 'FROM bf_ishop_primary_sales AS ips ';
@@ -383,11 +383,7 @@ class Ishop_model extends BF_Model
             $primary_sales_detail = $info->result_array();
             return $primary_sales_detail;
         } else {
-            //$info = $this->db->query($sql);
-            //$primary_sales_detail = $info->result_array();
             $primary_sales = $this->grid->get_result_res($sql);
-            //  testdata($primary_sales);
-            // $primary_sales = array('result'=>$primary_sales_detail);
 
             if (isset($primary_sales['result']) && !empty($primary_sales['result'])) {
                 $primary['head'] = array('Sr. No.', 'Action', 'Invoice No', 'Invoice Date', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.', 'Dispatch Amount');
@@ -411,7 +407,16 @@ class Ishop_model extends BF_Model
                     $order_tracking_no = '<div class="order_tracking_no_' . $ps["primary_sales_id"] . '"><span class="order_tracking_no">' . $ps['order_tracking_no'] . '</span></div>';
 
 
-                    $primary['row'][] = array($i, $ps['primary_sales_id'], $invoice_no, $ps['invoice_date'], $ps['user_code'], $ps['display_name'], $po_no, $order_tracking_no, $ps['total_amount']);
+                    if($local_date != null)
+                    {
+                        $date = strtotime($ps['invoice_date']);
+                        $invoice_date = date($local_date,$date);
+                    }
+                    else{
+                        $invoice_date = $ps['invoice_date'];
+                    }
+
+                    $primary['row'][] = array($i, $ps['primary_sales_id'], $invoice_no, $invoice_date, $ps['user_code'], $ps['display_name'], $po_no, $order_tracking_no, $ps['total_amount']);
                     $i++;
                 }
                 $primary['eye'] = 1;
@@ -1421,7 +1426,7 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no, $user_id, $country_id, $sales_view = null, $from_month = null, $to_month = null, $geo_level = null, $distributor_id = null, $page = null, $web_service = null)
+    public function secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no, $user_id, $country_id, $sales_view = null, $from_month = null, $to_month = null, $geo_level = null, $distributor_id = null, $page = null, $web_service = null,$local_date=null)
     {
         $sql = 'SELECT iss.secondary_sales_id as id,bu1.display_name as entry_by,iss.etn_no,iss.created_on,iss.invoice_no,iss.invoice_date,bu.user_code,bu.display_name,iss.PO_no,iss.order_tracking_no,iss.total_amount,iss.secondary_sales_id ';
         $sql .= 'FROM bf_ishop_secondary_sales AS iss ';
@@ -1476,7 +1481,20 @@ class Ishop_model extends BF_Model
 
                     $order_tracking_no = '<div class="order_tracking_no_' . $ss["secondary_sales_id"] . '"><span class="order_tracking_no">' . $ss['order_tracking_no'] . '</span></div>';
 
-                    $secondary['row'][] = array($i, $ss['secondary_sales_id'], $ss['entry_by'], $ss['created_on'], $ss['etn_no'], $invoice_no, $invoice_date, $ss['user_code'], $ss['display_name'], $PO_no, $order_tracking_no, $ss['total_amount']);
+                    if($local_date != null){
+                        $created = strtotime($ss['created_on']);
+                        $created_date = date($local_date, $created);
+
+                        $invoice = strtotime($ss['invoice_date']);
+                        $invoices_date = date($local_date, $invoice);
+
+                    }
+                    else{
+                        $created_date =  $ss['created_on'];
+                        $invoices_date = $invoice_date;
+                    }
+
+                    $secondary['row'][] = array($i, $ss['secondary_sales_id'], $ss['entry_by'],$created_date, $ss['etn_no'], $invoice_no, $invoices_date, $ss['user_code'], $ss['display_name'], $PO_no, $order_tracking_no, $ss['total_amount']);
                     $i++;
                 }
                 $secondary['eye'] = 1;
@@ -1944,55 +1962,14 @@ class Ishop_model extends BF_Model
                     $stock_month = strtotime($stock_month);
                     $stock_month = date('Y-m', $stock_month);
 
-                    /* dumpme($stock_month);
-                    dumpme($prod_sku);
-                    dumpme($qty);
-                    testdata($unit);*/
-
                     $qty_kgl = $this->get_product_conversion_data($prod_sku, $qty, $unit);
 
                     $login_customer_role = $user_role;
-
-                    /* if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
-                    {
-                        $cust_id=$retailer_id;
-                    }
-                    elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
-                    {
-                        $cust_id=$distributor_id;
-                    }
-                    else{
-                        $cust_id=$user_id;
-                    }*/
                     $cust_id = $user_id;
 
                     $product = $this->check_products_phy_stock($stock_month, $prod_sku, $unit, $cust_id);
 
                     if (isset($product) && !empty($product) && $product != 0) {
-                        /*  if($login_customer_role == 8)
-                        {
-                            if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '')
-                            {
-                                $customers_id=$retailer_id;
-                            }
-                            elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '')
-                            {
-                                $customers_id=$distributor_id;
-                            }
-                            $physical_stock_update_data = array(
-                                'stock_month' => $stock_month.'-01',
-                                'customer_id' => $customers_id,
-                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                                'modified_by_user' => $user_id,
-                                'country_id' => $country_id,
-                                'status' => '1',
-                                'modified_on' => date('Y-m-d H:i:s')
-                            );
-
-                        }*/
                         if ($login_customer_role == 9) {
 
                             $physical_stock_update_data = array(
@@ -2025,34 +2002,6 @@ class Ishop_model extends BF_Model
                         $this->db->where('stock_id', $product[0]['stock_id']);
                         $this->db->update('ishop_physical_stock', $physical_stock_update_data);
                     } else {
-                        // var_dump('in');die;
-                        /*if($login_customer_role == 8)
-                        {
-                            if(isset($retailer_id) && !empty($retailer_id) && $retailer_id != '0')
-                            {
-                                $customers_id=$retailer_id;
-                            }
-                            elseif(isset($distributor_id) && !empty($distributor_id) && $distributor_id != '0')
-                            {
-                                $customers_id=$distributor_id;
-                            }
-
-                            $physical_stock_data = array(
-                                'stock_month' => $stock_month.'-01',
-                                'customer_id' => $customers_id,
-                                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                                'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
-                                'created_by_user' => $user_id,
-                                'modified_by_user' => $user_id,
-                                'country_id' => $country_id,
-                                'status' => '1',
-                                'created_on' => date('Y-m-d H:i:s'),
-                                'modified_on' => date('Y-m-d H:i:s'),
-                            );
-
-                        }*/
                         if ($login_customer_role == 9) {
 
                             $physical_stock_data = array(
@@ -2973,7 +2922,7 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function get_all_company_current_stock($country_id, $web_service = null, $page = null)
+    public function get_all_company_current_stock($country_id, $web_service = null, $page = null,$local_date= null)
     {
 
         //$sql = 'SELECT iccs.stock_id AS id,iccs.stock_id,iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
@@ -2998,11 +2947,7 @@ class Ishop_model extends BF_Model
             $stock = $info->result_array();
             return $stock;
         } else {
-            /* $info = $this->db->query($sql);
-        $stock = $info->result_array();
-        $stock_detail = array('result'=>$stock);*/
             $stock_detail = $this->grid->get_result_res($sql);
-            //testdata($stock_detail);
 
             if (isset($stock_detail['result']) && !empty($stock_detail['result'])) {
                 $stock_view['head'] = array('Sr. No.', 'Action', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrusticted Qty.', 'Batch', 'Batch Expiry Date', 'Batch Mfg. Date');
@@ -3017,6 +2962,11 @@ class Ishop_model extends BF_Model
                 }
                 foreach ($stock_detail['result'] as $sd) {
                     $product_sku_id = '<div class="product_sku_id_' . $sd["stock_id"] . '"><span class="product_sku_id" style="display:none">' . $sd['product_sku_id'] . '</span></div>';
+                    if($local_date != null )
+                    {
+
+                    }
+
                     $date = '<div class="date_' . $sd["stock_id"] . '"><span class="date" style="display:none">' . $sd['date'] . '</span></div>';
 
                     $intrum_quantity = $product_sku_id . '<div class="int_qty_' . $sd["stock_id"] . '"><span class="int_qty">' . $sd['intrum_quantity'] . '</span></div>';
@@ -3027,6 +2977,7 @@ class Ishop_model extends BF_Model
                     $batch_exp_date = '<div class="batch_exp_date_' . $sd["stock_id"] . '"><span class="batch_exp_date">' . $sd['batch_exp_date'] . '</span></div>';
 
                     $batch_mfg_date = '<div class="batch_mfg_date_' . $sd["stock_id"] . '"><span class="batch_mfg_date">' . $sd['batch_mfg_date'] . '</span></div>';
+
 
                     $stock_view['row'][] = array($i, $sd['stock_id'], $sd['date'], $sd['product_sku_name'], $intrum_quantity, $unrestricted_quantity, $batch, $batch_exp_date, $batch_mfg_date);
                     $i++;
@@ -4660,7 +4611,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
      * @ Function Return    : array
      * */
 
-    public function get_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null)
+    public function get_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null,$local_date=null)
     {
         //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
 
@@ -4734,7 +4685,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $info = $this->db->query($sql);
 
             $order_data = $info->result_array();
-            //testdata($order_data);
+          //  testdata($order_data);
             return $order_data;
 
         } else {
@@ -4781,45 +4732,96 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         }
                         $order_view['eye'] = '';
 
-                    } else {
-
-                        $order_view['head'] = array('Sr. No.', 'Remove', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
-                        $order_view['count'] = count($order_view['head']);
-                        if ($page != null || $page != "") {
-                            $i = $page * 10 - 9;
-                        } else {
-                            $i = 1;
-                        }
-
-                        foreach ($orderdata['result'] as $od) {
-
-                            if ($od['order_status'] == 0) {
-                                $order_status = "Pending";
-                            } elseif ($od['order_status'] == 1) {
-                                $order_status = "Dispatched";
-                            } elseif ($od['order_status'] == 3) {
-                                $order_status = "Rejected";
-                            } elseif ($od['order_status'] == 4) {
-                                $order_status = "op_ackno";
-                            }
-
-                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
-
-                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
-                            $i++;
-
-
-                            if ($od['order_status'] == 4) {
-                                $order_view['delete'][] = '';
+                    } else
+                    {
+                        //testdata($orderdata['result']);
+                        if($radio_checked == "retailer"){
+                            $order_view['head'] = array('Sr. No.', 'Remove','Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                            $order_view['count'] = count($order_view['head']);
+                            if ($page != null || $page != "") {
+                                $i = $page * 10 - 9;
                             } else {
-                                $order_view['delete'][] = 'is_idelete';
+                                $i = 1;
                             }
+
+                            foreach ($orderdata['result'] as $od) {
+
+                                if ($od['order_status'] == 0) {
+                                    $order_status = "Pending";
+                                } elseif ($od['order_status'] == 1) {
+                                    $order_status = "Dispatched";
+                                } elseif ($od['order_status'] == 3) {
+                                    $order_status = "Rejected";
+                                } elseif ($od['order_status'] == 4) {
+                                    $order_status = "op_ackno";
+                                }
+
+                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                                if($local_date != null){
+                                    $date = strtotime($od['order_date']);
+                                    $order_date = date($local_date,$date);
+                                }
+                                else{
+                                    $order_date = $od['order_date'];
+                                }
+                                $order_view['row'][] = array($i, $od['order_id'],$od['t_dn'],$order_date, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                                $i++;
+
+
+                                if ($od['order_status'] == 4) {
+                                    $order_view['delete'][] = '';
+                                } else {
+                                    $order_view['delete'][] = 'is_idelete';
+                                }
+                            }
+                            $order_view['eye'] = '';
+                        }
+                        else{
+
+                            $order_view['head'] = array('Sr. No.', 'Remove', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                            $order_view['count'] = count($order_view['head']);
+                            if ($page != null || $page != "") {
+                                $i = $page * 10 - 9;
+                            } else {
+                                $i = 1;
+                            }
+
+                            foreach ($orderdata['result'] as $od) {
+
+                                if ($od['order_status'] == 0) {
+                                    $order_status = "Pending";
+                                } elseif ($od['order_status'] == 1) {
+                                    $order_status = "Dispatched";
+                                } elseif ($od['order_status'] == 3) {
+                                    $order_status = "Rejected";
+                                } elseif ($od['order_status'] == 4) {
+                                    $order_status = "op_ackno";
+                                }
+
+                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                                if($local_date != null){
+                                    $date = strtotime($od['order_date']);
+                                    $order_date = date($local_date,$date);
+                                }
+                                else{
+                                    $order_date = $od['order_date'];
+                                }
+                                $order_view['row'][] = array($i, $od['order_id'],$order_date, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                                $i++;
+
+
+                                if ($od['order_status'] == 4) {
+                                    $order_view['delete'][] = '';
+                                } else {
+                                    $order_view['delete'][] = 'is_idelete';
+                                }
+
+
+                            }
+                            $order_view['eye'] = '';
 
 
                         }
-                        $order_view['eye'] = '';
-
-
                     }
                 } else if ($loginusertype == 8) {
 
@@ -4871,15 +4873,31 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_view['row'][] = array($i, "", $od['f_dn'] , $od['t_dn'], $otn, $od['display_name'], $read_status);
 
                         } elseif ($radio_checked == "retailer") {
+                            if($local_date != null){
+                                $date = strtotime($od['order_date']);
+                                $order_date = date($local_date,$date);
+                            }
+                            else{
+                                $order_date = $od['order_date'];
+                            }
 
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od['t_dn'], $od["order_date"], $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od['t_dn'], $order_date, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
 
                         } elseif ($radio_checked == "distributor") {
+                            if($local_date != null){
+                                $date = strtotime($od['order_date']);
+                                $order_date = date($local_date,$date);
 
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od["order_date"], $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
+                                $date1 = strtotime($od["estimated_delivery_date"]);
+                               $estimated_date =  date($local_date,$date1);
 
+                            }
+                            else{
+                                $order_date = $od['order_date'];
+                                $estimated_date = $od["estimated_delivery_date"] ;
+                            }
+                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $order_date, $od["PO_no"], $otn, $estimated_date, $od["total_amount"], $od['display_name'], $order_status);
                         }
-
                         $i++;
                     }
                     $order_view['eye'] = '';
@@ -4920,7 +4938,19 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
 
-                            $order_view['row'][] = array($i, '', $od['order_date'], $po_no, $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                            if($local_date != null){
+                                $date = strtotime($od['order_date']);
+                                $order_date = date($local_date,$date);
+
+                                $date1 = strtotime($od["estimated_delivery_date"]);
+                                $estimated_date =  date($local_date,$date1);
+
+                            }
+                            else{
+                                $order_date = $od['order_date'];
+                                $estimated_date = $od["estimated_delivery_date"] ;
+                            }
+                            $order_view['row'][] = array($i, '', $order_date, $po_no, $otn, $estimated_date, $od['total_amount'], $od['display_name'], $order_status);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -4942,14 +4972,18 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
-
-                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $otn, $od['display_name'], $po_no);
+                            if($local_date != null){
+                                $date = strtotime($od['order_date']);
+                                $order_date = date($local_date,$date);
+                            }
+                            else{
+                                $order_date = $od['order_date'];
+                            }
+                            $order_view['row'][] = array($i, $od['order_id'],$order_date, $otn, $od['display_name'], $po_no);
                             $i++;
                         }
                         $order_view['eye'] = '';
-
                     }
-
 
                 } else if ($loginusertype == 10)
                 {
@@ -4983,8 +5017,19 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a class="set_pono" onClick="show_po_popup(' . trim($od['order_id']) . ','."'".trim($od['PO_no'])."'".');" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
+                            if($local_date != null){
+                                $date = strtotime($od['order_date']);
+                                $order_date = date($local_date,$date);
 
-                            $order_view['row'][] = array($i, '', $od['t_dn'], $od['order_date'], $po_no, $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                                $date1 = strtotime($od["estimated_delivery_date"]);
+                                $estimated_date =  date($local_date,$date1);
+
+                            }
+                            else{
+                                $order_date = $od['order_date'];
+                                $estimated_date = $od["estimated_delivery_date"] ;
+                            }
+                            $order_view['row'][] = array($i, '', $od['t_dn'],$order_date, $po_no, $otn,$estimated_date, $od['total_amount'], $od['display_name'], $order_status);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -5008,14 +5053,18 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
 
-                            $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $otn, $od['f_dn'], $od['display_name'], $po_no);
+                            if($local_date != null){
+                                $date = strtotime($od['order_date']);
+                                $order_date = date($local_date,$date);
+                            }
+                            else{
+                                $order_date = $od['order_date'];
+                            }
+                            $order_view['row'][] = array($i, $od['order_id'],$order_date, $otn, $od['f_dn'], $od['display_name'], $po_no);
                             $i++;
                         }
                         $order_view['eye'] = '';
-
                     }
-
-
                 }
 
                 $order_view['pagination'] = $orderdata['pagination'];
@@ -5025,7 +5074,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 return false;
             }
         }
-
     }
 
 
@@ -5054,7 +5102,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function order_status_product_details_view_by_id($order_id, $radiochecked, $logincustomertype, $action_data = null, $web_service = null)
     {
-
         $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity ';
         $sql .= ' FROM bf_ishop_product_order as bipo ';
         $sql .= ' LEFT JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
@@ -5074,7 +5121,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $order_detail = $this->grid->get_result_res($sql);
 
             // $order_detail = $this->db->get()->result_array();
-
             //   $order_detail = array('result'=>$order_details);
 
             if (isset($order_detail['result']) && !empty($order_detail['result'])) {
