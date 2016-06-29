@@ -153,9 +153,10 @@ class Esp extends Front_Controller
 	        
 	        $businesscode = $webservice_data['business_code'];
 			
+			//testdata($webservice_data);
+			
 		}
 		
-		echo $login_user_id."---".$pbgid."---".$from_month."---".$to_month."---".$businesscode;die;
 		
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
@@ -251,14 +252,20 @@ class Esp extends Front_Controller
             
             $forecast_id = "";
             
+			
+		
+		
+			
             foreach($pbg_sku_data as $skukey => $skuvalue){
               $html .= '<tr>';
               $html .= '<td><input type="hidden" name="product_sku_id[]" value="'.$skuvalue['product_sku_country_id'].'" />'.$skuvalue['product_sku_name'].'</td>';
                 
                 $l = 1;
                 
+				$webservice_initial_array = array();
+				
+				
                 foreach($month_data as $monthkey => $monthvalue){
-                    
                     
                     $employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
                     
@@ -282,26 +289,8 @@ class Esp extends Front_Controller
                         
                         $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
                         
-						
-						if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
-							$webservice_initial_array["monthname"] = $monthvalue;
-							
-							$webservice_initial_array["productdata"][]["forecastid"] = $forecast_id;
-							$webservice_initial_array["productdata"][]["productid"] = $skuvalue['product_sku_country_id'];
-							$webservice_initial_array["productdata"][]["productname"] = $skuvalue['product_sku_name'];
-							$webservice_initial_array["productdata"][]["forecast_qty"] = $forecast_qty;
-							$webservice_initial_array["productdata"][]["forecast_qty"] = $forecast_value;
-							
-							$webservice_final_array[] = $webservice_initial_array;
-							
-						}
-						
-                        
                     }
 
-					if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
-						return $webservice_final_array;
-					}
 					
                     //CHECK DATA FREEZED OR NOT
                     
@@ -450,11 +439,81 @@ class Esp extends Front_Controller
                          $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     
                         $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+						
+						
+						
+						//testdata($webservice_data);
+						
+						if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+							
+							//testdata($webservice_data);
+							
+							//if(!isset($webservice_initial_array["productdata"]["productid"])){
+								//$webservice_initial_array["productdata"]["productid"] = array();
+							//}
+							
+							
+								$data_inner_array = array();
+							
+							//if(array_key_exists($monthvalue,$data_inner_array)){
+							
+							//	$data_inner_array[$monthvalue]["monthname"] = $monthvalue;
+								
+								$data_inner_array["forecastid"] = $forecast_id;
+								$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
+								$data_inner_array["productname"] = $skuvalue['product_sku_name'];
+								$data_inner_array["forecast_qty"] = $forecast_qty;
+								$data_inner_array["forecast_value"] = $forecast_value;
+							
+							//}
+							
+							
+						//	if(!in_array($skuvalue['product_sku_country_id'],$webservice_initial_array["productdata"]["productid"])){
+								//$webservice_initial_array["productdata"]
+						//	}
+						
+							
+							//$webservice_initial_array["productdata"][] = $data_inner_array;
+						
+							
+						
+							$webservice_initial_array[$monthvalue]["monthname"] = $monthvalue;
+							
+							$webservice_initial_array[$monthvalue]["productdata"][] = $skuvalue['product_sku_country_id'];
+							
+						//	$webservice_initial_array["productdata"]["forecastid"] = $forecast_id;
+						
+						//$webservice_initial_array[$monthvalue]["productdata"][] = $inner_array();
+						
+						if(array_key_exists($monthvalue,$webservice_initial_array)){
+							
+							array_push($data_inner_array,$webservice_initial_array[$monthvalue]["productdata"]);
+							
+						}
+						else{
+							
+							$webservice_initial_array[$monthvalue]["productdata"][] = $data_inner_array;
+							
+						//	$webservice_initial_array[$monthvalue]["productdata"]["productid"] = $skuvalue['product_sku_country_id'];
+						//	$webservice_initial_array[$monthvalue]["productdata"]["productname"] = $skuvalue['product_sku_name'];
+						//	$webservice_initial_array[$monthvalue]["productdata"]["forecast_qty"] = $forecast_qty;
+						//	$webservice_initial_array[$monthvalue]["productdata"]["forecast_value"] = $forecast_value;
+					
+						}
+							
+							$webservice_final_array = $webservice_initial_array;
+							
+						}
+
+						
                                     
                     }
                         
                     $l++;
                 }
+
+				
+
                $html .= '<td></td>';
                $html .= '</tr>';
                 
@@ -472,6 +531,13 @@ class Esp extends Front_Controller
                 $html .= '</th>';
             $html .= '</tr>';
             
+			
+			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+				//array_values($webservice_final_array);
+				return $webservice_final_array;
+				//die;
+			}
+			
             $assumption_month = array();
             $probablity_month = array();
             
