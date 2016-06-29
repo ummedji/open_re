@@ -192,7 +192,7 @@ $(document).ready(function(){
    $("select#retailer_geo_level_2_data").on("change",function(){
        
        var selected_geo_id = $(this).val();
-       
+
        get_user_by_geo_data(selected_geo_id);
        
       // console.log(selected_user_id +"===="+selected_user_geo_location);
@@ -792,15 +792,15 @@ function get_user_by_geo_data(selected_geo_data){
                      
                 if(checked_type == "retailer" && login_customer_type == 8){
                     
-                     $("select#fo_retailer_data").empty();
+                     $("select#retailer_data").empty();
 
-                    $("select#fo_retailer_data").append('<option value="">Select Retailer Name</option>');
+                    $("select#retailer_data").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#fo_retailer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
+                        $('select#retailer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                     });
 
-                    $("select#fo_retailer_data").selectpicker('refresh');
+                    $("select#retailer_data").selectpicker('refresh');
                     
                 }
                 else if(checked_type == "distributor" && login_customer_type == 8 ){

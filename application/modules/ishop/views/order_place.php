@@ -269,7 +269,7 @@ echo form_open('',$attributes); ?>
                         <div class="col-md-3">
                             <div class="form-group fulle_wd">
                                 <label>Retailer Name<span style="color: red">*</span></label>
-                                <select class="selectpicker retailer_data" id="fo_retailer_data" name="fo_retailer_data" data-live-search="true" >
+                                <select class="selectpicker retailer_data" id="retailer_data" name="fo_retailer_data" data-live-search="true" >
                                 </select>
                             </div>
                         </div>

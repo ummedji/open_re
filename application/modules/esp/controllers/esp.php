@@ -155,6 +155,8 @@ class Esp extends Front_Controller
 			
 		}
 		
+		echo $login_user_id."---".$pbgid."---".$from_month."---".$to_month."---".$businesscode;die;
+		
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
         
@@ -168,6 +170,8 @@ class Esp extends Front_Controller
         $html = "";
         $html1 = "";
         $html2 = "";
+		
+		$webservice_final_array = array();
         
         if($pbg_sku_data != 0){
             
@@ -220,6 +224,7 @@ class Esp extends Front_Controller
                             }
                             
                             $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
+							
                         }
                        
                    $html .= '</tr>';
@@ -277,9 +282,27 @@ class Esp extends Front_Controller
                         
                         $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
                         
+						
+						if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+							$webservice_initial_array["monthname"] = $monthvalue;
+							
+							$webservice_initial_array["productdata"][]["forecastid"] = $forecast_id;
+							$webservice_initial_array["productdata"][]["productid"] = $skuvalue['product_sku_country_id'];
+							$webservice_initial_array["productdata"][]["productname"] = $skuvalue['product_sku_name'];
+							$webservice_initial_array["productdata"][]["forecast_qty"] = $forecast_qty;
+							$webservice_initial_array["productdata"][]["forecast_qty"] = $forecast_value;
+							
+							$webservice_final_array[] = $webservice_initial_array;
+							
+						}
+						
                         
                     }
-                    
+
+					if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+						return $webservice_final_array;
+					}
+					
                     //CHECK DATA FREEZED OR NOT
                     
                     $forecast_freeze_data = $this->esp_model->get_forecast_freeze_status($forecast_id);
@@ -431,7 +454,6 @@ class Esp extends Front_Controller
                     }
                         
                     $l++;
-                    
                 }
                $html .= '<td></td>';
                $html .= '</tr>';

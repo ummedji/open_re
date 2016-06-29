@@ -646,13 +646,19 @@ class Web_service extends Front_Controller
                     {
                         if($radio == 'farmer')
                         {
+                            if($order['read_status']  == 0)
+                            {
+                                $read_status = "Unread";
+                            }else{
+                                $read_status = "Read";
+                            }
                             $ord = array(
                                 "id" => $order['order_id'],
                                 "farmer_name" => $order['f_dn'],
                                 "retailer_name" => $order['t_dn'],
                                 "order_tracking_no" => $order['order_tracking_no'],
                                 "entered_by" => $order['display_name'],
-                                "read_status" => $order['read_status'],
+                                "read_status" => $read_status,
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }

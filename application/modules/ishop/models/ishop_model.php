@@ -4696,9 +4696,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             if (isset($orderdata['result']) && !empty($orderdata['result'])) {
 
                 if ($loginusertype == 7) {
-
                     //FOR HO
-
                     if ($action_data == "order_approval") {
 
                         $order_view['head'] = array('', 'Sr. No.', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.', 'Credit Limit', 'Amount', 'Status');
@@ -4824,9 +4822,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         }
                     }
                 } else if ($loginusertype == 8) {
-
                     //FOR FO
-
                     if ($radio_checked == "farmer") {
 
                         $order_view['head'] = array('Sr. No.', '', 'Farmer Name', 'Retailer Name', 'Order Tracking No.', 'Entered By', 'Read');
@@ -4869,6 +4865,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
                         if ($radio_checked == "farmer") {
+
+                            if ($od['read_status'] == 0) {
+                                $read_status = "Unread";
+                            } else {
+                                $read_status = "Read";
+                            }
 
                             $order_view['row'][] = array($i, "", $od['f_dn'] , $od['t_dn'], $otn, $od['display_name'], $read_status);
 
