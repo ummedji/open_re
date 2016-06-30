@@ -92,7 +92,7 @@ $("select#distributor_geo_level").on("change",function(){
 
 function get_user_by_geo_data(selected_geo_data){
 
-    var checked_type = $('input[name=radio1]:checked').val();
+    var checked_type = $('input[name=checked_type]:checked').val();
 
     var login_customer_type = $("input#login_customer_role").val();
 
@@ -209,7 +209,7 @@ function get_lower_geo_by_parent_geo_rol(selected_geo_id){
     var login_customer_type = $("input#login_customer_role" ).val();
     var customer_selected = $("input#login_customer_id").val();
     var url_seg = $("input.page_function" ).val();
-    var checked_type = $('input[name=radio1]:checked').val();
+    var checked_type = $('input[name=checked_type]:checked').val();
 
     $.ajax({
         type: 'POST',

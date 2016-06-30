@@ -330,12 +330,17 @@ if ($this->input->is_ajax_request()) {
 ?>
 <?php
 if (!$this->input->is_ajax_request()) { ?>
+    <?php
+    $attributes = array('class' => '', 'id' => 'order_status_view_data','name'=>'order_status_view_data');
+    echo form_open('',$attributes);
+    ?>
 <div id="middle_container" class="order_status">
 
 </div>
 <div id="middle_container_product" class="order_status">
 
 </div>
+    <?php echo form_close(); ?>
 <div class="clearfix"></div>
 <?php
 }

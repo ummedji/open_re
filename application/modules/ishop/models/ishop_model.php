@@ -2373,7 +2373,7 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null,$web_service = null)
+    public function view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null,$web_service = null,$local_date=null)
     {
         $sql = 'SELECT itsp.tertiary_sales_id,itsp.sales_month,bu.user_code,bu.display_name ';
         $sql .= 'FROM bf_ishop_tertiary_sales AS itsp ';
@@ -2388,10 +2388,7 @@ class Ishop_model extends BF_Model
         $sql .= 'AND itsp.created_by_user =' . $user_id . ' ';
         $sql .= 'AND itsp.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_id DESC ';
-       // echo $sql;
-        /* $info = $this->db->query($sql);
-        $tertiary_sales_detail = $info->result_array();
-        $sales_detail = array('result'=>$tertiary_sales_detail);*/
+
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);
             $sales_detail = $info->result_array();
@@ -2962,24 +2959,37 @@ class Ishop_model extends BF_Model
                 }
                 foreach ($stock_detail['result'] as $sd) {
                     $product_sku_id = '<div class="product_sku_id_' . $sd["stock_id"] . '"><span class="product_sku_id" style="display:none">' . $sd['product_sku_id'] . '</span></div>';
-                    if($local_date != null )
+
+                    if($local_date != null)
                     {
+                        $date = strtotime($sd['date']);
+                        $c_date = date($local_date,$date);
+
+                        $date1 = strtotime($sd['batch_exp_date']);
+                        $exp_date = date($local_date,$date1);
+
+                        $date2 = strtotime($sd['batch_mfg_date']);
+                        $mfg_date = date($local_date,$date2);
 
                     }
+                    else{
+                        $c_date = $sd['date'];
+                        $exp_date = $sd['batch_exp_date'];
+                        $mfg_date = $sd['batch_mfg_date'];
+                    }
 
-                    $date = '<div class="date_' . $sd["stock_id"] . '"><span class="date" style="display:none">' . $sd['date'] . '</span></div>';
+                    $date = '<div class="date_' . $sd["stock_id"] . '"><span class="date" style="display:none">' . $c_date . '</span></div>';
 
                     $intrum_quantity = $product_sku_id . '<div class="int_qty_' . $sd["stock_id"] . '"><span class="int_qty">' . $sd['intrum_quantity'] . '</span></div>';
                     $unrestricted_quantity = $date . '<div class="unrtd_qty_' . $sd["stock_id"] . '"><span class="unrtd_qty">' . $sd['unrestricted_quantity'] . '</span></div>';
 
                     $batch = '<div class="batch_' . $sd["stock_id"] . '"><span class="batch">' . $sd['batch'] . '</span></div>';
 
-                    $batch_exp_date = '<div class="batch_exp_date_' . $sd["stock_id"] . '"><span class="batch_exp_date">' . $sd['batch_exp_date'] . '</span></div>';
+                    $batch_exp_date = '<div class="batch_exp_date_' . $sd["stock_id"] . '"><span class="batch_exp_date">' . $exp_date . '</span></div>';
 
-                    $batch_mfg_date = '<div class="batch_mfg_date_' . $sd["stock_id"] . '"><span class="batch_mfg_date">' . $sd['batch_mfg_date'] . '</span></div>';
+                    $batch_mfg_date = '<div class="batch_mfg_date_' . $sd["stock_id"] . '"><span class="batch_mfg_date">' . $mfg_date . '</span></div>';
 
-
-                    $stock_view['row'][] = array($i, $sd['stock_id'], $sd['date'], $sd['product_sku_name'], $intrum_quantity, $unrestricted_quantity, $batch, $batch_exp_date, $batch_mfg_date);
+                    $stock_view['row'][] = array($i, $sd['stock_id'], $c_date, $sd['product_sku_name'], $intrum_quantity, $unrestricted_quantity, $batch, $batch_exp_date, $batch_mfg_date);
                     $i++;
                 }
                 $stock_view['eye'] = '';
@@ -2988,8 +2998,6 @@ class Ishop_model extends BF_Model
                 $stock_view['edit'] = 'is_edit';
                 $stock_view['delete'] = 'is_delete';
                 $stock_view['pagination'] = $stock_detail['pagination'];
-                // $product_view['pagination'] = $report_details['pagination'];
-                //testdata($stock_view);
                 return $stock_view;
             }
             else{
@@ -3199,7 +3207,7 @@ class Ishop_model extends BF_Model
      * */
 
 
-    public function get_all_distributors_credit_limit($country_id, $web_service = null, $page = null)
+    public function get_all_distributors_credit_limit($country_id, $web_service = null, $page = null,$local_date = null)
     {
        // $sql = 'SELECT icl.credit_limit_id as id,bu.display_name,icl.credit_limit,icl.current_outstanding_limit,icl.date ';
         $sql ='SELECT SQL_CALC_FOUND_ROWS icl.credit_limit_id as id,bu.display_name,icl.credit_limit,icl.current_outstanding_limit,icl.date ';
@@ -3237,7 +3245,16 @@ class Ishop_model extends BF_Model
                 }
 
                 foreach ($credit_limit_detail['result'] as $cld) {
-                    $credit_limit_view['row'][] = array($i, $cld['display_name'], $cld['credit_limit'], $cld['current_outstanding_limit'], $cld['date']);
+                    if($local_date != null)
+                    {
+                       $date = strtotime($cld['date']);
+                        $crd_date = date($local_date,$date);
+                    }
+                    else{
+                        $crd_date = $cld['date'];
+                    }
+
+                    $credit_limit_view['row'][] = array($i, $cld['display_name'], $cld['credit_limit'], $cld['current_outstanding_limit'],$crd_date);
                     $i++;
                 }
                 $credit_limit_view['eye'] = '';
@@ -4023,9 +4040,14 @@ class Ishop_model extends BF_Model
              */
 
             //    testdata($_POST);
+            if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
+                $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
+            }else{
+                $distributor_id = (isset($_POST["retailer_distributor_id"])) ? $_POST["retailer_distributor_id"] : 0;
+                $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
+            }
 
-            $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
-            $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
 
             if ($retailer_id == 0) {
                 $customer_id_from = $distributor_id;
@@ -4108,7 +4130,6 @@ class Ishop_model extends BF_Model
 
         if($this->db->affected_rows() > 0){
             return 1;
-
         }
         else{
             return 0;
@@ -4436,7 +4457,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
      * @ Function Return    : Json
      * */
 
-    public function get_prespective_order($from_date, $todate, $loginusertype, $loginuserid, $page = null, $web_service = null)
+    public function get_prespective_order($from_date, $todate, $loginusertype, $loginuserid, $page = null, $web_service = null,$local_date = null)
     {
 
         $sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1,bu.display_name as bu_dn,u.display_name as b_dn ';
@@ -4456,16 +4477,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $sql .= 'ORDER BY order_date DESC ';
 
-        //echo $sql;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);
             $prespective_order_data = $info->result_array();
             return $prespective_order_data;
-            //$orderdata = array('result'=>$order_data);
-            // var_dump($product_detail);die;
         } else {
             $prespective_order = $this->grid->get_result_res($sql);
-           // testdata($prespective_order);
             if (isset($prespective_order['result']) && !empty($prespective_order['result'])) {
 
                 if ($loginusertype == 9) {
@@ -4485,9 +4502,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 }
 
                 foreach ($prespective_order['result'] as $po) {
-                    //$read_status = "";
-                    // if($loginusertype == 9){
-
                     if ($po['read_status'] == 0) {
                         $read_status = "<a class='read_" . $po['order_id'] . "' href='javascript:void(0);' onclick = 'mark_as_read(" . $po['order_id'] . ");' >Mark as Read</a>";
                     } else {
@@ -4495,9 +4509,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     }
 
                     $otn = '<div class="eye_i" prdid ="' . $po['order_id'] . '"><a href="javascript:void(0);">' . $po['order_tracking_no'] . '</a></div>';
+                    if($local_date != null)
+                    {
+                      $date = strtotime($po['order_date']);
+                        $doe = date($local_date,$date);
+                    }
+                    else{
+                        $doe = $po['order_date'];
+                    }
 
-
-                    $prespective['row'][] = array($i, $po['b_dn'], $po['PO_no'], $otn, date("Y-m-d", strtotime($po['order_date'])), $po['bu_dn'], $po['address'], $po['primary_mobile_no'], $read_status);
+                    $prespective['row'][] = array($i, $po['b_dn'], $po['PO_no'], $otn, $doe, $po['bu_dn'], $po['address'], $po['primary_mobile_no'], $read_status);
                     $i++;
                 }
                 $prespective['eye'] = "";

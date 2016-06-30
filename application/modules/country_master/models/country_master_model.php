@@ -118,5 +118,4 @@ class Country_master_model extends BF_Model
 		$country=$this->db->get()->result_array();
 		return $country;
 	}
-
 }

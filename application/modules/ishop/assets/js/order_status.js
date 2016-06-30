@@ -75,38 +75,45 @@ $(document).on('submit','#order_status_data_details',function(){
 });
 
 $(document).on('click','div#middle_container_product div.delete_i',function(){
-        
-    var id = $(this).attr('prdid');
+    if (confirm("Are you sure?")) {
+        var id = $(this).attr('prdid');
 
-    $.ajax({
+        $.ajax({
             type: 'POST',
             url: site_url+"ishop/delete_order_detail_data",
             data: {data_id:id},
             success: function(resp){
-                //alert(resp);
-                console.log(resp);
-                //return false;
                 location.reload();
             }
         });
-    return false;
+    }
+    else{
+        return false;
+    }
+
 });
 
 $(document).on('click','div#middle_container div.delete_i',function(){
-        
-    var id = $(this).attr('prdid');
 
-    $.ajax({
+    if (confirm("Are you sure?")) {
+        var id = $(this).attr('prdid');
+
+        $.ajax({
             type: 'POST',
             url: site_url+"ishop/delete_product_order_data",
             data: {data_id:id},
             success: function(resp){
-                console.log(resp);
                 location.reload();
             }
         });
-    return false;
+    }
+    else{
+        return false;
+    }
+
 });
+
+
 
 
 $(document).on('click', 'div.order_status .edit_i', function () {
@@ -184,40 +191,83 @@ $(document).on('click', 'div.order_status .edit_i', function () {
        $("#to_date").val(" ");
        
  });
- 
-/* var order_status_validators = $("#order_status").validate({
-       // ignore: ".ignore",
-        rules: {
-            dis_distributor_geo_level_1_data :{
-                required: true
-            },
-            distributor_id :{
-                required: true
-            },
-            retailer_geo_level_2_data:{ 
-                required: true
-            },
-            retailer_geo_level_1_data:{ 
-                required: true
-            },
-            retailer_distributor_id:{
-                required: true
-            },
-            retailer_id :{ 
-                required: true
-            },
-            form_date:{ 
-                required: true
-            },
-            to_date:{ 
-                required: true
-            },
-            geo_level_2_data:{ 
-                required: true
+
+
+
+    $(document).on('click', '#update_order_details', function (e) {
+        e.preventDefault();
+        var order_data = $("#order_status_view_data").serializeArray();
+      /*  console.log(order_data);
+        return false;*/
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/update_order_status_detail_data',
+            data: order_data,
+            success: function(resp){
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Updated successfully.';
+                }
+                else{
+
+                    message += 'Data not Updated.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
             }
-        }
+        });
+        return false;
     });
- */
+
+
+
+
+    /* var order_status_validators = $("#order_status").validate({
+           // ignore: ".ignore",
+            rules: {
+                dis_distributor_geo_level_1_data :{
+                    required: true
+                },
+                distributor_id :{
+                    required: true
+                },
+                retailer_geo_level_2_data:{
+                    required: true
+                },
+                retailer_geo_level_1_data:{
+                    required: true
+                },
+                retailer_distributor_id:{
+                    required: true
+                },
+                retailer_id :{
+                    required: true
+                },
+                form_date:{
+                    required: true
+                },
+                to_date:{
+                    required: true
+                },
+                geo_level_2_data:{
+                    required: true
+                }
+            }
+        });
+     */
     $("#order_status").on("submit",function(e){
         e.preventDefault();
         var param = $("form#order_status").serializeArray();
@@ -300,6 +350,10 @@ function show_po_popup(order_id,PO_no){
     $('#myModal').modal('show');
     
 }
+
+
+
+
 
 $(document).on("click","#save_po_data",function(){
     

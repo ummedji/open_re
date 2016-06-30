@@ -24,15 +24,14 @@ class Web_service extends Front_Controller
         // Load Libraries
         $this->load->library('users/auth');
         $this->load->library('form_validation');
-
         // Load Models
         $this->load->model('users/user_model');
         $this->load->model('ishop/ishop_model');
-		$this->load->model('esp/esp_model');
 
+        $this->load->model('country_master/country_master_model');
+		$this->load->model('esp/esp_model');
         // Load Languages
         $this->lang->load('web_service');
-
         // Load Others
         /*$check_session = $this->check_active_session();
         if($check_session!==false){
@@ -421,7 +420,10 @@ class Web_service extends Front_Controller
 
         if(isset($user_id))
         {
+            //$local_date = $this->country_master_model->get_local_date_dy_id($user_id);
+
             $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
+            testdata($primary_sales_details);
             if(!empty($primary_sales_details))
             {
                 // For Pagination
@@ -814,6 +816,35 @@ class Web_service extends Front_Controller
         $this->do_json($result);
 
     }
+
+   /* public function  savePOAcknowledgmentdetail()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id)) {
+
+            $id= $this->ishop_model->update_order_detail_data($this->input->post(),'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+    }*/
+
     /**
      * @ Function Name        : getRol
      * @ Function Params    : user_id,country_id,role_id,radio_type (POST)
@@ -3285,21 +3316,30 @@ class Web_service extends Front_Controller
 					   "business_code" => $business_data,
 					   "webservice" => $webservice
 					);
+		if((isset($user_id) && !empty($user_id)) && (isset($form_month) && !empty($form_month)) && (isset($to_month) && !empty($to_month)) && (isset($pbg_data) && !empty($pbg_data)) && (isset($selected_employee) && !empty($selected_employee))){
 		
-		$forecast_data = modules::run('esp/esp/get_pbg_sku_data', $data);
+			$forecast_data = modules::run('esp/esp/get_pbg_sku_data', $data);
+			
+			if(!empty($forecast_data))
+	        {
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $forecast_data;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = array();
+	        }
 		
-		if(!empty($forecast_data))
-        {
-            $result['status'] = true;
-            $result['message'] = 'Successfull';
-			$result['data'] = $forecast_data;
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = 'No data found';
+		}
+		else
+		{
+			$result['status'] = false;
+	        $result['message'] = 'All fields required.';
 			$result['data'] = array();
-        }
+		}
 		
 		$this->do_json($result);
 		
@@ -3320,24 +3360,87 @@ class Web_service extends Front_Controller
 					   "webservice" => $webservice
 					 );
 		
-		$forecast_value_data = modules::run('esp/esp/get_forecast_value_data', $data);
+		if((isset($month_data) && !empty($month_data)) && (isset($product_sku_id) && !empty($product_sku_id)) && (isset($forecast_data) && !empty($forecast_data))){
 		
-		if(!empty($forecast_value_data))
-        {
-            $result['status'] = true;
-            $result['message'] = 'Successfull';
-			$result['data'] = $forecast_value_data;
-        }
-        else
-        {
-            $result['status'] = false;
-            $result['message'] = 'No data found';
-			$result['data'] = array();
-        }
-		
-		testdata($forecast_value_data);
+			
+			$forecast_value_data = modules::run('esp/esp/get_forecast_value_data', $data);
+			
+			if(!empty($forecast_value_data))
+	        {
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $forecast_value_data;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = "";
+	        }
+		}
+		else
+		{
+			$result['status'] = false;
+	        $result['message'] = 'All fields Required.';
+		    $result['data'] = "";
+			
+		}
 		
 		$this->do_json($result);
+		
+	}
+	
+	public function update_freeze_status(){
+		
+		$user_id = $this->input->get_post('user_id');
+		$forecast_id = $this->input->get_post('forecast_id');
+		$freeze_status = $this->input->get_post('freeze_status');
+		
+		$webservice = "webservice";
+		
+		$data = array("user_id" => $user_id,
+					   "forecastid" => $forecast_id,
+					   "freeze_status" => $freeze_status,
+					   "webservice" => $webservice
+					 );
+		if((isset($user_id) && !empty($user_id)) && (isset($forecast_id) && !empty($forecast_id)) && (isset($freeze_status) && !empty($freeze_status))){
+		
+			$forecast_freeze_data = modules::run('esp/esp/update_forecast_freeze_status_data', $data);
+			
+			if(!empty($forecast_freeze_data))
+	        {
+	        	if($forecast_freeze_data == 1){
+	        		
+	        		if($freeze_status == 1){
+	        			$freeze_status = 0;
+	        		}
+					else
+					{
+						$freeze_status = 1;
+					}
+					
+	        	}
+				
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $freeze_status;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = "";
+	        }
+		}
+		else
+        {
+            $result['status'] = false;
+            $result['message'] = 'All fields Required.';
+			$result['data'] = "";
+        }
+		
+		$this->do_json($result);
+		
 		
 	}
 	

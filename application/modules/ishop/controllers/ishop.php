@@ -743,7 +743,7 @@ class Ishop extends Front_Controller
 			$geo_level_0 = (isset($_POST['geo_level_0']) ? $_POST['geo_level_0'] : '');
 			$geo_level_1 = (isset($_POST['geo_level_1']) ? $_POST['geo_level_1'] : '');
 			$retailer_id = (isset($_POST['fo_retailer_id']) ? $_POST['fo_retailer_id'] : '');
-			$tertiary = $this->ishop_model-> view_ishop_sales_detail_by_retailer($user->id,$user->country_id,$from_month,$to_month,$geo_level_0,$geo_level_1,$retailer_id,$page);
+			$tertiary = $this->ishop_model-> view_ishop_sales_detail_by_retailer($user->id,$user->country_id,$from_month,$to_month,$geo_level_0,$geo_level_1,$retailer_id,$page,null,$user->local_date);
 			Template::set('table', $tertiary);
 			Template::set('td', $tertiary['count']);
 			Template::set('pagination', (isset($tertiary['pagination']) && !empty($tertiary['pagination'])) ? $tertiary['pagination'] : '' );
@@ -756,7 +756,7 @@ class Ishop extends Front_Controller
 			$geo_level = (isset($_POST['distributor_geo_level']) ? $_POST['distributor_geo_level'] : '');
 			$distributor_id = (isset($_POST['distributor_sales']) ? $_POST['distributor_sales'] : '');
 			$invoice_no = (isset($_POST['invoice_no']) ? $_POST['invoice_no'] : '');
-			$secondary = $this->ishop_model->secondary_sales_details_data_view($form_date=null,$to_date=null,$by_retailer=null,$invoice_no,$user->id,$user->country_id,'sales_view',$from_month,$to_month,$geo_level,$distributor_id,$page);
+			$secondary = $this->ishop_model->secondary_sales_details_data_view($form_date=null,$to_date=null,$by_retailer=null,$invoice_no,$user->id,$user->country_id,'sales_view',$from_month,$to_month,$geo_level,$distributor_id,$page,null,$user->local_date);
 
 			Template::set('table', $secondary);
 			Template::set('td', $secondary['count']);
@@ -894,7 +894,7 @@ class Ishop extends Front_Controller
 
 		$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
-		$credit_limit= $this->ishop_model->get_all_distributors_credit_limit($user->country_id,null,$page);
+		$credit_limit= $this->ishop_model->get_all_distributors_credit_limit($user->country_id,null,$page,$user->local_date);
 
 		Template::set('td', $credit_limit['count']);
 		Template::set('pagination', (isset($credit_limit['pagination']) && !empty($credit_limit['pagination'])) ? $credit_limit['pagination'] : '' );
@@ -1261,7 +1261,7 @@ class Ishop extends Front_Controller
 
             $user= $this->auth->user();
             $user_country_id = $user->country_id;
-
+			//testdata($_POST);
             $order_data = $this->ishop_model->add_order_place_details($user_id,$user_country_id);
 
 			echo $order_data;
@@ -1566,9 +1566,11 @@ class Ishop extends Front_Controller
             $loginuserid = $_POST["login_customer_id"];
 			$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
-            $prespective_order = $this->ishop_model->get_prespective_order($from_date,$todate,$loginusertype,$loginuserid,$page);
+			$user = $this->auth->user();
+
+            $prespective_order = $this->ishop_model->get_prespective_order($from_date,$todate,$loginusertype,$loginuserid,$page,null,$user->local_date);
             
-            $user = $this->auth->user();
+
 		
             $logined_user_type = $user->role_id;
             $logined_user_id = $user->id;
@@ -2045,9 +2047,7 @@ class Ishop extends Front_Controller
         public function delete_order_detail_data(){
             
             $order_product_id = $_POST["data_id"];
-            
             $detail_delete = $this->ishop_model->delete_order_detail_data($order_product_id);
-            
             die;
             
         }
@@ -2124,7 +2124,7 @@ class Ishop extends Front_Controller
             $customer_id = $logined_user_id;
 
 
-            $order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page);
+            $order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page,null,null,null,$user->local_date);
             
             Template::set('po_ack_table', $order_data);
 			Template::set('td', $order_data['count']);

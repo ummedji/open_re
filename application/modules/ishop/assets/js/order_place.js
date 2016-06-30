@@ -488,6 +488,7 @@ $(document).ready(function(){
 
 $("#order_place").on("submit",function(){
 
+
     /*$('#prod_sku').addClass('ignore');
     $('#units').addClass('ignore');
     $('#quantity').addClass('ignore');
@@ -508,11 +509,32 @@ $("#order_place").on("submit",function(){
                 url: site_url+"ishop/order_place_details",
                 data: param,
                 success: function(resp){
+                    var message = "";
+                    if(resp == 1){
 
-                    location.reload();
+                        message += 'Data Inserted successfully.';
+                    }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+                                location.reload()
+                            }
+                        });
                 }
             });
-    //return false;
+    return false;
        /* }*/
    /* }
     else

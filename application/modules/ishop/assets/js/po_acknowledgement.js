@@ -39,7 +39,9 @@ $(document).on('click','div#middle_container_product div.delete_i',function(){
 $(document).on('click', 'div#middle_container_product .edit_i', function () {
     
     var id = $(this).attr('prdid');
-   
+
+    //alert(id);
+
    //UNIT
    
    var unit_value = $("div.unit_"+id+" span.unit").text();
@@ -74,7 +76,7 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
    
    var qty_value = $("div.qty_"+id+" span.qty").text();
    $("div.qty_"+id).empty();
-   $("div.qty_"+id).append('<input id="quantity_'+id+'" type="text" class="quantity_data" name="quantity[]" value="'+qty_value+'"/>');
+   $("div.qty_"+id).append('<input id="quantity_'+id+'" type="text" class="quantity_data allownumericwithdecimal" name="quantity[]" value="'+qty_value+'"/>');
    
    //AMOUNT
    

@@ -1134,9 +1134,13 @@ class Esp extends Front_Controller
         
         $final_forecast_value  = $forecastdata*$forecase_value;
         
-        echo $final_forecast_value;
-        die;
-        
+		if($webservice_data != NULL && (isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))){
+			return $final_forecast_value;
+		}
+		else{
+	        echo $final_forecast_value;
+	        die;
+		}
     }
     
     public function add_forecast(){
@@ -1332,15 +1336,42 @@ class Esp extends Front_Controller
         die;
     }
     
-    public function update_forecast_freeze_status(){
+    public function update_forecast_freeze_status($webservice=NULL){
         
-        $user = $this->auth->user();
-        $forecast_id = $_POST["forecastid"];
-        $text_data = $_POST["textdata"];
-        $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user->id,$forecast_id,$text_data);
+		if(isset($webservice) && !empty($webservice) && $webservice != NULL){
+			
+			$user_id = $webservice['user_id'];
+			$forecast_id = $webservice['forecastid'];
+			$freeze_status_data = $webservice['freeze_status'];
+			
+			if($freeze_status_data == 1){
+				$text_data = "Freeze";
+			}
+			
+			if($freeze_status_data == 0){
+				$text_data = "Unfreeze";
+			}
+			
+		}
+		else
+		{
+	        $user = $this->auth->user();
+	        $forecast_id = $_POST["forecastid"];
+	        $text_data = $_POST["textdata"];
+			
+			$user_id = $user->id;
+		}
+		
+		$freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data);
         
-        echo $freeze_data;
-        die;
+		if(isset($webservice) && !empty($webservice) && $webservice != NULL)
+		{
+			return $freeze_data;
+		}
+		else{
+	        echo $freeze_data;
+	        die;
+		}
         
     }
     
