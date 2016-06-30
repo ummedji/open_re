@@ -3288,8 +3288,20 @@ class Web_service extends Front_Controller
 		
 		$forecast_data = modules::run('esp/esp/get_pbg_sku_data', $data);
 		
-		testdata($forecast_data);
-		die;
+		if(!empty($forecast_data))
+        {
+            $result['status'] = true;
+            $result['message'] = 'Successfull';
+			$result['data'] = $forecast_data;
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = 'No data found';
+			$result['data'] = array();
+        }
+		
+		$this->do_json($result);
 		
 	}
 	

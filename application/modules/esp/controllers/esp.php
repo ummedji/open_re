@@ -165,7 +165,6 @@ class Esp extends Front_Controller
         
         $lock_show_data = $this->get_user_level_data($login_user_id);
         
-                
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
         $html = "";
@@ -262,9 +261,6 @@ class Esp extends Front_Controller
                 
                 $l = 1;
                 
-				$webservice_initial_array = array();
-				
-				
                 foreach($month_data as $monthkey => $monthvalue){
                     
                     $employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
@@ -291,6 +287,10 @@ class Esp extends Front_Controller
                         
                     }
 
+					if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+						$data_inner_array = array();
+					}
+					
 					
                     //CHECK DATA FREEZED OR NOT
                     
@@ -299,6 +299,7 @@ class Esp extends Front_Controller
                     if($forecast_freeze_data != 0)
                     {
                         //If data Freezed
+                        
                         
                         if($forecast_freeze_data['freeze_status'] == 1){
                             //DATA FREEZED
@@ -331,7 +332,12 @@ class Esp extends Front_Controller
                     
                                 $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                 
-                                
+                              if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["forecast_qty"] = $forecast_qty;
+									$data_inner_array["forecast_value"] = $forecast_value;
+							  }
+								
+								
                             }else{
                                 
                                 
@@ -354,6 +360,12 @@ class Esp extends Front_Controller
                     
                                      $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                     
+									
+								  if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+										$data_inner_array["forecast_qty"] = $forecast_qty;
+										$data_inner_array["forecast_value"] = $forecast_value;
+								  }
+									
                                 }
                                 elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                     
@@ -372,6 +384,12 @@ class Esp extends Front_Controller
                     
                                      $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                     
+									
+									if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+											$data_inner_array["forecast_qty"] = $forecast_qty;
+											$data_inner_array["forecast_value"] = $forecast_value;
+									 }
+									
                                 }
                                 else{
                                     
@@ -383,6 +401,12 @@ class Esp extends Front_Controller
                     
                                     $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                     
+									
+								  if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+										$data_inner_array["forecast_qty"] = "";
+										$data_inner_array["forecast_value"] = "";
+								  }
+									
                                 }
                             }
                             else{
@@ -395,6 +419,12 @@ class Esp extends Front_Controller
                     
                                     $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                 
+                                
+								  if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+										$data_inner_array["forecast_qty"] = "";
+										$data_inner_array["forecast_value"] = "";
+								  }
+								
                               }
                                 
                            }
@@ -410,6 +440,11 @@ class Esp extends Front_Controller
                     
                                 $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                 
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["forecast_qty"] = $forecast_qty;
+									$data_inner_array["forecast_value"] = $forecast_value;
+							    }
+								
                             }
                             elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                 
@@ -419,6 +454,12 @@ class Esp extends Front_Controller
                     
                                 $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                 
+								
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["forecast_qty"] = $forecast_qty;
+									$data_inner_array["forecast_value"] = $forecast_value;
+							    }
+								
                             }
                             else{
                                 
@@ -429,8 +470,37 @@ class Esp extends Front_Controller
                     
                                     $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                 
+								
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["forecast_qty"] = "";
+									$data_inner_array["forecast_value"] = "";
+							    }
+								
                             }
                         }
+                        
+						
+						if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+							
+							//$data_inner_array = array();
+							
+							//$data_inner_array["forecastid"] = $forecast_id;
+							
+							$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
+							$data_inner_array["productname"] = $skuvalue['product_sku_name'];
+							//$data_inner_array["forecast_qty"] = $forecast_qty;
+							//$data_inner_array["forecast_value"] = $forecast_value;
+							
+							$webservice_final_array[$monthvalue]["monthname"] = $monthvalue;
+							$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
+							if($lock_status == ""){
+								$lock_status = 0;
+							}
+							$webservice_final_array[$monthvalue]["lock_status"] = $lock_status;
+						
+						}
+						
+						
                     }
                     else{
                         
@@ -441,72 +511,23 @@ class Esp extends Front_Controller
                         $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
 						
 						
-						
-						//testdata($webservice_data);
-						
 						if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
 							
-							//testdata($webservice_data);
+							$data_inner_array = array();
 							
-							//if(!isset($webservice_initial_array["productdata"]["productid"])){
-								//$webservice_initial_array["productdata"]["productid"] = array();
-							//}
+							//$data_inner_array["forecastid"] = $forecast_id;
 							
+							$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
+							$data_inner_array["productname"] = $skuvalue['product_sku_name'];
+							$data_inner_array["forecast_qty"] = $forecast_qty;
+							$data_inner_array["forecast_value"] = $forecast_value;
 							
-								$data_inner_array = array();
-							
-							//if(array_key_exists($monthvalue,$data_inner_array)){
-							
-							//	$data_inner_array[$monthvalue]["monthname"] = $monthvalue;
-								
-								$data_inner_array["forecastid"] = $forecast_id;
-								$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
-								$data_inner_array["productname"] = $skuvalue['product_sku_name'];
-								$data_inner_array["forecast_qty"] = $forecast_qty;
-								$data_inner_array["forecast_value"] = $forecast_value;
-							
-							//}
-							
-							
-						//	if(!in_array($skuvalue['product_sku_country_id'],$webservice_initial_array["productdata"]["productid"])){
-								//$webservice_initial_array["productdata"]
-						//	}
+							$webservice_final_array[$monthvalue]["monthname"] = $monthvalue;
+							$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
+							$webservice_final_array[$monthvalue]["lock_status"] = 0;
 						
-							
-							//$webservice_initial_array["productdata"][] = $data_inner_array;
-						
-							
-						
-							$webservice_initial_array[$monthvalue]["monthname"] = $monthvalue;
-							
-							$webservice_initial_array[$monthvalue]["productdata"][] = $skuvalue['product_sku_country_id'];
-							
-						//	$webservice_initial_array["productdata"]["forecastid"] = $forecast_id;
-						
-						//$webservice_initial_array[$monthvalue]["productdata"][] = $inner_array();
-						
-						if(array_key_exists($monthvalue,$webservice_initial_array)){
-							
-							array_push($data_inner_array,$webservice_initial_array[$monthvalue]["productdata"]);
-							
 						}
-						else{
-							
-							$webservice_initial_array[$monthvalue]["productdata"][] = $data_inner_array;
-							
-						//	$webservice_initial_array[$monthvalue]["productdata"]["productid"] = $skuvalue['product_sku_country_id'];
-						//	$webservice_initial_array[$monthvalue]["productdata"]["productname"] = $skuvalue['product_sku_name'];
-						//	$webservice_initial_array[$monthvalue]["productdata"]["forecast_qty"] = $forecast_qty;
-						//	$webservice_initial_array[$monthvalue]["productdata"]["forecast_value"] = $forecast_value;
-					
-						}
-							
-							$webservice_final_array = $webservice_initial_array;
-							
-						}
-
-						
-                                    
+            
                     }
                         
                     $l++;
@@ -531,12 +552,6 @@ class Esp extends Front_Controller
                 $html .= '</th>';
             $html .= '</tr>';
             
-			
-			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
-				//array_values($webservice_final_array);
-				return $webservice_final_array;
-				//die;
-			}
 			
             $assumption_month = array();
             $probablity_month = array();
@@ -571,8 +586,24 @@ class Esp extends Front_Controller
                 else{
                     $lock_status_array[$monthvalue] = "";
                 }
+                
+				
+				
+				if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+							
+					$data_assumption_inner_array = array();
+					
+					
+					$webservice_final_array[$monthvalue]['assumptiondata'] = $assumption_month[$monthvalue];
+					$webservice_final_array[$monthvalue]['probablitydata'] = $probablity_month[$monthvalue];
+					
+				}
+				
 
             }
+
+			
+
            
             $k = 1;
             
@@ -926,6 +957,7 @@ class Esp extends Front_Controller
        $html .= '</table>';
            
             $freeze_button = "";
+			$freeze_status = 0;
             if($login_user_parent_data != 0){
                 
                 $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$forecast_id);
@@ -935,19 +967,36 @@ class Esp extends Front_Controller
                 
                     if($freeze_history_user_status_data[0]['freeze_status'] == 0){
                     
+						$freeze_status = 0;
                         $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
                     }
                     else{
+                    	$freeze_status = 1;
                         $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
                     }
                     
                 }
                 else{
-                    
+                    $freeze_status = 0;
                     $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
                     
                 }
             }
+
+			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+				
+				//testdata($webservice_final_array);
+				
+				$final_array = array();
+				
+				$final_array["forecast_data"] = array_values($webservice_final_array);
+				$final_array["forecast_id"] = $forecast_id;
+				$final_array["freeze_status"] = $freeze_status;
+				
+				return $final_array;
+				//die;
+			}
+
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
                 <input type="hidden" id="forecast_id" name="forecast_id" value="'.$forecast_id.'" />
