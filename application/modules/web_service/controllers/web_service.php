@@ -423,7 +423,7 @@ class Web_service extends Front_Controller
             //$local_date = $this->country_master_model->get_local_date_dy_id($user_id);
 
             $primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,'web_service');
-            testdata($primary_sales_details);
+          //  testdata($primary_sales_details);
             if(!empty($primary_sales_details))
             {
                 // For Pagination
@@ -3398,14 +3398,15 @@ class Web_service extends Front_Controller
 		
 		$webservice = "webservice";
 		
-		$data = array("user_id" => $user_id,
-					   "forecastid" => $forecast_id,
-					   "freeze_status" => $freeze_status,
-					   "webservice" => $webservice
-					 );
-		if((isset($user_id) && !empty($user_id)) && (isset($forecast_id) && !empty($forecast_id)) && (isset($freeze_status) && !empty($freeze_status))){
+		if($user_id != "" && $forecast_id != "" && $freeze_status != ""){
 		
-			$forecast_freeze_data = modules::run('esp/esp/update_forecast_freeze_status_data', $data);
+			$data = array("user_id" => $user_id,
+			   "forecastid" => $forecast_id,
+			   "freeze_status" => $freeze_status,
+			   "webservice" => $webservice
+			 );
+		
+			$forecast_freeze_data = modules::run('esp/esp/update_forecast_freeze_status', $data);
 			
 			if(!empty($forecast_freeze_data))
 	        {
@@ -3434,13 +3435,13 @@ class Web_service extends Front_Controller
 		}
 		else
         {
+        	
             $result['status'] = false;
             $result['message'] = 'All fields Required.';
 			$result['data'] = "";
         }
 		
 		$this->do_json($result);
-		
 		
 	}
 	

@@ -263,6 +263,11 @@ class Esp extends Front_Controller
                 
                 foreach($month_data as $monthkey => $monthvalue){
                     
+					
+					$time=strtotime($monthvalue);
+                    $month=date("F",$time);
+                    $year=date("Y",$time);
+					
                     $employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
                     
                     $forecast_qty = "";
@@ -486,12 +491,17 @@ class Esp extends Front_Controller
 							
 							//$data_inner_array["forecastid"] = $forecast_id;
 							
+							
+							
+							
 							$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
 							$data_inner_array["productname"] = $skuvalue['product_sku_name'];
 							//$data_inner_array["forecast_qty"] = $forecast_qty;
 							//$data_inner_array["forecast_value"] = $forecast_value;
 							
-							$webservice_final_array[$monthvalue]["monthname"] = $monthvalue;
+							$webservice_final_array[$monthvalue]["monthvalue"] = $monthvalue;
+							$webservice_final_array[$monthvalue]["monthname"] = $month."-".$year;
+							
 							$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
 							if($lock_status == ""){
 								$lock_status = 0;
@@ -522,7 +532,8 @@ class Esp extends Front_Controller
 							$data_inner_array["forecast_qty"] = $forecast_qty;
 							$data_inner_array["forecast_value"] = $forecast_value;
 							
-							$webservice_final_array[$monthvalue]["monthname"] = $monthvalue;
+							$webservice_final_array[$monthvalue]["monthvalue"] = $monthvalue;
+							$webservice_final_array[$monthvalue]["monthname"] = $month."-".$year;
 							$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
 							$webservice_final_array[$monthvalue]["lock_status"] = 0;
 						
@@ -1336,13 +1347,13 @@ class Esp extends Front_Controller
         die;
     }
     
-    public function update_forecast_freeze_status($webservice=NULL){
+    public function update_forecast_freeze_status($webservice_data=NULL){
         
-		if(isset($webservice) && !empty($webservice) && $webservice != NULL){
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL){
 			
-			$user_id = $webservice['user_id'];
-			$forecast_id = $webservice['forecastid'];
-			$freeze_status_data = $webservice['freeze_status'];
+			$user_id = $webservice_data['user_id'];
+			$forecast_id = $webservice_data['forecastid'];
+			$freeze_status_data = $webservice_data['freeze_status'];
 			
 			if($freeze_status_data == 1){
 				$text_data = "Freeze";
@@ -1362,9 +1373,11 @@ class Esp extends Front_Controller
 			$user_id = $user->id;
 		}
 		
+		
+		
 		$freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data);
         
-		if(isset($webservice) && !empty($webservice) && $webservice != NULL)
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL)
 		{
 			return $freeze_data;
 		}
