@@ -3305,7 +3305,41 @@ class Web_service extends Front_Controller
 		
 	}
 	
-	
+	public function get_forecast_value(){
+		
+		$month_data = $this->input->get_post('monthval');
+		$product_sku_id = $this->input->get_post('product_sku_id');
+		$forecast_data = $this->input->get_post('forecast_data');
+		
+		
+		$webservice = "webservice";
+		
+		$data = array("month_data" => $month_data,
+					   "product_sku_id" => $product_sku_id,
+					   "forecastdata" => $forecast_data,
+					   "webservice" => $webservice
+					 );
+		
+		$forecast_value_data = modules::run('esp/esp/get_forecast_value_data', $data);
+		
+		if(!empty($forecast_value_data))
+        {
+            $result['status'] = true;
+            $result['message'] = 'Successfull';
+			$result['data'] = $forecast_value_data;
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = 'No data found';
+			$result['data'] = array();
+        }
+		
+		testdata($forecast_value_data);
+		
+		$this->do_json($result);
+		
+	}
 	
 	/*
 	 * FOR GETTING HIREARCHYCIAL USER DATA

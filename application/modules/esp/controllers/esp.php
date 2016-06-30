@@ -567,15 +567,109 @@ class Esp extends Front_Controller
                 {
                     $cur_month = $month_assumption_forecast_data[0]['month_data'];
 
-                    $assumption_month[$cur_month] = array($month_assumption_forecast_data[0]["assumption1_id"],$month_assumption_forecast_data[0]["assumption2_id"],$month_assumption_forecast_data[0]["assumption3_id"]);
-
-                    $probablity_month[$cur_month] = array($month_assumption_forecast_data[0]["probability1"],$month_assumption_forecast_data[0]["probability2"],$month_assumption_forecast_data[0]["probability3"]);
+					if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+						
+						if(isset($month_assumption_forecast_data[0]["assumption1_id"]) && $month_assumption_forecast_data[0]["assumption1_id"] != ""){
+							$assumption1_id = $month_assumption_forecast_data[0]["assumption1_id"];
+						}else{
+							$assumption1_id = "";
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["assumption2_id"]) && $month_assumption_forecast_data[0]["assumption2_id"] != ""){
+							$assumption2_id = $month_assumption_forecast_data[0]["assumption2_id"];
+						}else{
+							$assumption2_id = "";
+						}
+												
+						if(isset($month_assumption_forecast_data[0]["assumption3_id"]) && $month_assumption_forecast_data[0]["assumption3_id"] != ""){
+							$assumption3_id = $month_assumption_forecast_data[0]["assumption3_id"];
+						}else{
+							$assumption3_id = "";
+						}
+						
+						
+						if(isset($month_assumption_forecast_data[0]["probability1"]) && $month_assumption_forecast_data[0]["probability1"] != ""){
+							$probability1 = $month_assumption_forecast_data[0]["probability1"];
+						}else{
+							$probability1 = "";
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["probability2"]) && $month_assumption_forecast_data[0]["probability2"] != ""){
+							$probability2 = $month_assumption_forecast_data[0]["probability2"];
+						}else{
+							$probability2 = "";
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["probability3"]) && $month_assumption_forecast_data[0]["probability3"] != ""){
+							$probability3 = $month_assumption_forecast_data[0]["$probability3"];
+						}else{
+							$probability3 = "";
+						}
+						
+	                    $assumption_month[$cur_month] = array($assumption1_id,$assumption2_id,$assumption3_id);
+	
+	                    $probablity_month[$cur_month] = array($probability1,$probability2,$probability3);
+						
+						
+					}else{
+	                    $assumption_month[$cur_month] = array($month_assumption_forecast_data[0]["assumption1_id"],$month_assumption_forecast_data[0]["assumption2_id"],$month_assumption_forecast_data[0]["assumption3_id"]);
+	
+	                    $probablity_month[$cur_month] = array($month_assumption_forecast_data[0]["probability1"],$month_assumption_forecast_data[0]["probability2"],$month_assumption_forecast_data[0]["probability3"]);
+					}
 
                 }
                 else
                 {
-                    $assumption_month[$monthvalue] = array();
-                    $probablity_month[$monthvalue] = array();
+                	
+					if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+						
+						if(isset($month_assumption_forecast_data[0]["assumption1_id"]) && $month_assumption_forecast_data[0]["assumption1_id"] != ""){
+							$assumption1_id = $month_assumption_forecast_data[0]["assumption1_id"];
+						}else{
+							$assumption1_id = "";
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["assumption2_id"]) && $month_assumption_forecast_data[0]["assumption2_id"] != ""){
+							$assumption2_id = $month_assumption_forecast_data[0]["assumption2_id"];
+						}else{
+							$assumption2_id = "";
+						}
+												
+						if(isset($month_assumption_forecast_data[0]["assumption3_id"]) && $month_assumption_forecast_data[0]["assumption3_id"] != ""){
+							$assumption3_id = $month_assumption_forecast_data[0]["assumption3_id"];
+						}else{
+							$assumption3_id = "";
+						}
+						
+						
+						if(isset($month_assumption_forecast_data[0]["probability1"]) && $month_assumption_forecast_data[0]["probability1"] != ""){
+							$probability1 = $month_assumption_forecast_data[0]["probability1"];
+						}else{
+							$probability1 = "";
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["probability2"]) && $month_assumption_forecast_data[0]["probability2"] != ""){
+							$probability2 = $month_assumption_forecast_data[0]["probability2"];
+						}else{
+							$probability2 = "";
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["probability3"]) && $month_assumption_forecast_data[0]["probability3"] != ""){
+							$probability3 = $month_assumption_forecast_data[0]["$probability3"];
+						}else{
+							$probability3 = "";
+						}
+						
+	                    $assumption_month[$monthvalue] = array($assumption1_id,$assumption2_id,$assumption3_id);
+	
+	                    $probablity_month[$monthvalue] = array($probability1,$probability2,$probability3);
+						
+						
+					}else{
+					
+                    	$assumption_month[$monthvalue] = array();
+                    	$probablity_month[$monthvalue] = array();
+					}
                 }
                 
                 $month_assumption_forecast_lock_data = $this->esp_model->get_month_assumption_forecast_lock_data($forecast_id,$monthvalue);
@@ -1016,16 +1110,25 @@ class Esp extends Front_Controller
         
     }
     
-    public function get_forecast_value_data(){
+    public function get_forecast_value_data($webservice_data = NULL){
         
-        $relattrval = $_POST['relattrval'];
-        
-        $forecast_data = explode("_",$relattrval);
-        
-        $product_sku_id = $forecast_data[1];
-        $month_data = $forecast_data[2];
-        
-        $forecastdata = $_POST['forecastdata'];
+		if($webservice_data != NULL && (isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))){
+	        	
+			$product_sku_id = $webservice_data["product_sku_id"];
+	        $month_data = $webservice_data['month_data'];
+	        $forecastdata = $webservice_data['forecastdata'];
+			
+		}
+		else{
+			 $relattrval = $_POST['relattrval'];
+	        
+	        $forecast_data = explode("_",$relattrval);
+	        
+	        $product_sku_id = $forecast_data[1];
+	        $month_data = $forecast_data[2];
+			
+			$forecastdata = $_POST['forecastdata'];
+		}
         
         $forecase_value = $this->esp_model->get_forecast_data($product_sku_id,$month_data);
         
