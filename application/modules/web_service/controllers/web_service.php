@@ -519,7 +519,7 @@ class Web_service extends Front_Controller
                     $ord = array(
                         "id" => $order['order_id'],
                         "distributor_code" => $order['f_u_code'],
-                        "distributor_name" => $order['display_name'],
+                        "distributor_name" => $order['f_dn'],
                         "po_no" => $order['PO_no'],
                         "order_tracking_no" => $order['order_tracking_no'],
                         "credit_limit" => $order['credit_limit'],
@@ -3444,6 +3444,283 @@ class Web_service extends Front_Controller
 		$this->do_json($result);
 		
 	}
+
+	public function forecast_lock_data(){
+				
+		$user_id = $this->input->get_post('user_id');
+		$forecast_id = $this->input->get_post('forecast_id');
+		$month_val = $this->input->get_post('monthval');
+		$lock_data = $this->input->get_post('lock_data');
+		
+		$webservice = "webservice";
+		
+		if($user_id != "" && $forecast_id != "" && $month_val != "" && $lock_data != ""){
+		
+			$data = array("user_id" => $user_id,
+			   "forecastid" => $forecast_id,
+			   "monthval" => $month_val,
+			   "lock_data" => $lock_data,
+			   "webservice" => $webservice
+			 );
+		
+			$forecast_lock_data = modules::run('esp/esp/set_forecast_lock_data', $data);
+			
+			if(!empty($forecast_lock_data))
+	        {
+	        	if($forecast_lock_data == 1){
+	        		
+	        		if($lock_data == 1){
+	        			$lock_data = 0;
+	        		}
+					else
+					{
+						$lock_data = 1;
+					}
+					
+	        	}
+				
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $lock_data;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = "";
+	        }
+		}
+		else
+        {
+        	
+            $result['status'] = false;
+            $result['message'] = 'All fields Required.';
+			$result['data'] = "";
+        }
+		
+		$this->do_json($result);	
+		
+	}
+	
+	/*
+	 * ESP BUDGET WEBSERVICE 
+	 */
+	 
+	 
+	public function esp_budget(){
+		
+		$user_id = $this->input->get_post('user_id');
+		
+		$year_val = $this->input->get_post('yearval');
+		
+		$form_month = $year_val."-01-01";
+		$to_month = $year_val."-12-01".;;
+		
+		$pbg_data = $this->input->get_post('pbg_id');
+		
+		$selected_employee = $this->input->get_post('employee_id');
+		
+		$business_data = $this->esp_model->get_business_code($selected_employee);
+		
+		$webservice = "webservice";
+		
+		$data = array("login_user_id" => $user_id,
+					   "from_month" => $form_month,
+					   "to_month" => $to_month,
+					   "pbg_id" => $pbg_data,
+					   "business_code" => $business_data,
+					   "webservice" => $webservice
+					);
+		if((isset($user_id) && !empty($user_id)) && (isset($form_month) && !empty($form_month)) && (isset($to_month) && !empty($to_month)) && (isset($pbg_data) && !empty($pbg_data)) && (isset($selected_employee) && !empty($selected_employee))){
+		
+			$forecast_data = modules::run('esp/esp/get_pbg_sku_data', $data);
+			
+			if(!empty($forecast_data))
+	        {
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $forecast_data;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = array();
+	        }
+		
+		}
+		else
+		{
+			$result['status'] = false;
+	        $result['message'] = 'All fields required.';
+			$result['data'] = array();
+		}
+		
+		$this->do_json($result);
+		
+	}
+	 	 
+	public function get_budget_value(){
+		
+		$month_data = $this->input->get_post('monthval');
+		$product_sku_id = $this->input->get_post('product_sku_id');
+		$budget_data = $this->input->get_post('budget_data');
+		
+		
+		$webservice = "webservice";
+		
+		$data = array("month_data" => $month_data,
+					   "product_sku_id" => $product_sku_id,
+					   "budgetdata" => $budget_data,
+					   "webservice" => $webservice
+					 );
+		
+		if((isset($month_data) && !empty($month_data)) && (isset($product_sku_id) && !empty($product_sku_id)) && (isset($budget_data) && !empty($budget_data))){
+		
+			
+			$budget_value_data = modules::run('esp/esp/get_budget_value_data', $data);
+			
+			if($budget_value_data == 0 || $budget_value_data > 0)
+	        {
+	        	
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $budget_value_data;
+	        }
+	        else
+	        {
+	        	
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = "";
+	        }
+		}
+		else
+		{
+			$result['status'] = false;
+	        $result['message'] = 'All fields Required.';
+		    $result['data'] = "";
+			
+		}
+		
+		$this->do_json($result);
+		
+	}
+	
+	
+	public function update_budget_freeze_status(){
+		
+		$user_id = $this->input->get_post('user_id');
+		$budget_id = $this->input->get_post('budget_id');
+		$freeze_status = $this->input->get_post('freeze_status');
+		
+		$webservice = "webservice";
+		
+		if($user_id != "" && $budget_id != "" && $freeze_status != ""){
+		
+			$data = array("user_id" => $user_id,
+			   "budgetid" => $budget_id,
+			   "freeze_status" => $freeze_status,
+			   "webservice" => $webservice
+			 );
+		
+			$budget_freeze_data = modules::run('esp/esp/update_budget_freeze_status', $data);
+			
+			if(!empty($budget_freeze_data))
+	        {
+	        	if($budget_freeze_data == 1){
+	        		
+	        		if($freeze_status == 1){
+	        			$freeze_status = 0;
+	        		}
+					else
+					{
+						$freeze_status = 1;
+					}
+					
+	        	}
+				
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $freeze_status;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = "";
+	        }
+		}
+		else
+        {
+        	
+            $result['status'] = false;
+            $result['message'] = 'All fields Required.';
+			$result['data'] = "";
+        }
+		
+		$this->do_json($result);
+		
+	}
+	
+	
+	public function budget_lock_data(){
+				
+		$user_id = $this->input->get_post('user_id');
+		$budget_id = $this->input->get_post('budget_id');
+		$year_val = $this->input->get_post('yearval');
+		$lock_data = $this->input->get_post('lock_data');
+		
+		$webservice = "webservice";
+		
+		if($user_id != "" && $budget_id != "" && $year_val != "" && $lock_data != ""){
+		
+			$data = array("user_id" => $user_id,
+			   "budgetid" => $budget_id,
+			   "yearval" => $year_val,
+			   "lock_data" => $lock_data,
+			   "webservice" => $webservice
+			 );
+		
+			$budget_lock_data = modules::run('esp/esp/set_budget_lock_data', $data);
+			
+			if(!empty($budget_lock_data))
+	        {
+	        	if($budget_lock_data == 1){
+	        		
+	        		if($lock_data == 1){
+	        			$lock_data = 0;
+	        		}
+					else
+					{
+						$lock_data = 1;
+					}
+					
+	        	}
+				
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $lock_data;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = "";
+	        }
+		}
+		else
+        {
+        	
+            $result['status'] = false;
+            $result['message'] = 'All fields Required.';
+			$result['data'] = "";
+        }
+		
+		$this->do_json($result);	
+		
+	}
+	
 	
 	/*
 	 * FOR GETTING HIREARCHYCIAL USER DATA

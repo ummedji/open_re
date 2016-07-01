@@ -1388,19 +1388,47 @@ class Esp extends Front_Controller
         
     }
     
-    public function set_forecast_lock_data(){
+    public function set_forecast_lock_data($webservice_data = NULL){
         
-        $user = $this->auth->user();
-        $forecast_id = $_POST["forecastid"];
-        $monthval = $_POST["monthval"];
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL){
+			
+			$user_id = $webservice_data['user_id'];
+			$forecast_id = $webservice_data['forecastid'];
+			$monthval = $webservice_data['monthval'];
+			$lock_data = $webservice_data['lock_data'];
+			
+			if($lock_data == 1){
+				$text_data = "Lock";
+			}
+			
+			if($lock_data == 0){
+				$text_data = "Unlock";
+			}
+			
+		}
+		else
+		{
+		
+	        $user = $this->auth->user();
+	        $forecast_id = $_POST["forecastid"];
+	        $monthval = $_POST["monthval"];
+	        
+	        $text_data = $_POST["textdata"];
+	        $user_id = $user->id;
+			
+		}
+		
+        $lock_data = $this->esp_model->update_forecast_lock_status_data($user_id,$forecast_id,$monthval,$text_data);
         
-        $text_data = $_POST["textdata"];
-        
-        $lock_data = $this->esp_model->update_forecast_lock_status_data($user->id,$forecast_id,$monthval,$text_data);
-        
-        echo $lock_data;
-        die;
-        
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL)
+		{
+			return $lock_data;
+		}
+		else{
+	        echo $lock_data;
+	        die;
+		}
+		
     }
     
     public function get_monthly_data($from_month,$to_month) {
@@ -1648,10 +1676,7 @@ class Esp extends Front_Controller
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
         
-        //$assumption_data = $this->esp_model->get_assumption_data();
-        
-       // $lock_show_data = $this->get_user_level_data($login_user_id);
-        
+       
                 
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
@@ -1670,24 +1695,6 @@ class Esp extends Front_Controller
                             $time=strtotime($monthvalue);
                             $month=date("F",$time);
                             $year=date("Y",$time);
-                            
-                            /*if($lock_show_data != 0){
-                                
-                                foreach($pbg_sku_data as $skukey => $skuvalue){
-                                    
-                                 $employee_month_product_budget_data1 = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
-                    
-                                 $lock_status = 0;
-                                 $lock_by_id = "";
-                                 $check_lock_forecast_id = "";
-                            
-                                }
-                            }
-                            else{
-                                $lock_data = "";
-                            }
-							
-							*/
                             
                             $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;</th>';
                         }
@@ -2085,45 +2092,112 @@ class Esp extends Front_Controller
         
     }
 
-	public function update_budget_freeze_status(){
+	public function update_budget_freeze_status($webservice_data = NULL){
         
-        $user = $this->auth->user();
-        $budget_id = $_POST["budgetid"];
-        $text_data = $_POST["textdata"];
-        $freeze_data = $this->esp_model->update_budget_freeze_status_data($user->id,$budget_id,$text_data);
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL){
+			
+			$user_id = $webservice_data['user_id'];
+			$budget_id = $webservice_data['budgetid'];
+			$freeze_status_data = $webservice_data['freeze_status'];
+			
+			if($freeze_status_data == 1){
+				$text_data = "Freeze";
+			}
+			
+			if($freeze_status_data == 0){
+				$text_data = "Unfreeze";
+			}
+			
+		}
+		else
+		{
+		
+	        $user = $this->auth->user();
+	        $budget_id = $_POST["budgetid"];
+	        $text_data = $_POST["textdata"];
+			
+			$user_id = $user->id;
+		}
+		
+        $freeze_data = $this->esp_model->update_budget_freeze_status_data($user_id,$budget_id,$text_data);
         
-        echo $freeze_data;
-        die;
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL)
+		{
+			return $freeze_data;
+		}
+		else
+		{
+	        echo $freeze_data;
+	        die;
+		}
         
     }
 	
-	public function get_budget_value_data(){
+	public function get_budget_value_data($webservice_data=NULL){
         
-        $relattrval = $_POST['relattrval'];
-        
-        $budget_data = explode("_",$relattrval);
-        
-        $product_sku_id = $budget_data[1];
-        $month_data = $budget_data[2];
-        
-        $budgetdata = $_POST['budgetdata'];
+		if($webservice_data != NULL && (isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))){
+	        	
+			$product_sku_id = $webservice_data["product_sku_id"];
+	        $month_data = $webservice_data['month_data'];
+	        $budgetdata = $webservice_data['budgetdata'];
+			
+		}
+		else
+		{
+		
+	        $relattrval = $_POST['relattrval'];
+	        
+	        $budget_data = explode("_",$relattrval);
+	        
+	        $product_sku_id = $budget_data[1];
+	        $month_data = $budget_data[2];
+	        
+	        $budgetdata = $_POST['budgetdata'];
+        }
         
         $budget_value = $this->esp_model->get_budget_data($product_sku_id,$month_data);
         
         $final_budget_value  = $budgetdata*$budget_value;
         
-        echo $final_budget_value;
-        die;
+		if($webservice_data != NULL && (isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))){
+			return $final_budget_value;
+		}
+		else{
+	        echo $final_budget_value;
+	        die;
+		}
         
     }
     
-    public function set_budget_lock_data(){
+    public function set_budget_lock_data($webservice_data=NULL){
         
-        $user = $this->auth->user();
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL){
+			
+			$user_id = $webservice_data['user_id'];
+			$budget_id = $webservice_data['budgetid'];
+			$yearval = $webservice_data['yearval'];
+			$lock_data = $webservice_data['lock_data'];
+			
+			if($lock_data == 1){
+				$text_data = "Lock";
+			}
+			
+			if($lock_data == 0){
+				$text_data = "Unlock";
+			}
+			
+		}
+		else
+		{
 		
-        $budget_id = $_POST["budgetid"];
-        $yearval = $_POST["yearval"];
-        $text_data = $_POST["textdata"];
+	        $user = $this->auth->user();
+			
+	        $budget_id = $_POST["budgetid"];
+	        $yearval = $_POST["yearval"];
+	        $text_data = $_POST["textdata"];
+			$user_id = $user->id;
+		
+		}
 		
 		for($i=1;$i<=12;$i++){
 				
@@ -2131,13 +2205,18 @@ class Esp extends Front_Controller
 					$i = "0".$i;
 				}
 				$monthval = $yearval."-".$i."-01";
-				$lock_data = $this->esp_model->update_budget_lock_status_data($user->id,$budget_id,$monthval,$text_data);
+				$lock_data = $this->esp_model->update_budget_lock_status_data($user_id,$budget_id,$monthval,$text_data);
 		
 		}
         
-        echo $lock_data;
-        die;
-        
+		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL){
+			return $lock_data;
+		}
+		else{
+	        echo $lock_data;
+	        die;
+		}
+		
     }
    
    
