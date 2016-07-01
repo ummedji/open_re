@@ -3514,7 +3514,7 @@ class Web_service extends Front_Controller
 		$year_val = $this->input->get_post('yearval');
 		
 		$form_month = $year_val."-01-01";
-		$to_month = $year_val."-12-01".;;
+		$to_month = $year_val."-12-01";
 		
 		$pbg_data = $this->input->get_post('pbg_id');
 		
