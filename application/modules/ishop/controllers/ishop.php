@@ -3827,6 +3827,9 @@ class Ishop extends Front_Controller
                 $l = 1;
                 $first_data = 'A'.$l;
                 $last_data  = "";
+				
+				$user= $this->auth->user();
+            	$user_role_id = $user->role_id;
                 
                 foreach($_POST['val']["header"][1] as $key=> $col_data){
                 
@@ -3846,8 +3849,14 @@ class Ishop extends Front_Controller
                     $m = 2;
                     foreach($_POST['val'] as $key1 => $value)
                     {
+                    	
+						//dumpme($value);
+						
                         if((string)$key1 != 'header') {
                             $row_data = explode("~",$value);
+							
+							//dumpme($row_data);
+							
                             $j = 0;
                             foreach($_POST['val']["header"][1] as $key2=> $col_data){
                 
@@ -3883,23 +3892,32 @@ class Ishop extends Front_Controller
                                         }
                                 }
                                 elseif($_POST["dirname"] == "secondary_sales"){
-
-								   if($j == 3 && ($row_data[$j] != "")){
+									
+								if($user_role_id == 8){
+									
+								   if($j == 5 && ($row_data[$j] != "")){
+								   	
+										//echo "zzzz".$j;die;
+									
 											$date_data = explode("-",$row_data[$j]);
                                             
                                             $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
                                             $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
 								    }
-									else
-                                    {
-										if($j == 2 && ($row_data[$j] != "")){
-											$date_data = explode("-",$row_data[$j]);
-                                            
-                                            $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
-                                            $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
-										}
+								}
+								else
+                                {
+									if($j == 3 && ($row_data[$j] != "")){
+										
+										//echo "cccc".$j;die;
+										
+										$date_data = explode("-",$row_data[$j]);
+                                        
+                                        $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
+                                        $row_data[$j] = $date_data[2]."-".$monthName."-".$date_data[0];
 									}
-                                }
+								}
+                               }
 								elseif($_POST["dirname"] == "physical_stock"){
 									if($j == 0 && ($row_data[$j] != "")){
 										$date_data = explode("-",$row_data[$j]);
