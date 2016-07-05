@@ -294,9 +294,13 @@ class Esp_model extends BF_Model
     
     public function get_month_assumption_forecast_data($forecast_id,$monthvalue){
         
-        $this->db->select('*');
+        $this->db->select('befa.*,bma1.assumption_name as assumption1,bma2.assumption_name as assumption2,bma3.assumption_name as assumption3');
         $this->db->from("bf_esp_forecast_assumption as befa");
         
+		$this->db->join("bf_master_assumptions as bma1","bma1.assumption_id = befa.assumption1_id");
+		$this->db->join("bf_master_assumptions as bma2","bma2.assumption_id = befa.assumption2_id");
+		$this->db->join("bf_master_assumptions as bma3","bma3.assumption_id = befa.assumption3_id");
+		
         $this->db->where("befa.forecast_id",$forecast_id);
         $this->db->where("befa.month_data",$monthvalue);
        

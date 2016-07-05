@@ -564,6 +564,8 @@ class Esp extends Front_Controller
             $html .= '</tr>';
             
 			
+			$assumption_name_array = array();
+			
             $assumption_month = array();
             $probablity_month = array();
             
@@ -572,7 +574,7 @@ class Esp extends Front_Controller
             foreach($month_data as $monthkey => $monthvalue){
                      
                 $month_assumption_forecast_data = $this->esp_model->get_month_assumption_forecast_data($forecast_id,$monthvalue);
-                //testdata($month_assumption_forecast_data);
+              //  dumpme($month_assumption_forecast_data);
                 
                 if($month_assumption_forecast_data != 0)
                 {
@@ -582,20 +584,30 @@ class Esp extends Front_Controller
 						
 						if(isset($month_assumption_forecast_data[0]["assumption1_id"]) && $month_assumption_forecast_data[0]["assumption1_id"] != ""){
 							$assumption1_id = $month_assumption_forecast_data[0]["assumption1_id"];
+							
+							$assumption1 = $month_assumption_forecast_data[0]["assumption1"];
+							
 						}else{
 							$assumption1_id = "";
+							$assumption1 = "";
 						}
 						
 						if(isset($month_assumption_forecast_data[0]["assumption2_id"]) && $month_assumption_forecast_data[0]["assumption2_id"] != ""){
 							$assumption2_id = $month_assumption_forecast_data[0]["assumption2_id"];
+							
+							$assumption2 = $month_assumption_forecast_data[0]["assumption2"];
+							
 						}else{
 							$assumption2_id = "";
+							$assumption2 = "";
 						}
 												
 						if(isset($month_assumption_forecast_data[0]["assumption3_id"]) && $month_assumption_forecast_data[0]["assumption3_id"] != ""){
 							$assumption3_id = $month_assumption_forecast_data[0]["assumption3_id"];
+							$assumption3 = $month_assumption_forecast_data[0]["assumption3"];
 						}else{
 							$assumption3_id = "";
+							$assumption3 = "";
 						}
 						
 						
@@ -622,6 +634,9 @@ class Esp extends Front_Controller
 	                    $probablity_month[$cur_month] = array($probability1,$probability2,$probability3);
 						
 						
+						$assumption_name_array[$cur_month] = array($assumption1,$assumption2,$assumption3);
+						
+						
 					}else{
 	                    $assumption_month[$cur_month] = array($month_assumption_forecast_data[0]["assumption1_id"],$month_assumption_forecast_data[0]["assumption2_id"],$month_assumption_forecast_data[0]["assumption3_id"]);
 	
@@ -636,20 +651,26 @@ class Esp extends Front_Controller
 						
 						if(isset($month_assumption_forecast_data[0]["assumption1_id"]) && $month_assumption_forecast_data[0]["assumption1_id"] != ""){
 							$assumption1_id = $month_assumption_forecast_data[0]["assumption1_id"];
+							$assumption1 = $month_assumption_forecast_data[0]["assumption1"];
 						}else{
 							$assumption1_id = "";
+							$assumption1 = "";
 						}
 						
 						if(isset($month_assumption_forecast_data[0]["assumption2_id"]) && $month_assumption_forecast_data[0]["assumption2_id"] != ""){
 							$assumption2_id = $month_assumption_forecast_data[0]["assumption2_id"];
+							$assumption2 = $month_assumption_forecast_data[0]["assumption2"];
 						}else{
 							$assumption2_id = "";
+							$assumption2 = "";
 						}
 												
 						if(isset($month_assumption_forecast_data[0]["assumption3_id"]) && $month_assumption_forecast_data[0]["assumption3_id"] != ""){
 							$assumption3_id = $month_assumption_forecast_data[0]["assumption3_id"];
+							$assumption3 = $month_assumption_forecast_data[0]["assumption3"];
 						}else{
 							$assumption3_id = "";
+							$assumption3 = "";
 						}
 						
 						
@@ -676,10 +697,16 @@ class Esp extends Front_Controller
 	                    $probablity_month[$monthvalue] = array($probability1,$probability2,$probability3);
 						
 						
+						$assumption_name_array[$monthvalue] = array($assumption1,$assumption2,$assumption3);
+						
+						
 					}else{
 					
                     	$assumption_month[$monthvalue] = array();
                     	$probablity_month[$monthvalue] = array();
+						
+						$assumption_name_array[$monthvalue] = array(); 
+						
 					}
                 }
                 
@@ -700,6 +727,8 @@ class Esp extends Front_Controller
 					
 					
 					$webservice_final_array[$monthvalue]['assumptiondata'] = $assumption_month[$monthvalue];
+					$webservice_final_array[$monthvalue]['assumption_name_data'] = $assumption_name_array[$monthvalue];
+					
 					$webservice_final_array[$monthvalue]['probablitydata'] = $probablity_month[$monthvalue];
 					
 				}
@@ -2822,7 +2851,7 @@ class Esp extends Front_Controller
 					 ->setCellValue('D2', 'world!');
 					 
 					// Rename sheet
-					 $objWorkSheet->setTitle("$key_data");
+					 $objWorkSheet->setTitle("$u");
 							
 					$u++;
 				 }
@@ -2842,7 +2871,7 @@ class Esp extends Front_Controller
 
                 //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
                 //if you want to save it as .XLSX Excel 2007 format
-               // $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
+                $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
                 //force user to download the Excel file without writing it to server's HD
                 
                 /*
@@ -2880,7 +2909,7 @@ class Esp extends Front_Controller
                     echo $filename;
               //  }
                 
-               $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+             //  $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel5');
                 
                 $objWriter->save('php://output');
                 exit();
