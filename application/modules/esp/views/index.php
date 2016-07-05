@@ -100,3 +100,36 @@ echo form_open('esp/add_forecast',$attributes); ?>
 </div>
 <?php echo form_close(); ?>
 <div class="clearfix"></div>
+
+<div class="col-md-12 table_bottom">
+
+    <div class="row">
+        <div class="col-md-3 save_btn"></div>
+        <?php
+        $attributes = array('class' => '', 'id' => 'upload_esp_forecast_data','name'=>'upload_esp_forecast_data');
+        echo form_open_multipart('',$attributes);
+        ?>
+        <div class="col-md-9">
+            <div class="row">
+                <div class="col-md-1 upload_text">Upload: </div>
+                <div class="col-md-3 upload_file_space">
+                    <div class="input-group">
+                <span class="input-group-btn">
+                    <span class="btn btn-primary btn-file">
+                        Browse <input type="file" name="upload_file_data" id="upload_file_data" />
+                    </span>
+                </span>
+                        <input type="text" class="form-control" readonly>
+                    </div>
+                    <label id="upload_file_data-error" class="error" for="upload_file_data"></label>
+                    <div class="clearfix"></div>
+                </div>
+
+                <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> 
+                	<a id="download_forecast_data_xl" href="<?php echo base_url('/esp/generate_forecast_xl_data') ?>"  class="btn btn-default">Download Templates</a>
+                </div>
+                <?php echo form_close(); ?>
+            </div>
+        </div>
+    </div>
+</div>

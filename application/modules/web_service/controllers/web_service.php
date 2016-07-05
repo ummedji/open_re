@@ -196,6 +196,7 @@ class Web_service extends Front_Controller
                                     'color' => $code_data['color'],
                                     'language' => $code_data['language'],
                                     'role_id' => $code_data['role_id'],
+                                    'bussinescode' => $code_data['bussiness_code'],
                                     'country_id' => $code_data['country_id']
                                     );
 
@@ -3533,13 +3534,13 @@ class Web_service extends Front_Controller
 					);
 		if((isset($user_id) && !empty($user_id)) && (isset($form_month) && !empty($form_month)) && (isset($to_month) && !empty($to_month)) && (isset($pbg_data) && !empty($pbg_data)) && (isset($selected_employee) && !empty($selected_employee))){
 		
-			$forecast_data = modules::run('esp/esp/get_pbg_sku_data', $data);
+			$budget_data = modules::run('esp/esp/get_pbg_sku_budget_data', $data);
 			
-			if(!empty($forecast_data))
+			if(!empty($budget_data))
 	        {
 	            $result['status'] = true;
 	            $result['message'] = 'Successfull';
-				$result['data'] = $forecast_data;
+				$result['data'] = $budget_data;
 	        }
 	        else
 	        {
@@ -3721,6 +3722,150 @@ class Web_service extends Front_Controller
 		
 	}
 	
+	public function get_impact_entry_data(){
+		
+		$month_val = $this->input->get_post('monthval');
+		$bussinesscode = $this->input->get_post('bussiness_code');
+		
+		$webservice = "webservice";
+		
+		if($month_val != "" && $bussinesscode != ""){
+			
+			$data = array(
+			   "bussiness_code" => $bussinesscode,
+			   "monthval" => $month_val,
+			   "webservice" => $webservice
+			);
+			
+			$impact_entry_data = modules::run('esp/esp/get_forecast_impact_data', $data);
+			
+			if($impact_entry_data != "" || !empty($impact_entry_data) || $impact_entry_data != 0)
+			{
+				
+				$result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $impact_entry_data;
+				
+			}
+			else{
+				
+				$result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = array();
+				
+			}
+			
+		}
+		else
+		{
+			
+			$result['status'] = false;
+	        $result['message'] = 'All fields required.';
+			$result['data'] = array();
+			
+		}
+		
+		$this->do_json($result);
+	}
+
+
+	public function get_forecast_status_data(){
+		
+		$roleid = $this->input->get_post('role_id');
+		$userid = $this->input->get_post('user_id');
+		$webservice = "webservice";
+		
+		if($roleid != ""){
+			
+			$data = array(
+			   "role_id" => $roleid,
+			   "user_id" => $userid,
+			   "webservice" => $webservice
+			);
+			
+			$forecast_status_data = modules::run('esp/esp/forecast_status', $data);
+			
+			//testdata($forecast_status_data);
+			
+			if($forecast_status_data != "" || !empty($forecast_status_data) || $forecast_status_data != 0)
+			{
+				
+				$result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $forecast_status_data;
+				
+			}
+			else{
+				
+				$result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = array();
+				
+			}
+			
+		}
+		else
+		{
+			
+			$result['status'] = false;
+	        $result['message'] = 'All fields required.';
+			$result['data'] = array();
+			
+		}
+		
+		$this->do_json($result);
+		
+	}
+
+	public function show_monthly_user_statusdata(){
+		
+		$month_val = $this->input->get_post('monthdata');
+		$user_level_data = $this->input->get_post('user_level_data');
+		$webservice = "webservice";
+		
+		if($month_val != "" && !empty($user_level_data)){
+			
+			$data = array(
+			   "monthval" => $month_val,
+			   "userlevel_formdata" => $user_level_data,
+			   "webservice" => $webservice
+			);
+			
+			$forecast_monthly_status_data = modules::run('esp/esp/show_month_user_level_data', $data);
+			
+			//testdata($forecast_status_data);
+			
+			if($forecast_monthly_status_data != "" || !empty($forecast_monthly_status_data) || $forecast_monthly_status_data != 0)
+			{
+				
+				$result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $forecast_monthly_status_data;
+				
+			}
+			else{
+				
+				$result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = array();
+				
+			}
+			
+		}
+		else
+		{
+			
+			$result['status'] = false;
+	        $result['message'] = 'All fields required.';
+			$result['data'] = array();
+			
+		}
+		
+		$this->do_json($result);
+		
+	}
+
+
 	
 	/*
 	 * FOR GETTING HIREARCHYCIAL USER DATA

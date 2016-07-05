@@ -4106,7 +4106,7 @@ class Ishop_model extends BF_Model
         foreach ($product_sku_id as $key => $prd_sku) {
 
             $amt = $this->get_product_price_by_product($prd_sku,'ishop');
-
+            $amt= $amt * $Qty[$key];
             $order_data = array(
                 'order_id' => $order_id,
                 'product_sku_id' => $prd_sku,

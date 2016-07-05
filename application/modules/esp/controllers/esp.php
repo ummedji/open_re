@@ -612,7 +612,7 @@ class Esp extends Front_Controller
 						}
 						
 						if(isset($month_assumption_forecast_data[0]["probability3"]) && $month_assumption_forecast_data[0]["probability3"] != ""){
-							$probability3 = $month_assumption_forecast_data[0]["$probability3"];
+							$probability3 = $month_assumption_forecast_data[0]["probability3"];
 						}else{
 							$probability3 = "";
 						}
@@ -666,7 +666,7 @@ class Esp extends Front_Controller
 						}
 						
 						if(isset($month_assumption_forecast_data[0]["probability3"]) && $month_assumption_forecast_data[0]["probability3"] != ""){
-							$probability3 = $month_assumption_forecast_data[0]["$probability3"];
+							$probability3 = $month_assumption_forecast_data[0]["probability3"];
 						}else{
 							$probability3 = "";
 						}
@@ -1471,17 +1471,30 @@ class Esp extends Front_Controller
 		
 	}
 	
-	public function get_forecast_impact_data(){
+	public function get_forecast_impact_data($webservice_data = NULL){
 		
+		if($webservice_data == NULL && !isset($webservice_data["webservice"])){
+			
+			$monthdata = $_POST['selectedmonth']."-01"; 
+			
+			$user = $this->auth->user();
+			$login_bussiness_code = $user->bussiness_code;
 		
-		$monthdata = $_POST['selectedmonth']."-01"; 
-		
-		$user = $this->auth->user();
-		$login_bussiness_code = $user->bussiness_code;
+		}
+		else{
+			
+			$login_bussiness_code = $webservice_data["bussiness_code"];
+			$monthdata = $webservice_data["monthval"]."-01";
+			
+		}
 		
 		$impact_data = $this->esp_model->get_user_impact_data($login_bussiness_code,$monthdata);
 		
-		//testdata($impact_data);
+		if($webservice_data != NULL && isset($webservice_data["webservice"])){
+			
+			return $impact_data;
+			
+		}
 		
 		$html = "";
         
@@ -1662,27 +1675,48 @@ class Esp extends Front_Controller
 	}
 	
 
-	public function get_pbg_sku_budget_data(){
+	public function get_pbg_sku_budget_data($webservice_data = NULL){
         
-        $user = $this->auth->user();
-        $login_user_id = $user->id;
+		 if($webservice_data == NULL){
+        	
+			//IF NOT WEBSERVICE
+			
+	        $user = $this->auth->user();
+	        $login_user_id = $user->id;
+	        
+	        $pbgid = $_POST["pbgid"];
+	        $from_month = $_POST["frommonth"];
+	        $to_month = $_POST["tomonth"];
+	        
+	        $businesscode = $_POST["businesscode"];
         
-        $pbgid = $_POST["pbgid"];
-        $from_month = $_POST["frommonth"];
-        $to_month = $_POST["tomonth"];
-        
-        $businesscode = $_POST["businesscode"];
-        
+		}
+		else
+		{
+			//IF WEBSERVICE
+			
+			$login_user_id = $webservice_data['login_user_id'];
+	        
+	        $pbgid = $webservice_data['pbg_id'];
+	        $from_month = $webservice_data['from_month'];
+	        $to_month = $webservice_data['to_month'];
+	        
+	        $businesscode = $webservice_data['business_code'];
+			
+			//testdata($webservice_data);
+					
+		}	
+			
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
-        
-       
-                
+             
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
         $html = "";
         $html1 = "";
         $html2 = "";
+		
+		$webservice_final_array = array();
         
         if($pbg_sku_data != 0){
             
@@ -1733,7 +1767,10 @@ class Esp extends Front_Controller
                 
                 foreach($month_data as $monthkey => $monthvalue){
                     
-                    
+                    $time=strtotime($monthvalue);
+                    $month=date("F",$time);
+                    $year=date("Y",$time);
+					
                     $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
                     
                     $budget_qty = "";
@@ -1759,6 +1796,12 @@ class Esp extends Front_Controller
                         
                     }
                     
+					
+					if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+						$data_inner_array = array();
+					}
+					
+					
                     //CHECK DATA FREEZED OR NOT
                     
                     $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id);
@@ -1799,6 +1842,12 @@ class Esp extends Front_Controller
                                 $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                 
                                 
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["budget_qty"] = $budget_qty;
+									$data_inner_array["budget_value"] = $budget_value;
+							    }
+								
+								
                             }else{
                                 
                                 
@@ -1821,6 +1870,11 @@ class Esp extends Front_Controller
                     
                                      $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                     
+									if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+										$data_inner_array["budget_qty"] = $budget_qty;
+										$data_inner_array["budget_value"] = $budget_value;
+								    }
+									
                                 }
                                 elseif($login_user_id == $budget_freeze_data['created_by_user']){
                                     
@@ -1839,6 +1893,11 @@ class Esp extends Front_Controller
                     
                                      $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                     
+									if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+										$data_inner_array["budget_qty"] = $budget_qty;
+										$data_inner_array["budget_value"] = $budget_value;
+								    }
+									
                                 }
                                 else{
                                     
@@ -1850,6 +1909,11 @@ class Esp extends Front_Controller
                     
                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                     
+									if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+										$data_inner_array["budget_qty"] = "";
+										$data_inner_array["budget_value"] = "";
+								    }
+									
                                 }
                             }
                             else{
@@ -1862,6 +1926,11 @@ class Esp extends Front_Controller
                     
                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                 
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+										$data_inner_array["budget_qty"] = "";
+										$data_inner_array["budget_value"] = "";
+								    }
+								
                               }
                                 
                            }
@@ -1877,6 +1946,12 @@ class Esp extends Front_Controller
                     
                                 $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                 
+								
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["budget_qty"] = $budget_qty;
+									$data_inner_array["budget_value"] = $budget_value;
+								}
+								
                             }
                             elseif($login_user_id == $budget_freeze_data['created_by_user']){
                                 
@@ -1886,6 +1961,11 @@ class Esp extends Front_Controller
                     
                                 $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                 
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["budget_qty"] = $budget_qty;
+									$data_inner_array["budget_value"] = $budget_value;
+								}
+								
                             }
                             else{
                                 
@@ -1896,8 +1976,33 @@ class Esp extends Front_Controller
                     
                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
                                 
+								
+								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
+									$data_inner_array["budget_qty"] = "";
+									$data_inner_array["budget_value"] = "";
+							    }
+								
                             }
                         }
+
+							if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))
+							{
+								
+								$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
+								$data_inner_array["productname"] = $skuvalue['product_sku_name'];
+								
+								$webservice_final_array[$monthvalue]["monthvalue"] = $monthvalue;
+								$webservice_final_array[$monthvalue]["monthname"] = $month."-".$year;
+								
+								$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
+								if($lock_status == ""){
+									$lock_status = 0;
+								}
+								$webservice_final_array[$monthvalue]["lock_status"] = $lock_status;
+							
+							}
+
+
                     }
                     else{
                         
@@ -1906,7 +2011,27 @@ class Esp extends Front_Controller
                          $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     
                         $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
-                                    
+                            
+							
+							if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))
+							{
+							
+								$data_inner_array = array();
+								
+								//$data_inner_array["forecastid"] = $forecast_id;
+								
+								$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
+								$data_inner_array["productname"] = $skuvalue['product_sku_name'];
+								$data_inner_array["budget_qty"] = $budget_qty;
+								$data_inner_array["budget_value"] = $budget_value;
+								
+								$webservice_final_array[$monthvalue]["monthvalue"] = $monthvalue;
+								$webservice_final_array[$monthvalue]["monthname"] = $month."-".$year;
+								$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
+								$webservice_final_array[$monthvalue]["lock_status"] = 0;
+							
+							}
+							 	 								    
                     }
                         
                     $l++;
@@ -1921,6 +2046,8 @@ class Esp extends Front_Controller
        $html .= '</table>';
            
             $freeze_button = "";
+			$freeze_status = 0;
+			
             if($login_user_parent_data != 0){
                 
                 $freeze_history_user_status_data = $this->esp_model->get_budget_freeze_history_user_status_data($login_user_id,$budget_id);
@@ -1930,19 +2057,41 @@ class Esp extends Front_Controller
                 
                     if($freeze_history_user_status_data[0]['freeze_status'] == 0){
                     
+						$freeze_status = 0;
+						
                         $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
                     }
                     else{
+                    	$freeze_status = 1;
+						
                         $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
                     }
                     
                 }
                 else{
-                    
+                    $freeze_status = 0;
                     $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
                     
                 }
             }
+
+
+			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+				
+				
+				
+				$final_array = array();
+				
+				$final_array["budget_data"] = array_values($webservice_final_array);
+				$final_array["budget_id"] = $budget_id;
+				$final_array["freeze_status"] = $freeze_status;
+				
+				//testdata($final_array);
+				
+				return $final_array;
+				//die;
+			}
+
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
                 <input type="hidden" id="budget_id" name="budget_id" value="'.$budget_id.'" />
@@ -1961,7 +2110,6 @@ class Esp extends Front_Controller
         die;
         
     }
-
 
 	public function add_budget(){
        // testdata($_POST);
@@ -2220,17 +2368,30 @@ class Esp extends Front_Controller
     }
    
    
-    public function forecast_status(){
+    public function forecast_status($webservice_data=NULL){
     	
 		Assets::add_module_js('esp', 'esp_budget.js');
 
-		$user = $this->auth->user();
+		if($webservice_data != NULL){
+			
+			$user_role_id = $webservice_data["role_id"];
+			$user_id = $webservice_data["user_id"];
+			
+		}
+		else{
+
+			$user = $this->auth->user();
+			$user_role_id = $user->role_id;
+			$user_id = $user->id;
+		}
 		
-		$role_degigination_data = $this->esp_model->get_role_degination_data($user->role_id);
+		$role_degigination_data = $this->esp_model->get_role_degination_data($user_role_id);
+		
+		//testdata($role_degigination_data);
 		
 		$final_array = array();
 		
-		$test_array = array();
+		$webservice_final_array = array();
 		
 		
 		$html = "";
@@ -2263,19 +2424,26 @@ class Esp extends Front_Controller
 				$html .= "</tr><tr>";
 			}
 			
+			if($webservice_data != NULL){
+				$webservice_final_array[$month_data]["monthname"] = $monthName."-".$year;
+				$webservice_final_array[$month_data]["monthvalue"] = $month_data;
+				
+				$webservice_final_array[$month_data]["statusdata"] = array();
+			}
+			
+			
 			$html .= "<td><table class='inner_main' ><td colspan='2' align=center><input type='hidden' name='month_data' value='".$month_data."' id='month_data'/> $monthName $year </td></tr>";
 			 
 			if($role_degigination_data != 1){
 				
-				$level_user_id = $user->id;
+				$level_user_id = $user_id;
 				
 				$html .= "<form id='user_data_form' name='user_data_form'>";
 				
-				//echo $role_degigination_data;
-				
-				
 				
 				for($n=1;$n<$role_degigination_data;$n++){
+				
+					$inner_array = array();
 				
 					$level = $n;
 				
@@ -2293,17 +2461,21 @@ class Esp extends Front_Controller
 						
 						<input type='hidden' name='user_level_data_".$n."' value='".$levle_data['level_users']."' id='user_level_data_".$n."'/>
 						
-						
-						
 						".$users_forecast_freeze_count_data."/".$levle_data['tot']."</td>";
 					$html .= "</tr>";
 				
+						$inner_array["employee_level_data"] = $levle_data['level_users'];
+				
+						$inner_array["update_employee_count"] = $users_forecast_update_count_data;
+						$inner_array["freeze_employee_count"] = $users_forecast_freeze_count_data;
+						$inner_array["total_employee_count"] = $levle_data['tot'];
+				
+						$webservice_final_array[$month_data]["statusdata"][] = $inner_array;
 				
 				}
 				
 				$html .= "</form>";
 				
-				//die;
 			}
 			 
 			
@@ -2312,6 +2484,15 @@ class Esp extends Front_Controller
 			$row=$row+1;
 			
 		} // end of for loop for 12 months
+		
+		//testdata($webservice_final_array);
+		if($webservice_data != NULL){
+			
+			$final_array = array();
+			
+			$final_array = array_values($webservice_final_array);
+			return $final_array;
+		}
 		
 		$html .= "</table>";
 		
@@ -2322,23 +2503,53 @@ class Esp extends Front_Controller
 		
     }
 
-	public function show_month_user_level_data(){
+	public function show_month_user_level_data($webservice_data = NULL){
 		
 		//testdata($_POST["userlevel_formdata"]);
 		
-		$month_data = $_POST["monthval"];
+		$final_array = array();
 		
+		if($webservice_data != NULL){
+					
+			$month_data = $webservice_data["monthval"];
+			$no_of_level = count($webservice_data["userlevel_formdata"]);
+			
+			$user_level_formdata = $webservice_data["userlevel_formdata"];
+			
+			if(!empty($user_level_formdata)){
+					
+				$l = count($user_level_formdata);
+					
+				foreach($user_level_formdata as $level_key => $leveldata){
+							
+					//$level_array  = explode("_",$level_key);
+					//$level_data = $level_array["3"];	
+					$final_array["level"][] = "Level ".$l;
+					
+					$l--;
+				}
+			}
+			
+			
+		}
+		else{
+			$month_data = $_POST["monthval"];
+			$no_of_level = count($_POST["userlevel_formdata"]);
+			
+			$user_level_formdata = $_POST["userlevel_formdata"];
+			
+		}
 		$html = "";
 		
-		$no_of_level = count($_POST["userlevel_formdata"]);
 		
-		if(!empty($_POST["userlevel_formdata"])){
+		
+		if(!empty($user_level_formdata)){
 			
 			$html .= "<table id='table_user_data' style='width:50%;float:left;'><thead><tr>";
 			
 			$level_data_array = array();
 			
-			foreach($_POST["userlevel_formdata"] as $user_data_key => $user_level_data){
+			foreach($user_level_formdata as $user_data_key => $user_level_data){
 				
 				$level_data = $user_level_data["name"];
 				$level_array  = explode("_",$level_data);
@@ -2359,7 +2570,7 @@ class Esp extends Front_Controller
 			
 			$max_count = 0;
 			
-			foreach($_POST["userlevel_formdata"] as $user_data_key1 => $user_level_data1){
+			foreach($user_level_formdata as $user_data_key1 => $user_level_data1){
 				
 				$level_data = $user_level_data1["name"];
 				
@@ -2377,6 +2588,8 @@ class Esp extends Front_Controller
 				}
 				
 				$data_array[$level_data] = $users_forecast_update_status_data;
+				
+				$final_array["level_data"] = $data_array;
 				
 			}
 			
@@ -2413,10 +2626,304 @@ class Esp extends Front_Controller
 			
 		}
 		
+		if($webservice_data != NULL){
+			return $final_array;
+		}
+		
 		echo $html;
 		die;
 		
 	}
+
+	public function generate_forecast_xl_data(){
+		
+		$user = $this->auth->user();
+		$user_country_id = $user->country_id;
+		$bussiness_code = $user->bussiness_code;
+		
+		$pbgdata = $this->esp_model->get_pbg_data($user_country_id);
+		
+		$final_array = array();
+		
+		$year = date("Y");
+		
+		$from_month = $year."-01-01";
+		$to_month = $year."-12-01";
+		
+		$month_data = $this->get_monthly_data($from_month,$to_month);
+		
+		if(!empty($pbgdata)){
+			
+			foreach($month_data as $month_key => $monthvalue){
+			
+				foreach($pbgdata as $pbg_key => $pbg_data){
+					
+					$inner_array = array();
+					
+					//GET PRODUCT SKU FOR EACH PBG
+	
+					$product_sku_country_id = $pbg_data['product_country_id'];
+					$PBG_name = $pbg_data['product_country_name'];	
+					
+					$inner_array[$PBG_name]["PBG_name"] = $PBG_name;
+					$inner_array[$PBG_name]["PBG_id"] = $product_sku_country_id;
+					
+					
+					$inner_array[$PBG_name]["sku_data"] = array();
+					
+					$pbg_sku_data = $this->esp_model->get_pbg_sku_data($product_sku_country_id);
+					
+					$forecast_id = 0;
+					
+					if(!empty($pbg_sku_data)){
+						
+						foreach ($pbg_sku_data as $sku_key => $sku_value) {
+							$sku_data_array = array();
+							
+							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_name'] = $sku_value["product_sku_name"];
+							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_id'] = $sku_value["product_sku_country_id"];
+							
+							//FOR GETTING FORECAST DATA FOR SKU
+							
+							$employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($bussiness_code,$sku_value['product_sku_country_id'],$monthvalue);
+							
+							$forecast_qty = 0;
+							
+							if(!empty($employee_month_product_forecast_data)){
+								$forecast_qty = $employee_month_product_forecast_data[0]["forecast_quantity"];
+								
+								$forecast_id = $employee_month_product_forecast_data[0]["forecast_id"];
+								
+							}
+							
+							
+							 $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($bussiness_code,$sku_value['product_sku_country_id'],$monthvalue);
+                    
+                    		$budget_qty = 0;
+                    
+		                    if($employee_month_product_budget_data != 0){
+		                        $budget_qty = $employee_month_product_budget_data[0]['budget_quantity'];
+							}
+									
+							
+							$sku_data_array[$sku_value["product_sku_name"]]['forecast_quantity'] = $forecast_qty;
+							$sku_data_array[$sku_value["product_sku_name"]]['budget_quantity'] = $budget_qty;
+							
+							$inner_array[$PBG_name]["sku_data"][] = $sku_data_array;
+							
+						}
+						
+					}
+					
+					
+					//GETTING ASSUMPTION AND PROBABLITY DATA
+					
+					if($forecast_id != 0){
+					
+						$month_assumption_forecast_data = $this->esp_model->get_month_assumption_forecast_data($forecast_id,$monthvalue);
+						
+						if(isset($month_assumption_forecast_data[0]["assumption1_id"]) && $month_assumption_forecast_data[0]["assumption1_id"] != ""){
+							$assumption1_id = $month_assumption_forecast_data[0]["assumption1_id"];
+						}else{
+							$assumption1_id = 0;
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["assumption2_id"]) && $month_assumption_forecast_data[0]["assumption2_id"] != ""){
+							$assumption2_id = $month_assumption_forecast_data[0]["assumption2_id"];
+						}else{
+							$assumption2_id = 0;
+						}
+												
+						if(isset($month_assumption_forecast_data[0]["assumption3_id"]) && $month_assumption_forecast_data[0]["assumption3_id"] != ""){
+							$assumption3_id = $month_assumption_forecast_data[0]["assumption3_id"];
+						}else{
+							$assumption3_id = 0;
+						}
+						
+						
+						if(isset($month_assumption_forecast_data[0]["probability1"]) && $month_assumption_forecast_data[0]["probability1"] != ""){
+							$probability1 = $month_assumption_forecast_data[0]["probability1"];
+						}else{
+							$probability1 = 0;
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["probability2"]) && $month_assumption_forecast_data[0]["probability2"] != ""){
+							$probability2 = $month_assumption_forecast_data[0]["probability2"];
+						}else{
+							$probability2 = 0;
+						}
+						
+						if(isset($month_assumption_forecast_data[0]["probability3"]) && $month_assumption_forecast_data[0]["probability3"] != ""){
+							$probability3 = $month_assumption_forecast_data[0]["probability3"];
+						}else{
+							$probability3 = 0;
+						}
+						
+					}
+					else{
+						$assumption1_id = 0;
+						$assumption2_id = 0;
+						$assumption3_id = 0;
+						
+						$probability1 = 0;
+						$probability2 = 0;
+						$probability3 = 0;
+						
+					}
+					
+					$inner_array[$PBG_name]["assumption1"] = $assumption1_id;
+					$inner_array[$PBG_name]["probablity1"] = $probability1;
+					$inner_array[$PBG_name]["assumption2"] = $assumption2_id;
+					$inner_array[$PBG_name]["probablity2"] = $probability2;
+					$inner_array[$PBG_name]["assumption3"] = $assumption3_id;
+					$inner_array[$PBG_name]["probablity3"] = $probability3; 	
+					
+					$inner_array[$PBG_name]["forecast_id"] = $forecast_id; 
+					
+					$final_array[$monthvalue][] = $inner_array;
+					
+				}
+			}
+			
+		}
+		else{
+			
+			//NO PBG DATA FOUND
+			
+			$final_array[$monthvalue][] = "No Data Found";
+		}
+		
+		$xl_data =  $this->create_data_xl($final_array);
+		
+		die;
+		
+	}
+
+
+	  public function create_data_xl($final_array) {
+			
+            if(!empty($final_array))
+            {
+                $this->load->library('excel');
+
+                $records=array();
+				
+				$this->excel->setActiveSheetIndex();
+				
+				$u = 0;
+				
+				foreach($final_array as $key_data => $final_data){
+				
+	              //  $this->excel->setActiveSheetIndex(0);
+					
+					
+					 $this->excel->createSheet($u); 
+					
+					// $this->excel->setTitle("$key_data");
+					
+	                //name the worksheet
+	              /*  $this->excel->getActiveSheet()->setTitle($key_data);
+	                $k = 1;
+	                $l = 1;
+	                $first_data = 'A'.$l;
+	                $last_data  = "";
+					
+					$user= $this->auth->user();
+	            	$user_role_id = $user->role_id;
+	                
+					*/
+					
+					
+					
+	                //foreach($_POST['val']["header"][1] as $key=> $col_data){
+	                
+	                    //$this->excel->getActiveSheet()->setCellValue($key.$l,$col_data);
+	                   //$last_data = $key.$l;
+	                   // $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setSize(12);
+	                   // $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setBold(true);
+	                   // $k++; 
+	                //}
+	
+	               /* foreach(range($first_data,$last_data) as $columnID){
+	                    $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+	                }
+	
+	                $data_array = array();
+	                
+	                    $m = 2;
+	                    foreach($_POST['val'] as $key1 => $value)
+	                    {
+	                    	
+							//dumpme($value);
+							
+	                        if((string)$key1 != 'header') {
+	                            $row_data = explode("~",$value);
+								
+								//dumpme($row_data);
+								
+	                            $j = 0;
+	                
+	                                $this->excel->getActiveSheet()->setCellValue($key2.$m, $row_data[$j]);
+	                                $j++;
+	                            }
+	                        }
+	                         $m++;
+						*/
+						
+						$u++;
+							 
+				 }
+              }
+                $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xlsx';
+                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+                header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+                header('Cache-Control: max-age=0'); //no cache
+
+                //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+                //if you want to save it as .XLSX Excel 2007 format
+                $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+                //force user to download the Excel file without writing it to server's HD
+                
+                /*
+                 * NEED TO CHANGE AS PER UPLOADED FILE 
+                 */
+
+               /*  if($_SERVER['SERVER_NAME'] == "localhost"){
+                       $folder = "open_re/trunk";
+                   }
+                   elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
+                       $folder = "qa/re";
+                   }*/
+
+
+                //if(file_exists($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+                if(file_exists(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+
+                    unlink(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                    
+                }
+                
+                $objWriter->save(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+
+                $web_service = @$_POST['flag'];
+                if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+                    $result['status'] = true;
+                    $result['message'] = 'Retrieved Successfully.';
+                    $result['data'] = base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
+                    echo json_encode($result);
+                }
+                else
+                {
+                    echo $filename;
+                }
+                
+                $objWriter->save('php://output');
+                exit();
+            }
+            
+        
+      
 
 
 	
