@@ -2801,87 +2801,48 @@ class Esp extends Front_Controller
 
 
 	  public function create_data_xl($final_array) {
-			
+	  		
+			$this->load->library('excel');
+		 	$obj = new Excel();	
+	  		
+	  	
+			//testdata($final_array);
             if(!empty($final_array))
             {
-                $this->load->library('excel');
-
-                $records=array();
-				
-				$this->excel->setActiveSheetIndex();
-				
-				$u = 0;
-				
+               	$u = 0;
 				foreach($final_array as $key_data => $final_data){
 				
-	              //  $this->excel->setActiveSheetIndex(0);
-					
-					
-					 $this->excel->createSheet($u); 
-					
-					// $this->excel->setTitle("$key_data");
-					
-	                //name the worksheet
-	              /*  $this->excel->getActiveSheet()->setTitle($key_data);
-	                $k = 1;
-	                $l = 1;
-	                $first_data = 'A'.$l;
-	                $last_data  = "";
-					
-					$user= $this->auth->user();
-	            	$user_role_id = $user->role_id;
-	                
-					*/
-					
-					
-					
-	                //foreach($_POST['val']["header"][1] as $key=> $col_data){
-	                
-	                    //$this->excel->getActiveSheet()->setCellValue($key.$l,$col_data);
-	                   //$last_data = $key.$l;
-	                   // $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setSize(12);
-	                   // $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setBold(true);
-	                   // $k++; 
-	                //}
-	
-	               /* foreach(range($first_data,$last_data) as $columnID){
-	                    $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
-	                }
-	
-	                $data_array = array();
-	                
-	                    $m = 2;
-	                    foreach($_POST['val'] as $key1 => $value)
-	                    {
-	                    	
-							//dumpme($value);
+					// Add new sheet
+					 $objWorkSheet = $obj->createSheet($u); //Setting index when creating
+					 
+					//Write cells
+					 $objWorkSheet->setCellValue('A1', 'Hello'.$u)
+					 ->setCellValue('B2', 'world!')
+					 ->setCellValue('C1', 'Hello')
+					 ->setCellValue('D2', 'world!');
+					 
+					// Rename sheet
+					 $objWorkSheet->setTitle("$key_data");
 							
-	                        if((string)$key1 != 'header') {
-	                            $row_data = explode("~",$value);
-								
-								//dumpme($row_data);
-								
-	                            $j = 0;
-	                
-	                                $this->excel->getActiveSheet()->setCellValue($key2.$m, $row_data[$j]);
-	                                $j++;
-	                            }
-	                        }
-	                         $m++;
-						*/
-						
-						$u++;
-							 
+					$u++;
 				 }
-              }
-                $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xlsx';
-                header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
-                header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
-                header('Cache-Control: max-age=0'); //no cache
+            }
+
+				// $filename='just_some_random_name.xls'; //save our workbook as this file name
+				 $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xls';
+				 header('Content-Type: application/vnd.ms-excel'); //mime type
+				 header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+				 header('Cache-Control: max-age=0'); //no cache
+
+
+              //  $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xlsx';
+             //   header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+              //  header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+              //  header('Cache-Control: max-age=0'); //no cache
 
                 //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
                 //if you want to save it as .XLSX Excel 2007 format
-                $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+               // $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
                 //force user to download the Excel file without writing it to server's HD
                 
                 /*
@@ -2897,33 +2858,40 @@ class Esp extends Front_Controller
 
 
                 //if(file_exists($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
-                if(file_exists(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+               // if(file_exists(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
 
-                    unlink(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                //    unlink(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
                     
-                }
+               // }
                 
-                $objWriter->save(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+				 
+             //   $objWriter->save(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
 
-                $web_service = @$_POST['flag'];
-                if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+             //   $web_service = @$_POST['flag'];
+             //   if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
-                    $result['status'] = true;
-                    $result['message'] = 'Retrieved Successfully.';
-                    $result['data'] = base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
-                    echo json_encode($result);
-                }
-                else
-                {
+             //       $result['status'] = true;
+             //       $result['message'] = 'Retrieved Successfully.';
+              //      $result['data'] = base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
+              //      echo json_encode($result);
+              //  }
+             //   else
+             //   {
                     echo $filename;
-                }
+              //  }
+                
+               $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel5');
                 
                 $objWriter->save('php://output');
                 exit();
             }
             
         
-      
+      public function test_xl(){
+      	
+		 
+				
+      }
 
 
 	

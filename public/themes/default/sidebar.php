@@ -7,7 +7,7 @@
             <ul class="sid_button">
                 <li>
                     <span>
-                        <a href="#">
+                        <a href="<?php echo base_url('/ecp') ?>">
                             <span class="ecp_icon">
                             </span>
                             <div class="li_title pr_title">Activity Planner</div>
