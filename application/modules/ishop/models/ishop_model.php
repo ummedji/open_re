@@ -4013,9 +4013,6 @@ class Ishop_model extends BF_Model
                     $order_date = date("Y-m-d");
 
                 } elseif ($this->input->post("radio1") == "distributor") {
-
-                    testdata($_POST);
-
                     $distributor_id = $this->input->post("distributor_id");
 
                     $customer_id_from = $distributor_id;
@@ -4040,7 +4037,7 @@ class Ishop_model extends BF_Model
                 $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }else{
-                $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
+                $distributor_id = (isset($_POST["retailer_distributor_id"])) ? $_POST["retailer_distributor_id"] : 0;
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }
 

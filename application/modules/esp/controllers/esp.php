@@ -733,10 +733,7 @@ class Esp extends Front_Controller
 					
 				}
 				
-
             }
-
-			
 
            
             $k = 1;
@@ -2830,7 +2827,7 @@ class Esp extends Front_Controller
 
 
 	  public function create_data_xl($final_array) {
-	  		
+	  		//testdata($final_array);
 			$this->load->library('excel');
 		 	$obj = new Excel();	
 	  		
@@ -2845,13 +2842,37 @@ class Esp extends Front_Controller
 					 $objWorkSheet = $obj->createSheet($u); //Setting index when creating
 					 
 					//Write cells
-					 $objWorkSheet->setCellValue('A1', 'Hello'.$u)
+					
+					$objWorkSheet->setCellValue('A1','Product SKU Name');
+					$objWorkSheet->setCellValue('B1','Product SKU Code');
+					$objWorkSheet->setCellValue('C1','Budget');
+					$objWorkSheet->setCellValue('D1','Forecast');
+					$objWorkSheet->setCellValue('E1','Assumption1');
+					$objWorkSheet->setCellValue('F1','Probability1 (%)');
+					$objWorkSheet->setCellValue('G1','Assumption2');
+					$objWorkSheet->setCellValue('H1','Probability2 (%)');
+					$objWorkSheet->setCellValue('I1','Assumption3');
+					$objWorkSheet->setCellValue('J1','Probability3 (%)');
+					
+					$i = 2;
+					foreach($final_data as $pbg_key=>$pbg_data){
+						
+						foreach($pbg_data as $pbg=>$pbgdata){
+							$pbg_name = $pbgdata["PBG_name"];
+						
+							$objWorkSheet->setCellValue("A$i", $pbg_name);
+						}
+						$i++;
+					}
+					
+					/* $objWorkSheet->setCellValue('A1', 'Hello'.$u)
 					 ->setCellValue('B2', 'world!')
 					 ->setCellValue('C1', 'Hello')
 					 ->setCellValue('D2', 'world!');
+					 */
 					 
 					// Rename sheet
-					 $objWorkSheet->setTitle("$u");
+					 $objWorkSheet->setTitle("$key_data");
 							
 					$u++;
 				 }
@@ -2906,7 +2927,7 @@ class Esp extends Front_Controller
               //  }
              //   else
              //   {
-                    echo $filename;
+                 //   echo $filename;
               //  }
                 
              //  $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel5');
