@@ -60,6 +60,7 @@ $("input.select_customer_type").on("click",function(){
             get_geo_fo_userdata(customer_selected,customer_type_selected);
 
         }
+
         $("#sales_stock").empty();
     }
 });
@@ -503,6 +504,14 @@ $(document).on('click', 'div.sales_stock', function () { // <-- changes
     if (confirm("Are you sure?")) {
         $(this).closest('tr').remove();
     }
+    var i = 1;
+    $("tbody#sales_stock tr").each(function(  k, v  ) {
+
+        $(this).attr("id",i);
+        $(this).find("td").first().find("input").val(i);
+
+        i++;
+    });
     return false;
 });
 

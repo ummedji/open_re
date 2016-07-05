@@ -993,7 +993,6 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
 		$allocation_id = $this->ishop_model->check_schemes_detail($user_id,$user->country_id);
-		//testdata($allocation_id);
 		echo json_encode($allocation_id);
 		die;
 	}
@@ -1009,8 +1008,6 @@ class Ishop extends Front_Controller
 
 	public function update_schemes_details()
 	{
-
-
 		$user = $this->auth->user();
 		$user_id = $this->session->userdata('user_id');
 		$add = $this->ishop_model->update_schemes_detail($user_id,$user->country_id);
@@ -1141,15 +1138,12 @@ class Ishop extends Front_Controller
 	 * */
         
         public function order_place(){
-            
             Assets::add_module_js('ishop', 'order_place.js');
             
             $user= $this->auth->user();
             
             $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
-            
-            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
-            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id);
             $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
             
             $logined_user_type = $user->role_id;
@@ -1158,43 +1152,30 @@ class Ishop extends Front_Controller
             
             $get_geo_level_data = "";
             $action_data = $this->uri->segment(2);
-            
             //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
             
             if($logined_user_type == 7){
-                
                 //FOR HO
                 $default_type_selected = 9;
                 
                 $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-            
-                
             }
             elseif($logined_user_type == 8){
-            
                 //FOR FO
-                $default_type_selected = 11; 
-                
+                $default_type_selected = 11;
                 $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
             
                 
             }
             elseif($logined_user_type == 9){
-            
                 //FOR DISTRIBUTOR
                 $default_type_selected = null; 
             }
             elseif($logined_user_type == 10){
-            
                 //FOR RETAILER
                 $default_type_selected = null; 
             }
-           
-          //  echo "<pre>";
-          //  print_r($get_geo_level_data);
-          //  die;
-            
-		  //var_dump($distributor);die;
+
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
@@ -1202,8 +1183,7 @@ class Ishop extends Front_Controller
             Template::set('distributor',$distributor);
             Template::set('retailer',$retailer);
             Template::set('product_sku',$product_sku);
-            
-            
+
             Template::set('geo_level_data',$get_geo_level_data);
             
             Template::set_view('ishop/order_place');
@@ -1238,7 +1218,6 @@ class Ishop extends Front_Controller
         * */
         
         public function get_distributor_data(){
-            
             $user= $this->auth->user();
             $retailer_id = $_POST['retailerid'];
             
@@ -1261,7 +1240,6 @@ class Ishop extends Front_Controller
 
             $user= $this->auth->user();
             $user_country_id = $user->country_id;
-			//testdata($_POST);
             $order_data = $this->ishop_model->add_order_place_details($user_id,$user_country_id);
 
 			echo $order_data;
@@ -1277,7 +1255,6 @@ class Ishop extends Front_Controller
         * */
         
         public function get_user_by_geo_data(){
-           // testdata($_POST);
             $selected_geo_id = $_POST['selected_geo_id'];
             $login_user_country_id = $_POST['country_id'];
             $checked_data = $_POST['checked_data'];
@@ -1288,10 +1265,8 @@ class Ishop extends Front_Controller
                 $mobile_num = $_POST['moblie_num'];
                 
             }
-            
-           // echo $selected_geo_id."===".$login_user_country_id."===".$checked_data;die;
+
             $user_data = $this->ishop_model->get_user_for_geo_data($selected_geo_id,$login_user_country_id,$checked_data,$mobile_num);
-          //  testdata($user_data);
             echo $user_data;
             die;
             
@@ -1334,25 +1309,17 @@ class Ishop extends Front_Controller
             $url_data = $_POST['urlsegment'];
             
             if($customer_type_selected == "farmer"){
-                
                 $default_type = 11;
-                
             }
             else if($customer_type_selected == "retailer"){
-                
                  $default_type = 10;
-                
             }
             else if($customer_type_selected == "distributor"){
-                
                  $default_type = 9;
-                
             }
             
             $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,null,$default_type,$url_data);
-          //  var_dump($get_geo_level_data);die;
             echo json_encode($get_geo_level_data);
-            
             die;
             
         }
@@ -1407,35 +1374,25 @@ class Ishop extends Front_Controller
             
             
             if($checkedtype == "farmer"){
-                
                 $default_type = 11;
-                
             }
             else if($checkedtype == "retailer"){
-                
                  $default_type = 10;
                 
             }
             else if($checkedtype == "distributor"){
-                
                  $default_type = 9;
                 
             }
-            
-            
+
             $url_data = $_POST['urlsegment'];
-            $radio_selected_data = $_POST['checkedtype']; 
-            
+            $radio_selected_data = $_POST['checkedtype'];
            // echo $url_data;
-            
             //echo $selected_user_id."===".$user_country."===".$login_customer_type."===".$parent_geo_id;
             
             $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,$parent_geo_id,$default_type,$url_data);
             
             echo json_encode($get_geo_level_data);
-            
-            //die;
-            
             die;
             
         }
@@ -1798,8 +1755,6 @@ class Ishop extends Front_Controller
          if($loginusertype == 7){
             
             //FOR HO
-            
-           
             $radio_checked = $_POST["radio1"];
             
             if($radio_checked == "distributor"){
@@ -1972,10 +1927,10 @@ class Ishop extends Front_Controller
                 
                 $action_data = (isset($_POST['segment_data']) ? $_POST['segment_data'] : '');
                 $order_details = "";
-		if(isset($order_id) && !empty($order_id))
-		{
-			$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
-		}
+				if(isset($order_id) && !empty($order_id))
+				{
+					$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
+				}
                
                 //echo $action_data;die;
                 
@@ -1997,7 +1952,6 @@ class Ishop extends Front_Controller
                 }
 		//	Template::set('td', $order_details['count']);
 			//Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
-
 			Template::render();
             
         }
@@ -2031,7 +1985,9 @@ class Ishop extends Front_Controller
         public function update_order_status_detail_data() {
            
             $detail_data = $_POST;
-            
+
+			testdata($detail_data);
+
             $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
             echo $detail_update;
             die;
@@ -2051,8 +2007,7 @@ class Ishop extends Front_Controller
             die;
             
         }
-        
-         
+
         /**
         * @ Function Name	: delete_product_order_data
         * @ Function Params	: 
@@ -2063,7 +2018,6 @@ class Ishop extends Front_Controller
         public function delete_product_order_data(){
             
             $order_id = $_POST["data_id"];
-            
             $detail_delete = $this->ishop_model->delete_order_data($order_id);
             die;
             
@@ -2081,11 +2035,8 @@ class Ishop extends Front_Controller
         * @ Function Purpose 	: For getting po_acknowledgement order data 
         * @ Function Return 	: 
         * */
-        
-        
+
         public function po_acknowledgement() {
-            
-            
             Assets::add_module_js('ishop', 'order_place.js');
             Assets::add_module_js('ishop', 'order_status.js');
             Assets::add_module_js('ishop', 'po_acknowledgement.js');
@@ -2093,9 +2044,7 @@ class Ishop extends Front_Controller
             $user= $this->auth->user();
             $logined_user_countryid = $user->country_id;
             $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
-            
-            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id); 
-            
+            $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id);
             $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
             
             $logined_user_type = $user->role_id;
@@ -2105,18 +2054,17 @@ class Ishop extends Front_Controller
             $get_geo_level_data = "";
             $action_data = $this->uri->segment(2);
 
-			//testdata($_POST);per_page
-
 			$per_page = (isset($_POST['per_page']) ? $_POST['per_page'] : '');
 			$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
             if(isset($_POST) && !empty($_POST) && isset($per_page)&&  $per_page != ""){
                 
-                 $update_order_data = $this->ishop_model->update_order_data($_POST);
+				$update_order_data = $this->ishop_model->update_order_data($_POST);
+				echo $update_order_data;
+				die;
+
             }
-            
-            
-           
+
              $from_date = "";
              $todate = "";
 
@@ -2129,17 +2077,13 @@ class Ishop extends Front_Controller
             Template::set('po_ack_table', $order_data);
 			Template::set('td', $order_data['count']);
 			Template::set('pagination', (isset($order_data['pagination']) && !empty($order_data['pagination'])) ? $order_data['pagination'] : '' );
-
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
-            
             Template::set('distributor',$distributor);
             Template::set('retailer',$retailer);
             Template::set('product_sku',$product_sku);
-            
             Template::set('geo_level_data',$get_geo_level_data);
-            
             Template::set_view('ishop/po_acknowledgement');
             Template::render();
             
@@ -2171,20 +2115,15 @@ class Ishop extends Front_Controller
             $logined_user_type = $user->role_id;
             $logined_user_id = $user->id;
             $logined_user_countryid = $user->country_id;
-            
-          
             $action_data = $this->uri->segment(2);
             $sub_action_data = $this->uri->segment(3);
-            
             $order_data = "";
 
 			$page = (isset($_POST['page']) ? $_POST['page'] : '');
             if(isset($_POST) && !empty($_POST) && $_POST["form_date"] != "" && $_POST["to_date"] != ""){
 
-                
-                    $from_date = $_POST["form_date"];
-                    $todate = $_POST["to_date"];
-
+                   $from_date = $_POST["form_date"];
+				   $todate = $_POST["to_date"];
                    $radio_checked = "";
                    $customer_id = $logined_user_id;
 
@@ -2203,54 +2142,42 @@ class Ishop extends Front_Controller
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
-            
             Template::set_view('ishop/order_approval');
             Template::render();
-           
         }
 
 
 
         public function update_order_approval_detail_data() {
-            
             $detail_data = $_POST;
             $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
             redirect("ishop/order_approval");
-            
         }
         
         public function update_order_approval_status() {
            $detail_data = $_POST;
-
            $detail_update = $this->ishop_model->update_order_data($detail_data);
 			echo $detail_update;
             die;
-           
         }
         
         //TARGET
         
         public function target() {
-            
             Assets::add_module_js('ishop', 'target.js');
-            
             $user= $this->auth->user();
             $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
-            
             $logined_user_type = $user->role_id;
             $get_geo_level_data = "";
             $action_data = $this->uri->segment(2);
-
 			$checked_type=null;
 
 			$checked_type = (isset($_POST['checked_type']) && !empty($_POST['checked_type']) ) ? $_POST['checked_type'] :'distributor';
-
 			$default_type_selected = 9;
-			$get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
 
+			$get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
 			$page = (isset($_POST['page']) ? $_POST['page'] : '');
 			$target_data= $this->ishop_model->get_target_details($user->id,$user->country_id,$checked_type,$page);
-
 			Template::set('td', $target_data['count']);
 			Template::set('pagination', (isset($target_data['pagination']) && !empty($target_data['pagination'])) ? $target_data['pagination'] : '' );
 

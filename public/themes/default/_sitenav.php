@@ -2,7 +2,6 @@
     $segment = $this->uri->segment(1);
     $segment2 = $this->uri->segment(2);
     $segment3 = $this->uri->segment(3);
-      //testdata($segment);
     ?>
 <!--left sidebar-->
 <div class="main_header">
@@ -140,6 +139,29 @@
                                     <li role="presentation" class=""><a href="<?php echo base_url('/esp'); ?>">Forecast</a></li>
                                     <li role="presentation" class=""><a href="<?php echo base_url('/esp/budget'); ?>">Budget</a></li>
                               <?php
+                                }
+                                elseif($segment=='ecp'){
+                                    ?>
+                                    <li role="presentation" class="">
+                                        <a href="<?php echo base_url('ecp/activity'); ?>">ACTIVITY</a>
+                                    </li>
+                                    <li role="presentation" class=""><a href="<?php echo base_url('ecp/no_working'); ?>">NO WORKING</a></li>
+
+                                    <?php if($current_user->role_id == 8) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ecp' && $segment2=='material_request') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ecp/material_request'); ?>">MATERIAL REQUEST</a></li>
+                                        <?php
+                                    }?>
+
+                                    <?php if($current_user->role_id == 7) {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ecp' && $segment2=='all_material_request') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ecp/all_material_request'); ?>">MATERIAL REQUEST</a></li>
+                                        <?php
+                                    }?>
+
+
+                                    <li role="presentation" class=""><a href="<?php echo base_url('ecp/compititor_analysis'); ?>">COMPITITORS ANALYSIS</a></li>
+                                    <?php
                                 }
                                 else{
                                     ?>

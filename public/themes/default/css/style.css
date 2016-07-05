@@ -1972,3 +1972,6 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 .pbg_data.selectpicker { display: inline-block !important;}
 .freeze_area_btn { display: inline-block;}
 .lock_unlock_data { display: inline-block;}
+.zoom_out_btn { display: none !important;}
+.zoom_out_btn_show { display: inline-block !important;}
+.ad_mr_top_30 { margin-top: 35px;}

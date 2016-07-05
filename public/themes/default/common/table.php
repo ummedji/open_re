@@ -10,18 +10,19 @@ if(isset($table) && count($table)>0 && $table != false) {
     ?>
         <?php if(isset($table['no_margin']) && !empty($table['no_margin']) )
         { ?>
-                <div class="col-md-12">
+                <div class="col-md-12 ad_mr_top">
             <?php
         }else{
         ?>
-        <div class="col-md-12" style="margin-top: 24px">
+        <div class="col-md-12 ad_mr_top">
         <?php
     }?>
             <div class="row">
                 <div class="zoom_space">
                     <ul>
                         <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                        <li><a href="#" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                        <li class="zoom_out_btn"><a href="#" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
                     </ul>
                 </div>
                 <div id="no-more-tables">
@@ -102,7 +103,23 @@ if(isset($table) && count($table)>0 && $table != false) {
                                                <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
                                                <?php
                                            }
+                                            if(isset($table['delete_dis']) && !empty($table['delete_dis'])){
+
+                                               // echo "bbbb".$table['delete_disabled'][$rkey]."aaaa".$rkey;
+
+                                                if($table['delete_disabled'][$rkey] == 1){
+                                                    $style = "style='pointer-events: none;opacity: 0.4;'";
+                                                }
+                                                else{
+                                                    $style = "";
+                                                }
+                                                ?>
+                                                <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#" <?php echo $style; ?>><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                            <?php
+
+                                            }
                                             if(isset($table['delete']) && !empty($table['delete'])){
+
                                             ?>
                                                <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                            <?php } ?>
@@ -151,5 +168,25 @@ if(isset($table) && count($table)>0 && $table != false) {
     </div>
 
 
-
+<script type="text/javascript">
+    (function($){
+        $(".zoom_in_btn").click(function(e){
+            e.preventDefault();
+            $(".zoom_out_btn").toggleClass("zoom_out_btn_show");
+            $(".ad_mr_top").toggleClass("ad_mr_top_30");
+            $(".top_form").hide();
+            $(".zoom_in_btn").hide();
+            $(".middle_form").hide();
+        });
+        $(".zoom_out_btn").click(function(j){
+            j.preventDefault();
+            $(".zoom_out_btn").removeClass("zoom_out_btn_show");
+            $(".top_form").show();
+            $(".zoom_in_btn").show();
+            $(".middle_form").show();
+            /*$(".zoom_out_btn").hide();*/
+            $(".ad_mr_top").removeClass("ad_mr_top_30");
+        });
+    })(jQuery);
+</script>
 

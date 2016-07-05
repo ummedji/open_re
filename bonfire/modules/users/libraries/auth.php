@@ -310,7 +310,7 @@ class Auth
         //Add Country_local Date Formete
 
         $local_date = $this->ci->country_master_model->find($user->country_id);
-        $user->local_date = $local_date->local_date_formet;
+        @$user->local_date = $local_date->local_date_formet;
 
 
         // Load the security helper for the do_hash() function.

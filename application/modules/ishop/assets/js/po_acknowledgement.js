@@ -111,3 +111,41 @@ $(document).on('click', 'div.po_acknowledgement .eye_i', function () {
     return false;
 });
 
+$(document).on("click",'form#update_po_data button#update_po_order_details',function(){
+
+    var param = $("form#update_po_data").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/po_acknowledgement",
+        data: param,
+        success: function(resp){
+
+
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Updated successfully.';
+            }
+            else{
+
+                message += 'Data not Updated.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+        }
+    });
+    return false;
+});

@@ -33,12 +33,13 @@ if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
     }
     
     ?>
-        <div class="col-md-12" style="margin-top: 25px;">
+        <div class="col-md-12 ad_mr_top">
             <div class="row">
                 <div class="zoom_space">
                     <ul>
                         <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                        <li><a href="#" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                        <li class="zoom_out_btn"><a href="#" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
                     </ul>
                 </div>
                 <div id="no-more-tables">
@@ -149,7 +150,7 @@ if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
                         <div class="col-md-12 table_bottom">
                             <div class="row">
                                 <div class="col-md-3 save_btn">
-                                    <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                                    <button type="submit" id="update_po_order_details" class="btn btn-primary">Save</button>
                                 </div>
                             </div>
                         </div>
@@ -172,3 +173,24 @@ if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
     }
     ?>
 </div>
+<script type="text/javascript">
+    (function($){
+        $(".zoom_in_btn").click(function(e){
+            e.preventDefault();
+            $(".zoom_out_btn").toggleClass("zoom_out_btn_show");
+            $(".ad_mr_top").toggleClass("ad_mr_top_30");
+            $(".top_form").hide();
+            $(".zoom_in_btn").hide();
+            $(".middle_form").hide();
+        });
+        $(".zoom_out_btn").click(function(j){
+            j.preventDefault();
+            $(".zoom_out_btn").removeClass("zoom_out_btn_show");
+            $(".top_form").show();
+            $(".zoom_in_btn").show();
+            $(".middle_form").show();
+            /*$(".zoom_out_btn").hide();*/
+            $(".ad_mr_top").removeClass("ad_mr_top_30");
+        });
+    })(jQuery);
+</script>

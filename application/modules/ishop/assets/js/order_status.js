@@ -24,11 +24,12 @@ $(document).ready(function(){
         var id = $(this).attr('prdid');
         var radio_checked = $('input[name=radio1]:checked').val();
         var login_customer_type = $("input#login_customer_type" ).val();
+        var currentpage = $("input.page_function" ).val();
 
         $.ajax({
             type: 'POST',
             url: site_url+'ishop/get_order_status_data_details',
-            data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type},
+            data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type,segment_data:currentpage},
             success: function(resp){
                 $("div#middle_container_product").empty();
                 $("#middle_container_product").html(resp);
@@ -196,6 +197,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
 
     $(document).on('click', '#update_order_details', function (e) {
         e.preventDefault();
+
         var order_data = $("#order_status_view_data").serializeArray();
       /*  console.log(order_data);
         return false;*/

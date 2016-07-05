@@ -68,6 +68,8 @@ $(document).ready(function(){
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
 
            }
+
+           $("#order_place_data").empty();
            
        }
        else if(customer_type_selected == "distributor"){
@@ -85,6 +87,8 @@ $(document).ready(function(){
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
 
            }
+
+           $("#order_place_data").empty();
            
            
        }
@@ -103,8 +107,8 @@ $(document).ready(function(){
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
 
            }
-           
-           
+
+           $("#order_place_data").empty();
        }
        
    });
@@ -1148,5 +1152,25 @@ $("body").on("keyup","input.quantity_data",function(){
             
         }
        
+});
+
+
+$(document).on('click','tbody#order_place_data div.delete_i',function(){
+
+    if (confirm("Are you sure?")) {
+        $(this).closest('tr').remove();
+    }
+
+    var i = 1;
+    $("tbody#order_place_data tr").each(function(  k, v  ) {
+
+        $(this).attr("id",i);
+        $(this).find("td").first().find("input").val(i);
+
+        i++;
+    });
+
+    return false;
+
 });
    

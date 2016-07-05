@@ -29,7 +29,7 @@ echo form_open('',$attributes); ?>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
                     <label for="invoice_no">Invoice No.<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
+                    <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="" readonly>
                     <label id="invoice_no_error" class="errors" for="invoice_no"></label>
                 </div>
             </div>

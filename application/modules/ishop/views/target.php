@@ -184,10 +184,10 @@ echo form_open('',$attributes);
                         </div>
 
                     </div>
-                    <div class="row">
-                        <div class="col-md-3 save_btn">
-                            <button type="submit" class="btn btn-primary">Save</button>
-                        </div>
+                    <div class="svn_btn">
+
+                            <button type="submit" class="btn btn-primary gren_btn">Save</button>
+
                     </div>
                 </div>
                 <div class="clearfix"></div>

@@ -3377,25 +3377,19 @@ class Ishop_model extends BF_Model
 
     public function check_schemes_detail($user_id,$country_id)
     {
-
         $cur_year = $this->input->post("cur_year");
         $customer_id = $this->input->post("fo_retailer_id");
-    //    $scheme_slab = $this->input->post("radio_scheme_slab");
         $scheme_id = $this->input->post("schemes");
         $this->db->select('allocation_id');
         $this->db->from('ishop_scheme_allocation');
         $this->db->where("DATE_FORMAT(year,'%Y')",$cur_year);
         $this->db->where('customer_id',$customer_id);
         $this->db->where('scheme_id',$scheme_id);
-       // $this->db->where('slab_id',$scheme_slab);
         $this->db->where('country_id',$country_id);
         $data = $this->db->get()->row_array();
-        //$this->db->last_query();
-//testdata($data);
-        if (!isset($data) && empty($data)) {
+        if (empty($data)) {
             return 1;
         } else {
-           // @$allocation_id= $data['allocation_id'];
             return $data;
         }
     }
@@ -4020,7 +4014,9 @@ class Ishop_model extends BF_Model
 
                 } elseif ($this->input->post("radio1") == "distributor") {
 
-                    $distributor_id = $this->input->post("fo_distributor_data");
+                    testdata($_POST);
+
+                    $distributor_id = $this->input->post("distributor_id");
 
                     $customer_id_from = $distributor_id;
                     $customer_id_to = 0;
@@ -4044,7 +4040,7 @@ class Ishop_model extends BF_Model
                 $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }else{
-                $distributor_id = (isset($_POST["retailer_distributor_id"])) ? $_POST["retailer_distributor_id"] : 0;
+                $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }
 
@@ -5125,12 +5121,20 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function order_status_product_details_view_by_id($order_id, $radiochecked, $logincustomertype, $action_data = null, $web_service = null)
     {
-        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity ';
-        $sql .= ' FROM bf_ishop_product_order as bipo ';
-        $sql .= ' LEFT JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
-        $sql .= ' LEFT JOIN bf_master_product_sku_regional as psr ON (psr.product_sku_id = psc.product_sku_id) ';
+        //$sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id, biccs.intrum_quantity ';
+     //   testdata($action_data);
+        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id ';
 
-        $sql .= ' LEFT JOIN bf_ishop_company_current_stock as biccs ON (biccs.product_sku_id = psr.product_sku_id) ';
+       if($action_data==''){
+           $sql = ' , biccs.intrum_quantity  ';
+       }
+        $sql .= ' FROM bf_ishop_product_order as bipo ';
+        $sql .= '  JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
+        $sql .= '  JOIN bf_master_product_sku_regional as psr ON (psr.product_sku_id = psc.product_sku_id) ';
+
+        if($action_data==''){
+            $sql .= ' JOIN bf_ishop_company_current_stock as biccs ON (biccs.product_sku_id = psr.product_sku_id) ';
+        }
 
         $sql .= 'WHERE 1 ';
 
@@ -5142,9 +5146,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             return $order_detail;
         } else {
             $order_detail = $this->grid->get_result_res($sql);
-
-            // $order_detail = $this->db->get()->result_array();
-            //   $order_detail = array('result'=>$order_details);
 
             if (isset($order_detail['result']) && !empty($order_detail['result'])) {
 
@@ -5569,7 +5570,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function update_order_data($orderdata, $web_service = null)
     {
-      //  testdata($orderdata);
+       // testdata($orderdata);
         if (!empty($orderdata)) {
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
@@ -6329,7 +6330,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             'customer_id' => $to_user_id,
                             'product_sku_id' => $product_sku_id,
                             'quantity' => $quantity,
-                            'created_by_user' => $userid,
+                            'modified_by_user' => $userid,
                             'modified_on' => date("Y-m-d h:i:s")
                         );
 

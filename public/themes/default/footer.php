@@ -7,7 +7,13 @@ Assets::add_js((array('bootstrap.min.js',
 ));
 echo Assets::js();
 ?>
+<script>
+        $("#zoom_in_btn").click(function(){
+            $("").show();
+        });
 
+
+</script>
 <script type="text/javascript">
     $('.nav.nav-tabs').listslider({
         left_label: '<span class="bre_lf_arrow"></span>',
@@ -24,6 +30,10 @@ echo Assets::js();
             $(".toggle_wieght_sp").toggleClass("wieght_sp");
             $(".left_contain_big").toggleClass("left_contain");
 
+        });
+
+        $(".zoom_in_btn").click(function(e){
+            $(".zoom_out_btn").toggleClass("intro");
         });
         $(window).load(function(){
 
@@ -109,6 +119,16 @@ echo Assets::js();
 
     });
 </script>
+<!--<script>
+    $(".zoom_in_btn").click(function(){
+        $(".zoom_in_btn").hide();
+    });
+
+    $("").click(function(){
+        $("p").show();
+    });
+</script>-->
+
 <div id="error_file_popup">
 
  </div>

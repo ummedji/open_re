@@ -208,6 +208,14 @@ $(document).on('click', 'div.primary_sls', function () { // <-- changes
     if (confirm("Are you sure?")) {
         $(this).closest('tr').remove();
     }
+    var i = 1;
+    $("tbody#primary_sls tr").each(function(  k, v  ) {
+
+        $(this).attr("id",i);
+        $(this).find("td").first().find("input").val(i);
+
+        i++;
+    });
     return false;
 });
 

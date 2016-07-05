@@ -159,12 +159,13 @@ $(document).ready(function(){
                 success: function (resp) {
                     var message = "";
                     if (resp == 1) {
-                        alert('in');
+
                         $.ajax({
                             type: 'POST',
                             url: site_url + "ishop/add_schemes_details",
                             data: param,
                             success: function (resp) {
+
                                 var message = "";
                                 if (resp == 1) {
 
@@ -193,7 +194,6 @@ $(document).ready(function(){
 
                     }
                     else {
-                      //  alert('in1');
                         var obj = jQuery.parseJSON(resp);
                         var allocation_id = (obj.allocation_id);
                         param.push({name: "allocation_id", value:allocation_id});
