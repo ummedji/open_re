@@ -2538,9 +2538,16 @@ class Esp extends Front_Controller
 		if($webservice_data != NULL){
 					
 			$month_data = $webservice_data["monthval"];
+			
+			$webservice_data["userlevel_formdata"] = json_decode($webservice_data["userlevel_formdata"],TRUE);
+			
 			$no_of_level = count($webservice_data["userlevel_formdata"]);
 			
 			$user_level_formdata = $webservice_data["userlevel_formdata"];
+			
+			
+			//dumpme($webservice_data["userlevel_formdata"]);
+			//die;
 			
 			if(!empty($user_level_formdata)){
 					
@@ -2596,16 +2603,25 @@ class Esp extends Front_Controller
 			
 			$max_count = 0;
 			
+			if($webservice_data != NULL){
+				$m = count($user_level_formdata);
+			}
+			
 			foreach($user_level_formdata as $user_data_key1 => $user_level_data1){
+					
 				
-				$level_data = $user_level_data1["name"];
-				
-				$level_array  = explode("_",$level_data);
-				
-				$level_data = $level_array["3"];
-				
-				$level_user_data = $user_level_data1["value"];
-				
+				if($webservice_data == NULL){
+					$level_data = $user_level_data1["name"];
+					
+					$level_array  = explode("_",$level_data);
+					
+					$level_data = $level_array["3"];
+					
+					$level_user_data = $user_level_data1["value"];
+				}
+				else{
+					$level_user_data = $user_level_data1["employee_level_data"];
+				}
 				$users_forecast_update_status_data = $this->esp_model->get_update_user_detail_data($level_user_data,$month_data);
 				
 				if($users_forecast_update_status_data > $max_count)
@@ -2613,9 +2629,16 @@ class Esp extends Front_Controller
 					$max_count = count($users_forecast_update_status_data);
 				}
 				
-				$data_array[$level_data] = $users_forecast_update_status_data;
-				
-				$final_array["level_data"] = $data_array;
+				if($webservice_data == NULL){
+					$data_array[$level_data] = $users_forecast_update_status_data;
+				}
+				if($webservice_data != NULL){
+					
+					$data_array[ "Level ".$m] = $users_forecast_update_status_data;
+					
+					$final_array["level_data"] = $data_array;
+					$m--;
+				}
 				
 			}
 			
@@ -2707,6 +2730,7 @@ class Esp extends Front_Controller
 							$sku_data_array = array();
 							
 							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_name'] = $sku_value["product_sku_name"];
+							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_code'] = $sku_value["product_sku_code"];
 							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_id'] = $sku_value["product_sku_country_id"];
 							
 							//FOR GETTING FORECAST DATA FOR SKU
@@ -2854,13 +2878,95 @@ class Esp extends Front_Controller
 					$objWorkSheet->setCellValue('I1','Assumption3');
 					$objWorkSheet->setCellValue('J1','Probability3 (%)');
 					
+					
+					$objWorkSheet->getStyle('A1:J1')->applyFromArray(
+					        array(
+					            'fill' => array(
+					                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+					                'color' => array('rgb' => '696969')
+					            )
+					        )
+					    );
+						
+						
+						$BStyle = array(
+						  'borders' => array(
+						    'allborders' => array(
+						      'style' => PHPExcel_Style_Border::BORDER_THIN,
+						      'color' => array('rgb' => '000000')
+						    )
+						  )
+						);
+						
+					$objWorkSheet->getDefaultStyle()->getBorders()->applyFromArray($BStyle);	
+						
+					//$objWorkSheet->getDefaultStyle()->getBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+						
+					
+					$objWorkSheet->getProtection()->setSheet(true);
+					
 					$i = 2;
 					foreach($final_data as $pbg_key=>$pbg_data){
 						
+						$k = $i+1;
 						foreach($pbg_data as $pbg=>$pbgdata){
 							$pbg_name = $pbgdata["PBG_name"];
 						
-							$objWorkSheet->setCellValue("A$i", $pbg_name);
+							$objWorkSheet->setCellValue("A$i", $pbg);
+							
+							$objWorkSheet->setCellValue("C$i", "0.00");
+							$objWorkSheet->setCellValue("D$i",  "0.00");
+							
+						//	$objWorkSheet->getStyle("A$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+						
+							$objWorkSheet->getStyle("B$i:D$i")->applyFromArray(
+						        array(
+						            'fill' => array(
+						                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+						                'color' => array('rgb' => '696969')
+						            )
+									
+						        )
+						    );
+						
+							
+							if(!empty($pbgdata['sku_data'])){
+								foreach($pbgdata['sku_data'] as $sku_key =>$sku_data){
+									
+									foreach($sku_data as $skukey1=>$skudata1){
+										
+										$objWorkSheet->setCellValue("A$k", $skudata1["product_sku_name"]);
+										
+										$objWorkSheet->setCellValue("B$k", $skudata1["product_sku_code"]);
+										
+										$objWorkSheet->setCellValue("C$k", $skudata1["budget_quantity"]);
+										$objWorkSheet->setCellValue("D$k", $skudata1["forecast_quantity"]);
+										
+										
+										$objWorkSheet->getStyle("D$k")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+										
+										$objWorkSheet->getStyle("A$k:C$k")->applyFromArray(
+									        array(
+									            'fill' => array(
+									                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									                'color' => array('rgb' => '696969')
+									            )
+												
+									        )
+									    );
+										
+										$i = $k;
+										
+									}
+									
+									
+									
+									$k++;
+								
+								}
+								
+							}
+							
 						}
 						$i++;
 					}

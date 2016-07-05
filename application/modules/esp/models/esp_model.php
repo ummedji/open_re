@@ -49,9 +49,11 @@ class Esp_model extends BF_Model
     
     public function get_pbg_sku_data($pbgid){
         
-        $this->db->select('bmpsc.product_sku_name,bmpsc.product_sku_country_id');
+        $this->db->select('bmpsc.product_sku_name,bmpsc.product_sku_country_id,bmpsr.product_sku_code');
         $this->db->from("bf_master_product_sku_country as bmpsc");
         
+		$this->db->join("bf_master_product_sku_regional as bmpsr","bmpsr.product_sku_id = bmpsc.product_sku_id","LEFT");
+		
         $this->db->or_where("bmpsc.product_regional_id1",$pbgid);
         $this->db->or_where("bmpsc.product_regional_id2",$pbgid);
         $this->db->or_where("bmpsc.product_regional_id3",$pbgid);
