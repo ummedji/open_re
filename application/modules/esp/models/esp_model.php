@@ -636,37 +636,98 @@ class Esp_model extends BF_Model
 		
 	}
 
-	public function add_impact_entry($assumption_data){
+	public function add_impact_entry($assumption_data,$webservice_flag){
 		
-		if(!empty($assumption_data['assumption_id'])){
+		//testdata($assumption_data);
+		
+		if($webservice_flag == 0){
 			
-			foreach($assumption_data['assumption_id'] as $assumption_key => $impact_data){
+			if(!empty($assumption_data['assumption_id'])){
 				
-				$impact1 = $assumption_data['impact1'][$assumption_key];
-				$impact2 = $assumption_data['impact2'][$assumption_key];
-				$impact3 = $assumption_data['impact3'][$assumption_key];
-				
-				$data = array(
-		            'impact1' => $impact1,
-		            'impact2' => $impact2,
-		            'impact3' => $impact3
-		        );
-		            
-		        $this->db->where('forecast_assumption_id', $impact_data);
-		        $this->db->update('bf_esp_forecast_assumption' ,$data);
-		        
-		        if($this->db->affected_rows() > 0){
-		        	return 1;
-		        }
-				else{
-					return 0;
+				foreach($assumption_data['assumption_id'] as $assumption_key => $impact_data){
+					
+					//$impact1 = $assumption_data['impact1'][$assumption_key];
+					//$impact2 = $assumption_data['impact2'][$assumption_key];
+					//$impact3 = $assumption_data['impact3'][$assumption_key];
+					
+					$impact1 = ($assumption_data['impact1'][$assumption_key] == '') ? 0 : $assumption_data['impact1'][$assumption_key];
+					$impact2 = ($assumption_data['impact2'][$assumption_key] == '') ? 0 : $assumption_data['impact2'][$assumption_key];
+					$impact3 = ($assumption_data['impact3'][$assumption_key] == '') ? 0 : $assumption_data['impact3'][$assumption_key];
+					
+					$data = array(
+			            'impact1' => $impact1,
+			            'impact2' => $impact2,
+			            'impact3' => $impact3
+			        );
+			            
+			        $this->db->where('forecast_assumption_id', $impact_data);
+			        $this->db->update('bf_esp_forecast_assumption' ,$data);
+			        
+			        if($this->db->affected_rows() > 0){
+			        	return 1;
+			        }
+					else{
+						return 0;
+					}
+			        
 				}
-		        
+				
+			}
+			else{
+				return 0;
 			}
 			
 		}
 		else{
-			return 0;
+			
+			//INSERT / UPDATE DATA FROM WEBSERVICE
+			
+			if(!empty($assumption_data['data'])){
+				
+				foreach($assumption_data['data'] as $assumption_key => $impact_data){
+					
+					//$impact1 = $impact_data['impact1'];
+					//$impact2 = $impact_data['impact2'];
+					//$impact3 = $impact_data['impact3'];
+					
+					
+					$impact1 = ($impact_data['impact1'] == '') ? 0 : $impact_data['impact1'];
+					$impact2 = ($impact_data['impact2'] == '') ? 0 : $impact_data['impact2'];
+					$impact3 = ($impact_data['impact3'] == '') ? 0 : $impact_data['impact3'];
+					
+					
+					$data = array(
+			            'impact1' => $impact1,
+			            'impact2' => $impact2,
+			            'impact3' => $impact3
+			        );
+			            
+			        $this->db->where('forecast_assumption_id', $impact_data["forecast_assumption_id"]);
+			        $this->db->update('bf_esp_forecast_assumption' ,$data);
+			        
+					//echo $this->db->last_query();
+					//echo "</br>";
+					
+			      /*  if($this->db->affected_rows() > 0){
+			        	return 1;
+			        }
+					else{
+						return 0;
+					}
+					
+					*/
+			        
+				}
+				
+				return 1;
+				
+			}
+			else{
+				return 0;
+				
+			}
+			
+			
 		}
 		
 	}

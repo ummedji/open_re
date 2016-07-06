@@ -500,7 +500,9 @@ class Ishop_model extends BF_Model
             $dispatched_quantity = $this->input->post("dispatched_quantity");
             $amount = $this->input->post("amount");
         }
-        $total_amt = array_sum($amount);
+        if(!empty($amount)){
+            $total_amt = array_sum($amount);
+        }
 
         if (isset($primary_sales_product_id) && !empty($primary_sales_product_id)) {
             foreach ($primary_sales_product_id as $k => $pspi) {

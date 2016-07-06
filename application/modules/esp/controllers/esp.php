@@ -1181,7 +1181,7 @@ class Esp extends Front_Controller
     }
     
     public function add_forecast(){
-       // testdata($_POST);
+        //testdata($_POST);
       //  $forecast_data = $this->esp_model->add_forecast_data();
         
         if(isset($_POST) && !empty($_POST)){
@@ -1599,14 +1599,23 @@ class Esp extends Front_Controller
 		
 	}
 
-	public function add_impact_entry(){
+	public function add_impact_entry($webservice_data = NULL){
 	
-	//testdata($_POST);
-	
-	$impact_data = $this->esp_model->add_impact_entry($_POST);
-	echo $impact_data;
-	die;
-}
+		//testdata($_POST);
+		if($webservice_data == NULL){
+			
+			$webservice_flag = 0;
+			
+			$impact_data = $this->esp_model->add_impact_entry($_POST,$webservice_flag);
+			echo $impact_data;
+			die;
+		}
+		else{
+			$webservice_flag = 1;
+			$impact_data = $this->esp_model->add_impact_entry($webservice_data,$webservice_flag);
+			return $impact_data;
+		}
+	}
 	
 	public function budget(){
 		
@@ -2843,19 +2852,43 @@ class Esp extends Front_Controller
 			$final_array[$monthvalue][] = "No Data Found";
 		}
 		
-		$xl_data =  $this->create_data_xl($final_array);
+		$xl_data =  $this->create_forecast_data_xl($final_array);
 		
 		die;
 		
 	}
 
 
-	  public function create_data_xl($final_array) {
+	  public function create_forecast_data_xl($final_array) {
 	  		//testdata($final_array);
 			$this->load->library('excel');
 		 	$obj = new Excel();	
 	  		
-	  	
+	  		$assumption_data = $this->esp_model->get_assumption_data();
+			
+			$assumptiondata = "";
+			
+			$assumption_arr = array();
+			
+			if(!empty($assumption_data)){
+				foreach($assumption_data as $k=>$ass_data){
+					
+					$assumption_arr[] = $ass_data["assumption_name"];
+				}
+				
+			}
+			
+			if(!empty($assumption_arr)){
+				$assumptiondata = implode(",",$assumption_arr);
+				
+				$assumptiondata = '"'.$assumptiondata.'"';
+				
+				$assumptiondata = "'".$assumptiondata."'";
+				
+			}
+			
+			//echo "'".$assumptiondata."'";
+		//die;
 			//testdata($final_array);
             if(!empty($final_array))
             {
@@ -2912,12 +2945,66 @@ class Esp extends Front_Controller
 						foreach($pbg_data as $pbg=>$pbgdata){
 							$pbg_name = $pbgdata["PBG_name"];
 						
-							$objWorkSheet->setCellValue("A$i", $pbg);
+							$objWorkSheet->setCellValue("A$i", $pbg_name);
 							
 							$objWorkSheet->setCellValue("C$i", "0.00");
 							$objWorkSheet->setCellValue("D$i",  "0.00");
 							
-						//	$objWorkSheet->getStyle("A$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+							$objValidation = $objWorkSheet->getCell("E$i")->getDataValidation();
+							$objValidation->setType( PHPExcel_Cell_DataValidation::TYPE_LIST );
+							$objValidation->setErrorStyle( PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+							$objValidation->setAllowBlank(false);
+							$objValidation->setShowInputMessage(true);
+							$objValidation->setShowErrorMessage(true);
+							$objValidation->setShowDropDown(true);
+							$objValidation->setErrorTitle('Input error');
+							$objValidation->setError('Value is not in list.');
+							$objValidation->setPromptTitle('Pick from list');
+							$objValidation->setPrompt('Please pick a value from the drop-down list.');
+							$objValidation->setFormula1($assumptiondata);
+							
+							$objValidation = $objWorkSheet->getCell("G$i")->getDataValidation();
+							$objValidation->setType( PHPExcel_Cell_DataValidation::TYPE_LIST );
+							$objValidation->setErrorStyle( PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+							$objValidation->setAllowBlank(false);
+							$objValidation->setShowInputMessage(true);
+							$objValidation->setShowErrorMessage(true);
+							$objValidation->setShowDropDown(true);
+							$objValidation->setErrorTitle('Input error');
+							$objValidation->setError('Value is not in list.');
+							$objValidation->setPromptTitle('Pick from list');
+							$objValidation->setPrompt('Please pick a value from the drop-down list.');
+							$objValidation->setFormula1('"Item A,Item B,Item C"');
+							
+							$objValidation = $objWorkSheet->getCell("I$i")->getDataValidation();
+							$objValidation->setType( PHPExcel_Cell_DataValidation::TYPE_LIST );
+							$objValidation->setErrorStyle( PHPExcel_Cell_DataValidation::STYLE_INFORMATION );
+							$objValidation->setAllowBlank(false);
+							$objValidation->setShowInputMessage(true);
+							$objValidation->setShowErrorMessage(true);
+							$objValidation->setShowDropDown(true);
+							$objValidation->setErrorTitle('Input error');
+							$objValidation->setError('Value is not in list.');
+							$objValidation->setPromptTitle('Pick from list');
+							$objValidation->setPrompt('Please pick a value from the drop-down list.');
+							$objValidation->setFormula1('"Item A,Item B,Item C"');
+							
+							
+							$objWorkSheet->getStyle("E$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+							$objWorkSheet->getStyle("G$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+							$objWorkSheet->getStyle("I$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+						
+							$probablity1 = $pbgdata["probablity1"];
+							$probablity2 = $pbgdata["probablity2"];
+							$probablity3 = $pbgdata["probablity3"];
+						
+							$objWorkSheet->setCellValue("F$i", $probablity1);
+							$objWorkSheet->setCellValue("H$i",  $probablity2);
+							$objWorkSheet->setCellValue("J$i",  $probablity3);
+						
+							$objWorkSheet->getStyle("F$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+							$objWorkSheet->getStyle("H$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+							$objWorkSheet->getStyle("J$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
 						
 							$objWorkSheet->getStyle("B$i:D$i")->applyFromArray(
 						        array(
@@ -2942,10 +3029,23 @@ class Esp extends Front_Controller
 										$objWorkSheet->setCellValue("C$k", $skudata1["budget_quantity"]);
 										$objWorkSheet->setCellValue("D$k", $skudata1["forecast_quantity"]);
 										
-										
 										$objWorkSheet->getStyle("D$k")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
 										
+										$objWorkSheet->setCellValue("F$i", 0);
+										$objWorkSheet->setCellValue("H$i",  0);
+										$objWorkSheet->setCellValue("J$i",  0);
+										
 										$objWorkSheet->getStyle("A$k:C$k")->applyFromArray(
+									        array(
+									            'fill' => array(
+									                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+									                'color' => array('rgb' => '696969')
+									            )
+												
+									        )
+									    );
+										
+										$objWorkSheet->getStyle("E$k:J$k")->applyFromArray(
 									        array(
 									            'fill' => array(
 									                'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -2958,8 +3058,6 @@ class Esp extends Front_Controller
 										$i = $k;
 										
 									}
-									
-									
 									
 									$k++;
 								
@@ -3043,9 +3141,109 @@ class Esp extends Front_Controller
             }
             
         
-      public function test_xl(){
+      public function generate_budget_xl_data(){
       	
-		 
+		$user = $this->auth->user();
+		$user_country_id = $user->country_id;
+		$bussiness_code = $user->bussiness_code;
+		
+		$pbgdata = $this->esp_model->get_pbg_data($user_country_id);
+		
+		$final_array = array();
+		
+		$year = date("Y");
+		
+		$from_month = $year."-01-01";
+		$to_month = $year."-12-01";
+		
+		$month_data = $this->get_monthly_data($from_month,$to_month);
+		
+		if(!empty($pbgdata)){
+			
+			foreach($month_data as $month_key => $monthvalue){
+			
+				foreach($pbgdata as $pbg_key => $pbg_data){
+					
+					$inner_array = array();
+					
+					//GET PRODUCT SKU FOR EACH PBG
+	
+					$product_sku_country_id = $pbg_data['product_country_id'];
+					$PBG_name = $pbg_data['product_country_name'];	
+					
+					$inner_array[$PBG_name]["PBG_name"] = $PBG_name;
+					$inner_array[$PBG_name]["PBG_id"] = $product_sku_country_id;
+					
+					
+					$inner_array[$PBG_name]["sku_data"] = array();
+					
+					$pbg_sku_data = $this->esp_model->get_pbg_sku_data($product_sku_country_id);
+					
+					$forecast_id = 0;
+					
+					if(!empty($pbg_sku_data)){
+						
+						foreach ($pbg_sku_data as $sku_key => $sku_value) {
+							$sku_data_array = array();
+							
+							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_code'] = $PBG_name;
+							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_name'] = $sku_value["product_sku_name"];
+							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_name'] = $sku_value["product_sku_name"];
+							
+							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_id'] = $sku_value["product_sku_country_id"];
+							
+							//FOR GETTING FORECAST DATA FOR SKU
+							
+						//	$employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($bussiness_code,$sku_value['product_sku_country_id'],$monthvalue);
+							
+						//	$budget_qty = 0;
+							
+							//if(!empty($employee_month_product_budget_data)){
+							//	$budget_qty = $employee_month_product_budget_data[0]["budget_quantity"];
+							//	
+							//	$budget_id = $employee_month_product_budget_data[0]["budget_id"];
+								
+							//}
+							
+							
+							 $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($bussiness_code,$sku_value['product_sku_country_id'],$monthvalue);
+                    
+                    		$budget_qty = 0;
+                    
+		                    if($employee_month_product_budget_data != 0){
+		                        $budget_qty = $employee_month_product_budget_data[0]['budget_quantity'];
+							}
+									
+							
+							//$sku_data_array[$sku_value["product_sku_name"]]['forecast_quantity'] = $forecast_qty;
+							$sku_data_array[$sku_value["product_sku_name"]]['budget_quantity'] = $budget_qty;
+							
+							$inner_array[$PBG_name]["sku_data"][] = $sku_data_array;
+							
+						}
+						
+					}
+					
+					$inner_array[$PBG_name]["forecast_id"] = $forecast_id; 
+					
+					$final_array[$monthvalue][] = $inner_array;
+					
+				}
+			}
+			
+		}
+		else{
+			
+			//NO PBG DATA FOUND
+			
+			$final_array[$monthvalue] = "No Data Found";
+		}
+		
+		testdata($final_array);
+		
+		//$xl_data =  $this->create_budget_data_xl($final_array);
+		
+		die;
 				
       }
 

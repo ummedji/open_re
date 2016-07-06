@@ -3,7 +3,7 @@
 
     </div>
     <?php
-   // testdata($table);
+
 $action_data = $this->uri->segment(2);
 
 if(isset($table) && count($table)>0 && $table != false) {
@@ -168,7 +168,7 @@ if(isset($table) && count($table)>0 && $table != false) {
     </div>
 
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
     (function($){
         $(".zoom_in_btn").click(function(e){
             e.preventDefault();
@@ -188,5 +188,5 @@ if(isset($table) && count($table)>0 && $table != false) {
             $(".ad_mr_top").removeClass("ad_mr_top_30");
         });
     })(jQuery);
-</script>
+</script>-->
 
