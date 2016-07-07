@@ -102,8 +102,12 @@ class Esp_model extends BF_Model
     
     public function insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data){
         
-        //echo "<pre>";
-        //print_r($assumption_data);
+       // echo "<pre>";
+      //  print_r($assumption_data);
+	//print_r($probablity_data);
+		//echo $forecast_insert_id."===".$month_data;
+		
+		//exit;
         
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
@@ -205,6 +209,14 @@ class Esp_model extends BF_Model
     
     public function update_forecast_assumption_details($forecast_assumption_id,$assumption_data,$probablity_data){
         
+		
+		//echo "<pre>";
+       // print_r($assumption_data);
+		//print_r($probablity_data);
+		//echo $forecast_assumption_id;
+		
+		//exit;
+		
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
        

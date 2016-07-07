@@ -1726,7 +1726,14 @@ class Ishop_model extends BF_Model
         $sql .= 'ORDER BY ips.stock_id DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
             $phy_detail = $info->result_array();
             return $phy_detail;
         } else {

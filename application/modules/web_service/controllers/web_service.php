@@ -3506,6 +3506,35 @@ class Web_service extends Front_Controller
 		
 	}
 	
+	
+	public function add_update_forecast_data(){
+			
+		$forecast_data = $this->input->get_post('forecast_data');	
+			
+		$forecastdata = json_decode($forecast_data,TRUE);
+		
+		$final_array = array();
+		
+		foreach($forecastdata as $datakey=>$data){
+			
+			$final_array["login_user_id"] = $data["login_user_id"];
+			$final_array["login_user_countryid"] = $data["login_user_countryid"];
+			
+			$final_array["from_month"] = $data["from_month"];
+    		$final_array["to_month"] = $data["to_month"];
+    		$final_array["pbg_data"] = $data["pbg_data"];
+			
+			
+			
+		}
+		
+		
+		
+		
+		testdata($forecastdata);
+		
+	}
+	
 	/*
 	 * ESP BUDGET WEBSERVICE 
 	 */
@@ -3952,6 +3981,7 @@ class Web_service extends Front_Controller
 
 */
 
+	
 
     /**
      * @ Function Name        : do_json

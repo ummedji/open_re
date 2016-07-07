@@ -276,8 +276,6 @@ class Esp extends Front_Controller
                      $lock_status = "";
                      $lock_by_id = "";
                     
-                //    echo "<pre>";
-                //    print_r($employee_month_product_forecast_data);
                     
                     if($employee_month_product_forecast_data != 0){
                         
@@ -312,12 +310,7 @@ class Esp extends Front_Controller
                             if($login_user_id == $forecast_freeze_data['freeze_user_id']){
                                 
                                 
-                                
-                                $editable = "";
-                                
-                                $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
-                                
-                                if($login_user_parent_data == $lock_by_id){
+                               /* if($login_user_parent_data == $lock_by_id){
                                     
                                     if($lock_status == 1){
                                         $editable = "readonly";
@@ -327,7 +320,28 @@ class Esp extends Front_Controller
                                     }
                                     
                                 }
+								*/
+								
+							   $editable = "";
                                 
+                               $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+								
+								if($lock_status == 1)
+								{ 
+									if($login_user_id == $lock_by_id){
+										$editable = "";
+									}
+									elseif($login_user_parent_data == 0){
+										$editable = "";
+									}
+									else{
+										$editable = "readonly";
+									}
+								}
+								else
+								{
+									$editable = "";
+								}
                                 
                                // echo "1";
                                 
@@ -378,12 +392,34 @@ class Esp extends Front_Controller
                                     
                                    // echo "3";
                                     
-                                    if($lock_status == 1){
+                                  /*  if($lock_status == 1){
                                         $editable = "readonly";
                                     }
                                     else{
                                         $editable = "";
                                     }
+                                    */
+                                    
+                               $editable = "";
+                                
+                               $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+                                    
+                                if($lock_status == 1)
+								{ 
+									if($login_user_id == $lock_by_id){
+										$editable = "";
+									}
+									elseif($login_user_parent_data == 0){
+										$editable = "";
+									}
+									else{
+										$editable = "readonly";
+									}
+								}
+								else
+								{
+									$editable = "";
+								}
                                     
                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
                     
@@ -1187,7 +1223,7 @@ class Esp extends Front_Controller
     }
     
     public function add_forecast(){
-        //testdata($_POST);
+       // testdata($_POST);
       //  $forecast_data = $this->esp_model->add_forecast_data();
         
         if(isset($_POST) && !empty($_POST)){
@@ -1273,7 +1309,7 @@ class Esp extends Front_Controller
                 }
             }
              
-           // testdata($final_array);
+          //  testdata($final_array);
             
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
@@ -1329,10 +1365,14 @@ class Esp extends Front_Controller
                         $assumption_data = implode("~",$data["assumption"]);
                         $probablity_data = implode("~",$data["probablity"]);
 
+						//echo $assumption_data."====".$probablity_data."</br>";
 
                        // echo $old_forecast_id."</br>";
 
                         $get_assumption_old_data = $this->esp_model->get_forecast_assumption_details($old_forecast_id,$month_data);
+
+					//	echo "aaaa======</br>";
+					//	dumpme($get_assumption_old_data);
 
                         if($get_product_old_data != 0){
 
@@ -1367,7 +1407,7 @@ class Esp extends Front_Controller
             }
             
         }
-        
+      //  die;
         redirect('esp/');
         
     }
