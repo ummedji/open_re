@@ -1167,10 +1167,6 @@ class Esp_model extends BF_Model
 		return $final_array;	
 	}
 	
-	
-			
-	}
-	
 
 	
 }
