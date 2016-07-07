@@ -1,6 +1,6 @@
 <?php
 $attributes = array('class' => '', 'id' => 'material_request','name'=>'material_request');
-echo form_open('',$attributes); ?>
+echo form_open('ecp/material_request',$attributes); ?>
 
 <div class="col-md-12">
     <div class="top_form">

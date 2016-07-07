@@ -1088,9 +1088,12 @@ class Esp extends Front_Controller
        $html .= '</table>';
            
             $freeze_button = "";
+			
 			$freeze_status = 0;
             if($login_user_parent_data != 0){
                 
+				$freeze_show = 1;
+				
                 $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$forecast_id);
                 
                 if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
@@ -1113,6 +1116,9 @@ class Esp extends Front_Controller
                     
                 }
             }
+			else{
+				$freeze_show = 0;
+			}
 
 			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
 				
@@ -1123,7 +1129,7 @@ class Esp extends Front_Controller
 				$final_array["forecast_data"] = array_values($webservice_final_array);
 				$final_array["forecast_id"] = $forecast_id;
 				$final_array["freeze_status"] = $freeze_status;
-				
+				$final_array["freeze_show"] = $freeze_show;
 				return $final_array;
 				//die;
 			}
@@ -3138,7 +3144,7 @@ class Esp extends Front_Controller
                 
                 $objWriter->save('php://output');
                 exit();
-            }
+    }
             
         
       public function generate_budget_xl_data(){
@@ -3160,22 +3166,12 @@ class Esp extends Front_Controller
 		
 		if(!empty($pbgdata)){
 			
-			foreach($month_data as $month_key => $monthvalue){
-			
 				foreach($pbgdata as $pbg_key => $pbg_data){
-					
-					$inner_array = array();
 					
 					//GET PRODUCT SKU FOR EACH PBG
 	
 					$product_sku_country_id = $pbg_data['product_country_id'];
 					$PBG_name = $pbg_data['product_country_name'];	
-					
-					$inner_array[$PBG_name]["PBG_name"] = $PBG_name;
-					$inner_array[$PBG_name]["PBG_id"] = $product_sku_country_id;
-					
-					
-					$inner_array[$PBG_name]["sku_data"] = array();
 					
 					$pbg_sku_data = $this->esp_model->get_pbg_sku_data($product_sku_country_id);
 					
@@ -3184,52 +3180,34 @@ class Esp extends Front_Controller
 					if(!empty($pbg_sku_data)){
 						
 						foreach ($pbg_sku_data as $sku_key => $sku_value) {
-							$sku_data_array = array();
-							
-							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_code'] = $PBG_name;
-							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_name'] = $sku_value["product_sku_name"];
-							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_name'] = $sku_value["product_sku_name"];
-							
-							$sku_data_array[$sku_value["product_sku_name"]]['product_sku_id'] = $sku_value["product_sku_country_id"];
-							
-							//FOR GETTING FORECAST DATA FOR SKU
-							
-						//	$employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($bussiness_code,$sku_value['product_sku_country_id'],$monthvalue);
-							
-						//	$budget_qty = 0;
-							
-							//if(!empty($employee_month_product_budget_data)){
-							//	$budget_qty = $employee_month_product_budget_data[0]["budget_quantity"];
-							//	
-							//	$budget_id = $employee_month_product_budget_data[0]["budget_id"];
-								
-							//}
-							
-							
-							 $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($bussiness_code,$sku_value['product_sku_country_id'],$monthvalue);
-                    
-                    		$budget_qty = 0;
-                    
-		                    if($employee_month_product_budget_data != 0){
-		                        $budget_qty = $employee_month_product_budget_data[0]['budget_quantity'];
+                            $sku_data_array = array();
+
+                            $sku_data_array['product_sku_code'] = $sku_value["product_sku_code"];
+                            $sku_data_array['PBG_name'] = $PBG_name;
+                            $sku_data_array['product_sku_name'] = $sku_value["product_sku_name"];
+                                
+                            $sku_data_array['product_sku_id'] = $sku_value["product_sku_country_id"];
+ 
+                            foreach($month_data as $month_key => $monthvalue){
+
+    							$employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($bussiness_code,$sku_value['product_sku_country_id'],$monthvalue);
+                        
+                        		$budget_qty = 0;
+                        
+    		                    if($employee_month_product_budget_data != 0){
+    		                        $budget_qty = $employee_month_product_budget_data[0]['budget_quantity'];
+    							}
+    							
+    							$sku_data_array['budget_quantity'][$monthvalue] = $budget_qty;
+    							
 							}
-									
-							
-							//$sku_data_array[$sku_value["product_sku_name"]]['forecast_quantity'] = $forecast_qty;
-							$sku_data_array[$sku_value["product_sku_name"]]['budget_quantity'] = $budget_qty;
-							
-							$inner_array[$PBG_name]["sku_data"][] = $sku_data_array;
-							
+                            $final_array[] =  $sku_data_array;
+
 						}
 						
 					}
 					
-					$inner_array[$PBG_name]["forecast_id"] = $forecast_id; 
-					
-					$final_array[$monthvalue][] = $inner_array;
-					
 				}
-			}
 			
 		}
 		else{
@@ -3238,15 +3216,271 @@ class Esp extends Front_Controller
 			
 			$final_array[$monthvalue] = "No Data Found";
 		}
-		
-		testdata($final_array);
-		
-		//$xl_data =  $this->create_budget_data_xl($final_array);
-		
+		$xl_data =  $this->create_budget_data_xl($final_array);
 		die;
-				
       }
 
+      public function create_budget_data_xl($final_array) {
+            //testdata($final_array);
+            $this->load->library('excel');
+            $obj = new Excel(); 
+            
+           
+            if(!empty($final_array))
+            {
+                
+                // Add new sheet
+                $objWorkSheet = $obj->createSheet(0); //Setting index when creating
+
+                //Write cells
+                
+                $objWorkSheet->setCellValue('A1','Product SKU Code');
+                $objWorkSheet->setCellValue('B1','PBG');
+                $objWorkSheet->setCellValue('C1','Product SKU Name');
+                $objWorkSheet->setCellValue('D1','Jan (Kg/Ltr)');
+                $objWorkSheet->setCellValue('E1','Feb (Kg/Ltr)');
+                $objWorkSheet->setCellValue('F1','Mar (Kg/Ltr)');
+                $objWorkSheet->setCellValue('G1','Apr (Kg/Ltr)');
+                $objWorkSheet->setCellValue('H1','May (Kg/Ltr)');
+                $objWorkSheet->setCellValue('I1','Jun (Kg/Ltr)');
+                $objWorkSheet->setCellValue('J1','Jul (Kg/Ltr)');
+                $objWorkSheet->setCellValue('K1','Aug (Kg/Ltr)');
+                $objWorkSheet->setCellValue('L1','Sep (Kg/Ltr)');
+                $objWorkSheet->setCellValue('M1','Oct (Kg/Ltr)');
+                $objWorkSheet->setCellValue('N1','Nov (Kg/Ltr)');
+                $objWorkSheet->setCellValue('O1','Dec (Kg/Ltr)');
+
+                $objWorkSheet->getStyle('A1:O1')->applyFromArray(
+                    array(
+                        'fill' => array(
+                            'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                            'color' => array('rgb' => '696969')
+                        )
+                    )
+                );
+                        
+                        
+                $BStyle = array(
+                  'borders' => array(
+                    'allborders' => array(
+                      'style' => PHPExcel_Style_Border::BORDER_THIN,
+                      'color' => array(
+                             'rgb' => '808080'
+                         )
+                      
+                    )
+                  )
+                );
+                        
+                $objWorkSheet->getDefaultStyle()->getBorders()->applyFromArray($BStyle);    
+                        
+                //$objWorkSheet->getDefaultStyle()->getBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_THIN);
+                        
+                    
+                $objWorkSheet->getProtection()->setSheet(true);
+                $u = 2;
+                foreach($final_array as $key_data => $final_data){
+                    
+
+                    $pbg_name = $final_data["PBG_name"];
+
+                    $objWorkSheet->setCellValue("A$u", $final_data["product_sku_code"]);
+                    $objWorkSheet->setCellValue("B$u", $pbg_name);
+                    $objWorkSheet->setCellValue("C$u", $final_data["product_sku_name"]);
+                                        
+                    $objWorkSheet->getStyle("A$u:C$u")->applyFromArray(
+                        array(
+                            'fill' => array(
+                                'type' => PHPExcel_Style_Fill::FILL_SOLID,
+                                'color' => array('rgb' => '696969')
+                            )
+                            
+                        )
+                    );
+
+                    $i = 2;
+                    foreach($final_data["budget_quantity"] as $budget_key=>$budget_data){
+                        
+                        $objWorkSheet->setCellValue("D$u", $budget_data);
+                        $objWorkSheet->setCellValue("E$u", $budget_data);
+                        $objWorkSheet->setCellValue("F$u", $budget_data);
+                        $objWorkSheet->setCellValue("G$u", $budget_data);
+                        $objWorkSheet->setCellValue("H$u", $budget_data);
+                        $objWorkSheet->setCellValue("I$u", $budget_data);
+                        $objWorkSheet->setCellValue("J$u", $budget_data);
+                        $objWorkSheet->setCellValue("K$u", $budget_data);
+                        $objWorkSheet->setCellValue("L$u", $budget_data);
+                        $objWorkSheet->setCellValue("M$u", $budget_data);
+                        $objWorkSheet->setCellValue("N$u", $budget_data);
+                        $objWorkSheet->setCellValue("O$u", $budget_data);
+
+                        $objWorkSheet->getStyle("D$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("E$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("F$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("G$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("H$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("I$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("L$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("M$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("N$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("O$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        
+                    }
+                    
+                    /* $objWorkSheet->setCellValue('A1', 'Hello'.$u)
+                     ->setCellValue('B2', 'world!')
+                     ->setCellValue('C1', 'Hello')
+                     ->setCellValue('D2', 'world!');
+                     */
+                     
+                    // Rename sheet
+                    // $objWorkSheet->setTitle("$key_data");
+                            
+                    $u++;
+                 }
+            }
+
+                // $filename='just_some_random_name.xls'; //save our workbook as this file name
+                 $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xls';
+                 header('Content-Type: application/vnd.ms-excel'); //mime type
+                 header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+                 header('Cache-Control: max-age=0'); //no cache
+
+                $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
+
+              //  $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xlsx';
+             //   header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+              //  header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+              //  header('Cache-Control: max-age=0'); //no cache
+
+                //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+                //if you want to save it as .XLSX Excel 2007 format
+                
+                //force user to download the Excel file without writing it to server's HD
+                
+                /*
+                 * NEED TO CHANGE AS PER UPLOADED FILE 
+                 */
+
+               /*  if($_SERVER['SERVER_NAME'] == "localhost"){
+                       $folder = "open_re/trunk";
+                   }
+                   elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
+                       $folder = "qa/re";
+                   }*/
+
+
+                //if(file_exists($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+               // if(file_exists(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
+
+                //    unlink(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+                    
+               // }
+                
+                 
+             //   $objWriter->save(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+
+             //   $web_service = @$_POST['flag'];
+             //   if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+             //       $result['status'] = true;
+             //       $result['message'] = 'Retrieved Successfully.';
+              //      $result['data'] = base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
+              //      echo json_encode($result);
+              //  }
+             //   else
+             //   {
+                 //   echo $filename;
+              //  }
+                
+             //  $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+                
+                $objWriter->save('php://output');
+                exit();
+    }
+
+	
+	public function upload_budget_data(){
+			
+            if(!empty($_FILES))
+            {
+                
+                $file = $_POST["upload_file_data"]["tmp_name"];
+
+                $filename = explode("_",$_POST["upload_file_data"]["name"]);
+                
+                //load the excel library
+                $this->load->library('excel');
+
+                //read file from path
+                $objPHPExcel = PHPExcel_IOFactory::load($file);
+
+                //get only the Cell Collection
+                $cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
+
+
+                $arr_data = array();
+                //extract to a PHP readable array format
+
+                $i = 1;
+
+                $final_array = array();
+
+                foreach ($cell_collection as $cell) {
+
+                        $inner_array = array();
+
+                    //if($i != 1){
+                        $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
+                        $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
+                        $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
+                        if($row != 1){
+                            if($column == "A" || $column == "B" || $column == "C"){
+                                $arr_data[$row][$column] = $data_value;
+                            }
+                            else{
+                                $arr_data[$row]["monthdata"][$column] = $data_value;
+                            }
+                        }
+                        
+                   if($row == 10){
+                    break;
+                    //die;
+                   }
+                   $i++;
+
+                }
+
+                $data['values'] = $arr_data;
+
+                echo "<pre>";
+                print_r($data);
+
+                foreach($data['values'] as $key=>$budget_data){
+
+					$sku_code = $budget_data["A"];
+					$pbg = $budget_data["B"];
+					$product_sku_name = $budget_data["C"];
+
+					if($sku_code != ""){
+						$sku_id = $this->esp_model->get_sku_data($sku_code);
+					}
+					else{
+						$sku_id = ""; 
+					}
+					
+					if($pbg != ""){
+						$pbg_id = $this->esp_model->get_pbg_data($pbg);
+					}
+					else{
+						$pbg_id = ""; 
+					}
+
+                }
+
+            }
+
+	}
 
 	
 }

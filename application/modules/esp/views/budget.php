@@ -95,8 +95,8 @@ echo form_open('esp/add_budget',$attributes); ?>
     <div class="row">
         <div class="col-md-3 save_btn"></div>
         <?php
-        $attributes = array('class' => '', 'id' => 'upload_esp_budget_data','name'=>'upload_esp_budget_data');
-        echo form_open_multipart('',$attributes);
+        $attributes = array('class' => '', 'id' => 'upload_budget_data','name'=>'upload_budget_data');
+        echo form_open_multipart('esp/upload_budget_data',$attributes);
         ?>
         <div class="col-md-9">
             <div class="row">

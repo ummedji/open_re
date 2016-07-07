@@ -26,6 +26,7 @@ class Ecp extends Front_Controller
 		$this->lang->load('ecp');
 
 		$this->load->model('ecp_model');
+		$this->load->model('ishop/ishop_model');
 
 		$this->set_current_user();
 		//Assets::add_module_js('ecp', 'ecp.js');
@@ -51,7 +52,10 @@ class Ecp extends Front_Controller
 		$page = (isset($_POST['page']) ? $_POST['page'] : '');
 		//$materials_request = array();
 		$materials_request =  $this->ecp_model->get_all_materials_by_country_id($user->country_id,$page,$user->local_date);
+		Template::set('td', $materials_request['count']);
+		Template::set('pagination', (isset($materials_request['pagination']) && !empty($materials_request['pagination'])) ? $materials_request['pagination'] : '' );
 		Template::set('table', $materials_request);
+
 		Template::set('materials', $materials);
 		Template::set('current_user', $user);
 		Template::set_view('ecp/material_request');
@@ -124,4 +128,218 @@ class Ecp extends Front_Controller
 		echo $delete;
 		die;
 	}
+
+
+
+
+	public function retailer_compititor_analysis()
+	{
+		Assets::add_module_js('ecp', 'retailer_compititor.js');
+
+		$user = $this->auth->user();
+		$radio_checked='10';
+
+		$geo_level = $this->ecp_model->get_employee_geo_data($user->id, $user->country_id, $user->role_id, $parent_geo_id = null, $action_data = null,$radio_checked);
+
+		$compititor = $this->ecp_model->get_all_copititor_data($user->country_id);
+
+		Template::set('compititor', $compititor);
+		Template::set('current_user', $user);
+		Template::set('geo_level', $geo_level);
+		Template::set_view('ecp/retailer_compititor');
+		Template::render();
+	}
+
+	public function retailer_compititor_details()
+	{
+		$user = $this->auth->user();
+		$insert=$this->ecp_model->add_retailer_compititor_details($user->id,$user->country_id);
+		echo $insert;
+		die;
+	}
+
+	public function retailer_compititor_product()
+	{
+		Assets::add_module_js('ecp', 'retailer_compititor_product.js');
+
+		$user = $this->auth->user();
+		$radio_checked='10';
+
+		$geo_level = $this->ecp_model->get_employee_geo_data($user->id, $user->country_id, $user->role_id, $parent_geo_id = null, $action_data = null,$radio_checked);
+
+		$compititor = $this->ecp_model->get_all_copititor_data($user->country_id);
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+
+		Template::set('product_sku', $product_sku);
+		Template::set('compititor', $compititor);
+		Template::set('current_user', $user);
+		Template::set('geo_level', $geo_level);
+		Template::set_view('ecp/retailer_compititor_product');
+		Template::render();
+	}
+
+	public function retailer_compititor_product_details()
+	{
+		$user = $this->auth->user();
+		$insert=$this->ecp_model->add_retailer_compititor_product_details($user->id,$user->country_id);
+		echo $insert;
+		die;
+	}
+
+	public function retailer_compititor_view()
+	{
+		Assets::add_module_js('ecp', 'retailer_compititor_view.js');
+		Template::set_view('ecp/retailer_compititor_view');
+		Template::render();
+	}
+
+	public function retailer_compititor_details_view()
+	{
+		//testdata($_POST);
+		$user = $this->auth->user();
+
+		$radio = (isset($_POST['radio']) ? $_POST['radio'] : '');
+		$from_month = (isset($_POST['from_month']) ? $_POST['from_month'] : '');
+		$to_month = (isset($_POST['to_month']) ? $_POST['to_month'] : '');
+
+		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+
+		if($radio == 'total'){
+			$retailer_compititor_details = $this->ecp_model->get_retailer_compititor_details_view($from_month, $to_month,$page,$user->local_date,$user->country_id);
+		}
+		elseif($radio == 'product'){
+			$retailer_compititor_details = $this->ecp_model->get_retailer_compititor_product_details_view($from_month, $to_month,$page,$user->local_date,$user->country_id);
+		}
+
+
+		Template::set('td', $retailer_compititor_details['count']);
+		Template::set('pagination', (isset($retailer_compititor_details['pagination']) && !empty($retailer_compititor_details['pagination'])) ? $retailer_compititor_details['pagination'] : '' );
+		Template::set('table', $retailer_compititor_details);
+		Template::set_view('ecp/retailer_compititor_view');
+		Template::render();
+
+	}
+
+
+	public function distributor_compititor_analysis()
+	{
+		Assets::add_module_js('ecp', 'distributor_compititor.js');
+
+		$user = $this->auth->user();
+		$radio_checked='9';
+
+		$geo_level = $this->ecp_model->get_employee_geo_data($user->id, $user->country_id, $user->role_id, $parent_geo_id = null, $action_data = null,$radio_checked);
+
+		$compititor = $this->ecp_model->get_all_copititor_data($user->country_id);
+
+		Template::set('compititor', $compititor);
+		Template::set('current_user', $user);
+		Template::set('geo_level', $geo_level);
+		Template::set_view('ecp/distributor_compititor');
+		Template::render();
+	}
+
+	public function distributor_compititor_details()
+	{
+		$user = $this->auth->user();
+		$insert=$this->ecp_model->add_distributor_compititor_details($user->id,$user->country_id);
+		echo $insert;
+		die;
+	}
+
+	public function distributor_compititor_product()
+	{
+		Assets::add_module_js('ecp', 'distributor_compititor_product.js');
+
+		$user = $this->auth->user();
+		$radio_checked='9';
+
+		$geo_level = $this->ecp_model->get_employee_geo_data($user->id, $user->country_id, $user->role_id, $parent_geo_id = null, $action_data = null,$radio_checked);
+
+		$compititor = $this->ecp_model->get_all_copititor_data($user->country_id);
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+
+		Template::set('product_sku', $product_sku);
+		Template::set('compititor', $compititor);
+		Template::set('current_user', $user);
+		Template::set('geo_level', $geo_level);
+		Template::set_view('ecp/distributor_compititor_product');
+		Template::render();
+	}
+
+	public function distributor_compititor_product_details()
+	{
+		$user = $this->auth->user();
+		$insert=$this->ecp_model->add_distributor_compititor_product_details($user->id,$user->country_id);
+		echo $insert;
+		die;
+	}
+
+	public function distributor_compititor_view()
+	{
+		Assets::add_module_js('ecp', 'distributor_compititor_view.js');
+		Template::set_view('ecp/distributor_compititor_view');
+		Template::render();
+	}
+
+	public function distributor_compititor_details_view()
+	{
+		$user = $this->auth->user();
+
+		$radio = (isset($_POST['radio']) ? $_POST['radio'] : '');
+		$from_month = (isset($_POST['from_month']) ? $_POST['from_month'] : '');
+		$to_month = (isset($_POST['to_month']) ? $_POST['to_month'] : '');
+
+		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+
+		if($radio == 'total'){
+			$distributor_compititor_details = $this->ecp_model->get_distributor_compititor_details_view($from_month, $to_month,$page,$user->local_date,$user->country_id);
+		}
+		elseif($radio == 'product'){
+			$distributor_compititor_details = $this->ecp_model->get_distributor_compititor_product_details_view($from_month, $to_month,$page,$user->local_date,$user->country_id);
+		}
+
+
+		Template::set('td', $distributor_compititor_details['count']);
+		Template::set('pagination', (isset($distributor_compititor_details['pagination']) && !empty($distributor_compititor_details['pagination'])) ? $distributor_compititor_details['pagination'] : '' );
+		Template::set('table', $distributor_compititor_details);
+		Template::set_view('ecp/retailer_compititor_view');
+		Template::render();
+	}
+
+
+	public function update_compititor_details()
+	{
+		$user = $this->auth->user();
+
+		$radio = (isset($_POST['radio_checked']) ? $_POST['radio_checked'] : '');
+		if($radio == 'total'){
+			echo $update=$this->ecp_model->update_compititor_details();
+		}
+		elseif($radio == 'product'){
+			echo $update=$this->ecp_model->update_compititor_product_details();
+		}
+
+		die;
+	}
+
+	public function delete_compititor_details()
+	{
+		//$user = $this->auth->user();
+
+		$radio = (isset($_POST['radio_checked']) ? $_POST['radio_checked'] : '');
+		$id = $this->input->post("id");
+		if($radio == 'total'){
+			echo $update=$this->ecp_model->delete_compititor_details($id);
+		}
+		elseif($radio == 'product'){
+
+			echo $update=$this->ecp_model->delete_compititor_product_details($id);
+		}
+
+		die;
+	}
+
+
+
 }

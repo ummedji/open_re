@@ -160,7 +160,7 @@
                                     }?>
 
 
-                                    <li role="presentation" class=""><a href="<?php echo base_url('ecp/compititor_analysis'); ?>">COMPITITORS ANALYSIS</a></li>
+                                    <li role="presentation" class="<?php echo ($segment=='ecp' && $segment2=='retailer_compititor_analysis') ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/retailer_compititor_analysis'); ?>">COMPITITORS ANALYSIS</a></li>
                                     <?php
                                 }
                                 else{

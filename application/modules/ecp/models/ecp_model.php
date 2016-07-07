@@ -161,6 +161,7 @@ class Ecp_model extends BF_Model
             $material['edit'] = '';
             $material['delete_dis'] = 'is_delete';
             $material['pagination'] = $requested_material['pagination'];
+           // testdata($material);
             return $material;
         }
         else{
@@ -350,4 +351,670 @@ class Ecp_model extends BF_Model
     }
 
 
+
+    public function get_employee_geo_data($user_id, $country_id, $customer_type, $parent_geo_id = null, $action_data = null,$radio_checked)
+    {
+        //  var_dump($radio_checked);
+        $main_query_start = "";
+        $main_query_end = "";
+        $select_data = " bmpgd.political_geo_id, bmpgd.political_geography_name ";
+        $sub_query = "";
+
+        if ($customer_type == 7) {
+            if (($action_data == "retailer_compititor_analysis" || $action_data == "retailer_compititor_product") && $parent_geo_id == null) {
+                $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
+`bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
+ where `political_geo_id` IN ( ";
+
+
+                $main_query_end .= " )";
+
+                $select_data = " bmpgd.parent_geo_id ";
+
+                $subquery1 = $main_query_start . " SELECT " . $select_data . " FROM `bf_users` as bu";
+                $where1 = " ";
+                $where2 = " ";
+                $where3 = " ";
+
+
+            } elseif ($parent_geo_id != null) {
+
+                $customer_type = 10;
+                $sub_query = " AND bmpgd.parent_geo_id = $parent_geo_id ";
+
+
+                $subquery1 = $main_query_start . " SELECT " . $select_data . " FROM `bf_users` as bu";
+
+                $where1 = " ";
+                $where2 = " ";
+                $where3 = " ";
+
+            } else {
+
+                $subquery1 = " SELECT " . $select_data . " FROM `bf_users` as bu";
+                $where1 = " ";
+                $where2 = " ";
+                $where3 = " ";
+
+            }
+
+        }
+        else {
+
+
+        if (($action_data == "retailer_compititor_analysis" || $action_data == "retailer_compititor_product") && $parent_geo_id == null) {
+            $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
+`bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
+ where `political_geo_id` IN ( ";
+
+
+            $main_query_end .= " )";
+
+            $select_data = " bmpgd.parent_geo_id ";
+
+        }
+
+        if ($parent_geo_id != null) {
+
+            $customer_type = 10;
+            $sub_query = " AND bmpgd.parent_geo_id = $parent_geo_id ";
+
+        }
+
+        $subquery1 = $main_query_start . " SELECT  " . $select_data . " FROM (`bf_master_employe_to_customer` as etc)
+                    JOIN `bf_users` as bu ON `bu`.`id` = `etc`.`customer_id` ";
+
+        $where1 = " `etc`.`employee_id` = " . $user_id;
+        $where2 = " AND YEAR(etc.year) = '" . date("Y") . "' AND ";
+        $where3 = "";
+
+    }
+
+        $query1 = $subquery1 . " JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id`
+JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id1`
+
+WHERE " . $where1 . " " . $where2 . " " . $where3 . "
+
+`bu`.`role_id` = " . $radio_checked . "
+AND `bu`.`type` = 'Customer'
+AND `bu`.`deleted` = '0'
+AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query . "
+
+GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
+
+
+        $query = $this->db->query($query1);
+
+        $geo_loc_data = $query->result_array();
+
+        // echo $this->db->last_query();
+//die;
+        return $geo_loc_data;
+
+    }
+
+
+    public function get_all_copititor_data($country_id)
+    {
+        $this->db->select('compititor_id,compititor_name');
+        $this->db->from('bf_ecp_compititor_master');
+        $this->db->where('country_id',$country_id );
+        $this->db->where('status','1');
+        $this->db->where('deleted','0');
+        $compititor = $this->db->get()->result_array();
+
+        if (isset($compititor) && !empty($compititor)) {
+            return $compititor;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function add_retailer_compititor_details($user_id,$country_id)
+    {
+        $month_da = $this->input->post("month_da");
+        $retailer_id = $this->input->post("retailer_id");
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $comp_id = explode(',', $this->input->post("comp_id"));
+            $amount = explode(',', $this->input->post("amount"));
+        } else {
+            $comp_id = $this->input->post("comp_id");
+            $amount = $this->input->post("amount");
+        }
+
+        $retailer_analysis_data = array(
+            'compititor_analysis_month' =>$month_da.'-01',
+            'coustomer_id' => (isset($retailer_id) && !empty($retailer_id)) ? $retailer_id : '',
+            'created_by_user' => $user_id,
+            'country_id' => $country_id,
+            'status' => '1',
+            'created_on' => date('Y-m-d H:i:s')
+        );
+
+        if ($this->db->insert('ecp_compititor_analysis_total', $retailer_analysis_data)) {
+            $insert_id = $this->db->insert_id();
+        }
+
+
+        $compititor_analysis_total_id = $insert_id;
+
+        foreach ($comp_id as $key => $val_comp_id) {
+
+            $retailer_compititor_data = array(
+                'compititor_analysis_total_id' => $compititor_analysis_total_id,
+                'compititor_id' => $val_comp_id,
+                'amount' => $amount[$key],
+            );
+            $this->db->insert('ecp_compititor_total_details', $retailer_compititor_data);
+        }
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
+    public function add_retailer_compititor_product_details($user_id,$country_id)
+    {
+        $month_data = $this->input->post("month_data");
+        $compititor_id = $this->input->post("compititor_id");
+        $retailer_id = $this->input->post("retailer_id");
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+            $prod_sku_id = explode(',', $this->input->post("prod_sku_id"));
+            $quantity = explode(',', $this->input->post("quantity"));
+            $comp_prd_name = explode(',', $this->input->post("comp_prd_name"));
+        } else {
+            $prod_sku_id = $this->input->post("prod_sku_id");
+            $quantity = $this->input->post("quantity");
+            $comp_prd_name = $this->input->post("comp_prd_name");
+        }
+
+        $retailer_analysis_product_data = array(
+            'compititor_analysis_month' =>$month_data.'-01',
+            'coustomer_id' => (isset($retailer_id) && !empty($retailer_id)) ? $retailer_id : '',
+            'compititor_id' => (isset($compititor_id) && !empty($compititor_id)) ? $compititor_id : '',
+            'created_by_user' => $user_id,
+            'country_id' => $country_id,
+            'status' => '1',
+            'created_on' => date('Y-m-d H:i:s')
+        );
+
+        if ($this->db->insert('ecp_compititor_analysis_product', $retailer_analysis_product_data)) {
+            $insert_id = $this->db->insert_id();
+        }
+
+        $compititor_analysis_product_id = $insert_id;
+
+        foreach ($prod_sku_id as $key => $prod_sku) {
+
+            $retailer_compititor_prd_data = array(
+                'compititor_analysis_product_id' => $compititor_analysis_product_id,
+                'product_sku_id' => $prod_sku,
+                'compititor_product_name' => $comp_prd_name[$key],
+                'quantity' => $quantity[$key],
+            );
+            $this->db->insert('ecp_compititor_product_details', $retailer_compititor_prd_data);
+        }
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
+    public function add_distributor_compititor_details($user_id,$country_id)
+    {
+        $month_data = $this->input->post("month_data");
+        $distributor_id = $this->input->post("distributor_id");
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $comp_id = explode(',', $this->input->post("comp_id"));
+            $amount = explode(',', $this->input->post("amount"));
+        } else {
+            $comp_id = $this->input->post("comp_id");
+            $amount = $this->input->post("amount");
+        }
+
+        $distributor_analysis_data = array(
+            'compititor_analysis_month' =>$month_data.'-01',
+            'coustomer_id' => (isset($distributor_id) && !empty($distributor_id)) ? $distributor_id : '',
+            'created_by_user' => $user_id,
+            'country_id' => $country_id,
+            'status' => '1',
+            'created_on' => date('Y-m-d H:i:s')
+        );
+
+        if ($this->db->insert('ecp_compititor_analysis_total', $distributor_analysis_data)) {
+            $insert_id = $this->db->insert_id();
+        }
+
+
+        $compititor_analysis_total_id = $insert_id;
+
+        foreach ($comp_id as $key => $val_comp_id) {
+
+            $distributor_compititor_data = array(
+                'compititor_analysis_total_id' => $compititor_analysis_total_id,
+                'compititor_id' => $val_comp_id,
+                'amount' => $amount[$key],
+            );
+            $this->db->insert('ecp_compititor_total_details', $distributor_compititor_data);
+        }
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function add_distributor_compititor_product_details($user_id,$country_id)
+    {
+        $month_data = $this->input->post("month_data");
+        $compititor_id = $this->input->post("compititor_id");
+        $distributor_id = $this->input->post("distributor_id");
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+            $prod_sku_id = explode(',', $this->input->post("prod_sku_id"));
+            $quantity = explode(',', $this->input->post("quantity"));
+            $comp_prd_name = explode(',', $this->input->post("comp_prd_name"));
+        } else {
+            $prod_sku_id = $this->input->post("prod_sku_id");
+            $quantity = $this->input->post("quantity");
+            $comp_prd_name = $this->input->post("comp_prd_name");
+        }
+
+        $distributor_analysis_product_data = array(
+            'compititor_analysis_month' =>$month_data.'-01',
+            'coustomer_id' => (isset($distributor_id) && !empty($distributor_id)) ? $distributor_id : '',
+            'compititor_id' => (isset($compititor_id) && !empty($compititor_id)) ? $compititor_id : '',
+            'created_by_user' => $user_id,
+            'country_id' => $country_id,
+            'status' => '1',
+            'created_on' => date('Y-m-d H:i:s')
+        );
+
+        if ($this->db->insert('ecp_compititor_analysis_product', $distributor_analysis_product_data)) {
+            $insert_id = $this->db->insert_id();
+        }
+
+        $compititor_analysis_product_id = $insert_id;
+
+        foreach ($prod_sku_id as $key => $prod_sku) {
+
+            $distributor_compititor_prd_data = array(
+                'compititor_analysis_product_id' => $compititor_analysis_product_id,
+                'product_sku_id' => $prod_sku,
+                'compititor_product_name' => $comp_prd_name[$key],
+                'quantity' => $quantity[$key],
+            );
+            $this->db->insert('ecp_compititor_product_details', $distributor_compititor_prd_data);
+        }
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function get_retailer_compititor_details_view($from_month, $to_month,$page=null,$local_date,$country_id)
+    {
+        $sql = ' SELECT ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
+        $sql .= ' FROM bf_ecp_compititor_analysis_total AS ecat ';
+        $sql .= ' JOIN bf_users AS bu ON (bu.id = ecat.coustomer_id) ';
+        $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
+        $sql .= ' JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = mucd.geo_level_id1) ';
+        $sql .= ' JOIN bf_ecp_compititor_total_details AS ectd ON (ectd.compititor_analysis_total_id = ecat.compititor_analysis_total_id) ';
+        $sql .= ' JOIN bf_ecp_compititor_master AS ecm ON (ecm.compititor_id = ectd.compititor_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND ecat.country_id ="' . $country_id . '" ';
+        $sql .= 'AND bu.role_id = 10 ';
+        if (isset($from_month) && !empty($from_month) && isset($to_month) && !empty($to_month)) {
+            $sql .= ' AND DATE_FORMAT(ecat.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
+        }
+        $sql .= 'ORDER BY bu.display_name ASC ';
+        $retailer_analysis = $this->grid->get_result_res($sql);
+
+        if (isset($retailer_analysis['result']) && !empty($retailer_analysis['result'])) {
+            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Amount');
+            $analysis['count'] = count($analysis['head']);
+            if ($page != null || $page != "") {
+                $i = $page * 10 - 9;
+            } else {
+                $i = 1;
+            }
+            foreach ($retailer_analysis['result'] as $rm) {
+
+                if ($local_date != null) {
+                    $date3 = strtotime($rm['created_on']);
+                    $entry_date = date($local_date, $date3);
+
+                } else {
+                    $entry_date = $rm['created_on'];
+                }
+                $month = strtotime($rm['compititor_analysis_month']);
+                $month = date('F - Y', $month);
+
+                $amount = '<div class="amount_' . $rm["compititor_total_details_id"] . '"><span class="amount">' . $rm['amount'] . '</span></div>';
+
+                $analysis['row'][] = array($i, $rm['compititor_total_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$amount);
+                $i++;
+            }
+            $analysis['eye'] = '';
+            $analysis['action'] = 'is_action';
+            $analysis['edit'] = 'is_edit';
+            $analysis['delete'] = 'is_delete';
+            $analysis['pagination'] = $retailer_analysis['pagination'];
+            //testdata($analysis);
+            return $analysis;
+        } else {
+            return false;
+        }
+    }
+
+    public function get_retailer_compititor_product_details_view($from_month, $to_month,$page= null,$local_date,$country_id)
+    {
+
+        $sql = ' SELECT ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
+        $sql .= ' FROM bf_ecp_compititor_analysis_product AS ecap ';
+        $sql .= ' JOIN bf_users AS bu ON (bu.id = ecap.coustomer_id) ';
+        $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
+        $sql .= ' JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = mucd.geo_level_id1) ';
+
+        $sql .= ' JOIN bf_ecp_compititor_product_details AS ecpd ON (ecpd.compititor_analysis_product_id = ecap.compititor_analysis_product_id) ';
+        $sql .= ' JOIN bf_ecp_compititor_master AS ecm ON (ecm.compititor_id = ecap.compititor_id) ';
+        $sql .= ' JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ecpd.product_sku_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND ecap.country_id ="' . $country_id . '" ';
+        $sql .= 'AND bu.role_id = 10 ';
+        if (isset($from_month) && !empty($from_month) && isset($to_month) && !empty($to_month)) {
+            $sql .= ' AND DATE_FORMAT(ecap.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
+        }
+        $sql .= 'ORDER BY bu.display_name ASC ';
+        $retailer_analysis = $this->grid->get_result_res($sql);
+
+        if (isset($retailer_analysis['result']) && !empty($retailer_analysis['result'])) {
+            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Compititor Product Name','Quantity','Our Product');
+            $analysis['count'] = count($analysis['head']);
+            if ($page != null || $page != "") {
+                $i = $page * 10 - 9;
+            } else {
+                $i = 1;
+            }
+            foreach ($retailer_analysis['result'] as $rm) {
+
+                if ($local_date != null) {
+                    $date3 = strtotime($rm['created_on']);
+                    $entry_date = date($local_date, $date3);
+
+                } else {
+                    $entry_date = $rm['created_on'];
+                }
+                $month = strtotime($rm['compititor_analysis_month']);
+                $month = date('F - Y', $month);
+
+                $quantity = '<div class="quantity_' . $rm["compititor_product_details_id"] . '"><span class="quantity">' . $rm['quantity'] . '</span></div>';
+
+                $analysis['row'][] = array($i, $rm['compititor_product_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$rm['compititor_product_name'],$quantity,$rm['product_sku_name']);
+                $i++;
+            }
+            $analysis['eye'] = '';
+            $analysis['action'] = 'is_action';
+            $analysis['edit'] = 'is_edit';
+            $analysis['delete'] = 'is_delete';
+            $analysis['pagination'] = $retailer_analysis['pagination'];
+            return $analysis;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function get_distributor_compititor_details_view($from_month, $to_month,$page=null,$local_date,$country_id)
+    {
+        $sql = ' SELECT ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
+        $sql .= ' FROM bf_ecp_compititor_analysis_total AS ecat ';
+        $sql .= ' JOIN bf_users AS bu ON (bu.id = ecat.coustomer_id) ';
+        $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
+        $sql .= ' JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = mucd.geo_level_id1) ';
+        $sql .= ' JOIN bf_ecp_compititor_total_details AS ectd ON (ectd.compititor_analysis_total_id = ecat.compititor_analysis_total_id) ';
+        $sql .= ' JOIN bf_ecp_compititor_master AS ecm ON (ecm.compititor_id = ectd.compititor_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND ecat.country_id ="' . $country_id . '" ';
+        $sql .= 'AND bu.role_id = 9 ';
+        if (isset($from_month) && !empty($from_month) && isset($to_month) && !empty($to_month)) {
+            $sql .= ' AND DATE_FORMAT(ecat.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
+        }
+        $sql .= 'ORDER BY bu.display_name ASC ';
+        $distributor_analysis = $this->grid->get_result_res($sql);
+
+        if (isset($distributor_analysis['result']) && !empty($distributor_analysis['result'])) {
+            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Amount');
+            $analysis['count'] = count($analysis['head']);
+            if ($page != null || $page != "") {
+                $i = $page * 10 - 9;
+            } else {
+                $i = 1;
+            }
+            foreach ($distributor_analysis['result'] as $rm) {
+
+                if ($local_date != null) {
+                    $date3 = strtotime($rm['created_on']);
+                    $entry_date = date($local_date, $date3);
+
+                } else {
+                    $entry_date = $rm['created_on'];
+                }
+                $month = strtotime($rm['compititor_analysis_month']);
+                $month = date('F - Y', $month);
+
+                $amount = '<div class="amount_' . $rm["compititor_total_details_id"] . '"><span class="amount">' . $rm['amount'] . '</span></div>';
+
+                $analysis['row'][] = array($i, $rm['compititor_total_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$amount);
+                $i++;
+            }
+            $analysis['eye'] = '';
+            $analysis['action'] = 'is_action';
+            $analysis['edit'] = 'is_edit';
+            $analysis['delete'] = 'is_delete';
+            $analysis['pagination'] = $distributor_analysis['pagination'];
+            //testdata($analysis);
+            return $analysis;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function get_distributor_compititor_product_details_view($from_month, $to_month,$page= null,$local_date,$country_id)
+    {
+        $sql = ' SELECT ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
+        $sql .= ' FROM bf_ecp_compititor_analysis_product AS ecap ';
+        $sql .= ' JOIN bf_users AS bu ON (bu.id = ecap.coustomer_id) ';
+        $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
+        $sql .= ' JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = mucd.geo_level_id1) ';
+
+        $sql .= ' JOIN bf_ecp_compititor_product_details AS ecpd ON (ecpd.compititor_analysis_product_id = ecap.compititor_analysis_product_id) ';
+        $sql .= ' JOIN bf_ecp_compititor_master AS ecm ON (ecm.compititor_id = ecap.compititor_id) ';
+        $sql .= ' JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ecpd.product_sku_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND ecap.country_id ="' . $country_id . '" ';
+        $sql .= 'AND bu.role_id = 9 ';
+        if (isset($from_month) && !empty($from_month) && isset($to_month) && !empty($to_month)) {
+            $sql .= ' AND DATE_FORMAT(ecap.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
+        }
+        $sql .= 'ORDER BY bu.display_name ASC ';
+        $distributor_analysis = $this->grid->get_result_res($sql);
+
+        if (isset($distributor_analysis['result']) && !empty($distributor_analysis['result'])) {
+            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Compititor Product Name','Quantity','Our Product');
+            $analysis['count'] = count($analysis['head']);
+            if ($page != null || $page != "") {
+                $i = $page * 10 - 9;
+            } else {
+                $i = 1;
+            }
+            foreach ($distributor_analysis['result'] as $rm) {
+
+                if ($local_date != null) {
+                    $date3 = strtotime($rm['created_on']);
+                    $entry_date = date($local_date, $date3);
+
+                } else {
+                    $entry_date = $rm['created_on'];
+                }
+                $month = strtotime($rm['compititor_analysis_month']);
+                $month = date('F - Y', $month);
+
+                $quantity = '<div class="quantity_' . $rm["compititor_product_details_id"] . '"><span class="quantity">' . $rm['quantity'] . '</span></div>';
+
+                $analysis['row'][] = array($i, $rm['compititor_product_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$rm['compititor_product_name'],$quantity,$rm['product_sku_name']);
+                $i++;
+            }
+            $analysis['eye'] = '';
+            $analysis['action'] = 'is_action';
+            $analysis['edit'] = 'is_edit';
+            $analysis['delete'] = 'is_delete';
+            $analysis['pagination'] = $distributor_analysis['pagination'];
+            return $analysis;
+        } else {
+            return false;
+        }
+    }
+
+    public function update_compititor_details()
+    {
+       // testdata('in');
+        $id = $this->input->post("id");
+        $amount = $this->input->post("amount");
+
+        foreach($id as $k=>$val_id)
+        {
+            $retailer_compititor_update = array(
+                'amount' => $amount[$k],
+            );
+
+            $this->db->where('compititor_total_details_id',$val_id);
+            $this->db->update('ecp_compititor_total_details', $retailer_compititor_update);
+        }
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function update_compititor_product_details()
+    {
+        // testdata('in');
+        $id = $this->input->post("id");
+        $quantity = $this->input->post("quantity");
+
+        foreach($id as $k=>$val_id)
+        {
+            $retailer_compititor_product_update = array(
+                'quantity' => $quantity[$k],
+            );
+
+            $this->db->where('compititor_product_details_id',$val_id);
+            $this->db->update('ecp_compititor_product_details', $retailer_compititor_product_update);
+        }
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function delete_compititor_details($id)
+    {
+        $this->db->select('compititor_analysis_total_id');
+        $this->db->from('ecp_compititor_total_details');
+        $this->db->where('compititor_total_details_id',$id );
+        $compititor_id = $this->db->get()->row_array();
+        if (isset($compititor_id) && !empty($compititor_id))
+        {
+            $this->db->select('*');
+            $this->db->from('bf_ecp_compititor_total_details');
+            $this->db->where('compititor_analysis_total_id',$compititor_id['compititor_analysis_total_id']);
+            $query = $this->db->get();
+            $rowcount = $query->num_rows();
+
+            if($rowcount > 1)
+            {
+                $this->db->where('compititor_total_details_id', $id);
+                $this->db->delete('ecp_compititor_total_details');
+            }
+            else{
+                $this->db->where('compititor_total_details_id', $id);
+                $this->db->delete('ecp_compititor_total_details');
+
+                $this->db->where('compititor_analysis_total_id', $compititor_id['compititor_analysis_total_id']);
+                $this->db->delete('ecp_compititor_analysis_total');
+            }
+        }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function delete_compititor_product_details($id)
+    {
+        $this->db->select('compititor_analysis_product_id');
+        $this->db->from('ecp_compititor_product_details');
+        $this->db->where('compititor_product_details_id',$id );
+        $compititor_id = $this->db->get()->row_array();
+        if (isset($compititor_id) && !empty($compititor_id))
+        {
+            $this->db->select('*');
+            $this->db->from('ecp_compititor_product_details');
+            $this->db->where('compititor_analysis_product_id',$compititor_id['compititor_analysis_product_id']);
+            $query = $this->db->get();
+            $rowcount = $query->num_rows();
+
+            if($rowcount > 1)
+            {
+                $this->db->where('compititor_product_details_id', $id);
+                $this->db->delete('ecp_compititor_product_details');
+            }
+            else{
+                $this->db->where('compititor_product_details_id', $id);
+                $this->db->delete('ecp_compititor_product_details');
+
+                $this->db->where('compititor_analysis_product_id', $compititor_id['compititor_analysis_product_id']);
+                $this->db->delete('ecp_compititor_analysis_product');
+            }
+        }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
 }

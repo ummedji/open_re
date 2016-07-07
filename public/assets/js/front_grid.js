@@ -92,6 +92,7 @@ function submitForm() {
         case'prespective_order': val = $("#prespective_order");break;
         case'target': val = $("#target");break;
         case'budget': val = $("#budget");break;
+       // case'material_request': val = $("#material_request");break;
        /* default  : val = $("#form_ntfdetails");break;*/
     }
 

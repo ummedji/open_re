@@ -36,7 +36,7 @@ echo form_open('',$attributes); ?>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
                     <label for="invoice_date">Invoice Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" readonly>
+                    <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="">
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">

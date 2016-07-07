@@ -1167,6 +1167,17 @@ class Esp_model extends BF_Model
 		return $final_array;	
 	}
 	
+	public function get_sku_data($sku_code){
+		
+		
+		
+	}
+	
+	public function get_pbg_data($pbg){
+		
+		
+		
+	}
 	
 
 	
