@@ -1223,7 +1223,7 @@ class Esp extends Front_Controller
     }
     
     public function add_forecast($webservice_data = NULL){
-       // testdata($_POST);
+      //  testdata($_POST);
       //  $forecast_data = $this->esp_model->add_forecast_data();
         
         if($webservice_data != NULL){
@@ -1236,13 +1236,31 @@ class Esp extends Front_Controller
             
          //   testdata($_POST);
             
-            if(!isset($_POST['employee_data']))
-            {
-                $forecast_user_id = $_POST['login_user_id'];
+            
+			
+			if($webservice_data == NULL){
+            
+	            if(!isset($_POST['employee_data']))
+	            {
+	                $forecast_user_id = $_POST['login_user_id'];
+	            }
+	            else{
+	                $forecast_user_id = $_POST['employee_data'];
+	            }
+			
+
             }
-            else{
-                $forecast_user_id = $_POST['employee_data'];
-            }
+			else
+			{
+				 if(isset($webservice_data["emp_id"]) && ($webservice_data["emp_id"] != $webservice_data["login_user_id"])){
+				 	$forecast_user_id = $webservice_data["emp_id"];
+				 }
+				 else
+				 {
+					 $forecast_user_id = $webservice_data['login_user_id'];
+				 }
+			}
+			
             
             $businss_data = $this->esp_model->get_business_code($forecast_user_id);
             
@@ -1260,6 +1278,8 @@ class Esp extends Front_Controller
             $i = 1;
             
             $forecast_insert_id = '';
+			
+			$old_forecast_id = "";
 
             if(!empty($_POST['month_data'])){
                 foreach($_POST['month_data'] as $month_key=>$month_value){
@@ -1298,12 +1318,12 @@ class Esp extends Front_Controller
                     }
 
                         if(isset($_POST['assumption'.$i])){
-                            $initial_array_assumption = $_POST['assumption'.$i];
+                            $initial_array_assumption = array($_POST['assumption'.$i][0],$_POST['assumption'.$i][1],$_POST['assumption'.$i][2]);
                         }
                         else{
                             $initial_array_assumption = array();
                         }
-                        $initial_array_probablity = $_POST['probablity'.$i];
+                        $initial_array_probablity = array($_POST['probablity'.$i][0],$_POST['probablity'.$i][1],$_POST['probablity'.$i][2]);
                     
                        // if($initial_array_assumption != "")
                     
@@ -1315,7 +1335,7 @@ class Esp extends Front_Controller
                 }
             }
              
-            testdata($final_array);
+          //  dumpme($final_array);
             
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
@@ -1335,6 +1355,8 @@ class Esp extends Front_Controller
 
                             //UPDATE MAIN TABLE RECORD
                             
+                            //echo "a";
+                            
                             $forecast_product_id = $get_product_old_data[0]['forecast_product_id'];
                             $old_forecast_id = $get_product_old_data[0]['forecast_id'];
 
@@ -1349,18 +1371,25 @@ class Esp extends Front_Controller
 
                         }else{
 
-                            $this->esp_model->insert_forecast_product_details($forecast_insert_id,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value);
+							if($forecast_insert_id == "")
+							{
+								$fid = $old_forecast_id;
+							}
+							else{
+								$fid = $forecast_insert_id;
+							}
+
+
+                            $this->esp_model->insert_forecast_product_details($fid,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value);
 							
 							$history_status_data = 0;
 							
 							//ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
 							
-							 $this->esp_model->insert_forecast_product_details_history($forecast_insert_id,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$history_status_data);
+							 $this->esp_model->insert_forecast_product_details_history($fid,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$history_status_data);
 							
                         }
 						
-							
-                        
                     }
                    
                     $assumption_data = "";
@@ -1377,14 +1406,16 @@ class Esp extends Front_Controller
 
                         $get_assumption_old_data = $this->esp_model->get_forecast_assumption_details($old_forecast_id,$month_data);
 
-					//	echo "aaaa======</br>";
-					//	dumpme($get_assumption_old_data);
+						//echo "aaaa======</br>";
+						//dumpme($get_assumption_old_data);
 
-                        if($get_product_old_data != 0){
+                        if($get_assumption_old_data != 0){
 
                             //UPDATE MAIN TABLE RECORD
 
                             $forecast_assumption_id = $get_assumption_old_data[0]['forecast_assumption_id'];
+
+							//echo "aaaa======</br>";
 
                             $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id,$assumption_data,$probablity_data);
 							
@@ -1396,13 +1427,25 @@ class Esp extends Front_Controller
 
                         }else{ 
 
-                           $this->esp_model->insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data);
+							
+							
+							if($forecast_insert_id == "")
+							{
+								$fid = $old_forecast_id;
+							}
+							else{
+								$fid = $forecast_insert_id;
+							}
+							
+							//echo $fid."bbbbb======</br>";
+							
+                           $this->esp_model->insert_forecast_assumption_probablity_data($fid,$assumption_data,$probablity_data,$month_data);
                            
 						   $history_update_status = 0;
 						   
 						   //ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
 							
-							 $this->esp_model->insert_forecast_assumption_data_history($forecast_insert_id,$assumption_data,$probablity_data,$month_data,$history_update_status);
+							 $this->esp_model->insert_forecast_assumption_data_history($fid,$assumption_data,$probablity_data,$month_data,$history_update_status);
 						   
                         }
 						
@@ -1413,8 +1456,13 @@ class Esp extends Front_Controller
             }
             
         }
-      //  die;
-        redirect('esp/');
+        
+		if($webservice_data != NULL){
+			$result = "Data Updated Successfully";
+			return $result;
+        }else{
+        	redirect('esp/');
+		}
         
     }
     
@@ -2204,22 +2252,41 @@ class Esp extends Front_Controller
         
     }
 
-	public function add_budget(){
+	public function add_budget($webservice_data = NULL){
        // testdata($_POST);
       //  $forecast_data = $this->esp_model->add_forecast_data();
+        
+         if($webservice_data != NULL){
+        	$_POST = $webservice_data;
+		 }
+        
         
         if(isset($_POST) && !empty($_POST)){
             
          //   testdata($_POST);
             
-            if(!isset($_POST['employee_data']))
-            {
-                $budget_user_id = $_POST['login_user_id'];
-            }
-            else{
-                $budget_user_id = $_POST['employee_data'];
-            }
+            if($webservice_data == NULL){
             
+	            if(!isset($_POST['employee_data']))
+	            {
+	                $budget_user_id = $_POST['login_user_id'];
+	            }
+	            else{
+	                $budget_user_id = $_POST['employee_data'];
+	            }
+
+            }
+			else
+			{
+				 if(isset($webservice_data["emp_id"]) && ($webservice_data["emp_id"] != $webservice_data["login_user_id"])){
+				 	$budget_user_id = $webservice_data["emp_id"];
+				 }
+				 else
+				 {
+					 $budget_user_id = $webservice_data['login_user_id'];
+				 }
+			}
+			
             $businss_data = $this->esp_model->get_business_code($budget_user_id);
             
             $user_business_code = $businss_data;
@@ -2288,12 +2355,21 @@ class Esp extends Front_Controller
                     
                     foreach($data["productid"] as $product_id => $product_data){
                         
+						
+						
                         $budget_qty = $product_data["budget_qty"];
                         $budget_value = $product_data["budget_value"];
                         
                         $get_product_old_data = $this->esp_model->get_budget_product_details($businss_data,$product_id,$month_data);
                         
+						//echo "aaaaa<pre>";
+						//print_r($get_product_old_data);
+						
+						//echo "</br>";
+						
                         if($get_product_old_data != 0){
+                        	
+							//echo "UPDATE----".$businss_data."----".$product_id.'----'.$month_data."</br>";
 
                             //UPDATE MAIN TABLE RECORD
                             
@@ -2310,6 +2386,8 @@ class Esp extends Front_Controller
 							
 
                         }else{
+                        	
+							//echo "INSERT----".$businss_data."----".$product_id.'----'.$month_data."</br>";
 
                             $this->esp_model->insert_budget_product_details($budget_insert_id,$businss_data,$product_id,$month_data,$budget_qty,$budget_value);
 							
@@ -2328,9 +2406,15 @@ class Esp extends Front_Controller
             }
             
         }
+
         
-        redirect('esp/budget');
-        
+		if($webservice_data != NULL){
+			$result = "Data Updated Successfully";
+			return $result;
+        }else{
+        	redirect('esp/budget');
+		}
+		
     }
 
 	public function update_budget_freeze_status($webservice_data = NULL){

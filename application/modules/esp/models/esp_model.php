@@ -86,6 +86,9 @@ class Esp_model extends BF_Model
     }
     
     public function insert_forecast_product_details($forecast_insert_id,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value){
+        		
+        $forecast_qty = ($forecast_qty == '' || empty($forecast_qty)) ? 0 : $forecast_qty;
+		$forecast_value = ($forecast_value == '' || empty($forecast_value)) ? 0 : $forecast_value;
         
         $data = array( 
             'forecast_id'	=>  $forecast_insert_id, 
@@ -102,19 +105,28 @@ class Esp_model extends BF_Model
     
     public function insert_forecast_assumption_probablity_data($forecast_insert_id,$assumption_data,$probablity_data,$month_data){
         
-       // echo "<pre>";
+      
+	  //	echo "UPDATE";
       //  print_r($assumption_data);
-	//print_r($probablity_data);
-		//echo $forecast_insert_id."===".$month_data;
+	//	print_r($probablity_data);
 		
-		//exit;
-        
+	//	echo "</br>";
+	  
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
-       
+		
+		$asumption[0] = ($asumption[0] == '' || empty($asumption[0])) ? 0 : $asumption[0];
+		$asumption[1] = ($asumption[1] == '' || empty($asumption[1])) ? 0 : $asumption[1];
+		$asumption[2] = ($asumption[2] == '' || empty($asumption[2])) ? 0 : $asumption[2];
+		
+		$probablity[0] = ($probablity[0] == '' || empty($probablity[0])) ? 0 : $probablity[0];
+		$probablity[1] = ($probablity[1] == '' || empty($probablity[1])) ? 0 : $probablity[1];
+		$probablity[2] = ($probablity[2] == '' || empty($probablity[2])) ? 0 : $probablity[2];
+		
+	   
         $data = array( 
             'forecast_id'	=>  $forecast_insert_id, 
-            'assumption1_id'=> $asumption[0], 
+            'assumption1_id'=>  $asumption[0], 
             'assumption2_id'=>  $asumption[1],
             'assumption3_id'=>  $asumption[2],
             'probability1'	=>  $probablity[0],
@@ -179,6 +191,10 @@ class Esp_model extends BF_Model
     
     public function update_forecast_product_details($forecast_product_id,$forecast_qty,$forecast_value){
         
+		$forecast_qty = ($forecast_qty == '' || empty($forecast_qty)) ? 0 : $forecast_qty;
+		$forecast_value = ($forecast_value == '' || empty($forecast_value)) ? 0 : $forecast_value;
+        
+		
         $data = array(
             'forecast_quantity'	=>$forecast_qty,
             'forecast_value'	=>$forecast_value
@@ -210,16 +226,26 @@ class Esp_model extends BF_Model
     public function update_forecast_assumption_details($forecast_assumption_id,$assumption_data,$probablity_data){
         
 		
-		//echo "<pre>";
+		//echo $forecast_assumption_id."===UPDATE";
        // print_r($assumption_data);
 		//print_r($probablity_data);
-		//echo $forecast_assumption_id;
-		
+		///echo $forecast_assumption_id;
+		//echo "</br>";
 		//exit;
 		
         $asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
        
+	   
+	    $asumption[0] = ($asumption[0] == '' || empty($asumption[0])) ? 0 : $asumption[0];
+		$asumption[1] = ($asumption[1] == '' || empty($asumption[1])) ? 0 : $asumption[1];
+		$asumption[2] = ($asumption[2] == '' || empty($asumption[2])) ? 0 : $asumption[2];
+		
+		$probablity[0] = ($probablity[0] == '' || empty($probablity[0])) ? 0 : $probablity[0];
+		$probablity[1] = ($probablity[1] == '' || empty($probablity[1])) ? 0 : $probablity[1];
+		$probablity[2] = ($probablity[2] == '' || empty($probablity[2])) ? 0 : $probablity[2];
+	   
+	   
         $data = array( 
             'assumption1_id'=> $asumption[0], 
             'assumption2_id'=>  $asumption[1],
@@ -231,6 +257,8 @@ class Esp_model extends BF_Model
             
         $this->db->where('forecast_assumption_id', $forecast_assumption_id);
         $this->db->update('bf_esp_forecast_assumption' ,$data); 
+		
+		//echo $this->db->last_query();
         
     }
     
@@ -563,6 +591,10 @@ class Esp_model extends BF_Model
     
 	public function insert_forecast_product_details_history($forecast_insert_id,$businss_data,$pbg_id,$product_id,$month_data,$forecast_qty,$forecast_value,$update_status){
 		
+		$forecast_qty = ($forecast_qty == '' || empty($forecast_qty)) ? 0 : $forecast_qty;
+		$forecast_value = ($forecast_value == '' || empty($forecast_value)) ? 0 : $forecast_value;
+        
+		
 		$data = array( 
             'forecast_id'	=>  $forecast_insert_id, 
             'business_code'=> $businss_data, 
@@ -582,6 +614,14 @@ class Esp_model extends BF_Model
 		$asumption = explode("~",$assumption_data);
         $probablity = explode("~",$probablity_data);
        
+	    $asumption[0] = ($asumption[0] == '' || empty($asumption[0])) ? 0 : $asumption[0];
+		$asumption[1] = ($asumption[1] == '' || empty($asumption[1])) ? 0 : $asumption[1];
+		$asumption[2] = ($asumption[2] == '' || empty($asumption[2])) ? 0 : $asumption[2];
+		
+		$probablity[0] = ($probablity[0] == '' || empty($probablity[0])) ? 0 : $probablity[0];
+		$probablity[1] = ($probablity[1] == '' || empty($probablity[1])) ? 0 : $probablity[1];
+		$probablity[2] = ($probablity[2] == '' || empty($probablity[2])) ? 0 : $probablity[2];
+	   
         $data = array( 
             'forecast_id'	=>  $forecast_insert_id, 
             'assumption1_id'=> $asumption[0], 
@@ -871,6 +911,11 @@ class Esp_model extends BF_Model
 	
 	public function update_budget_product_details($budget_product_id,$budget_qty,$budget_value){
         
+		//echo $budget_product_id."====".$budget_qty."====".$budget_value;
+		
+		$budget_qty = ($budget_qty == '' || empty($budget_qty)) ? 0 : $budget_qty;
+		$budget_value = ($budget_value == '' || empty($budget_value)) ? 0 : $budget_value;
+		
         $data = array(
             'budget_quantity'	=>$budget_qty,
             'budget_value'	=>$budget_value
@@ -882,6 +927,10 @@ class Esp_model extends BF_Model
 	
 	public function insert_budget_product_details($budget_insert_id,$businss_data,$product_id,$month_data,$budget_qty,$budget_value){
         
+		$budget_qty = ($budget_qty == '' || empty($budget_qty)) ? 0 : $budget_qty;
+		$budget_value = ($budget_value == '' || empty($budget_value)) ? 0 : $budget_value;
+		
+		
         $data = array( 
             'budget_id'	=>  $budget_insert_id, 
             'business_code'=> $businss_data, 

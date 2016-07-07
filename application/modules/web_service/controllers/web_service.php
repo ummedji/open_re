@@ -3520,6 +3520,8 @@ class Web_service extends Front_Controller
 			$final_array["login_user_id"] = $forecastdata["login_user_id"];
 			$final_array["login_user_countryid"] = $forecastdata["login_user_countryid"];
 			
+			$final_array["emp_id"] = $forecastdata["emp_id"];
+			
 			$final_array["from_month"] = $forecastdata["from_month"];
 			$final_array["to_month"] = $forecastdata["to_month"];
 			
@@ -3535,12 +3537,12 @@ class Web_service extends Front_Controller
 			
 			$final_array["month_data"] = $forecastdata["month_data"];
 			
-			$final_array["assumption1"] = array();
+		/*	$final_array["assumption1"] = array();
 			$final_array["probablity1"] = array();
 			$final_array["assumption2"] = array();
 			$final_array["probablity2"] = array();
 			$final_array["assumption3"] = array();
-			$final_array["probablity3"] = array();
+			$final_array["probablity3"] = array(); */
 			
 			if(!empty($forecastdata["forecast_qty"])){
 				foreach($forecastdata["forecast_qty"] as $forecast_key => $forecast_data){
@@ -3556,39 +3558,60 @@ class Web_service extends Front_Controller
 				}
 			}
 			
-			if(!empty($forecastdata["forecast_value"])){
-				foreach($forecastdata["forecast_value"] as $forecastvalue_key => $forecastvalue_data){
-					foreach($forecastvalue_data as $fv_key => $fv_data){
-						if($fv_key != "monthvalue"){
-							foreach($forecastdata["product_sku_id"] as $sku_key => $product_data){
-								if($fv_key == $product_data){
-									$final_array["forecast_value"][$product_data][] = $fv_data;
+				
+				if(!empty($forecastdata["forecast_value"])){
+					foreach($forecastdata["forecast_value"] as $forecastvalue_key => $forecastvalue_data){
+						foreach($forecastvalue_data as $fv_key => $fv_data){
+							if($fv_key != "monthvalue"){
+								foreach($forecastdata["product_sku_id"] as $sku_key => $product_data){
+									if($fv_key == $product_data){
+										$final_array["forecast_value"][$product_data][] = $fv_data;
+									}
 								}
 							}
 						}
 					}
 				}
-			}
+				
 			
-			if(!empty($forecastdata["assumption"])){
-				foreach($forecastdata["assumption"] as $assumption_key => $assumption_data){
-					$final_array["assumption1"][] = $assumption_data[0];
-					$final_array["assumption2"][] = $assumption_data[1];
-					$final_array["assumption3"][] = $assumption_data[2];
-				}
-			}
+			$i = 1;
+			foreach($forecastdata["month_data"] as $month_key=>$monthvalue){
 			
-			if(!empty($forecastdata["probablity"])){
-				foreach($forecastdata["probablity"] as $probablity_key => $probablity_data){
-					$final_array["probablity1"][] = $probablity_data[0];
-					$final_array["probablity2"][] = $probablity_data[1];
-					$final_array["probablity3"][] = $probablity_data[2];
+				$final_array["assumption$i"] = array();
+				$final_array["probablity$i"] = array();
+				
+				if(!empty($forecastdata["assumption"])){
+					
+					foreach($forecastdata["assumption"] as $assumption_key => $assumption_data){
+						
+						if($assumption_data["monthvalue"] == $monthvalue){
+							$final_array["assumption$i"] = $assumption_data;
+						}
+					
+					}
 				}
+			
+				if(!empty($forecastdata["probablity"])){
+					foreach($forecastdata["probablity"] as $probablity_key => $probablity_data){
+						if($probablity_data["monthvalue"] == $monthvalue){
+							$final_array["probablity$i"] = $probablity_data;
+						}
+						
+					}
+				}
+				
+				$i++;
 			}
 			
 		}
 		
 		$forecast_data = modules::run('esp/esp/add_forecast', $final_array);
+		
+		$result['status'] = true;
+	    $result['message'] = 'Successfull';
+		$result['data'] = $forecast_data;
+		
+		$this->do_json($result);
 		
 	}
 	
@@ -3808,6 +3831,85 @@ class Web_service extends Front_Controller
         }
 		
 		$this->do_json($result);	
+		
+	}
+	
+	
+	public function add_update_budget_data(){
+			
+		$budget_data = $this->input->get_post('budget_data');	
+			
+		$budgetdata = json_decode($budget_data,TRUE);
+		
+		//testdata($budgetdata);
+		
+		$final_array = array();
+		
+		foreach($budgetdata as $datakey=>$data){
+			
+			$final_array["login_user_id"] = $budgetdata["login_user_id"];
+			$final_array["login_user_countryid"] = $budgetdata["login_user_countryid"];
+			
+			//$final_array["from_month"] = $budgetdata["from_month"];
+			$final_array["emp_id"] = $budgetdata["emp_id"];
+			
+			$final_array["pbg_data"] = $budgetdata["pbg_data"];
+			
+			$final_array["budget_id"] = $budgetdata["budget_id"];
+			$final_array["freeze_status"] = $budgetdata["freeze_status"];
+			
+			$final_array["product_sku_id"] = $budgetdata["product_sku_id"];
+			
+			$final_array["budget_qty"] = array();
+			$final_array["budget_value"] = array();
+			
+			$final_array["month_data"] = $budgetdata["month_data"];
+			
+		/*	$final_array["assumption1"] = array();
+			$final_array["probablity1"] = array();
+			$final_array["assumption2"] = array();
+			$final_array["probablity2"] = array();
+			$final_array["assumption3"] = array();
+			$final_array["probablity3"] = array(); */
+			
+			if(!empty($budgetdata["budget_qty"])){
+				foreach($budgetdata["budget_qty"] as $budget_key => $budget_data){
+					foreach($budget_data as $b_key => $b_data){
+						if($b_key != "monthvalue"){
+							foreach($budgetdata["product_sku_id"] as $sku_key => $product_data){
+								if($b_key == $product_data){
+									$final_array["budget_qty"][$product_data][] = $b_data;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+				
+				if(!empty($budgetdata["budget_value"])){
+					foreach($budgetdata["budget_value"] as $budgetvalue_key => $budgetvalue_data){
+						foreach($budgetvalue_data as $bv_key => $bv_data){
+							if($bv_key != "monthvalue"){
+								foreach($budgetdata["product_sku_id"] as $sku_key => $product_data){
+									if($bv_key == $product_data){
+										$final_array["budget_value"][$product_data][] = $bv_data;
+									}
+								}
+							}
+						}
+					}
+				}
+				
+		}
+		
+		$budget_data = modules::run('esp/esp/add_budget', $final_array);
+		
+		$result['status'] = true;
+	    $result['message'] = 'Successfull';
+		$result['data'] = $budget_data;
+		
+		$this->do_json($result);
 		
 	}
 	
