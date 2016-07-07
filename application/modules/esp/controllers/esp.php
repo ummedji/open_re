@@ -1222,9 +1222,15 @@ class Esp extends Front_Controller
 		}
     }
     
-    public function add_forecast(){
+    public function add_forecast($webservice_data = NULL){
        // testdata($_POST);
       //  $forecast_data = $this->esp_model->add_forecast_data();
+        
+        if($webservice_data != NULL){
+        	$_POST = $webservice_data;
+        }
+		
+		// testdata($_POST);
         
         if(isset($_POST) && !empty($_POST)){
             
@@ -1309,7 +1315,7 @@ class Esp extends Front_Controller
                 }
             }
              
-          //  testdata($final_array);
+            testdata($final_array);
             
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
@@ -2130,7 +2136,9 @@ class Esp extends Front_Controller
 			$freeze_status = 0;
 			
             if($login_user_parent_data != 0){
-                
+                	
+                $freeze_show = 1;
+				
                 $freeze_history_user_status_data = $this->esp_model->get_budget_freeze_history_user_status_data($login_user_id,$budget_id);
                 
                 if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
@@ -2155,6 +2163,9 @@ class Esp extends Front_Controller
                     
                 }
             }
+			else{
+				$freeze_show = 0;
+			}
 
 
 			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
@@ -2166,6 +2177,7 @@ class Esp extends Front_Controller
 				$final_array["budget_data"] = array_values($webservice_final_array);
 				$final_array["budget_id"] = $budget_id;
 				$final_array["freeze_status"] = $freeze_status;
+				$final_array["freeze_show"] = $freeze_show;
 				
 				//testdata($final_array);
 				

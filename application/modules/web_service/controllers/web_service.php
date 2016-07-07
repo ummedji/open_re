@@ -3517,21 +3517,78 @@ class Web_service extends Front_Controller
 		
 		foreach($forecastdata as $datakey=>$data){
 			
-			$final_array["login_user_id"] = $data["login_user_id"];
-			$final_array["login_user_countryid"] = $data["login_user_countryid"];
+			$final_array["login_user_id"] = $forecastdata["login_user_id"];
+			$final_array["login_user_countryid"] = $forecastdata["login_user_countryid"];
 			
-			$final_array["from_month"] = $data["from_month"];
-    		$final_array["to_month"] = $data["to_month"];
-    		$final_array["pbg_data"] = $data["pbg_data"];
+			$final_array["from_month"] = $forecastdata["from_month"];
+			$final_array["to_month"] = $forecastdata["to_month"];
 			
+			$final_array["pbg_data"] = $forecastdata["pbg_data"];
 			
+			$final_array["forecast_id"] = $forecastdata["forecast_id"];
+			$final_array["freeze_status"] = $forecastdata["freeze_status"];
+			
+			$final_array["product_sku_id"] = $forecastdata["product_sku_id"];
+			
+			$final_array["forecast_qty"] = array();
+			$final_array["forecast_value"] = array();
+			
+			$final_array["month_data"] = $forecastdata["month_data"];
+			
+			$final_array["assumption1"] = array();
+			$final_array["probablity1"] = array();
+			$final_array["assumption2"] = array();
+			$final_array["probablity2"] = array();
+			$final_array["assumption3"] = array();
+			$final_array["probablity3"] = array();
+			
+			if(!empty($forecastdata["forecast_qty"])){
+				foreach($forecastdata["forecast_qty"] as $forecast_key => $forecast_data){
+					foreach($forecast_data as $f_key => $f_data){
+						if($f_key != "monthvalue"){
+							foreach($forecastdata["product_sku_id"] as $sku_key => $product_data){
+								if($f_key == $product_data){
+									$final_array["forecast_qty"][$product_data][] = $f_data;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			if(!empty($forecastdata["forecast_value"])){
+				foreach($forecastdata["forecast_value"] as $forecastvalue_key => $forecastvalue_data){
+					foreach($forecastvalue_data as $fv_key => $fv_data){
+						if($fv_key != "monthvalue"){
+							foreach($forecastdata["product_sku_id"] as $sku_key => $product_data){
+								if($fv_key == $product_data){
+									$final_array["forecast_value"][$product_data][] = $fv_data;
+								}
+							}
+						}
+					}
+				}
+			}
+			
+			if(!empty($forecastdata["assumption"])){
+				foreach($forecastdata["assumption"] as $assumption_key => $assumption_data){
+					$final_array["assumption1"][] = $assumption_data[0];
+					$final_array["assumption2"][] = $assumption_data[1];
+					$final_array["assumption3"][] = $assumption_data[2];
+				}
+			}
+			
+			if(!empty($forecastdata["probablity"])){
+				foreach($forecastdata["probablity"] as $probablity_key => $probablity_data){
+					$final_array["probablity1"][] = $probablity_data[0];
+					$final_array["probablity2"][] = $probablity_data[1];
+					$final_array["probablity3"][] = $probablity_data[2];
+				}
+			}
 			
 		}
 		
-		
-		
-		
-		testdata($forecastdata);
+		$forecast_data = modules::run('esp/esp/add_forecast', $final_array);
 		
 	}
 	
