@@ -390,6 +390,8 @@ class Esp_model extends BF_Model
         $this->db->where('forecast_id', $forecast_id);
         $this->db->update('bf_esp_forecast' ,$data);
         
+        $update_res = $this->db->affected_rows();
+        
         if($this->db->affected_rows() > 0){
             
             $this->db->select('*');
@@ -433,10 +435,10 @@ class Esp_model extends BF_Model
                 $this->db->where('id', $freeze_history_id);
                 $this->db->update('bf_forecast_freeze_status_history' ,$update_history_data);
                 
-                
             }
             
-            return 1;
+            $update_res = 1;
+            return $update_res;
         }
         else{
             return 0;

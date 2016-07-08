@@ -152,7 +152,7 @@ $(document).on("click","#save_data",function(e){
 $(document).on("click","button#freeze_data",function(e){
     
     e.preventDefault();
-   
+
     var forecast_id = $("input#forecast_id").val();
     var text_data = $(this).text();
     
@@ -161,7 +161,7 @@ $(document).on("click","button#freeze_data",function(e){
         url: site_url+"esp/update_forecast_freeze_status",
         data: {forecastid:forecast_id,textdata:text_data},
         success: function(resp){
-            
+            //alert(resp);
             var message = "";
             if(resp == 1){
                 

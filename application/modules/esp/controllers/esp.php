@@ -252,9 +252,6 @@ class Esp extends Front_Controller
             $forecast_id = "";
             
 			
-		
-		
-			
             foreach($pbg_sku_data as $skukey => $skuvalue){
               $html .= '<tr>';
               $html .= '<td><input type="hidden" name="product_sku_id[]" value="'.$skuvalue['product_sku_country_id'].'" />'.$skuvalue['product_sku_name'].'</td>';
@@ -1461,7 +1458,8 @@ class Esp extends Front_Controller
 			$result = "Data Updated Successfully";
 			return $result;
         }else{
-        	redirect('esp/');
+        	echo 1;
+            die;
 		}
         
     }
@@ -1498,8 +1496,6 @@ class Esp extends Front_Controller
 			
 			$user_id = $user->id;
 		}
-		
-		
 		
 		$freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data);
         

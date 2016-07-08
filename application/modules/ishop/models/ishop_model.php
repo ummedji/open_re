@@ -1705,7 +1705,7 @@ class Ishop_model extends BF_Model
 
     public function get_all_physical_stock_by_user($user_id, $country_id, $role_id, $checked_type = null, $page = null, $web_service = null,$stock_month=null)
     {
-        $sql = 'SELECT bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.product_sku_id,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.product_sku_id,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
         $sql .= 'FROM bf_ishop_physical_stock AS ips ';
         $sql .= 'LEFT JOIN bf_users AS bu  ON (bu.id = ips.modified_by_user) ';
         $sql .= 'LEFT JOIN bf_users AS bu1  ON (bu1.id = ips.customer_id) ';

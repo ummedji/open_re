@@ -1,3 +1,12 @@
+var impact_validators = $("#impact_entry").validate({
+        //ignore:'.ignore',
+        rules: {
+            from_month:{
+                required: true
+            }
+        }
+    });
+
 $(document).ready(function(){
     
 	var date = new Date();
@@ -19,22 +28,27 @@ $(document).ready(function(){
     
     $("button#view_impact_entry").on("click",function(){
         
-        var selected_month = $("input#from_month").val();
+        var $valid = $("#impact_entry").valid();
+        if(!$valid) {
+
+            impact_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
         
-        $.ajax({
-        type: 'POST',
-        url: site_url+"esp/get_forecast_impact_data",
-        data: {selectedmonth:selected_month},
-        success: function(resp){
-            
-            $("div.impact_entry_data").html(resp);
-            
+            var selected_month = $("input#from_month").val();
+
+            $.ajax({
+                type: 'POST',
+                url: site_url+"esp/get_forecast_impact_data",
+                data: {selectedmonth:selected_month},
+                success: function(resp){
+                    $("div.impact_entry_data").html(resp);
+                }
+            });
         }
     });
-        
-    });
-    
-    
 });
 
 $(document).on("submit","#impact_entry",function(e){
@@ -43,7 +57,16 @@ $(document).on("submit","#impact_entry",function(e){
     
     var param = $("#impact_entry").serializeArray();
 
-	 $.ajax({
+    var $valid = $("#impact_entry").valid();
+    if(!$valid) {
+
+        impact_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+
+	       $.ajax({
                 type: 'POST',
                 url: site_url+"esp/add_impact_entry",
                 data: param,
@@ -72,11 +95,13 @@ $(document).on("submit","#impact_entry",function(e){
 		                    }
 	                });
             
-                	location.reload();
+                	//location.reload();
                 	
                 }
                 
-             });
+        });
+        
+    }
 
     
 });
