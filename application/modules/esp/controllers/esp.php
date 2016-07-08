@@ -1175,7 +1175,7 @@ class Esp extends Front_Controller
                 <input type="hidden" id="forecast_id" name="forecast_id" value="'.$forecast_id.'" />
                 <div class="row">
                     <div class="save_btn">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" id="save_data" class="btn btn-primary">Save</button>
                         '.$freeze_button.'
                     </div>
                 </div>
@@ -1950,8 +1950,6 @@ class Esp extends Front_Controller
                             
                             if($login_user_id == $budget_freeze_data['freeze_user_id']){
                                 
-                                
-                                
                                 $editable = "";
                                 
                                 $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
@@ -2238,7 +2236,7 @@ class Esp extends Front_Controller
                 <input type="hidden" id="budget_id" name="budget_id" value="'.$budget_id.'" />
                 <div class="row">
                     <div class="save_btn">
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button id="save_data" type="submit" class="btn btn-primary">Save</button>
                         '.$freeze_button.'
                     </div>
                 </div>
@@ -2412,7 +2410,9 @@ class Esp extends Front_Controller
 			$result = "Data Updated Successfully";
 			return $result;
         }else{
-        	redirect('esp/budget');
+            echo 1;
+            die;
+        	//redirect('esp/budget');
 		}
 		
     }

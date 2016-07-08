@@ -56,6 +56,75 @@ $(document).on("change","select.pbg_data",function(){
 
 });
 
+
+var budget_validators = $("#add_budget").validate({
+        //ignore:'.ignore',
+        rules: {
+            year_data:{
+                required: true
+            },
+            employee_data:{
+                required: true
+            },
+            pbg_data:{
+                required: true
+            },
+        }
+    });
+
+
+$(document).on("click","#save_data",function(e){
+    
+    e.preventDefault();
+    
+    var param = $("#add_budget").serializeArray();
+    
+    var $valid = $("#add_budget").valid();
+    if(!$valid) {
+
+        budget_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+    
+        $.ajax({
+            type: 'POST',
+            url: site_url+"esp/add_budget",
+            data: param,
+            //dataType : 'json',
+            success: function(resp){
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data added successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                           // location.reload()
+                        }
+                    });
+            }
+        });
+        return false;
+   }
+
+});
+
+
 $(document).on("click","button#freeze_data",function(e){
     
     e.preventDefault();

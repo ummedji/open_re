@@ -1975,3 +1975,10 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 .zoom_out_btn { display: none !important;}
 .zoom_out_btn_show { display: inline-block !important;}
 .ad_mr_top_30 { margin-top: 35px;}
+
+.no_wrkn .radio_space .radio { display: block; text-align: left;}
+.no_wrkn .radio_space .radio:first-child { margin-left: 15px;}
+
+@media screen and (max-width:991px) {
+    .no_wrkn .radio_space .radio { text-align: center;}
+}

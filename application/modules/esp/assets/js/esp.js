@@ -1,3 +1,21 @@
+var forecast_validators = $("#add_forecast").validate({
+    //ignore:'.ignore',
+    rules: {
+        from_month:{
+            required: true
+        },
+        to_month:{
+            required: true
+        },
+        employee_data:{
+            required: true
+        },
+        pbg_data:{
+            required: true
+        },
+    }
+});
+
 $(document).ready(function(){
     
     $( "#from_month" ).datepicker({
@@ -22,13 +40,23 @@ $(document).ready(function(){
     
     $("button#exeute").on("click",function(){
         
-        var user_id = $("input#login_user_id").val();
-        $("div#user_level_data div.form-group").remove();
-        $("div#pbg_data").empty();
         
-        $("div.forecast_data").empty();
-        
-        get_user_level_data(user_id);
+        var $valid = $("#add_forecast").valid();
+        if(!$valid) {
+
+            forecast_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            var user_id = $("input#login_user_id").val();
+            $("div#user_level_data div.form-group").remove();
+            $("div#pbg_data").empty();
+
+            $("div.forecast_data").empty();
+
+            get_user_level_data(user_id);
+        }
         
     });
     
@@ -66,6 +94,60 @@ $(document).on("change","select.pbg_data",function(){
     get_pbg_product_sku_data(pbg_id);
 
 });
+
+
+$(document).on("click","#save_data",function(e){
+    
+    e.preventDefault();
+    
+    var param = $("#add_forecast").serializeArray();
+    
+    var $valid = $("#add_forecast").valid();
+    if(!$valid) {
+
+        forecast_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+    
+        $.ajax({
+            type: 'POST',
+            url: site_url+"esp/add_forecast",
+            data: param,
+            //dataType : 'json',
+            success: function(resp){
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data added successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                           // location.reload()
+                        }
+                    });
+            }
+        });
+        return false;
+   }
+
+});
+
+
 
 $(document).on("click","button#freeze_data",function(e){
     

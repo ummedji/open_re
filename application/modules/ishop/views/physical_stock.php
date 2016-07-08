@@ -120,11 +120,11 @@ echo form_open('ishop/physical_stock',$attributes); ?>
                         <div class="form-group">
                             <label>Month<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" readonly>
-                            <div class="cal_icon">
+                            <!--<div class="cal_icon">
                                 <a href="#">
                                     <i class="fa fa-calendar" aria-hidden="true"></i>
                                 </a>
-                            </div>
+                            </div>-->
                         </div>
                     </div>
 

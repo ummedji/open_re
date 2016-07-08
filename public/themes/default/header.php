@@ -12,7 +12,7 @@
 
     <?php
     Assets::add_css(array('bootstrap.min.css', 'style.css','green.css','hover.css','jquery.mCustomScrollbar.css',
-        'bootstrap-select.min.css','bootstrap-datepicker.min.css'));
+        'bootstrap-select.min.css','bootstrap-datepicker.min.css','calendar.css'));
     //Assets::add_js('bootstrap.min.js');
     $inline  = '$(".dropdown-toggle").dropdown();';
     $inline .= '$(".tooltips").tooltip();';
@@ -36,9 +36,8 @@
         window.base_url = "<?php echo base_url(); ?>";
         window.site_url = "<?php echo site_url(); ?>";
     </script>
-    
+
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  
   <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     
 </head>

@@ -1837,10 +1837,13 @@ class Web_service extends Front_Controller
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
             $id = $this->ishop_model->update_order_data($this->input->post(),'web_service');
+            $pending_count=$this->ishop_model->get_all_pending_data($user_id,$country_id);
+
             if($id)
             {
                 $result['status'] = true;
                 $result['message'] = 'Updated Successfully.';
+                $result['data'] = array('count'=>$pending_count);
             }
             else
             {
@@ -3865,12 +3868,7 @@ class Web_service extends Front_Controller
 			
 			$final_array["month_data"] = $budgetdata["month_data"];
 			
-		/*	$final_array["assumption1"] = array();
-			$final_array["probablity1"] = array();
-			$final_array["assumption2"] = array();
-			$final_array["probablity2"] = array();
-			$final_array["assumption3"] = array();
-			$final_array["probablity3"] = array(); */
+		
 			
 			if(!empty($budgetdata["budget_qty"])){
 				foreach($budgetdata["budget_qty"] as $budget_key => $budget_data){

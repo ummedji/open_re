@@ -145,22 +145,22 @@
                                     <li role="presentation" class="">
                                         <a href="<?php echo base_url('ecp/activity'); ?>">ACTIVITY</a>
                                     </li>
-                                    <li role="presentation" class=""><a href="<?php echo base_url('ecp/no_working'); ?>">NO WORKING</a></li>
-
-                                    <?php if($current_user->role_id == 8) {
-                                        ?>
-                                        <li role="presentation" class="<?php echo ($segment=='ecp' && $segment2=='material_request') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ecp/material_request'); ?>">MATERIAL REQUEST</a></li>
-                                        <?php
-                                    }?>
+                                    <li role="presentation" class="<?php echo ($segment=='ecp' && ($segment2=='no_working' || $segment2=='set_leave')) ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/no_working'); ?>">NO WORKING</a></li>
 
                                     <?php if($current_user->role_id == 7) {
                                         ?>
                                         <li role="presentation" class="<?php echo ($segment=='ecp' && $segment2=='all_material_request') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ecp/all_material_request'); ?>">MATERIAL REQUEST</a></li>
                                         <?php
+                                    }
+                                    else
+                                    {
+                                        ?>
+                                        <li role="presentation" class="<?php echo ($segment=='ecp' && $segment2=='material_request') ? 'active' :'' ;?>"><a href="<?php echo base_url('/ecp/material_request'); ?>">MATERIAL REQUEST</a></li>
+                                        <?php
                                     }?>
 
 
-                                    <li role="presentation" class="<?php echo ($segment=='ecp' && $segment2=='retailer_compititor_analysis') ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/retailer_compititor_analysis'); ?>">COMPITITORS ANALYSIS</a></li>
+                                    <li role="presentation" class="<?php echo ($segment=='ecp' && ($segment2=='retailer_compititor_analysis'|| $segment2=='retailer_compititor_product' || $segment2=='retailer_compititor_view' || $segment2=='distributor_compititor_analysis' ||  $segment2=='distributor_compititor_product' || $segment2=='distributor_compititor_view' )) ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/retailer_compititor_analysis'); ?>">COMPITITORS ANALYSIS</a></li>
                                     <?php
                                 }
                                 else{

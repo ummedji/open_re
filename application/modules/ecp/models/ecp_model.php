@@ -271,7 +271,6 @@ class Ecp_model extends BF_Model
                     $received_status='Confirm';
                 }
 
-
                     if ($rm['material_request_status'] == '0') {
                         $request_status = '<select name="request_status" class="request_status" id="request_status" ><option value="0">Pending</option><option  value="1">Approve</option><option  value="1">Reject</option></select>
                     <input type="hidden" id="mr_id" class="mr_id" name="mr_id" value="' . $rm['material_request_id'] . '">';
@@ -354,7 +353,6 @@ class Ecp_model extends BF_Model
 
     public function get_employee_geo_data($user_id, $country_id, $customer_type, $parent_geo_id = null, $action_data = null,$radio_checked)
     {
-        //  var_dump($radio_checked);
         $main_query_start = "";
         $main_query_end = "";
         $select_data = " bmpgd.political_geo_id, bmpgd.political_geography_name ";
@@ -401,54 +399,42 @@ class Ecp_model extends BF_Model
         }
         else {
 
+            if (($action_data == "retailer_compititor_analysis" || $action_data == "retailer_compititor_product") && $parent_geo_id == null) {
+                $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
+    `bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
+     where `political_geo_id` IN ( ";
 
-        if (($action_data == "retailer_compititor_analysis" || $action_data == "retailer_compititor_product") && $parent_geo_id == null) {
-            $main_query_start = "SELECT `bmpgd2`.`political_geo_id`,`bmpgd2`.`political_geography_name`,
-`bmpgd2`.`parent_geo_id` FROM `bf_master_political_geography_details` as bmpgd2
- where `political_geo_id` IN ( ";
+                $main_query_end .= " )";
+                $select_data = " bmpgd.parent_geo_id ";
 
+            }
 
-            $main_query_end .= " )";
+            if ($parent_geo_id != null) {
+                $customer_type = 10;
+                $sub_query = " AND bmpgd.parent_geo_id = $parent_geo_id ";
 
-            $select_data = " bmpgd.parent_geo_id ";
+            }
+            $subquery1 = $main_query_start . " SELECT  " . $select_data . " FROM (`bf_master_employe_to_customer` as etc)
+                        JOIN `bf_users` as bu ON `bu`.`id` = `etc`.`customer_id` ";
+
+            $where1 = " `etc`.`employee_id` = " . $user_id;
+            $where2 = " AND YEAR(etc.year) = '" . date("Y") . "' AND ";
+            $where3 = "";
 
         }
-
-        if ($parent_geo_id != null) {
-
-            $customer_type = 10;
-            $sub_query = " AND bmpgd.parent_geo_id = $parent_geo_id ";
-
-        }
-
-        $subquery1 = $main_query_start . " SELECT  " . $select_data . " FROM (`bf_master_employe_to_customer` as etc)
-                    JOIN `bf_users` as bu ON `bu`.`id` = `etc`.`customer_id` ";
-
-        $where1 = " `etc`.`employee_id` = " . $user_id;
-        $where2 = " AND YEAR(etc.year) = '" . date("Y") . "' AND ";
-        $where3 = "";
-
-    }
-
         $query1 = $subquery1 . " JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id`
-JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id1`
+        JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id1`
 
-WHERE " . $where1 . " " . $where2 . " " . $where3 . "
+        WHERE " . $where1 . " " . $where2 . " " . $where3 . "
 
-`bu`.`role_id` = " . $radio_checked . "
-AND `bu`.`type` = 'Customer'
-AND `bu`.`deleted` = '0'
-AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query . "
-
-GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
-
+        `bu`.`role_id` = " . $radio_checked . "
+        AND `bu`.`type` = 'Customer'
+        AND `bu`.`deleted` = '0'
+        AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query . "
+        GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
 
         $query = $this->db->query($query1);
-
         $geo_loc_data = $query->result_array();
-
-        // echo $this->db->last_query();
-//die;
         return $geo_loc_data;
 
     }
@@ -598,7 +584,6 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
             $insert_id = $this->db->insert_id();
         }
 
-
         $compititor_analysis_total_id = $insert_id;
 
         foreach ($comp_id as $key => $val_comp_id) {
@@ -720,7 +705,6 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
             $analysis['edit'] = 'is_edit';
             $analysis['delete'] = 'is_delete';
             $analysis['pagination'] = $retailer_analysis['pagination'];
-            //testdata($analysis);
             return $analysis;
         } else {
             return false;
@@ -729,7 +713,6 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
 
     public function get_retailer_compititor_product_details_view($from_month, $to_month,$page= null,$local_date,$country_id)
     {
-
         $sql = ' SELECT ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
         $sql .= ' FROM bf_ecp_compititor_analysis_product AS ecap ';
         $sql .= ' JOIN bf_users AS bu ON (bu.id = ecap.coustomer_id) ';
@@ -902,7 +885,6 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
 
     public function update_compititor_details()
     {
-       // testdata('in');
         $id = $this->input->post("id");
         $amount = $this->input->post("amount");
 
@@ -911,7 +893,6 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
             $retailer_compititor_update = array(
                 'amount' => $amount[$k],
             );
-
             $this->db->where('compititor_total_details_id',$val_id);
             $this->db->update('ecp_compititor_total_details', $retailer_compititor_update);
         }
@@ -926,7 +907,6 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
 
     public function update_compititor_product_details()
     {
-        // testdata('in');
         $id = $this->input->post("id");
         $quantity = $this->input->post("quantity");
 
@@ -1017,4 +997,174 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
             return 0;
         }
     }
+
+    public function all_reason_noworking_details($country_id)
+    {
+        $this->db->select('reason_country_id,reason_country_name');
+        $this->db->from('ecp_noworking_reason_master_country');
+        $this->db->where('country_id',$country_id );
+        $this->db->where('status','1');
+        $this->db->where('deleted','0');
+        $reason = $this->db->get()->result_array();
+        if (isset($reason) && !empty($reason)) {
+            return $reason;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function all_leave_type_details($country_id)
+    {
+        $this->db->select('leave_type_country_id,short_code');
+        $this->db->from('ecp_leave_type_master_country');
+        $this->db->where('country_id',$country_id );
+        $this->db->where('status','1');
+        $this->db->where('deleted','0');
+        $leave_type = $this->db->get()->result_array();
+        if (isset($leave_type) && !empty($leave_type)) {
+            return $leave_type;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function add_no_working_details($user_id,$country_id)
+    {
+        $cur_date = $this->input->post("cur_date");
+        $radio = $this->input->post("radio");
+        $oth_reason = $this->input->post("oth_reason");
+
+        $date = str_replace('/', '-', $cur_date);
+
+        $no_working_date = date('Y-m-d', strtotime($date));
+
+        $no_work_date= $this->no_working_details($user_id,$country_id,$no_working_date);
+
+        if($no_work_date == 0){
+
+            $no_working_details = array(
+                'no_working_date' => $no_working_date,
+                'reason_country_id' => $radio,
+                'employee_id' => $user_id,
+                'other_reason' => $oth_reason,
+                'country_id' => $country_id,
+                'status' => '1',
+                'created_by_user' => $user_id,
+                'created_on' => date('Y-m-d H:i:s')
+            );
+
+            $this->db->insert('ecp_no_wokring', $no_working_details);
+        }
+        else{
+
+            $no_working_details = array(
+
+                'no_working_date' => $no_working_date,
+                'reason_country_id' => $radio,
+                'employee_id' => $user_id,
+                'other_reason' => $oth_reason,
+                'country_id' => $country_id,
+                'status' => '1',
+                'modified_by_user' => $user_id,
+                'modified_on' => date('Y-m-d H:i:s')
+            );
+            $this->db->where('no_working_id',$no_work_date['no_working_id']);
+            $this->db->update('ecp_no_wokring', $no_working_details);
+        }
+
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
+    public function no_working_details($user_id,$country_id,$cur_date)
+    {
+        $this->db->select('*');
+        $this->db->from('ecp_no_wokring');
+        $this->db->where('employee_id',$user_id );
+        $this->db->where('no_working_date',$cur_date );
+        $this->db->where('country_id',$country_id );
+        $this->db->where('status','1');
+        $user_details = $this->db->get()->row_array();
+        if (isset($user_details) && !empty($user_details)) {
+            return $user_details;
+        } else {
+            return 0;
+        }
+    }
+
+    public function add_leave_details($user_id,$country_id)
+    {
+        $cur_date = $this->input->post("cur_date");
+        $radio = $this->input->post("radio");
+
+        $date = str_replace('/', '-', $cur_date);
+        $leave_date = date('Y-m-d', strtotime($date));
+
+        $leave_type= $this->leave_type_details($user_id,$country_id,$leave_date);
+
+        if($leave_type == 0){
+
+            $leave_details = array(
+                'leave_date' => $leave_date,
+                'leave_type_country_id' => $radio,
+                'employee_id' => $user_id,
+                'country_id' => $country_id,
+                'status' => '1',
+                'created_by_user' => $user_id,
+                'created_on' => date('Y-m-d H:i:s')
+            );
+
+            $this->db->insert('ecp_leave', $leave_details);
+        }
+        else{
+
+            $leave_details = array(
+
+                'leave_date' => $leave_date,
+                'leave_type_country_id' => $radio,
+                'employee_id' => $user_id,
+                'country_id' => $country_id,
+                'status' => '1',
+                'modified_by_user' => $user_id,
+                'modified_on' => date('Y-m-d H:i:s')
+            );
+            $this->db->where('leave_id',$leave_type['leave_id']);
+            $this->db->update('ecp_leave', $leave_details);
+        }
+
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function leave_type_details($user_id,$country_id,$leave_date)
+    {
+        $this->db->select('*');
+        $this->db->from('ecp_leave');
+        $this->db->where('employee_id',$user_id );
+        $this->db->where('leave_date',$leave_date );
+        $this->db->where('country_id',$country_id );
+        $this->db->where('status','1');
+        $user_details = $this->db->get()->row_array();
+        if (isset($user_details) && !empty($user_details)) {
+            return $user_details;
+        } else {
+            return 0;
+        }
+    }
+
+
+
 }

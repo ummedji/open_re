@@ -84,4 +84,5 @@ if ($this->input->is_ajax_request()) {
     </div>
 <?php  } ?>
     <?php echo form_close(); ?>
+</div>
 

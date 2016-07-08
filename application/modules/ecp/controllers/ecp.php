@@ -24,6 +24,7 @@ class Ecp extends Front_Controller
 		$this->load->library('form_validation');
 		$this->load->helper('form');
 		$this->lang->load('ecp');
+		$this->load->helper('calendar');
 
 		$this->load->model('ecp_model');
 		$this->load->model('ishop/ishop_model');
@@ -278,6 +279,7 @@ class Ecp extends Front_Controller
 	public function distributor_compititor_view()
 	{
 		Assets::add_module_js('ecp', 'distributor_compititor_view.js');
+
 		Template::set_view('ecp/distributor_compititor_view');
 		Template::render();
 	}
@@ -311,7 +313,6 @@ class Ecp extends Front_Controller
 	public function update_compititor_details()
 	{
 		$user = $this->auth->user();
-
 		$radio = (isset($_POST['radio_checked']) ? $_POST['radio_checked'] : '');
 		if($radio == 'total'){
 			echo $update=$this->ecp_model->update_compititor_details();
@@ -326,7 +327,6 @@ class Ecp extends Front_Controller
 	public function delete_compititor_details()
 	{
 		//$user = $this->auth->user();
-
 		$radio = (isset($_POST['radio_checked']) ? $_POST['radio_checked'] : '');
 		$id = $this->input->post("id");
 		if($radio == 'total'){
@@ -336,8 +336,190 @@ class Ecp extends Front_Controller
 
 			echo $update=$this->ecp_model->delete_compititor_product_details($id);
 		}
-
 		die;
+	}
+
+	public function no_working()
+	{
+		Assets::add_module_js('ecp', 'no_working.js');
+
+		$user = $this->auth->user();
+		$reason=$this->ecp_model->all_reason_noworking_details($user->country_id);
+
+		$cal_data = $this->leave_sidebar_calender();
+
+		Template::set('reason', $reason);
+		Template::set('cal_data', $cal_data);
+		Template::set_view('ecp/no_working');
+		Template::render();
+	}
+
+	public function set_leave()
+	{
+		Assets::add_module_js('ecp', 'leave.js');
+
+		$user = $this->auth->user();
+		$leave_type=$this->ecp_model->all_leave_type_details($user->country_id);
+
+		$cal_data = $this->leave_sidebar_calender();
+
+		Template::set('leave_type', $leave_type);
+		Template::set('cal_data', $cal_data);
+		Template::set_view('ecp/leave');
+		Template::render();
+	}
+
+	public function leave_sidebar_calender(){
+
+		$user = $this->auth->user();
+
+// Get current year, month and day
+		list($iNowYear, $iNowMonth, $iNowDay) = explode('-', date('Y-m-d'));
+
+// Get current year and month depending on possible GET parameters
+		if (isset($_GET['month'])) {
+			list($iMonth, $iYear) = explode('-', $_GET['month']);
+			$iMonth = (int)$iMonth;
+			$iYear = (int)$iYear;
+		} else {
+			list($iMonth, $iYear) = explode('-', date('n-Y'));
+		}
+
+// Get name and number of days of specified month
+		$iTimestamp = mktime(0, 0, 0, $iMonth, $iNowDay, $iYear);
+		list($sMonthName, $iDaysInMonth) = explode('-', date('F-t', $iTimestamp));
+
+// Get previous year and month
+		$iPrevYear = $iYear;
+		$iPrevMonth = $iMonth - 1;
+		if ($iPrevMonth <= 0) {
+			$iPrevYear--;
+			$iPrevMonth = 12; // set to December
+		}
+
+// Get next year and month
+		$iNextYear = $iYear;
+		$iNextMonth = $iMonth + 1;
+		if ($iNextMonth > 12) {
+			$iNextYear++;
+			$iNextMonth = 1;
+		}
+
+// Get number of days of previous month
+		$iPrevDaysInMonth = (int)date('t', mktime(0, 0, 0, $iPrevMonth, $iNowDay, $iPrevYear));
+
+// Get numeric representation of the day of the week of the first day of specified (current) month
+		$iFirstDayDow = (int)date('w', mktime(0, 0, 0, $iMonth, 1, $iYear));
+
+// On what day the previous month begins
+		$iPrevShowFrom = $iPrevDaysInMonth - $iFirstDayDow + 1;
+
+// If previous month
+		$bPreviousMonth = ($iFirstDayDow > 0);
+
+// Initial day
+		$iCurrentDay = ($bPreviousMonth) ? $iPrevShowFrom : 1;
+
+		$bNextMonth = false;
+		$sCalTblRows = '';
+
+// Generate rows for the calendar
+		for ($i = 0; $i < 6; $i++) { // 6-weeks range
+			$sCalTblRows .= '<tr>';
+			for ($j = 0; $j < 7; $j++) { // 7 days a week
+
+				$sClass = '';
+				if ($iNowYear == $iYear && $iNowMonth == $iMonth && $iNowDay == $iCurrentDay && !$bPreviousMonth && !$bNextMonth) {
+					$sClass = 'today';
+				} elseif (!$bPreviousMonth && !$bNextMonth) {
+					$sClass = 'current';
+				}
+				if(!empty($user->local_date)){
+					$dates = strtotime($iYear.'-'.$iMonth.'-'.$iCurrentDay);
+					$leave_date = date($user->local_date,$dates);
+				}
+				else{
+					$leave_date= $iYear.'-'.$iMonth.'-'.$iCurrentDay ;
+				}
+				$sCalTblRows .= '<td class="'.$sClass.'" ><a class="leave_date" rel="'.$leave_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+
+				// Next day
+				$iCurrentDay++;
+				if ($bPreviousMonth && $iCurrentDay > $iPrevDaysInMonth) {
+					$bPreviousMonth = false;
+					$iCurrentDay = 1;
+				}
+				if (!$bPreviousMonth && !$bNextMonth && $iCurrentDay > $iDaysInMonth) {
+					$bNextMonth = true;
+					$iCurrentDay = 1;
+				}
+			}
+			$sCalTblRows .= '</tr>';
+		}
+
+// Prepare replacement keys and generate the calendar
+		$aKeys = array(
+			'__prev_month__' => "{$iPrevMonth}-{$iPrevYear}",
+			'__next_month__' => "{$iNextMonth}-{$iNextYear}",
+			'__cal_caption__' => $sMonthName . ', ' . $iYear,
+			'__cal_rows__' => $sCalTblRows,
+		);
+//$sCalendarItself = strtr(file_get_contents('calendar.html'), $aKeys);
+		$sCalendarItself = '';
+
+		$sCalendarItself .= '<div class="navigation">';
+		$sCalendarItself .= '<a class="prev" href="'.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__prev_month__"].'" onclick="$(\'#calendar\').load(\''.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__prev_month__"].'&_r=\' + Math.random()); return false;"></a> ';
+
+
+		$sCalendarItself .= '<div class="title" >'.$aKeys['__cal_caption__'].'</div>';
+
+		$sCalendarItself .= '<a class="next" href="'.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__next_month__"].'" onclick="$(\'#calendar\').load(\''.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__next_month__"].'&_r=\' + Math.random()); return false;"></a>';
+
+		$sCalendarItself .= '</div><table>
+    <tr>
+        <th class="weekday">Sun</th>
+        <th class="weekday">Mon</th>
+        <th class="weekday">Tue</th>
+        <th class="weekday">Wed</th>
+        <th class="weekday">Thu</th>
+        <th class="weekday">Fri</th>
+        <th class="weekday">Sat</th>
+    </tr>';
+
+		$sCalendarItself .= $aKeys["__cal_rows__"];
+		$sCalendarItself .= '</table>';
+
+
+		if ($this->input->is_ajax_request()) {
+			echo $sCalendarItself;
+			die;
+		}
+		else{
+			return $sCalendarItself;
+		}
+
+	}
+
+
+	public function no_working_details()
+	{
+		$user = $this->auth->user();
+		$insert=$this->ecp_model->add_no_working_details($user->id,$user->country_id);
+		echo $insert;
+		die;
+	}
+
+	public function leave_details()
+	{
+		$user = $this->auth->user();
+		$insert=$this->ecp_model->add_leave_details($user->id,$user->country_id);
+		echo $insert;
+		die;
+	}
+
+	public function check_leave_type()
+	{
+
 	}
 
 

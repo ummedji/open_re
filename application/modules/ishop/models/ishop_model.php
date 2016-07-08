@@ -178,6 +178,7 @@ class Ishop_model extends BF_Model
                 $amount = $this->input->post("amount");
             }
 
+
             $total_amount = array_sum($amount);
 
             $validat = $this->check_valid_primary_sales_data($invoice_no, $order_tracking_no, $PO_no);
@@ -1609,7 +1610,10 @@ class Ishop_model extends BF_Model
                 $this->db->update('ishop_secondary_sales_product', $secondary_sales_product_update);
             }
             $secondary_sales = $this->get_sales_id_by_secondary_sales_product_id($secondary_sales_product_id);
-            $total_amt = array_sum($amount);
+            if(!empty($amount)){
+                $total_amt = array_sum($amount);
+            }
+          //  $total_amt = array_sum($amount);
             $secondary_sales_update_by_product = array(
                 'total_amount' => $total_amt,
                 'modified_by_user' => $user_id,
@@ -2150,8 +2154,11 @@ class Ishop_model extends BF_Model
                 $qty_kgl = $this->input->post("qty_kgl");
                 $amount = $this->input->post("amount");
             }
+
             $distributor_sales = $this->input->post("distributor_sales");
             $retailer_id = $this->input->post("retailer_id");
+
+
             $total_amount = array_sum($amount);
 
 
@@ -2445,10 +2452,7 @@ class Ishop_model extends BF_Model
         $sql .= 'WHERE 1 ';
         $sql .= 'AND itsp.tertiary_sales_id =' . $tertiary_sales_id . ' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_product_id DESC ';
-        //echo $sql;
-        /* $info = $this->db->query($sql);
-        $tertiary_sales_detail = $info->result_array();
-        $sales_detail = array('result'=>$tertiary_sales_detail);*/
+
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);
             $sales_detail = $info->result_array();
@@ -2486,7 +2490,6 @@ class Ishop_model extends BF_Model
 
     public function update_ishop_sales_detail($user_id, $country_id,$web_service = null)
     {
-        // testdata($_POST);
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             $checked_type = $this->input->post("radio1");
@@ -2514,7 +2517,10 @@ class Ishop_model extends BF_Model
 
         if ($checked_type == 'distributor') {
 
-            $total_amt = array_sum($amount);
+            if(!empty($amount)){
+                $total_amt = array_sum($amount);
+            }
+           // $total_amt = array_sum($amount);
 
             if (isset($secondary_sales_product_id) && !empty($secondary_sales_product_id)) {
                 foreach ($secondary_sales_product_id as $k => $pspi) {
@@ -2557,14 +2563,12 @@ class Ishop_model extends BF_Model
 
 
         } else {
-
             if (isset($secondary_sales_product_id) && !empty($secondary_sales_product_id)) {
                 foreach ($secondary_sales_product_id as $k => $pspi) {
                     $tertiary_sales_product_update = array(
                         'quantity' => $quantity[$k],
                         'unit' => $units[$k],
                         'qty_kgl' => $qty_kgl[$k],
-
                     );
 
                     $this->db->where('tertiary_sales_product_id', $secondary_sales_product_id[$k]);
@@ -2580,7 +2584,6 @@ class Ishop_model extends BF_Model
                 $this->db->where('tertiary_sales_id', $tertiary_sales[0]['tertiary_sales_id']);
                 $this->db->update('ishop_tertiary_sales', $secondary_sales_update_by_product);
             }
-
         }
         if($this->db->affected_rows() > 0){
             return 1;
@@ -2607,8 +2610,7 @@ class Ishop_model extends BF_Model
     {
         if ($checked_type == 'distributor') {
             $this->delete_secondary_sales_detail($sales_id);
-            //  $this->db->where('secondary_sales_id', $sales_id);
-            //$this->db->delete('ishop_secondary_sales');
+
         } else {
             $this->db->where('tertiary_sales_id', $sales_id);
             $this->db->delete('ishop_tertiary_sales');
@@ -2617,12 +2619,9 @@ class Ishop_model extends BF_Model
 
     public function delete_ishop_sales_product_detail($product_sales_id, $checked_type)
     {
-        //testdata($product_sales_id);
         if ($checked_type == 'distributor') {
-
             $this->delete_secondary_sales_product_detail($product_sales_id);
-            /*  $this->db->where('secondary_sales_product_id', $product_sales_id);
-            $this->db->delete('ishop_secondary_sales_product');*/
+
         } else {
 
             $this->db->where('tertiary_sales_product_id', $product_sales_id);
@@ -2833,7 +2832,6 @@ class Ishop_model extends BF_Model
 
     public function update_current_stock_details($user_id, $country_id, $web_service = null)
     {
-        // testdata($_POST);
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $product_sku_id = explode(',', $this->input->get_post("product_sku_id"));
             /*$cur_date = explode(',',$this->input->get_post("cur_date"));*/
@@ -6464,9 +6462,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     {
         $month = strtotime($month);
         $month = date('Y-m', $month);
-        /*  dumpme($month);
-        dumpme($product_data);
-        testdata($user_id);*/
 
         $this->db->select('*');
         $this->db->from('ishop_physical_stock');
@@ -6475,8 +6470,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $this->db->where('customer_id', $user_id);
         $this->db->where('unit', $unit);
         $phy_data = $this->db->get()->result_array();
-        // echo $this->db->last_query();
-        //   testdata($phy_data);
         if (isset($phy_data) && !empty($phy_data)) {
             return 1;
         } else {
