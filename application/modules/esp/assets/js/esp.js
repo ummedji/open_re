@@ -118,8 +118,9 @@ $(document).on("click","#save_data",function(e){
             //dataType : 'json',
             success: function(resp){
                 var message = "";
-                if(resp == 1){
-
+                //alert(resp);
+                if(resp != 0){
+                    $("input#forecast_id").val(resp);
                     message += 'Data added successfully.';
                 }
                 else{

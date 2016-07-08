@@ -1448,13 +1448,13 @@ class Web_service extends Front_Controller
                 $id = $this->ishop_model->delete_budget_detail($id);
             }
             elseif($mode == "ishop_sales"){
-                $id = $this->delete_ishop_sales_detail($id, $checked_type);
+                $id = $this->ishop_model->delete_ishop_sales_detail($id, $checked_type);
             }
             elseif($mode == "ishop_sales_product"){
-                $id = $this->delete_ishop_sales_product_detail($id, $checked_type);
+                $id = $this->ishop_model->delete_ishop_sales_product_detail($id, $checked_type);
             }
             elseif($mode == "current_stock"){
-                $id = $this->delete_current_stock_detail($id);
+                $id = $this->ishop_model->delete_current_stock_detail($id);
             }
             if($id)
             {
@@ -1837,19 +1837,38 @@ class Web_service extends Front_Controller
         if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
         {
             $id = $this->ishop_model->update_order_data($this->input->post(),'web_service');
-            $pending_count=$this->ishop_model->get_all_pending_data($user_id,$country_id);
 
             if($id)
             {
                 $result['status'] = true;
                 $result['message'] = 'Updated Successfully.';
-                $result['data'] = array('count'=>$pending_count);
             }
             else
             {
                 $result['status'] = false;
                 $result['message'] = 'Fail';
             }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function get_pending_count()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        {
+            $pending_count=$this->ishop_model->get_all_pending_data($user_id,$country_id);
+
+            $result['status'] = true;
+            $result['message'] = '';
+            $result['data'] = array('count'=>$pending_count);
         }
         else
         {

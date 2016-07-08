@@ -340,7 +340,7 @@ class Esp extends Front_Controller
 									$editable = "";
 								}
                                 
-                               // echo "1";
+                                echo "1";
                                 
                                 //check login user equal to freezed user if equal than make data visible and editable else not for login user
                                 
@@ -369,7 +369,7 @@ class Esp extends Front_Controller
                                     
                                     //SHOW FREEZEED DATA
                                     
-                                  //  echo "2";
+                                    echo "2";
                                     
                                     
                                      $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
@@ -383,19 +383,13 @@ class Esp extends Front_Controller
 								  }
 									
                                 }
-                                elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                              /*  elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                     
                                     //GET LOCK STATUS
                                     
-                                   // echo "3";
+                                    echo "3";
                                     
-                                  /*  if($lock_status == 1){
-                                        $editable = "readonly";
-                                    }
-                                    else{
-                                        $editable = "";
-                                    }
-                                    */
+                                 
                                     
                                $editable = "";
                                 
@@ -428,21 +422,44 @@ class Esp extends Front_Controller
 											$data_inner_array["forecast_value"] = $forecast_value;
 									 }
 									
-                                }
+                                }*/
                                 else{
                                     
                                     //SHOW FREEZED DATA BUT READONLY
                                     
-                                   // echo "4";
+                                    echo "4";
                                     
-                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""  /></td>';
+                                         
+                                   $editable = "";
+
+                                   $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+
+                                    if($lock_status == 1)
+                                    { 
+                                        if($login_user_id == $lock_by_id){
+                                            $editable = "";
+                                        }
+                                        elseif($login_user_parent_data == 0){
+                                            $editable = "";
+                                        }
+                                        else{
+                                            $editable = "readonly";
+                                        }
+                                    }
+                                    else
+                                    {
+                                        $editable = "";
+                                    }
+                                    
+                                    
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  '.$editable.' /></td>';
                     
-                                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+                                    $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
                                     
 									
 								  if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-										$data_inner_array["forecast_qty"] = "";
-										$data_inner_array["forecast_value"] = "";
+										$data_inner_array["forecast_qty"] = $forecast_qty;
+										$data_inner_array["forecast_value"] = $forecast_value;
 								  }
 									
                                 }
@@ -451,7 +468,7 @@ class Esp extends Front_Controller
                                 
                                 //NOT SHOW FREEZED DATA
                                 
-                               // echo "5";
+                                echo "5";
                                     
                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     
@@ -472,7 +489,7 @@ class Esp extends Front_Controller
                             
                             if($login_user_id == $forecast_freeze_data['freeze_user_id']){
                                 
-                              //  echo "6";
+                                echo "6";
                                 
                                 $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
                     
@@ -486,7 +503,7 @@ class Esp extends Front_Controller
                             }
                             elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                 
-                               // echo "7";
+                                echo "7";
                                 
                                 $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" /></td>';
                     
@@ -501,7 +518,7 @@ class Esp extends Front_Controller
                             }
                             else{
                                 
-                               // echo "8";
+                                echo "8";
                                 //NOT SHOW FREEZED DATA
                                     
                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
@@ -547,7 +564,7 @@ class Esp extends Front_Controller
                     }
                     else{
                         
-                       // echo "9";
+                        echo "9";
                         
                          $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     
@@ -900,7 +917,7 @@ class Esp extends Front_Controller
                                      
                                     
                                 }
-                                elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                             /*   elseif($login_user_id == $forecast_freeze_data['created_by_user']){
                                     
                                     //GET LOCK STATUS
                                     
@@ -927,13 +944,13 @@ class Esp extends Front_Controller
             </div></td><td><input type="text" '.$probablity_editable.' name="probablity'.$j.'[]" value="'.$probablitydata.'" />';
                                      
                                     
-                                }
+                                } */
                                 else{
                                     
                                     //NOT SHOW FREEZED DATA
                                     
                                             $html .= '<div class="tp_form">
-            <div class="form-group"><select class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
+            <div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
                                 <option value= "">Select Assumption</option>';
                                 foreach($assumption_data as $assumption_key => $assumption)
@@ -947,12 +964,12 @@ class Esp extends Front_Controller
                                          $selected = "";
                                      }
 
-                                    $html .= '<option  value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
+                                    $html .= '<option  '.$selected.'   value= "'.$assumption['assumption_id'].'">'.$assumption['assumption_name'].'</option>';
                                 }
                                 $html .= '</select>';
 
                                 $html .= '</div>
-        </div></td><td><input type="text" name="probablity'.$j.'[]" value="" />'; 
+        </div></td><td><input type="text" name="probablity'.$j.'[]" value="'.$probablitydata.'"  />'; 
                                     
                                     
                                 }
@@ -1334,6 +1351,8 @@ class Esp extends Front_Controller
              
           //  dumpme($final_array);
             
+            $fid = "";
+            
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
                     
@@ -1351,6 +1370,15 @@ class Esp extends Front_Controller
                         if($get_product_old_data != 0){
 
                             //UPDATE MAIN TABLE RECORD
+                            
+                            
+                            if($forecast_insert_id == "")
+							{
+								$fid = $old_forecast_id;
+							}
+							else{
+								$fid = $forecast_insert_id;
+							}
                             
                             //echo "a";
                             
@@ -1409,6 +1437,14 @@ class Esp extends Front_Controller
                         if($get_assumption_old_data != 0){
 
                             //UPDATE MAIN TABLE RECORD
+                            
+                            if($forecast_insert_id == "")
+							{
+								$fid = $old_forecast_id;
+							}
+							else{
+								$fid = $forecast_insert_id;
+							}
 
                             $forecast_assumption_id = $get_assumption_old_data[0]['forecast_assumption_id'];
 
@@ -1458,7 +1494,7 @@ class Esp extends Front_Controller
 			$result = "Data Updated Successfully";
 			return $result;
         }else{
-        	echo 1;
+        	echo $fid;
             die;
 		}
         
