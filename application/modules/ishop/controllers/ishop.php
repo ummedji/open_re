@@ -3755,7 +3755,7 @@ class Ishop extends Front_Controller
                 $first_data = 'A'.$l;
                 $last_data  = "";
 				
-                if(!isset$_POST['role_id']){
+                if(!isset($_POST['role_id'])){
                     $user= $this->auth->user();
                     $user_role_id = $user->role_id;
                 }
