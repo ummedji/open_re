@@ -1,19 +1,18 @@
+<?php if (!$this->input->is_ajax_request()) { ?>
 <?php
 $attributes = array('class' => '', 'id' => 'primary_sales_view','name'=>'primary_sales_view');
 echo form_open('ishop/primary_sales_details_view',$attributes); ?>
-
-<?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
     <div class="top_form">
         <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>From Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" readonly>
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
                     </div>
                     <div class="form-group">
                         <label>To Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly>
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                     </div>
                 </div>
                 <div class="col-md-10 col-md-offset-1">
@@ -55,16 +54,18 @@ echo form_open('ishop/primary_sales_details_view',$attributes); ?>
     <div class="clearfix"></div>
 </div>
 <?php }?>
+
 <?php
-/*if ($this->input->is_ajax_request()) {*/
+if ($this->input->is_ajax_request()) {
 echo theme_view('common/middle');
-/*}*/
+}
 ?>
 <?php if (!$this->input->is_ajax_request()) {
     ?>
     <?php
     $attributes = array('class' => '', 'id' => 'primary_sales_view_data','name'=>'primary_sales_view_data');
-    echo form_open('',$attributes); ?>
+    echo form_open('',$attributes);
+    ?>
         <div id="middle_container" class="primary_cont">
 
         </div>
@@ -72,6 +73,7 @@ echo theme_view('common/middle');
         <div id="middle_container_product" class="primary_products">
 
         </div>
+
     <?php echo form_close(); ?>
 <?php
 }?>

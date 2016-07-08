@@ -12,7 +12,7 @@ echo form_open('ishop/invoice_confirmation_received',$attributes); ?>
                         <div class="col-md-3">
                             <div class="form-group">
                                 <label>Month</label>
-                                <input type="text" class="form-control" name="invoice_month" id="invoice_month" placeholder="" readonly>
+                                <input type="text" class="form-control" name="invoice_month" id="invoice_month" placeholder="">
                             </div>
                         </div>
                         <div class="col-md-3">

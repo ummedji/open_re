@@ -68,8 +68,8 @@ $("#primary_sales_view").on("submit",function(e){
             data: param,
             success: function(resp){
                 // console.log(resp);
-                $('#middle_container').html(resp);
                 $("#middle_container_product").empty();
+                $('#middle_container').html(resp);
             }
         });
         return false;
@@ -158,9 +158,10 @@ $(document).on('click', '.edit_i', function () {
     $("div.check_save_btn").css("display","block");
 });
 
-$(document).on('click', 'div.check_save_btn #check_save', function () {
+$(document).on('click', 'div.check_save_btn #check_save', function (e) {
+    e.preventDefault();
     var primary_sales_data = $("#primary_sales_view_data").serializeArray();
-
+        console.log(primary_sales_data);
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/update_sales_details',

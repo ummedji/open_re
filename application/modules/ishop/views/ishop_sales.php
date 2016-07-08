@@ -41,7 +41,7 @@ echo form_open('',$attributes); ?>
                                     <label>Month<span style="color: red">*</span></label>
                                     <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;">
                                     <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                        <a href="#">
+                                        <a href="">
                                             <i class="fa fa-calendar" aria-hidden="true">
                                             </i>
                                         </a>
@@ -212,7 +212,7 @@ echo form_open('',$attributes); ?>
                         <input type="text" class="form-control allownumericwithdecimal" name="amt" id="amt" placeholder="">
                     </div>
                 </div>
-                <div class="plus_btn"><a href="#" id="add_sales_stock_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <div class="plus_btn"><a href="javascript: void(0);" id="add_sales_stock_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -224,8 +224,8 @@ echo form_open('',$attributes); ?>
     <div class="row">
         <div class="zoom_space">
             <ul>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
             </ul>
         </div>
         <div id="no-more-tables">

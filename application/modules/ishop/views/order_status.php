@@ -133,11 +133,11 @@
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
                             <label>From Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" readonly>
+                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
                         </div>
                         <div class="form-group">
                             <label>To Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly>
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
                     </div>
@@ -152,11 +152,11 @@
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" readonly>
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
                 </div>
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly>
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>
@@ -172,11 +172,11 @@
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" readonly>
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
                 </div>
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly>
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>
@@ -300,11 +300,11 @@
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
                             <label>From Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" readonly>
+                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
                         </div>
                         <div class="form-group">
                             <label>To Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly>
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
                     </div>

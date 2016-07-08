@@ -28,9 +28,9 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
             <div class="row">
                 <div class="zoom_space">
                     <ul>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                        <li><a href="#" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
-                        <li class="zoom_out_btn"><a href="#" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
+                        <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                        <li><a href="javascript: void(0);" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                        <li class="zoom_out_btn"><a href="javascript: void(0);" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
                     </ul>
                 </div>
                 <div id="no-more-tables">
@@ -39,7 +39,7 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                         <tr>
                             <?php foreach($order_table['head'] as $hkey => $head) { if($head != ""){ ?>
                                 <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
-                                    <a href="#">
+                                    <a href="javascript: void(0);">
                                         <?php echo $head;?>
                                     </a>
                                     <span class="rts_bordet"></span>
@@ -60,7 +60,7 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                                         ?>
                                         <td data-title="<?php echo $order_table['head'][$rwkey]; ?>">
                                             <div>
-                                                <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
+                                                <a href="javascript: void(0);" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
                                         </td>
                                     <?php }
@@ -74,12 +74,12 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                                             if(isset($order_table['eye']) && !empty($order_table['eye']))
                                             {
                                                 ?>
-                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
+                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
                                                 <?php
                                             }
                                            if($action_data !="get_order_status_data"){
                                             ?>
-                                            <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
+                                            <div class="edit_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
                                            <?php } 
                                            
                                          
@@ -91,7 +91,7 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                                            
                                            ?>
                                             
-                                           <div class="delete_i" <?php echo $style; ?> prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                           <div class="delete_i" <?php echo $style; ?> prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                            
                                         </td>
                                     <?php 

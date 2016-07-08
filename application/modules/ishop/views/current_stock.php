@@ -61,14 +61,14 @@ echo form_open('ishop/company_current_stock',$attributes); ?>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
-                            <label for="batch_expiry_date">Batch Expiry Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="">
-                        </div>
-                    </div>
-                    <div class="col-md-2_ tp_form">
-                        <div class="form-group">
                             <label for="batch_mfg_date">Batch Mfg.Date<span style="color: red">*</span></label>
                             <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="">
+                        </div>
+                    </div>
+                    <div class="col-md-3_ tp_form">
+                        <div class="form-group">
+                            <label for="batch_expiry_date">Batch Expiry Date<span style="color: red">*</span></label>
+                            <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="">
                         </div>
                     </div>
                     <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>

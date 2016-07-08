@@ -9,10 +9,29 @@ $(document).on('click','.leave_date', function(){
         url: site_url + "ecp/check_leave_type",
         data: param,
         success: function (resp) {
+            if(resp != 0){
+                var obj = jQuery.parseJSON(resp);
+                var leave_id = 'leave_'+obj.leave_type_country_id;
 
+                $('div.check_leave input').each(function( index,element  ){
+                    var leave_detail_id= $(this).attr('attr-id');
+                    if(leave_detail_id == leave_id)
+                    {
+                        alert('in');
+                        $(this).attr('checked','checked');
+                    }
+                });
+                $('#leave_id').val(obj.leave_id);
+                $('.delete_button').css("display","block");
+            }
+            else{
+                $('input[name=radio]').removeAttr('checked');
+                $('#leave_id').val('');
+                $('.delete_button').css("display","none");
+            }
         }
     });
-
+    return false;
 });
 
 
@@ -74,5 +93,25 @@ $(document).ready(function() {
         }
         return false;
     });
+});
+
+$(document).on('click', 'div.delete_button', function () {
+
+    if (confirm("Are you sure?")) {
+        var delete_param = $("#leave_set").serializeArray();
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ecp/delete_leave_details',
+            data: delete_param,
+            success: function(resp){
+                location.reload();
+            }
+        });
+    }
+    else{
+        return false;
+    }
+    console.log(delete_param);
+    return false;
 
 });

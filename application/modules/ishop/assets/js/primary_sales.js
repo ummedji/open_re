@@ -81,8 +81,15 @@ $(function () {
                     }
                     else{
                         already_assign_error = 0;
+
                         $('.error').css('display','none');
                         $('#invoice_no_error').empty();
+
+                        $('#customer_id').selectpicker('val', '');
+                        $('#invoice_date').val('');
+                        $('#order_traking_no').val('');
+                        $('#po_no').val('');
+                        $("#primary_sls").empty();
                     }
                 }
             });

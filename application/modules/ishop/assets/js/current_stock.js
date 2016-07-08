@@ -14,6 +14,11 @@ $(function () {
     $('#batch_mfg_date').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true
+    }).on('changeDate', function(selected){
+        $('#batch_expiry_date').val('');
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('#batch_expiry_date').datepicker('setStartDate', startDate);
     });
 });
 
@@ -125,10 +130,6 @@ $(document).on('click', 'div.current_stock_container .edit_i', function () {
     $("div.date_"+id).append('<input type="hidden" name="cur_date[]" value="'+cur_date+'" />');
 
 
-   // alert(product_sku_id);
-   // alert(cur_date);
-    //intrum_quantity
-
     var int_qty_value = $("div.int_qty_"+id+" span.int_qty").text();
     $("div.int_qty_"+id).empty();
     $("div.int_qty_"+id).append('<input type="hidden" name="stock_id[]" value="'+id+'" /><input id="int_qty_'+id+'" type="text" class="int_qty allownumericwithdecimal" name="int_qty[]" value="'+int_qty_value+'"/>');
@@ -169,13 +170,13 @@ $(document).on('click', 'div.current_stock_container .edit_i', function () {
 
 $(document).on('click', 'div.check_save_btn #check_save', function () {
     var current_stock_data = $("#update_current_stock").serializeArray();
-    //console.log(current_stock_data);
-    //return false;
+
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/update_current_stock_details',
         data: current_stock_data,
         success: function(resp){
+
             var message = "";
             if(resp == 1){
 

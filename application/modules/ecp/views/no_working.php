@@ -22,13 +22,13 @@ echo form_open('',$attributes); ?>
                                 <label for="cur_date">Date</label>
                                 <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder="" readonly style="display: inline-block;width: auto;">
                             </div>
-                            <div class="col-md-6 col-md-offset-3">
+                            <div class="col-md-6 col-md-offset-3 check_no_worh">
                             <?php
                             foreach($reason as $k=>$val_res){
                                 ?>
 
                                     <div class="radio">
-                                        <input type="radio" class="reason_type"   name="radio" id="<?php echo strtolower($val_res['reason_country_name']);?>" value="<?php echo $val_res['reason_country_id'];?>">
+                                        <input  attr-id="no_working_<?php echo $val_res['reason_country_id'];?>"  type="radio" class="reason_type" name="radio" id="<?php echo strtolower($val_res['reason_country_name']);?>" value="<?php echo $val_res['reason_country_id'];?>">
                                         <label for="<?php echo strtolower($val_res['reason_country_name']);?>"><?php echo $val_res['reason_country_name'];?></label>
                                     </div>
 
@@ -60,8 +60,10 @@ echo form_open('',$attributes); ?>
                                 <div class="col-md-3 save_btn">
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
-                                <div class="col-md-3 save_btn">
-                                    <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>
+                                <div class="delete_button" style="display: none">
+                                    <div class="col-md-3 save_btn">
+                                        <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -72,4 +74,6 @@ echo form_open('',$attributes); ?>
         </div>
     </div>
 </div>
+
+    <input class="no_working_id" type="hidden" name="no_working_id" id="no_working_id" />
 <?php echo form_close(); ?>

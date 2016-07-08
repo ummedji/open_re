@@ -20,9 +20,9 @@ if(isset($table) && count($table)>0 && $table != false) {
             <div class="row">
                 <div class="zoom_space">
                     <ul>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                        <li><a href="#" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
-                        <li class="zoom_out_btn"><a href="#" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
+                        <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                        <li><a href="javascript: void(0);" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                        <li class="zoom_out_btn"><a href="javascript: void(0);" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
                     </ul>
                 </div>
                 <div id="no-more-tables">
@@ -31,7 +31,7 @@ if(isset($table) && count($table)>0 && $table != false) {
                         <tr>
                             <?php foreach($table['head'] as $hkey => $head) { ?>
                                 <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
-                                    <a href="#">
+                                    <a href="javascript: void(0);">
                                         <?php echo $head;?>
                                     </a>
                                     <span class="rts_bordet"></span>
@@ -64,7 +64,7 @@ if(isset($table) && count($table)>0 && $table != false) {
                                         ?>
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>">
                                             <div>
-                                                <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
+                                                <a href="javascript: void(0);" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
                                         </td>
                                     <?php }
@@ -95,12 +95,12 @@ if(isset($table) && count($table)>0 && $table != false) {
                                             if(isset($table['eye']) && !empty($table['eye']))
                                             {
                                                 ?>
-                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
+                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
                                                 <?php
                                             }
                                            if(isset($table['edit']) && !empty($table['edit'])) {
                                                ?>
-                                               <div class="edit_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
+                                               <div class="edit_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
                                                <?php
                                            }
                                             if(isset($table['delete_dis']) && !empty($table['delete_dis'])){
@@ -114,14 +114,14 @@ if(isset($table) && count($table)>0 && $table != false) {
                                                     $style = "";
                                                 }
                                                 ?>
-                                                <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#" <?php echo $style; ?>><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                                <div class="delete_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);" <?php echo $style; ?>><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                             <?php
 
                                             }
                                             if(isset($table['delete']) && !empty($table['delete'])){
 
                                             ?>
-                                               <div class="delete_i" prdid ="<?php echo $row;?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                               <div class="delete_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                            <?php } ?>
                                         </td>
                                     <?php }

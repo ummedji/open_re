@@ -86,7 +86,10 @@ $(document).on("change","select.employee_data",function(){
     
     alert($(this).parent().parent().parent().nextAll().find("div.form-group").html());
     
-    $(this).parent().nextAll("div.form-group").remove();
+   // $(this).parent().nextAll("div.form-group").remove();
+    
+    $(this).parent().parent().nextAll().remove();
+    
     $("div#pbg_data").empty();
     $("div.forecast_data").empty();
     get_user_level_data(user_id);

@@ -9,9 +9,9 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
         <div class="row">
             <div class="zoom_space">
                 <ul>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                    <li><a href="#" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
-                    <li class="zoom_out_btn"><a href="#" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
+                    <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                    <li><a href="javascript: void(0);" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                    <li class="zoom_out_btn"><a href="javascript: void(0);" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
                 </ul>
             </div>
             <div id="no-more-tables">
@@ -42,7 +42,7 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
                                 <td data-title="Sr. No." class="numeric"><?php echo $rowary[0];?></td>
                                 <td data-title="Select All " class="numeric"><input type="checkbox" attr-check="<?php echo $rowary[1];?>" name="del_scheme" id="scheme_check_id" class="check_checked"/></td>
                                 <td data-title="Action" class="numeric">
-                                    <div class="delete_i" prdid ="<?php echo $rowary[1];?>"><a href="#"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                    <div class="delete_i" prdid ="<?php echo $rowary[1];?>"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                 </td>
                                 <td data-title="Region"><?php echo $rowary[2];?></td>
                                 <td data-title="Territory Code"><?php echo $rowary[3];?></td>
@@ -89,7 +89,9 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
     </div>
     <?php }
     else{
-       echo "NO Date Available";
+        ?>
+        <h1 align="center" class="on_data">No Data Available</h1>
+        <?php
     }
     ?>
 </div>

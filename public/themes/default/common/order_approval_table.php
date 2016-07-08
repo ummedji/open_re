@@ -31,9 +31,9 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
             <div class="row">
                 <div class="zoom_space">
                     <ul>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                        <li><a href="#" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
-                        <li class="zoom_out_btn"><a href="#" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
+                        <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                        <li><a href="javascript: void(0);" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                        <li class="zoom_out_btn"><a href="javascript: void(0);" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
                     </ul>
                 </div>
                 <div id="no-more-tables">
@@ -47,7 +47,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                                     if($head != ""){
                                       ?>
                                          <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
-                                    <a href="#">
+                                    <a href="javascript: void(0);">
                                         <?php echo $head;?>
                                     </a>
                                     <span class="rts_bordet"></span>
@@ -58,7 +58,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                                 else{
                              //if($head != ""){ ?>
                                 <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
-                                    <a href="#">
+                                    <a href="javascript: void(0);">
                                         <?php echo $head;?>
                                     </a>
                                     <span class="rts_bordet"></span>
@@ -94,7 +94,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                                     ?>    
                                          <td data-title="<?php echo $order_approval_table['head'][$rwkey]; ?>">
                                             <div>
-                                                <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
+                                                <a href="javascript: void(0);" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
                                            
                                         </td>
@@ -118,7 +118,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                                         ?>
                                         <td data-title="<?php echo $order_approval_table['head'][$rwkey]; ?>">
                                             <div>
-                                                <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
+                                                <a href="javascript: void(0);" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
                                         </td>
                                     <?php }

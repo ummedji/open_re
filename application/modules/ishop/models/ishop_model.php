@@ -482,6 +482,7 @@ class Ishop_model extends BF_Model
 
     public function update_sales_detail($user_id, $country_id, $web_service = null)
     {
+
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $primary_sales_id = explode(',', $this->input->post("primary_sales_detail"));
             $invoice_no = explode(',', $this->input->post("invoice_no"));
@@ -1711,7 +1712,7 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function get_all_physical_stock_by_user($user_id, $country_id, $role_id, $checked_type = null, $page = null, $web_service = null,$stock_month=null)
+    public function get_all_physical_stock_by_user($user_id, $country_id, $role_id, $checked_type = null, $page = null, $web_service = null,$stock_month=null,$local_date = null)
     {
         $sql = 'SELECT SQL_CALC_FOUND_ROWS bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.product_sku_id,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
         $sql .= 'FROM bf_ishop_physical_stock AS ips ';
@@ -1785,7 +1786,6 @@ class Ishop_model extends BF_Model
                     }
                 } elseif ($role_id == 9 || ($role_id == 8 && $checked_type == 'distributor')) {
 
-
                     $pyh_stock['head'] = array('Sr. No.', 'Action', 'Month Year', 'Latest Updated By', 'Entry Date', 'Product SKU Code', 'Product SKU Name', 'Quantity', 'Units', 'Qty Kg/Ltr');
                     $pyh_stock['count'] = count($pyh_stock['head']);
 
@@ -1807,7 +1807,15 @@ class Ishop_model extends BF_Model
                         $month = strtotime($rd['stock_month']);
                         $month = date('F - Y', $month);
 
-                        $pyh_stock['row'][] = array($i, $rd['stock_id'], $month, $rd['display_name'], $rd['created_on'], $rd['product_sku_code'], $rd['product_sku_name'], $quantity, $units, $quantity_kg_ltr);
+                        if($local_date != null){
+                            $created = strtotime($rd['created_on']);
+                            $created_date = date($local_date, $created);
+                        }
+                        else{
+                            $created_date =  $rd['created_on'];
+                        }
+
+                        $pyh_stock['row'][] = array($i, $rd['stock_id'], $month, $rd['display_name'], $created_date, $rd['product_sku_code'], $rd['product_sku_name'], $quantity, $units, $quantity_kg_ltr);
                         $i++;
                     }
                 }
@@ -2865,18 +2873,27 @@ class Ishop_model extends BF_Model
             $int_qty = $this->input->post("int_qty");
             $unrtd_qty = $this->input->post("unrtd_qty");
             $batch = $this->input->post("batch");
+
             $batch_exp_date = $this->input->post("batch_exp_date");
             $batch_mfg_date = $this->input->post("batch_mfg_date");
         }
 
+
         if (isset($stock_id) && !empty($stock_id)) {
             foreach ($stock_id as $k => $si) {
+
+                $exp_date = str_replace('/', '-', $batch_exp_date[$k]);
+                $batch_exp_date = date('Y-m-d', strtotime($exp_date));
+
+                $mfg_date = str_replace('/', '-', $batch_mfg_date[$k]);
+                $batch_mfg_date = date('Y-m-d', strtotime($mfg_date));
+
                 $stock_update = array(
                     'intrum_quantity' => $int_qty[$k],
                     'unrestricted_quantity' => $unrtd_qty[$k],
                     'batch' => $batch[$k],
-                    'batch_exp_date' => $batch_exp_date[$k],
-                    'batch_mfg_date' => $batch_mfg_date[$k],
+                    'batch_exp_date' =>$batch_exp_date,
+                    'batch_mfg_date' => $batch_mfg_date,
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
@@ -2892,8 +2909,8 @@ class Ishop_model extends BF_Model
                     'intransit_quantity' => $int_qty[$k],
                     'unrestricted_quantity' => $unrtd_qty[$k],
                     'batch' => $batch[$k],
-                    'batch_exp_date' => $batch_exp_date[$k],
-                    'batch_mfg_date' => $batch_mfg_date[$k],
+                    'batch_exp_date' => $batch_exp_date,
+                    'batch_mfg_date' => $batch_mfg_date,
                     'country_id' => $country_id,
                     'created_by_user' => $user_id,
                     'created_on' => date('Y-m-d H:i:s'),
@@ -2904,9 +2921,16 @@ class Ishop_model extends BF_Model
                 );
 
                 $id = $this->db->insert('ishop_company_current_stock_log', $stock_add);
+
+                if($this->db->affected_rows() > 0){
+                    return 1;
+                }
+                else{
+                    return 0;
+                }
             }
-            return $id;
         }
+
     }
 
     public function delete_current_stock_detail($stock_id)

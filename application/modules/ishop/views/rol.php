@@ -1,8 +1,8 @@
-<?php
-$attributes = array('class' => '', 'id' => 'rol_limit','name'=>'rol_limit');
-//echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('ishop/set_rol',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>
+    <?php
+    $attributes = array('class' => '', 'id' => 'rol_limit','name'=>'rol_limit');
+//echo form_open($this->uri->uri_string(),$attributes);
+    echo form_open('ishop/set_rol',$attributes); ?>
     <div class="col-md-12">
         <?php if($current_user->role_id == '7'){
             ?>

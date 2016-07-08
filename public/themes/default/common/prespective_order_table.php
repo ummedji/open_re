@@ -18,9 +18,9 @@ if(isset($prespective_order_data) && count($prespective_order_data)>0 && $prespe
             <div class="row">
                 <div class="zoom_space">
                     <ul>
-                        <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                        <li><a href="#" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
-                        <li class="zoom_out_btn"><a href="#" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
+                        <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                        <li><a href="javascript: void(0);" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                        <li class="zoom_out_btn"><a href="javascript: void(0);" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
                     </ul>
                 </div>
                 <div id="no-more-tables">
@@ -29,7 +29,7 @@ if(isset($prespective_order_data) && count($prespective_order_data)>0 && $prespe
                         <tr>
                             <?php foreach($prespective_order_data['head'] as $hkey => $head) {  ?>
                                 <th<?php if($hkey>2){?> class="numeric"<?php } ?>>
-                                    <a href="#">
+                                    <a href="javascript: void(0);">
                                         <?php echo $head;?>
                                     </a>
                                     <span class="rts_bordet"></span>
@@ -50,7 +50,7 @@ if(isset($prespective_order_data) && count($prespective_order_data)>0 && $prespe
                                         ?>
                                         <td data-title="<?php echo $prespective_order_data['head'][$rwkey]; ?>">
                                             <div>
-                                                <a href="#" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
+                                                <a href="javascript: void(0);" attr-prdid="<?php echo $row;?>"><?php echo $row;?></a>
                                             </div>
                                         </td>
                                     <?php }

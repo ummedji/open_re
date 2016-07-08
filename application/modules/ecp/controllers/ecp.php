@@ -345,8 +345,10 @@ class Ecp extends Front_Controller
 
 		$user = $this->auth->user();
 		$reason=$this->ecp_model->all_reason_noworking_details($user->country_id);
+		$action ='no_working';
+		$no_working_details = $this->ecp_model->all_no_working_details($user->id,$user->country_id);
 
-		$cal_data = $this->leave_sidebar_calender();
+		$cal_data = $this->leave_sidebar_calender($no_working_details,$action);
 
 		Template::set('reason', $reason);
 		Template::set('cal_data', $cal_data);
@@ -361,7 +363,9 @@ class Ecp extends Front_Controller
 		$user = $this->auth->user();
 		$leave_type=$this->ecp_model->all_leave_type_details($user->country_id);
 
-		$cal_data = $this->leave_sidebar_calender();
+		$leave_details = $this->ecp_model->all_leave_details($user->id,$user->country_id);
+		$action ='set_leave';
+		$cal_data = $this->leave_sidebar_calender($leave_details,$action);
 
 		Template::set('leave_type', $leave_type);
 		Template::set('cal_data', $cal_data);
@@ -369,7 +373,8 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
-	public function leave_sidebar_calender(){
+	public function leave_sidebar_calender($leave_details,$action){
+		//testdata($leave_details);
 
 		$user = $this->auth->user();
 
@@ -432,16 +437,102 @@ class Ecp extends Front_Controller
 				if ($iNowYear == $iYear && $iNowMonth == $iMonth && $iNowDay == $iCurrentDay && !$bPreviousMonth && !$bNextMonth) {
 					$sClass = 'today';
 				} elseif (!$bPreviousMonth && !$bNextMonth) {
-					$sClass = 'current';
+					if($iCurrentDay < date("d")){
+						$sClass = 'prev';
+					} else {
+						$sClass = 'current';
+					}
 				}
+				$dYear = $iYear;
+				$dMonth = $iMonth;
+				if($bPreviousMonth==1){
+					$dMonth--;
+				} else if($bNextMonth==1){
+					if($iMonth==12){
+						$dMonth = 1;
+						$dYear++;
+					} else {
+						$dMonth++;
+					}
+				}
+
 				if(!empty($user->local_date)){
-					$dates = strtotime($iYear.'-'.$iMonth.'-'.$iCurrentDay);
+					$dates = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
 					$leave_date = date($user->local_date,$dates);
+
+					if($dates < strtotime(date('Y-m-d')))
+					{
+						$style = "pointer-events: none;opacity: 0.7;";
+					}
+					else
+					{
+						$style = "";
+					}
+
+					$style1 = "";
+
+					if(!empty($leave_details) && !empty($action))
+					{
+						if($action == 'no_working'){
+							foreach($leave_details as $k => $ld)
+							{
+								if($dates == strtotime($ld['no_working_date']))
+								{
+									$style1 = "background-color: yellow;";
+								}
+							}
+						}
+						if($action == 'set_leave'){
+							foreach($leave_details as $k => $ld)
+							{
+								if($dates == strtotime($ld['leave_date']))
+								{
+									$style1 = "background-color: yellow;";
+								}
+							}
+						}
+
+					}
+
 				}
 				else{
-					$leave_date= $iYear.'-'.$iMonth.'-'.$iCurrentDay ;
+					$leave_date = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
+
+					if($leave_date < strtotime(date('Y-m-d')))
+					{
+						$style = "pointer-events: none;opacity: 0.7;";
+					}
+					else
+					{
+						$style = "";
+					}
+					$style1 = "";
+					if(!empty($leave_details) && !empty($action))
+					{
+						if($action == 'no_working'){
+							foreach($leave_details as $k => $ld)
+							{
+								if($leave_date == strtotime($ld['no_working_date']))
+								{
+									$style1 = "background-color: yellow;";
+								}
+							}
+						}
+
+						if($action == 'set_leave'){
+							foreach($leave_details as $k => $ld)
+							{
+								if($leave_date == strtotime($ld['leave_date']))
+								{
+									$style1 = "background-color: yellow;";
+								}
+							}
+						}
+					}
+
 				}
-				$sCalTblRows .= '<td class="'.$sClass.'" ><a class="leave_date" rel="'.$leave_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+
+				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="leave_date" style="'.$style1.'" rel="'.$leave_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
 
 				// Next day
 				$iCurrentDay++;
@@ -509,6 +600,30 @@ class Ecp extends Front_Controller
 		die;
 	}
 
+
+	public function check_no_working_type()
+	{
+		$user = $this->auth->user();
+
+		$cur_date = (isset($_POST['cur_date']) ? $_POST['cur_date'] : '');
+
+		$date = str_replace('/', '-', $cur_date);
+		$leave_date = date('Y-m-d', strtotime($date));
+
+		$no_working_type= $this->ecp_model->no_working_details($user->id,$user->country_id,$leave_date);
+		echo json_encode($no_working_type);
+		die;
+	}
+
+
+	public function delete_no_working_details()
+	{
+		$id = (isset($_POST["no_working_id"]) ? $_POST["no_working_id"] : '');
+		$delete=$this->ecp_model->delete_no_working_detail($id);
+		echo $delete;
+		die;
+	}
+
 	public function leave_details()
 	{
 		$user = $this->auth->user();
@@ -519,7 +634,25 @@ class Ecp extends Front_Controller
 
 	public function check_leave_type()
 	{
+		$user = $this->auth->user();
 
+		$cur_date = (isset($_POST['cur_date']) ? $_POST['cur_date'] : '');
+
+		$date = str_replace('/', '-', $cur_date);
+		$leave_date = date('Y-m-d', strtotime($date));
+
+		$leave_type= $this->ecp_model->leave_type_details($user->id,$user->country_id,$leave_date);
+		echo json_encode($leave_type);
+		die;
+	}
+
+
+	public function delete_leave_details()
+	{
+		$id = (isset($_POST["leave_id"]) ? $_POST["leave_id"] : '');
+		$delete=$this->ecp_model->delete_leave_detail($id);
+		echo $delete;
+		die;
 	}
 
 

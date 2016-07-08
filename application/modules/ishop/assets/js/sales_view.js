@@ -563,6 +563,7 @@ $(document).on('click', 'div.sales_cont .delete_i', function () {
             url: site_url+'ishop/delete_ishop_sales_details',
             data: {secondary_sales_id:id,checked_type:checked_type},
             success: function(resp){
+                location.reload()
             }
         });
     }
@@ -581,6 +582,7 @@ $(document).on('click', 'div.sales_product .delete_i', function () {
             url: site_url+'ishop/delete_ishop_sales_product_details',
             data: {secondary_product_sales_id:id,checked_type:checked_type},
             success: function(resp){
+                location.reload()
             }
         });
     }

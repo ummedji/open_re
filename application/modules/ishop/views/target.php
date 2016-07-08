@@ -58,7 +58,7 @@ echo form_open('',$attributes);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" name="month_data" id="month_data" class="form-control month_data" readonly/>
+                                    <input type="text" name="month_data" id="month_data" class="form-control month_data" />
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ echo form_open('',$attributes);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" name="ret_month_data" id="ret_month_data" class="form-control month_data" readonly/>
+                                    <input type="text" name="ret_month_data" id="ret_month_data" class="form-control month_data" />
                                 </div>
                             </div>
                         </div>
@@ -358,7 +358,7 @@ if (!$this->input->is_ajax_request()) {
                             </div>
                             <div class="form-group" id="year_data">
                                 <label>Selecte Year</label>
-                                <input type="text" name="to_year_data"  class="form-control" id="to_copy_popup_datepicker"  readonly/>
+                                <input type="text" name="to_year_data"  class="form-control" id="to_copy_popup_datepicker"  />
                             </div>
 
                             <div id="month_data">

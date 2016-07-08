@@ -1,9 +1,7 @@
-<?php
-$attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock');
-//echo form_open($this->uri->uri_string(),$attributes);
-echo form_open('ishop/physical_stock',$attributes); ?>
-<!--------------------------------------Filter1-------------------------------------------------->
 <?php if (!$this->input->is_ajax_request()) { ?>
+    <?php
+    $attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock');
+    echo form_open('ishop/physical_stock',$attributes); ?>
 <div class="col-md-12 od_approval">
     <div class="top_form">
          <div class="row">
@@ -38,9 +36,9 @@ echo form_open('ishop/physical_stock',$attributes); ?>
                         <div class="col-md-3 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label>Month<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;" readonly>
+                                <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;" >
                                 <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
-                                    <a href="#">
+                                    <a href="">
                                         <i class="fa fa-calendar" aria-hidden="true">
                                         </i>
                                     </a>
@@ -119,9 +117,9 @@ echo form_open('ishop/physical_stock',$attributes); ?>
                     <div class="col-md-4 col-md-offset-4 tp_form text-center_form" >
                         <div class="form-group">
                             <label>Month<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" readonly>
+                            <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" >
                             <!--<div class="cal_icon">
-                                <a href="#">
+                                <a href="">
                                     <i class="fa fa-calendar" aria-hidden="true"></i>
                                 </a>
                             </div>-->
@@ -195,15 +193,22 @@ echo form_open('ishop/physical_stock',$attributes); ?>
 <?php }?>
 <?php echo form_close(); ?>
 <!--------------------------------------Table-------------------------------------------------->
-<?php $attributes = array('class' => '', 'id' => 'update_physical_stock','name'=>'update_physical_stock');
-echo form_open('',$attributes); ?>
+<?php if ($this->input->is_ajax_request()) { ?>
+    <?php
+    echo theme_view('common/middle');
+    ?>
+<?php } ?>
 
-<div id="middle_container" class="phy_stock_container">
-<?php
-echo theme_view('common/middle');
-?>
-<!--</div>-->
-<?php echo form_close(); ?>
+<?php if (!$this->input->is_ajax_request()) { ?>
+    <?php $attributes = array('class' => '', 'id' => 'update_physical_stock','name'=>'update_physical_stock');
+    echo form_open('',$attributes); ?>
+
+    <div id="middle_container" class="phy_stock_container">
+
+    </div>
+    <?php echo form_close(); ?>
+
+    <?php } ?>
 
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
 <div class="clearfix"></div>

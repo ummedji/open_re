@@ -196,7 +196,7 @@ echo form_open('',$attributes); ?>
                 <div class="form-group">
                     <div class="form-group">
                         <label>Date<span style="color: red">*</span></label>
-                        <input type="text" name="order_date" class="order_date form-control" id="order_date"  readonly/>
+                        <input type="text" name="order_date" class="order_date form-control" id="order_date"  />
                     </div>
                 </div>
                 <div class="form-group">
@@ -379,8 +379,8 @@ echo form_open('',$attributes); ?>
         
          <div class="zoom_space">
                 <ul>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                    <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                    <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                    <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
                 </ul>
             </div>
         

@@ -103,7 +103,7 @@ echo form_open('',$attributes); ?>
                     </div>
                     <label id="amt-error" class="error" for="amt"></label>
                 </div>
-                <div class="plus_btn"><a href="#" id="add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <div class="plus_btn"><a href="javascript: void(0);" id="add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -115,8 +115,8 @@ echo form_open('',$attributes); ?>
     <div class="row">
         <div class="zoom_space">
             <ul>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
             </ul>
         </div>
         <div id="no-more-tables">

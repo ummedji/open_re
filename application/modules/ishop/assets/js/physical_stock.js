@@ -530,7 +530,7 @@ $(document).on('click', '.edit_i', function () {
 
 $(document).on('click', 'div.check_save_btn #check_save', function () {
     var physical_data = $("#update_physical_stock").serializeArray();
-     //console.log(physical_data);
+     console.log(physical_data);
     //return false;
     $.ajax({
         type: 'POST',

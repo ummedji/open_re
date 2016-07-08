@@ -547,7 +547,7 @@ class Ishop extends Front_Controller
 		$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
 		$stock_month = (isset($_POST['stock_month']) ? $_POST['stock_month'] : '');
-		$physical_stock= $this->ishop_model->get_all_physical_stock_by_user($user->id,$user->country_id,$user->role_id,$checked_type,$page,null,$stock_month);
+		$physical_stock= $this->ishop_model->get_all_physical_stock_by_user($user->id,$user->country_id,$user->role_id,$checked_type,$page,null,$stock_month,$user->local_date);
 
 		Template::set('td', $physical_stock['count']);
 		Template::set('pagination', (isset($physical_stock['pagination']) && !empty($physical_stock['pagination'])) ? $physical_stock['pagination'] : '' );
@@ -868,8 +868,10 @@ class Ishop extends Front_Controller
 	public function update_current_stock_details()
 	{
 		$user = $this->auth->user();
-		$this->ishop_model->update_current_stock_details($user->id,$user->country_id);
-		redirect('ishop/company_current_stock');
+		$add = $this->ishop_model->update_current_stock_details($user->id,$user->country_id);
+		echo $add;
+		die;
+
 	}
 	public function delete_current_stock_details()
 	{

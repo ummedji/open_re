@@ -23,12 +23,12 @@ echo form_open('',$attributes); ?>
                                 <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder="" readonly style="display: inline-block;width: auto;">
                             </div>
 
-                            <div class="col-md-6 col-md-offset-3">
+                            <div class="col-md-6 col-md-offset-3 check_leave">
                             <?php
                             foreach($leave_type as $k=>$val_leave_type){
                                 ?>
                                 <div class="radio">
-                                    <input type="radio" name="radio" id="<?php echo $val_leave_type['short_code'];?>" value="<?php echo $val_leave_type['leave_type_country_id'];?>">
+                                    <input attr-id="leave_<?php echo $val_leave_type['leave_type_country_id'];?>" type="radio" name="radio" class="leave_id" id="<?php echo $val_leave_type['short_code'];?>" value="<?php echo $val_leave_type['leave_type_country_id'];?>">
                                     <label for="<?php echo $val_leave_type['short_code'];?>"><?php echo $val_leave_type['short_code'];?></label>
                                 </div>
                                 <?php
@@ -51,8 +51,10 @@ echo form_open('',$attributes); ?>
                                 <div class="col-md-3 save_btn">
                                     <button type="submit" class="btn btn-primary">Save</button>
                                 </div>
-                                <div class="col-md-3 save_btn">
-                                    <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>
+                                <div class="delete_button" style="display: none">
+                                    <div class="col-md-3 save_btn" style="">
+                                        <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

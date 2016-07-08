@@ -1,8 +1,7 @@
-<?php
-$attributes = array('class' => '', 'id' => 'add_schemes','name'=>'add_schemes');
-echo form_open('',$attributes); ?>
-
 <?php if (!$this->input->is_ajax_request()) { ?>
+    <?php
+    $attributes = array('class' => '', 'id' => 'add_schemes','name'=>'add_schemes');
+    echo form_open('',$attributes); ?>
 <div class="col-md-12">
     <div class="top_form">
         <div class="row">

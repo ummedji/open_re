@@ -1013,6 +1013,38 @@ class Ecp_model extends BF_Model
         }
     }
 
+    public function all_no_working_details($user_id,$country_id)
+    {
+        $this->db->select('no_working_date');
+        $this->db->from('ecp_no_wokring');
+        $this->db->where('country_id',$country_id );
+        $this->db->where('employee_id',$user_id );
+        $this->db->where('status','1');
+        $no_working_details = $this->db->get()->result_array();
+
+        if (isset($no_working_details) && !empty($no_working_details)) {
+            return $no_working_details;
+        } else {
+            return false;
+        }
+    }
+
+    public function all_leave_details($user_id,$country_id)
+    {
+        $this->db->select('leave_date');
+        $this->db->from('ecp_leave');
+        $this->db->where('country_id',$country_id );
+        $this->db->where('employee_id',$user_id );
+        $this->db->where('status','1');
+        $leave_details = $this->db->get()->result_array();
+
+        if (isset($leave_details) && !empty($leave_details)) {
+            return $leave_details;
+        } else {
+            return false;
+        }
+    }
+
 
     public function all_leave_type_details($country_id)
     {
@@ -1161,6 +1193,32 @@ class Ecp_model extends BF_Model
         if (isset($user_details) && !empty($user_details)) {
             return $user_details;
         } else {
+            return 0;
+        }
+    }
+
+    public function delete_leave_detail($leave_id)
+    {
+        $this->db->where('leave_id',$leave_id);
+        $this->db->delete('ecp_leave');
+
+        if($this->db->affected_rows() > 0){
+        return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function delete_no_working_detail($id)
+    {
+        $this->db->where('no_working_id',$id);
+        $this->db->delete('ecp_no_wokring');
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
             return 0;
         }
     }

@@ -35,7 +35,7 @@ echo form_open('',$attributes); ?>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
                     <label for="invoice_date">Invoice Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" readonly>
+                    <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" >
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
@@ -102,7 +102,7 @@ echo form_open('',$attributes); ?>
                         <input type="text" class="form-control allownumericwithdecimal" name="sec_amt" id="sec_amt" placeholder="">
                     </div>
                 </div>
-                <div class="plus_btn"><a href="#"id="sec_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <div class="plus_btn"><a href="javascript: void(0);"id="sec_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -115,8 +115,8 @@ echo form_open('',$attributes); ?>
     <div class="row">
         <div class="zoom_space">
             <ul>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                <li><a href="#"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
             </ul>
         </div>
         <div id="no-more-tables">

@@ -143,15 +143,18 @@ $(document).ready(function(){
 
     $("#add_schemes").on("submit",function(){
 
+        //alert('in');
         var param = $("#add_schemes").serializeArray();
 
         var $valid = $("#add_schemes").valid();
         if(!$valid) {
+           // alert('out');
             schemes_validators.focusInvalid();
             return false;
         }
         else
         {
+          //  alert('in');
             $.ajax({
                 type: 'POST',
                 url: site_url + "ishop/check_schemes_details",
@@ -159,7 +162,7 @@ $(document).ready(function(){
                 success: function (resp) {
                     var message = "";
                     if (resp == 1) {
-
+                      //  alert('in1');
                         $.ajax({
                             type: 'POST',
                             url: site_url + "ishop/add_schemes_details",
@@ -190,10 +193,12 @@ $(document).ready(function(){
                                         }
                                     });
                             }
-                        });
 
+                        });
+                        return false;
                     }
                     else {
+                     //   alert('in3');
                         var obj = jQuery.parseJSON(resp);
                         var allocation_id = (obj.allocation_id);
                         param.push({name: "allocation_id", value:allocation_id});
@@ -226,12 +231,10 @@ $(document).ready(function(){
                                     });
                             }
                         });
+                        return false;
                     }
                 }
             });
-
-
-
             return false;
         }
     });
