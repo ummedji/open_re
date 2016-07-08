@@ -1454,6 +1454,7 @@ class Web_service extends Front_Controller
                 $id = $this->ishop_model->delete_ishop_sales_product_detail($id, $checked_type);
             }
             elseif($mode == "current_stock"){
+
                 $id = $this->ishop_model->delete_current_stock_detail($id);
             }
             if($id)

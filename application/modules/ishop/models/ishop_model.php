@@ -1094,6 +1094,9 @@ class Ishop_model extends BF_Model
     {
         $this->db->where('rol_id', $rol_id);
         $this->db->delete('ishop_rol');
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
 
@@ -1664,6 +1667,9 @@ class Ishop_model extends BF_Model
     {
         $this->db->where('secondary_sales_id', $secondary_sales_id);
         $this->db->delete('ishop_secondary_sales');
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
 
     }
 
@@ -1699,7 +1705,9 @@ class Ishop_model extends BF_Model
         $this->db->where('secondary_sales_product_id', $secondary_product_sales_id);
         $this->db->delete('ishop_secondary_sales_product');
 
-
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
 
@@ -2119,6 +2127,9 @@ class Ishop_model extends BF_Model
     {
         $this->db->where('stock_id', $stock_id);
         $this->db->delete('ishop_physical_stock');
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
 
@@ -2615,6 +2626,9 @@ class Ishop_model extends BF_Model
             $this->db->where('tertiary_sales_id', $sales_id);
             $this->db->delete('ishop_tertiary_sales');
         }
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
     public function delete_ishop_sales_product_detail($product_sales_id, $checked_type)
@@ -2626,6 +2640,9 @@ class Ishop_model extends BF_Model
 
             $this->db->where('tertiary_sales_product_id', $product_sales_id);
             $this->db->delete('ishop_tertiary_sales_products');
+        }
+        if($this->db->affected_rows() > 0){
+            return 1;
         }
     }
 
@@ -2894,8 +2911,12 @@ class Ishop_model extends BF_Model
 
     public function delete_current_stock_detail($stock_id)
     {
+
         $this->db->where('stock_id', $stock_id);
         $this->db->delete('ishop_company_current_stock');
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
     /**
@@ -3697,6 +3718,9 @@ class Ishop_model extends BF_Model
     {
         $this->db->where_in('allocation_id', $cs);
         $this->db->delete('bf_ishop_scheme_allocation');
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
     public function invoice_confirmation_received_by_distributor($invoice_month, $po_no, $invoice_no, $user_id, $country_id, $page = null,$web_service=null)
@@ -5547,6 +5571,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $this->db->update('bf_ishop_orders', $update_data);
 
         $this->db->delete('bf_ishop_product_order', array('product_order_id' => $order_product_id));
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
     /**
@@ -5561,6 +5588,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $this->db->delete('bf_ishop_product_order', array('order_id' => $order_id));
         $this->db->delete('bf_ishop_orders', array('order_id' => $order_id));
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
 
     }
 
@@ -5919,6 +5949,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     {
         $this->db->where('ishop_target_id', $target_id);
         $this->db->delete('ishop_target');
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
     public function get_target_monthly_data($data, $web_service=null,$page = null)
@@ -6204,6 +6237,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     {
         $this->db->where('ishop_budget_id', $budget_id);
         $this->db->delete('ishop_budget');
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
     }
 
     public function check_budget_data($product_sku_id, $month_data, $customer_id)
