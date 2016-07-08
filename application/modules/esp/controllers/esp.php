@@ -1285,15 +1285,16 @@ class Esp extends Front_Controller
             }
 			else
 			{
-				 if(isset($webservice_data["emp_id"]) && ($webservice_data["emp_id"] != $webservice_data["login_user_id"])){
-				 	$forecast_user_id = $webservice_data["emp_id"];
-				 }
+                
+                if($webservice_data["emp_id"] != "" ){
+                    $forecast_user_id = $webservice_data["emp_id"];
+                }
 				 else
 				 {
 					 $forecast_user_id = $webservice_data['login_user_id'];
 				 }
 			}
-			
+           
             
             $businss_data = $this->esp_model->get_business_code($forecast_user_id);
             
