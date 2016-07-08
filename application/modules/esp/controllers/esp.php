@@ -125,6 +125,21 @@ class Esp extends Front_Controller
     */
     
     
+    public function get_higest_level_employee_for_loginuser($login_user_id){
+        
+        $u_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+        if($u_data != 0){
+           
+            $login_user_id = $u_data;
+            $this->get_higest_level_employee_for_loginuser($login_user_id);
+        }else{
+          
+            echo $login_user_id;
+            die;
+        }
+        
+    }
+    
     public function get_pbg_sku_data($webservice_data=null){
         		
         	
@@ -166,6 +181,10 @@ class Esp extends Front_Controller
         $lock_show_data = $this->get_user_level_data($login_user_id);
         
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+        
+        $login_user_higest_level_data = $this->get_higest_level_employee_for_loginuser($login_user_id);
+        
+       // testdata($login_user_higest_data);
         
         $html = "";
         $html1 = "";
