@@ -71,6 +71,7 @@ $(document).ready(function(){
 		var user_id = $("input#login_user_id").val();
         $("div#user_level_data div.form-group").remove();
         $("div#pbg_data").empty();
+        $("div.forecast_data").empty();
         get_user_level_data(user_id);
 		
 	});
@@ -82,8 +83,12 @@ $(document).ready(function(){
 $(document).on("change","select.employee_data",function(){
         
     var user_id = $(this).val();
+    
+    alert($(this).parent().parent().parent().nextAll().find("div.form-group").html());
+    
     $(this).parent().nextAll("div.form-group").remove();
     $("div#pbg_data").empty();
+    $("div.forecast_data").empty();
     get_user_level_data(user_id);
 
 });

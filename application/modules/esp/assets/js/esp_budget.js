@@ -45,6 +45,7 @@ $(document).on("change","select.employee_data",function(){
     var user_id = $(this).val();
     $(this).parent().nextAll("div.form-group").remove();
     $("div#pbg_data").empty();
+    $("div.budget_data").empty();
     get_user_level_data(user_id);
 
 });

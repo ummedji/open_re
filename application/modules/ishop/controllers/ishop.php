@@ -3755,8 +3755,13 @@ class Ishop extends Front_Controller
                 $first_data = 'A'.$l;
                 $last_data  = "";
 				
-				$user= $this->auth->user();
-            	$user_role_id = $user->role_id;
+                if(!isset$_POST['role_id']){
+                    $user= $this->auth->user();
+                    $user_role_id = $user->role_id;
+                }
+                else{
+                   $user_role_id = $_POST['role_id'];
+                }
                 
                 foreach($_POST['val']["header"][1] as $key=> $col_data){
                 

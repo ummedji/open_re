@@ -2605,6 +2605,7 @@ class Web_service extends Front_Controller
 
             }
             $_POST['val'] = $final_array;
+            $_POST['role_id'] = $_POST['role_id'];
             $_POST['flag'] = 'web_service';
 
             modules::run('ishop/ishop/create_data_xl', $_POST);
