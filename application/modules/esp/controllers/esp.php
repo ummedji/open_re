@@ -134,8 +134,8 @@ class Esp extends Front_Controller
             $this->get_higest_level_employee_for_loginuser($login_user_id);
         }else{
           
-            echo $login_user_id;
-            die;
+            return  $login_user_id;
+          
         }
         
     }
@@ -182,9 +182,9 @@ class Esp extends Front_Controller
         
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
-        $login_user_higest_level_data = $this->get_higest_level_employee_for_loginuser($login_user_id);
+      //  $login_user_higest_level_data = $this->get_higest_level_employee_for_loginuser($login_user_id);
         
-       // testdata($login_user_higest_data);
+       // testdata($login_user_higest_level_data);
         
         $html = "";
         $html1 = "";
