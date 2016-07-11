@@ -127,18 +127,18 @@ class Esp extends Front_Controller
     
     public function get_higher_level_employee_for_loginuser($login_user_id){
         
-        $user_array = array();
+      //  $user_array = array();
         
         $u_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         if($u_data != 0){
            
             $login_user_id = $u_data;
             
-            $user_array[] = $login_user_id;
+           // $user_array[] = $login_user_id;
             $this->get_higher_level_employee_for_loginuser($login_user_id);
         }else{
             
-            return  $user_array;
+            return  $login_user_id;
           
         }
         
@@ -186,9 +186,9 @@ class Esp extends Front_Controller
         
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
-        $login_user_higher_level_data = $this->get_higher_level_employee_for_loginuser($login_user_id);
-      //  echo "aaa";
-      //  testdata($login_user_higher_level_data);
+        //$login_user_higher_level_data = $this->get_higher_level_employee_for_loginuser($login_user_id);
+       // echo "aaa";
+       //testdata($login_user_parent_data);
         
         $html = "";
         $html1 = "";
@@ -224,7 +224,7 @@ class Esp extends Front_Controller
                                 }
                           //  }
                             
-                          //  dumpme($forecast_freeze_data2);
+                            
                           //  echo $forecast_id;
                             
                             //$forecast_freeze_data2 = $this->esp_model->get_forecast_freeze_status($forecast_id);
@@ -234,12 +234,31 @@ class Esp extends Front_Controller
                             if($forecast_freeze_data2 != "" || !empty($forecast_freeze_data2)){
                                 
                                 if($forecast_freeze_data2["freeze_status"] == 1){
-                                    
+                                    dumpme($forecast_freeze_data2);
                                     //LOGIC FOR SHOWING SENIOR LOCK STATUS OR LOGIN USER
                                     
                                     if($login_user_id == $forecast_freeze_data2["freeze_user_id"]){
                                         
-                                        //THAN GET HIS SENIOR LOCK STATUS
+                                        //THAN GET JUST HIS SENIOR
+                                        
+                                        if($login_user_parent_data)
+                                        {
+                                            
+                                            echo $login_user_parent_data."===".$monthvalue."===".$forecast_id."</br>";
+                                            
+                                            //THAN GET HIS JUST SENIOR LOCK STATUS
+                                            
+                                         //   $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
+                                            
+                                           // dumpme($senior_lock_data);
+                                            
+                                           // {
+                                                
+                                          //  }
+                                            
+                                        }
+                                        
+                                        
                                         
                                     }
                                     else
@@ -270,7 +289,7 @@ class Esp extends Front_Controller
 							
                         }
             
-            die;
+           // die;
                        
                    $html .= '</tr>';
                    $html .= '<tr>';

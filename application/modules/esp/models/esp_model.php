@@ -522,6 +522,29 @@ class Esp_model extends BF_Model
         
     }
     
+    public function get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id){
+        
+        
+        $this->db->select("*");
+        $this->db->from("bf_forecast_lock_status_history as bflsh");
+        
+        $this->db->where("bflsh.forecast_id",$forecast_id);
+        $this->db->where("bflsh.month_data",$monthvalue);
+        $this->db->where("bflsh.lock_by_id",$login_user_parent_data);
+        
+        $user_lock_data = $this->db->get()->result_array();
+        
+        echo $this->db->last_query();
+       /* 
+        if(isset($user_level_data) && !empty($user_level_data)) {
+            return $user_lock_data;
+        } else{
+            return 0;
+        }
+        */
+        
+    }
+    
     public function update_forecast_lock_status_data($user_id,$forecast_id,$monthval,$text_data){
         
         if($text_data == 'Lock'){

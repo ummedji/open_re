@@ -30,6 +30,7 @@ class Web_service extends Front_Controller
 
         $this->load->model('country_master/country_master_model');
 		$this->load->model('esp/esp_model');
+		$this->load->model('ecp/ecp_model');
         // Load Languages
         $this->lang->load('web_service');
         // Load Others
@@ -274,6 +275,7 @@ class Web_service extends Front_Controller
 
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
             $materials = $this->ecp_model->get_materials_by_country_id($country_id);
+            $compititor = $this->ecp_model->get_all_copititor_data($country_id);
 
             $dist_array = array();
             if (!empty($distributors)) {
@@ -316,7 +318,31 @@ class Web_service extends Front_Controller
                 array("name"=>"Kg/Ltr","value"=>"kg/ltr")
             );
 
-            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units);
+            $mtl_array = array();
+            if (!empty($materials)) {
+                foreach ($materials as $material) {
+                    $mtl = array(
+                        "id" => $material['promotional_country_id'],
+                        "material_name" => $material['promotional_material_country_name'],
+                        "material_code" => $material['promotional_material_country_code'],
+                    );
+                    array_push($mtl_array, $mtl);
+                }
+            }
+
+
+            $comp_array = array();
+            if (!empty($compititor)) {
+                foreach ($compititor as $compititors) {
+                    $comp = array(
+                        "id" => $compititors['compititor_id'],
+                        "compititor_name" => $compititors['compititor_name'],
+                    );
+                    array_push($comp_array, $comp);
+                }
+            }
+
+            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units,"materials" => $mtl_array,"compititor" =>$comp_array);
         //  testdata($data);
             $result['status'] = true;
             $result['message'] = 'Success';
@@ -3282,6 +3308,52 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
+
+
+    /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
+
+    public function getMaterialRequest()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if((isset($user_id) && !empty($user_id)) &&(isset($country_id) && !empty($country_id)) ) {
+            $materials_request = $this->ecp_model->get_all_materials_by_country_id($country_id, null, $local_date = null, $web_service = 'web_service');
+            
+            if (!empty($materials_request)) {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows / 10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $materials_request;
+            } else {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+    }
+
+
+    public function saveMaterialRequest()
+    {
+
+    }
+
+    /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
 
 
 	//ESP WEBSERVICE

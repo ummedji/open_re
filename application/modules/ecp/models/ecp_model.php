@@ -79,7 +79,7 @@ class Ecp_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function get_all_materials_by_country_id($country_id,$page = null,$local_date = null)
+    public function get_all_materials_by_country_id($country_id,$page = null,$local_date = null,$web_service=null)
     {
         $sql = 'SELECT emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,emr.material_request_status,emr.recived_status,emr.disptched_date,buu.display_name as updated_user,emr.modified_on ';
         $sql .= 'FROM bf_ecp_material_request AS emr ';
@@ -89,84 +89,101 @@ class Ecp_model extends BF_Model
         $sql .= 'WHERE 1 ';
         $sql .= 'AND emr.country_id ="' . $country_id . '" ';
         $sql .= 'ORDER BY emr.material_request_id DESC ';
-        $requested_material = $this->grid->get_result_res($sql);
 
-        if (isset($requested_material['result']) && !empty($requested_material['result'])) {
-            $material['head'] = array('Sr. No.', 'Action', 'Date', 'Mr.Id', 'Material', 'Quantity', 'Employee Name', 'Status', 'Received','Last Update','Last Updated By','Dispatch Date');
-            $material['count'] = count($material['head']);
-            if ($page != null || $page != "") {
-                $i = $page * 10 - 9;
-            } else {
-                $i = 1;
-            }
-
-            foreach ($requested_material['result'] as $rm) {
-
-                if($local_date != null)
-                {
-                    $date3 = strtotime($rm['material_request_date']);
-                    $request_date = date($local_date,$date3);
-
-                    if($rm['disptched_date'] !=null){
-                        $date1 = strtotime($rm['disptched_date']);
-                        $disptched_date = date($local_date,$date1);
-                    }
-                    else{
-                        $disptched_date =  '';
-                    }
-                    $date2 = strtotime($rm['modified_on']);
-                    $modified_on_date = date($local_date,$date2);
-
-                }
-                else{
-                    $request_date = $rm['material_request_date'];
-                    $disptched_date = $rm['disptched_date'];
-                    $modified_on_date = $rm['modified_on'];
-                }
-
-                if($rm['material_request_status'] == 0){
-                    $material_request_status = 'Pending';
-                    $material['delete_disabled'][] = 0;
-                }
-                elseif($rm['material_request_status'] == 1){
-                    $material_request_status = 'Approve';
-                    $material['delete_disabled'][] = 1;
-                }else{
-                    $material_request_status = 'Reject';
-                    $material['delete_disabled'][] = 1;
-                }
-
-                if($rm['material_request_status'] == 1){
-
-                    if ($rm['recived_status'] == '0') {
-                        $received_status = '<select name="received_status" class="received_status" id="received_status" ><option value="0">Pending</option><option  value="1">Confirm</option></select>
-                    <input type="hidden" id="mr_id" class="mr_id" name="mr_id" value="' . $rm['material_request_id'] . '">';
-                    } else {
-                        $received_status = 'Confirm';
-                    }
-                }
-                else{
-                    if ($rm['recived_status'] == '0') {
-                        $received_status = 'Pending';
-                    } else {
-                        $received_status = 'Confirm';
-                    }
-                }
-
-                $material['row'][] = array($i, $rm['material_request_id'],$request_date ,$rm['material_request_id'] , $rm['promotional_material_country_name'], $rm['quantity'],$rm['emp'],$material_request_status,$received_status,$modified_on_date,$rm['updated_user'],$disptched_date);
-                $i++;
-            }
-            $material['eye'] = '';
-            $material['action'] = 'is_action';
-            $material['edit'] = '';
-            $material['delete_dis'] = 'is_delete';
-            $material['pagination'] = $requested_material['pagination'];
-           // testdata($material);
+        if(!empty($web_service) && $web_service=='web_service')
+        {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $info = $this->db->query($sql);
+            // For Pagination
+            $material = $info->result_array();
             return $material;
         }
         else{
-            return false;
+            $requested_material = $this->grid->get_result_res($sql);
+
+            if (isset($requested_material['result']) && !empty($requested_material['result'])) {
+                $material['head'] = array('Sr. No.', 'Action', 'Date', 'Mr.Id', 'Material', 'Quantity', 'Employee Name', 'Status', 'Received','Last Update','Last Updated By','Dispatch Date');
+                $material['count'] = count($material['head']);
+                if ($page != null || $page != "") {
+                    $i = $page * 10 - 9;
+                } else {
+                    $i = 1;
+                }
+
+                foreach ($requested_material['result'] as $rm) {
+
+                    if($local_date != null)
+                    {
+                        $date3 = strtotime($rm['material_request_date']);
+                        $request_date = date($local_date,$date3);
+
+                        if($rm['disptched_date'] !=null){
+                            $date1 = strtotime($rm['disptched_date']);
+                            $disptched_date = date($local_date,$date1);
+                        }
+                        else{
+                            $disptched_date =  '';
+                        }
+                        $date2 = strtotime($rm['modified_on']);
+                        $modified_on_date = date($local_date,$date2);
+
+                    }
+                    else{
+                        $request_date = $rm['material_request_date'];
+                        $disptched_date = $rm['disptched_date'];
+                        $modified_on_date = $rm['modified_on'];
+                    }
+
+                    if($rm['material_request_status'] == 0){
+                        $material_request_status = 'Pending';
+                        $material['delete_disabled'][] = 0;
+                    }
+                    elseif($rm['material_request_status'] == 1){
+                        $material_request_status = 'Approve';
+                        $material['delete_disabled'][] = 1;
+                    }else{
+                        $material_request_status = 'Reject';
+                        $material['delete_disabled'][] = 1;
+                    }
+
+                    if($rm['material_request_status'] == 1){
+
+                        if ($rm['recived_status'] == '0') {
+                            $received_status = '<select name="received_status" class="received_status" id="received_status" ><option value="0">Pending</option><option  value="1">Confirm</option></select>
+                    <input type="hidden" id="mr_id" class="mr_id" name="mr_id" value="' . $rm['material_request_id'] . '">';
+                        } else {
+                            $received_status = 'Confirm';
+                        }
+                    }
+                    else{
+                        if ($rm['recived_status'] == '0') {
+                            $received_status = 'Pending';
+                        } else {
+                            $received_status = 'Confirm';
+                        }
+                    }
+
+                    $material['row'][] = array($i, $rm['material_request_id'],$request_date ,$rm['material_request_id'] , $rm['promotional_material_country_name'], $rm['quantity'],$rm['emp'],$material_request_status,$received_status,$modified_on_date,$rm['updated_user'],$disptched_date);
+                    $i++;
+                }
+                $material['eye'] = '';
+                $material['action'] = 'is_action';
+                $material['edit'] = '';
+                $material['delete_dis'] = 'is_delete';
+                $material['pagination'] = $requested_material['pagination'];
+                // testdata($material);
+                return $material;
+            }
+            else{
+                return false;
+            }
         }
+
     }
 
     public function update_material_request_detail($user_id,$mr_id,$status)
