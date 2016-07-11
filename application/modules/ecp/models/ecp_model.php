@@ -537,7 +537,7 @@ class Ecp_model extends BF_Model
     }
 
 
-    public function add_retailer_compititor_product_details($user_id,$country_id)
+    public function add_retailer_compititor_product_details($user_id,$country_id,$web_service=null)
     {
         $month_data = $this->input->post("month_data");
         $compititor_id = $this->input->post("compititor_id");
@@ -590,7 +590,7 @@ class Ecp_model extends BF_Model
     }
 
 
-    public function add_distributor_compititor_details($user_id,$country_id)
+    public function add_distributor_compititor_details($user_id,$country_id,$web_service=null)
     {
         $month_data = $this->input->post("month_data");
         $distributor_id = $this->input->post("distributor_id");
@@ -636,7 +636,7 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function add_distributor_compititor_product_details($user_id,$country_id)
+    public function add_distributor_compititor_product_details($user_id,$country_id,$web_service=null)
     {
         $month_data = $this->input->post("month_data");
         $compititor_id = $this->input->post("compititor_id");
@@ -688,7 +688,7 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function get_retailer_compititor_details_view($from_month, $to_month,$page=null,$local_date,$country_id)
+    public function get_retailer_compititor_details_view($from_month, $to_month,$page=null,$local_date=null,$country_id,$web_service=null)
     {
         $sql = ' SELECT ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
         $sql .= ' FROM bf_ecp_compititor_analysis_total AS ecat ';
@@ -705,45 +705,61 @@ class Ecp_model extends BF_Model
             $sql .= ' AND DATE_FORMAT(ecat.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
         }
         $sql .= 'ORDER BY bu.display_name ASC ';
-        $retailer_analysis = $this->grid->get_result_res($sql);
 
-        if (isset($retailer_analysis['result']) && !empty($retailer_analysis['result'])) {
-            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Amount');
-            $analysis['count'] = count($analysis['head']);
-            if ($page != null || $page != "") {
-                $i = $page * 10 - 9;
-            } else {
-                $i = 1;
-            }
-            foreach ($retailer_analysis['result'] as $rm) {
+        if(!empty($web_service) && $web_service=='web_service')
+        {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $info = $this->db->query($sql);
+            // For Pagination
+            $retailer_analysis = $info->result_array();
+            return $retailer_analysis;
+        }
+        else{
+            $retailer_analysis = $this->grid->get_result_res($sql);
 
-                if ($local_date != null) {
-                    $date3 = strtotime($rm['created_on']);
-                    $entry_date = date($local_date, $date3);
-
+            if (isset($retailer_analysis['result']) && !empty($retailer_analysis['result'])) {
+                $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Amount');
+                $analysis['count'] = count($analysis['head']);
+                if ($page != null || $page != "") {
+                    $i = $page * 10 - 9;
                 } else {
-                    $entry_date = $rm['created_on'];
+                    $i = 1;
                 }
-                $month = strtotime($rm['compititor_analysis_month']);
-                $month = date('F - Y', $month);
+                foreach ($retailer_analysis['result'] as $rm) {
 
-                $amount = '<div class="amount_' . $rm["compititor_total_details_id"] . '"><span class="amount">' . $rm['amount'] . '</span></div>';
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['created_on']);
+                        $entry_date = date($local_date, $date3);
 
-                $analysis['row'][] = array($i, $rm['compititor_total_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$amount);
-                $i++;
+                    } else {
+                        $entry_date = $rm['created_on'];
+                    }
+                    $month = strtotime($rm['compititor_analysis_month']);
+                    $month = date('F - Y', $month);
+
+                    $amount = '<div class="amount_' . $rm["compititor_total_details_id"] . '"><span class="amount">' . $rm['amount'] . '</span></div>';
+
+                    $analysis['row'][] = array($i, $rm['compititor_total_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$amount);
+                    $i++;
+                }
+                $analysis['eye'] = '';
+                $analysis['action'] = 'is_action';
+                $analysis['edit'] = 'is_edit';
+                $analysis['delete'] = 'is_delete';
+                $analysis['pagination'] = $retailer_analysis['pagination'];
+                return $analysis;
+            } else {
+                return false;
             }
-            $analysis['eye'] = '';
-            $analysis['action'] = 'is_action';
-            $analysis['edit'] = 'is_edit';
-            $analysis['delete'] = 'is_delete';
-            $analysis['pagination'] = $retailer_analysis['pagination'];
-            return $analysis;
-        } else {
-            return false;
         }
     }
 
-    public function get_retailer_compititor_product_details_view($from_month, $to_month,$page= null,$local_date,$country_id)
+    public function get_retailer_compititor_product_details_view($from_month, $to_month,$page= null,$local_date=null,$country_id,$web_service=null)
     {
         $sql = ' SELECT ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
         $sql .= ' FROM bf_ecp_compititor_analysis_product AS ecap ';
@@ -762,46 +778,62 @@ class Ecp_model extends BF_Model
             $sql .= ' AND DATE_FORMAT(ecap.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
         }
         $sql .= 'ORDER BY bu.display_name ASC ';
-        $retailer_analysis = $this->grid->get_result_res($sql);
 
-        if (isset($retailer_analysis['result']) && !empty($retailer_analysis['result'])) {
-            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Compititor Product Name','Quantity','Our Product');
-            $analysis['count'] = count($analysis['head']);
-            if ($page != null || $page != "") {
-                $i = $page * 10 - 9;
-            } else {
-                $i = 1;
-            }
-            foreach ($retailer_analysis['result'] as $rm) {
+        if(!empty($web_service) && $web_service=='web_service')
+        {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $info = $this->db->query($sql);
+            // For Pagination
+            $retailer_analysis = $info->result_array();
+            return $retailer_analysis;
+        }
+        else{
+            $retailer_analysis = $this->grid->get_result_res($sql);
 
-                if ($local_date != null) {
-                    $date3 = strtotime($rm['created_on']);
-                    $entry_date = date($local_date, $date3);
-
+            if (isset($retailer_analysis['result']) && !empty($retailer_analysis['result'])) {
+                $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Compititor Product Name','Quantity','Our Product');
+                $analysis['count'] = count($analysis['head']);
+                if ($page != null || $page != "") {
+                    $i = $page * 10 - 9;
                 } else {
-                    $entry_date = $rm['created_on'];
+                    $i = 1;
                 }
-                $month = strtotime($rm['compititor_analysis_month']);
-                $month = date('F - Y', $month);
+                foreach ($retailer_analysis['result'] as $rm) {
 
-                $quantity = '<div class="quantity_' . $rm["compititor_product_details_id"] . '"><span class="quantity">' . $rm['quantity'] . '</span></div>';
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['created_on']);
+                        $entry_date = date($local_date, $date3);
 
-                $analysis['row'][] = array($i, $rm['compititor_product_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$rm['compititor_product_name'],$quantity,$rm['product_sku_name']);
-                $i++;
+                    } else {
+                        $entry_date = $rm['created_on'];
+                    }
+                    $month = strtotime($rm['compititor_analysis_month']);
+                    $month = date('F - Y', $month);
+
+                    $quantity = '<div class="quantity_' . $rm["compititor_product_details_id"] . '"><span class="quantity">' . $rm['quantity'] . '</span></div>';
+
+                    $analysis['row'][] = array($i, $rm['compititor_product_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$rm['compititor_product_name'],$quantity,$rm['product_sku_name']);
+                    $i++;
+                }
+                $analysis['eye'] = '';
+                $analysis['action'] = 'is_action';
+                $analysis['edit'] = 'is_edit';
+                $analysis['delete'] = 'is_delete';
+                $analysis['pagination'] = $retailer_analysis['pagination'];
+                return $analysis;
+            } else {
+                return false;
             }
-            $analysis['eye'] = '';
-            $analysis['action'] = 'is_action';
-            $analysis['edit'] = 'is_edit';
-            $analysis['delete'] = 'is_delete';
-            $analysis['pagination'] = $retailer_analysis['pagination'];
-            return $analysis;
-        } else {
-            return false;
         }
     }
 
 
-    public function get_distributor_compititor_details_view($from_month, $to_month,$page=null,$local_date,$country_id)
+    public function get_distributor_compititor_details_view($from_month, $to_month,$page=null,$local_date=null,$country_id,$web_service=null)
     {
         $sql = ' SELECT ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
         $sql .= ' FROM bf_ecp_compititor_analysis_total AS ecat ';
@@ -818,47 +850,64 @@ class Ecp_model extends BF_Model
             $sql .= ' AND DATE_FORMAT(ecat.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
         }
         $sql .= 'ORDER BY bu.display_name ASC ';
-        $distributor_analysis = $this->grid->get_result_res($sql);
 
-        if (isset($distributor_analysis['result']) && !empty($distributor_analysis['result'])) {
-            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Amount');
-            $analysis['count'] = count($analysis['head']);
-            if ($page != null || $page != "") {
-                $i = $page * 10 - 9;
-            } else {
-                $i = 1;
-            }
-            foreach ($distributor_analysis['result'] as $rm) {
-
-                if ($local_date != null) {
-                    $date3 = strtotime($rm['created_on']);
-                    $entry_date = date($local_date, $date3);
-
-                } else {
-                    $entry_date = $rm['created_on'];
-                }
-                $month = strtotime($rm['compititor_analysis_month']);
-                $month = date('F - Y', $month);
-
-                $amount = '<div class="amount_' . $rm["compititor_total_details_id"] . '"><span class="amount">' . $rm['amount'] . '</span></div>';
-
-                $analysis['row'][] = array($i, $rm['compititor_total_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$amount);
-                $i++;
-            }
-            $analysis['eye'] = '';
-            $analysis['action'] = 'is_action';
-            $analysis['edit'] = 'is_edit';
-            $analysis['delete'] = 'is_delete';
-            $analysis['pagination'] = $distributor_analysis['pagination'];
-            //testdata($analysis);
-            return $analysis;
-        } else {
-            return false;
+        if(!empty($web_service) && $web_service=='web_service')
+        {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $info = $this->db->query($sql);
+            // For Pagination
+            $distributor_analysis = $info->result_array();
+            return $distributor_analysis;
         }
+        else{
+            $distributor_analysis = $this->grid->get_result_res($sql);
+
+            if (isset($distributor_analysis['result']) && !empty($distributor_analysis['result'])) {
+                $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Amount');
+                $analysis['count'] = count($analysis['head']);
+                if ($page != null || $page != "") {
+                    $i = $page * 10 - 9;
+                } else {
+                    $i = 1;
+                }
+                foreach ($distributor_analysis['result'] as $rm) {
+
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['created_on']);
+                        $entry_date = date($local_date, $date3);
+
+                    } else {
+                        $entry_date = $rm['created_on'];
+                    }
+                    $month = strtotime($rm['compititor_analysis_month']);
+                    $month = date('F - Y', $month);
+
+                    $amount = '<div class="amount_' . $rm["compititor_total_details_id"] . '"><span class="amount">' . $rm['amount'] . '</span></div>';
+
+                    $analysis['row'][] = array($i, $rm['compititor_total_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$amount);
+                    $i++;
+                }
+                $analysis['eye'] = '';
+                $analysis['action'] = 'is_action';
+                $analysis['edit'] = 'is_edit';
+                $analysis['delete'] = 'is_delete';
+                $analysis['pagination'] = $distributor_analysis['pagination'];
+                //testdata($analysis);
+                return $analysis;
+            } else {
+                return false;
+            }
+        }
+
     }
 
 
-    public function get_distributor_compititor_product_details_view($from_month, $to_month,$page= null,$local_date,$country_id)
+    public function get_distributor_compititor_product_details_view($from_month, $to_month,$page= null,$local_date=null,$country_id,$web_service=null)
     {
         $sql = ' SELECT ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
         $sql .= ' FROM bf_ecp_compititor_analysis_product AS ecap ';
@@ -877,49 +926,72 @@ class Ecp_model extends BF_Model
             $sql .= ' AND DATE_FORMAT(ecap.compititor_analysis_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
         }
         $sql .= 'ORDER BY bu.display_name ASC ';
-        $distributor_analysis = $this->grid->get_result_res($sql);
-
-        if (isset($distributor_analysis['result']) && !empty($distributor_analysis['result'])) {
-            $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Compititor Product Name','Quantity','Our Product');
-            $analysis['count'] = count($analysis['head']);
-            if ($page != null || $page != "") {
-                $i = $page * 10 - 9;
-            } else {
-                $i = 1;
-            }
-            foreach ($distributor_analysis['result'] as $rm) {
-
-                if ($local_date != null) {
-                    $date3 = strtotime($rm['created_on']);
-                    $entry_date = date($local_date, $date3);
-
-                } else {
-                    $entry_date = $rm['created_on'];
-                }
-                $month = strtotime($rm['compititor_analysis_month']);
-                $month = date('F - Y', $month);
-
-                $quantity = '<div class="quantity_' . $rm["compititor_product_details_id"] . '"><span class="quantity">' . $rm['quantity'] . '</span></div>';
-
-                $analysis['row'][] = array($i, $rm['compititor_product_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$rm['compititor_product_name'],$quantity,$rm['product_sku_name']);
-                $i++;
-            }
-            $analysis['eye'] = '';
-            $analysis['action'] = 'is_action';
-            $analysis['edit'] = 'is_edit';
-            $analysis['delete'] = 'is_delete';
-            $analysis['pagination'] = $distributor_analysis['pagination'];
-            return $analysis;
-        } else {
-            return false;
+        if(!empty($web_service) && $web_service=='web_service')
+        {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $info = $this->db->query($sql);
+            // For Pagination
+            $distributor_analysis = $info->result_array();
+            return $distributor_analysis;
         }
+        else{
+            $distributor_analysis = $this->grid->get_result_res($sql);
+
+            if (isset($distributor_analysis['result']) && !empty($distributor_analysis['result'])) {
+                $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date','Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Compititor Product Name','Quantity','Our Product');
+                $analysis['count'] = count($analysis['head']);
+                if ($page != null || $page != "") {
+                    $i = $page * 10 - 9;
+                } else {
+                    $i = 1;
+                }
+                foreach ($distributor_analysis['result'] as $rm) {
+
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['created_on']);
+                        $entry_date = date($local_date, $date3);
+
+                    } else {
+                        $entry_date = $rm['created_on'];
+                    }
+                    $month = strtotime($rm['compititor_analysis_month']);
+                    $month = date('F - Y', $month);
+
+                    $quantity = '<div class="quantity_' . $rm["compititor_product_details_id"] . '"><span class="quantity">' . $rm['quantity'] . '</span></div>';
+
+                    $analysis['row'][] = array($i, $rm['compititor_product_details_id'],$entry_date,$month, $rm['political_geography_name'], $rm['user_code'], $rm['display_name'], $rm['compititor_name'],$rm['compititor_product_name'],$quantity,$rm['product_sku_name']);
+                    $i++;
+                }
+                $analysis['eye'] = '';
+                $analysis['action'] = 'is_action';
+                $analysis['edit'] = 'is_edit';
+                $analysis['delete'] = 'is_delete';
+                $analysis['pagination'] = $distributor_analysis['pagination'];
+                return $analysis;
+            } else {
+                return false;
+            }
+        }
+
     }
 
-    public function update_compititor_details()
+    public function update_compititor_details($web_service=null)
     {
-        $id = $this->input->post("id");
-        $amount = $this->input->post("amount");
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
+            $id = explode(',', $this->input->post("id"));
+            $amount = explode(',', $this->input->post("amount"));
+
+        }
+        else{
+            $id = $this->input->post("id");
+            $amount = $this->input->post("amount");
+        }
         foreach($id as $k=>$val_id)
         {
             $retailer_compititor_update = array(
@@ -939,8 +1011,16 @@ class Ecp_model extends BF_Model
 
     public function update_compititor_product_details()
     {
-        $id = $this->input->post("id");
-        $quantity = $this->input->post("quantity");
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+            $id = explode(',', $this->input->post("id"));
+            $quantity = explode(',', $this->input->post("quantity"));
+
+        }
+        else{
+            $id = $this->input->post("id");
+            $quantity = $this->input->post("quantity");
+        }
 
         foreach($id as $k=>$val_id)
         {

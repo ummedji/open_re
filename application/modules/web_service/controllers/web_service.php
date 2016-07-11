@@ -276,6 +276,8 @@ class Web_service extends Front_Controller
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
             $materials = $this->ecp_model->get_materials_by_country_id($country_id);
             $compititor = $this->ecp_model->get_all_copititor_data($country_id);
+            $reason=$this->ecp_model->all_reason_noworking_details($country_id);
+            $leave_type=$this->ecp_model->all_leave_type_details($country_id);
 
             $dist_array = array();
             if (!empty($distributors)) {
@@ -342,7 +344,30 @@ class Web_service extends Front_Controller
                 }
             }
 
-            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units,"materials" => $mtl_array,"compititor" =>$comp_array);
+            $reason_array = array();
+            if (!empty($reason)) {
+                foreach ($reason as $reasons) {
+                    $reason = array(
+                        "id" => $reasons['reason_country_id'],
+                        "reason_name" => $reasons['reason_country_name'],
+                    );
+                    array_push($reason_array, $reason);
+                }
+            }
+
+            $leave_type_array = array();
+            if (!empty($leave_type)) {
+                foreach ($leave_type as $leave_types) {
+                    $leave_type = array(
+                        "id" => $leave_types['leave_type_country_id'],
+                        "short_code" => $leave_types['short_code'],
+                    );
+                    array_push($leave_type_array, $leave_type);
+                }
+            }
+
+
+            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units,"materials" => $mtl_array,"compititor" =>$comp_array,"reasons" => $reason_array,"leave_type" =>$leave_type_array);
         //  testdata($data);
             $result['status'] = true;
             $result['message'] = 'Success';
@@ -1307,8 +1332,7 @@ class Web_service extends Front_Controller
         {
            if($role_id == 7)
            {
-               if( isset($year) && !empty($year) && isset($region) && !empty($region) && isset($territory) && !empty($territory)
-                   && isset($region) && !empty($region))
+               if( isset($year) && !empty($year))
                {
                    $scheme_view = $this->ishop_model->view_schemes_detail($user_id,$country_id,$year,$region,$territory,$role_id,$retailer,null,'web_service');
                    if(!empty($scheme_view))
@@ -3490,30 +3514,280 @@ class Web_service extends Front_Controller
 
     }
 
-    /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
+    public function saveProductCompititorRetailerAnalysis()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id))) {
 
-    /*$geolevels3 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,null,$default_type,$action_data);
-                    if(!empty($geolevels3))
-                    {
-                        foreach($geolevels3 as $k3 => $geolevel3)
-                        {
-                            $g3 = array(
-                                "id"=>$geolevel3['political_geo_id'],
-                                "political_geography_name"=>$geolevel3['political_geography_name'],
-                            );
-                            $final_array[] = $g3; // Add Geo Level 3 Into Final Array
-                            $parent_geo_id3 = $geolevel3['political_geo_id'];
-                            $distibutors_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id3, $country_id, $radio_type, null);
-                            $distibutors_names = json_decode($distibutors_names, true);
-                            if(!empty($distibutors_names))
-                            {
-                                foreach ($distibutors_names as $k1 => $distibutors_name)
-                                {
-                                    $final_array[$k3]['distributors'][] = $distibutors_name; // Add Geo Level 1 Into Final Array
-                                }
-                            }
+                $insert=$this->ecp_model->add_retailer_compititor_product_details($user_id,$country_id,'web_service');
+            if($insert==1){
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+                $result['data'] = '';
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+    }
+
+    public function getCompititorDistributorAnalysis()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id))) {
+            $radio_checked='9';
+            $final_array = array();
+            $geo_level = $this->ecp_model->get_employee_geo_data($user_id, $country_id, $role_id, $parent_geo_id = null, $action_data = null,$radio_checked);
+            // testdata($geo_level);
+            if (!empty($geo_level))
+            {
+                foreach ($geo_level as $k2 => $geolevel2) {
+                    $g2 = array(
+                        "id" => $geolevel2['political_geo_id'],
+                        "political_geography_name" => $geolevel2['political_geography_name'],
+                    );
+                    $final_array['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
+                    $parent_geo_id2 = $geolevel2['political_geo_id'];
+                    $radio_type = 'distributor';
+                    $distributors_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id2, $country_id, $radio_type, null);
+                    $distributors_names = json_decode($distributors_names, true);
+                    if (!empty($distributors_names)) {
+                        foreach ($distributors_names as $k1 => $distributors_name) {
+                            $final_array['geolevel2'][$k2]['distributors'][] = $distributors_name; // Add Geo Level 1 Into Final Array
                         }
-                    }*/
+                    }
+                }
+            }
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = array($final_array);
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    public function saveTotalCompititorDistributorAnalysis()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id))) {
+
+            $insert=$this->ecp_model->add_distributor_compititor_details($user_id,$country_id,'web_service');
+            if($insert==1){
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+                $result['data'] = '';
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+    }
+
+    public function saveProductCompititorDistributorAnalysis()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id))) {
+
+            $insert=$this->ecp_model->add_distributor_compititor_product_details($user_id,$country_id,'web_service');
+            if($insert==1){
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+                $result['data'] = '';
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+    }
+
+    public function getCompititorRetailer()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $radio = $this->input->get_post('radio');
+        $from_month = $this->input->get_post('from_month');
+        $to_month = $this->input->get_post('to_month');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($radio) && !empty($radio)) && (isset($from_month) && !empty($from_month)) && (isset($to_month) && !empty($to_month)))
+        {
+            $retailer_compititor_details = array();
+            if($radio == 'total'){
+                $retailer_compititor_details = $this->ecp_model->get_retailer_compititor_details_view($from_month, $to_month,$page=null,$local_date=null,$country_id,'web_service');
+            }
+            elseif($radio == 'product'){
+                $retailer_compititor_details = $this->ecp_model->get_retailer_compititor_product_details_view($from_month, $to_month,$page=null,$local_date=null,$country_id,'web_service');
+            }
+            // For Pagination
+            $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+            $total_rows = $count->result()[0]->total_rows;
+            $pages = $total_rows / 10;
+            $pages = ceil($pages);
+            $result['total_rows'] = $total_rows;
+            $result['pages'] = $pages;
+            // For Pagination
+
+            $result['status'] = true;
+            $result['message'] = 'Saved Successfully.';
+            $result['data'] = $retailer_compititor_details;
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+    }
+
+    public function getCompititorDistributor()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $radio = $this->input->get_post('radio');
+        $from_month = $this->input->get_post('from_month');
+        $to_month = $this->input->get_post('to_month');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($radio) && !empty($radio)) && (isset($from_month) && !empty($from_month)) && (isset($to_month) && !empty($to_month)))
+        {
+            $distributor_compititor_details = array();
+            if($radio == 'total'){
+                $distributor_compititor_details = $this->ecp_model->get_distributor_compititor_details_view($from_month, $to_month,$page=null,$local_date=null,$country_id,'web_service');
+            }
+            elseif($radio == 'product'){
+                $distributor_compititor_details = $this->ecp_model->get_distributor_compititor_product_details_view($from_month, $to_month,$page=null,$local_date=null,$country_id,'web_service');
+            }
+            // For Pagination
+            $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+            $total_rows = $count->result()[0]->total_rows;
+            $pages = $total_rows / 10;
+            $pages = ceil($pages);
+            $result['total_rows'] = $total_rows;
+            $result['pages'] = $pages;
+            // For Pagination
+
+            $result['status'] = true;
+            $result['message'] = 'Saved Successfully.';
+            $result['data'] = $distributor_compititor_details;
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    public function updateCompitiorAnalysis()
+    {
+        $id = $this->input->get_post('id');
+        $amount = $this->input->get_post('amount');
+        $quantity = $this->input->get_post('quantity');
+        $radio = $this->input->get_post('radio_checked');
+
+        if((isset($id) && !empty($id)) && ((isset($amount) && !empty($amount)) || (isset($quantity) && !empty($quantity))) && (isset($radio) && !empty($radio)))
+        {
+            $update='';
+            if($radio == 'total'){
+                 $update=$this->ecp_model->update_compititor_details('web_service');
+            }
+            elseif($radio == 'product'){
+                 $update=$this->ecp_model->update_compititor_product_details('web_service');
+            }
+            if($update==1){
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+                $result['data'] = '';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function deleteCompitiorAnalysis()
+    {
+        $id = $this->input->get_post('id');
+        $radio = $this->input->get_post('radio_checked');
+
+        if((isset($id) && !empty($id)) && (isset($radio) && !empty($radio)))
+        {
+            $delete='';
+            if($radio == 'total'){
+                $delete=$this->ecp_model->delete_compititor_details($id);
+            }
+            elseif($radio == 'product'){
+                $delete=$this->ecp_model->delete_compititor_product_details($id);
+            }
+            if($delete==1){
+                $result['status'] = true;
+                $result['message'] = 'Deleted Successfully.';
+                $result['data'] = '';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function getNoWorking()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)))
+        {
+            $no_working_details = $this->ecp_model->all_no_working_details($user_id,$country_id);
+
+            $result['status'] = true;
+            $result['message'] = 'Success.';
+            $result['data'] = $no_working_details;
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+
+    }
+
+    /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
 
 	//ESP WEBSERVICE
 	

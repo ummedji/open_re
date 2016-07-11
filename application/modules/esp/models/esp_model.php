@@ -501,6 +501,33 @@ class Esp_model extends BF_Model
         
     }
     
+    public function forecast_freeze_status_history($forecast_id,$login_userid){
+        
+        $this->db->select('*');
+        $this->db->from("bf_forecast_freeze_status_history as bffsh");
+        
+        $this->db->where("bffsh.forecast_id",$forecast_id);
+        $this->db->where("bffsh.freeze_by_id",$login_userid);
+        
+        $forecast_data = $this->db->get()->result_array();
+        
+        
+        $forecast_array = array();
+        
+        if(!empty($forecast_data)){
+            $forecast_array["forecast_id"] = $forecast_data[0]['forecast_id'];
+          //  $forecast_array["created_by_user"] = $forecast_data[0]['created_by_user'];
+            $forecast_array["freeze_status"] = $forecast_data[0]['freeze_status'];
+            $forecast_array["freeze_user_id"] = $forecast_data[0]['freeze_by_id'];
+        }
+        if(isset($forecast_array) && !empty($forecast_array)) {
+            return $forecast_array;
+        } else{
+            return 0;
+        }
+        
+    }
+    
     public function get_freeze_user_parent_data($freeze_user_id){
         
         
@@ -524,7 +551,6 @@ class Esp_model extends BF_Model
     
     public function get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id){
         
-        
         $this->db->select("*");
         $this->db->from("bf_forecast_lock_status_history as bflsh");
         
@@ -536,10 +562,14 @@ class Esp_model extends BF_Model
         
        // echo $this->db->last_query();
         
+       
+        
         if(isset($user_lock_data) && !empty($user_lock_data)) {
+            // dumpme($user_lock_data);
             return $user_lock_data;
         } else{
-            return 0;
+            //echo "INNN";
+            return "0";
         }
         
         
