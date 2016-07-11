@@ -486,15 +486,18 @@ class Ecp_model extends BF_Model
     }
 
 
-    public function add_retailer_compititor_details($user_id,$country_id)
+    public function add_retailer_compititor_details($user_id,$country_id,$web_service=null)
     {
-        $month_da = $this->input->post("month_da");
-        $retailer_id = $this->input->post("retailer_id");
+
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            $month_da = $this->input->post("month_data");
+            $retailer_id = $this->input->post("retailer_id");
             $comp_id = explode(',', $this->input->post("comp_id"));
             $amount = explode(',', $this->input->post("amount"));
         } else {
+            $month_da = $this->input->post("month_da");
+            $retailer_id = $this->input->post("retailer_id");
             $comp_id = $this->input->post("comp_id");
             $amount = $this->input->post("amount");
         }

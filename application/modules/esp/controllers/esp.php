@@ -241,23 +241,23 @@ class Esp extends Front_Controller
                                             
                                             $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
                                             
-                                            dumpme($senior_lock_data);
+                                            //dumpme($senior_lock_data);
                                             
                                             if($senior_lock_data != 0){
                                                 
                                                //GET LOWEST LEVEL USER LOGIN
                                                //GET SENIOR LOCK DATA
                                                 
+                                              //  dumpme($lock_show_data);
+                                                
                                                 if(isset($senior_lock_data["lock_status"]) && $senior_lock_data["lock_status"] == 1){
                                                     
-                                                    
+                                                  //  echo $lock_show_data."===UMMED";
                                                     
                                                     //SHOW UNLOCK BUTTON
                                                     //MAKE CLICKABLE ON BASICS OF LOWEST USER LOGIN
                                                     
-                                                    if($lock_show_data != 0){
-                                                        
-                                                     
+                                                    if($lock_show_data == 0){
                                                         
                                                         //LOGIN USER HAVING PARENT DATA (HIGHEST OR MEDIUM LEVEL USER)
                                                         $clickable = "pointer-events: none;opacity: 0.7;";
@@ -273,12 +273,16 @@ class Esp extends Front_Controller
                                                     
                                                     
                                                 }
-                                                else{
+                                                else
+                                                {
                                                     
+                                                   // dumpme($lock_show_data);
+                                                    
+                                                   // echo "UMMED111";
                                                     //SHOW LOCK BUTTON
                                                     //MAKE CLICKABLE ON BASICS OF LOWEST USER LOGIN
                                                     
-                                                    if($lock_show_data != 0){
+                                                    if($lock_show_data == 0){
                                                         
                                                        
                                                         
@@ -330,7 +334,7 @@ class Esp extends Front_Controller
                                 {
                                     // SHOW UNLOCK FOR LOCKING DATA BUT IF USER IS LOWEST THAN MAKE IT DISABLED
                                     
-                                   if($lock_show_data != 0){
+                                   if($lock_show_data == 0){
                                       
                                         //LOGIN USER HAVING PARENT DATA (HIGHEST OR MEDIUM LEVEL USER)
                                         $clickable = "pointer-events: none;opacity: 0.7;";

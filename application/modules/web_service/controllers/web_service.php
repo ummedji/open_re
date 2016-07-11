@@ -1557,6 +1557,11 @@ class Web_service extends Front_Controller
 
                 $id = $this->ishop_model->delete_current_stock_detail($id);
             }
+            elseif($mode == "material_request"){
+
+                $id = $this->ecp_model->delete_material_detail($id);
+            }
+
             if($id)
             {
                 $result['status'] = true;
@@ -3418,19 +3423,97 @@ class Web_service extends Front_Controller
     }
 
 
-    public function getTotalCompititorRetailerAnalysis()
+    public function getCompititorRetailerAnalysis()
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
-        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id)))
-        {
+        $role_id = $this->input->get_post('role_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id))) {
+            $radio_checked='10';
+            $final_array = array();
+            $geo_level = $this->ecp_model->get_employee_geo_data($user_id, $country_id, $role_id, $parent_geo_id = null, $action_data = null,$radio_checked);
+           // testdata($geo_level);
+            if (!empty($geo_level))
+            {
+                foreach ($geo_level as $k2 => $geolevel2) {
+                    $g2 = array(
+                        "id" => $geolevel2['political_geo_id'],
+                        "political_geography_name" => $geolevel2['political_geography_name'],
+                    );
+                    $final_array['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
+                    $parent_geo_id2 = $geolevel2['political_geo_id'];
+                    $radio_type = 'retailer';
+                    $retailers_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id2, $country_id, $radio_type, null);
+                    $retailers_names = json_decode($retailers_names, true);
+                    if (!empty($retailers_names)) {
+                        foreach ($retailers_names as $k1 => $retailers_name) {
+                            $final_array['geolevel2'][$k2]['retailers'][] = $retailers_name; // Add Geo Level 1 Into Final Array
+                        }
+                    }
+                }
+            }
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = array($final_array);
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    public function saveTotalCompititorRetailerAnalysis()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id))) {
+
+            $insert=$this->ecp_model->add_retailer_compititor_details($user_id,$country_id,'web_service');
+            if($insert==1){
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+                $result['data'] = '';
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
 
         }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
 
     }
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
 
+    /*$geolevels3 = $this->ishop_model->get_employee_geo_data($user_id,$country_id,$role_id,null,$default_type,$action_data);
+                    if(!empty($geolevels3))
+                    {
+                        foreach($geolevels3 as $k3 => $geolevel3)
+                        {
+                            $g3 = array(
+                                "id"=>$geolevel3['political_geo_id'],
+                                "political_geography_name"=>$geolevel3['political_geography_name'],
+                            );
+                            $final_array[] = $g3; // Add Geo Level 3 Into Final Array
+                            $parent_geo_id3 = $geolevel3['political_geo_id'];
+                            $distibutors_names = $this->ishop_model->get_user_for_geo_data($parent_geo_id3, $country_id, $radio_type, null);
+                            $distibutors_names = json_decode($distibutors_names, true);
+                            if(!empty($distibutors_names))
+                            {
+                                foreach ($distibutors_names as $k1 => $distibutors_name)
+                                {
+                                    $final_array[$k3]['distributors'][] = $distibutors_name; // Add Geo Level 1 Into Final Array
+                                }
+                            }
+                        }
+                    }*/
 
 	//ESP WEBSERVICE
 	
