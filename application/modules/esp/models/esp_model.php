@@ -482,6 +482,9 @@ class Esp_model extends BF_Model
         
         $forecast_data = $this->db->get()->result_array();
         
+        //echo $this->db->last_query();
+       // die;
+        
         $forecast_array = array();
         
         if(!empty($forecast_data)){
@@ -507,6 +510,9 @@ class Esp_model extends BF_Model
         $this->db->where("bmerp.user_id",$freeze_user_id);
         $this->db->where("bmerp.to_date",NULL);
         $user_level_data = $this->db->get()->result_array();
+        
+       // echo $this->db->last_query();
+       // die;
         
         if(isset($user_level_data) && !empty($user_level_data)) {
             return $user_level_data[0]['reporting_user_id'];

@@ -3952,7 +3952,7 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function get_distributor_by_retailer($country_id, $retailer_id)
+    public function get_distributor_by_retailer($country_id, $retailer_id,$web_service=null)
     {
 
         $this->db->select('*');
@@ -3966,6 +3966,9 @@ class Ishop_model extends BF_Model
 
         $retailer_distributer_data = $this->db->get()->result_array();
         if (isset($retailer_distributer_data) && !empty($retailer_distributer_data)) {
+            if($web_service=='web_service'){
+                return $retailer_distributer_data;
+            }
             return json_encode($retailer_distributer_data);
         } else {
             return 0;

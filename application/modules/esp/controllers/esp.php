@@ -125,16 +125,20 @@ class Esp extends Front_Controller
     */
     
     
-    public function get_higest_level_employee_for_loginuser($login_user_id){
+    public function get_higher_level_employee_for_loginuser($login_user_id){
+        
+        $user_array = array();
         
         $u_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         if($u_data != 0){
            
             $login_user_id = $u_data;
-            $this->get_higest_level_employee_for_loginuser($login_user_id);
+            
+            $user_array[] = $login_user_id;
+            $this->get_higher_level_employee_for_loginuser($login_user_id);
         }else{
-          
-            return  $login_user_id;
+            
+            return  $user_array;
           
         }
         
@@ -182,9 +186,9 @@ class Esp extends Front_Controller
         
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
-      //  $login_user_higest_level_data = $this->get_higest_level_employee_for_loginuser($login_user_id);
-        
-       // testdata($login_user_higest_level_data);
+        $login_user_higher_level_data = $this->get_higher_level_employee_for_loginuser($login_user_id);
+      //  echo "aaa";
+      //  testdata($login_user_higher_level_data);
         
         $html = "";
         $html1 = "";
@@ -198,53 +202,75 @@ class Esp extends Front_Controller
                 $html .= '<thead>';
                     $html .= '<tr style="border-bottom: solid 1px #b1b1b1;">';
                         $html .= '<th></th>';
+            
+                        $forecast_id = "";
+                        $forecast_freeze_data2 = "";
+            
                         foreach($month_data as $monthkey => $monthvalue){
+                            
+                           // if($forecast_id == ""){
+                            
+                                foreach($pbg_sku_data as $skukey => $skuvalue){
+
+                                     $employee_month_product_forecast_data2 = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+
+                                    if($employee_month_product_forecast_data2 != 0){
+                                        $forecast_id = $employee_month_product_forecast_data2[0]['forecast_id'];
+                                        $forecast_freeze_data2 = $this->esp_model->get_forecast_freeze_status($forecast_id);
+
+                                        break;
+                                    }
+
+                                }
+                          //  }
+                            
+                          //  dumpme($forecast_freeze_data2);
+                          //  echo $forecast_id;
+                            
+                            //$forecast_freeze_data2 = $this->esp_model->get_forecast_freeze_status($forecast_id);
+                            
+                            //testdata($forecast_freeze_data2);
+                            
+                            if($forecast_freeze_data2 != "" || !empty($forecast_freeze_data2)){
+                                
+                                if($forecast_freeze_data2["freeze_status"] == 1){
+                                    
+                                    //LOGIC FOR SHOWING SENIOR LOCK STATUS OR LOGIN USER
+                                    
+                                    if($login_user_id == $forecast_freeze_data2["freeze_user_id"]){
+                                        
+                                        //THAN GET HIS SENIOR LOCK STATUS
+                                        
+                                    }
+                                    else
+                                    {
+                                        //CHECK FOR LOWEST USER LOGIN OR NOT
+                                        
+                                    }
+                                    
+                                    
+                                }
+                                else
+                                {
+                                    // SHOW UNLOCK FOR LOCKING DATA BUT IF USER IS LOWEST THAN MAKE IT DISABLED
+                                }
+                                
+                                
+                            }
                             
                             $time=strtotime($monthvalue);
                             $month=date("F",$time);
                             $year=date("Y",$time);
                             
-                            if($lock_show_data != 0){
-                                
-                                foreach($pbg_sku_data as $skukey => $skuvalue){
-                                    
-                                 $employee_month_product_forecast_data1 = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
-                    
-                                 $lock_status = 0;
-                                 $lock_by_id = "";
-                                 $check_lock_forecast_id = "";
-
+                            $lock_data = "";
                             
-                                if($employee_month_product_forecast_data1 != 0){
-
-                                   // $lock_status = $employee_month_product_forecast_data1[0]['lock_status'];
-                                   // $lock_by_id = $employee_month_product_forecast_data1[0]['lock_by_id'];
-                                    $check_lock_forecast_id = $employee_month_product_forecast_data1[0]['forecast_id'];
-
-                                   $forecast_lock_history_data =  $this->esp_model->get_employee_month_product_forecast_lock_data($login_user_id,$check_lock_forecast_id,$monthvalue);
-                                    if(!empty($forecast_lock_history_data)){
-                                        $lock_status = $forecast_lock_history_data[0]['lock_status'];
-                                    }
-                                
-                                }
-                                    
-                                if($lock_status == 0){
-                                    
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
-                                    }
-                                    else{
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
-                                    } 
                             
-                                }
-                            }
-                            else{
-                                $lock_data = "";
-                            }
                             
                             $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
 							
                         }
+            
+            die;
                        
                    $html .= '</tr>';
                    $html .= '<tr>';

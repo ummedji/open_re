@@ -271,8 +271,9 @@ class Web_service extends Front_Controller
         {
             $distributors = $this->ishop_model->get_distributor_by_user_id($country_id);
             $retailers = $this->ishop_model->get_retailer_by_distributor_id($user_id, $country_id);
-           // $retailer = $this->ishop_model->get_distributor_by_user_id($country_id);
+
             $product_skus = $this->ishop_model->get_product_sku_by_user_id($country_id);
+            $materials = $this->ecp_model->get_materials_by_country_id($country_id);
 
             $dist_array = array();
             if (!empty($distributors)) {
@@ -535,6 +536,37 @@ class Web_service extends Front_Controller
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = !empty($order_array) ? $order_array : array();
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function get_distributor_by_retailer()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if(isset($user_id) && isset($country_id) && !empty($user_id) && !empty($country_id))
+        {
+            $distributors= $this->ishop_model->get_distributor_by_retailer($country_id,$user_id,'web_service');
+            $dist_array=array();
+            if (!empty($distributors)) {
+                foreach ($distributors as $distributor) {
+
+                    $dist = array(
+                        "id" => $distributor['id'],
+                        "display_name" => $distributor['display_name'],
+                    );
+                    array_push($dist_array, $dist);
+                }
+            }
+            $data = array("distributors" => $dist_array);
+            $result['status'] = true;
+            $result['message'] = 'Success';
+            $result['data'] = $data;
         }
         else
         {
