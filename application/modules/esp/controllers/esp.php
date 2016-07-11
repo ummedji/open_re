@@ -188,7 +188,7 @@ class Esp extends Front_Controller
         
         //$login_user_higher_level_data = $this->get_higher_level_employee_for_loginuser($login_user_id);
        // echo "aaa";
-       //testdata($login_user_parent_data);
+      // testdata($lock_show_data);
         
         $html = "";
         $html1 = "";
@@ -206,6 +206,8 @@ class Esp extends Front_Controller
                         $forecast_id = "";
                         $forecast_freeze_data2 = "";
             
+                        $lock_data = "";
+            
                         foreach($month_data as $monthkey => $monthvalue){
                             
                            // if($forecast_id == ""){
@@ -222,48 +224,53 @@ class Esp extends Front_Controller
                                     }
 
                                 }
-                          //  }
-                            
-                            
-                          //  echo $forecast_id;
-                            
-                            //$forecast_freeze_data2 = $this->esp_model->get_forecast_freeze_status($forecast_id);
-                            
-                            //testdata($forecast_freeze_data2);
+                         
                             
                             if($forecast_freeze_data2 != "" || !empty($forecast_freeze_data2)){
                                 
                                 if($forecast_freeze_data2["freeze_status"] == 1){
-                                   // dumpme($forecast_freeze_data2);
+                                  
                                     //LOGIC FOR SHOWING SENIOR LOCK STATUS OR LOGIN USER
                                     
-                                   // echo $login_user_id ."==". $forecast_freeze_data2["freeze_user_id"];
-                                    
-                                   // if($login_user_id == $forecast_freeze_data2["freeze_user_id"]){
-                                        
                                         //THAN GET JUST HIS SENIOR
                                         
                                         if($login_user_parent_data)
                                         {
-                                            
-                                            echo $login_user_parent_data."===".$monthvalue."===".$forecast_id."</br>";
-                                            
+                                          
                                             //THAN GET HIS JUST SENIOR LOCK STATUS
                                             
                                             $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
                                             
+                                            dumpme($senior_lock_data);
+                                            
                                             if($senior_lock_data != 0){
                                                 
-                                                //GET LOWEST LEVEL USER LOGIN
-                                                
-                                                
-                                                
+                                               //GET LOWEST LEVEL USER LOGIN
                                                //GET SENIOR LOCK DATA
                                                 
-                                                if($senior_lock_data["lock_status"] == 1){
+                                                if(isset($senior_lock_data["lock_status"]) && $senior_lock_data["lock_status"] == 1){
+                                                    
+                                                    
                                                     
                                                     //SHOW UNLOCK BUTTON
                                                     //MAKE CLICKABLE ON BASICS OF LOWEST USER LOGIN
+                                                    
+                                                    if($lock_show_data != 0){
+                                                        
+                                                     
+                                                        
+                                                        //LOGIN USER HAVING PARENT DATA (HIGHEST OR MEDIUM LEVEL USER)
+                                                        $clickable = "pointer-events: none;opacity: 0.7;";
+                                                    }
+                                                    else
+                                                    {
+                                                        
+                                                        //LOGIN USER HAVING NO PARENT DATA (LOWEST LEVEL USER)
+                                                        $clickable = "";
+                                                    }
+                                                    
+                                                     $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+                                                    
                                                     
                                                 }
                                                 else{
@@ -271,33 +278,71 @@ class Esp extends Front_Controller
                                                     //SHOW LOCK BUTTON
                                                     //MAKE CLICKABLE ON BASICS OF LOWEST USER LOGIN
                                                     
+                                                    if($lock_show_data != 0){
+                                                        
+                                                       
+                                                        
+                                                        //LOGIN USER HAVING PARENT DATA (HIGHEST OR MEDIUM LEVEL USER)
+                                                        $clickable = "pointer-events: none;opacity: 0.7;";
+                                                    }
+                                                    else
+                                                    {
+                                                       
+                                                        //LOGIN USER HAVING NO PARENT DATA (LOWEST LEVEL USER)
+                                                        $clickable = "";
+                                                    }
+                                                    
+                                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+                                                    
                                                 }
-                                                
                                             }
                                             else
                                             {
-                                                
-                                                
-                                                
+                                                 if($lock_show_data != 0){
+                                                     
+                                                     //IF SENIOR IS NOT LOCKED AND USER HAVING CHILD DATA
+                                                     
+                                                     $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
+                                                     
+                                                     if($self_lock_data != 0){
+                                                         
+                                                         //IF LOCKED BY SELF
+                                                         
+                                                        
+                                                         
+                                                          $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+                                                         
+                                                     }
+                                                     else
+                                                     {
+                                                           
+                                                     
+                                                         
+                                                         $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+                                                         
+                                                     }
+                                                     
+                                                 }
                                             }
-                                            
-                                            
                                         }
-                                        
-                                  //  }
-                                  //  else
-                                  //  {
-                                        //CHECK FOR LOWEST USER LOGIN OR NOT
-                                        
-                                  //      $check_login_user_data = 
-                                        
-                                 //   }
-                                    
-                                    
                                 }
                                 else
                                 {
                                     // SHOW UNLOCK FOR LOCKING DATA BUT IF USER IS LOWEST THAN MAKE IT DISABLED
+                                    
+                                   if($lock_show_data != 0){
+                                      
+                                        //LOGIN USER HAVING PARENT DATA (HIGHEST OR MEDIUM LEVEL USER)
+                                        $clickable = "pointer-events: none;opacity: 0.7;";
+                                    }
+                                    else
+                                    {
+                                       
+                                        //LOGIN USER HAVING NO PARENT DATA (LOWEST LEVEL USER)
+                                        $clickable = "";
+                                    }
+                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+                                    
                                 }
                                 
                                 
@@ -306,9 +351,6 @@ class Esp extends Front_Controller
                             $time=strtotime($monthvalue);
                             $month=date("F",$time);
                             $year=date("Y",$time);
-                            
-                            $lock_data = "";
-                            
                             
                             
                             $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';

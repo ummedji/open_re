@@ -831,7 +831,7 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
         $role_id = $this->input->get_post('role_id');
-        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) &&( isset($role_id) && !empty($role_id)) )
         {
             $page_function = 'po_acknowledgement';
             $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$user_id,null,null,null,null,null,$page_function,null,'web_service');
@@ -852,14 +852,29 @@ class Web_service extends Front_Controller
                 {
 
                     $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
-                    $ord = array(
-                        "id" => $order['order_id'],
-                        "entered_by" => $order['display_name'],
-                        "po_no" => $order['PO_no'],
-                        "order_tracking_no" => $order['order_tracking_no'],
-                        "order_date" => $order['order_date'],
-                        "details" => !empty($order_details) ? $order_details : array()
-                    );
+                    if($role_id == 9)
+                    {
+                        $ord = array(
+                            "id" => $order['order_id'],
+                            "entered_by" => $order['display_name'],
+                            "po_no" => $order['PO_no'],
+                            "order_tracking_no" => $order['order_tracking_no'],
+                            "order_date" => $order['order_date'],
+                            "details" => !empty($order_details) ? $order_details : array()
+                        );
+                    }
+                    else{
+                        $ord = array(
+                            "id" => $order['order_id'],
+                            "entered_by" => $order['display_name'],
+                            "po_no" => $order['PO_no'],
+                            "order_tracking_no" => $order['order_tracking_no'],
+                            "distributor"=>$order['t_dn'],
+                            "order_date" => $order['order_date'],
+                            "details" => !empty($order_details) ? $order_details : array()
+                        );
+                    }
+
                     array_push($order_array, $ord);
                 }
             }
@@ -3400,6 +3415,18 @@ class Web_service extends Front_Controller
             $result['message'] = "All Fields are Required.";
         }
         $this->do_json($result);
+    }
+
+
+    public function getTotalCompititorRetailerAnalysis()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id)))
+        {
+
+        }
+
     }
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
