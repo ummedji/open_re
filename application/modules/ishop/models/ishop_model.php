@@ -5434,7 +5434,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     }
 
 
-    public function update_po_data($orderid, $po_numdata)
+    public function update_po_data($orderid, $po_numdata,$web_service=null)
     {
 
         $update_data = array(
@@ -5444,8 +5444,22 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $this->db->where('order_id', $orderid);
         $this->db->update('bf_ishop_orders', $update_data);
-        echo $this->db->affected_rows();
-        die;
+        if($web_service=='web_service')
+        {
+            if($this->db->affected_rows() > 0){
+                return 1;
+            }
+            else{
+                return 0;
+            }
+
+        }
+        else{
+            echo $this->db->affected_rows();
+            die;
+        }
+
+
     }
 
     public function check_po_data($po_numdata)

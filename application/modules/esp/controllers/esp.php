@@ -234,12 +234,12 @@ class Esp extends Front_Controller
                             if($forecast_freeze_data2 != "" || !empty($forecast_freeze_data2)){
                                 
                                 if($forecast_freeze_data2["freeze_status"] == 1){
-                                    dumpme($forecast_freeze_data2);
+                                   // dumpme($forecast_freeze_data2);
                                     //LOGIC FOR SHOWING SENIOR LOCK STATUS OR LOGIN USER
                                     
-                                    echo $login_user_id ."==". $forecast_freeze_data2["freeze_user_id"];
+                                   // echo $login_user_id ."==". $forecast_freeze_data2["freeze_user_id"];
                                     
-                                    if($login_user_id == $forecast_freeze_data2["freeze_user_id"]){
+                                   // if($login_user_id == $forecast_freeze_data2["freeze_user_id"]){
                                         
                                         //THAN GET JUST HIS SENIOR
                                         
@@ -250,24 +250,48 @@ class Esp extends Front_Controller
                                             
                                             //THAN GET HIS JUST SENIOR LOCK STATUS
                                             
-                                         //   $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
+                                            $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
                                             
-                                           // dumpme($senior_lock_data);
-                                            
-                                           // {
+                                            if($senior_lock_data != 0){
                                                 
-                                          //  }
+                                                //GET LOWEST LEVEL USER LOGIN
+                                                
+                                                
+                                                
+                                               //GET SENIOR LOCK DATA
+                                                
+                                                if($senior_lock_data["lock_status"] == 1){
+                                                    
+                                                    //SHOW UNLOCK BUTTON
+                                                    //MAKE CLICKABLE ON BASICS OF LOWEST USER LOGIN
+                                                    
+                                                }
+                                                else{
+                                                    
+                                                    //SHOW LOCK BUTTON
+                                                    //MAKE CLICKABLE ON BASICS OF LOWEST USER LOGIN
+                                                    
+                                                }
+                                                
+                                            }
+                                            else
+                                            {
+                                                
+                                                
+                                                
+                                            }
+                                            
                                             
                                         }
                                         
-                                        
-                                        
-                                    }
-                                    else
-                                    {
+                                  //  }
+                                  //  else
+                                  //  {
                                         //CHECK FOR LOWEST USER LOGIN OR NOT
                                         
-                                    }
+                                  //      $check_login_user_data = 
+                                        
+                                 //   }
                                     
                                     
                                 }

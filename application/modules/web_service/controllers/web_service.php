@@ -602,6 +602,33 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+    public function addPONumber(){
+
+        $order_id = $this->input->get_post('order_id');
+        $po_numdata = $this->input->get_post('po_data');
+
+        if(isset($order_id) && isset($po_numdata) && !empty($order_id) && !empty($po_numdata))
+        {
+
+            $po_data_status = $this->ishop_model->update_po_data($order_id,$po_numdata,'web_service');
+
+            if($po_data_status=='1'){
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = '';
+                $this->do_json($result);
+            }
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+            $this->do_json($result);
+        }
+
+
+    }
+
     /**
      * @ Function Name        : getOrderStatus
      * @ Function Params    : user_id,country_id (POST)
