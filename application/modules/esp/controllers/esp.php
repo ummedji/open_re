@@ -237,6 +237,8 @@ class Esp extends Front_Controller
                                     dumpme($forecast_freeze_data2);
                                     //LOGIC FOR SHOWING SENIOR LOCK STATUS OR LOGIN USER
                                     
+                                    echo $login_user_id ."==". $forecast_freeze_data2["freeze_user_id"];
+                                    
                                     if($login_user_id == $forecast_freeze_data2["freeze_user_id"]){
                                         
                                         //THAN GET JUST HIS SENIOR

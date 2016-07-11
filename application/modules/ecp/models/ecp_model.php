@@ -38,15 +38,27 @@ class Ecp_model extends BF_Model
      * @ Function Return     : Array
      * */
 
-    public function add_material_request_detail($user_id,$country_id)
+    public function add_material_request_detail($user_id,$country_id,$web_service = null)
     {
-        $request_date = $this->input->post("material_request_date");
+        if(!empty($web_service) && $web_service=='web_service'){
+            $request_date = $this->input->post("request_date");
 
-        $req_date = str_replace('/', '-', $request_date);
-        $material_request_date =  date('Y-m-d', strtotime($req_date));
-        $promotional_country_id = $this->input->post("promotional_country_id");
-        $quantity = $this->input->post("quantity");
-        $remark = $this->input->post("remark");
+            $req_date = str_replace('/', '-', $request_date);
+            $material_request_date =  date('Y-m-d', strtotime($req_date));
+            $promotional_country_id = $this->input->post("promotional_id");
+            $quantity = $this->input->post("quantity");
+            $remark = $this->input->post("remark");
+        }
+        else{
+            $request_date = $this->input->post("material_request_date");
+
+            $req_date = str_replace('/', '-', $request_date);
+            $material_request_date =  date('Y-m-d', strtotime($req_date));
+            $promotional_country_id = $this->input->post("promotional_country_id");
+            $quantity = $this->input->post("quantity");
+            $remark = $this->input->post("remark");
+        }
+
 
         $add_materials = array(
             'material_request_date' => $material_request_date,

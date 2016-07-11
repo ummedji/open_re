@@ -3319,7 +3319,7 @@ class Web_service extends Front_Controller
 
         if((isset($user_id) && !empty($user_id)) &&(isset($country_id) && !empty($country_id)) ) {
             $materials_request = $this->ecp_model->get_all_materials_by_country_id($country_id, null, $local_date = null, $web_service = 'web_service');
-            
+
             if (!empty($materials_request)) {
                 // For Pagination
                 $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
@@ -3350,7 +3350,29 @@ class Web_service extends Front_Controller
 
     public function saveMaterialRequest()
     {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
 
+        if(isset($user_id)&& !empty($user_id))
+        {
+            $id = $this->ecp_model->add_material_request_detail($user_id,$country_id,'web_service');
+            if($id)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Saved Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Fail';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
     }
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
