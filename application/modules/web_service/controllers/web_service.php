@@ -1585,6 +1585,14 @@ class Web_service extends Front_Controller
 
                 $id = $this->ecp_model->delete_material_detail($id);
             }
+            elseif($mode == "no_working"){
+
+                $id = $this->ecp_model->delete_no_working_detail($id);
+            }
+            elseif($mode == "leave"){
+
+                $id = $this->ecp_model->delete_leave_detail($id);
+            }
 
             if($id)
             {
@@ -3771,7 +3779,7 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)))
         {
-            $no_working_details = $this->ecp_model->all_no_working_details($user_id,$country_id);
+            $no_working_details = $this->ecp_model->all_no_working_details($user_id,$country_id,'web_service');
 
             $result['status'] = true;
             $result['message'] = 'Success.';
@@ -3784,8 +3792,74 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
 
+    }
+
+    public function saveNoWorking()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)))
+        {
+            $insert=$this->ecp_model->add_no_working_details($user_id,$country_id);
+            if($insert == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = '';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function getLeave()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)))
+        {
+            $leave_details = $this->ecp_model->all_leave_details($user_id,$country_id,'web_service');
+
+            $result['status'] = true;
+            $result['message'] = 'Success.';
+            $result['data'] = $leave_details;
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
 
     }
+
+    public function saveLeave()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)))
+        {
+
+            $insert=$this->ecp_model->add_leave_details($user_id,$country_id);
+            if($insert == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = '';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
 

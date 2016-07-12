@@ -125,24 +125,7 @@ class Esp extends Front_Controller
     */
     
     
-    public function get_higher_level_employee_for_loginuser($login_user_id){
-        
-      //  $user_array = array();
-        
-        $u_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
-        if($u_data != 0){
-           
-            $login_user_id = $u_data;
-            
-           // $user_array[] = $login_user_id;
-            $this->get_higher_level_employee_for_loginuser($login_user_id);
-        }else{
-            
-            return  $login_user_id;
-          
-        }
-        
-    }
+    
     
     public function get_pbg_sku_data($webservice_data=null){
         		
@@ -186,9 +169,9 @@ class Esp extends Front_Controller
         
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
-        //$login_user_higher_level_data = $this->get_higher_level_employee_for_loginuser($login_user_id);
-       // echo "aaa";
-      // testdata($lock_show_data);
+        $login_user_highest_level_data = $this->esp_model->get_higher_level_employee_for_loginuser($login_user_id);
+        //dumpme($login_user_highest_level_data);
+      // testdata($login_user_higher_level_data);
         
         $html = "";
         $html1 = "";
@@ -261,6 +244,19 @@ class Esp extends Front_Controller
                                                 
                                                // dumpme($senior_lock_data);
                                                 
+                                               // echo $login_user_highest_level_data."====". $senior_lock_data[0]["lock_by_id"]."----".$login_user_id ."@@@@@". $login_user_highest_level_data." bbb";
+                                                
+                                                if(($login_user_highest_level_data == $senior_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data))
+                                                 {
+                                                    
+                                                     $higest_level_user_status = "pointer-events: none;opacity: 0.7;";
+                                                 }
+                                                 else{
+                                                     
+                                                     $higest_level_user_status = "";
+                                                 }
+                                                
+                                                
                                                 if(isset($senior_lock_data["lock_status"]) && $senior_lock_data["lock_status"] == 1){
                                                     
                                                   //  echo $lock_show_data."===UMMED";
@@ -280,7 +276,7 @@ class Esp extends Front_Controller
                                                         $clickable = "";
                                                     }
                                                     
-                                                     $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />1111</a></div>";
+                                                     $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable.$higest_level_user_status."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />1111</a></div>";
                                                     
                                                     
                                                 }
@@ -305,17 +301,13 @@ class Esp extends Front_Controller
                                                         $clickable = "";
                                                     }
                                                     
-                                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />2222</a></div>";
+                                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable.$higest_level_user_status."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />2222</a></div>";
                                                     
                                                 }
                                             }
                                             else
                                             {
                                                
-                                                //echo "IIII";
-                                                
-                                                //dumpme($lock_show_data);
-                                                
                                                  if($lock_show_data != 0){
                                                      
                                                      //IF SENIOR IS NOT LOCKED AND USER HAVING CHILD DATA
@@ -328,15 +320,25 @@ class Esp extends Front_Controller
                                                          
                                                          //IF LOCKED BY SELF
                                                          
+                                                         
+                                                         if(($login_user_highest_level_data == $self_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data))
+                                                         {
+                                                             $higest_level_user_status = "pointer-events: none;opacity: 0.7;";
+                                                         }
+                                                         else{
+                                                             $higest_level_user_status = "";
+                                                         }
+
+                                                         
                                                          if($self_lock_data[0]["lock_status"] != 0){
                                                              
-                                                               $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />3333</a></div>";
+                                                               $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />3333</a></div>";
                                                              
                                                          }
                                                          else
                                                          {
                                                              
-                                                                 $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />8888</a></div>";
+                                                                 $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />4444</a></div>";
                                                              
                                                          }
                                                          
@@ -346,14 +348,14 @@ class Esp extends Front_Controller
                                                            
                                                      
                                                          
-                                                         $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />4444</a></div>";
+                                                         $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />5555</a></div>";
                                                          
                                                      }
                                                      
                                                  }
-                                                //else{
-                                                //    $lock_data = "aaaa";
-                                                //}
+                                                else{
+                                                    $lock_data = "";
+                                                }
                                                 
                                                 
                                             }
@@ -382,7 +384,7 @@ class Esp extends Front_Controller
                                         //LOGIN USER HAVING NO PARENT DATA (LOWEST LEVEL USER)
                                         $clickable = "";
                                     }
-                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />5555</a></div>";
+                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$clickable."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />6666</a></div>";
                                     
                                 }
                                 
@@ -394,21 +396,29 @@ class Esp extends Front_Controller
                                 
                                  $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
 
-                               // dumpme($self_lock_data);
+                                
 
                                  if($self_lock_data != 0){
 
                                      //IF LOCKED BY SELF
+                                     
+                                     if(($login_user_highest_level_data == $self_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data))
+                                     {
+                                         $higest_level_user_status = "pointer-events: none;opacity: 0.7;";
+                                     }
+                                     else{
+                                         $higest_level_user_status = "";
+                                     }
 
                                      if($self_lock_data[0]["lock_status"] != 0){
 
-                                           $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />3333</a></div>";
+                                           $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />7777</a></div>";
 
                                      }
                                      else
                                      {
 
-                                             $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />8888</a></div>";
+                                             $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />8888</a></div>";
 
                                      }
 
@@ -418,29 +428,20 @@ class Esp extends Front_Controller
 
 
 
-                                     $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />4444</a></div>";
+                                     $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />9999</a></div>";
 
                                  }
                                 
-                                
-                           //     die;
                             }
                             
                             $time=strtotime($monthvalue);
                             $month=date("F",$time);
                             $year=date("Y",$time);
                             
-                          //  $l_array[] = $lock_data;
-                            
-                            
-                            
                             $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
 							
                         }
             
-         //   print_r($l_array);
-            
-          //  die;
                        
                    $html .= '</tr>';
                    $html .= '<tr>';
@@ -651,10 +652,18 @@ class Esp extends Front_Controller
 
                                     if($lock_status == 1)
                                     { 
+                                        
+                                        $locked_user_parent_data = $this->esp_model->get_freeze_user_parent_data($lock_by_id);
+                                        
+                                      // echo $login_user_id ."==". $lock_by_id;
+                                        
                                         if($login_user_id == $lock_by_id){
                                             $editable = "";
                                         }
                                         elseif($login_user_parent_data == 0){
+                                            $editable = "";
+                                        }
+                                        elseif($locked_user_parent_data == $login_user_id){
                                             $editable = "";
                                         }
                                         else{
@@ -1056,7 +1065,10 @@ class Esp extends Front_Controller
                             if($login_user_id == $forecast_freeze_data['freeze_user_id']){
                                 
                                 
-                                 $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+                                $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+                                
+                                $locked_user_parent_data = $this->esp_model->get_freeze_user_parent_data($lock_by_id);
+                                 //   dumpme($locked_user_parent_data);
                                 
                                 if($login_user_parent_data == $lock_by_id){
                                     
@@ -1070,6 +1082,9 @@ class Esp extends Front_Controller
                                     }
                                     
                                 }
+                                
+                                
+                                    
                                 
                                 
                                 
@@ -1106,6 +1121,9 @@ class Esp extends Front_Controller
                                 
                                 if($login_user_id  == $freeze_user_parent_data){
                                     
+                                    
+                                    
+                                    
                                     //SHOW FREEZEED DATA
                                     
                                         $html .= '<div class="tp_form">
@@ -1132,10 +1150,10 @@ class Esp extends Front_Controller
                                      
                                     
                                 }
-                             /*   elseif($login_user_id == $forecast_freeze_data['created_by_user']){
+                             /*   elseif $login_user_id == $forecast_freeze_data['created_by_user']){
                                     
                                     //GET LOCK STATUS
-                                    
+                                
                                         $html .= '<div class="tp_form">
                 <div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
 
@@ -1163,6 +1181,15 @@ class Esp extends Front_Controller
                                 else{
                                     
                                     //NOT SHOW FREEZED DATA
+                                  //  echo $locked_user_parent_data." ==". $login_user_id;die;
+                                    
+                                    if($locked_user_parent_data == $login_user_id){
+                                        
+                                        $assumption_editable = "";
+                                        $probablity_editable = "";
+
+                                    }
+                                    
                                     
                                             $html .= '<div class="tp_form">
             <div class="form-group"><select '.$assumption_editable.' class="selectpicker" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -1360,6 +1387,9 @@ class Esp extends Front_Controller
 				$freeze_show = 1;
 				
                 $freeze_history_user_status_data = $this->esp_model->get_freeze_history_user_status_data($login_user_id,$forecast_id);
+                
+                //$senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
+                
                 
                 if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
                     

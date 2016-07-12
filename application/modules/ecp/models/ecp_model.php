@@ -1125,9 +1125,15 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function all_no_working_details($user_id,$country_id)
+    public function all_no_working_details($user_id,$country_id,$web_service=null)
     {
-        $this->db->select('no_working_date');
+        if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+        {
+            $this->db->select('no_working_id,no_working_date,reason_country_id,employee_id,other_reason');
+        }
+        else{
+            $this->db->select('no_working_date');
+        }
         $this->db->from('ecp_no_wokring');
         $this->db->where('country_id',$country_id );
         $this->db->where('employee_id',$user_id );
@@ -1141,9 +1147,15 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function all_leave_details($user_id,$country_id)
+    public function all_leave_details($user_id,$country_id,$web_service=null)
     {
-        $this->db->select('leave_date');
+        if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+        {
+            $this->db->select('leave_id,leave_date,leave_type_country_id,employee_id');
+        }
+        else{
+            $this->db->select('leave_date');
+        }
         $this->db->from('ecp_leave');
         $this->db->where('country_id',$country_id );
         $this->db->where('employee_id',$user_id );

@@ -388,7 +388,7 @@ echo form_open('',$attributes); ?>
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
                 <tr>
-                    <th>Sr. No. <span class="rts_bordet"></span></th>
+                    <th class="first_th">Sr. No. <span class="rts_bordet"></span></th>
                     <th class="numeric">Remove <span class="rts_bordet"></span></th>
                     <th>Product SKU Code <span class="rts_bordet"></span></th>
                     <th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>

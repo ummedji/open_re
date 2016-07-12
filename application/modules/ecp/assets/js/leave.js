@@ -17,7 +17,6 @@ $(document).on('click','.leave_date', function(){
                     var leave_detail_id= $(this).attr('attr-id');
                     if(leave_detail_id == leave_id)
                     {
-                        alert('in');
                         $(this).attr('checked','checked');
                     }
                 });

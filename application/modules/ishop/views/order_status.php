@@ -1,18 +1,18 @@
-<div class="modal fade" id="myModal" role="dialog" >
+<div class="modal fade po_modal_parent" id="myModal" role="dialog" >
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Close Popup">&times;</button>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
+            <div class="modal-body text-center tp_form">
+                <div class="form-group" style="margin-bottom: 0;">
                     <label for="usr">PO No:</label>
                     <input type="hidden" name="order_id" value=""  id="order_data" class="form-control po_number_data" />
                     <input type="text" name="po_no" value=""  id="po_number_data" class="form-control po_number_data" />
                 </div>
             </div>
-            <div class="modal-footer">
-                <button id="save_po_data" type="button" class="btn btn-primary">Save</button>
+            <div class="modal-footer text-center save_btn">
+                <button id="save_po_data" type="button" class="btn btn-primary gren_btn" title="Save Change">Save</button>
             </div>
         </div>
     </div>

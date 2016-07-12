@@ -20,13 +20,13 @@
         <div class="col-md-12 header">
             <div class="row">
                 <div class="top_setting">
-                    <div class="slide_icon"><a href="#"><img src="<?php echo Template::theme_url('images/back_arrow.png'); ?>" alt=""></a></div>
+                    <div class="slide_icon"><a href="#" title="Open Menu"><img src="<?php echo Template::theme_url('images/back_arrow.png'); ?>" alt=""></a></div>
                     <div class="right_nave">
                         <ul class="top_nv">
-                            <li><a href="#"><img src="<?php echo Template::theme_url('images/download_i.svg'); ?>" class="hvr-push" alt=""></a></li>
-                            <li><a href="#"><img src="<?php echo Template::theme_url('images/share_i.svg'); ?>" class="hvr-push" alt=""></a></li>
-                            <li><a href="<?php echo site_url('logout'); ?>"><img src="<?php echo Template::theme_url('images/logout_i.svg'); ?>"class="hvr-push" alt=""></a></li>
-                            <li class="nav_space"><a href="#" id="nav-expander"><img src="<?php echo Template::theme_url('images/nave_btn.svg'); ?>" alt=""></a></li>
+                            <li><a href="#" title="Download"><img src="<?php echo Template::theme_url('images/download_i.svg'); ?>" class="hvr-push" alt=""></a></li>
+                            <li><a href="#" title="Share"><img src="<?php echo Template::theme_url('images/share_i.svg'); ?>" class="hvr-push" alt=""></a></li>
+                            <li><a href="<?php echo site_url('logout'); ?>" title="Logout"><img src="<?php echo Template::theme_url('images/logout_i.svg'); ?>"class="hvr-push" alt=""></a></li>
+                            <li class="nav_space"><a href="#" id="nav-expander" title="Nave"><img src="<?php echo Template::theme_url('images/nave_btn.svg'); ?>" alt=""></a></li>
                         </ul>
                     </div>
                     <div class="clearfix"></div>

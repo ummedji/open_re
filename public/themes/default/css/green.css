@@ -177,3 +177,4 @@ ul.listslider li{
 #success_file_popup .ui-dialog .ui-dialog-buttonpane button:hover {
     background-color: #65ac1e;
 }
+a.set_pono, .eye_i a { border-bottom: solid 1px #65ac1e !important;}

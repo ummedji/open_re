@@ -1019,6 +1019,18 @@ input[readonly] {
     background-color: white !important;
     cursor: text !important;
 	/*border: 0px;*/
+    text-align: center;
+}
+.quantity_data, .qty_1 { text-align: right !important;}
+/*#order_place_data tr td:first-child { width: 50px;}*/
+#no-more-tables th.first_th { min-width: 90px !important; max-width: 90px !important; width: 90px;}
+.confirm_data input[type="checkbox"] {
+    vertical-align: middle;
+    margin-top: -2px;
+    margin-right: 2px;
+}
+a.set_pono, .eye_i a {
+    text-decoration: none !important;
 }
 .upload_file_space .input-group {
     display: block;
@@ -1765,7 +1777,7 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     margin: 0 auto;
 }
 #success_file_popup .ui-widget-content:first-child {
-    width: 600px !important;
+    width: 400px !important;
     position: relative !important;
     display: inherit !important;
     left: inherit !important;
@@ -1982,3 +1994,27 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 @media screen and (max-width:991px) {
     .no_wrkn .radio_space .radio { text-align: center;}
 }
+
+
+/*po modal css*/
+.po_modal_parent .modal-dialog { width: 400px;}
+@media screen and (max-width: 767px){
+    .po_modal_parent .modal-dialog { width: auto;}
+}
+.po_modal_parent .modal-content {
+    border: none;
+    border-radius: 0;
+}
+.po_modal_parent .modal-header { border-bottom: none; padding: 15px 15px 0;}
+.po_modal_parent .modal-footer {
+    padding: 0 5px 20px;
+    text-align: center;
+    border-top: none;
+}
+.po_modal_parent .modal-footer button {
+    display: inline-block;
+    text-align: center;
+    width: auto;
+}
+
+/*po modal css*/

@@ -114,7 +114,7 @@ if(isset($table) && count($table)>0 && $table != false) {
                                                     $style = "";
                                                 }
                                                 ?>
-                                                <div class="delete_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);" <?php echo $style; ?>><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
+                                                <div class="delete_i" prdid ="<?php echo $row;?>" <?php echo $style; ?>><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                             <?php
 
                                             }

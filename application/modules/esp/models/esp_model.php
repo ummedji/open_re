@@ -549,6 +549,25 @@ class Esp_model extends BF_Model
         
     }
     
+    public function get_higher_level_employee_for_loginuser($login_user_id,$global_head_user=NULL){
+        
+       // $user_array = array();
+        
+        $u_data = $this->get_freeze_user_parent_data($login_user_id);
+        if($u_data != 0){
+           
+            $login_user_id = $u_data;
+           return $this->get_higher_level_employee_for_loginuser($login_user_id);
+        }else{
+            //echo $login_user_id;
+            
+            $global_head_user = $login_user_id;
+            return  $global_head_user;
+           
+        }
+
+    }
+    
     public function get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id){
         
         $this->db->select("*");
