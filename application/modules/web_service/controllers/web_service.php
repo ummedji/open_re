@@ -2680,6 +2680,7 @@ class Web_service extends Front_Controller
         fwrite($file,$param);
         fclose($file);
         $user_id = $this->input->get_post('user_id');
+        $file_name = $this->input->get_post('file_name');
         if(isset($user_id)) {
             // testdata($_POST);
             $_POST['flag'] = 'web_service';

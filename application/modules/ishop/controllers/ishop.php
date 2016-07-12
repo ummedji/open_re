@@ -2387,7 +2387,11 @@ class Ishop extends Front_Controller
             
                 $file = $_POST["upload_file_data"]["tmp_name"];
 
-                $filename = explode("_",$_POST["upload_file_data"]["name"]);
+                if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
+                    $filename = explode("_",$_POST["upload_file_data"]["name"]);
+                }else{
+                    $filename[] = $_POST["file_name"];
+                }
                 
                 //load the excel library
                 $this->load->library('excel');
