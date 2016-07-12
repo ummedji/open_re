@@ -19,6 +19,22 @@ $("input.select_customer_type").on("click",function(){
         
        // alert("1111");
         
+       $("select#retailer_rol").empty();
+       $("select#geo_level_1").empty();
+       $("select#geo_level_rol").val("");
+        
+       $("select#prod_sku").val("");
+       $("select#unit_id").val("");
+         
+       $("select#retailer_rol").selectpicker('refresh');
+       $("select#geo_level_1").selectpicker('refresh');
+       $("select#geo_level_rol").selectpicker('refresh');
+        
+       $("select#prod_sku").selectpicker('refresh');
+       $("select#unit_id").selectpicker('refresh');
+        
+       $("input#rol_qty").val("");
+        
         $("a#retailer_xl").css("display","inline-block");
         $("a#distributor_xl").css("display","none");
         
@@ -50,6 +66,21 @@ $("input.select_customer_type").on("click",function(){
     else if(customer_type_selected == "distributor"){
         
        // alert("2222");
+        
+        
+       $("select#distributor_rol").empty();
+       $("select#distributor_geo_level").empty();
+       $("select#prod_sku").val("");
+       $("select#unit_id").val("");
+                
+
+       
+       $("select#distributor_rol").selectpicker('refresh');
+       $("select#distributor_geo_level").selectpicker('refresh');
+       $("select#prod_sku").selectpicker('refresh');
+       $("select#unit_id").selectpicker('refresh');
+        
+       $("input#rol_qty").val("");
         
         $("a#retailer_xl").css("display","none");
         $("a#distributor_xl").css("display","inline-block");
@@ -317,6 +348,8 @@ $(document).ready(function(){
         e.preventDefault();
 
         var param = $("#rol_limit").serializeArray();
+        
+        //console.log();
 
         var $valid = $("#rol_limit").valid();
         if(!$valid) {
@@ -351,7 +384,11 @@ $(document).ready(function(){
                             resizable: true,
                             close: function (event, ui) {
                                 $(this).remove();
-                                location.reload()
+                                //location.reload()
+                                
+                                //.val()
+                                
+                                $('input[name=checked_type]:checked', '#rol_limit').trigger( "click" );
                             }
                         });
                 }

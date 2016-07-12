@@ -84,6 +84,43 @@ class Ecp_model extends BF_Model
         }
     }
 
+
+    public function get_all_designation_by_country($country_id)
+    {
+        $this->db->select('mdc.desigination_country_id,mdc.desigination_country_name,mdr.role_id');
+        $this->db->from('master_designation_country as mdc');
+        $this->db->join('master_designation_role as mdr','mdr.desigination_id = mdc.desigination_country_id');
+        $this->db->where('mdc.country_id',$country_id );
+        $this->db->where('mdc.status','1');
+        $this->db->where('mdc.deleted','0');
+        $this->db->order_by('desigination_country_name','ASC');
+        $designation = $this->db->get()->result_array();
+       // testdata($designation);
+        if (isset($designation) && !empty($designation)) {
+            return $designation;
+        } else {
+            return false;
+        }
+    }
+
+    public function get_employee_by_role_id($role_id, $country_id)
+    {
+        $this->db->select('id,display_name');
+        $this->db->from('users');
+        $this->db->where('role_id',$role_id );
+        $this->db->where('country_id',$country_id );
+        $this->db->where('type','Employee' );
+        $this->db->where('active','1');
+        $this->db->where('deleted','0');
+        $this->db->order_by('display_name','ASC');
+        $employees = $this->db->get()->result_array();
+        if (isset($employees) && !empty($employees)) {
+            return $employees;
+        } else {
+            return false;
+        }
+    }
+
     /**
      * @ Function Name        : get_all_materials_by_country_id
      * @ Function Params    : $country_id
@@ -231,11 +268,13 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id,$page,$local_date,$country_id)
+    public function get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id,$page,$local_date,$country_id,$web_service = null)
     {
-        $sql = 'SELECT emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,bu.user_code,emr.material_request_status,emr.recived_status,emr.disptched_date,emr.disptched_qty,emr.remark,emr.executor_remark ';
+        $sql = 'SELECT emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,bu.user_code,emr.material_request_status,emr.recived_status,emr.disptched_date,emr.disptched_qty,emr.remark,emr.executor_remark,mdc.desigination_country_name ';
         $sql .= 'FROM bf_ecp_material_request AS emr ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = emr.employee_id) ';
+        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.role_id = bu.role_id) ';
+        $sql .= 'JOIN bf_master_designation_country AS mdc ON (mdc.desigination_country_id = mdr.desigination_id) ';
         $sql .= 'JOIN bf_users AS buu ON (buu.id = emr.modified_by_user) ';
         $sql .= 'JOIN bf_master_promotional_material_country AS mpmc ON (mpmc.promotional_country_id = emr.promotional_country_id) ';
         $sql .= 'WHERE 1 ';
@@ -250,59 +289,73 @@ class Ecp_model extends BF_Model
         }
         $sql .= 'AND emr.country_id ="' . $country_id . '" ';
         $sql .= 'ORDER BY emr.material_request_id DESC ';
-        $requested_material = $this->grid->get_result_res($sql);
+        if(!empty($web_service) && $web_service=='web_service')
+        {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $info = $this->db->query($sql);
+            // For Pagination
+            $requested_material = $info->result_array();
+            return $requested_material;
+        }
+        else{
+            $requested_material = $this->grid->get_result_res($sql);
 
-        if (isset($requested_material['result']) && !empty($requested_material['result'])) {
-            $material['head'] = array('Sr. No.', 'Action', 'Mr.Id','Employee Code','Employee Name','Requested Date','Requested Material', 'Requested Quantity','Dispatched Date','Dispatched Quantity','Remark', 'Status', 'Received Status','Executor Remark',);
-            $material['count'] = count($material['head']);
-            if ($page != null || $page != "") {
-                $i = $page * 10 - 9;
-            } else {
-                $i = 1;
-            }
+            if (isset($requested_material['result']) && !empty($requested_material['result'])) {
+                $material['head'] = array('Sr. No.', 'Action', 'Mr.Id','Employee Code','Employee Name','Designation','Requested Date','Requested Material', 'Requested Quantity','Dispatched Date','Dispatched Quantity','Remark', 'Status', 'Received Status','Executor Remark',);
+                $material['count'] = count($material['head']);
+                if ($page != null || $page != "") {
+                    $i = $page * 10 - 9;
+                } else {
+                    $i = 1;
+                }
 
-            foreach ($requested_material['result'] as $rm) {
+                foreach ($requested_material['result'] as $rm) {
 
-                if($local_date != null)
-                {
-                    $date3 = strtotime($rm['material_request_date']);
-                    $request_date = date($local_date,$date3);
+                    if($local_date != null)
+                    {
+                        $date3 = strtotime($rm['material_request_date']);
+                        $request_date = date($local_date,$date3);
 
-                    if($rm['disptched_date'] !=null){
-                        $date1 = strtotime($rm['disptched_date']);
-                        $disptched_date = date($local_date,$date1);
+                        if($rm['disptched_date'] !=null){
+                            $date1 = strtotime($rm['disptched_date']);
+                            $disptched_date = date($local_date,$date1);
+                        }
+                        else{
+                            $disptched_date =  '';
+                        }
+
                     }
                     else{
-                        $disptched_date =  '';
+                        $request_date = $rm['material_request_date'];
+                        $disptched_date = $rm['disptched_date'];
                     }
 
-                }
-                else{
-                    $request_date = $rm['material_request_date'];
-                    $disptched_date = $rm['disptched_date'];
-                }
+                    /*material_request_status*/
+                    if($rm['material_request_status'] == 0){
+                        $material['delete_disabled'][] = 0;
+                    }
+                    elseif($rm['material_request_status'] == 1){
+                        $material['delete_disabled'][] = 1;
+                    }else{
+                        $material['delete_disabled'][] = 1;
+                    }
+                    /*material_request_status*/
 
-                /*material_request_status*/
-                if($rm['material_request_status'] == 0){
-                    $material['delete_disabled'][] = 0;
-                }
-                elseif($rm['material_request_status'] == 1){
-                    $material['delete_disabled'][] = 1;
-                }else{
-                    $material['delete_disabled'][] = 1;
-                }
-                /*material_request_status*/
-
-                if($rm['recived_status'] == 0){
-                    $received_status='Pending';
-                }
-                else{
-                    $received_status='Confirm';
-                }
+                    if($rm['recived_status'] == 0){
+                        $received_status='Pending';
+                    }
+                    else{
+                        $received_status='Confirm';
+                    }
 
                     if ($rm['material_request_status'] == '0') {
                         $request_status = '<select name="request_status" class="request_status" id="request_status" ><option value="0">Pending</option><option  value="1">Approve</option><option  value="1">Reject</option></select>
-                    <input type="hidden" id="mr_id" class="mr_id" name="mr_id" value="' . $rm['material_request_id'] . '">';
+                    <input type="hidden" id="mr_id" class="mr_id" name="mr_id[]" value="' . $rm['material_request_id'] . '">';
                     }
                     elseif($rm['material_request_status'] == '1') {
                         $request_status = 'Approve';
@@ -311,53 +364,70 @@ class Ecp_model extends BF_Model
                         $request_status = 'Reject';
                     }
 
-                $remark ='<textarea name="remarks" id="remarks" readonly>'.$rm["remark"].'</textarea>';
-                if($rm['material_request_status'] == '0'){
-                    $executor_remark ='<textarea name="executor_remarks" id="executor_remark">'.$rm["executor_remark"].'</textarea>';
-                    $disptched_quantity = '<input type="text" id="disptched_quantity" name="disptched_quantity">';
-                }
-                else{
-                    $executor_remark ='<textarea name="executor_remark" id="executor_remark" readonly>'.$rm["executor_remark"].'</textarea>';
-                    $disptched_quantity = $rm['disptched_qty'];
-                }
+                    $remark ='<textarea name="remarks[]" id="remarks" readonly>'.$rm["remark"].'</textarea>';
+                    if($rm['material_request_status'] == '0'){
+                        $executor_remark ='<textarea name="executor_remarks[]" id="executor_remark">'.$rm["executor_remark"].'</textarea>';
+                        $disptched_quantity = '<input type="text" class="allownumericwithdecimal" id="disptched_quantity" name="disptched_quantity[]">';
+                    }
+                    else{
+                        $executor_remark ='<textarea name="executor_remark" id="executor_remark" readonly>'.$rm["executor_remark"].'</textarea>';
+                        $disptched_quantity = $rm['disptched_qty'];
+                    }
 
 
-                $material['row'][] = array($i, $rm['material_request_id'],$rm['material_request_id'],$rm['user_code'],$rm['emp'],$request_date , $rm['promotional_material_country_name'], $rm['quantity'],$disptched_date,$disptched_quantity,$remark,$request_status,$received_status,$executor_remark);
-                $i++;
+                    $material['row'][] = array($i, $rm['material_request_id'],$rm['material_request_id'],$rm['user_code'],$rm['emp'],$rm['desigination_country_name'],$request_date , $rm['promotional_material_country_name'], $rm['quantity'],$disptched_date,$disptched_quantity,$remark,$request_status,$received_status,$executor_remark);
+                    $i++;
+                }
+                $material['eye'] = '';
+                $material['action'] = 'is_action';
+                $material['edit'] = '';
+                $material['delete_dis'] = 'is_delete';
+                $material['selected_status'] = $status_id;
+                $material['pagination'] = $requested_material['pagination'];
+
+                return $material;
             }
-            $material['eye'] = '';
-            $material['action'] = 'is_action';
-            $material['edit'] = '';
-            $material['delete_dis'] = 'is_delete';
-            $material['pagination'] = $requested_material['pagination'];
-
-            return $material;
-        }
-        else{
-            return false;
+            else{
+                return false;
+            }
         }
     }
 
 
-    public function update_materials_detail($user_id)
+    public function update_materials_detail($user_id,$web_service=null)
     {
-        $disptched_quantity = $this->input->post("disptched_quantity");
-        $request_status = $this->input->post("request_status");
-        $mr_id = $this->input->post("mr_id");
-        $executor_remarks = $this->input->post("executor_remarks");
+       if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
+       {
+
+           $disptched_quantity = explode(',', $this->input->post("disptched_quantity"));
+           $request_status = explode(',', $this->input->post("request_status"));
+           $mr_id = explode(',', $this->input->post("mr_id"));
+           $executor_remarks = explode(',', $this->input->post("executor_remarks"));
+       }
+        else{
+            $disptched_quantity = $this->input->post("disptched_quantity");
+            $request_status = $this->input->post("request_status");
+            $mr_id = $this->input->post("mr_id");
+            $executor_remarks = $this->input->post("executor_remarks");
+        }
         $disptched_date = date('Y-m-d');
 
-        $update_material_details = array(
-            'disptched_qty' => $disptched_quantity,
-            'material_request_status' => $request_status,
-            'executor_remark' => $executor_remarks,
-            'disptched_date' => $disptched_date,
-            'modified_by_user' => $user_id,
-            'modified_on' => date('Y-m-d H:i:s')
-        );
+        foreach($mr_id as $K => $m_id)
+        {
+            $disptched_qty=isset($disptched_quantity[$K]) ? $disptched_quantity[$K] : '0';
+            $executor_remark=isset($executor_remarks[$K]) ?$executor_remarks[$K] : '';
+            $update_material_details = array(
+                'disptched_qty' => $disptched_qty,
+                'material_request_status' => $request_status[$K],
+                'executor_remark' =>$executor_remark,
+                'disptched_date' => $disptched_date,
+                'modified_by_user' => $user_id,
+                'modified_on' => date('Y-m-d H:i:s')
+            );
 
-        $this->db->where('material_request_id', $mr_id);
-        $this->db->update('ecp_material_request', $update_material_details);
+            $this->db->where('material_request_id', $m_id);
+            $this->db->update('ecp_material_request', $update_material_details);
+        }
         if($this->db->affected_rows() > 0){
             return 1;
         }

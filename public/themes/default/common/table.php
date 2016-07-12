@@ -5,7 +5,6 @@
     <?php
 
 $action_data = $this->uri->segment(2);
-
 if(isset($table) && count($table)>0 && $table != false) {
     ?>
         <?php if(isset($table['no_margin']) && !empty($table['no_margin']) )
@@ -154,6 +153,21 @@ if(isset($table) && count($table)>0 && $table != false) {
                     <div class="clearfix"></div>
                 </div>
             </div>
+            <?php
+            if(isset($table["selected_status"])){
+               if($table["selected_status"] == 0)
+               {
+                   ?>
+                   <div class="check_save_btn" id="check_save_btn">
+                       <div class="col-md-2 save_btn">
+                           <label>&nbsp;</label>
+                           <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
+                       </div>
+                   </div>
+                <?php
+               }
+            }
+            ?>
         </div>
 
     <?php

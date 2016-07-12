@@ -69,7 +69,7 @@ function paginationCall(page) {
 
 function submitForm() {
     var uri = $(location).attr('href');
-    //alert(uri);
+  //  alert(uri);
     var lm = uri.split('/').reverse()[0];
     var val='';
     switch(lm)
@@ -92,7 +92,7 @@ function submitForm() {
         case'prespective_order': val = $("#prespective_order");break;
         case'target': val = $("#target");break;
         case'budget': val = $("#budget");break;
-       // case'material_request': val = $("#material_request");break;
+        case'all_material_request': val = $("#all_material_request");break;
        /* default  : val = $("#form_ntfdetails");break;*/
     }
 

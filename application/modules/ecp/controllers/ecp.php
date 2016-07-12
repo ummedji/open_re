@@ -87,13 +87,24 @@ class Ecp extends Front_Controller
 
 		$user = $this->auth->user();
 
-		$employee =  $this->ecp_model->get_all_employee_by_country_id($user->country_id);
-		Template::set('employee', $employee);
+		$designation =  $this->ecp_model->get_all_designation_by_country($user->country_id);
+	//	$employee =  $this->ecp_model->get_all_employee_by_country_id($user->country_id);
+		Template::set('designation', $designation);
 		Template::set('current_user', $user);
 		Template::set_view('ecp/all_material_requests');
 		Template::render();
 	}
 
+	public function get_employees_by_role_id()
+	{
+		$role_id=$_POST['role_id'];
+		//testdata($role_id);
+		$user = $this->auth->user();
+		$employee =  $this->ecp_model->get_employee_by_role_id($role_id,$user->country_id);
+		echo json_encode($employee);
+		die;
+
+	}
 	public function all_materials_details_view()
 	{
 		$user = $this->auth->user();

@@ -24,6 +24,9 @@ $(document).ready(function() {
             to_date:{
                 required: true
             },
+            designation_id:{
+                required: true
+            },
             employee_id:{
                 required: true
             },
@@ -38,7 +41,7 @@ $(document).ready(function() {
     $("#all_material_request").on("submit",function(e){
         e.preventDefault();
         var param = $("#all_material_request").serializeArray();
-
+       // console.log(param);
         var $valid = $("#all_material_request").valid();
         if(!$valid) {
             all_material_request_validators.focusInvalid();
@@ -52,6 +55,7 @@ $(document).ready(function() {
                 data: param,
                 success: function(resp){
                     $('#middle_container').html(resp);
+                   // $('#check_save_btn').css('display','block')
                 }
             });
             return false;
@@ -116,3 +120,37 @@ $(document).on('click', 'div.materials_cont .delete_i', function () {
     }
 
 });
+
+$(document).on("change","select#designation_id",function(){
+    var role_id = $(this).val();
+    get_employee_by_role_id(role_id);
+
+
+});
+
+function get_employee_by_role_id(role_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ecp/get_employees_by_role_id",
+        data: {role_id:role_id},
+        dataType : 'json',
+        success: function(resp){
+
+            $("select#employee_id").empty();
+            $("select#employee_id").selectpicker('refresh');
+
+            if(resp.length > 0){
+
+                $("select#employee_id").append('<option value="0">Select Employee</option>');
+
+                $.each(resp, function(key, value) {
+                    $('select#employee_id').append('<option  value="' + value.id + '" >' +value.display_name+ '</option>');
+                });
+
+                $("select#employee_id").selectpicker('refresh');
+
+            }
+        }
+    });
+}

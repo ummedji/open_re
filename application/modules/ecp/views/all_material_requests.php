@@ -1,8 +1,9 @@
-<?php if (!$this->input->is_ajax_request()) {
+<?php
+if (!$this->input->is_ajax_request()) {
     ?>
     <?php
     $attributes = array('class' => '', 'id' => 'all_material_request','name'=>'all_material_request');
-    echo form_open('',$attributes);
+    echo form_open('ecp/all_materials_details_view',$attributes);
     ?>
     <div class="col-md-12">
         <div class="top_form">
@@ -26,21 +27,27 @@
                         <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
                     </div>
                 </div>
+
                 <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+                    <div class="form-group">
+                        <label>Designation<span style="color: red">*</span></label>
+                        <select class="selectpicker" id="designation_id" name="designation_id" data-live-search="true">
+                            <option value="">Select Designation</option>
+                            <?php
+                            if(isset($designation) && !empty($designation)) {
+                                foreach ($designation as $key => $val_designation) {
+                                    ?>
+                                    <option value="<?php echo $val_designation['role_id']; ?>" role="<?php echo $val_designation['role_id']; ?>"><?php echo $val_designation['desigination_country_name']; ?></option>
+                                    <?php
+                                }
+                            }
+                            ?>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Employee<span style="color: red">*</span></label>
                         <select class="selectpicker" id="employee_id" name="employee_id" data-live-search="true">
-                            <option value="">Select Employee</option>
-                            <?php
-                                if(isset($employee) && !empty($employee)) {
-                                    foreach ($employee as $key => $val_employee) {
-                                        ?>
-                                        <option value="<?php echo $val_employee['id']; ?>"><?php echo $val_employee['display_name']; ?></option>
-                                        <?php
-                                    }
-                                }
-                            ?>
-                        </select
+                        </select>
                     </div>
                     <div class="form-group">
                         <div class="save_button">
@@ -76,13 +83,9 @@ if ($this->input->is_ajax_request()) {
     <div id="middle_container" class="materials_cont">
 
     </div>
-    <div class="check_save_btn" id="check_save_btn">
-        <div class="col-md-2 save_btn">
-            <label>&nbsp;</label>
-            <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
-        </div>
-    </div>
 <?php  } ?>
-    <?php echo form_close(); ?>
-</div>
+    <?php echo form_close();
+
+    ?>
+
 

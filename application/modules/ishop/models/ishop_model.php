@@ -2451,7 +2451,7 @@ class Ishop_model extends BF_Model
                 }
                 $sales_view['eye'] = 'is_action';
                 $sales_view['action'] = 'is_action';
-                $sales_view['edit'] = 'is_edit';
+                $sales_view['edit'] = '';
                 $sales_view['delete'] = 'is_delete';
                 $sales_view['pagination'] = $sales_detail['pagination'];
                 return $sales_view;
@@ -4012,7 +4012,7 @@ class Ishop_model extends BF_Model
             $customer_id_to = $distributor_id;
             $order_taken_by_id = $user_id;
 
-            $order_status = 4;
+            $order_status = 0;
 
             $po_no = NULL;
 
@@ -4095,7 +4095,15 @@ class Ishop_model extends BF_Model
                 $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }else{
-                $distributor_id = (isset($_POST["retailer_distributor_id"])) ? $_POST["retailer_distributor_id"] : 0;
+                
+                if ($this->input->post("radio1") != "distributor") {
+                    $distributor_id = (isset($_POST["retailer_distributor_id"])) ? $_POST["retailer_distributor_id"] : 0;
+                }
+                else{
+                    $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
+                }
+                
+                
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }
 
@@ -4743,8 +4751,20 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $sql .= ' AND bio.order_status != 4 ';
 
         }
+        
+        if($action_data == "get_order_status_data")
+        {
+           $subsql = ' AND bu.role_id="'.$loginusertype.'" ';
+        }
+        else
+        {
+            $subsql = '';
+        }
 
-        $sql .= ' AND bio.country_id = "' . $user_country_id . ' " ORDER BY bio.order_date DESC ';
+        $sql .= ' AND bio.country_id = "' . $user_country_id . ' " '.$subsql.' ORDER BY bio.order_date DESC ';
+        
+       // echo $action_data."</br>";
+        
        // echo $sql;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
@@ -4987,6 +5007,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         $order_view['head'] = array('Sr. No.', '', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                         $order_view['count'] = count($order_view['head']);
+
+                        testdata($page);
                         if ($page != null || $page != "") {
                             $i = $page * 10 - 9;
                         } else {

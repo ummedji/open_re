@@ -320,6 +320,12 @@ class Web_service extends Front_Controller
                 array("name"=>"Kg/Ltr","value"=>"kg/ltr")
             );
 
+            $status = array(
+                array("name"=>"Pending","value"=>"0"),
+                array("name"=>"Approved","value"=>"1"),
+                array("name"=>"Rejected","value"=>"2")
+            );
+
             $mtl_array = array();
             if (!empty($materials)) {
                 foreach ($materials as $material) {
@@ -367,7 +373,7 @@ class Web_service extends Front_Controller
             }
 
 
-            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units,"materials" => $mtl_array,"compititor" =>$comp_array,"reasons" => $reason_array,"leave_type" =>$leave_type_array);
+            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units,"materials" => $mtl_array,"compititor" =>$comp_array,"reasons" => $reason_array,"leave_type" =>$leave_type_array ,"status" =>$status);
         //  testdata($data);
             $result['status'] = true;
             $result['message'] = 'Success';
@@ -3363,6 +3369,7 @@ class Web_service extends Front_Controller
      * @ Function Params    : user_id,country_id,primary_sales_detail,invoice_no,PO_no,order_tracking_no,primary_sales_product_detail,quantity,dispatched_quantity,amount (POST)
      * @ Function Purpose    : Edit Primary Sales Invoice
      * */
+
     public function confirmInvoiceReceived()
     {
         $user_id = $this->input->get_post('user_id');
@@ -3863,6 +3870,141 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
+
+
+    public function confirmMaterialReceived()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $status =  $this->input->get_post('received_status');
+        $mr_id = $this->input->get_post('id');
+
+        if((isset($user_id) && !empty($user_id)) && (isset($status) && !empty($status)) && (isset($mr_id) && !empty($mr_id)))
+        {
+            $id =  $this->ecp_model->update_material_request_detail($user_id,$mr_id,$status);
+            if($id == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Updated Successfully.';
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = 'Something Went Wrong.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function getMaterialRequestStatus()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        if((isset($user_id)&& !empty($user_id)) &&(isset($country_id)&& !empty($country_id))) {
+
+            $final_array = array();
+            $designations =$this->ecp_model->get_all_designation_by_country($country_id);
+
+            if (!empty($designations))
+            {
+                foreach ($designations as $k2 => $designation) {
+                    $g2 = array(
+                        "id" => $designation['desigination_country_id'],
+                        "desigination_name" => $designation['desigination_country_name'],
+                    );
+                    $final_array['designation'][] = $g2; // Add Geo Level 2 Into Final Array
+                    $role_id = $designation['role_id'];
+
+                    $employees = $this->ecp_model->get_employee_by_role_id($role_id, $country_id);
+                    if (!empty($employees)) {
+                        foreach ($employees as $k1 => $employee) {
+                            $final_array['designation'][$k2]['employees'][] = $employee; // Add Geo Level 1 Into Final Array
+                        }
+                    }
+                }
+            }
+
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = array($final_array);
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    public function getAllMaterialRequest()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $from_date = $this->input->get_post('from_date');
+        $to_date = $this->input->get_post('to_date');
+        $status_id = $this->input->get_post('status_id');
+            $employee_id = $this->input->get_post('employee_id');
+
+        if((isset($user_id) && !empty($user_id)) &&(isset($from_date) && !empty($from_date)) && (isset($to_date) && !empty($to_date)) && (isset($status_id) && !empty($status_id)) &&(isset($employee_id) && !empty($employee_id)) && (isset($country_id) && !empty($country_id))) {
+
+            $materials_request = $this->ecp_model->get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id,$page=null,$local_date=null,$country_id,$web_service = 'web_service');
+
+            if (!empty($materials_request)) {
+                // For Pagination
+                $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
+                $total_rows = $count->result()[0]->total_rows;
+                $pages = $total_rows / 10;
+                $pages = ceil($pages);
+                $result['total_rows'] = $total_rows;
+                $result['pages'] = $pages;
+                // For Pagination
+
+                $result['status'] = true;
+                $result['message'] = 'Success';
+                $result['data'] = $materials_request;
+            } else {
+                $result['status'] = false;
+                $result['message'] = 'No Records Found.';
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+    }
+
+    public function saveAllMaterialRequest()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)))
+        {
+            $insert=$this->ecp_model->update_materials_detail($user_id,'web_service');
+            if($insert == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = '';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+
 
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/

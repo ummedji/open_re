@@ -111,36 +111,71 @@ $(document).on('click', 'a.update_order_status', function () {
     
     var param = $("form#update_order_approval_data").serializeArray();
     
-    $.ajax({
-        type: 'POST',
-        url: site_url+'ishop/update_order_approval_status',
-        data: param,
-        success: function(resp){
-            var message = "";
-            if(resp == 1){
-
-                message += 'Data Updated successfully.';
-            }
-            else{
-
-                message += 'Data not Updated.';
-            }
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                        location.reload()
-                    }
-                });
+    var check_values = [];
+    var i = 0;
+    $("tbody.tbl_body_row tr td:first-child").each(function( index,element ) {
+        
+        if ($(this).find("input.order_status").prop('checked')==true){ 
+            check_values[i] = 1;
+        }else{
+            check_values[i] = 0;
         }
+       i++;
     });
+    
+    if($.inArray(1,check_values) != -1){
+    
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/update_order_approval_status',
+            data: param,
+            success: function(resp){
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Updated successfully.';
+                }
+                else{
+
+                    message += 'Data not Updated.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
+            }
+        });
+
+    }
+    else
+    {
+        message = 'Please first check some data.';
+         $('<div></div>').appendTo('body')
+            .html('<div><b>'+message+'</b></div>')
+            .dialog({
+                appendTo: "#success_file_popup",
+                modal: true,
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: true,
+                close: function (event, ui) {
+                    $(this).remove();
+                   
+                }
+            });
+        
+    }
     return false;
     
 });
