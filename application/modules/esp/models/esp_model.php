@@ -511,7 +511,6 @@ class Esp_model extends BF_Model
         
         $forecast_data = $this->db->get()->result_array();
         
-        
         $forecast_array = array();
         
         if(!empty($forecast_data)){

@@ -1571,6 +1571,9 @@ class Web_service extends Front_Controller
             elseif($mode == "budget"){
                 $id = $this->ishop_model->delete_budget_detail($id);
             }
+            elseif($mode == "target"){
+                $id = $this->ishop_model->delete_target_detail($id);
+            }
             elseif($mode == "ishop_sales"){
                 $id = $this->ishop_model->delete_ishop_sales_detail($id, $checked_type);
             }

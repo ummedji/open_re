@@ -205,6 +205,8 @@ class Esp extends Front_Controller
                                         
                                         //$forecast_freeze_data2 = $this->esp_model->get_forecast_freeze_status($forecast_id);
                                         
+                                     //   echo $forecast_id."====".$login_user_id;
+                                        
                                         $forecast_freeze_data2 = $this->esp_model->forecast_freeze_status_history($forecast_id,$login_user_id);
 
                                         break;
@@ -401,6 +403,8 @@ class Esp extends Front_Controller
                                  if($self_lock_data != 0){
 
                                      //IF LOCKED BY SELF
+                                     
+                                   //  echo $login_user_highest_level_data."===".$self_lock_data[0]["lock_by_id"] ."===".$login_user_id;
                                      
                                      if(($login_user_highest_level_data == $self_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data))
                                      {
