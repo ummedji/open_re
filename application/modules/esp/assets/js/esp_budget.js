@@ -132,9 +132,25 @@ $(document).on("click","#save_data",function(e){
 $(document).on("click","button#freeze_data",function(e){
     
     e.preventDefault();
-   
+    
     var budget_id = $("input#budget_id").val();
     var text_data = $(this).text();
+    
+    var year_data = $("input#year_data").val();
+    
+    var lock_status = "";
+    
+    $.ajax({
+        type: 'POST',
+        url: site_url+"esp/get_budget_lock_status",
+        data: {budgetid:budget_id,yeardata:year_data},
+        success: function(resp){
+            lock_status = resp;
+
+        },
+        async:false
+    });
+    
     
     $.ajax({
         type: 'POST',

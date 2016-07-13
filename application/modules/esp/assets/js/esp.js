@@ -223,51 +223,87 @@ $(document).on("click","button#freeze_data",function(e){
        return false;   
         
     }
-    
-    $.ajax({
-        type: 'POST',
-        url: site_url+"esp/update_forecast_freeze_status",
-        data: {forecastid:forecast_id,textdata:text_data,freezedate:freeze_date},
-        success: function(resp){
-            //alert(resp);
-            var message = "";
-            if(resp == 1){
+    else
+    {
+        var lock_status = "";
+        $.ajax({
+            type: 'POST',
+            url: site_url+"esp/get_forecast_lock_status",
+            data: {forecastid:forecast_id,freezedate:freeze_date},
+            success: function(resp){
+                lock_status = resp;
                 
-                if(text_data == "Freeze"){
-                    $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
-                    
-                     message += 'Data freezed successfully.';
-                    
+            },
+            async:false
+        });
+        
+        if(lock_status == 1){
+
+            $('<div></div>').appendTo('body')
+            .html('<div><b>Selected months are locked by Senior employees.So No data is Freeze or unfreezed.</b></div>')
+            .dialog({
+                appendTo: "#success_file_popup",
+                modal: true,
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: true,
+                close: function (event, ui) {
+                    $(this).remove();
+                }
+            });
+
+            return false;
+        }
+        else{
+    
+        $.ajax({
+            type: 'POST',
+            url: site_url+"esp/update_forecast_freeze_status",
+            data: {forecastid:forecast_id,textdata:text_data,freezedate:freeze_date},
+            success: function(resp){
+                //alert(resp);
+                var message = "";
+                if(resp == 1){
+
+                    if(text_data == "Freeze"){
+                        $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
+
+                         message += 'Data freezed successfully.';
+
+                    }
+                    else{
+                        $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
+
+                         message += 'Data Unfreezed successfully.';
+
+                    }
+
                 }
                 else{
-                    $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
-                    
-                     message += 'Data Unfreezed successfully.';
-                    
+
+                    message += 'Data not freezed.';
                 }
-                
+
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+
             }
-            else{
-                
-                message += 'Data not freezed.';
-            }
-            
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                    }
-                });
+         });
             
         }
-    });
+    }
     
     return false;
 
@@ -322,6 +358,26 @@ $(document).on("click","a.lock_data",function(){
     });
     
 });
+
+/*
+$(document).on("change","select#selected_month_data",function(){
+    
+    var date_data = $(this).val();
+    
+    $.ajax({
+            type: 'POST',
+            url: site_url+"esp/check_forecast_data_locked",
+            data: {userid:user_id},
+            success: function(resp){
+                
+                
+                
+            }
+    });
+    
+});
+
+*/
 
 function get_user_level_data(user_id){
     

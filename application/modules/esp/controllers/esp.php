@@ -248,7 +248,7 @@ class Esp extends Front_Controller
                                                 
                                               //  echo $login_user_highest_level_data."====". $senior_lock_data[0]["lock_by_id"]."----".$login_user_id ."@@@@@"." bbb";
                                                 
-                                                if(($login_user_highest_level_data == $senior_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data))
+                                                if(($login_user_highest_level_data == $senior_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data) && $senior_lock_data[0]["lock_status"] == 1)
                                                  {
                                                     
                                                      $higest_level_user_status = "pointer-events: none;opacity: 0.7;";
@@ -258,7 +258,7 @@ class Esp extends Front_Controller
                                                      $higest_level_user_status = "";
                                                  }
                                                 
-                                             //   dumpme($senior_lock_data);
+                                              //  dumpme($senior_lock_data);
                                                 
                                                 if(isset($senior_lock_data[0]["lock_status"]) && $senior_lock_data[0]["lock_status"] == 1){
                                                     
@@ -332,7 +332,7 @@ class Esp extends Front_Controller
                                                          //IF LOCKED BY SELF
                                                          
                                                          
-                                                         if(($login_user_highest_level_data == $self_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data))
+                                                         if(($login_user_highest_level_data == $self_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data)  && $senior_lock_data[0]["lock_status"] == 1)
                                                          {
                                                              $higest_level_user_status = "pointer-events: none;opacity: 0.7;";
                                                          }
@@ -412,7 +412,7 @@ class Esp extends Front_Controller
                                      
                                    //  echo $login_user_highest_level_data."===".$self_lock_data[0]["lock_by_id"] ."===".$login_user_id;
                                      
-                                     if(($login_user_highest_level_data == $self_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data))
+                                     if(($login_user_highest_level_data == $self_lock_data[0]["lock_by_id"]) && ($login_user_id != $login_user_highest_level_data)  && $self_lock_data[0]["lock_status"] == 1)
                                      {
                                          $higest_level_user_status = "pointer-events: none;opacity: 0.7;";
                                      }
@@ -959,8 +959,6 @@ class Esp extends Front_Controller
                         }
                     
                         
-                        
-                        
                         //CHECK DATA FREEZED OR NOT
                         
                         if($forecast_freeze_data != 0 || $child_flag == 1)
@@ -1162,7 +1160,8 @@ class Esp extends Front_Controller
 						$freeze_status = 0;
                         $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
                     }
-                    else{
+                    else
+                    {
                     	$freeze_status = 1;
                         $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
                     }
@@ -1209,6 +1208,42 @@ class Esp extends Front_Controller
         echo $html.$html2;
         die;
         
+    }
+    
+    public function get_forecast_lock_status(){
+        
+        $user = $this->auth->user();
+	    $login_user_id = $user->id;
+        
+        $forecastid = $_POST["forecastid"];
+        $freezedate = $_POST["freezedate"];
+        
+        $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+        
+        $login_user_highest_level_data = $this->esp_model->get_higher_level_employee_for_loginuser($login_user_id);
+        
+       // $explode_date = explode(",",$freezedate);
+        
+        $lock_array = array();
+        
+        foreach($freezedate as $key => $datedata){
+            
+            $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$datedata,$forecastid);
+            
+            if(!empty($senior_lock_data) && $senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
+                $lock_array[] = $senior_lock_data[0]["lock_status"];
+            }
+            
+        }
+        
+        if(!empty($lock_array)){
+            
+            echo 1;
+        }
+        else{
+            echo 0;
+        }
+        die;
     }
     
     public function get_forecast_value_data($webservice_data = NULL){
@@ -2544,6 +2579,18 @@ class Esp extends Front_Controller
 	        echo $freeze_data;
 	        die;
 		}
+        
+    }
+    
+    public function get_budget_lock_status(){
+        
+        $budget_id = $_POST["budgetid"];
+        $year_data = $_POST["yeardata"];
+        
+        $from_month = $year_data."-01-01".
+        $to_month = $year_data."-12-01".
+        
+        $month_data = $this->get_monthly_data($from_month,$to_month);
         
     }
 	
