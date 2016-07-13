@@ -1839,11 +1839,16 @@ class Esp extends Front_Controller
 		
     }
     
-    public function get_monthly_data($from_month,$to_month) {
+    public function get_monthly_data($from_month=NULL,$to_month=NULL) {
         
+        if(!isset($_POST["frommonth"]) && !isset($_POST["tomonth"])){
             $from_date = $from_month."-01";
             $to_date = $to_month."-01";
-        
+        }
+        else{
+            $from_date = $_POST["frommonth"]."-01";
+            $to_date = $_POST["tomonth"]."-01";
+        }
             $date1  = $from_date;
             $date2  = $to_date;
             $month_output = array();
@@ -1864,8 +1869,13 @@ class Esp extends Front_Controller
                 $time = strtotime('+1 month', $time);
             } while ($month != $last);
 
-
+        if(!isset($_POST["frommonth"]) && !isset($_POST["tomonth"])){
             return $month_output;
+        }
+        else{
+            echo json_encode($month_output);
+            die;
+        }
         
     }
     

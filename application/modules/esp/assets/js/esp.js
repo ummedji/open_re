@@ -54,8 +54,40 @@ $(document).ready(function(){
             $("div#pbg_data").empty();
 
             $("div.forecast_data").empty();
-
+            
             get_user_level_data(user_id);
+            
+            var from_value = $("input#from_month").val();
+            var to_value = $("input#to_month").val();
+            
+             $.ajax({
+                type: 'POST',
+                url: site_url+"esp/get_monthly_data",
+                data: {frommonth:from_value,tomonth:to_value},
+                success: function(resp){
+                    
+                   // console.log(resp);
+                    
+                    var res_html = '<select id="selected_month_data" name="selected_month_data" multiple>';
+                    res_html += '<option value="">Select Data</option>';
+                    if(resp != ""){
+                        var monthdata = $.parseJSON(resp);
+                        
+                        for(var k=0;k<monthdata.length;k++){
+                            res_html += '<option vaue="'+monthdata[k]+'">'+monthdata[k]+'</option>'
+                        }
+                        //alert(res_html);
+                    }
+                    
+                    res_html += '</option>';
+                    
+                     $("div#middle_filter").html(res_html);
+                    
+                    
+                }
+
+            });
+            
         }
         
     });

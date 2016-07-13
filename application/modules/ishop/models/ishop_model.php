@@ -1630,11 +1630,16 @@ class Ishop_model extends BF_Model
         }
 
         if (isset($secondary_sales_id) && !empty($secondary_sales_id)) {
+            //testdata($secondary_sales_id);
             foreach ($secondary_sales_id as $key => $psi) {
+                $PO_n = isset($PO_no[$key]) ? $PO_no[$key] : '';
+                $invoice_n = isset($invoice_no[$key]) ? $invoice_no[$key] : '';
+                $order_tracking_n = isset($order_tracking_no[$key]) ? $order_tracking_no[$key] : '';
+
                 $secondary__sales_update = array(
-                    'invoice_no' => $invoice_no[$key],
-                    'PO_no' => $PO_no[$key],
-                   // 'order_tracking_no' => $order_tracking_no[$key],
+                    'invoice_no' => $invoice_n,
+                    'PO_no' =>$PO_n,
+                    'order_tracking_no' => $order_tracking_n,
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
