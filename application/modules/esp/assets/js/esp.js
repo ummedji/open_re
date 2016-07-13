@@ -62,14 +62,14 @@ $(document).ready(function(){
             
              $.ajax({
                 type: 'POST',
-                url: site_url+"esp/get_monthly_data",
+                url: site_url+"esp/get_monthly_select_data",
                 data: {frommonth:from_value,tomonth:to_value},
                 success: function(resp){
                     
                    // console.log(resp);
                     
-                    var res_html = '<select id="selected_month_data" name="selected_month_data" multiple>';
-                    res_html += '<option value="">Select Data</option>';
+                    var res_html = '<select class="selectpicker" id="selected_month_data" name="selected_month_data" multiple>';
+                 //   res_html += '<option value="">Select Data</option>';
                     if(resp != ""){
                         var monthdata = $.parseJSON(resp);
                         
@@ -83,6 +83,7 @@ $(document).ready(function(){
                     
                      $("div#middle_filter").html(res_html);
                     
+                    $("select#selected_month_data").selectpicker('refresh');
                     
                 }
 
@@ -197,10 +198,36 @@ $(document).on("click","button#freeze_data",function(e){
     var forecast_id = $("input#forecast_id").val();
     var text_data = $(this).text();
     
+    var freeze_date = $("select#selected_month_data").val();
+    
+   // alert(forecast_id+"==="+freeze_date);
+    
+    //alert(freeze_date);
+    //return false;
+    if(freeze_date == null){
+        
+       $('<div></div>').appendTo('body')
+        .html('<div><b>Please Select month to freeze data.</b></div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
+
+       return false;   
+        
+    }
+    
     $.ajax({
         type: 'POST',
         url: site_url+"esp/update_forecast_freeze_status",
-        data: {forecastid:forecast_id,textdata:text_data},
+        data: {forecastid:forecast_id,textdata:text_data,freezedate:freeze_date},
         success: function(resp){
             //alert(resp);
             var message = "";

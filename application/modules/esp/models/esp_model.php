@@ -373,7 +373,7 @@ class Esp_model extends BF_Model
         
     }
     
-    public function update_forecast_freeze_status_data($user_id,$forecast_id,$text_data){
+    public function update_forecast_freeze_status_data($user_id,$forecast_id,$text_data,$freeze_date_data){
         
         if($text_data == "Freeze"){
             $freeze_status = 1;
@@ -382,13 +382,20 @@ class Esp_model extends BF_Model
             $freeze_status = 0;
         }
         
+       // $data = array(
+       //     'freeze_status'	=>$freeze_status,
+       //     'freeze_by_id' =>$user_id
+       // );
+        
         $data = array(
-            'freeze_status'	=>$freeze_status,
-            'freeze_by_id' =>$user_id
+            'submit_status'	=>$freeze_status,
+            'submit_by_id' =>$user_id,
+            'submit_date' => date("Y-m-d")
         );
             
         $this->db->where('forecast_id', $forecast_id);
-        $this->db->update('bf_esp_forecast' ,$data);
+        $this->db->where('forecast_month', $freeze_date_data);
+        $this->db->update('bf_esp_forecast_product_details' ,$data);
         
         $update_res = $this->db->affected_rows();
         
@@ -399,6 +406,7 @@ class Esp_model extends BF_Model
 
             $this->db->where("bffsh.forecast_id",$forecast_id);
             $this->db->where("bffsh.freeze_by_id",$user_id);
+            $this->db->where("bffsh.month_data",$freeze_date_data);
 
             $freeze_data = $this->db->get()->result_array();
             
@@ -408,7 +416,8 @@ class Esp_model extends BF_Model
                 
                 $freeze_data = array( 
                     'forecast_id'	=> $forecast_id, 
-                    'freeze_by_id'  => $user_id, 
+                    'freeze_by_id'  => $user_id,
+                    'month_data'  => $freeze_date_data,
                     'freeze_status'	=>  1
                 );
                 $this-> db->insert('bf_forecast_freeze_status_history', $freeze_data);
@@ -473,16 +482,20 @@ class Esp_model extends BF_Model
     }
     
     
-    public function get_forecast_freeze_status($forecast_id){
+    public function get_forecast_freeze_status($forecast_id,$login_user_id,$monthvalue){
         
         $this->db->select('*');
-        $this->db->from("bf_esp_forecast as bef");
+        $this->db->from("bf_forecast_freeze_status_history as bffsh");
         
-        $this->db->where("bef.forecast_id",$forecast_id);
+        $this->db->join("bf_esp_forecast as bef","bef.forecast_id = bffsh.forecast_id");
+        
+        $this->db->where("bffsh.forecast_id",$forecast_id);
+        $this->db->where("bffsh.month_data",$monthvalue);
+        $this->db->where("bffsh.freeze_by_id",$login_user_id);
         
         $forecast_data = $this->db->get()->result_array();
         
-        //echo $this->db->last_query();
+    //    echo $this->db->last_query();
        // die;
         
         $forecast_array = array();

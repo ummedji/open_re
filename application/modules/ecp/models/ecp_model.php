@@ -415,7 +415,7 @@ class Ecp_model extends BF_Model
         foreach($mr_id as $K => $m_id)
         {
             $disptched_qty=isset($disptched_quantity[$K]) ? $disptched_quantity[$K] : '0';
-            $executor_remark=isset($executor_remarks[$K]) ?$executor_remarks[$K] : '';
+            $executor_remark=isset($executor_remarks[$K]) ? $executor_remarks[$K] : '';
             $update_material_details = array(
                 'disptched_qty' => $disptched_qty,
                 'material_request_status' => $request_status[$K],
@@ -1079,7 +1079,7 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function update_compititor_product_details()
+    public function update_compititor_product_details($web_service= null)
     {
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
@@ -1088,6 +1088,7 @@ class Ecp_model extends BF_Model
 
         }
         else{
+
             $id = $this->input->post("id");
             $quantity = $this->input->post("quantity");
         }
@@ -1413,6 +1414,23 @@ class Ecp_model extends BF_Model
             return 1;
         }
         else{
+            return 0;
+        }
+    }
+
+
+    public function activity_type_details($country_id)
+    {
+        $this->db->select('activity_type_country_id,activity_type_code,activity_type_country_name');
+        $this->db->from('bf_ecp_activity_master_country');
+        $this->db->where('country_id',$country_id );
+        $this->db->where('status','1');
+        $this->db->where('deleted','0');
+        $activity_type = $this->db->get()->result_array();
+       // testdata($activity_type);
+        if (isset($activity_type) && !empty($activity_type)) {
+            return $activity_type;
+        } else {
             return 0;
         }
     }
