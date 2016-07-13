@@ -178,3 +178,28 @@ ul.listslider li{
     background-color: #65ac1e;
 }
 a.set_pono, .eye_i a { border-bottom: solid 1px #65ac1e !important;}
+
+
+
+/*final login css*/
+.login-submit {background-color: #83a771; }
+.login-button:before {
+    background: #7ab203;
+    border-radius: 24px;
+    background-image: -webkit-linear-gradient(top, #7ab203, #3a6208);
+    background-image: -moz-linear-gradient(top, #7ab203, #3a6208);
+    background-image: -o-linear-gradient(top, #7ab203, #3a6208);
+    background-image: linear-gradient(to bottom, #7ab203, #3a6208);
+}
+.login-button:active:before {
+    background: #3a6208;
+    background-image: -webkit-linear-gradient(top, #3a6208, #7ab203);
+    background-image: -moz-linear-gradient(top, #3a6208, #7ab203);
+    background-image: -o-linear-gradient(top, #3a6208, #7ab203);
+    background-image: linear-gradient(to bottom, #3a6208, #7ab203);
+}
+@media screen and (max-width: 767px){
+    .login-submit {background-color: transparent;}
+}
+.corp_text .plus_btn a { color: #519548;}
+/*final login css*/

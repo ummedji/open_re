@@ -3,7 +3,7 @@
 ?>
 <?php
 $attributes = array('class' => '', 'id' => 'retailer_compititor_view','name'=>'retailer_compititor_view');
-echo form_open('',$attributes);
+echo form_open('ecp/retailer_compititor_details_view',$attributes);
 ?>
 <div class="col-md-12 full-height">
     <div class="row">

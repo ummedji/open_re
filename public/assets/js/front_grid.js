@@ -93,6 +93,9 @@ function submitForm() {
         case'target': val = $("#target");break;
         case'budget': val = $("#budget");break;
         case'all_material_request': val = $("#all_material_request");break;
+        case'material_request': val = $("#material_request");break;
+        case'retailer_compititor_view': val = $("#retailer_compititor_view");break;
+        case'distributor_compititor_view': val = $("#distributor_compititor_view");break;
        /* default  : val = $("#form_ntfdetails");break;*/
     }
 

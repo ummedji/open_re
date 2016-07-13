@@ -143,7 +143,7 @@
                                 elseif($segment=='ecp'){
                                     ?>
                                     <li role="presentation" class="">
-                                        <a href="<?php echo base_url('ecp/activity'); ?>">ACTIVITY</a>
+                                        <a href="<?php echo base_url('ecp/activity_planning'); ?>">ACTIVITY</a>
                                     </li>
                                     <li role="presentation" class="<?php echo ($segment=='ecp' && ($segment2=='no_working' || $segment2=='set_leave')) ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/no_working'); ?>">NO WORKING</a></li>
 

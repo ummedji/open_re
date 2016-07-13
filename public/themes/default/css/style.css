@@ -2018,3 +2018,507 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 }
 
 /*po modal css*/
+
+/*final login css*/
+.new_login {
+    background: url(../images/login_bg_1.jpg) no-repeat 50% 50%;
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    text-align: center;
+}
+.left_lg {
+    position: fixed;
+    height: 100%;
+    width: 50%;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    margin: 0 auto;
+}
+.left_lg a {
+    position: relative;
+    /*left: 37%;*/
+    top: 35%;
+    /*bottom: 0;*/
+}
+@media screen and (max-width: 991px){
+    .left_lg {
+        position: relative;
+        height: auto;
+        width: 100%;
+        padding: 10px 0;
+    }
+}
+.right_lg {
+    position: fixed;
+    height: 100%;
+    width: 50%;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0.15);
+    margin: 0 auto;
+}
+.login {
+    position: relative;
+    width: 460px;
+    top: 42%;
+    display: inline-block;
+}
+.login p {
+    margin: 0 0 10px;
+}
+
+.login input, .login button, .login label {
+    font-family: 'Exo2-Medium';
+    font-size: 15px;
+    color: #fff;
+    font-weight: normal;
+}
+
+.login input[type=text], .login input[type=password] {
+    padding: 0 10px;
+    width: 300px;
+    font-family: 'Exo2-Medium';
+    height: 40px;
+    color: #fff;
+    text-shadow: 1px 1px 1px black;
+    background: rgba(0, 0, 0, 0.4);
+    border: 0;
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.3), 0 1px rgba(255, 255, 255, 0.06);
+}
+.login input[type=text]:focus, .login input[type=password]:focus {
+    color: white;
+    background: rgba(0, 0, 0, 0.3);
+    outline: 0;
+}
+
+.login label {
+    float: left;
+    width: 110px;
+    line-height: 40px;
+    padding-right: 0px;
+    text-align: right;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.5);
+}
+.login label img { margin-right: 5px; margin-top: -5px; }
+
+.forgot-password {
+    padding-left: 135px;
+    font-size: 13px;
+    font-weight: 100;
+    font-family: 'Exo2-Regular';
+    color: #fff;
+    text-align: right;
+    padding-right: 22px;
+}
+.forgot-password a { color: #fff; text-decoration: none;}
+.ckbx_sp {
+    padding-left: 135px;
+    padding-right: 22px;
+    font-size: 12px;
+    font-weight: 100;
+    font-family: 'Exo2-Regular';
+    color: #fff !important;
+    margin-top: 15px;
+}
+.ckbx_sp a {
+    color: #fff !important;
+    font-size: 13px !important;
+    text-decoration: none;
+}
+.ckbx_sp .checkbox label::before { margin-left: -18px;}
+.ckbx_sp .checkbox label::before { border-radius: 5px;}
+.login .ckbx_sp label {
+    font-size: 13px !important;
+    line-height: inherit;
+    width: auto;
+}
+.login-submit {
+    position: absolute;
+    top: 12px;
+    right: 0;
+    width: 65px;
+    height: 65px;
+    padding: 8px;
+    border-radius: 32px;
+    /*-webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 0 4px rgba(0, 0, 0, 0.35);*/
+
+}
+.login-submit:before, .login-submit:after {
+    content: '';
+    z-index: 1;
+    position: absolute;
+}
+.login-submit:before {
+    top: 28px;
+    left: -4px;
+    width: 4px;
+    height: 10px;
+    -webkit-box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+    box-shadow: inset 0 1px rgba(255, 255, 255, 0.06);
+}
+.login-submit:after {
+    top: -4px;
+    bottom: -4px;
+    right: -4px;
+    width: 36px;
+}
+
+.login-button {
+    position: relative;
+    z-index: 2;
+    width: 48px;
+    height: 48px;
+    padding: 0 0 35px;
+    /* Fix wrong positioning in Firefox 9 & older (bug 450418) */
+    text-indent: 120%;
+    white-space: nowrap;
+    overflow: hidden;
+    background: none;
+    border: 0;
+    border-radius: 24px;
+    cursor: pointer;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.1);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.2), 0 1px rgba(255, 255, 255, 0.1);
+    /* Must use another pseudo element for the gradient background because Webkit */
+    /* clips the background incorrectly inside elements with a border-radius.     */
+}
+.login-button:before {
+    content: '';
+    position: absolute;
+    top: 5px;
+    bottom: 5px;
+    left: 5px;
+    right: 5px;
+    -webkit-box-shadow: inset 0 0 0 1px #333e29, 0 0 0 5px rgba(0, 0, 0, 0.16);
+    box-shadow: inset 0 0 0 1px #333e29, 0 0 0 5px rgba(0, 0, 0, 0.16);
+}
+
+.login-button:after {
+    content: '';
+    position: absolute;
+    top: 15px;
+    left: 12px;
+    width: 25px;
+    height: 19px;
+    background: url("../images/arrow.png") 0 0 no-repeat;
+}
+
+::-moz-focus-inner {
+    border: 0;
+    padding: 0;
+}
+
+.lt-ie9 input[type=text], .lt-ie9 input[type=password] {
+    line-height: 40px;
+    background: #282828;
+}
+.lt-ie9 .login-submit {
+    position: absolute;
+    top: 12px;
+    right: -28px;
+    padding: 4px;
+}
+.lt-ie9 .login-submit:before, .lt-ie9 .login-submit:after {
+    display: none;
+}
+.lt-ie9 .login-button {
+    line-height: 48px;
+}
+.lt-ie9 .about {
+    background: #313131;
+}
+.setting_sp {
+    position: absolute;
+    right: 0;
+    padding: 11px;
+    top: 0;
+}
+@media screen and (max-width: 991px){
+    .right_lg {
+        position: absolute;
+        height: auto;
+        width: 100%;
+        padding: 40px 0;
+        bottom: 0;
+        top: 202px;
+    }
+}
+
+@media screen and (max-width: 767px){
+    .new_login {
+        overflow-y: scroll;
+    }
+    .right_lg { top: 140px;}
+    .login { width: auto;}
+    .login label {
+        display: block;
+        text-align: left;
+        width: auto;
+    }
+    .login input[type=text], .login input[type=password] {
+        width: 100%;
+    }
+    .ckbx_sp {
+        padding-left: 0px;
+        padding-right: 0;
+    }
+    .ckbx_sp .checkbox {
+        width: 100%;
+    }
+    .left_lg a img {
+        max-height: 120px;
+    }
+    .login-submit {
+        position: relative;
+
+        width: auto;
+        margin-top: 30px;
+    }
+    .login-button {
+        display: block;
+        margin: 20px auto;
+    }
+}
+.login .alert-warning{
+    position: absolute;
+    width: 100%;
+    top: -73px;
+}
+.login #login-error {
+    position: absolute;
+    top: -54px;
+    width: 302px;
+    left: 134px;
+    text-align: left;
+    background-color: rgba(255, 255, 255, 0.5);
+    padding: 0px 5px;
+    border-radius: 5px;
+}
+/*final login css*/
+
+/*ECP planning css*/
+.top_form.planning_parent {
+    padding: 20px 0px 20px 0px;
+}
+.plng_sub_nave {
+    margin-top: -4px;
+    margin-bottom: -29px;
+    z-index: 10;
+}
+.default_box_white {
+    border-bottom: solid 1px #d9dada;
+    padding: 30px 0;
+}
+.cont_size_select .bootstrap-select {
+    max-width: 126px;
+    min-width: 126px;
+}
+.first_lb {text-align: right;}
+.mr_bot_group .form-group{margin-bottom: 30px;}
+.mr_bot_group .form-group:last-child { margin-bottom: 0;}
+.tp_form .form-group textarea {
+    font-family: 'Exo2-Regular';
+    font-size: 15px;
+    color: #767676;
+    border-radius: 0;
+    border-color: #c9c9c9;
+    background-color: #fff;
+    outline: none;
+    box-shadow: none;
+    height: auto;
+    padding: 0px 12px;
+}
+@media screen and (min-width: 1400px){
+    .cont_size_select .bootstrap-select {
+        max-width: 100%;
+        min-width: 100%;
+    }
+}
+@media screen and (max-width: 1199px){
+    .cont_size_select .bootstrap-select {
+        max-width: 100px;
+        min-width: 100px;
+    }
+}
+@media screen and (max-width: 991px){
+    /*.first_lb {text-align: left;}*/
+    .cont_size_select .bootstrap-select {
+        max-width: 100%;
+        min-width: 100%;
+    }
+    .mrg_bottom_30 { margin-bottom: 30px;}
+}
+@media screen and (max-width: 767px){
+    .first_lb {text-align: left;}
+    .mrg_bottom_30 { margin-bottom: 5px;}
+}
+.default_box_grey {
+    border-bottom: solid 1px #d9dada;
+    padding: 25px 0;
+    background-color: #fbfdff;
+}
+.corp_text_align { text-align: right;}
+.corp_text .plus_btn {
+    border: solid 1px #c9c9c9;
+    display: inline-block;
+    float: none;
+    margin-left: 8px;
+    height: 30px;
+    width: 30px;
+    padding: 4px;
+    font-size: 16px;
+    margin-top: 0px;
+    vertical-align: middle;
+}
+.corp_text .bootstrap-select { width: 180px !important;}
+@media screen and (max-width: 1199px) and (min-width: 992px) {.corp_text .bootstrap-select { width: 130px !important;}}
+@media screen and (max-width: 1363px) { .corp_text .plus_btn { margin-top: 0px !important;} }
+@media screen and (max-width: 991px) {
+    .corp_text_align { text-align: center;}
+    .corp_text { margin-bottom: 15px;}
+}
+@media screen and (max-width: 575px) { .corp_text .plus_btn { border-radius: 50% !important;}}
+@media screen and (max-width: 414px) {
+    .corp_text .bootstrap-select { width: 100% !important; margin-bottom: 5px !important;}
+}
+
+.frm_details .bootstrap-select, .frm_details input{width: 230px !important;}
+@media screen and (max-width: 1300px) {.frm_details .bootstrap-select, .frm_details input{width: 185px !important;}}
+@media screen and (max-width: 1199px) and (min-width: 992px) {.frm_details .bootstrap-select, .frm_details input{width: 130px !important;}}
+@media screen and (max-width: 991px) {
+    .mrg_top_30 { margin-top: 30px !important;}
+}
+@media screen and (max-width: 414px) {
+    .frm_details .bootstrap-select, .frm_details input { width: 100% !important; margin-bottom: 5px !important;}
+}
+.plng_title h5 {
+    font-family: 'Exo2-Regular';
+    font-size: 15px;
+    color: #5e5f5f;
+    margin: 0 0 20px 0;
+}
+.material_request {
+    display: block;
+    background-color: #ffffff;
+}
+.material_request h6 {
+    font-family: 'Exo2-Regular';
+    font-size: 15px;
+    color: #5e5f5f;
+    margin: 8px 15px;
+}
+table.request_table {
+    width: 100%;
+    font-family: 'Exo2-Regular';
+    font-size: 14px;
+    color: #5e5f5f;
+    font-weight: normal !important;
+}
+.request_table>thead>tr>th {
+    background-color: #fbfdff;
+}
+.request_table>thead>tr>th, .request_table>tbody>tr>td  {
+    padding: 8px 15px;
+    border: solid 1px #e1e3ee;
+    width: 50%;
+}
+.material_request .request_table h6 { font-size: 14px; margin:0px; padding-bottom: 5px;}
+.request_table.tp_form .form-group {
+    margin-bottom: 0px;
+    width: 50%;
+    float: left;
+    padding: 12px 0;
+}
+.request_table.tp_form .form-group input {
+    display: inline-block;
+}
+@media screen and (max-width: 1199px){
+    .material_request_inn { overflow-x: scroll;}
+    table.request_table {
+        overflow-x: scroll;
+        min-width: 900px;
+    }
+}
+@media screen and (max-width: 991px){
+    .request_table.tp_form .form-group .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-group-btn) {
+        width: auto !important;
+    }
+}
+.product_name {
+    width: 70%;
+    float: left;
+}
+.product_name span, .qty_space span { margin-left: 5px; font-weight: bold;}
+.qty_space {
+    width: 30%;
+    float: left;
+}
+.pln_table_bottom .save_btn button{
+    margin-right: 5px;
+}
+@media screen and (max-width: 436px){
+    .pln_table_bottom .save_btn button{ margin-bottom: 10px;}
+}
+.right_planning { padding-left: 0px !important;}
+@media screen and (max-width: 991px){
+    .right_planning { padding-left: 15px !important;}
+}
+.panel.act_panel {
+    background-color: transparent;
+    border: none;
+    margin-bottom: 0;
+    box-shadow: none;
+}
+.panel.act_panel .panel-heading {
+    background-color: transparent;
+    border: none;
+    padding: 0;
+}
+ul.activity_list { margin: 0; padding: 0 15px; text-align: center;}
+.activity_list li {
+    list-style: none;
+    display: inline-block;
+    background-color: #00793a;
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+.activity_list li a {
+    color: #fff;
+    text-decoration: none;
+    padding: 6px 12px;
+    display: block;
+}
+.act_panel .panel-body { padding: 0;}
+.calendar_space, .add_new_space {
+    display: block;
+    margin-bottom: 15px;
+}
+.as_accordion .panel {
+    margin-bottom: 0 !important;
+    border-radius: 0;
+}
+ul.acc_list { margin: 0; padding: 0; text-align: center;}
+.acc_list li {
+    list-style: none;
+    display: inline-block;
+    border-right: solid 1px #cccecf;
+    padding: 3px 3px;
+    font-size: 13px;
+    font-family: 'Exo2-Regular';
+    color: #000000;
+}
+.acc_list li:first-child { width: 38px;}
+.acc_list li a{ color: #000000; text-decoration: none;}
+.acc_list li:last-child {border-right: none;}
+
+.sub_nave_sub {
+    margin-top: 0px;
+    margin-bottom: 15px;
+}
+.sub_nave_sub .inn_sub_nave {
+    border-radius: 8px;
+}

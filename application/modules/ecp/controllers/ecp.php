@@ -666,6 +666,17 @@ class Ecp extends Front_Controller
 		die;
 	}
 
+	public function activity_planning()
+	{
+		Assets::add_module_js('ecp', 'activity_planning.js');
+		$user = $this->auth->user();
+		$activity_type = $this->ecp_model->activity_type_details($user->country_id);
+
+		Template::set('activity_type', $activity_type);
+		Template::set_view('ecp/activity_planning');
+		Template::render();
+	}
+
 
 
 }

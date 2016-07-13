@@ -355,13 +355,16 @@ class Esp_model extends BF_Model
         } 
     }
     
-    public function get_month_assumption_forecast_lock_data($forecast_id,$monthvalue){
+    public function get_month_assumption_forecast_lock_data($forecast_id,$login_user_id,$monthvalue){
         
         $this->db->select('*');
-        $this->db->from("bf_esp_forecast_product_details as befpd");
+      //  $this->db->from("bf_esp_forecast_product_details as befpd");
+        
+        $this->db->from("bf_forecast_lock_status_history as befpd");
         
         $this->db->where("befpd.forecast_id",$forecast_id);
-        $this->db->where("befpd.forecast_month",$monthvalue);
+        $this->db->where("befpd.lock_by_id",$login_user_id);
+        $this->db->where("befpd.month_data",$monthvalue);
        
         $forecast_lock_data = $this->db->get()->result_array();
         
@@ -514,13 +517,14 @@ class Esp_model extends BF_Model
         
     }
     
-    public function forecast_freeze_status_history($forecast_id,$login_userid){
+    public function forecast_freeze_status_history($forecast_id,$monthvalue,$login_userid){
         
         $this->db->select('*');
         $this->db->from("bf_forecast_freeze_status_history as bffsh");
         
         $this->db->where("bffsh.forecast_id",$forecast_id);
         $this->db->where("bffsh.freeze_by_id",$login_userid);
+        $this->db->where("bffsh.month_data",$monthvalue);
         
         $forecast_data = $this->db->get()->result_array();
         

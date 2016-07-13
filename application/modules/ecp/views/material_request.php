@@ -1,3 +1,4 @@
+<?php if (!$this->input->is_ajax_request()) { ?>
 <?php
 $attributes = array('class' => '', 'id' => 'material_request','name'=>'material_request');
 echo form_open('ecp/material_request',$attributes); ?>
@@ -64,6 +65,8 @@ echo form_open('ecp/material_request',$attributes); ?>
     <div class="clearfix"></div>
 </div>
 <?php echo form_close(); ?>
+
+<?php }?>
 
 <?php $attributes = array('class' => '', 'id' => 'update_material_request','name'=>'update_material_request');
 echo form_open('',$attributes); ?>

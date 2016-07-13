@@ -20,7 +20,8 @@ $(document).ready(function() {
     });
 
 
-    $("#material_request").on("submit",function(){
+    $("#material_request").on("submit",function(e){
+        e.preventDefault();
         var param = $("#material_request").serializeArray();
         //console.log(param);
         var $valid = $("#material_request").valid();
