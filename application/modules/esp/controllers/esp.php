@@ -2534,7 +2534,7 @@ class Esp extends Front_Controller
 			$result = "Data Updated Successfully";
 			return $result;
         }else{
-            echo 1;
+            echo $budget_insert_id;
             die;
         	//redirect('esp/budget');
 		}

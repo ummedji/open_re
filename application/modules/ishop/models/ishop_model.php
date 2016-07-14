@@ -5013,7 +5013,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['head'] = array('Sr. No.', '', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                         $order_view['count'] = count($order_view['head']);
 
-                        testdata($page);
+                        //testdata($page);
                         if ($page != null || $page != "") {
                             $i = $page * 10 - 9;
                         } else {

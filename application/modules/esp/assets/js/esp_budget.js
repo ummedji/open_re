@@ -99,8 +99,8 @@ $(document).on("click","#save_data",function(e){
             //dataType : 'json',
             success: function(resp){
                 var message = "";
-                if(resp == 1){
-
+                if(resp != 0){
+                     $("input#budget_id").val(resp);
                     message += 'Data added successfully.';
                 }
                 else{
