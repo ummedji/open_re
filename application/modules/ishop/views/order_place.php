@@ -366,7 +366,7 @@ echo form_open('',$attributes); ?>
                     </div>
 
                 </div>
-                <div class="plus_btn"><a href="javascript:void(0);" id="order_place_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                <div class="plus_btn"><a title="Add Product" href="javascript:void(0);" id="order_place_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -379,8 +379,8 @@ echo form_open('',$attributes); ?>
         
          <div class="zoom_space">
                 <ul>
-                    <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                    <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                    <li><a title="Filter" href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
+                    <li><a title="Expand" href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
                 </ul>
             </div>
         
@@ -409,7 +409,7 @@ echo form_open('',$attributes); ?>
 <div class="col-md-12 table_bottom">
     <div class="row">
         <div class="col-md-3 save_btn">
-            <button type="submit" class="btn btn-primary">Save</button>
+            <button title="Save Order" type="submit" class="btn btn-primary">Save</button>
         </div>
     </div>
 </div>

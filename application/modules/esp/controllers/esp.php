@@ -2652,7 +2652,7 @@ class Esp extends Front_Controller
 				$final_array["freeze_status"] = $freeze_status;
 				$final_array["freeze_show"] = $freeze_show;
 				
-				testdata($final_array);
+				//testdata($final_array);
 				
 				return $final_array;
 				//die;

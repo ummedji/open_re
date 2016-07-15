@@ -1028,7 +1028,7 @@ function order_place_add_row()
             "</td>"+
             
             "<td data-title='remove'>" +
-                "<div class='delete_i' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
+                "<div class='delete_i' attr-dele=''><a title='Delete Row' href='javascript:void(0);'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
             "</td>"+
             
             "<td data-title='Product SKU Code' class='numeric'>" +
@@ -1058,8 +1058,8 @@ function order_place_add_row()
             "</td>"+
         "</tr>"
     );
-    $('#prod_sku').selectpicker('val', '0');
-    $('#units').selectpicker('val', '0');
+    $('#prod_sku').selectpicker('val', '');
+    $('#units').selectpicker('val', '');
     $('#quantity').val('');
    
 }
