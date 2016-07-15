@@ -147,4 +147,16 @@ $(document).on('click', 'div.delete_button', function () {
 
 });
 
+function getCalenderData(iMonth)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/getNoWorkingDetailByMonth",
+        data: {cur_month:iMonth},
+        success: function (resp) {
+            $('#calendar').html(resp);
+        }
+    });
+}
+
 

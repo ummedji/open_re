@@ -356,10 +356,8 @@ class Ecp extends Front_Controller
 
 		$user = $this->auth->user();
 		$reason=$this->ecp_model->all_reason_noworking_details($user->country_id);
-		$action ='no_working';
-		$no_working_details = $this->ecp_model->all_no_working_details($user->id,$user->country_id);
-
-		$cal_data = $this->leave_sidebar_calender($no_working_details,$action);
+		$cur_month=date('n');
+		$cal_data = $this->getNoWorkingDetailByMonth($cur_month);
 
 		Template::set('reason', $reason);
 		Template::set('cal_data', $cal_data);
@@ -367,16 +365,44 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
+	public function getNoWorkingDetailByMonth($curr_month = '')
+	{
+		Assets::add_module_js('ecp', 'no_working.js');
+
+		if($curr_month !='' && !empty($curr_month))
+		{
+			$cur_month = $curr_month;
+		}
+		else{
+			@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
+
+		}
+		$user = $this->auth->user();
+		$leave_detail = $this->ecp_model->all_no_working_details($user->id,$user->country_id,null,$cur_month);
+		//testdata($leave_detail);
+		$action ='no_working';
+
+		$cal_data = $this->leave_sidebar_calender($leave_detail,$action);
+
+		if($curr_month =='')
+		{
+			echo json_encode($leave_detail);
+			die;
+		}
+		else{
+			return $cal_data;
+		}
+	}
+
+
 	public function set_leave()
 	{
 		Assets::add_module_js('ecp', 'leave.js');
 
 		$user = $this->auth->user();
 		$leave_type=$this->ecp_model->all_leave_type_details($user->country_id);
-
-		$leave_details = $this->ecp_model->all_leave_details($user->id,$user->country_id);
-		$action ='set_leave';
-		$cal_data = $this->leave_sidebar_calender($leave_details,$action);
+		$cur_month=date('n');
+		$cal_data = $this->getLeaveDetailByMonth($cur_month);
 
 		Template::set('leave_type', $leave_type);
 		Template::set('cal_data', $cal_data);
@@ -384,8 +410,36 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
-	public function leave_sidebar_calender($leave_details,$action){
-		//testdata($leave_details);
+	public function getLeaveDetailByMonth($curr_month = '')
+	{
+		Assets::add_module_js('ecp', 'leave.js');
+		if($curr_month !='' && !empty($curr_month))
+		{
+			$cur_month = $curr_month;
+		}
+		else{
+			@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
+
+		}
+		$user = $this->auth->user();
+		$leave_detail = $this->ecp_model->all_leave_details($user->id,$user->country_id,null,$cur_month);
+		//testdata($leave_detail);
+		$action ='set_leave';
+
+		$cal_data = $this->leave_sidebar_calender($leave_detail,$action);
+
+		if($curr_month =='')
+		{
+			echo json_encode($leave_detail);
+			die;
+		}
+		else{
+			return $cal_data;
+		}
+	}
+
+
+	public function leave_sidebar_calender($leave_details=array(),$action=''){
 
 		$user = $this->auth->user();
 
@@ -393,8 +447,8 @@ class Ecp extends Front_Controller
 		list($iNowYear, $iNowMonth, $iNowDay) = explode('-', date('Y-m-d'));
 
 // Get current year and month depending on possible GET parameters
-		if (isset($_GET['month'])) {
-			list($iMonth, $iYear) = explode('-', $_GET['month']);
+		if (isset($_REQUEST['cur_month'])) {
+			list($iMonth, $iYear) = explode('-', $_REQUEST['cur_month']);
 			$iMonth = (int)$iMonth;
 			$iYear = (int)$iYear;
 		} else {
@@ -448,11 +502,16 @@ class Ecp extends Front_Controller
 				if ($iNowYear == $iYear && $iNowMonth == $iMonth && $iNowDay == $iCurrentDay && !$bPreviousMonth && !$bNextMonth) {
 					$sClass = 'today';
 				} elseif (!$bPreviousMonth && !$bNextMonth) {
-					if($iCurrentDay < date("d")){
-						$sClass = 'prev';
-					} else {
+
+
+					if(($iCurrentDay > date("d") && $iMonth >= date("n")) || ($iMonth > date("n"))){
 						$sClass = 'current';
 					}
+					else
+					{
+						$sClass = 'prev';
+					}
+
 				}
 				$dYear = $iYear;
 				$dMonth = $iMonth;
@@ -494,6 +553,7 @@ class Ecp extends Front_Controller
 							}
 						}
 						if($action == 'set_leave'){
+
 							foreach($leave_details as $k => $ld)
 							{
 								if($dates == strtotime($ld['leave_date']))
@@ -570,12 +630,12 @@ class Ecp extends Front_Controller
 		$sCalendarItself = '';
 
 		$sCalendarItself .= '<div class="navigation">';
-		$sCalendarItself .= '<a class="prev" href="'.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__prev_month__"].'" onclick="$(\'#calendar\').load(\''.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__prev_month__"].'&_r=\' + Math.random()); return false;"></a> ';
 
+		$sCalendarItself .= '<a class="prev" href="javascript: void(0);" onclick="getCalenderData(\''.$aKeys["__prev_month__"].'\')"></a> ';
 
 		$sCalendarItself .= '<div class="title" >'.$aKeys['__cal_caption__'].'</div>';
 
-		$sCalendarItself .= '<a class="next" href="'.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__next_month__"].'" onclick="$(\'#calendar\').load(\''.base_url('ecp/leave_sidebar_calender').'?month='.$aKeys["__next_month__"].'&_r=\' + Math.random()); return false;"></a>';
+		$sCalendarItself .= '<a class="next" href="javascript: void(0);" onclick="getCalenderData(\''.$aKeys["__next_month__"].'\')"></a>';
 
 		$sCalendarItself .= '</div><table>
     <tr>
@@ -591,7 +651,6 @@ class Ecp extends Front_Controller
 		$sCalendarItself .= $aKeys["__cal_rows__"];
 		$sCalendarItself .= '</table>';
 
-
 		if ($this->input->is_ajax_request()) {
 			echo $sCalendarItself;
 			die;
@@ -599,7 +658,6 @@ class Ecp extends Front_Controller
 		else{
 			return $sCalendarItself;
 		}
-
 	}
 
 
@@ -671,11 +729,312 @@ class Ecp extends Front_Controller
 		Assets::add_module_js('ecp', 'activity_planning.js');
 		$user = $this->auth->user();
 		$activity_type = $this->ecp_model->activity_type_details($user->country_id);
+		$crop_details = $this->ecp_model->crop_details_by_country_id($user->country_id);
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+		$diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
+		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user->id,$user->country_id);
+		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
+
+		$global_head_user = array();
+
+		$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+		$cur_month=date('n');
+		$cal_data = $this->getActivityDetailByMonth($cur_month);
 
 		Template::set('activity_type', $activity_type);
+		Template::set('crop_details', $crop_details);
+		Template::set('product_sku', $product_sku);
+		Template::set('diseases_details', $diseases_details);
+		Template::set('key_farmer', $key_farmer);
+		Template::set('materials', $materials);
+		Template::set('employee_visit', $employee_visit);
+		Template::set('cal_data', $cal_data);
 		Template::set_view('ecp/activity_planning');
 		Template::render();
 	}
+
+
+	public function getActivityDetailByMonth($curr_month = '')
+	{
+
+		Assets::add_module_js('ecp', 'activity_planning.js');
+		if($curr_month !='' && !empty($curr_month))
+		{
+			$cur_month = $curr_month;
+		}
+		else{
+			@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
+
+		}
+		$user = $this->auth->user();
+		$activity_detail = $this->ecp_model->all_activity_planning_details($user->id,$user->country_id,null,$cur_month);
+
+		$action ='activity_planning';
+
+		$cal_data = $this->activity_planning_sidebar_calender($activity_detail,$action);
+
+		if($curr_month =='')
+		{
+			echo json_encode($activity_detail);
+			die;
+		}
+		else{
+			return $cal_data;
+		}
+	}
+
+
+
+	public function activity_planning_sidebar_calender($activity_details=array(),$action=''){
+
+		$user = $this->auth->user();
+
+// Get current year, month and day
+		list($iNowYear, $iNowMonth, $iNowDay) = explode('-', date('Y-m-d'));
+
+// Get current year and month depending on possible GET parameters
+		if (isset($_REQUEST['cur_month'])) {
+			list($iMonth, $iYear) = explode('-', $_REQUEST['cur_month']);
+			$iMonth = (int)$iMonth;
+			$iYear = (int)$iYear;
+		} else {
+			list($iMonth, $iYear) = explode('-', date('n-Y'));
+		}
+
+// Get name and number of days of specified month
+		$iTimestamp = mktime(0, 0, 0, $iMonth, $iNowDay, $iYear);
+		list($sMonthName, $iDaysInMonth) = explode('-', date('F-t', $iTimestamp));
+
+// Get previous year and month
+		$iPrevYear = $iYear;
+		$iPrevMonth = $iMonth - 1;
+		if ($iPrevMonth <= 0) {
+			$iPrevYear--;
+			$iPrevMonth = 12; // set to December
+		}
+
+// Get next year and month
+		$iNextYear = $iYear;
+		$iNextMonth = $iMonth + 1;
+		if ($iNextMonth > 12) {
+			$iNextYear++;
+			$iNextMonth = 1;
+		}
+
+// Get number of days of previous month
+		$iPrevDaysInMonth = (int)date('t', mktime(0, 0, 0, $iPrevMonth, $iNowDay, $iPrevYear));
+
+// Get numeric representation of the day of the week of the first day of specified (current) month
+		$iFirstDayDow = (int)date('w', mktime(0, 0, 0, $iMonth, 1, $iYear));
+
+// On what day the previous month begins
+		$iPrevShowFrom = $iPrevDaysInMonth - $iFirstDayDow + 1;
+
+// If previous month
+		$bPreviousMonth = ($iFirstDayDow > 0);
+
+// Initial day
+		$iCurrentDay = ($bPreviousMonth) ? $iPrevShowFrom : 1;
+
+		$bNextMonth = false;
+		$sCalTblRows = '';
+
+// Generate rows for the calendar
+		for ($i = 0; $i < 6; $i++) { // 6-weeks range
+			$sCalTblRows .= '<tr>';
+			for ($j = 0; $j < 7; $j++) { // 7 days a week
+
+				$sClass = '';
+				if ($iNowYear == $iYear && $iNowMonth == $iMonth && $iNowDay == $iCurrentDay && !$bPreviousMonth && !$bNextMonth) {
+					$sClass = 'today';
+				} elseif (!$bPreviousMonth && !$bNextMonth) {
+
+
+					if(($iCurrentDay > date("d") && $iMonth >= date("n")) || ($iMonth > date("n"))){
+						$sClass = 'current';
+					}
+					else
+					{
+						$sClass = 'prev';
+					}
+
+				}
+				$dYear = $iYear;
+				$dMonth = $iMonth;
+				if($bPreviousMonth==1){
+					$dMonth--;
+				} else if($bNextMonth==1){
+					if($iMonth==12){
+						$dMonth = 1;
+						$dYear++;
+					} else {
+						$dMonth++;
+					}
+				}
+
+				if(!empty($user->local_date)){
+					$dates = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
+					$activity_date = date($user->local_date,$dates);
+
+					if($dates < strtotime(date('Y-m-d')))
+					{
+						$style = "pointer-events: none;opacity: 0.7;";
+					}
+					else
+					{
+						$style = "";
+					}
+
+					$style1 = "";
+
+					if(!empty($activity_details) && !empty($action))
+					{
+						if($action == 'no_working'){
+							foreach($activity_details as $k => $ld)
+							{
+								if($dates == strtotime($ld['no_working_date']))
+								{
+									$style1 = "background-color: yellow;";
+								}
+							}
+						}
+					}
+
+				}
+				else{
+					$activity_date = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
+
+					if($activity_date < strtotime(date('Y-m-d')))
+					{
+						$style = "pointer-events: none;opacity: 0.7;";
+					}
+					else
+					{
+						$style = "";
+					}
+					$style1 = "";
+					if(!empty($activity_details) && !empty($action))
+					{
+						if($action == 'no_working'){
+							foreach($activity_details as $k => $ld)
+							{
+								if($activity_date == strtotime($ld['no_working_date']))
+								{
+									$style1 = "background-color: yellow;";
+								}
+							}
+						}
+					}
+
+				}
+
+				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="leave_date" style="'.$style1.'" rel="'.$activity_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+
+				// Next day
+				$iCurrentDay++;
+				if ($bPreviousMonth && $iCurrentDay > $iPrevDaysInMonth) {
+					$bPreviousMonth = false;
+					$iCurrentDay = 1;
+				}
+				if (!$bPreviousMonth && !$bNextMonth && $iCurrentDay > $iDaysInMonth) {
+					$bNextMonth = true;
+					$iCurrentDay = 1;
+				}
+			}
+			$sCalTblRows .= '</tr>';
+		}
+
+// Prepare replacement keys and generate the calendar
+		$aKeys = array(
+			'__prev_month__' => "{$iPrevMonth}-{$iPrevYear}",
+			'__next_month__' => "{$iNextMonth}-{$iNextYear}",
+			'__cal_caption__' => $sMonthName . ', ' . $iYear,
+			'__cal_rows__' => $sCalTblRows,
+		);
+//$sCalendarItself = strtr(file_get_contents('calendar.html'), $aKeys);
+		$sCalendarItself = '';
+
+		$sCalendarItself .= '<div class="navigation">';
+
+		$sCalendarItself .= '<a class="prev" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__prev_month__"].'\')"></a> ';
+
+		$sCalendarItself .= '<div class="title" >'.$aKeys['__cal_caption__'].'</div>';
+
+		$sCalendarItself .= '<a class="next" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__next_month__"].'\')"></a>';
+
+		$sCalendarItself .= '</div><table>
+    <tr>
+        <th class="weekday">Sun</th>
+        <th class="weekday">Mon</th>
+        <th class="weekday">Tue</th>
+        <th class="weekday">Wed</th>
+        <th class="weekday">Thu</th>
+        <th class="weekday">Fri</th>
+        <th class="weekday">Sat</th>
+    </tr>';
+
+		$sCalendarItself .= $aKeys["__cal_rows__"];
+		$sCalendarItself .= '</table>';
+
+		if ($this->input->is_ajax_request()) {
+			echo $sCalendarItself;
+			die;
+		}
+		else{
+			return $sCalendarItself;
+		}
+	}
+
+
+
+
+	public function get_geo_activity()
+	{
+		$code = (isset($_POST["activity_type_selected"]) ? $_POST["activity_type_selected"] : '');
+		$perent_id = (isset($_POST["perent_id"]) ? $_POST["perent_id"] : null);
+		$second_perent = (isset($_POST["second_perent"]) ? $_POST["second_perent"] : null);
+		$user = $this->auth->user();
+
+		if($code =='RMP003' || $code =='RVP004' )
+		{
+			$role_id = 10;
+		}
+		else{
+			$role_id = 11;
+		}
+
+		$get_geo_level_data = $this->ecp_model->get_customer_type_geo_data($role_id,$user->country_id,$user->id,$perent_id,$second_perent);
+		echo json_encode($get_geo_level_data);
+		die;
+
+	}
+
+	public function get_mobile_number_by_farmer()
+	{
+		$farmer_id=$_POST['farmer_id'];
+		$mobile_no = $this->ecp_model->get_mobile_number_by_farmer_id($farmer_id);
+		echo json_encode($mobile_no);
+		die;
+	}
+
+
+	public function getDigitalLibraryData()
+	{
+		$activity_type_id = $_POST['activity_type_id'];
+		$user = $this->auth->user();
+		$mobile_no = $this->ecp_model->getDigitalLibraryDataByCountry($activity_type_id,$user->country_id);
+		echo json_encode($mobile_no);
+		die;
+	}
+
+	public function get_demonstration_data()
+	{
+		$user = $this->auth->user();
+		$get_geo_level_data = $this->ecp_model->get_demonstration_data_by_id($user->country_id);
+	}
+
+
+
 
 
 

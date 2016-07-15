@@ -1343,6 +1343,41 @@ class Esp_model extends BF_Model
         }
         
     }
+    
+    
+    public function get_employee_for_loginuser($login_user_id,&$global_head_user)
+    {
+
+        $u_data = $this->get_user_parent_data($login_user_id);
+
+        if ($u_data != 0) {
+            $global_head_user[] = $u_data[0]['reporting_user_id'];
+            $login_user_id = $u_data[0]['reporting_user_id'];
+            return $this->get_employee_for_loginuser($login_user_id,$global_head_user);
+        } else {
+          //  $global_head_user[] = $login_user_id;
+            return $global_head_user;
+        }
+
+    }
+
+    public function get_user_parent_data($freeze_user_id)
+    {
+        $this->db->select("bmerp.reporting_user_id");
+        $this->db->from("bf_master_employee_reporting_person as bmerp");
+        $this->db->join("bf_users as bu", 'bu.id = bmerp.reporting_user_id');
+        $this->db->where("bmerp.user_id", $freeze_user_id);
+        $this->db->where("bmerp.to_date", NULL);
+        $user_level_data = $this->db->get()->result_array();
+
+        if (isset($user_level_data) && !empty($user_level_data)) {
+            return $user_level_data;
+        } else {
+            return 0;
+        }
+
+    }
+    
 	
 
 	

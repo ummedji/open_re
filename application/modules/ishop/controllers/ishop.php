@@ -2387,12 +2387,20 @@ class Ishop extends Front_Controller
             {
             
                 $file = $_POST["upload_file_data"]["tmp_name"];
+                
+                
 
                 if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
                     $filename = explode("_",$_POST["upload_file_data"]["name"]);
                 }else{
                     $filename[] = $_POST["file_name"];
                 }
+                
+                $ext = explode(".",$filename[1]);
+                
+                
+                if($ext[1] == "xlsx")
+                {
                 
                 //load the excel library
                 $this->load->library('excel');
@@ -2613,7 +2621,21 @@ class Ishop extends Front_Controller
                                 if(!isset($error_array["error"]["header"])){
                                      $error_array["error"]["header"] = $header;
                                 }
-                                $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Excel User or Product data not matched with DB data";
+                                
+                                if($user_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "User data not matched with DB data";
+                                }
+                                if($product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Product data not matched with DB data";
+                                }
+                                if($user_data == 0 && $product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "User Data and Product data not matched with DB data";
+                                }
+                                
+                                $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~".$error_message;
                             }
 
                         }
@@ -2725,7 +2747,14 @@ class Ishop extends Front_Controller
                                 if(!isset($error_array["error"]["header"])){
                                      $error_array["error"]["header"] = $header;
                                 }
-                                $error_array["error"][] = $product_code."~".$product_name."~".$batch_no."~".$Unrestricted_Qty."~".$In_Transit_Qty."~".$Expiry_Date."~".$Mfg_Date."~".$Date_data."~"."Excel User or Product data not matched with DB data";
+                                
+                                
+                                if($product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Product data not matched with DB data";
+                                }
+                                
+                                $error_array["error"][] = $product_code."~".$product_name."~".$batch_no."~".$Unrestricted_Qty."~".$In_Transit_Qty."~".$Expiry_Date."~".$Mfg_Date."~".$Date_data."~".$error_message;
                             }
                             
                         }
@@ -2813,7 +2842,13 @@ class Ishop extends Front_Controller
                                 if(!isset($error_array["error"]["header"])){
                                      $error_array["error"]["header"] = $header;
                                 }
-                                $error_array["error"][] = $distributor_code."~".$distributor_name."~".$credit_limit."~".$current_outstanding."~".$Date_data."~"."Excel User or Product data not matched with DB data";
+                                
+                                if($user_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "User data not matched with DB data";
+                                }
+                                
+                                $error_array["error"][] = $distributor_code."~".$distributor_name."~".$credit_limit."~".$current_outstanding."~".$Date_data."~".$error_message;
                             }
                             
                         }
@@ -2904,11 +2939,25 @@ class Ishop extends Front_Controller
 
                                 }
                                 else{
+                                    if($user_data == 0){
+                                        //USER ERROR MESSAGE
+                                        $error_message = "Excel User data not matched with DB data";
+                                    }
+                                    
+                                    if($product_data == 0){
+                                        //USER ERROR MESSAGE
+                                        $error_message = "Product data not matched with DB data";
+                                    }
+                                    
+                                    if($user_data == 0 && $product_data == 0){
+                                        //USER ERROR MESSAGE
+                                        $error_message = "Excel User or Product data not matched with DB data";
+                                    }
 
                                     if(!isset($error_array["error"]["header"])){
                                          $error_array["error"]["header"] = $header;
                                     }
-                                    $error_array["error"][] = $distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~"."Excel User or Product data not matched with DB data";
+                                    $error_array["error"][] = $distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~".$error_message;
                                 }
 
                             }
@@ -2980,7 +3029,13 @@ class Ishop extends Front_Controller
                                     if(!isset($error_array["error"]["header"])){
                                          $error_array["error"]["header"] = $header;
                                     }
-                                    $error_array["error"][] = $product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~"."Excel User or Product data not matched with DB data";
+                                    
+                                    if($product_data == 0){
+                                        //USER ERROR MESSAGE
+                                        $error_message = "Product data not matched with DB data";
+                                    }
+                                    
+                                    $error_array["error"][] = $product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~".$error_message;
                                 }
 
                             }
@@ -3154,7 +3209,23 @@ class Ishop extends Front_Controller
 							  if(!isset($error_array["error"]["header"])){
 								  $error_array["error"]["header"] = $header;
 							  }
-							  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Excel User or Product data not matched with DB data";
+                              
+                                if($user_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Excel User data not matched with DB data";
+                                }
+
+                                if($product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Product data not matched with DB data";
+                                }
+
+                                if($user_data == 0 && $product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "User and Product data not matched with DB data";
+                                }
+                              
+							  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
 						  }
 
 					  }
@@ -3387,7 +3458,31 @@ class Ishop extends Front_Controller
 								   if(!isset($error_array["error"]["header"])){
 									   $error_array["error"]["header"] = $header;
 								   }
-								   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel User or Product data not matched with DB data";
+                                   
+                                   
+                                if($user_distributor_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Distributor data not matched with DB data";
+                                }
+                                   
+                                if($user_retailer_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Retailer data not matched with DB data";
+                                }
+                                   
+
+                                if($product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Product data not matched with DB data";
+                                }
+
+                                if($user_distributor_data == 0 && $user_retailer_data == 0  && $product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Distributor data and Retailer data and Product data not matched with DB data";
+                                }
+                                   
+                                   
+								   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
 							   }
 						   }
 					   }
@@ -3620,7 +3715,26 @@ class Ishop extends Front_Controller
 								   if(!isset($error_array["error"]["header"])){
 									   $error_array["error"]["header"] = $header;
 								   }
-								   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel User or Product data not matched with DB data";
+                                   
+                                   
+                                if($user_retailer_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Retailer data not matched with DB data";
+                                }
+                                   
+
+                                if($product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Product data not matched with DB data";
+                                }
+
+                                if($user_retailer_data == 0  && $product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Retailer data and Product data not matched with DB data";
+                                }
+                                   
+                                   
+								   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
 							   }
 
 						   }
@@ -3701,13 +3815,24 @@ class Ishop extends Front_Controller
 							  if(!isset($error_array["error"]["header"])){
 								  $error_array["error"]["header"] = $header;
 							  }
-							  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~"."Excel Product data not matched with DB data";
+                              
+                             
+                                   
+
+                                if($product_data == 0){
+                                    //USER ERROR MESSAGE
+                                    $error_message = "Product data not matched with DB data";
+                                }
+
+                              
+							  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~".$error_message;
 						  }
 
 					  }
 				  }
                    
                 }
+               
             }
             else{
                 $error_array["error"][] = "No data found";
@@ -3734,6 +3859,13 @@ class Ishop extends Front_Controller
 					else{
 						return $error_array;
 					}
+                }
+                
+              }
+                else{
+                    
+                    $error_array["error"][] = "Incorrect format. Please upload xlsx format file.";
+                    echo json_encode($error_array); die;
                 }
                 
             }

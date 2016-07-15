@@ -2156,7 +2156,7 @@ class Esp extends Front_Controller
                     {
                         //SENIOR RESPONSE
                         
-                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />1111</a></div>";
                         
                         $final_lock_array["lockdata"] = 1;
                         $final_lock_array["seniorlock"] = 1;
@@ -2169,18 +2169,18 @@ class Esp extends Front_Controller
 						
 					   if($lock_status == 0){
 						
-							$lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+							$lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />2222</a></div>";
                            
-                            $final_lock_array["locakdata"] = 0;
+                            $final_lock_array["locakdata"] = 1;
                            
                             $final_lock_array["seniorlock"] = 0;
                             $final_lock_array["higherlock"] = $higest_user_status;
                            
 						}
 						else{
-							$lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+							$lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />3333</a></div>";
                             
-                            $final_lock_array["locakdata"] = 1;
+                            $final_lock_array["locakdata"] = 0;
                             
                             $final_lock_array["seniorlock"] = 0;
                             $final_lock_array["higherlock"] = $higest_user_status;
@@ -2196,12 +2196,94 @@ class Esp extends Front_Controller
 		}
 		else
 		{
-			$lock_data = "";
+			//$lock_data = "87788";
             
-            $final_lock_array["lockdata"] = "";
             
-            $final_lock_array["seniorlock"] = "";
-            $final_lock_array["higherlock"] = "";
+            foreach($month_data as $monthkey => $monthvalue){
+				foreach($pbg_sku_data as $skukey => $skuvalue){
+					
+					 $employee_month_product_budget_data1 = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+			
+					 $lock_status = 0;
+					 $lock_by_id = "";
+					 $check_lock_budget_id = "";
+			
+					if($employee_month_product_budget_data1 != 0){
+			
+						$check_lock_budget_id = $employee_month_product_budget_data1[0]['budget_id'];
+			
+					   $budget_lock_history_data =  $this->esp_model->get_employee_month_product_budget_lock_data($login_user_id,$check_lock_budget_id,$monthvalue);
+						if(!empty($budget_lock_history_data)){
+							$lock_status = $budget_lock_history_data[0]['lock_status'];
+						}
+					
+					}
+                    
+                     $get_higher_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_highest_level_data,$check_lock_budget_id,$monthvalue);
+        
+        
+                        $senior_lock_status = "";
+
+                        if(($get_higher_user_lock_status != 0 || !empty($get_higher_user_lock_status)) && ($get_higher_user_lock_status[0]["lock_status"] == 1)){
+                            $senior_lock_status = 1;
+                        }
+                        else{
+                            if($login_user_parent_data != 0){
+
+                                $get_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_parent_data,$check_lock_budget_id,$monthvalue);
+                                if(($get_user_lock_status != 0 || !empty($get_user_lock_status)) && ($get_user_lock_status[0]["lock_status"] == 1)){
+                                    $senior_lock_status = 1;
+                                }
+                                else{
+                                    $senior_lock_status = 0;
+                                }
+                            }
+                            else{
+                                $senior_lock_status = 0;
+                            }
+                        }
+                    
+                    if($senior_lock_status == 1 && ($login_user_highest_level_data != $login_user_id)){
+                         $higest_level_user_status = "pointer-events: none;opacity: 0.7;";
+                    }
+                    else{
+                         $higest_level_user_status = "";
+                    }
+                    
+                    if($higest_level_user_status == ""){
+                        $higest_user_status = "";
+                    }
+                    else{
+                        $higest_user_status = 1;
+                    }
+                    
+                    
+                    if($senior_lock_status == 1)
+                    {
+                        //SENIOR RESPONSE
+                        
+                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />1111</a></div>";
+                        
+                        $final_lock_array["lockdata"] = 1;
+                        $final_lock_array["seniorlock"] = 1;
+                        $final_lock_array["higherlock"] = $higest_user_status;
+                        
+                        
+                        
+                    }
+                    else
+                    {
+                        $lock_data = "";
+                        
+                        $final_lock_array["lockdata"] = "";
+            
+                        $final_lock_array["seniorlock"] = "";
+                        $final_lock_array["higherlock"] = "";
+                        
+                    }
+			
+				}
+			}
 	                                
 		}
 		
@@ -2210,6 +2292,9 @@ class Esp extends Front_Controller
 		     die;  
          }
         else{
+            
+            
+            
             return $final_lock_array;
         }
         
@@ -2253,6 +2338,19 @@ class Esp extends Front_Controller
         $month_data = $this->get_monthly_data($from_month,$to_month);
              
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+        
+        
+        
+       //  $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+        
+        $login_user_highest_level_data = $this->esp_model->get_higher_level_employee_for_loginuser($login_user_id);
+        
+        $global_head_user = array();
+        
+        $login_user_all_parent_data = $this->esp_model->get_employee_for_loginuser($login_user_id,$global_head_user);
+        
+       // testdata($login_user_all_parent_data);
+        
         
         $html = "";
         $html1 = "";
@@ -2344,6 +2442,28 @@ class Esp extends Front_Controller
 					}
 					
 					
+                    //GET ANY SENIOR USER LOCKED OR NOT DATA
+                    
+                    $senior_lock_data = array();
+                    
+                    if(!empty($login_user_all_parent_data)){
+                        
+                        foreach($login_user_all_parent_data as $parent_key => $parentid){
+                            
+                            $get_senioruser_lock_status = $this->esp_model->senior_budget_lock_status($parentid,$budget_id,$monthvalue);
+                            if(!empty($get_senioruser_lock_status)){
+                                if($get_senioruser_lock_status[0]["lock_status"] == 1){
+                                        
+                                    $senior_lock_data[] = 1;
+
+                                }
+                            }
+                            
+                        }
+                        
+                    }
+                    
+                    
                     //CHECK DATA FREEZED OR NOT
                     
                     $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id);
@@ -2358,8 +2478,9 @@ class Esp extends Front_Controller
                             if($login_user_id == $budget_freeze_data['freeze_user_id']){
                                 
                                 $editable = "";
+                               
                                 
-                                $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+                              /*  $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
                                 
                                 if($login_user_parent_data == $lock_by_id){
                                     
@@ -2372,8 +2493,53 @@ class Esp extends Front_Controller
                                     
                                 }
                                 
+                                */
                                 
-                               // echo "1";
+                   /*           
+        
+		              $get_higher_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_highest_level_data,$budget_id,$monthvalue);  
+                           
+                        if(($get_higher_user_lock_status != 0 || !empty($get_higher_user_lock_status)) && ($get_higher_user_lock_status[0]["lock_status"] == 1)){
+                           // $senior_lock_status = 1;
+                            
+                            echo "high";
+                            
+                             $editable = "readonly";
+                            
+                        }
+                        else{
+                            if($login_user_parent_data != 0){
+
+                                $get_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_parent_data,$budget_id,$monthvalue);
+                                if(($get_user_lock_status != 0 || !empty($get_user_lock_status)) && ($get_user_lock_status[0]["lock_status"] == 1)){
+                                   // $senior_lock_status = 1;
+                                    
+                                    echo "senior";
+                                    
+                                     $editable = "readonly";
+                                    
+                                }
+                                else{
+                                   // $senior_lock_status = 0;
+                                     $editable = "";
+                                }
+                            }
+                            else{
+                                //$senior_lock_status = 0;
+                                
+                                 $editable = "";
+                            }
+                        }
+                                
+                                */
+                                
+                                if(in_array(1,$senior_lock_data)){
+                                    $editable = "readonly";
+                                }
+                                
+                                
+                                
+                                echo "1";
                                 
                                 //check login user equal to freezed user if equal than make data visible and editable else not for login user
                                 
@@ -2398,7 +2564,7 @@ class Esp extends Front_Controller
                             
                             if($freeze_user_parent_data != 0){
                                 
-                              //  echo $login_user_id ."==". $freeze_user_parent_data;
+                                echo $login_user_id ."==". $freeze_user_parent_data;
                                 
                                 if($login_user_id == $freeze_user_parent_data){
                                     
@@ -2406,7 +2572,7 @@ class Esp extends Front_Controller
                                     
                                     //SHOW FREEZEED DATA
                                     
-                                  //  echo "2";
+                                    echo "2";
                                     
                                     
                                      $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
@@ -2425,13 +2591,55 @@ class Esp extends Front_Controller
                                     
                                     //GET LOCK STATUS
                                     
-                                   // echo "3";
+                                    echo "3";
                                     
-                                    if($lock_status == 1){
+                                /*    if($lock_status == 1){
                                         $editable = "readonly";
                                     }
                                     else{
                                         $editable = "";
+                                    }
+                                    
+                                    */
+                                    
+                                    
+                              /*       $get_higher_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_highest_level_data,$budget_id,$monthvalue);  
+                           
+                                    if(($get_higher_user_lock_status != 0 || !empty($get_higher_user_lock_status)) && ($get_higher_user_lock_status[0]["lock_status"] == 1)){
+                                       // $senior_lock_status = 1;
+                                             echo "high";
+                                         $editable = "readonly";
+
+                                    }
+                                    else{
+                                        if($login_user_parent_data != 0){
+
+                                            $get_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_parent_data,$budget_id,$monthvalue);
+                                            if(($get_user_lock_status != 0 || !empty($get_user_lock_status)) && ($get_user_lock_status[0]["lock_status"] == 1)){
+                                               // $senior_lock_status = 1;
+                                                 echo "senior";
+                                                 $editable = "readonly";
+
+                                            }
+                                            else{
+                                               // $senior_lock_status = 0;
+                                                 $editable = "";
+                                            }
+                                        }
+                                        else{
+                                            //$senior_lock_status = 0;
+
+                                             $editable = "";
+                                        }
+                                    }
+                                    
+                                    */
+                                    
+                                 //   dumpme($senior_lock_data);
+                                    
+                                    $editable = "";
+                                    if(in_array(1,$senior_lock_data)){
+                                        $editable = "readonly";
                                     }
                                     
                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.'  /></td>';
@@ -2451,7 +2659,7 @@ class Esp extends Front_Controller
                                     
                                     //SHOW FREEZED DATA BUT READONLY
                                     
-                                   // echo "4";
+                                    echo "4";
                                     
                                      $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value=""  /></td>';
                     
@@ -2471,7 +2679,7 @@ class Esp extends Front_Controller
                                 
                                 //NOT SHOW FREEZED DATA
                                 
-                               // echo "5";
+                                echo "5";
                                     
                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     
@@ -2494,7 +2702,7 @@ class Esp extends Front_Controller
                             
                             if($login_user_id == $budget_freeze_data['freeze_user_id']){
                                 
-                              //  echo "6";
+                                echo "6";
                                 
                                 $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
                     
@@ -2512,7 +2720,7 @@ class Esp extends Front_Controller
                             }
                             elseif($login_user_id == $budget_freeze_data['created_by_user']){
                                 
-                               // echo "7";
+                                echo "7";
                                 
                                 $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
                     
@@ -2528,7 +2736,7 @@ class Esp extends Front_Controller
                             }
                             else{
                                 
-                               // echo "8";
+                                echo "8";
                                 //NOT SHOW FREEZED DATA
                                     
                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
@@ -2566,7 +2774,7 @@ class Esp extends Front_Controller
                     }
                     else{
                         
-                       // echo "9";
+                        echo "9";
                         
                          $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
                     

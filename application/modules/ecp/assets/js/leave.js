@@ -36,6 +36,11 @@ $(document).on('click','.leave_date', function(){
 
 $(document).ready(function() {
 
+  /*  var d = new Date();
+    var curr_month = d.getMonth() + 1;
+
+    getCalenderDaqta(curr_month);*/
+
     var leave_set_validators = $("#leave_set").validate({
         rules: {
             cur_date:{
@@ -92,6 +97,9 @@ $(document).ready(function() {
         }
         return false;
     });
+
+
+
 });
 
 $(document).on('click', 'div.delete_button', function () {
@@ -114,3 +122,21 @@ $(document).on('click', 'div.delete_button', function () {
     return false;
 
 });
+
+function getCalenderData(iMonth)
+{
+
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/getLeaveDetailByMonth",
+        data: {cur_month:iMonth},
+        success: function (resp) {
+           $('#calendar').html(resp);
+        }
+    });
+
+
+
+}
+

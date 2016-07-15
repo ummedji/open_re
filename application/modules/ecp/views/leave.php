@@ -39,9 +39,12 @@ echo form_open('',$attributes); ?>
                             <div class="clearfix"></div>
                         </div>
                         <div class="col-md-6 text-center calendar_space">
+
+                            <?php if (!$this->input->is_ajax_request()) { ?>
                             <div id="calendar">
-                                <? echo $cal_data; ?>
+                                <?php  echo $cal_data; ?>
                             </div>
+                            <?php  } ?>
                             <div class="clearfix"></div>
                         </div>
                     </div>

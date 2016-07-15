@@ -384,9 +384,7 @@ $(document).ready(function(){
                             resizable: true,
                             close: function (event, ui) {
                                 $(this).remove();
-                                //location.reload()
-                                
-                                //.val()
+                                location.reload()
                                 
                                 $('input[name=checked_type]:checked', '#rol_limit').trigger( "click" );
                             }

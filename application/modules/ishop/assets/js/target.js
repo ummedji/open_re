@@ -622,7 +622,9 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                     $("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                      //  $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        
+                         $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
                     });
 
                     $("select#distributor_distributor_id").selectpicker('refresh');
@@ -635,7 +637,10 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                     $("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                       // $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        
+                         $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
+                        
                     });
                     $("select#distributor_distributor_id").selectpicker('refresh');
 
@@ -649,7 +654,10 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                             $("select#from_customer_data").append('<option value="">Select Distributor Name</option>');
 
                             $.each(resp, function(key, value) {
-                                $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                               // $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                                
+                                 $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
+                                
                             });
                             $("select#from_customer_data").selectpicker('refresh');
                         }
@@ -659,7 +667,10 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                             $("select#to_customer_data").append('<option value="">Select Distributor Name</option>');
 
                             $.each(resp, function(key, value) {
-                                $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                             //   $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                                
+                                 $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
+                                
                             });
                             $("select#to_customer_data").selectpicker('refresh');
                         }
@@ -674,7 +685,10 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                     $("select#retailer_id").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
-                        $('select#retailer_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                      //  $('select#retailer_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                        
+                        $('select#retailer_id').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
+                        
                     });
 
                     $("select#retailer_id").selectpicker('refresh');
@@ -689,7 +703,10 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                             $("select#from_customer_data").append('<option value="">Select Retailer Name</option>');
 
                             $.each(resp, function(key, value) {
-                                $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                              //  $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                                
+                                 $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
+                                
                             });
                             $("select#from_customer_data").selectpicker('refresh');
                         }
@@ -699,7 +716,10 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                             $("select#to_customer_data").append('<option value="">Select Retailer Name</option>');
 
                             $.each(resp, function(key, value) {
-                                $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                             //   $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
+                                
+                                $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.display_name+ '</option>');
+                                
                             });
                             $("select#to_customer_data").selectpicker('refresh');
                         }
