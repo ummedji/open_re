@@ -369,7 +369,7 @@ class Esp extends Front_Controller
                                                          else{
                                                              $higest_level_user_status = "";
                                                              
-                                                              $header_final_array["header_lock"][$monthvalue]['highest_user_status'] = 1;
+                                                              $header_final_array[$monthvalue]['highest_user_status'] = 1;
                                                              
                                                          }
 
@@ -1319,12 +1319,12 @@ class Esp extends Front_Controller
 				$final_array = array();
 				
 				$final_array["forecast_data"] = array_values($webservice_final_array);
-                $final_array["header_lock_data"] = $header_final_array;
+                $final_array["header_lock_data"] = array_values($header_final_array);
 				$final_array["forecast_id"] = $forecast_id;
 				$final_array["freeze_status"] = $freeze_status;
 				$final_array["freeze_show"] = $freeze_show;
                 
-                testdata($final_array);
+              //  testdata($final_array);
                 
 				return $final_array;
 				//die;
