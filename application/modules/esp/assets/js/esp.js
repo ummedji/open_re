@@ -117,7 +117,7 @@ $(document).on("change","select.employee_data",function(){
         
     var user_id = $(this).val();
     
-    alert($(this).parent().parent().parent().nextAll().find("div.form-group").html());
+  //  alert($(this).parent().parent().parent().nextAll().find("div.form-group").html());
     
    // $(this).parent().nextAll("div.form-group").remove();
     
