@@ -2,7 +2,7 @@
 Assets::add_js((array('bootstrap.min.js',
     'jquery.mCustomScrollbar.concat.min.js',
     'jquery-listslider.js','bootstrap-select.min.js','bootstrap-datepicker.min.js','jquery.validate.min.js','front_grid.js',
-    'bootstrap-datetimepicker.min.js',
+    'bootstrap-timepicker.js',
 
 )
 ));
@@ -65,27 +65,6 @@ echo Assets::js();
             event.preventDefault();
         }
     });
- /*   $(document).on('change', '.btn-file :file', function() {
-        var input = $(this),
-            numFiles = input.get(0).files ? input.get(0).files.length : 1,
-            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        input.trigger('fileselect', [numFiles, label]);
-    });
-
-    $(document).ready( function() {
-        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-
-            var input = $(this).parents('.input-group').find(':text'),
-                log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-            if( input.length ) {
-                input.val(log);
-            } else {
-                if( log ) alert(log);
-            }
-
-        });
-    }); */
 
 </script>
 <script type="text/javascript">
@@ -101,34 +80,11 @@ echo Assets::js();
             $('body').removeClass('nav-expanded');
         });
 
-        // Initialize navgoco with default options
-        /*$(".main-menu").navgoco({
-            caret: '<span class="caret"></span>',
-            accordion: false,
-            openClass: 'open',
-            save: true,
-            cookie: {
-                name: 'navgoco',
-                expires: false,
-                path: '/'
-            },
-            slide: {
-                duration: 300,
-                easing: 'swing'
-            }
-        });*/
-
     });
 </script>
-<!--<script>
-    $(".zoom_in_btn").click(function(){
-        $(".zoom_in_btn").hide();
-    });
-
-    $("").click(function(){
-        $("p").show();
-    });
-</script>-->
+<script type="text/javascript">
+    $('#timepicker1').timepicker();
+</script>
 
 <div id="error_file_popup">
 

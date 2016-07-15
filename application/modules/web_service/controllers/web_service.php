@@ -4180,6 +4180,8 @@ class Web_service extends Front_Controller
 		$user_id = $this->input->get_post('user_id');
 		$forecast_id = $this->input->get_post('forecast_id');
 		$freeze_status = $this->input->get_post('freeze_status');
+        
+        $month_data = $this->input->get_post('month_data');
 		
 		$webservice = "webservice";
 		
@@ -4188,35 +4190,50 @@ class Web_service extends Front_Controller
 			$data = array("user_id" => $user_id,
 			   "forecastid" => $forecast_id,
 			   "freeze_status" => $freeze_status,
+              "month_data" => $month_data,
 			   "webservice" => $webservice
 			 );
+            
+            $check_month_data_locked = modules::run('esp/esp/get_forecast_lock_status', $data);
 		
-			$forecast_freeze_data = modules::run('esp/esp/update_forecast_freeze_status', $data);
-			
-			if(!empty($forecast_freeze_data))
-	        {
-	        	if($forecast_freeze_data == 1){
-	        		
-	        		if($freeze_status == 1){
-	        			$freeze_status = 0;
-	        		}
-					else
-					{
-						$freeze_status = 1;
-					}
-					
-	        	}
-				
-	            $result['status'] = true;
-	            $result['message'] = 'Successfull';
-				$result['data'] = $freeze_status;
-	        }
-	        else
-	        {
-	            $result['status'] = false;
-	            $result['message'] = 'No data found';
-				$result['data'] = "";
-	        }
+            if($check_month_data_locked != 1){
+            
+                $forecast_freeze_data = modules::run('esp/esp/update_forecast_freeze_status', $data);
+
+                if(!empty($forecast_freeze_data))
+                {
+                    if($forecast_freeze_data == 1){
+
+                        if($freeze_status == 1){
+                            $freeze_status = 0;
+                        }
+                        else
+                        {
+                            $freeze_status = 1;
+                        }
+
+                    }
+
+                    $result['status'] = true;
+                    $result['message'] = 'Successfull';
+                    $result['data'] = $freeze_status;
+                }
+                else
+                {
+                    $result['status'] = false;
+                    $result['message'] = 'No data found';
+                    $result['data'] = "";
+                }
+
+
+            }
+            else{
+                
+                $result['status'] = false;
+                $result['message'] = 'Selected months are locked by Senior employees.So No data is Freeze or unfreezed';
+                $result['data'] = "";
+                
+            }
 		}
 		else
         {
@@ -4507,6 +4524,8 @@ class Web_service extends Front_Controller
 		$user_id = $this->input->get_post('user_id');
 		$budget_id = $this->input->get_post('budget_id');
 		$freeze_status = $this->input->get_post('freeze_status');
+        
+        $yeardata = $this->input->get_post('yeardata'); 
 		
 		$webservice = "webservice";
 		
@@ -4515,35 +4534,50 @@ class Web_service extends Front_Controller
 			$data = array("user_id" => $user_id,
 			   "budgetid" => $budget_id,
 			   "freeze_status" => $freeze_status,
+               "yeardata" => $yeardata,
 			   "webservice" => $webservice
 			 );
-		
-			$budget_freeze_data = modules::run('esp/esp/update_budget_freeze_status', $data);
-			
-			if(!empty($budget_freeze_data))
-	        {
-	        	if($budget_freeze_data == 1){
-	        		
-	        		if($freeze_status == 1){
-	        			$freeze_status = 0;
-	        		}
-					else
-					{
-						$freeze_status = 1;
-					}
-					
-	        	}
-				
-	            $result['status'] = true;
-	            $result['message'] = 'Successfull';
-				$result['data'] = $freeze_status;
-	        }
-	        else
-	        {
-	            $result['status'] = false;
-	            $result['message'] = 'No data found';
-				$result['data'] = "";
-	        }
+            
+            
+                
+            $budget_lock_data = modules::run('esp/esp/get_budget_lock_status', $data);            
+
+		if($budget_lock_data != 1){
+            
+                $budget_freeze_data = modules::run('esp/esp/update_budget_freeze_status', $data);
+
+                if(!empty($budget_freeze_data))
+                {
+                    if($budget_freeze_data == 1){
+
+                        if($freeze_status == 1){
+                            $freeze_status = 0;
+                        }
+                        else
+                        {
+                            $freeze_status = 1;
+                        }
+
+                    }
+
+                    $result['status'] = true;
+                    $result['message'] = 'Successfull';
+                    $result['data'] = $freeze_status;
+                }
+                else
+                {
+                    $result['status'] = false;
+                    $result['message'] = 'No data found';
+                    $result['data'] = "";
+                }
+            }
+            else{
+                
+                $result['status'] = false;
+                $result['message'] = 'No data found';
+                $result['data'] = "Selected months are locked by Senior employees.So No data is Freeze or unfreezed";
+                
+            }
 		}
 		else
         {
@@ -4885,6 +4919,55 @@ class Web_service extends Front_Controller
 		
 	}
 	
+    public function get_budget_lock_data(){
+        
+        $user_id = $this->input->get_post('user_id');
+		$businesscode = $this->input->get_post('businesscode');
+		$year_val = $this->input->get_post('yearval');
+        $pbgid = $this->input->get_post('pbgid');
+		
+		
+		$webservice = "webservice";
+		
+		if($user_id != "" && $year_val != ""  && $businesscode != ""  && $pbgid != ""){
+		
+			$data = array("user_id" => $user_id,
+			   "yearval" => $year_val,
+               "businesscode" => $businesscode,
+               "pbgid" => $pbgid,
+			   "webservice" => $webservice
+			 );
+		
+			$budget_lock_data = modules::run('esp/esp/show_budget_lock', $data);
+			
+          //  testdata($budget_lock_data);
+            
+			if(!empty($budget_lock_data))
+	        {
+	            $result['status'] = true;
+	            $result['message'] = 'Successfull';
+				$result['data'] = $budget_lock_data;
+	        }
+	        else
+	        {
+	            $result['status'] = false;
+	            $result['message'] = 'No data found';
+				$result['data'] = "";
+	        }
+		}
+		else
+        {
+        	
+            $result['status'] = false;
+            $result['message'] = 'All fields Required.';
+			$result['data'] = "";
+        }
+		
+		$this->do_json($result);	
+        
+        
+    }
+    
 	/*
 	 * FOR GETTING HIREARCHYCIAL USER DATA
 	 */

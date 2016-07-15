@@ -146,56 +146,78 @@ $(document).on("click","button#freeze_data",function(e){
         data: {budgetid:budget_id,yeardata:year_data},
         success: function(resp){
             lock_status = resp;
-
         },
         async:false
     });
     
+   // return false;
     
-    $.ajax({
-        type: 'POST',
-        url: site_url+"esp/update_budget_freeze_status",
-        data: {budgetid:budget_id,textdata:text_data},
-        success: function(resp){
-            
-            var message = "";
-            if(resp == 1){
-                
-                if(text_data == "Freeze"){
-                    $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
-                    
-                     message += 'Data freezed successfully.';
-                    
+    if(lock_status == 1){
+        
+         $('<div></div>').appendTo('body')
+            .html('<div><b>Selected year data locked by Senior employees. So No data is Freeze or unfreezed.</b></div>')
+            .dialog({
+                appendTo: "#success_file_popup",
+                modal: true,
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: true,
+                close: function (event, ui) {
+                    $(this).remove();
+                }
+            });
+        
+        
+        
+    }
+    else{
+        $.ajax({
+            type: 'POST',
+            url: site_url+"esp/update_budget_freeze_status",
+            data: {budgetid:budget_id,textdata:text_data},
+            success: function(resp){
+
+                var message = "";
+                if(resp == 1){
+
+                    if(text_data == "Freeze"){
+                        $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
+
+                         message += 'Data freezed successfully.';
+
+                    }
+                    else{
+                        $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
+
+                         message += 'Data Unfreezed successfully.';
+
+                    }
+
                 }
                 else{
-                    $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
-                    
-                     message += 'Data Unfreezed successfully.';
-                    
+
+                    message += 'Data not freezed.';
                 }
-                
+
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+
             }
-            else{
-                
-                message += 'Data not freezed.';
-            }
-            
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                    }
-                });
-            
-        }
-    });
+        });
+
+    }
     
     return false;
 
@@ -237,17 +259,25 @@ $(document).on("click","a.lock_data",function(){
         url: site_url+"esp/set_budget_lock_data",
         data: {textdata:text_data,yearval:year_val,budgetid:budget_id},
         success: function(resp){
-            
+           // alert(resp);
             if(resp == 1){
                 
                 if($.trim(text_data) == "Lock"){
-                    $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock /></a>");
+                    
+                     //alert("bbbb");
+                    
+                    $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a>");
                 }
                 else{
-                     $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
+                  //   alert("cccc");
+                    
+                     $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
                 }
                 
             }
+           // else{
+           //     alert("aaaa");
+           // }
             
         }
     });

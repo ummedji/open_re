@@ -2016,6 +2016,28 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     text-align: center;
     width: auto;
 }
+/*po modal css*/
+
+
+
+/*
+.table_content_ .blue_tb.fixed thead{
+    background-color: #1caf9a;
+    color: #fff;
+}
+#no-more-tables .fixed tfoot { display: none;}
+#no-more-tables .fixed thead { display: none;}
+#no-more-tables .blue_tb.fixed thead { display: block;}
+
+
+.blue_tb.fixed{
+    top:40px;
+    position:fixed;
+    width: auto;
+    display:none;
+    border:none;
+    z-index: 999;
+}*/
 
 /*po modal css*/
 
@@ -2521,4 +2543,12 @@ ul.acc_list { margin: 0; padding: 0; text-align: center;}
 }
 .sub_nave_sub .inn_sub_nave {
     border-radius: 8px;
+}
+
+
+/*time picker*/
+.bootstrap-timepicker-as { display: inline-block;}
+.bootstrap-timepicker-as table tr td input { width: 60px !important;}
+@media screen and (max-width: 767px){
+    .bootstrap-timepicker-as { display: block;}
 }

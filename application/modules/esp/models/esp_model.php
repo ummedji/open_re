@@ -1323,6 +1323,26 @@ class Esp_model extends BF_Model
 		
 		return $final_array;	
 	}
+    
+    public function senior_budget_lock_status($user_id,$budget_id,$from_month)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_budget_lock_status_history as bblsh");
+        $this->db->where("budget_id",$budget_id);
+        $this->db->where("month_data",$from_month);
+        $this->db->where("lock_by_id",$user_id);
+        
+        $budget_lock_data = $this->db->get()->result_array();
+        
+       // echo $this->db->last_query();die;
+        
+        if(isset($budget_lock_data) && !empty($budget_lock_data)) {
+            return $budget_lock_data;
+        } else{
+            return 0;
+        }
+        
+    }
 	
 
 	

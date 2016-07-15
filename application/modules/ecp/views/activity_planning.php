@@ -25,7 +25,10 @@
 
                                 <div class="form-group">
                                     <label>Time</label>
-                                    <input  type="text" class="form-control input-append" data-format="hh:mm" id="datetimepicker1"  />
+                                    <!--<input  type="text" class="form-control input-append" data-format="hh:mm" id="timepicker1"  />-->
+                                    <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                        <input id="timepicker1" type="text" class="input-group-time form-control input-append">
+                                    </div>
                                 </div>
                             </div>
                             <div class="clearfix"></div>

@@ -5,11 +5,11 @@ $(document).ready(function() {
         autoclose: true
     });
 
-    $('#datetimepicker3').datetimepicker({
-        format: 'LT',
-        //pickDate: false,
-       // autoclose: true
+    $('#timepicker1').timepicker({
+        format: "hh:mm",
+        autoclose:true
     });
+
 
 
 });
