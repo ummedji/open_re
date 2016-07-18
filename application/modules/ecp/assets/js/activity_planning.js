@@ -860,7 +860,29 @@ function selectDiseases(select)
     ul.appendChild(li);
 }
 
+/*as js*/
+$(document).ready(function() {
+    $(".js-example-tags").select2({
+        tags: true
+    }).on('change', function() {
+        var $selected = $(this).find('option:selected');
+        var $container = $(this).siblings('.js-example-tags-container');
 
+        var $list = $('<ul>');
+        $selected.each(function(k, v) {
+            var $li = $('<li class="tag-selected"><a class="destroy-tag-selected">×</a>' + $(v).text() + '</li>');
+            $li.children('a.destroy-tag-selected')
+                .off('click.select2-copy')
+                .on('click.select2-copy', function(e) {
+                    var $opt = $(this).data('select2-opt');
+                    $opt.attr('selected', false);
+                    $opt.parents('select').trigger('change');
+                }).data('select2-opt', $(v));
+            $list.append($li);
+        });
+        $container.html('').append($list);
+    }).trigger('change');
+});
 
 function getActivityCalenderData(iMonth)
 {

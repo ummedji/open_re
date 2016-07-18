@@ -39,7 +39,7 @@
 				//console.log($(this).width()+'px');
 				$header.find('th').eq(index).css('width',$(this).width()+'px');
 			});
-			
+
 			$(window).on("scroll", function() {
 				var offset = $(this).scrollTop();
 				tableOffset = table.offset().top;

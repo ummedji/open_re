@@ -403,6 +403,8 @@ $(document).on("click","a.lock_data",function(){
     var month_val = $(this).attr("rel");
     var forecast_id = $("input#forecast_id").val();
     
+     alert(parent_data.parent().parent().html());
+    
     $.ajax({
         type: 'POST',
         url: site_url+"esp/set_forecast_lock_data",
@@ -413,9 +415,14 @@ $(document).on("click","a.lock_data",function(){
                 
                 if($.trim(text_data) == "Lock"){
                     parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a>");
+                    
+                   get_pbg_product_sku_data(1);
+                    
                 }
                 else{
                      parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
+                    
+                    get_pbg_product_sku_data(1);
                 }
                 
             }

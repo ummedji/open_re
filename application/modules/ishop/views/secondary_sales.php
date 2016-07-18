@@ -111,12 +111,13 @@ echo form_open('',$attributes); ?>
 </div>
 <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $current_user->id; ?>" />
 <!--------------------------------------Table-------------------------------------------------->
-<div class="col-md-12">
+<div class="col-md-12 ad_mr_top">
     <div class="row">
         <div class="zoom_space">
             <ul>
                 <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" alt=""></a></li>
+                <li><a href="javascript: void(0);" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
+                <li class="zoom_out_btn"><a href="javascript: void(0);" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
             </ul>
         </div>
         <div id="no-more-tables">

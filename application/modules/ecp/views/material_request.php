@@ -45,16 +45,14 @@ echo form_open('ecp/material_request',$attributes); ?>
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label for="remark">Remark<span style="color: red">*</span></label>
-                    <textarea rows="2" cols="50" name="remark" id="remark"></textarea>
+                    <textarea rows="2" cols="50" class="form-control" name="remark" id="remark"></textarea>
                 </div>
             </div>
-            <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+            <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px; margin-bottom: 20px;">
                 <div class="save_button">
                         <div class="row">
-                            <div class="col-md-3 save_btn">
+                            <div class="save_btn">
                                 <button type="submit" class="btn btn-primary">Save</button>
-                            </div>
-                            <div class="col-md-3 save_btn">
                                 <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Cancel</button>
                             </div>
                         </div>

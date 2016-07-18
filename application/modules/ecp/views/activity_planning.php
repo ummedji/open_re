@@ -89,6 +89,7 @@
                                     <div class="col-md-8 col-sm-8">
                                         <textarea class="form-control" rows="4" name="address"></textarea>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="clearfix"></div>
@@ -98,6 +99,7 @@
                         <!--Demonstration  Detail-->
 
                         <div id="demo_details">
+
                         </div>
 
                         <!--Demonstration  Detail-->
@@ -108,30 +110,43 @@
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Corp</label>
-                                            <select id="crop_id" onchange="selectCrop(this);">
-                                                <option value="">Select Corp</option>
+                                            <!--<select class="js-example-tags form-control" multiple="multiple">
+                                                <option selected="selected">orange sdfsadf asfsaf asdfsadfs dsf sf</option>
+                                                <option selected="selected">white</option>
+                                                <option selected="selected">purple</option>
+                                                <option selected="selected">red</option>
+                                                <option selected="selected">blue</option>
+                                                <option selected="selected">green</option>
+                                            </select>-->
+
+                                            <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
+                                                <option value="" selected="selected">Select Corp</option>
                                                 <?php
                                                 if(isset($crop_details) && !empty($crop_details)) {
                                                     foreach ($crop_details as $key => $val) {
                                                         ?>
-                                                        <option value="<?php echo $val['crop_country_id']; ?>"><?php echo $val['crop_name']; ?></option>
+                                                        <option value="<?php echo $val['crop_country_id']; ?>" selected="selected"><?php echo $val['crop_name']; ?></option>
                                                         <?php
                                                     }
                                                 }
                                                 ?>
                                             </select>
+                                            <div class="js-example-tags-container"></div>
 
 
 
                                             <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
 
+                                            <!--<div class="js-example-tags-container"></div>-->
+
 
                                         </div>
                                     </div>
                                     <div class="col-md-7 selected_data" >
-                                        <ul>
 
-                                        </ul>
+                                        <!--<ul>
+
+                                        </ul>-->
                                     </div>
                                 </div>
                             </div>

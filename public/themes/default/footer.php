@@ -2,7 +2,7 @@
 Assets::add_js((array('bootstrap.min.js',
     'jquery.mCustomScrollbar.concat.min.js',
     'jquery-listslider.js','bootstrap-select.min.js','bootstrap-datepicker.min.js','jquery.validate.min.js','front_grid.js',
-    'bootstrap-timepicker.js',
+    'bootstrap-timepicker.js','select2.min.js',
 
 )
 ));
@@ -81,6 +81,26 @@ echo Assets::js();
         });
 
     });
+
+        $(document).on('click',".zoom_in_btn",function(e){
+            e.preventDefault();
+            $(".zoom_out_btn").toggleClass("zoom_out_btn_show");
+            $(".ad_mr_top").toggleClass("ad_mr_top_30");
+            $(".top_form").hide();
+            $(".zoom_in_btn").hide();
+            $(".middle_form").hide();
+        });
+        $(document).on('click',".zoom_out_btn",function(j){
+            j.preventDefault();
+            $(".zoom_out_btn").removeClass("zoom_out_btn_show");
+            $(".top_form").show();
+            $(".zoom_in_btn").show();
+            $(".middle_form").show();
+            /*$(".zoom_out_btn").hide();*/
+            $(".ad_mr_top").removeClass("ad_mr_top_30");
+        });
+
+
 </script>
 <script type="text/javascript">
     $('#timepicker1').timepicker();

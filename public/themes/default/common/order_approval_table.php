@@ -190,7 +190,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
 <!--    --><?php /*echo form_close(); */?>
 <script type="text/javascript">
     (function($){
-        $(".zoom_in_btn").click(function(e){
+        /*$(".zoom_in_btn").click(function(e){
             e.preventDefault();
             $(".zoom_out_btn").toggleClass("zoom_out_btn_show");
             $(".ad_mr_top").toggleClass("ad_mr_top_30");
@@ -204,9 +204,9 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
             $(".top_form").show();
             $(".zoom_in_btn").show();
             $(".middle_form").show();
-            /*$(".zoom_out_btn").hide();*/
+            /!*$(".zoom_out_btn").hide();*!/
             $(".ad_mr_top").removeClass("ad_mr_top_30");
-        });
+        });*/
 
 
         ! function (a) {

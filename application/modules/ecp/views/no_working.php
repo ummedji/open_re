@@ -17,10 +17,10 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="col-md-12 no_wrkn">
 
-                        <div class="col-md-6 text-center radio_space tp_form">
+                        <div class="col-md-6 text-center radio_space tp_form inline-parent">
                             <div class="form-group">
                                 <label for="cur_date">Date</label>
-                                <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder="" readonly style="display: inline-block;width: auto;">
+                                <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder="" readonly >
                             </div>
                             <div class="col-md-6 col-md-offset-3 check_no_worh">
                             <?php

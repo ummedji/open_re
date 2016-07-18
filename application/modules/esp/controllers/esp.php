@@ -477,18 +477,18 @@ class Esp extends Front_Controller
                             
                             if($senior_lock_data != 0 || !empty($senior_lock_data)){
                             
-                            if(in_array(1,$senior_lock_data)){                                
-                                $editable = "readonly";
+                                if(in_array(1,$senior_lock_data)){                                
+                                    $editable = "readonly";
+                                }
+
+                                if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 1){
+                                    $editable = "readonly";
+                                }
+
+                                if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 0){
+                                    $editable = "";
+                                }
                             }
-                            
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 1){
-                                $editable = "readonly";
-                            }
-                               
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 0){
-                                $editable = "";
-                            }
-                        }
                             else{
                                 $editable = "";
                             }
@@ -534,6 +534,9 @@ class Esp extends Front_Controller
                             
                             $logib_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
                             
+                            
+                            $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
+                            
                              if(!empty($login_user_all_parent_data)){
                                 foreach($login_user_all_parent_data as $parent_key => $parentid){
                                     $get_senioruser_lock_status = $this->esp_model->senior_forecast_lock_status($parentid,$forecast_id,$monthvalue);
@@ -562,6 +565,24 @@ class Esp extends Front_Controller
                         }
                             else{
                                 $editable = "";
+                            }
+                            
+                            if($self_lock_data != 0){
+                               // echo "qqqq";
+                                if($self_lock_data[0]["lock_status"] == 0){
+                                    $editable = "readonly";
+                                    
+                                }
+                                else{
+                                     $editable = "";
+                                }
+                                
+                                
+                            }
+                            else{
+                                
+                                $editable = "readonly";
+                                
                             }
                           
                             

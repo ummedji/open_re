@@ -92,24 +92,3 @@ if(isset($prespective_order_data) && count($prespective_order_data)>0 && $prespe
     }
     ?>
  </div>
-    <script type="text/javascript">
-        (function($){
-            $(".zoom_in_btn").click(function(e){
-                e.preventDefault();
-                $(".zoom_out_btn").toggleClass("zoom_out_btn_show");
-                $(".ad_mr_top").toggleClass("ad_mr_top_30");
-                $(".top_form").hide();
-                $(".zoom_in_btn").hide();
-                $(".middle_form").hide();
-            });
-            $(".zoom_out_btn").click(function(j){
-                j.preventDefault();
-                $(".zoom_out_btn").removeClass("zoom_out_btn_show");
-                $(".top_form").show();
-                $(".zoom_in_btn").show();
-                $(".middle_form").show();
-                /*$(".zoom_out_btn").hide();*/
-                $(".ad_mr_top").removeClass("ad_mr_top_30");
-            });
-        })(jQuery);
-    </script>

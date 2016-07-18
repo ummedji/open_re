@@ -96,7 +96,7 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
     ?>
 </div>
 <script type="text/javascript">
-    (function($){
+    /*(function($){
         $(".zoom_in_btn").click(function(e){
             e.preventDefault();
             $(".zoom_out_btn").toggleClass("zoom_out_btn_show");
@@ -111,8 +111,8 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
             $(".top_form").show();
             $(".zoom_in_btn").show();
             $(".middle_form").show();
-            /*$(".zoom_out_btn").hide();*/
+            /!*$(".zoom_out_btn").hide();*!/
             $(".ad_mr_top").removeClass("ad_mr_top_30");
         });
-    })(jQuery);
+    })(jQuery);*/
 </script>
