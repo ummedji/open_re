@@ -60,6 +60,8 @@ $(document).ready(function(){
             var from_value = $("input#from_month").val();
             var to_value = $("input#to_month").val();
             
+           // alert("INNN");
+            
              $.ajax({
                 type: 'POST',
                 url: site_url+"esp/get_monthly_select_data",

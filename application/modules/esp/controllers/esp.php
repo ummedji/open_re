@@ -441,7 +441,7 @@ class Esp extends Front_Controller
 
                                 //SHOW DATA
                             
-                         //    echo "qqqq";
+                            echo "1";
                             
                            $editable = "";
 
@@ -494,7 +494,8 @@ class Esp extends Front_Controller
                         elseif($child_flag == 1)
                         {
                            
-                           // echo "wwww";
+                            echo "2";
+                            
                              $editable = "";
 
                             
@@ -548,7 +549,7 @@ class Esp extends Front_Controller
                         else
                         {
                             
-                          //  echo "3";
+                            echo "3";
                             
                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
                     
@@ -568,7 +569,7 @@ class Esp extends Front_Controller
                     }
                     else
                     {
-                        //echo "4";
+                        echo "4";
                         
                         //NOT FREZEED
                         $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';

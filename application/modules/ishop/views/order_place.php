@@ -145,7 +145,7 @@ echo form_open('',$attributes); ?>
                             <div class="form-group">
                                 <div class="form-group">
                                 <label>Distributor Name<span style="color: red">*</span></label>
-                                <select class="selectpicker" id="retailer_distributor_id" name="distributor_id" data-live-search="true">
+                                <select class="selectpicker" id="retailer_distributor_id" name="distributor_id" data-live-search="true" required>
                                     <option value="">Select Distributor Name</option>
                                     <?php
                                     if(isset($distributor) && !empty($distributor))

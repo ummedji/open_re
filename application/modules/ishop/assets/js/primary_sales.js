@@ -34,23 +34,23 @@ $(function () {
         },
         messages: {
             customer_id: {
-                required: "Please Select Customer Name."
+               // required: "Please Select Customer Name."
             },
             invoice_no: {
-                required: "Please Enter Invoice Number."
+              //  required: "Please Enter Invoice Number."
                 //remote: "Invoice Number already exist!"
             },
             invoice_date:{
-                required:  "Please Enter Invoice Date."
+                //required:  "Please Enter Invoice Date."
             },
             prod_sku:{
-                required:  "Please Select Product SKU."
+               // required:  "Please Select Product SKU."
             },
             dispatched_qty:{
-                required:  "Please Enter Dispached Qty."
+               // required:  "Please Enter Dispached Qty."
             },
             amt:{
-                required:  "Please Enter Amt."
+               // required:  "Please Enter Amt."
             }
         }
 
