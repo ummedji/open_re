@@ -38,10 +38,10 @@ var primary_sales_view_validators = $("#primary_sales_view").validate({
     },
     messages: {
         form_date: {
-            required: "Please Enter From Date."
+           // required: "Please Enter From Date."
         },
         to_date: {
-            required: "Please Enter To Date."
+          //  required: "Please Enter To Date."
         }
     }
 });
@@ -99,10 +99,10 @@ $(document).on('click', 'div.primary_cont .eye_i', function () {
 $(document).on('click', 'div.primary_cont .edit_i', function () {
     var id = $(this).attr('prdid');
 
-    var invoice_no = $("div.primary_cont div.invoice_no_"+id+" span.invoice_no").text();
+   /*    var invoice_no = $("div.primary_cont div.invoice_no_"+id+" span.invoice_no").text();
     $("div.primary_cont div.invoice_no_"+id).empty();
-    $("div.primary_cont div.invoice_no_"+id).append('<input type="hidden" name="primary_sales_detail[]" value="'+id+'" /><input id="invoice_no_'+id+'" type="text" name="invoice_no[]" value="'+invoice_no+'"/>');
-
+    $("div.primary_cont div.invoice_no_"+id).append('<input id="invoice_no_'+id+'" type="text" name="invoice_no[]" value="'+invoice_no+'"/>');
+*/
 
     //Invoice Date
 
@@ -115,7 +115,7 @@ $(document).on('click', 'div.primary_cont .edit_i', function () {
 
     var po_value = $("div.primary_cont div.po_no_"+id+" span.po_no").text();
     $("div.primary_cont div.po_no_"+id).empty();
-    $("div.primary_cont div.po_no_"+id).append('<input id="po_no_'+id+'" type="text" class="po_no" name="PO_no[]" value="'+po_value+'"/>');
+    $("div.primary_cont div.po_no_"+id).append('<input type="hidden" name="primary_sales_detail[]" value="'+id+'" /><input id="po_no_'+id+'" type="text" class="po_no" name="PO_no[]" value="'+po_value+'"/>');
 
     //Order Tracking No
 

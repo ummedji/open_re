@@ -3950,7 +3950,7 @@ class Web_service extends Front_Controller
         $status_id = $this->input->get_post('status_id');
             $employee_id = $this->input->get_post('employee_id');
 
-        if((isset($user_id) && !empty($user_id)) &&(isset($from_date) && !empty($from_date)) && (isset($to_date) && !empty($to_date)) && (isset($status_id) && !empty($status_id)) &&(isset($employee_id) && !empty($employee_id)) && (isset($country_id) && !empty($country_id))) {
+        if((isset($user_id) && !empty($user_id)) &&(isset($from_date) && !empty($from_date)) && (isset($to_date) && !empty($to_date)) && (isset($status_id)) &&(isset($employee_id) && !empty($employee_id)) && (isset($country_id) && !empty($country_id))) {
 
             $materials_request = $this->ecp_model->get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id,$page=null,$local_date=null,$country_id,$web_service = 'web_service');
 

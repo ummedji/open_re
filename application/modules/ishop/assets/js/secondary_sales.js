@@ -35,25 +35,25 @@ $(function () {
         },
         messages: {
             customer_id: {
-                required: "Please Select Customer Name."
+               // required: "Please Select Customer Name."
             },
             invoice_no: {
-                required: "Please Enter Invoice Number."
+              //  required: "Please Enter Invoice Number."
             },
             invoice_date:{
-                required:  "Please Enter Invoice Date."
+               // required:  "Please Enter Invoice Date."
             },
             sec_prod_sku:{
-                required:  "Please Select SKU."
+               // required:  "Please Select SKU."
             },
             sec_qty:{
-                required:  "Please Enter Qty."
+               // required:  "Please Enter Qty."
             },
             sec_sel_unit:{
-                required:  "Please Select Unit."
+               // required:  "Please Select Unit."
             },
             amt:{
-                required:  "Please Enter Amt."
+              //  required:  "Please Enter Amt."
             }
         }
     });

@@ -428,7 +428,6 @@ class Esp extends Front_Controller
                     $child_forecast_array = array_filter($child_forecast_array);
                     
                   //  dumpme($child_forecast_array);
-                    
                    // echo count($child_forecast_array);
                     
                     if(count($child_forecast_array) > 0){
@@ -439,12 +438,15 @@ class Esp extends Front_Controller
                     
                     if($forecast_freeze_data != 0 || $child_flag == 1){
                         
+                        
+                     //   dumpme($forecast_freeze_data);
+                        
                         if($forecast_freeze_data["freeze_status"] == 1 || $forecast_freeze_data["created_by_user"] == $login_user_id){
                         
 
                                 //SHOW DATA
                             
-                          //  echo "1";
+                            echo "1";
                             
                            $editable = "";
 
@@ -514,7 +516,7 @@ class Esp extends Front_Controller
                         elseif($child_flag == 1)
                         {
                            
-                          //  echo "2";
+                            echo "2";
                             
                                        
                            $editable = "";
@@ -589,7 +591,7 @@ class Esp extends Front_Controller
                         else
                         {
                             
-                          //  echo "3";
+                            echo "3";
                             
                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
                     
@@ -609,7 +611,7 @@ class Esp extends Front_Controller
                     }
                     else
                     {
-                       // echo "4";
+                        echo "4";
                         
                         //NOT FREZEED
                         $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
@@ -1346,6 +1348,85 @@ class Esp extends Front_Controller
             }
             
         }
+    }
+    
+    public function check_login_user_lock_status(){
+        
+        $user = $this->auth->user();
+        $login_user_id = $user->id;
+        
+        $freeze_date =   $_POST["freezedate"];
+        $forecast_id = $_POST["forecastid"];
+        
+        $lock_array = array();
+        
+        foreach($freeze_date as $freeze_key => $freeze_date_data){
+        
+		    //  $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data,$freeze_date_data);
+            
+            
+            $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$freeze_date_data,$forecast_id);
+            
+            if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] != 0){
+               $lock_array[] = $self_lock_data[0]["lock_status"]; 
+            }
+            
+        }
+        
+        
+        
+        
+        if(!empty($lock_array)){
+            
+           $res = 1;
+            
+        }
+        else{
+            $res = 0;
+        }
+        
+        echo $res;
+        die;
+        
+    }
+    
+    public function check_login_user_level_status(){
+        
+        $user = $this->auth->user();
+        $login_user_id = $user->id;
+        
+        //$login_user_id = $_POST["login_user_id"];
+        
+         $child_user_data = $this->esp_model->get_user_selected_level_data($login_user_id,null);
+
+            $child_forecast_array = array();
+
+            $child_flag = 0;
+
+            if(!empty($child_user_data["level_users"])){
+
+              /*  $user_data = explode(",",$child_user_data["level_users"]);
+
+                foreach($user_data as $user_key => $userdata){
+                  // $child_forecast_array[] = $this->esp_model->get_forecast_freeze_status($forecast_id,$userdata,$monthvalue);
+
+                     $child_forecast_data = $this->esp_model->get_forecast_freeze_status($forecast_id,$userdata,$monthvalue);
+
+                    if($child_forecast_data != 0 && $child_forecast_data["freeze_status"] == 1)
+                    $child_forecast_array[] = $child_forecast_data;
+
+
+                }
+                
+                */
+                
+                $child_flag = 1;
+                
+            }
+        
+        echo $child_flag;
+        die;
+        
     }
     
     public function get_forecast_value_data($webservice_data = NULL){

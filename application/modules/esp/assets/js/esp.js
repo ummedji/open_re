@@ -227,6 +227,63 @@ $(document).on("click","button#freeze_data",function(e){
     }
     else
     {
+       
+        var login_user_child_status = "";
+        
+        if(text_data == "Freeze")
+        {
+                //CHECK FOR LOCK OF DATA FOR THAT MONTH IF LOCKED THAN MAKE IT FREEZE IF LOGIN USER IS NOT LOWEST USER
+            
+            $.ajax({
+                type: 'POST',
+                url: site_url+"esp/check_login_user_level_status",
+            //    data: {forecastid:forecast_id,freezedate:freeze_date},
+                success: function(resp){
+                    login_user_child_status = resp;
+                },
+                async:false
+            });
+            
+            if(login_user_child_status == 1){
+                
+                //CHECK FOR SELECTED MONTH DATA LOCKED OR NOT
+                
+                var login_user_lock_status = "";
+                
+                $.ajax({
+                    type: 'POST',
+                    url: site_url+"esp/check_login_user_lock_status",
+                    data: {forecastid:forecast_id,freezedate:freeze_date},
+                    success: function(resp){
+                        login_user_lock_status = resp;
+                    },
+                    async:false
+                });
+            
+                if(login_user_lock_status != 1){
+                    
+                     $('<div></div>').appendTo('body')
+                        .html('<div><b>Please lock data before freezing data for selected months.</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+                            }
+                        });
+
+                    return false;
+                }
+                
+                
+            }
+            
+        }
+        
         var lock_status = "";
         $.ajax({
             type: 'POST',
