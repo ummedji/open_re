@@ -45,7 +45,7 @@ echo form_open('',$attributes); ?>
                     
                             <div class="form-group">
                             <label>Geo L1<span style="color: red">*</span></label>
-                            <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                            <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
                                 <option value="">Select Geo Level</option>
                                 <?php
                                 if(isset($geo_level_data) && !empty($geo_level_data))
@@ -67,7 +67,7 @@ echo form_open('',$attributes); ?>
                             <div class="form-group">
                                 <div class="form-group">
                                 <label>Distributor Name<span style="color: red">*</span></label>
-                                <select class="selectpicker" id="distributor_distributor_id" name="distributor_id" data-live-search="true">
+                                <select class="selectpicker" id="distributor_distributor_id" name="distributor_id" data-live-search="true" required>
                                     <option value="">Select Distributor</option>
                                 </select>
                             </div>
@@ -82,7 +82,7 @@ echo form_open('',$attributes); ?>
 
                              <div class="form-group">
                                 <label>Geo L2<span style="color: red">*</span></label>
-                                <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="retailer_geo_level_1_data" data-live-search="true">
+                                <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="retailer_geo_level_1_data" data-live-search="true" required>
 
                                 </select>
 
@@ -93,7 +93,7 @@ echo form_open('',$attributes); ?>
                     
                         <div class="form-group">
                             <label>Geo L1<span style="color: red">*</span></label>
-                            <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="retailer_geo_level_2_data" data-live-search="true">
+                            <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="retailer_geo_level_2_data" data-live-search="true" required>
 
                             </select>
                     
@@ -104,7 +104,7 @@ echo form_open('',$attributes); ?>
                     <div class="col-md-3 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Retailer Name<span style="color: red">*</span></label>
-                                <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true" onchange="get_distributors('retailer')">
+                                <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true" onchange="get_distributors('retailer')" required>
                                 </select>
                             </div>
                     </div>
@@ -112,7 +112,7 @@ echo form_open('',$attributes); ?>
                     <div class="col-md-3 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Distributor Name<span style="color: red">*</span></label>
-                                <select class="selectpicker" id="retailer_distributor_id" name="retailer_distributor_id" data-live-search="true">
+                                <select class="selectpicker" id="retailer_distributor_id" name="retailer_distributor_id" data-live-search="true" required>
                                     
                                 </select>
                             </div>
@@ -196,12 +196,12 @@ echo form_open('',$attributes); ?>
                 <div class="form-group">
                     <div class="form-group">
                         <label>Date<span style="color: red">*</span></label>
-                        <input type="text" name="order_date" class="order_date form-control" id="order_date"  />
+                        <input type="text" name="order_date" class="order_date form-control" id="order_date"  required/>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Geo L2<span style="color: red">*</span></label>
-                    <select class="selectpicker geo_level_1_data" id="farmer_geo_level_1_data" name="farmer_geo_level_1_data" data-live-search="true">
+                    <select class="selectpicker geo_level_1_data" id="farmer_geo_level_1_data" name="farmer_geo_level_1_data" data-live-search="true" required>
                         <option value="">Select Geo Level</option>
                         <?php
                         if(isset($geo_level_data) && !empty($geo_level_data))
@@ -219,7 +219,7 @@ echo form_open('',$attributes); ?>
                 </div>
                 <div class="form-group">
                     <label>Geo L1<span style="color: red">*</span></label>
-                    <select class="selectpicker geo_level_2_data" class="" id="farmer_geo_level_2_data" name="farmer_geo_level_2_data" data-live-search="true">
+                    <select class="selectpicker geo_level_2_data" class="" id="farmer_geo_level_2_data" name="farmer_geo_level_2_data" data-live-search="true" required >
 
                     </select>
 
@@ -228,7 +228,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Farmer Name<span style="color: red">*</span></label>
-                        <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true">
+                        <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true" required>
 
                         </select>
                     </div>
@@ -238,7 +238,7 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="form-group">
                         <label>Retailer Name<span style="color: red">*</span></label>
-                        <select class="selectpicker retailer_data" id="farmer_retailer_data" name="farmer_retailer_data" data-live-search="true" >
+                        <select class="selectpicker retailer_data" id="farmer_retailer_data" name="farmer_retailer_data" data-live-search="true" required >
 
                         </select>
 
@@ -255,28 +255,28 @@ echo form_open('',$attributes); ?>
                         <div class="col-md-3">
                             <div class="form-group fulle_wd">
                                 <label>Geo L3<span style="color: red">*</span></label>
-                                <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                                <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group fulle_wd">
                                 <label>Geo L2<span style="color: red">*</span></label>
-                                <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_2_data" data-live-search="true">
+                                <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_2_data" data-live-search="true" required>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group fulle_wd">
                                 <label>Retailer Name<span style="color: red">*</span></label>
-                                <select class="selectpicker retailer_data" id="retailer_data" name="fo_retailer_data" data-live-search="true" >
+                                <select class="selectpicker retailer_data" id="retailer_data" name="fo_retailer_data" data-live-search="true" required >
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group fulle_wd">
                                 <label>Distributor Name<span style="color: red">*</span></label>
-                                <select class="selectpicker" id="distributor_data" name="distributor_data" data-live-search="true">
+                                <select class="selectpicker" id="distributor_data" name="distributor_data" data-live-search="true" required >
                                 </select>
                             </div>
                         </div>
@@ -289,17 +289,17 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Geo L2<span style="color: red">*</span></label>
-                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="distributor_geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="distributor_geo_level_1_data" data-live-search="true" required >
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Geo L1<span style="color: red">*</span></label>
-                        <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="distributor_geo_level_2_data" data-live-search="true">
+                        <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="distributor_geo_level_2_data" data-live-search="true" required >
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Distributor Name<span style="color: red">*</span></label>
-                        <select class="selectpicker" id="fo_distributor_data" name="fo_distributor_data" data-live-search="true">
+                        <select class="selectpicker" id="fo_distributor_data" name="fo_distributor_data" data-live-search="true" required >
                         </select>
                     </div>
                 </div>
@@ -329,7 +329,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Product Sku Name<span style="color: red">*</span></label>
-                        <select class="selectpicker" id="prod_sku" data-live-search="true" name="prod_sku">
+                        <select class="selectpicker lva" id="prod_sku" data-live-search="true" name="prod_sku" required>
                             <option value="">Product Name</option>
                             <?php
                             if(isset($product_sku) && !empty($product_sku))
@@ -348,21 +348,18 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Units<span style="color: red">*</span></label>
-
-                        <select class="selectpicker" id="units" data-live-search="true" name="units">
+                        <select class="selectpicker lva" id="units" data-live-search="true" name="units" required>
                             <option value="">Select Unit</option>
                             <option value="box">Box</option>
                             <option value="packages">Packages</option>
                             <option value="kg/ltr">Kg/Ltr</option>
                         </select>
-
                     </div>
-
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" name="quantity" id="quantity" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal lva" name="quantity" id="quantity" placeholder="" required>
                     </div>
 
                 </div>

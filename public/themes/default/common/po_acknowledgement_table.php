@@ -10,7 +10,7 @@ $login_customer_type = $user->role_id;
 
  $_POST['radio1'] =  (isset($_POST['radio1']) ? $_POST['radio1'] : '');
  
-//echo "<pre>";print_r($_POST);
+//echo "ttttttt";
 
 if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
     if($login_customer_type == 9 || $login_customer_type == 10){

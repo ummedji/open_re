@@ -256,7 +256,7 @@ $(document).on("click","button#freeze_data",function(e){
             return false;
         }
         else{
-    
+            
         $.ajax({
             type: 'POST',
             url: site_url+"esp/update_forecast_freeze_status",
@@ -276,6 +276,13 @@ $(document).on("click","button#freeze_data",function(e){
                         $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
 
                          message += 'Data Unfreezed successfully.';
+                        
+                        
+                        $("input.forecast_qty").removeAttr("readonly");
+                        $("select.assumption_data").removeAttr("disabled");
+                        $("input.probablity_data").removeAttr("readonly");
+                        
+                        $("select").selectpicker('refresh');
 
                     }
 

@@ -134,7 +134,7 @@ function add_row()
         "</tr>"
     );
     $('.save_button').css("display","block");
-    $('#compititor_id').selectpicker('val', '0');
+    $('#compititor_id').selectpicker('val', '');
     $('#amt').val('');
 
 }

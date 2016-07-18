@@ -1344,6 +1344,26 @@ class Esp_model extends BF_Model
         
     }
     
+    public function senior_forecast_lock_status($user_id,$forecast_id,$from_month)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_forecast_lock_status_history as bflsh");
+        $this->db->where("forecast_id",$forecast_id);
+        $this->db->where("month_data",$from_month);
+        $this->db->where("lock_by_id",$user_id);
+        
+        $forecast_lock_data = $this->db->get()->result_array();
+        
+       // echo $this->db->last_query();die;
+        
+        if(isset($forecast_lock_data) && !empty($forecast_lock_data)) {
+            return $forecast_lock_data;
+        } else{
+            return 0;
+        }
+        
+    }
+    
     
     public function get_employee_for_loginuser($login_user_id,&$global_head_user)
     {

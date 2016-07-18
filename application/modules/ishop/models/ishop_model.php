@@ -5777,15 +5777,56 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function add_target_data($target_data, $user_id, $web_service = null, $country_id = null, $role_id = null)
     {
+        //testdata($target_data);
+        
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            
+            if(isset($target_data) && !empty($target_data)) 
+            {
+                
+                 foreach ($target_data as $key => $value) {
 
+                    $target_array = array();
 
-        if (isset($target_data) && !empty($target_data)) {
-            //testdata($target_data);
-            if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-                $month_data = $target_data["month"] . "-01";
-                $customers_id = $target_data['customer_id'];
-            } else {
-                if ($role_id == 8) {
+                    $target_array["month_data"] = $value[0];
+                    $target_array["customer_id"] = $value[1];
+                    $target_array["product_sku_id"] = $value[2];
+                    $target_array["quantity"] = $value[3];
+
+                    $target_array["created_on"] = date("Y-m-d h:i:s");
+                    $target_array["created_by_user"] = $user_id;
+
+                     
+                    $check_already_data = $this->check_target_data($value[2], $value[0], $value[1]);
+                     
+                    if ($check_already_data == 0) {
+                       $id = $this->db->insert('bf_ishop_target', $target_array);
+                    } else {
+                        $target_update_data = array(
+                            'month_data' => $value[0],
+                            'customer_id' => $value[1],
+                            'product_sku_id' => $value[2],
+                            'quantity' => $value[3],
+                            'modified_by_user' => $user_id,
+                            'country_id' => $country_id,
+                            'status' => '1',
+                            'modified_on' => date('Y-m-d H:i:s')
+                        );
+
+                        $this->db->where('ishop_target_id', $check_already_data);
+                        $id = $this->db->update('bf_ishop_target', $target_update_data);
+
+                    }
+                    
+                }
+                
+                
+            }
+            
+        }
+        else{
+            
+            if ($role_id == 8) {
                     $target_data['radio1'] = 'distributor';
                 }
                 if ($target_data['radio1'] == 'distributor') {
@@ -5795,63 +5836,45 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $month_data = $target_data["ret_month_data"] . "-01";
                     $customers_id = $target_data['retailer_id'];
                 }
-            }
-
-            $prod_sku = $target_data['prod_sku'];
-            $quantity = $target_data['quantity'];
-
-
-            $target = array(
-                'month_data' => $month_data,
-                'customer_id' => (isset($customers_id) && !empty($customers_id)) ? $customers_id : '',
-                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
-                'created_by_user' => $user_id,
-                'country_id' => $country_id,
-                'status' => '1',
-                'created_on' => date('Y-m-d H:i:s')
-            );
-
-            $check_already_data = $this->check_target_data($prod_sku, $month_data, $customers_id);
-            if ($check_already_data == 0) {
-                $this->db->insert('ishop_target', $target);
-            } else {
-                $target_update_data = array(
+                
+                $prod_sku = $target_data['prod_sku'];
+                $quantity = $target_data['quantity'];
+                
+                 $target = array(
                     'month_data' => $month_data,
-                    'customer_id' => $customers_id,
+                    'customer_id' => (isset($customers_id) && !empty($customers_id)) ? $customers_id : '',
                     'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                     'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
-                    'modified_by_user' => $user_id,
+                    'created_by_user' => $user_id,
                     'country_id' => $country_id,
                     'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
+                    'created_on' => date('Y-m-d H:i:s')
                 );
 
-                $this->db->where('ishop_target_id', $check_already_data);
-                $id = $this->db->update('bf_ishop_target', $target_update_data);
+                $check_already_data = $this->check_target_data($prod_sku, $month_data, $customers_id);
+                if ($check_already_data == 0) {
+                    $this->db->insert('ishop_target', $target);
+                } else {
+                    $target_update_data = array(
+                        'month_data' => $month_data,
+                        'customer_id' => $customers_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
 
+                    $this->db->where('ishop_target_id', $check_already_data);
+                    $id = $this->db->update('bf_ishop_target', $target_update_data);
+
+                }
             }
-        } else {
-
-            //INSERT USING FILE UPLOAD
-
-            foreach ($target_data as $key => $value) {
-
-                $target_array = array();
-
-                $target_array["month_data"] = $value[0];
-                $target_array["customer_id"] = $value[1];
-                $target_array["product_sku_id"] = $value[2];
-                $target_array["quantity"] = $value[3];
-
-                $target_array["created_on"] = date("Y-m-d h:i:s");
-                $target_array["created_by_user"] = $user_id;
-
-                $id = $this->db->insert('bf_ishop_target', $target_array);
-
-            }
-
-        }
+            
+        
+        
+        
         if($this->db->affected_rows() > 0){
             return 1;
         }

@@ -300,7 +300,31 @@ function get_retailer_by_distributor(selected_id)
 
 // START ::: Added By Vishal Malaviya For Validation
 $(document).ready(function(){
-    var ishop_sales_validators = $("#add_ishop_sales").validate({
+
+
+    var ishop_sales = $("#add_ishop_sales");
+    ishop_sales.validate();
+
+    $("#add_sales_stock_row").click(function()
+    {
+        var form_state = false;
+        try{
+            $(".lva").each(function(i,j){
+                $(this).attr('required',true);
+            });
+            form_state = ishop_sales.valid();
+        } catch (e){
+            alert(e);
+        }
+
+        if(form_state==true){
+            add_sales_stock_row();
+        }
+
+    });
+
+
+  /*  var ishop_sales_validators = $("#add_ishop_sales").validate({
         ignore: ".ignore",
         rules: {
             stock_month :{
@@ -364,31 +388,44 @@ $(document).ready(function(){
             add_sales_stock_row();
         }
 
-    });
+    });*/
     $("#add_ishop_sales").on("submit",function(){
 
-        $('#sales_prod_sku').addClass('ignore');
-        $('#sec_sel_unit').addClass('ignore');
-        $('#sales_qty').addClass('ignore');
-        $('#amt').addClass('ignore');
+        $(".lva").each(function(i,j){
+            $(this).removeAttr('required');
+            $(this).next("label.error").remove();
+        });
 
-        var param = $("#add_ishop_sales").serializeArray();
-
-        var validator = ishop_sales_validators;
-
-        var $valid = $("#add_ishop_sales").valid();
-        if(!$valid) {
-            validator.focusInvalid();
+        var form_sub_state = false;
+        form_sub_state = ishop_sales.valid();
+        if(form_sub_state == false){
             return false;
         }
         else
         {
             if($("#add_ishop_sales").children().length <= 0)
             {
-                alert('No Product Selected');
+                var message = "";
+                message += 'No data added.';
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            return false;
+                        }
+                    });
                 return false;
+
             }
             else {
+                var param = $("#add_ishop_sales").serializeArray();
                 $.ajax({
                     type: 'POST',
                     url: site_url+"ishop/add_ishop_sales_details",
@@ -492,8 +529,8 @@ function add_sales_stock_row()
         "</td>"+
         "</tr>"
     );
-    $('#sales_prod_sku').selectpicker('val', '0');
-    $('#sec_sel_unit').selectpicker('val', '0');
+    $('#sales_prod_sku').selectpicker('val', '');
+    $('#sec_sel_unit').selectpicker('val', '');
     $('#sales_qty').val('');
     $('#disp_qty').val('');
     $('#amt').val('');

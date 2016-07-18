@@ -147,7 +147,7 @@ function add_row()
         "</tr>"
     );
     $('.save_button').css("display","block");
-    $('#prod_sku').selectpicker('val', '0');
+    $('#prod_sku').selectpicker('val', '');
     $('#comp_prd').val('');
     $('#qty').val('');
 }

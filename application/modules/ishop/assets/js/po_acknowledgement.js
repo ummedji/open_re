@@ -98,12 +98,15 @@ $(document).on('click', 'div.po_acknowledgement .eye_i', function () {
     var id = $(this).attr('prdid');
     var action_data = $('input.page_function').val();
     var login_customer_type = $("input#login_customer_type" ).val();
-    
+   // alert("INNN");
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/get_order_status_data_details',
         data: {id: id,logincustomertype:login_customer_type,segment_data:action_data},
         success: function(resp){
+            
+           // alert(resp);
+            
             //$("div#middle_container_product").empty();
             $("#middle_container_product").html(resp);
         }

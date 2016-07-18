@@ -204,7 +204,7 @@ function add_row()
         "</tr>"
     );
     $('.save_button').css("display","block");
-    $('#prod_sku').selectpicker('val', '0');
+    $('#prod_sku').selectpicker('val', '');
     $('#po_qty').val('');
     $('#dispatched_qty').val('');
     $('#amt').val('');

@@ -1935,12 +1935,16 @@ class Ishop extends Front_Controller
 					$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
 				}
                
+            //testdata($order_details);
+            
                 //echo $action_data;die;
                 
                 if($action_data == "po_acknowledgement"){
-                    
+                 
                     Template::set('po_ack_table',$order_details);
-
+                    
+                //    Template::set('po_acknowledgement_table',$order_details);
+                    
                     Template::set_view('ishop/po_acknowledgement');
                 }
                 elseif($action_data == "order_approval"){
@@ -1950,6 +1954,7 @@ class Ishop extends Front_Controller
                     Template::set_view('ishop/order_approval');
                 }
                 else{
+                  
                     Template::set('order_table',$order_details);
                     Template::set_view('ishop/order_status');
                 }
@@ -4062,7 +4067,7 @@ class Ishop extends Front_Controller
             
             
             if($_POST["dirname"] == "target"){
-                $target_data = $this->ishop_model->add_target_data($_POST["val"],$user_id);
+                $target_data = $this->ishop_model->add_target_data($_POST["val"],$user_id,'web_service',$country_id);
             }
             elseif($_POST["dirname"] == "budget"){
                 $budget_data = $this->ishop_model->add_budget_data($_POST["val"]);

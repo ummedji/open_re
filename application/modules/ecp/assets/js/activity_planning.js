@@ -162,7 +162,7 @@ function add_farmer()
         "</td>"+
         "</tr>"
     );
-    $('#farmer_id').selectpicker('val', '0');
+    $('#farmer_id').selectpicker('val', '');
     $('#farmer_no').val('');
 }
 $(document).on('click', 'div.farmer_detail', function () {
@@ -196,7 +196,7 @@ function add_product()
         "</td>"+
         "</tr>"
     );
-    $('#product_sample_id').selectpicker('val', '0');
+    $('#product_sample_id').selectpicker('val', '');
     $('#qty').val('');
 
 }
@@ -231,7 +231,7 @@ function add_product_material()
         "</td>"+
         "</tr>"
     );
-    $('#product_material_id').selectpicker('val', '0');
+    $('#product_material_id').selectpicker('val', '');
     $('#qty_material').val('');
 }
 

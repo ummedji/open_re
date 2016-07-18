@@ -363,150 +363,63 @@ $(document).ready(function(){
        
    });
 
-  /*  var order_place_validators = $("#order_place").validate({
-        ignore: '.ignore',
-        rules:{
-            geo_level_1_data:{
-                required: true
-            },
-            distributor_id:{
-                required: true
-            },
-            prod_sku:{
-                required: true
-            },
-            units:{
-                required: true
-            },
-            quantity:{
-                required: true
-            },
-
-            retailer_geo_level_1_data:{
-                required: true
-            },
-            retailer_geo_level_2_data:{
-                required: true
-            },
-            retailer_id:{
-                required: true
-            },
-            retailer_distributor_id:{
-                required: true
-            },
-        }
-    });
-
-    var order_place_validatorsddd = $("#order_placeddd").validate({
-       // ignore: ".ignore",
-        rules: {
-            distributor_geo_level_1_data :{
-                required: true
-            },
-            distributor_geo_level_1 :{
-                required: true
-            },
-            distributor_id :{
-                required: true
-            },
-            retailer_geo_level_1_data:{
-                required: true
-            },
-            retailer_geo_level_2_data:{
-                required: true
-            },
-            retailer_id:{
-                required: true
-            },
-            retailer_distributor_id :{
-                required: true
-            },
-            order_date:{
-                required: true
-            },
-            geo_level_1_data :{
-                required: true
-            },
-            geo_level_2_data:{
-                required: true
-            },
-            farmer_data:{
-                required: true
-            },
-            retailer_data:{
-                required: true
-            },
-            prod_sku :{
-                required: true
-            },
-            units :{
-                required: true
-            },
-            quantity:{
-                required: true
-            },
-            fo_distributor_data:{
-                required: true
-            },
-            distributor_geo_level_2_data:{
-                required: true
-            },
-            fo_retailer_data:{
-                required: true
-            },
-            distributor_data:{
-                required: true
-            },
-            farmer_geo_level_1_data:{
-                required: true
-            },
-            farmer_geo_level_2_data:{
-                required: true
-            },
-            farmer_retailer_data:{
-                required: true
-            }
-        }
-    });*/
+    var order_form = $("#order_place");
+    order_form.validate();
 
     $("#order_place_add_row").click(function()
     {
-      /*  $('#prod_sku').removeClass('ignore');
-        $('#units').removeClass('ignore');
-        $('#quantity').removeClass('ignore');
-
-        var $valid = $("#order_place").valid();
-        var checked_type = $('input[name=radio1]:checked').val();
-
-        if($valid==false)
-        {
-            order_place_validators.focusInvalid();
-            return false;
+        var form_state = false;
+        try{
+            $(".lva").each(function(i,j){
+                $(this).attr('required',true);
+            });
+            form_state = order_form.valid();
+        } catch (e){
+            alert(e);
         }
-        else
-        {*/
-           order_place_add_row();
-       /* }*/
+
+        if(form_state==true){
+            order_place_add_row();
+        }
+
   });
 
 
 $("#order_place").on("submit",function(){
 
+    $(".lva").each(function(i,j){
+        $(this).removeAttr('required');
+        $(this).next("label.error").remove();
+    });
 
-    /*$('#prod_sku').addClass('ignore');
-    $('#units').addClass('ignore');
-    $('#quantity').addClass('ignore');
-
-    var $valid = $("#order_place").valid();
-    if($valid != false)
-    {
+    var form_sub_state = false;
+    form_sub_state = order_form.valid();
+    if(form_sub_state == false){
+        return false;
+    }
+    else{
         if($("#order_place_data").children().length <= 0)
         {
-            alert('No data added');
+            var message = "";
+            message += 'No data added.';
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        return false;
+                    }
+                });
             return false;
         }
         else
-        {*/
+        {
             var param = $("#order_place").serializeArray();
             $.ajax({
                 type: 'POST',
@@ -538,38 +451,9 @@ $("#order_place").on("submit",function(){
                         });
                 }
             });
-    return false;
-       /* }*/
-   /* }
-    else
-    {
-        alert('focusInvalid');
-        //validator.focusInvalid();
-        return false;
-    }*/
-
-
-    /*var validator = order_place_validators;
-
-    var $valid = $("#order_place").valid();
-    if(!$valid) {
-        alert('focusInvalid');
-        validator.focusInvalid();
-        return false;
-    }
-    else
-    {*/
-      
-    /*  if($("#order_place_data").children().length <= 0)
-        {
-            alert('No data added');
             return false;
         }
-        else {*/
-
-   /*   }
-    }*/
-  //  return false;
+    }
 });
 
 
