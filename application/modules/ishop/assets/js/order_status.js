@@ -37,18 +37,13 @@ $(document).ready(function(){
                 $("div#middle_container_product").empty();
                 $("#middle_container_product").html(resp);
                 
-            //$('html, body').animate({ scrollTop: $(document).height() }, 1200);
-            //    return false;
-                
-                $(window).animate({ 
-                    scrollTop: $("#middle_container_product").offset().top }, 500
-                                                      );
-                
-                
-                
-                
             }
         });
+        
+        $("body, html").animate({ 
+                    scrollTop: $( $(this).attr('href') ).offset().top 
+                }, "slow");
+        
         return false;
     });
 

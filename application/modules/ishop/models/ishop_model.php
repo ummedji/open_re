@@ -3035,9 +3035,12 @@ class Ishop_model extends BF_Model
                         $mfg_date = $sd['batch_mfg_date'];
                     }
 
+                    
+                    $intrumquantity = isset($sd['intrum_quantity']) ?  $sd['intrum_quantity']:"";
+                    
                     $date = '<div class="date_' . $sd["stock_id"] . '"><span class="date" style="display:none">' . $c_date . '</span></div>';
 
-                    $intrum_quantity = $product_sku_id . '<div class="int_qty_' . $sd["stock_id"] . '"><span class="int_qty">' . $sd['intrum_quantity'] . '</span></div>';
+                    $intrum_quantity = $product_sku_id . '<div class="int_qty_' . $sd["stock_id"] . '"><span class="int_qty">' . $intrumquantity. '</span></div>';
                     $unrestricted_quantity = $date . '<div class="unrtd_qty_' . $sd["stock_id"] . '"><span class="unrtd_qty">' . $sd['unrestricted_quantity'] . '</span></div>';
 
                     $batch = '<div class="batch_' . $sd["stock_id"] . '"><span class="batch">' . $sd['batch'] . '</span></div>';
@@ -4893,7 +4896,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                     $order_status = "op_ackno";
                                 }
 
-                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
                                 if($local_date != null){
                                     $date = strtotime($od['order_date']);
                                     $order_date = date($local_date,$date);
@@ -5276,8 +5279,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $unit_data, $qty_data, $quantity_kg_ltr, $amount, $dispatched_quantity);
 
                         } elseif ($action_data == "order_approval") {
-
-                            $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit_data, $qty_data, $quantity_kg_ltr, $amount, $od['intrum_quantity'], $dispatched_quantity);
+                            
+                            $intrum_qty = isset($od['intrum_quantity']) ? $od['intrum_quantity']:"";
+                                
+                            $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit_data, $qty_data, $quantity_kg_ltr, $amount, $intrum_qty, $dispatched_quantity);
 
 
                         } else {
