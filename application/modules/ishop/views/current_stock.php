@@ -9,7 +9,7 @@ echo form_open('ishop/company_current_stock',$attributes); ?>
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="current_date" id="current_date" placeholder="">
+                        <input type="text" class="form-control" name="current_date" id="current_date" placeholder="" autocomplete="off" >
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 tp_form">
@@ -62,13 +62,13 @@ echo form_open('ishop/company_current_stock',$attributes); ?>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
                             <label for="batch_mfg_date">Batch Mfg.Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="">
+                            <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="" autocomplete="off" >
                         </div>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
                             <label for="batch_expiry_date">Batch Expiry Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="">
+                            <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="" autocomplete="off" >
                         </div>
                     </div>
                     <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>

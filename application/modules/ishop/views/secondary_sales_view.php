@@ -2,18 +2,18 @@
     <div class="col-md-12">
         <div class="top_form">
             <?php
-            $attributes = array('class' => '', 'id' => 'secondary_sales_view','name'=>'secondary_sales_view');
+            $attributes = array('class' => '', 'id' => 'secondary_sales_view','name'=>'secondary_sales_view','' );
             echo form_open('ishop/secondary_sales_view_details',$attributes); ?>
 
             <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>From Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off">
                     </div>
                     <div class="form-group">
                         <label>To Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" >
                     </div>
                 </div>
                 <div class="col-md-10 col-md-offset-1">

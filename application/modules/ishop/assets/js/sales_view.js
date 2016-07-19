@@ -362,6 +362,10 @@ $(document).ready(function(){
 /*Get Sales Product Data*/
 $(document).on('click', 'div.sales_cont .eye_i', function () {
     var id = $(this).attr('prdid');
+
+    $('div.sales_cont').find('tr.bg_focus').removeClass();
+    $(this).parents("tr").addClass("bg_focus");
+
     var checked_type = $('input[name=radio1]:checked').val();
     $.ajax({
         type: 'POST',

@@ -69,8 +69,8 @@
                     
                             <div class="form-group">
                             <label>Geo L1<span style="color: red">*</span></label>
-                            <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="dis_distributor_geo_level_1_data" data-live-search="true">
-                                <option value="0">Select Geo Level</option>
+                            <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="dis_distributor_geo_level_1_data" data-live-search="true" required>
+                                <option value="">Select Geo Level</option>
                                 <?php
                                 if(isset($geo_level_data) && !empty($geo_level_data))
                                 {
@@ -91,7 +91,7 @@
                             <div class="form-group">
                                 <div class="form-group">
                                 <label>Distributor Name<span style="color: red">*</span></label>
-                                <select class="selectpicker" id="distributor_distributor_id" name="distributor_id" data-live-search="true">
+                                <select class="selectpicker" id="distributor_distributor_id" name="distributor_id" data-live-search="true" required>
                                 </select>
                             </div>
                             </div>
@@ -104,7 +104,7 @@
                      <div class="col-md-4 col-sm-4 tp_form">
                              <div class="form-group">
                                 <label>Geo L2<span style="color: red">*</span></label>
-                                <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="retailer_geo_level_1_data" data-live-search="true">
+                                <select class="selectpicker retailer_geo_level_1_data"  id="retailer_geo_level_1_data" name="retailer_geo_level_1_data" data-live-search="true" required>
                                 </select>
 
                             </div>
@@ -114,7 +114,7 @@
                     
                         <div class="form-group">
                             <label>Geo L1<span style="color: red">*</span></label>
-                            <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="retailer_geo_level_2_data" data-live-search="true">
+                            <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="retailer_geo_level_2_data" data-live-search="true" required>
                             </select>
                         </div>
                     </div>
@@ -123,7 +123,7 @@
                     <div class="col-md-4 col-sm-4 tp_form">
                         <div class="form-group">
                                 <label>Retailer Name<span style="color: red">*</span></label>
-                                <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true">
+                                <select class="selectpicker" id="retailer_id" name="retailer_id" data-live-search="true" required>
                                 </select>
                             </div>
                     </div>
@@ -133,11 +133,11 @@
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
                             <label>From Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
+                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
                         </div>
                         <div class="form-group">
                             <label>To Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
                     </div>
@@ -152,11 +152,11 @@
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>
@@ -172,11 +172,11 @@
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
                 </div>
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>
@@ -223,13 +223,13 @@
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Geo L2<span style="color: red">*</span></label>
-                        <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
                         </select>
 
                     </div>
                     <div class="form-group">
                         <label>Geo L1<span style="color: red">*</span></label>
-                        <select class="selectpicker geo_level_2_data" class="" id="geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker geo_level_2_data" class="" id="geo_level_2_data" name="geo_level_1_data" data-live-search="true" required>
                         </select>
 
                     </div>
@@ -247,14 +247,14 @@
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Geo L3<span style="color: red">*</span></label>
-                        <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
 
                         </select>
 
                     </div>
                     <div class="form-group">
                         <label>Geo L2<span style="color: red">*</span></label>
-                        <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true" required>
 
                         </select>
 
@@ -262,7 +262,7 @@
 
                     <div class="form-group">
                         <label>Retailer Name<span style="color: red">*</span></label>
-                        <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" >
+                        <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" required>
 
                         </select>
                     </div>
@@ -276,13 +276,13 @@
                     
                     <div class="form-group">
                         <label>Geo L2<span style="color: red">*</span></label>
-                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
                         </select>
                     </div>
 
                     <div class="form-group">
                         <label>Geo L1<span style="color: red">*</span></label>
-                        <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="geo_level_1_data" data-live-search="true">
+                        <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="geo_level_1_data" data-live-search="true" required>
                             
                         </select>
                     
@@ -290,7 +290,7 @@
 
                        <div class="form-group">
                        <label>Distributor Name<span style="color: red">*</span></label>
-                       <select class="selectpicker" id="fo_distributor_data" name="distributor_data" data-live-search="true">
+                       <select class="selectpicker" id="fo_distributor_data" name="distributor_data" data-live-search="true" required>
 
                        </select>
                    </div>
@@ -300,11 +300,11 @@
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
                             <label>From Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" >
+                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
                         </div>
                         <div class="form-group">
                             <label>To Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" >
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
                     </div>

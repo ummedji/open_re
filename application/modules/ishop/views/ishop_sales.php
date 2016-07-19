@@ -39,7 +39,7 @@ echo form_open('',$attributes); ?>
                             <div class="col-md-3 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;" required />
+                                    <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" style="width: 100%;" required autocomplete="off" />
                                     <!--<div class="cal_icon" style="position: absolute; right: 23px; bottom: 16px; top: auto;">
                                         <a href="">
                                             <i class="fa fa-calendar" aria-hidden="true">
@@ -127,7 +127,7 @@ echo form_open('',$attributes); ?>
                                     <div class="col-md-3 col-sm-6 tp_form">
                                         <div class="form-group">
                                             <label for="invoice_date">Invoice Date<span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" style="width: 100%;" required />
+                                            <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" style="width: 100%;" required autocomplete="off" />
                                         </div>
                                     </div>
                                     <div class="col-md-3 col-sm-6 tp_form">

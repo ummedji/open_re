@@ -83,14 +83,32 @@ $("#primary_sales_view").on("submit",function(e){
 $(document).on('click', 'div.primary_cont .eye_i', function () {
     var id = $(this).attr('prdid');
 
+    $('div#middle_container').find('tr.bg_focus').removeClass();
+    $(this).parents("tr").addClass("bg_focus");
+
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/primary_sales_product_details_view',
         data: {id: id},
         success: function(resp){
             $("#middle_container_product").html(resp);
+            
+       //      $("#middle_container_product").animate({ 
+       //         scrollTop: $("#middle_container_product").offset().top 
+      //      }, "slow");
+            
         }
     });
+    
+ //   alert($(this).find("a").attr('href'));
+    
+    
+    
+  //  $("body, html").animate({ 
+  //      scrollTop: $( $(this).find("a").attr('href') ).offset().top 
+  //   }, "slow");
+        
+    
     return false;
 });
 /*Get  Primary Sales Data*/
@@ -161,7 +179,7 @@ $(document).on('click', '.edit_i', function () {
 $(document).on('click', 'div.check_save_btn #check_save', function (e) {
     e.preventDefault();
     var primary_sales_data = $("#primary_sales_view_data").serializeArray();
-        console.log(primary_sales_data);
+
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/update_sales_details',

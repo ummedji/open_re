@@ -65,6 +65,9 @@ $(document).ready(function(){
 $(document).on('click', 'div.order_cont .eye_i', function () {
     var id = $(this).attr('prdid');
 
+    $('div.order_cont').find('tr.bg_focus').removeClass();
+    $(this).parents("tr").addClass("bg_focus");
+
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/get_prespective_order_details',
@@ -73,6 +76,11 @@ $(document).on('click', 'div.order_cont .eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
+    
+    $("body, html").animate({ 
+        scrollTop: $( $(this).attr('href') ).offset().top 
+     }, "slow");
+        
     return false;
 });
    

@@ -40,6 +40,7 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
     
     var id = $(this).attr('prdid');
 
+
     //alert(id);
 
    //UNIT
@@ -96,6 +97,10 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
 
 $(document).on('click', 'div.po_acknowledgement .eye_i', function () {
     var id = $(this).attr('prdid');
+
+    $('div.po_acknowledgement').find('tr.bg_focus').removeClass();
+    $(this).parents("tr").addClass("bg_focus");
+
     var action_data = $('input.page_function').val();
     var login_customer_type = $("input#login_customer_type" ).val();
    // alert("INNN");
@@ -111,6 +116,12 @@ $(document).on('click', 'div.po_acknowledgement .eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
+    
+     $("body, html").animate({ 
+        scrollTop: $( $(this).attr('href') ).offset().top 
+     }, "slow");
+        
+    
     return false;
 });
 

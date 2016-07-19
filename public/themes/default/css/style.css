@@ -890,8 +890,19 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     border-left: solid 1px #dcdeeb !important;*/
 
 }
+[for="stock_month"] {
+    position: relative !important;
+    left: 0 !important;
+    top: 0 !important;
+}
+.bg_focus {
+    background-color: rgba(101, 172, 30, 0.32) !important;
+}
 #no-more-tables>.table-striped>tbody>tr:nth-of-type(odd){
     background-color: #ffffff;
+}
+#no-more-tables>tr:focus {
+    background-color: rgba(101, 172, 30, 0.32) !important;
 }
 #no-more-tables .cf_shadow {
     border-top: solid 2px rgba(0, 0, 0, 0.1);
@@ -1517,7 +1528,7 @@ nav {
 /*target popup css*/
 
 .error{
-    color: #ff0000 !important;
+    color: #982e0d !important;
 }
 /*start login css*/
 .main_login {

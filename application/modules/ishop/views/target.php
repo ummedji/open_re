@@ -58,7 +58,7 @@ echo form_open('',$attributes);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" name="month_data" id="month_data" class="form-control month_data" />
+                                    <input type="text" name="month_data" id="month_data" class="form-control month_data" autocomplete="off" />
                                 </div>
                             </div>
                         </div>
@@ -101,7 +101,7 @@ echo form_open('',$attributes);
                             <div class="form-group">
                                 <div class="form-group">
                                     <label>Month<span style="color: red">*</span></label>
-                                    <input type="text" name="ret_month_data" id="ret_month_data" class="form-control month_data" />
+                                    <input type="text" name="ret_month_data" id="ret_month_data" class="form-control month_data" autocomplete="off" />
                                 </div>
                             </div>
                         </div>

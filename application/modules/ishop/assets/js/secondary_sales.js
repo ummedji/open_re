@@ -14,9 +14,6 @@ $(function () {
             customer_id:{
                 required: true
             },
-            invoice_no:{
-                required: true
-            },
             invoice_date:{
                 required: true
             },
@@ -68,7 +65,7 @@ $(function () {
         if(customer_id != '' && invoice_no !=''){
             $.ajax({
                 type: 'POST',
-                url: site_url + "ishop/check_duplicate_data_secondary_sales",
+                    url: site_url + "ishop/check_duplicate_data_secondary_sales",
                 data: {customer_id:customer_id,invoice_no:invoice_no,login_id:login_customer_id},
                 //dataType : 'json',
                 success: function (resp) {

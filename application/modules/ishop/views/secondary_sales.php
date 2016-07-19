@@ -27,7 +27,7 @@ echo form_open('',$attributes); ?>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
-                    <label for="invoice_no">Invoice No.<span style="color: red">*</span></label>
+                    <label for="invoice_no">Invoice No.</label>
                     <input type="text" class="form-control" name="invoice_no" id="invoice_no" placeholder="">
                     <label id="invoice_no_error" class="errors" for="invoice_no"></label>
                 </div>
@@ -35,7 +35,7 @@ echo form_open('',$attributes); ?>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
                     <label for="invoice_date">Invoice Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" >
+                    <input type="text" class="form-control" name="invoice_date" id="invoice_date" placeholder="" autocomplete="off" >
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">

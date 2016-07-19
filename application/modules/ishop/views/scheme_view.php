@@ -24,7 +24,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                    <!-- <div class="col-md-4 col-sm-6 tp_form">-->
                         <div class="form-group">
                             <label>Year<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="year" id="year" placeholder="" >
+                            <input type="text" class="form-control" name="year" id="year" placeholder="" autocomplete="off" >
                         </div>
                     <!--</div>-->
                     <?php if($current_user->role_id == 7){
@@ -33,7 +33,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                             <div class="form-group">
                                 <label>Geo Level 3</label>
                                 <select class="selectpicker" name="region" id="geo_level_scheme" data-live-search="true">
-                                    <option value="0">Select Geo Location</option>
+                                    <option value="">Select Geo Location</option>
                                 </select>
                             </div>
                         <!--</div>-->
@@ -41,7 +41,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                             <div class="form-group">
                                 <label>Geo Level 2</label>
                                 <select class="selectpicker" name="territory" id="geo_level_1" data-live-search="true">
-                                    <option value="0">Select Geo Location</option>
+                                    <option value="">Select Geo Location</option>
                                 </select>
                             </div>
                         <!--</div>-->
@@ -74,7 +74,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                             <div class="form-group">
                                 <label>Retailer Name</label>
                                 <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme" data-live-search="true">
-                                    <option value="0">Select Retailer</option>
+                                    <option value="">Select Retailer</option>
                                 </select>
                             </div>
                        <!-- </div-->

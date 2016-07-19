@@ -1470,7 +1470,7 @@ class Ishop_model extends BF_Model
             $secondary_sales = $this->grid->get_result_res($sql);
 
             if (isset($secondary_sales['result']) && !empty($secondary_sales['result'])) {
-                $secondary['head'] = array('Sr. No.', 'Action', 'Entry By', 'Entry Date', 'ENT', 'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No.', 'Order Tracking No.', 'Dispatch Amount');
+                $secondary['head'] = array('Sr. No.', 'Action', 'Entry By', 'Entry Date', 'ETN', 'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No.', 'Order Tracking No.', 'Dispatch Amount');
                 $secondary['count'] = count($secondary['head']);
                 if ($page != null || $page != "") {
 
@@ -4575,7 +4575,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $read_status = "<a class='unread_" . $po['order_id'] . "'  href='javascript:void(0);'  onclick = 'mark_as_unread(" . $po['order_id'] . ");'>Mark as Unread</a>";
                     }
 
-                    $otn = '<div class="eye_i" prdid ="' . $po['order_id'] . '"><a href="javascript:void(0);">' . $po['order_tracking_no'] . '</a></div>';
+                    $otn = '<div class="eye_i" prdid ="' . $po['order_id'] . '"><a href="#middle_container_product">' . $po['order_tracking_no'] . '</a></div>';
                     if($local_date != null)
                     {
                       $date = strtotime($po['order_date']);
@@ -4821,7 +4821,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $order_data = '<input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input id="check_data_' . $od['order_id'] . '" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
 
-                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
 
                             $checkbox = $order_data . '<input id="order_status_' . $od['order_id'] . '" type="checkbox" name="change_order_status1[]" class="order_status" />';
 
@@ -4854,7 +4854,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                     $order_status = "op_ackno";
                                 }
 
-                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
                                 if($local_date != null){
                                     $date = strtotime($od['order_date']);
                                     $order_date = date($local_date,$date);
@@ -4961,7 +4961,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         }
 
 
-                        $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                        $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
 
 
                         if ($radio_checked == "farmer") {
@@ -5040,7 +5040,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' ."'".trim($od['PO_no'])."'". ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
-                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
+                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['PO_no'] . '</a></div>';
 
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
@@ -5073,7 +5073,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         foreach ($orderdata['result'] as $od) {
 
 
-                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
                             if($local_date != null){
@@ -5120,7 +5120,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a class="set_pono" onClick="show_po_popup(' . trim($od['order_id']) . ','."'".trim($od['PO_no'])."'".');" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
-                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['PO_no'] . '</a></div>';
+                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['PO_no'] . '</a></div>';
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
@@ -5153,7 +5153,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         foreach ($orderdata['result'] as $od) {
 
 
-                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
 

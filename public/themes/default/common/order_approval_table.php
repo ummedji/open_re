@@ -598,7 +598,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
         $(document).ready(function () {
 
             $(".sticky-header").floatThead({
-                scrollingTop: 300
+                scrollingTop: 150
             });
 
         });

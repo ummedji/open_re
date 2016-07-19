@@ -86,6 +86,10 @@ function update_invoice_confirmation_received(sales_id)
 
 $(document).on('click', 'div.middle_container_received .eye_i', function () {
     var id = $(this).attr('prdid');
+
+    $('div.middle_container_received').find('tr.bg_focus').removeClass();
+    $(this).parents("tr").addClass("bg_focus");
+
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/invoice_sales_product_details_view',
