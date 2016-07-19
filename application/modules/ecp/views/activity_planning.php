@@ -1,3 +1,7 @@
+<?php
+$attributes = array('class' => '', 'id' => 'activity_planning','name'=>'activity_planning');
+echo form_open('',$attributes);
+?>
 <div class="col-md-12 full-height">
     <div class="row">
         <div class="col-md-12 text-center plng_sub_nave">
@@ -20,14 +24,14 @@
                             <div class="col-md-12 text-center tp_form inline-parent">
                                 <div class="form-group">
                                     <label>Select Date<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" readonly="">
+                                    <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="">
                                 </div>
 
                                 <div class="form-group">
-                                    <label>Time</label>
+                                    <label>Time<span style="color: red">*</span></label>
                                     <!--<input  type="text" class="form-control input-append" data-format="hh:mm" id="timepicker1"  />-->
                                     <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                        <input id="timepicker1" type="text" class="input-group-time form-control input-append">
+                                        <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append">
                                     </div>
                                 </div>
                             </div>
@@ -37,7 +41,7 @@
                         <div class="default_box_white">
                             <div class="col-md-12 tp_form mr_bot_group">
                                 <div class="row form-group">
-                                    <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Select Activity Type</label></div>
+                                    <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Select Activity Type<span style="color: red">*</span></label></div>
                                     <div class="col-md-4 col-sm-8 cont_size_select mrg_bottom_30" >
                                         <select class="selectpicker" id="activity_type_id" name="activity_type_id" data-live-search="true">
                                             <option value="">Select Activity Type</option>
@@ -62,21 +66,21 @@
 
                                 <!--GEO  Dropdown-->
                                 <div class="row form-group" id="geo">
-                                    <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>
+                                    <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>
                                     <div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">
-                                        <select class="selectpicker" data-live-search="true">
+                                        <select class="selectpicker" data-live-search="true" name="geo_level_2" id="geo_level_2">
                                             <option value="">Select Geo 2</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-1 col-sm-3 first_lb"><label>Geo3</label></div>
+                                    <div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>
                                     <div class="col-md-2 col-sm-8 cont_size_select">
-                                        <select class="selectpicker" data-live-search="true">
+                                        <select class="selectpicker" data-live-search="true" name="geo_level_3" id="geo_level_3">
                                             <option value="">Select Geo 3</option>
                                         </select>
                                     </div>
-                                    <div class="col-md-1 col-sm-3 first_lb"><label>Geo4</label></div>
+                                    <div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>
                                     <div class="col-md-2 col-sm-8 cont_size_select">
-                                        <select class="selectpicker" data-live-search="true">
+                                        <select class="selectpicker" data-live-search="true" name="geo_level_4" id="geo_level_4">
                                             <option value="">Select Geo 4</option>
                                         </select>
                                     </div>
@@ -85,9 +89,9 @@
                                 <!--GEO  Dropdown-->
 
                                 <div class="row form-group">
-                                    <div class="col-md-3 col-sm-3 first_lb"><label>Address</label></div>
+                                    <div class="col-md-3 col-sm-3 first_lb"><label>Address<span style="color: red">*</span></label></div>
                                     <div class="col-md-8 col-sm-8">
-                                        <textarea class="form-control" rows="4" name="address"></textarea>
+                                        <textarea class="form-control" rows="4" name="activity_address" id="activity_address"></textarea>
                                     </div>
 
                                 </div>
@@ -109,18 +113,13 @@
                                 <div class="row">
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
-                                            <label>Corp</label>
-                                            <!--<select class="js-example-tags form-control" multiple="multiple">
-                                                <option selected="selected">orange sdfsadf asfsaf asdfsadfs dsf sf</option>
-                                                <option selected="selected">white</option>
-                                                <option selected="selected">purple</option>
-                                                <option selected="selected">red</option>
-                                                <option selected="selected">blue</option>
-                                                <option selected="selected">green</option>
-                                            </select>-->
+                                           <label>Corp<span style="color: red">*</span></label>
+                                            <select id="crop_id" name="crop_id" onchange="selectCrop(this);">
+                                                <option value="">Select Corp</option>
 
-                                            <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
-                                                <option value="" selected="selected">Select Corp</option>
+                                        <!--    <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
+                                                <option value="" selected="selected">Select Corp</option>-->
+
                                                 <?php
                                                 if(isset($crop_details) && !empty($crop_details)) {
                                                     foreach ($crop_details as $key => $val) {
@@ -131,22 +130,18 @@
                                                 }
                                                 ?>
                                             </select>
-                                            <div class="js-example-tags-container"></div>
-
-
+                                        <!--    <div class="js-example-tags-container"></div>-->
 
                                             <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
-
                                             <!--<div class="js-example-tags-container"></div>-->
-
 
                                         </div>
                                     </div>
                                     <div class="col-md-7 selected_data" >
 
-                                        <!--<ul>
+                                        <ul>
 
-                                        </ul>-->
+                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -158,8 +153,8 @@
                                 <div class="row">
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
-                                            <label>Products</label>
-                                            <select id="product_sku_id" onchange="selectProducts(this);">
+                                            <label>Products<span style="color: red">*</span></label>
+                                            <select id="product_sku_id" name="product_sku_id" onchange="selectProducts(this);">
                                                 <option value="">Select Product</option>
                                                 <?php
                                                 if(isset($product_sku) && !empty($product_sku)) {
@@ -187,8 +182,8 @@
                                 <div class="row">
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
-                                            <label>Diseases</label>
-                                            <select id="diseases_id" onchange="selectDiseases(this);">
+                                            <label>Diseases<span style="color: red">*</span></label>
+                                            <select id="diseases_id" name="diseases_id" onchange="selectDiseases(this);">
                                                 <option value="">Select Diseases</option>
                                                 <?php
                                                 if(isset($diseases_details) && !empty($diseases_details)) {
@@ -217,7 +212,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
-                                            <label>Key Farmer</label>
+                                            <label>Key Farmer<span style="color: red">*</span></label>
                                             <select class="selectpicker" name="farmer_id" id="farmer_id" data-live-search="true">
                                                 <option value="">Select Farmer</option>
                                                 <?php
@@ -234,7 +229,7 @@
                                     </div>
                                     <div class="col-md-6 corp_text mrg_top_30">
                                         <div class="form-group frm_details text-center">
-                                            <label>Mobile No.</label>
+                                            <label>Mobile No.<span style="color: red">*</span></label>
                                             <input type="text" class="form-control" name="farmer_no" id="farmer_no" placeholder="">
                                             <div class="plus_btn" ><a  href="javascript: void(0);" id="add_farmer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
@@ -521,14 +516,23 @@
             <div class="col-md-12 table_bottom pln_table_bottom">
                 <div class="row">
                     <div class="save_btn">
-                        <button type="button" class="btn btn-primary">Save</button>
-                        <button type="button" class="btn btn-primary">Cancel</button>
-                        <button type="button" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-primary" id="check_save">Save</button>
+                        <button type="button" class="btn btn-primary" id="check_cancel">Cancel</button>
+                        <button type="button" class="btn btn-primary" id="check_submit">Submit</button>
                     </div>
                 </div>
             </div>
             <div class="clearfix"></div>
         </div>
+        <?php echo form_close(); ?>
+
+
+
+
+
+
+
+
 
         <div class="col-md-3 right_planning">
             <div class="top_form planning_parent" style="padding: 10px 5px 10px 5px;">
@@ -629,6 +633,6 @@
                 <div class="clearfix"></div>
             </div>
         </div>
-
     </div>
 </div>
+

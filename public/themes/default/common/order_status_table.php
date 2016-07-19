@@ -169,7 +169,7 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
     ?>
 </div>
 
-<script type="text/javascript">
+<!--<script type="text/javascript">
     (function($){
         $(".zoom_in_btn").click(function(e){
             e.preventDefault();
@@ -189,4 +189,4 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
             $(".ad_mr_top").removeClass("ad_mr_top_30");
         });
     })(jQuery);
-</script>
+</script>-->

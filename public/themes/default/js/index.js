@@ -1,8 +1,9 @@
+/*
 (function($){
 	$.fn.stickytable = function(options){
-		
+
 		var settings = $.extend({},$.fn.stickytable.defaults, options);
-		
+
 		return this.each(function(index){
 			var table = $(this);
 			var fixedheader = $('<div class="header-fixed"></div>');
@@ -15,8 +16,8 @@
 				if($('th',table).length > 0){
 					$('th',table).eq(0).parent().wrap('<thead class="theader"></thead>');
 					$('.theader',table).prependTo(table);
-				} 
-				
+				}
+
 				else $('tr',table).eq(0).wrap('<thead></thead>');
 			}
 
@@ -58,14 +59,14 @@
 
 		});
 	}
-	
+
 
 	$.fn.stickytable.defaults = {
-		
+
 	}
 
 })(jQuery);
 
 $(document).ready(function(){
 	$('.stickytable').stickytable();
-});
+});*/

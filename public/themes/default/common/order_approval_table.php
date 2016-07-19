@@ -207,8 +207,17 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
             /!*$(".zoom_out_btn").hide();*!/
             $(".ad_mr_top").removeClass("ad_mr_top_30");
         });*/
+        /*var cf = $(".cf");
 
+        cf.on("scroll", function(e) {
 
+            if (this.scrollTop > 147) {
+                wrap.addClass("fix-search");
+            } else {
+                wrap.removeClass("fix-search");
+            }
+
+        });*/
         ! function (a) {
             function b(a, b, c) {
                 if (8 == g) {
@@ -589,7 +598,7 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
         $(document).ready(function () {
 
             $(".sticky-header").floatThead({
-                scrollingTop: 150
+                scrollingTop: 300
             });
 
         });
