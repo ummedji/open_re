@@ -21,6 +21,9 @@ $(document).ready(function(){
     });
 
     $(document).on('click', 'div.order_status .eye_i', function () {
+        
+        //alert("INNN");
+        
         var id = $(this).attr('prdid');
         var radio_checked = $('input[name=radio1]:checked').val();
         var login_customer_type = $("input#login_customer_type" ).val();
@@ -36,6 +39,10 @@ $(document).ready(function(){
                 
             //$('html, body').animate({ scrollTop: $(document).height() }, 1200);
             //    return false;
+                
+                $(window).animate({ 
+                    scrollTop: $("#middle_container_product").offset().top }, 500
+                                                      );
                 
                 
                 

@@ -402,6 +402,8 @@ $(document).on("click","a.lock_data",function(){
     
     var month_val = $(this).attr("rel");
     var forecast_id = $("input#forecast_id").val();
+       
+    var pbg_id = $("select.pbg_data").val();
     
      alert(parent_data.parent().parent().html());
     
@@ -416,13 +418,13 @@ $(document).on("click","a.lock_data",function(){
                 if($.trim(text_data) == "Lock"){
                     parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a>");
                     
-                   get_pbg_product_sku_data(1);
+                   get_pbg_product_sku_data(pbg_id);
                     
                 }
                 else{
                      parent_data.parent().html("<a style='cursor:pointer;' rel='"+month_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
                     
-                    get_pbg_product_sku_data(1);
+                    get_pbg_product_sku_data(pbg_id);
                 }
                 
             }
@@ -432,25 +434,22 @@ $(document).on("click","a.lock_data",function(){
     
 });
 
-/*
-$(document).on("change","select#selected_month_data",function(){
+var date_array = "";
+
+$(document).on("focusout","select#selected_month_data",function(){ 
+    //var date_array = $(this).val();
+    date_array = $(this).val();
     
-    var date_data = $(this).val();
-    
-    $.ajax({
-            type: 'POST',
-            url: site_url+"esp/check_forecast_data_locked",
-            data: {userid:user_id},
-            success: function(resp){
-                
-                
-                
-            }
-    });
-    
+    setTimeout(function(){
+       alert(date_array);
+    }, 2000);
+   
 });
 
-*/
+
+
+//alert(date_array);
+
 
 function get_user_level_data(user_id){
     
