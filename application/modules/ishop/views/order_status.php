@@ -351,4 +351,13 @@ if (!$this->input->is_ajax_request()) { ?>
 <div class="clearfix"></div>
 <?php
 }
+if($login_customer_type == 10){
 ?>
+<script type="text/javascript">
+    $(document).ready(function() {
+        setTimeout(function () {
+            $("button#order_status").trigger("click");
+        }, 1000);
+    });
+</script>
+<?php } ?>

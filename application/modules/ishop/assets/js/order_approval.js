@@ -87,6 +87,10 @@ $(document).on('click', 'input.order_status', function () {
 
 $(document).on('click', 'div#middle_container .eye_i', function () {
     var id = $(this).attr('prdid');
+
+    $('div#middle_container').find('tr.bg_focus').removeClass();
+    $(this).parents("tr").addClass("bg_focus");
+
     var action_data = $('input.page_function').val();
     var login_customer_type = $("input#login_customer_type" ).val();
     
