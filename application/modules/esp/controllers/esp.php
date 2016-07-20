@@ -196,13 +196,14 @@ class Esp extends Front_Controller
                         $lock_data = "";
                         $l_array = array();
 
-            
                         $header_final_array = array();
+
             
                         foreach($month_data as $monthkey => $monthvalue){
 
                             $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Freeze</button></div>';
-                            
+
+                            $header_final_array[$monthvalue]["freeze_button"] = 1;
                             
                            // if($forecast_id == ""){
                             
@@ -223,18 +224,30 @@ class Esp extends Front_Controller
                                         if($forecast_freeze_data2 != 0){
                                             if(!empty($forecast_freeze_data2) && $forecast_freeze_data2["freeze_status"] == 0){
                                                 $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Freeze</button></div>';
+
+
+                                                $freeze_button_data = 1;
+
                                             }
                                             else{
                                                 $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Unfreeze</button></div>';
+
+                                                $freeze_button_data = 0;
+
                                             }
                                         }else{
                                             $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Freeze</button></div>';
+
+                                            $freeze_button_data = 1;
+
                                         }
 
                                         if($login_user_highest_level_data == $login_user_id){
                                             $freeze_button = '';
+                                            $freeze_button_data = "";
                                         }
 
+                                        $header_final_array[$monthvalue]["freeze_button"] = $freeze_button_data;
 
                                         break;
                                     }
@@ -268,7 +281,7 @@ class Esp extends Front_Controller
                                 
                                 $header_final_array[$monthvalue]["lockdata"] = 1;
                                 $header_final_array[$monthvalue]["clickable"] = 0;
-                                
+
                               //  $lock_data = "lock";
                                 
                             }else{
@@ -333,10 +346,7 @@ class Esp extends Front_Controller
                                 }
                                 
                             }
-                            
-                            
-                                    
-                            
+
                             
                             $time=strtotime($monthvalue);
                             $month=date("F",$time);
@@ -610,6 +620,10 @@ class Esp extends Front_Controller
                                     elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
                                    //     echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
+                                    }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
+                                        //    echo "fff".$monthvalue."</br>";
+                                        $editable = "";
                                     }
                                     else{
                                     //    echo "eee".$monthvalue."</br>";
@@ -1112,6 +1126,11 @@ class Esp extends Front_Controller
                                          $probablity_editable = "readonly";
                                         
                                     }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
+                                        //    echo "fff".$monthvalue."</br>";
+                                        $assumption_editable = "";
+                                        $probablity_editable = "";
+                                    }
                                     else{
                                     //    echo "eee".$monthvalue."</br>";
                                       //  $editable = "readonly";
@@ -1266,6 +1285,11 @@ class Esp extends Front_Controller
                                          $assumption_editable = "disabled";
                                          $probablity_editable = "readonly";
                                         
+                                    }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
+                                        //    echo "fff".$monthvalue."</br>";
+                                        $assumption_editable = "";
+                                        $probablity_editable = "";
                                     }
                                     else{
                                     //    echo "eee".$monthvalue."</br>";
@@ -1464,7 +1488,7 @@ class Esp extends Front_Controller
 
 			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
 				
-				//testdata($webservice_final_array);
+				//testdata($header_final_array);
 				
 				$final_array = array();
 				
