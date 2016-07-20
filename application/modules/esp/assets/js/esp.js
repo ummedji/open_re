@@ -193,19 +193,21 @@ $(document).on("click","#save_data",function(e){
 
 
 
-$(document).on("click","button#freeze_data",function(e){
+$(document).on("click","button.freeze_data",function(e){
     
     e.preventDefault();
 
     var forecast_id = $("input#forecast_id").val();
     var text_data = $(this).text();
     
-    var freeze_date = $("select#selected_month_data").val();
+   // var freeze_date = $("select#selected_month_data").val();
+
+    var freeze_date = $(this).attr("rel");
     
-   // alert(forecast_id+"==="+freeze_date);
+    //alert(forecast_id+"==="+freeze_date+"===="+text_data);
     
     //alert(freeze_date);
-    //return false;
+   // return false;
     if(freeze_date == null){
         
        $('<div></div>').appendTo('body')

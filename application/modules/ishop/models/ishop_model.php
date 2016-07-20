@@ -440,7 +440,7 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function primary_sales_product_details_view_by_id($primary_sales_id, $web_service = null)
+    public function primary_sales_product_details_view_by_id($primary_sales_id, $web_service = null,$csv=null)
     {
         $sql = 'SELECT ipsp.primary_sales_product_id AS id,ipsp.primary_sales_product_id,psr.product_sku_code,psc.product_sku_name,ipsp.quantity,ipsp.dispatched_quantity,ipsp.amount ';
         $sql .= 'FROM bf_ishop_primary_sales_product AS ipsp ';
@@ -462,10 +462,17 @@ class Ishop_model extends BF_Model
                 // $product_view['count'] = count($product_view['head']);
                 $i = 1;
                 foreach ($product_detail['result'] as $pd) {
-                    $qty_data = '<div class="qty_' . $pd["primary_sales_product_id"] . '"><span class="qty">' . $pd['quantity'] . '</span></div>';
-                    $dispatched_quantity = '<div class="dispatched_quantity_' . $pd["primary_sales_product_id"] . '"><span class="dispatched_quantity">' . $pd['dispatched_quantity'] . '</span></div>';
-                    $amount = '<div class="amount_' . $pd["primary_sales_product_id"] . '"><input  type="hidden"  name="amount[]" value="' . $pd['amount'] . '"/><span class="amount">' . $pd['amount'] . '</span></div>';
-                    $product_view['row'][] = array($i, $pd['primary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $qty_data, $dispatched_quantity, $amount);
+
+                    if($csv == 'csv')
+                    {
+                        $product_view['row'][] = array($i, $pd['primary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $pd['quantity'], $pd['dispatched_quantity'], $pd['amount']);
+                    }
+                    else{
+                        $qty_data = '<div class="qty_' . $pd["primary_sales_product_id"] . '"><span class="qty">' . $pd['quantity'] . '</span></div>';
+                        $dispatched_quantity = '<div class="dispatched_quantity_' . $pd["primary_sales_product_id"] . '"><span class="dispatched_quantity">' . $pd['dispatched_quantity'] . '</span></div>';
+                        $amount = '<div class="amount_' . $pd["primary_sales_product_id"] . '"><input  type="hidden"  name="amount[]" value="' . $pd['amount'] . '"/><span class="amount">' . $pd['amount'] . '</span></div>';
+                        $product_view['row'][] = array($i, $pd['primary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $qty_data, $dispatched_quantity, $amount);
+                    }
                     $i++;
                 }
                 $product_view['eye'] = '';
@@ -952,8 +959,6 @@ class Ishop_model extends BF_Model
 
     public function get_all_rol_by_user($user_id, $country_id, $logined_user_role, $checked_type = null, $web_service = null, $page = null)
     {
-        //$sql = 'SELECT ir.rol_id as id,ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
-
         $sql ='SELECT SQL_CALC_FOUND_ROWS ir.rol_id as id,ir.rol_id,bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
         $sql .= 'FROM bf_ishop_rol AS ir ';
         $sql .= 'JOIN bf_users AS bu  ON (bu.id = ir.customer_id) ';
@@ -988,10 +993,7 @@ class Ishop_model extends BF_Model
             return $rol_detail;
         } else {
             $rol_details = $this->grid->get_result_res($sql);
-            /* $info = $this->db->query($sql);
-             $rol_detail = $info->result_array();
-             $rol_details = array('result'=>$rol_detail);*/
-            // testdata($rol_details);
+
             if (isset($rol_details['result']) && !empty($rol_details['result'])) {
                 if ($logined_user_role == 9 || $logined_user_role == 10) {
                     $rol['head'] = array('Sr. No.', 'Action', 'PBG', 'Product SKU Name', 'Units', 'ROL Quantity', 'ROL Qty Kg/Ltr');
@@ -1435,7 +1437,7 @@ class Ishop_model extends BF_Model
 
     public function secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no, $user_id, $country_id, $sales_view = null, $from_month = null, $to_month = null, $geo_level = null, $distributor_id = null, $page = null, $web_service = null,$local_date=null)
     {
-        $sql = 'SELECT iss.secondary_sales_id as id,bu1.display_name as entry_by,iss.etn_no,iss.created_on,iss.invoice_no,iss.invoice_date,bu.user_code,bu.display_name,iss.PO_no,iss.order_tracking_no,iss.total_amount,iss.secondary_sales_id ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS iss.secondary_sales_id as id,bu1.display_name as entry_by,iss.etn_no,iss.created_on,iss.invoice_no,iss.invoice_date,bu.user_code,bu.display_name,iss.PO_no,iss.order_tracking_no,iss.total_amount,iss.secondary_sales_id ';
         $sql .= 'FROM bf_ishop_secondary_sales AS iss ';
         $sql .= 'JOIN bf_users AS bu  ON (bu.id = iss.customer_id_to) ';
         $sql .= 'JOIN bf_users AS bu1 ON (bu1.id = iss.created_by_user) ';
@@ -1463,9 +1465,17 @@ class Ishop_model extends BF_Model
         $sql .= 'ORDER BY iss.secondary_sales_id DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
             $info = $this->db->query($sql);
+            // For Pagination
             $secondary_sales_product_detail = $info->result_array();
             return $secondary_sales_product_detail;
+
         } else {
             $secondary_sales = $this->grid->get_result_res($sql);
 
@@ -1525,7 +1535,7 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function secondary_sales_product_details_view_by_id($secondary_sales_id, $web_service = null)
+    public function secondary_sales_product_details_view_by_id($secondary_sales_id, $web_service = null,$csv=null)
     {
         $sql = 'SELECT issp.secondary_sales_product_id as id,issp.secondary_sales_product_id,psr.product_sku_code,psc.product_sku_name,issp.quantity,issp.amount,issp.unit,issp.qty_kgl, issp.product_sku_id ';
         $sql .= 'FROM bf_ishop_secondary_sales_product AS issp ';
@@ -1551,14 +1561,21 @@ class Ishop_model extends BF_Model
                 $secondary_id_data = '<input type="hidden" name="secondary_sales_id" value="' . $secondary_sales_id . '">';
 
                 foreach ($product_detail['result'] as $pd) {
-                    $product_sku_id = $secondary_id_data . '<div class="prd_' . $pd["secondary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $pd['product_sku_id'] . '</span></div>';
-                    $units = $product_sku_id . '<div class="units_' . $pd["secondary_sales_product_id"] . '"><span class="units">' . $pd['unit'] . '</span></div>';
-                    $quantity = '<div class="quantity_' . $pd["secondary_sales_product_id"] . '"><span class="quantity">' . $pd['quantity'] . '</span></div>';
+                    if($csv == 'csv')
+                    {
+                        $product_view['row'][] = array($i, $pd['secondary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $pd['quantity'], $pd['unit'], $pd['qty_kgl'], $pd['amount']);
+                    }
+                    else{
+                        $product_sku_id = $secondary_id_data . '<div class="prd_' . $pd["secondary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $pd['product_sku_id'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $pd["secondary_sales_product_id"] . '"><span class="units">' . $pd['unit'] . '</span></div>';
+                        $quantity = '<div class="quantity_' . $pd["secondary_sales_product_id"] . '"><span class="quantity">' . $pd['quantity'] . '</span></div>';
 
-                    $amount = '<div class="amount_' . $pd["secondary_sales_product_id"] . '"><input  type="hidden"  name="amount[]" value="' . $pd['amount'] . '"/><span class="amount">' . $pd['amount'] . '</span></div>';
-                    $qty_kgl = '<div class="rol_quantity_kg_ltr_' . $pd["secondary_sales_product_id"] . '"><span class="rol_quantity_kg_ltr">' . $pd['qty_kgl'] . '</span></div>';
+                        $amount = '<div class="amount_' . $pd["secondary_sales_product_id"] . '"><input  type="hidden"  name="amount[]" value="' . $pd['amount'] . '"/><span class="amount">' . $pd['amount'] . '</span></div>';
+                        $qty_kgl = '<div class="rol_quantity_kg_ltr_' . $pd["secondary_sales_product_id"] . '"><span class="rol_quantity_kg_ltr">' . $pd['qty_kgl'] . '</span></div>';
 
-                    $product_view['row'][] = array($i, $pd['secondary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $quantity, $units, $qty_kgl, $amount);
+                        $product_view['row'][] = array($i, $pd['secondary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $quantity, $units, $qty_kgl, $amount);
+                    }
+
                     $i++;
                 }
                 $product_view['eye'] = '';
@@ -6612,5 +6629,319 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         }
 
     }
+
+
+    public function get_primary_details_view_for_report($form_date, $to_date, $by_distributor, $by_invoice_no, $web_service = null, $page = null,$local_date = null)
+    {
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS ips.invoice_no,ips.invoice_date,bu.user_code,bu.display_name,ips.PO_no,ips.order_tracking_no,ips.primary_sales_id ';
+        $sql .= 'FROM bf_ishop_primary_sales AS ips ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = ips.customer_id) ';
+        $sql .= 'WHERE 1 ';
+        if (isset($by_distributor) && !empty($by_distributor) && $by_distributor != 0) {
+            $sql .= 'AND ips.customer_id =' . $by_distributor . ' ';
+        }
+        if (isset($by_invoice_no) && !empty($by_invoice_no)) {
+            $sql .= 'AND ips.invoice_no ="' . $by_invoice_no . '" ';
+        }
+        if ((isset($form_date) && !empty($form_date)) && (isset($to_date) && !empty($to_date))) {
+            $sql .= 'AND ips.invoice_date BETWEEN ' . '"' . $form_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
+        }
+        $sql .= 'ORDER BY ips.primary_sales_id DESC ';
+
+            $primary_sales = $this->grid->get_result_res($sql,true,$page);
+
+        $detail_data["row"] = array();
+       // testdata($primary_sales);
+
+        $final_array = array();
+
+            if (isset($primary_sales['result']) && !empty($primary_sales['result'])) {
+
+                foreach($primary_sales['result'] as $k => $val)
+                {
+
+
+                   $detail_data = $this->primary_sales_product_details_view_by_id($val['primary_sales_id'],null,'csv');
+
+                    if(!empty($detail_data["row"])) {
+                        foreach ($detail_data["row"] as $d_key => $product_data) {
+                            $inner_array = array();
+
+                            $inner_array = $val;
+                            $inner_array["product_sku_code"] = isset($product_data[2]) ? $product_data[2] : '0';
+                            $inner_array["product_sku_name"] = isset($product_data[3]) ? $product_data[3] : '0';
+                            $inner_array["quantity"] = isset($product_data[4]) ? $product_data[4] : '0';
+                            $inner_array["amount"] = isset($product_data[6]) ? $product_data[6] : '0';
+
+                            $final_array[] = $inner_array;
+                        }
+                    }
+                    else{
+                        $inner_array = array();
+
+                        $inner_array = $val;
+                        $inner_array["product_sku_code"] =  '0';
+                        $inner_array["product_sku_name"] = '0';
+                        $inner_array["quantity"] = '0';
+                        $inner_array["amount"] =  '0';
+
+
+                        $final_array[] = $inner_array;
+                    }
+                }
+
+
+
+                $primary['head'] = array('Sr. No.', 'Invoice No', 'Invoice Date', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.','Product SKU Code','Product SKU Name','Quantity','Amount');
+
+                $i = 1;
+
+                foreach ($final_array as $ps) {
+                    if($local_date != null)
+                    {
+                        $date = strtotime($ps['invoice_date']);
+                        $invoice_date = date($local_date,$date);
+                    }
+                    else{
+                        $invoice_date = $ps['invoice_date'];
+                    }
+
+                    $primary['row'][] = array($i,$ps['invoice_no'], $invoice_date, $ps['user_code'], $ps['display_name'],$ps['PO_no'] ,$ps['order_tracking_no'] , $ps['product_sku_code'],$ps['product_sku_name'],$ps['quantity'],$ps['amount']);
+                    $i++;
+                }
+               // testdata($primary);
+                return $primary;
+            }
+            else{
+                return false;
+            }
+    }
+
+
+    public function get_all_rol_view_for_report($user_id, $country_id, $logined_user_role, $checked_type = null,$page = null)
+    {
+        $sql ='SELECT SQL_CALC_FOUND_ROWS bu.user_code,bu.display_name,mptnc.product_country_name,ir.product_sku_id,mpsc.product_sku_name,ir.units,ir.rol_quantity,ir.rol_quantity_Kg_Ltr ';
+        $sql .= 'FROM bf_ishop_rol AS ir ';
+        $sql .= 'JOIN bf_users AS bu  ON (bu.id = ir.customer_id) ';
+        $sql .= 'JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ir.product_sku_id) ';
+        $sql .= 'JOIN bf_master_product_type_name_country AS mptnc ON (mptnc.product_country_id = mpsc.PBG) ';
+        $sql .= 'WHERE 1 ';
+        if ($checked_type == "retailer") {
+            $sql .= ' AND bu.role_id =10 ';
+        }
+        if ($checked_type == "distributor") {
+            $sql .= ' AND bu.role_id =9 ';
+        }
+        if ($logined_user_role == 10 || $logined_user_role == 9) {
+            $sql .= 'AND ir.customer_id =' . $user_id . ' ';
+        }
+
+        $sql .= 'AND ir.country_id =' . $country_id . ' ';
+        $sql .= 'ORDER BY ir.rol_id DESC ';
+
+        $rol_details = $this->grid->get_result_res($sql,true,$page);
+
+
+        if (isset($rol_details['result']) && !empty($rol_details['result'])) {
+
+                if ($logined_user_role == 9 || $logined_user_role == 10) {
+                    $rol['head'] = array('Sr. No.', 'PBG', 'Product SKU Name', 'Units', 'ROL Quantity', 'ROL Qty Kg/Ltr');
+                    $i = 1;
+
+                    foreach ($rol_details['result'] as $rd) {
+
+                        $rol['row'][] = array($i, $rd['product_country_name'], $rd['product_sku_name'], $rd['units'] , $rd['rol_quantity'] , $rd['rol_quantity_Kg_Ltr']);
+                        $i++;
+                    }
+                }
+                else
+                {
+                   // testdata($rol_details['result']);
+                    if ($checked_type == 'retailer') {
+                        $rol['head'] = array('Sr. No.', 'Retailer Code', 'Retailer Name', 'PBG', 'Product SKU Name', 'Units', 'ROL Quantity', 'ROL Qty Kg/Ltr');
+                    }
+                    else
+                    {
+                        $rol['head'] = array('Sr. No.', 'Distributor Code', 'Distributor Name', 'PBG', 'Product SKU Name', 'Units', 'ROL Quantity', 'ROL Qty Kg/Ltr');
+                    }
+
+                    $i = 1;
+
+                    foreach ($rol_details['result'] as $rd) {
+
+                        $rol['row'][] = array($i, $rd['user_code'], $rd['display_name'], $rd['product_country_name'], $rd['product_sku_name'], $rd['units'], $rd['rol_quantity_Kg_Ltr'], $rd['rol_quantity']);
+                        $i++;
+                    }
+                }
+                return $rol;
+
+            }
+            else{
+                return false;
+            }
+
+    }
+
+
+    public function company_current_stock_for_report($country_id, $page = null,$local_date= null)
+    {
+        $sql ='SELECT SQL_CALC_FOUND_ROWS iccs.date,iccs.product_sku_id,iccs.intrum_quantity,iccs.unrestricted_quantity,iccs.batch,iccs.batch_exp_date,iccs.batch_mfg_date,iccs.country_id,psc.product_sku_name ';
+        $sql .= 'FROM bf_ishop_company_current_stock AS iccs ';
+        $sql .= 'JOIN bf_master_product_sku_country AS psc ON (psc.product_sku_country_id = iccs.product_sku_id) ';
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND iccs.country_id =' . $country_id . ' ';
+        $sql .= 'ORDER BY stock_id DESC ';
+
+        $stock_detail = $this->grid->get_result_res($sql,true,$page);
+
+        if (isset($stock_detail['result']) && !empty($stock_detail['result'])) {
+                $stock_view['head'] = array('Sr. No.', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrusticted Qty.', 'Batch', 'Batch Expiry Date', 'Batch Mfg. Date');
+
+            $i = 1;
+
+            foreach ($stock_detail['result'] as $sd) {
+
+                    if($local_date != null)
+                    {
+                        $date = strtotime($sd['date']);
+                        $c_date = date($local_date,$date);
+
+                        $date1 = strtotime($sd['batch_exp_date']);
+                        $exp_date = date($local_date,$date1);
+
+                        $date2 = strtotime($sd['batch_mfg_date']);
+                        $mfg_date = date($local_date,$date2);
+
+                    }
+                    else{
+                        $c_date = $sd['date'];
+                        $exp_date = $sd['batch_exp_date'];
+                        $mfg_date = $sd['batch_mfg_date'];
+                    }
+
+
+                    $intrumquantity = isset($sd['intrum_quantity']) ?  $sd['intrum_quantity']:"";
+
+                    $stock_view['row'][] = array($i, $c_date, $sd['product_sku_name'], $intrumquantity, $sd['unrestricted_quantity'], $sd['batch'], $exp_date, $mfg_date);
+                    $i++;
+                }
+
+                return $stock_view;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+
+    public function get_secondary_details_view_for_report($form_date, $to_date, $by_retailer, $by_invoice_no, $user_id, $country_id, $sales_view = null, $from_month = null, $to_month = null, $geo_level = null, $distributor_id = null, $page = null,$local_date=null)
+    {
+        $sql = 'SELECT iss.secondary_sales_id as id,bu1.display_name as entry_by,iss.etn_no,iss.created_on,iss.invoice_no,iss.invoice_date,bu.user_code,bu.display_name,iss.PO_no,iss.order_tracking_no,iss.total_amount,iss.secondary_sales_id ';
+        $sql .= 'FROM bf_ishop_secondary_sales AS iss ';
+        $sql .= 'JOIN bf_users AS bu  ON (bu.id = iss.customer_id_to) ';
+        $sql .= 'JOIN bf_users AS bu1 ON (bu1.id = iss.created_by_user) ';
+        $sql .= 'WHERE 1 ';
+        if (isset($by_retailer) && !empty($by_retailer) && $by_retailer != 0) {
+            $sql .= 'AND iss.customer_id_to =' . $by_retailer . ' ';
+        }
+        if (isset($by_invoice_no) && !empty($by_invoice_no)) {
+            $sql .= 'AND iss.invoice_no =' . $by_invoice_no . ' ';
+        }
+        if ((isset($form_date) && !empty($form_date) && (isset($to_date) && !empty($to_date)))) {
+            $sql .= 'AND iss.invoice_date BETWEEN ' . '"' . $form_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
+        }
+        if (isset($sales_view) && !empty($sales_view) && $sales_view = 'sales_view') {
+            if ((isset($from_month) && !empty($from_month)) && (isset($to_month) && !empty($to_month))) {
+                $sql .= 'AND DATE_FORMAT(iss.invoice_date,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
+            }
+            if ((isset($geo_level) && !empty($geo_level)) || (isset($distributor_id) && !empty($distributor_id))) {
+                $sql .= 'AND iss.customer_id_from =' . $distributor_id . ' ';
+            }
+        }
+
+        $sql .= 'AND iss.created_by_user =' . $user_id . ' ';
+        $sql .= 'AND iss.country_id =' . $country_id . ' ';
+        $sql .= 'ORDER BY iss.secondary_sales_id DESC ';
+
+        $secondary_sales = $this->grid->get_result_res($sql,true,$page);
+
+        //testdata($secondary_sales);
+
+        $detail_data["row"] = array();
+        // testdata($primary_sales);
+
+        $final_array = array();
+
+        if (isset($secondary_sales['result']) && !empty($secondary_sales['result'])) {
+
+            foreach($secondary_sales['result'] as $k => $val)
+            {
+
+                $detail_data = $this->secondary_sales_product_details_view_by_id($val['secondary_sales_id'],null,'csv');
+
+                if(!empty($detail_data["row"])) {
+                    foreach ($detail_data["row"] as $d_key => $product_data) {
+                        $inner_array = array();
+
+                        $inner_array = $val;
+                        $inner_array["product_sku_code"] = isset($product_data[2]) ? $product_data[2] : '0';
+                        $inner_array["product_sku_name"] = isset($product_data[3]) ? $product_data[3] : '0';
+                        $inner_array["quantity"] = isset($product_data[4]) ? $product_data[4] : '0';
+                        $inner_array["unit"] = isset($product_data[5]) ? $product_data[5] : '0';
+                        $inner_array["qty_kgl"] = isset($product_data[6]) ? $product_data[6] : '0';
+                        $inner_array["amount"] = isset($product_data[7]) ? $product_data[7] : '0';
+
+                        $final_array[] = $inner_array;
+                    }
+                }
+                else{
+                    $inner_array = array();
+
+                    $inner_array = $val;
+                    $inner_array["product_sku_code"] =  '0';
+                    $inner_array["product_sku_name"] = '0';
+                    $inner_array["unit"] = '0';
+                    $inner_array["qty_kgl"] = '0';
+                    $inner_array["amount"] = '0';
+
+                    $final_array[] = $inner_array;
+                }
+            }
+
+           $secondary['head'] = array('Sr. No.','Entry By','Entry Date','ETN' ,'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No.', 'Order Tracking No.','Product SKU Code','Product SKU Name','Quantity','Unit','Quantity KG/Ltr','Amount');
+
+            $i = 1;
+
+            foreach ($final_array as $ps) {
+                if($local_date != null)
+                {
+                    $date = strtotime($ps['created_on']);
+                    $entry_date = date($local_date,$date);
+
+                    $date1 = strtotime($ps['invoice_date']);
+                    $invoice_date = date($local_date,$date1);
+
+
+                }
+                else{
+                    $entry_date = $ps['created_on'];
+                    $invoice_date = $ps['invoice_date'];
+                }
+
+                $secondary['row'][] = array($i,$ps['entry_by'], $entry_date, $ps['etn_no'], $ps['invoice_no'],$invoice_date,$ps['user_code'] ,$ps['display_name'] , $ps['PO_no'],$ps['order_tracking_no'],$ps['product_sku_code'],$ps['product_sku_name'],$ps['quantity'],$ps['unit'],$ps['qty_kgl'],$ps['amount']);
+                $i++;
+            }
+            
+            return $secondary;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+
+
 
 }

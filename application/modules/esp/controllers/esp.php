@@ -195,11 +195,13 @@ class Esp extends Front_Controller
             
                         $lock_data = "";
                         $l_array = array();
+
             
                         $header_final_array = array();
             
                         foreach($month_data as $monthkey => $monthvalue){
-                            
+
+                            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Freeze</button></div>';
                             
                             
                            // if($forecast_id == ""){
@@ -216,6 +218,18 @@ class Esp extends Front_Controller
                                      //   echo $forecast_id."====".$login_user_id;
                                         
                                         $forecast_freeze_data2 = $this->esp_model->forecast_freeze_status_history($forecast_id,$monthvalue,$login_user_id);
+                                   //     dumpme($forecast_freeze_data2);
+
+                                        if($forecast_freeze_data2 != 0){
+                                            if(!empty($forecast_freeze_data2) && $forecast_freeze_data2["freeze_status"] == 0){
+                                                $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Freeze</button></div>';
+                                            }
+                                            else{
+                                                $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Unfreeze</button></div>';
+                                            }
+                                        }else{
+                                            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$monthvalue.'">Freeze</button></div>';
+                                        }
 
                                         break;
                                     }
@@ -323,7 +337,7 @@ class Esp extends Front_Controller
                             $month=date("F",$time);
                             $year=date("Y",$time);
                             
-                            $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'</th>';
+                            $html .= '<th colspan="2"><span class="rts_bordet"></span>'.$month.'-'.$year.'&nbsp;&nbsp;'.$lock_data.'&nbsp;&nbsp;'.$freeze_button.'</th>';
 							
                         }
             
@@ -1459,14 +1473,14 @@ class Esp extends Front_Controller
 				return $final_array;
 				//die;
 			}
-
+           // '.$freeze_button.'
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
                 <input type="hidden" id="forecast_id" name="forecast_id" value="'.$forecast_id.'" />
                 <div class="row">
                     <div class="save_btn">
                         <button type="submit" id="save_data" class="btn btn-primary">Save</button>
-                        '.$freeze_button.'
+
                     </div>
                 </div>
             </div>';
@@ -1566,18 +1580,18 @@ class Esp extends Front_Controller
         
         $lock_array = array();
         
-        foreach($freeze_date as $freeze_key => $freeze_date_data){
+     //   foreach($freeze_date as $freeze_key => $freeze_date_data){
         
 		    //  $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data,$freeze_date_data);
             
             
-            $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$freeze_date_data,$forecast_id);
+            $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$freeze_date,$forecast_id);
             
             if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] != 0){
                $lock_array[] = $self_lock_data[0]["lock_status"]; 
             }
             
-        }
+    //    }
         
         
         

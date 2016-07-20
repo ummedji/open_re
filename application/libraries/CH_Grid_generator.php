@@ -99,11 +99,15 @@ class CH_Grid_generator
 
 
 
-    public function get_result_res($report_details,$is_limit=true)
+    public function get_result_res($report_details,$is_limit=true,$page=null)
     {
-        $this->req_data['page'] = isset($_POST['page']) ? $_POST['page'] : '0';
+        if($page !=null){
+            $this->req_data['page'] = $page;
+        }
+        else{
+            $this->req_data['page'] = isset($_POST['page']) ? $_POST['page'] : '0';
+        }
         $this->req_data['per_page'] = isset($_POST['per_page']) ? $_POST['per_page'] : '10';
-
 
 
         $info1=$this->CI->db->query($report_details);
@@ -119,7 +123,7 @@ class CH_Grid_generator
 
         $info = $this->CI->db->query($report_detail);
 
-        //echo $report_detail;die;
+      //  echo $report_detail;die;
 
 
         $this->CI->db->flush_cache();
