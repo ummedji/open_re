@@ -397,6 +397,8 @@ $(document).ready(function(){
 });
 
 
+
+
 function get_data_conversion(sku_id,quantity,units){
 
     var unit_data = "";
@@ -727,4 +729,17 @@ $(document).on('submit', '#upload_rol_data', function (e) {
   
    return false;
     
+});
+
+
+$('#download_csv').on('click',function(){
+
+    var param = $("#rol_limit").serialize();
+
+    var export_url = site_url + "ishop/rol_details_csv_report?" + param+"&page="+$("input#page").val();
+
+    window.location.href = export_url;
+
+    return false;
+
 });

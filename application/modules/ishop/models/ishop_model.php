@@ -4544,7 +4544,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     public function get_prespective_order($from_date, $todate, $loginusertype, $loginuserid, $page = null, $web_service = null,$local_date = null)
     {
 
-        $sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1,bu.display_name as bu_dn,u.display_name as b_dn ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS  bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.read_status,bio.created_on, bmupd.first_name as from_fname,bmupd.middle_name as from_mname,bmupd.last_name as from_lname, bmucd.primary_mobile_no, bmucd.address ,bmupd1.first_name as ot_from_fname1,bmupd1.middle_name as ot_from_mname1,bmupd1.last_name as ot_from_lname1,bu.display_name as bu_dn,u.display_name as b_dn ';
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.customer_id_from) ';
         $sql .= ' LEFT JOIN bf_master_user_personal_details as bmupd ON (bmupd.user_id = bu.id) ';
@@ -4562,7 +4562,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql .= 'ORDER BY order_date DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
             $info = $this->db->query($sql);
+            // For Pagination
+
             $prespective_order_data = $info->result_array();
             return $prespective_order_data;
         } else {
@@ -6932,7 +6941,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $secondary['row'][] = array($i,$ps['entry_by'], $entry_date, $ps['etn_no'], $ps['invoice_no'],$invoice_date,$ps['user_code'] ,$ps['display_name'] , $ps['PO_no'],$ps['order_tracking_no'],$ps['product_sku_code'],$ps['product_sku_name'],$ps['quantity'],$ps['unit'],$ps['qty_kgl'],$ps['amount']);
                 $i++;
             }
-            
+
             return $secondary;
         }
         else{

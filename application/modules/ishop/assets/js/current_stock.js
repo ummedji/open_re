@@ -416,3 +416,15 @@ $(document).on('submit', '#upload_current_stock_data', function (e) {
    return false;
     
 });
+
+$('#download_csv').on('click',function(){
+
+    var param = $("#add_company_current_stock").serialize();
+
+    var export_url = site_url + "ishop/current_stock_details_csv_report?" + param+"&page="+$("input#page").val();
+
+    window.location.href = export_url;
+
+    return false;
+
+});

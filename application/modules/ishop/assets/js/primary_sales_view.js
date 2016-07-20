@@ -76,6 +76,27 @@ $("#primary_sales_view").on("submit",function(e){
     }
 });
 
+
+$('#download_csv').on('click',function(){
+
+    var param = $("#primary_sales_view").serialize();
+
+    var $valid = $("#primary_sales_view").valid();
+    if(!$valid) {
+        primary_sales_view_validators.focusInvalid();
+        return false;
+    }
+    else {
+        var export_url = site_url + "ishop/primary_sales_details_csv_report?" + param+"&page="+$("input#page").val();
+
+        window.location.href = export_url;
+    }
+    return false;
+
+});
+
+
+
 /*Get  Primary Sales Data*/
 
 

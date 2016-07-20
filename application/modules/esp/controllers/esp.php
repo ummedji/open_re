@@ -1985,11 +1985,11 @@ class Esp extends Front_Controller
         
 		//$freeze_date = explode(",",$freeze_date);
             
-        foreach($freeze_date as $freeze_key => $freeze_date_data){
+      //  foreach($freeze_date as $freeze_key => $freeze_date_data){
         
-		  $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data,$freeze_date_data);
+		  $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data,$freeze_date);
             
-        }
+      //  }
 		if(isset($webservice_data) && !empty($webservice_data) && $webservice_data != NULL)
 		{
 			return $freeze_data;

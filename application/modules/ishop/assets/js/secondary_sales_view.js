@@ -70,10 +70,36 @@ $("#secondary_sales_view").on("submit",function(e){
 
 /*Get  Secondary Sales Data*/
 
+/*Get Download Secondary Sales Data*/
+$('#download_csv').on('click',function(){
+
+    var param = $("#secondary_sales_view").serialize();
+
+    var $valid = $("#secondary_sales_view").valid();
+    if(!$valid) {
+        secondary_sales_view_validators.focusInvalid();
+        return false;
+    }
+    else {
+        var export_url = site_url + "ishop/secondary_sales_details_csv_report?" + param+"&page="+$("input#page").val();
+
+        window.location.href = export_url;
+    }
+    return false;
+
+});
+
+/*Get Download Secondary Sales Data*/
+
+
+
 
 /*Get Secondary Sales Product Data*/
 $(document).on('click', 'div.secondary_cont .eye_i', function () {
     var id = $(this).attr('prdid');
+
+    $('div.secondary_cont').find('tr.bg_focus').removeClass();
+    $(this).parents("tr").addClass("bg_focus");
 
     $.ajax({
         type: 'POST',
@@ -84,10 +110,10 @@ $(document).on('click', 'div.secondary_cont .eye_i', function () {
         }
     });
     
-    $("body, html").animate({ 
+  /*  $("body, html").animate({
         scrollTop: $( $(this).attr('href') ).offset().top 
      }, "slow");
-    
+    */
     return false;
 });
 /*Get  Secondary Sales Data*/
