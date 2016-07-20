@@ -740,6 +740,8 @@ class Web_service extends Front_Controller
 
                     $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
 
+                    $ord = array();
+
                     if($role_id == 7){
                         if($radio == 'retailer')
                         {
