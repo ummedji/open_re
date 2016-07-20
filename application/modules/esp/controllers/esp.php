@@ -2733,60 +2733,7 @@ class Esp extends Front_Controller
                             if($login_user_id == $budget_freeze_data['freeze_user_id']){
                                 
                                 $editable = "";
-                               
-                                
-                              /*  $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
-                                
-                                if($login_user_parent_data == $lock_by_id){
-                                    
-                                    if($lock_status == 1){
-                                        $editable = "readonly";
-                                    }
-                                    else{
-                                        $editable = "";
-                                    }
-                                    
-                                }
-                                
-                                */
-                                
-                   /*           
-        
-		              $get_higher_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_highest_level_data,$budget_id,$monthvalue);  
-                           
-                        if(($get_higher_user_lock_status != 0 || !empty($get_higher_user_lock_status)) && ($get_higher_user_lock_status[0]["lock_status"] == 1)){
-                           // $senior_lock_status = 1;
-                            
-                            echo "high";
-                            
-                             $editable = "readonly";
-                            
-                        }
-                        else{
-                            if($login_user_parent_data != 0){
 
-                                $get_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_parent_data,$budget_id,$monthvalue);
-                                if(($get_user_lock_status != 0 || !empty($get_user_lock_status)) && ($get_user_lock_status[0]["lock_status"] == 1)){
-                                   // $senior_lock_status = 1;
-                                    
-                                    echo "senior";
-                                    
-                                     $editable = "readonly";
-                                    
-                                }
-                                else{
-                                   // $senior_lock_status = 0;
-                                     $editable = "";
-                                }
-                            }
-                            else{
-                                //$senior_lock_status = 0;
-                                
-                                 $editable = "";
-                            }
-                        }
-                                
-                                */
                                 
                                 if(in_array(1,$senior_lock_data)){
                                     $editable = "readonly";
@@ -2828,9 +2775,11 @@ class Esp extends Front_Controller
                                     //SHOW FREEZEED DATA
                                     
                                     echo "2";
+
+
+                                    $editable = "readonly";
                                     
-                                    
-                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
+                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.' /></td>';
                     
                                      $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
                                     
@@ -2847,51 +2796,7 @@ class Esp extends Front_Controller
                                     //GET LOCK STATUS
                                     
                                     echo "3";
-                                    
-                                /*    if($lock_status == 1){
-                                        $editable = "readonly";
-                                    }
-                                    else{
-                                        $editable = "";
-                                    }
-                                    
-                                    */
-                                    
-                                    
-                              /*       $get_higher_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_highest_level_data,$budget_id,$monthvalue);  
-                           
-                                    if(($get_higher_user_lock_status != 0 || !empty($get_higher_user_lock_status)) && ($get_higher_user_lock_status[0]["lock_status"] == 1)){
-                                       // $senior_lock_status = 1;
-                                             echo "high";
-                                         $editable = "readonly";
 
-                                    }
-                                    else{
-                                        if($login_user_parent_data != 0){
-
-                                            $get_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_parent_data,$budget_id,$monthvalue);
-                                            if(($get_user_lock_status != 0 || !empty($get_user_lock_status)) && ($get_user_lock_status[0]["lock_status"] == 1)){
-                                               // $senior_lock_status = 1;
-                                                 echo "senior";
-                                                 $editable = "readonly";
-
-                                            }
-                                            else{
-                                               // $senior_lock_status = 0;
-                                                 $editable = "";
-                                            }
-                                        }
-                                        else{
-                                            //$senior_lock_status = 0;
-
-                                             $editable = "";
-                                        }
-                                    }
-                                    
-                                    */
-                                    
-                                 //   dumpme($senior_lock_data);
-                                    
                                     $editable = "";
                                     if(in_array(1,$senior_lock_data)){
                                         $editable = "readonly";

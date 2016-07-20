@@ -2484,7 +2484,7 @@ class Ishop_model extends BF_Model
     }
 
 
-    public function tertiary_sales_product_details_view_by_id($tertiary_sales_id,$web_service = null)
+    public function tertiary_sales_product_details_view_by_id($tertiary_sales_id,$web_service = null,$csv=null)
     {
         $sql = 'SELECT itsp.tertiary_sales_product_id,mpsr.product_sku_code,itsp.product_sku_id,mpsc.product_sku_name,itsp.unit,itsp.quantity,itsp.qty_kgl ';
         $sql .= 'FROM bf_ishop_tertiary_sales_products AS itsp ';
@@ -2507,14 +2507,20 @@ class Ishop_model extends BF_Model
                 $i = 1;
 
                 foreach ($sales_detail['result'] as $sd) {
+                    if($csv=='csv')
+                    {
+                        $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'], $sd['unit'], $sd['quantity'] , $sd['qty_kgl'] );
+                    }
+                    else{
+                        $product_sku_id = '<div class="prd_' . $sd["tertiary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $sd['product_sku_id'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $sd["tertiary_sales_product_id"] . '"><span class="units">' . $sd['unit'] . '</span></div>';
+                        $quantity = '<div class="quantity_' . $sd["tertiary_sales_product_id"] . '"><span class="quantity">' . $sd['quantity'] . '</span></div>';
+                        $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $sd["tertiary_sales_product_id"] . '"><span class="rol_quantity_kg_ltr">' . $sd['qty_kgl'] . '</span></div>';
 
-                    $product_sku_id = '<div class="prd_' . $sd["tertiary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $sd['product_sku_id'] . '</span></div>';
-                    $units = $product_sku_id . '<div class="units_' . $sd["tertiary_sales_product_id"] . '"><span class="units">' . $sd['unit'] . '</span></div>';
-                    $quantity = '<div class="quantity_' . $sd["tertiary_sales_product_id"] . '"><span class="quantity">' . $sd['quantity'] . '</span></div>';
-                    $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $sd["tertiary_sales_product_id"] . '"><span class="rol_quantity_kg_ltr">' . $sd['qty_kgl'] . '</span></div>';
 
+                        $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'], $units, $quantity, $quantity_kg_ltr);
+                    }
 
-                    $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'], $units, $quantity, $quantity_kg_ltr);
                     $i++;
                 }
                 $sales_view['eye'] = '';
@@ -6844,8 +6850,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     }
 
 
-    public function get_secondary_details_view_for_report($form_date, $to_date, $by_retailer, $by_invoice_no, $user_id, $country_id, $sales_view = null, $from_month = null, $to_month = null, $geo_level = null, $distributor_id = null, $page = null,$local_date=null)
+    public function get_secondary_details_view_for_report($form_date, $to_date, $by_retailer, $by_invoice_no, $user_id, $country_id, $sales_view = null, $from_month = null, $to_month = null, $geo_level = null, $distributor_id = null, $page = null,$web_service=null,$local_date=null)
     {
+
         $sql = 'SELECT iss.secondary_sales_id as id,bu1.display_name as entry_by,iss.etn_no,iss.created_on,iss.invoice_no,iss.invoice_date,bu.user_code,bu.display_name,iss.PO_no,iss.order_tracking_no,iss.total_amount,iss.secondary_sales_id ';
         $sql .= 'FROM bf_ishop_secondary_sales AS iss ';
         $sql .= 'JOIN bf_users AS bu  ON (bu.id = iss.customer_id_to) ';
@@ -6910,7 +6917,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $inner_array = $val;
                     $inner_array["product_sku_code"] =  '0';
                     $inner_array["product_sku_name"] = '0';
-                    $inner_array["unit"] = '0';
+                    $inner_array["unit"] = '';
                     $inner_array["qty_kgl"] = '0';
                     $inner_array["amount"] = '0';
 
@@ -6922,7 +6929,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
             $i = 1;
 
+
             foreach ($final_array as $ps) {
+
                 if($local_date != null)
                 {
                     $date = strtotime($ps['created_on']);
@@ -7064,6 +7073,82 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         }
         else{
+            return false;
+        }
+
+    }
+
+
+    public function view_sales_detail_by_retailer_report($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null,$web_service = null,$local_date=null)
+    {
+        $sql = 'SELECT itsp.tertiary_sales_id,itsp.sales_month,bu.user_code,bu.display_name ';
+        $sql .= 'FROM bf_ishop_tertiary_sales AS itsp ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = itsp.customer_id) ';
+        $sql .= 'WHERE 1 ';
+        if ((isset($from_month) && !empty($from_month)) && (isset($to_month) && !empty($to_month))) {
+            $sql .= 'AND DATE_FORMAT(itsp.sales_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
+        }
+        if ((isset($geo_level_0) && !empty($geo_level_0)) && (isset($geo_level_1) && !empty($geo_level_1)) && (isset($retailer_id) && !empty($retailer_id))) {
+            $sql .= 'AND  itsp.customer_id =' . $retailer_id . ' ';
+        }
+        $sql .= 'AND itsp.created_by_user =' . $user_id . ' ';
+        $sql .= 'AND itsp.country_id =' . $country_id . ' ';
+        $sql .= 'ORDER BY itsp.tertiary_sales_id DESC ';
+
+
+        $sales_detail = $this->grid->get_result_res($sql,true,$page);
+
+        if (isset($sales_detail['result']) && !empty($sales_detail['result'])) {
+
+            foreach($sales_detail['result'] as $k => $val)
+            {
+
+                $detail_data = $this->tertiary_sales_product_details_view_by_id($val['tertiary_sales_id'],null,'csv');
+
+                if(!empty($detail_data["row"])) {
+                    foreach ($detail_data["row"] as $d_key => $product_data) {
+                        $inner_array = array();
+
+                        $inner_array = $val;
+                        $inner_array["product_sku_code"] = isset($product_data[2]) ? $product_data[2] : '0';
+                        $inner_array["product_sku_name"] = isset($product_data[3]) ? $product_data[3] : '0';
+                        $inner_array["unit"] = isset($product_data[5]) ? $product_data[4] : '0';
+                        $inner_array["quantity"] = isset($product_data[4]) ? $product_data[5] : '0';
+                        $inner_array["qty_kgl"] = isset($product_data[6]) ? $product_data[6] : '0';
+
+
+                        $final_array[] = $inner_array;
+                    }
+                }
+                else{
+                    $inner_array = array();
+
+                    $inner_array = $val;
+                    $inner_array["product_sku_code"] =  '0';
+                    $inner_array["product_sku_name"] = '0';
+                    $inner_array["qty_kgl"] = '0';
+                    $inner_array["quantity"]='0';
+                    $inner_array["unit"] = '';
+
+
+                    $final_array[] = $inner_array;
+                }
+            }
+
+
+            $sales_view['head'] = array('Sr. No.', 'Month', 'Retailer Code', 'Retailer Name','Product SKU Code','Product SKU Name','Unit','Quantity','Quantity Kg/Ltr');
+
+            $i = 1;
+
+            foreach ($final_array as $sd) {
+                $month = strtotime($sd['sales_month']);
+                $month = date('F - Y', $month);
+                $sales_view['row'][] = array($i, $month, $sd['user_code'], $sd['display_name'],$sd['product_sku_code'],$sd['product_sku_name'],$sd['unit'],$sd['quantity'],$sd['qty_kgl']);
+                $i++;
+            }
+
+            return $sales_view;
+        } else {
             return false;
         }
 

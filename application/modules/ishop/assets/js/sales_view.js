@@ -356,7 +356,27 @@ $(document).ready(function(){
         }
 
     });
+
+
+    $('#download_csv').on('click',function(){
+
+        var param = $("#view_ishop_sales").serialize();
+
+        var $valid = $("#view_ishop_sales").valid();
+        if(!$valid) {
+            ishop_sales_view_validators.focusInvalid();
+            return false;
+        }
+        else {
+            var export_url = site_url + "ishop/sales_view_details_csv_report?" + param+"&page="+$("input#page").val();
+
+            window.location.href = export_url;
+        }
+        return false;
+
+    });
 });
+
 
 
 /*Get Sales Product Data*/

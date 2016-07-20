@@ -72,7 +72,7 @@ var budget_validators = $("#add_budget").validate({
             },
             pbg_data:{
                 required: true
-            },
+            }
         }
     });
 

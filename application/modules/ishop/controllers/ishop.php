@@ -4654,6 +4654,150 @@ class Ishop extends Front_Controller
 	}
 
 
+	public function sales_view_details_csv_report()
+	{
+		$this->load->library('excel');
+		$user = $this->auth->user();
+
+		$check_redio = (isset($_GET['radio1']) ? $_GET['radio1'] : '');
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+		if($check_redio == 'retailer')
+		{
+			$from_month = (isset($_GET['from_month']) ? $_GET['from_month'] : '');
+			$to_month = (isset($_GET['to_month']) ? $_GET['to_month'] : '');
+			$geo_level_0 = (isset($_GET['geo_level_0']) ? $_GET['geo_level_0'] : '');
+			$geo_level_1 = (isset($_GET['geo_level_1']) ? $_GET['geo_level_1'] : '');
+			$retailer_id = (isset($_GET['fo_retailer_id']) ? $_GET['fo_retailer_id'] : '');
+
+			$tertiary = $this->ishop_model-> view_sales_detail_by_retailer_report($user->id,$user->country_id,$from_month,$to_month,$geo_level_0,$geo_level_1,$retailer_id,$page,null,$user->local_date);
+
+			$this->excel->setActiveSheetIndex(0);
+			$this->excel->getActiveSheet()->setTitle('Tertiary Sales');
+
+			if(!empty($tertiary) && isset($tertiary))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$tertiary['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$tertiary['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$tertiary['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$tertiary['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$tertiary['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$tertiary['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$tertiary['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$tertiary['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$tertiary['head'][8]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
+
+			foreach(range('A1','I1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($tertiary))
+			{
+				foreach($tertiary['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+				}
+			}
+
+			$filename='tertiary_sales_'.date('d-m-y').'.xlsx';
+
+		}
+		elseif($check_redio == 'distributor')
+		{
+			$from_month = (isset($_GET['from_month']) ? $_GET['from_month'] : '');
+			$to_month = (isset($_GET['to_month']) ? $_GET['to_month'] : '');
+			$geo_level = (isset($_GET['distributor_geo_level']) ? $_GET['distributor_geo_level'] : '');
+			$distributor_id = (isset($_GET['distributor_sales']) ? $_GET['distributor_sales'] : '');
+			$invoice_no = (isset($_GET['invoice_no']) ? $_GET['invoice_no'] : '');
+			$secondary = $this->ishop_model->get_secondary_details_view_for_report($form_date=null,$to_date=null,$by_retailer=null,$invoice_no,$user->id,$user->country_id,'sales_view',$from_month,$to_month,$geo_level,$distributor_id,$page,null,$user->local_date);
+
+			$this->excel->setActiveSheetIndex(0);
+			$this->excel->getActiveSheet()->setTitle('Secondary Sales');
+
+			if(!empty($secondary) && isset($secondary))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$secondary['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$secondary['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$secondary['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$secondary['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$secondary['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$secondary['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$secondary['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$secondary['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$secondary['head'][8]);
+				$this->excel->getActiveSheet()->setCellValue('J1',$secondary['head'][9]);
+				$this->excel->getActiveSheet()->setCellValue('K1',$secondary['head'][10]);
+				$this->excel->getActiveSheet()->setCellValue('L1',$secondary['head'][11]);
+				$this->excel->getActiveSheet()->setCellValue('M1',$secondary['head'][12]);
+				$this->excel->getActiveSheet()->setCellValue('N1',$secondary['head'][13]);
+				$this->excel->getActiveSheet()->setCellValue('O1',$secondary['head'][14]);
+				$this->excel->getActiveSheet()->setCellValue('P1',$secondary['head'][15]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:P1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:P1')->getFont()->setBold(true);
+
+			foreach(range('A1','P1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($secondary))
+			{
+				foreach($secondary['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+					$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+					$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+					$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+					$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+					$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+					$this->excel->getActiveSheet()->setCellValue('O'.($k+2), $row['14']);
+					$this->excel->getActiveSheet()->setCellValue('P'.($k+2), $row['15']);
+				}
+			}
+
+			$filename='secondary_sales_'.date('d-m-y').'.xlsx';
+
+		}
+
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+		exit();
+
+	}
+
+
 
 
 	/*-----------------------Report Download--------------------------------------*/
