@@ -351,7 +351,7 @@ if (!$this->input->is_ajax_request()) { ?>
 <div class="clearfix"></div>
 <?php
 }
-if($login_customer_type == 10){
+if(isset($login_customer_type) && $login_customer_type == 10){
 ?>
 <script type="text/javascript">
     $(document).ready(function() {
