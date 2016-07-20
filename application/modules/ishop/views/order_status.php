@@ -168,15 +168,22 @@
             <div class="col-md-6 col-md-offset-3 distributore_form distributor_data">
                     
                 </div>
+                
+            <?php 
+            
+                $from_date = date("Y-m-01");
+                $to_date = date("Y-m-t", strtotime($from_date));
+            
+            ?>
 
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" value="<?php echo $from_date; ?>" required />
                 </div>
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" value="<?php echo $to_date; ?>" required />
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>

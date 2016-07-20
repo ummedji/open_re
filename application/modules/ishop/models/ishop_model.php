@@ -1470,7 +1470,7 @@ class Ishop_model extends BF_Model
             $secondary_sales = $this->grid->get_result_res($sql);
 
             if (isset($secondary_sales['result']) && !empty($secondary_sales['result'])) {
-                $secondary['head'] = array('Sr. No.', 'Action', 'Entry By', 'Entry Date', 'ETN', 'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No.', 'Order Tracking No.', 'Dispatch Amount');
+                $secondary['head'] = array('Sr. No.', 'Action', 'Entry By', 'Entry Date', 'ENT', 'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No.', 'Order Tracking No.', 'Dispatch Amount');
                 $secondary['count'] = count($secondary['head']);
                 if ($page != null || $page != "") {
 
@@ -4079,7 +4079,7 @@ class Ishop_model extends BF_Model
                     $order_date = date("Y-m-d");
 
                 } elseif ($this->input->post("radio1") == "distributor") {
-                    $distributor_id = $this->input->post("distributor_id");
+                    $distributor_id = $this->input->post("fo_distributor_data");
 
                     $customer_id_from = $distributor_id;
                     $customer_id_to = 0;
@@ -4744,10 +4744,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $sql .= ' AND f_bu.role_id = 9 ';
 
             if ($order_tracking_no != null) {
-                $sql .= ' AND bio.order_tracking_no =' . $order_tracking_no . ' ';
+                $sql .= ' AND bio.order_tracking_no ="' . $order_tracking_no . '" ';
             }
             if ($order_po_no != null) {
-                $sql .= ' AND bio.PO_no =' . $order_po_no . ' ';
+                $sql .= ' AND bio.PO_no ="' . $order_po_no . '" ';
             }
             if ($sub_action_data == "dispatched") {
                 $sql .= ' AND bio.order_status = 1 ';
@@ -4773,7 +4773,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         
        // echo $action_data."</br>";
         
-       // echo $sql;
+      //  echo $sql;
+      //  die;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             // For Pagination

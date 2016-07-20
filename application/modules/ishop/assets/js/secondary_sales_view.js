@@ -75,9 +75,6 @@ $("#secondary_sales_view").on("submit",function(e){
 $(document).on('click', 'div.secondary_cont .eye_i', function () {
     var id = $(this).attr('prdid');
 
-    $('div#middle_container').find('tr.bg_focus').removeClass();
-    $(this).parents("tr").addClass("bg_focus");
-
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/secondary_sales_product_details_view',
@@ -86,6 +83,11 @@ $(document).on('click', 'div.secondary_cont .eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
+    
+    $("body, html").animate({ 
+        scrollTop: $( $(this).attr('href') ).offset().top 
+     }, "slow");
+    
     return false;
 });
 /*Get  Secondary Sales Data*/

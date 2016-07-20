@@ -3,6 +3,10 @@
  */
 $(document).ready(function(){
     
+    setTimeout(function(){
+      $("button#order_status").trigger("click");
+    }, 1000);
+    
     
     $("#form_date").datepicker({
       format: "yyyy-mm-dd",
@@ -25,10 +29,6 @@ $(document).ready(function(){
         //alert("INNN");
         
         var id = $(this).attr('prdid');
-
-        $('div.order_status').find('tr.bg_focus').removeClass();
-        $(this).parents("tr").addClass("bg_focus");
-
         var radio_checked = $('input[name=radio1]:checked').val();
         var login_customer_type = $("input#login_customer_type" ).val();
         var currentpage = $("input.page_function" ).val();
@@ -248,8 +248,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
     });
 
 
-    var order_status = $("#order_status");
-    order_status.validate();
+
 
     /* var order_status_validators = $("#order_status").validate({
            // ignore: ".ignore",
@@ -282,21 +281,22 @@ $(document).on('click', 'div.order_status .edit_i', function () {
                     required: true
                 }
             }
-        });*/
-
+        });
+     */
     $("#order_status").on("submit",function(e){
         e.preventDefault();
         var param = $("form#order_status").serializeArray();
+        
+     /*   var validator = order_status_validators;
 
-        var form_order_status = false;
-
-        form_order_status = order_status.valid();
-
-    if(form_order_status == false){
+    var $valid = $("#order_status").valid();
+    if(!$valid) {
+        //alert('focusInvalid');
+        validator.focusInvalid();
         return false;
     }
     else
-    {
+    {*/
         $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/get_order_status_data",
@@ -310,7 +310,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
                 }
             });
             return false;
-        }
+     /*   }*/
 
     });
     

@@ -482,67 +482,40 @@ class Esp extends Front_Controller
                             
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
                             
-                            
-                            
-                          /*  
-                            if($senior_lock_data != 0 || !empty($senior_lock_data)){
-                            
-                                if(in_array(1,$senior_lock_data)){                                
-                                    $editable = "readonly";
-                                }
-
-                                if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 1){
-                                    $editable = "readonly";
-                                }
-
-                                if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 0){
-                                    $editable = "";
-                                }
-                            }
-                            else{
-                               // $editable = "";
-                                
-                                if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] != 0){
-                               // echo "qqqq";
-                                    $editable = "";
-                                }
-                                else{
-
-                                    $editable = "readonly";
-
-                                }
-                                
-                            }
-                            */
-                            
-                            if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
-                           // echo "qqqq";
-                               // echo "!".$monthvalue."</br>";
-                                $editable = "";
-                            }
-                            
-                                
-                                if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
-                                
-                                  //  echo "@".$monthvalue."</br>";
-                                    $editable = "readonly";
-                                }
-                                else{
-                                    
-                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
-                                   // echo "#".$monthvalue."</br>";
-                                        $editable = "readonly";
-                                }
-                            }
+                       
                              
                             if($login_user_highest_level_data == $login_user_id){
                                 $editable = "";
+                                
+                              //   echo "aaa".$monthvalue."</br>";
+                            }
+                            else{
+                                if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
+
+                                    $editable = "readonly";
+                                  //  echo "bbb".$monthvalue."</br>";
+
+                                }
+                                elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
+                                    
+                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
+                                   //     echo "ccc".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
+                                   //     echo "ddd".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                    else{
+                                    //    echo "eee".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                    
+                                    
+                                }
                             }
                             
-                           // elseif($self_lock_data == 0 || )
-                           // {
-                           //     $editable = "readonly";
-                           // }
+                          
                             
                             
                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
@@ -593,114 +566,41 @@ class Esp extends Front_Controller
 
                                 }
                             }
-                            
-                          /*  
-                            if($self_lock_data != 0){
-                               // echo "qqqq";
-                                if($self_lock_data[0]["lock_status"] == 0){
-                                    $editable = "readonly";
-                                    
-                                }
-                                else{
-                                     $editable = "";
-                                }
-                                
-                                
-                            }
-                            else{
-                                
-                                $editable = "readonly";
-                                
-                            }
-                            
-                            
-                            if($senior_lock_data != 0 || !empty($senior_lock_data)){
-                            
-                            if(in_array(1,$senior_lock_data)){                                
-                                $editable = "readonly";
-                            }
-                            
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 1){
-                                $editable = "readonly";
-                            }
-                               
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 0){
-                                $editable = "";
-                            }
-                        }
-                            else{
-                                $editable = "";
-                            }
-                            
+                      
                             
                           
-                            
-                            if($login_user_highest_level_data == $login_user_id){
-                                $editable = "";
-                            }
-                            
-                            */
-                          /*  
-                            
-                             if($senior_lock_data != 0 || !empty($senior_lock_data)){
-                            
-                                if(in_array(1,$senior_lock_data)){                                
-                                    $editable = "readonly";
-                                }
-
-                                if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 1){
-                                    $editable = "readonly";
-                                }
-
-                                if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 0){
-                                    $editable = "";
-                                }
-                            }
-                            else{
-                               // $editable = "";
-                                
-                                if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] != 0){
-                               // echo "qqqq";
-                                    $editable = "";
-                                }
-                                else{
-
-                                    $editable = "readonly";
-
-                                }
-                                
-                            }
-                            
                              if($login_user_highest_level_data == $login_user_id){
                                 $editable = "";
-                            }
-                            
-                            */
-                            
-                            
-                            if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
-                           // echo "qqqq";
-                               // echo "!".$monthvalue."</br>";
-                                $editable = "";
-                            }
-                            
                                 
+                              //   echo "aaa".$monthvalue."</br>";
+                            }
+                            else{
                                 if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
-                                
-                                  //  echo "@".$monthvalue."</br>";
+
                                     $editable = "readonly";
+                                  //  echo "bbb".$monthvalue."</br>";
+
                                 }
-                                else{
+                                elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
                                     
-                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
-                                   // echo "#".$monthvalue."</br>";
+                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
+                                   //     echo "ccc".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
+                                   //     echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
+                                    }
+                                    else{
+                                    //    echo "eee".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                    
+                                    
                                 }
                             }
-                             
-                            if($login_user_highest_level_data == $login_user_id){
-                                $editable = "";
-                            }
+                            
+                            
                             
                             //SHOW DATA
                             
@@ -1120,59 +1020,8 @@ class Esp extends Front_Controller
                                 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
                             
-                                
-                         /*       
-                            if($self_lock_data != 0){
-                               // echo "qqqq";
-                                if($self_lock_data[0]["lock_status"] == 0){
-                                   $assumption_editable = "disabled";
-                                    $probablity_editable = "readonly"; 
-                                }
-                                else{
-                                     $assumption_editable = "";
-                                     $probablity_editable = "";
-                                }
-                            }
-                            else{
-                                $assumption_editable = "disabled";
-                                $probablity_editable = "readonly";
-                            }
-                               
-                                
-                                
-                            if($senior_lock_data != 0 || !empty($senior_lock_data)){
-                            
-                            if(in_array(1,$senior_lock_data)){                                
-                                $assumption_editable = "disabled";
-                                $probablity_editable = "readonly";
-                            }
-                            
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 1){
-                                $assumption_editable = "disabled";
-                                $probablity_editable = "readonly";
-                            }
-                               
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 0){
-                                $assumption_editable = "";
-                                     $probablity_editable = "";
-                            }
-                        }
-                            else{
-                                $assumption_editable = "";
-                                     $probablity_editable = "";
-                            }
-                                
-                                
-                                
-                               
-                            
-                            if($login_user_highest_level_data == $login_user_id){
-                                 $assumption_editable = "";
-                                     $probablity_editable = "";
-                            }
-                                
-                           */     
-                            
+                             
+                            /*
                                 if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
                            // echo "qqqq";
                                // echo "!".$monthvalue."</br>";
@@ -1207,6 +1056,53 @@ class Esp extends Front_Controller
                                 
                                 $assumption_editable = "";
                                      $probablity_editable = "";
+                            }
+                                */
+                                
+                                
+                            if($login_user_highest_level_data == $login_user_id){
+                                 $assumption_editable = "";
+                                $probablity_editable = "";
+                                
+                              //   echo "aaa".$monthvalue."</br>";
+                            }
+                            else{
+                                if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
+
+                                     $assumption_editable = "disabled";
+                                     $probablity_editable = "readonly";
+                                  //  echo "bbb".$monthvalue."</br>";
+
+                                }
+                                elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
+                                    
+                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
+                                   //     echo "ccc".$monthvalue."</br>";
+                                       // $editable = "";
+                                        
+                                         $assumption_editable = "";
+                                        $probablity_editable = "";
+                                        
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
+                                   //     echo "ddd".$monthvalue."</br>";
+                                        //$editable = "readonly";
+                                        
+                                         $assumption_editable = "disabled";
+                                         $probablity_editable = "readonly";
+                                        
+                                    }
+                                    else{
+                                    //    echo "eee".$monthvalue."</br>";
+                                      //  $editable = "readonly";
+                                        
+                                         $assumption_editable = "disabled";
+                                         $probablity_editable = "readonly";
+                                        
+                                    }
+                                    
+                                    
+                                }
                             }
                                 
                                 
@@ -1275,55 +1171,8 @@ class Esp extends Front_Controller
                                 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
                             
-                          
-                                
-                         /*       if($self_lock_data != 0){
-                               // echo "qqqq";
-                                if($self_lock_data[0]["lock_status"] == 0){
-                                   $assumption_editable = "disabled";
-                                    $probablity_editable = "readonly"; 
-                                }
-                                else{
-                                     $assumption_editable = "";
-                                     $probablity_editable = "";
-                                }
-                            }
-                            else{
-                                $assumption_editable = "disabled";
-                                $probablity_editable = "readonly";
-                            }
-                                
-                            
-                            if($senior_lock_data != 0 || !empty($senior_lock_data)){
-                            
-                            if(in_array(1,$senior_lock_data)){                                
-                                $assumption_editable = "disabled";
-                                $probablity_editable = "readonly";
-                            }
-                            
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 1){
-                                $assumption_editable = "disabled";
-                                $probablity_editable = "readonly";
-                            }
-                               
-                            if($senior_lock_data ==0 && $senior_lock_data[0]["lock_status"] == 0){
-                                $assumption_editable = "";
-                                     $probablity_editable = "";
-                            }
-                        }
-                            else{
-                                $assumption_editable = "";
-                                     $probablity_editable = "";
-                            }
-                          
-                               
-                            
-                            if($login_user_highest_level_data == $login_user_id){
-                                 $assumption_editable = "";
-                                     $probablity_editable = "";
-                            }
-                            */
-                               
+                        
+                            /*   
                                 
                                     if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
                            // echo "qqqq";
@@ -1363,6 +1212,53 @@ class Esp extends Front_Controller
 
                               //  echo "2";
                                 
+                               */ 
+                                
+                                
+                                if($login_user_highest_level_data == $login_user_id){
+                                 $assumption_editable = "";
+                                $probablity_editable = "";
+                                
+                              //   echo "aaa".$monthvalue."</br>";
+                            }
+                            else{
+                                if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
+
+                                     $assumption_editable = "disabled";
+                                     $probablity_editable = "readonly";
+                                  //  echo "bbb".$monthvalue."</br>";
+
+                                }
+                                elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
+                                    
+                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
+                                   //     echo "ccc".$monthvalue."</br>";
+                                       // $editable = "";
+                                        
+                                         $assumption_editable = "";
+                                        $probablity_editable = "";
+                                        
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
+                                   //     echo "ddd".$monthvalue."</br>";
+                                        //$editable = "readonly";
+                                        
+                                         $assumption_editable = "disabled";
+                                         $probablity_editable = "readonly";
+                                        
+                                    }
+                                    else{
+                                    //    echo "eee".$monthvalue."</br>";
+                                      //  $editable = "readonly";
+                                        
+                                         $assumption_editable = "disabled";
+                                         $probablity_editable = "readonly";
+                                        
+                                    }
+                                    
+                                    
+                                }
+                            }
                                 
                                 
 

@@ -87,10 +87,6 @@ $(document).on('click', 'input.order_status', function () {
 
 $(document).on('click', 'div#middle_container .eye_i', function () {
     var id = $(this).attr('prdid');
-
-    $('div#middle_container').find('tr.bg_focus').removeClass();
-    $(this).parents("tr").addClass("bg_focus");
-
     var action_data = $('input.page_function').val();
     var login_customer_type = $("input#login_customer_type" ).val();
     
@@ -122,6 +118,36 @@ $(document).on('click', 'a.update_order_status', function () {
     
     var check_values = [];
     var i = 0;
+   // var j = 1;
+    var check_data = 0;
+    
+   if($("tbody.tbl_body_row tr").length > 0){
+       check_data = 1;
+   }
+       
+    if(check_data == 0){
+        
+         message = 'There is no data to confirm please render some and process further.';
+         $('<div></div>').appendTo('body')
+            .html('<div><b>'+message+'</b></div>')
+            .dialog({
+                appendTo: "#success_file_popup",
+                modal: true,
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: true,
+                close: function (event, ui) {
+                    $(this).remove();
+                   
+                }
+            });
+        
+        return false;
+        
+    }
+    
+    
     $("tbody.tbl_body_row tr td:first-child").each(function( index,element ) {
         
         if ($(this).find("input.order_status").prop('checked')==true){ 
@@ -168,7 +194,7 @@ $(document).on('click', 'a.update_order_status', function () {
     }
     else
     {
-        message = 'Please first check some data.';
+        message = 'Please check some data to confirm.';
          $('<div></div>').appendTo('body')
             .html('<div><b>'+message+'</b></div>')
             .dialog({
