@@ -5212,7 +5212,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id ';
 
        if($action_data==''){
-           $sql = ' , biccs.intrum_quantity  ';
+           $sql .= ' , biccs.intrum_quantity  ';
        }
         $sql .= ' FROM bf_ishop_product_order as bipo ';
         $sql .= '  JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
@@ -5222,10 +5222,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $sql .= ' JOIN bf_ishop_company_current_stock as biccs ON (biccs.product_sku_id = psr.product_sku_id) ';
         }
 
-        $sql .= 'WHERE 1 ';
+        $sql .= ' WHERE 1 ';
 
         $sql .= ' AND bipo.order_id =' . $order_id . ' ';
 
+      // echo $sql;
+//die;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);
             $order_detail = $info->result_array();
@@ -5281,7 +5283,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         } elseif ($action_data == "order_approval") {
                             
-                            $intrum_qty = isset($od['intrum_quantity']) ? $od['intrum_quantity']:"";
+                            $intrum_qty = isset($od['intrum_quantity']) ? $od['intrum_quantity']:"0";
                                 
                             $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit_data, $qty_data, $quantity_kg_ltr, $amount, $intrum_qty, $dispatched_quantity);
 

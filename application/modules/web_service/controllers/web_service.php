@@ -542,6 +542,8 @@ class Web_service extends Front_Controller
         {
             $order_data = $this->ishop_model->get_order_data($role_id,$country_id,null,$user_id,$user_id,$form_date,$to_date,$by_otn,$by_po_no,null,$page_function,$order_status,'web_service');
 
+           // testdata($order_data);
+
             $order_array = array();
             if (!empty($order_data)) {
 
@@ -573,8 +575,8 @@ class Web_service extends Front_Controller
                         $order_status = "op_ackno";
                     }
 
-                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
-
+                    $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,'','web_service');
+//dumpme($order_details);
                     $ord = array(
                         "id" => $order['order_id'],
                         "distributor_code" => $order['f_u_code'],
@@ -588,11 +590,20 @@ class Web_service extends Front_Controller
                     );
                     array_push($order_array, $ord);
                 }
+
+
+                $result['status'] = true;
+                $result['message'] = 'Retrieved Successfully.';
+                $result['data'] = !empty($order_array) ? $order_array : array();
+
+            }
+            else{
+
+                $result['status'] = false;
+                $result['message'] = 'No data found.';
+                $result['data'] = "";
             }
 
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($order_array) ? $order_array : array();
         }
         else
         {
@@ -685,7 +696,7 @@ class Web_service extends Front_Controller
             $radio = null;
         }
 
-        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id))
+        if(isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) )
         {
             if(isset($order_tracking_no) && !empty($order_tracking_no)){
               //  testdata('in');
@@ -756,12 +767,13 @@ class Web_service extends Front_Controller
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
                                 "order_status" => $order_status,
+                                "intrum_quantity" => $order['credit_limit'],
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
                     }
 
-                    if($role_id == 8)
+                    if($role_id == 8 && ($radio != null || $radio != ""))
                     {
                         if($radio == 'farmer')
                         {
@@ -781,7 +793,7 @@ class Web_service extends Front_Controller
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
-                        if($radio == 'retailer')
+                        elseif($radio == 'retailer')
                         {
                             $ord = array(
                                 "id" => $order['order_id'],
@@ -795,8 +807,7 @@ class Web_service extends Front_Controller
                                 "order_status" => $order_status,
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
-                        }
-                        if($radio == 'distributor')
+                        }elseif($radio == 'distributor')
                         {
                             $ord = array(
                                 "id" => $order['order_id'],
@@ -810,6 +821,7 @@ class Web_service extends Front_Controller
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
+
                     }
                     if($role_id == 9)
                     {
@@ -840,18 +852,32 @@ class Web_service extends Front_Controller
                             "details" => !empty($order_details) ? $order_details : array()
                         );
                     }
-                    array_push($order_array, $ord);
+                    //if($role_id == 8 && ($radio != null || $radio != "")) {
+                        array_push($order_array, $ord);
+                   // }
                 }
             }
 
-            $result['status'] = true;
-            $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = !empty($order_array) ? $order_array : array();
+           // if($role_id == 8 && ($radio == null || $radio == "")){
+           //     $result['status'] = false;
+          //      $result['message'] = "All Fields are Required. Please check customer type selected data.";
+           // }
+           // else {
+
+                $result['status'] = true;
+                $result['message'] = 'Retrieved Successfully.';
+                $result['data'] = !empty($order_array) ? $order_array : array();
+          //  }
         }
         else
         {
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";
+
+
+
+
+
         }
         $this->do_json($result);
     }

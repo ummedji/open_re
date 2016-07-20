@@ -20,8 +20,9 @@ $(document).ready(function(){
       autoclose: true
     });
 
-    $(document).on('click', 'div.order_status .eye_i', function () {
-        
+    $(document).on('click', 'div.order_status .eye_i', function (e) {
+
+        e.preventDefault();
         //alert("INNN");
         
         var id = $(this).attr('prdid');
@@ -43,7 +44,9 @@ $(document).ready(function(){
                 
             }
         });
-        
+
+
+
         $("body, html").animate({ 
             scrollTop: $( $(this).attr('href') ).offset().top 
         }, "slow");
