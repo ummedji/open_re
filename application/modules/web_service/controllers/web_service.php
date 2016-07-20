@@ -767,13 +767,13 @@ class Web_service extends Front_Controller
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
                                 "order_status" => $order_status,
-                                "intrum_quantity" => $order['credit_limit'],
+
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
                     }
 
-                    if($role_id == 8 && ($radio != null || $radio != ""))
+                    if($role_id == 8)
                     {
                         if($radio == 'farmer')
                         {
@@ -856,6 +856,17 @@ class Web_service extends Front_Controller
                         array_push($order_array, $ord);
                    // }
                 }
+
+                $result['status'] = true;
+                $result['message'] = 'Retrieved Successfully.';
+                $result['data'] = !empty($order_array) ? $order_array : array();
+
+            }
+            else{
+
+                $result['status'] = false;
+                $result['message'] = "No data found.";
+
             }
 
            // if($role_id == 8 && ($radio == null || $radio == "")){
@@ -864,19 +875,13 @@ class Web_service extends Front_Controller
            // }
            // else {
 
-                $result['status'] = true;
-                $result['message'] = 'Retrieved Successfully.';
-                $result['data'] = !empty($order_array) ? $order_array : array();
+
           //  }
         }
         else
         {
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";
-
-
-
-
 
         }
         $this->do_json($result);
