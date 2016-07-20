@@ -6951,6 +6951,126 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
 
+    public function physical_stock_by_for_report($user_id, $country_id, $role_id, $checked_type = null, $page = null, $web_service = null,$stock_month=null,$local_date = null)
+    {
+        $sql = 'SELECT  bu.display_name,ips.created_on,ips.stock_id,ips.stock_month,ips.quantity,ips.unit,ips.product_sku_id,ips.qty_kgl,mpsc.product_sku_name,mpsr.product_sku_code ';
+        $sql .= 'FROM bf_ishop_physical_stock AS ips ';
+        $sql .= 'LEFT JOIN bf_users AS bu  ON (bu.id = ips.modified_by_user) ';
+        $sql .= 'LEFT JOIN bf_users AS bu1  ON (bu1.id = ips.customer_id) ';
+        $sql .= 'JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ips.product_sku_id) ';
+        $sql .= 'JOIN bf_master_product_sku_regional AS mpsr ON (mpsr.product_sku_id = mpsc.product_sku_id) ';
+        $sql .= 'WHERE 1 ';
+
+        if ($checked_type == "retailer") {
+            $sql .= ' AND bu1.role_id =10 ';
+        }
+        if ($checked_type == "distributor") {
+            $sql .= ' AND bu1.role_id =9 ';
+        }
+        if ($role_id == 10 || $role_id == 9) {
+            $sql .= 'AND ips.customer_id =' . $user_id . ' ';
+        }
+        if($stock_month != null){
+            $sql .= 'AND DATE_FORMAT(ips.stock_month,"%Y-%m") ="'.$stock_month  . '" ';
+        }
+        $sql .= 'AND ips.country_id =' . $country_id . ' ';
+        $sql .= 'ORDER BY ips.stock_id DESC ';
+
+        $pyh_stock_details = $this->grid->get_result_res($sql,true,$page);
+
+        if (isset($pyh_stock_details['result']) && !empty($pyh_stock_details['result'])) {
+            $pyh_stock= array();
+            if ($role_id == 10 || ($role_id == 8 && $checked_type == 'retailer')) {
+
+                $pyh_stock['head'] = array('Sr. No.', 'Month Year', 'Product SKU Code', 'Product SKU Name', 'Quantity', 'Units', 'Qty Kg/Ltr');
+                $i = 1;
+                foreach ($pyh_stock_details['result'] as $rd) {
+                    $month = strtotime($rd['stock_month']);
+                    $month = date('F - Y', $month);
+                    $pyh_stock['row'][] = array($i, $month, $rd['product_sku_code'], $rd['product_sku_name'],  $rd['quantity'], $rd['unit'], $rd['qty_kgl']);
+                    $i++;
+                }
+            } elseif ($role_id == 9 || ($role_id == 8 && $checked_type == 'distributor')) {
+
+                $pyh_stock['head'] = array('Sr. No.', 'Month Year', 'Latest Updated By', 'Entry Date', 'Product SKU Code', 'Product SKU Name', 'Quantity', 'Units', 'Qty Kg/Ltr');
+                $i = 1;
+
+                foreach ($pyh_stock_details['result'] as $rd) {
+                    $month = strtotime($rd['stock_month']);
+                    $month = date('F - Y', $month);
+
+                    if($local_date != null){
+                        $created = strtotime($rd['created_on']);
+                        $created_date = date($local_date, $created);
+                    }
+                    else{
+                        $created_date =  $rd['created_on'];
+                    }
+
+                    $pyh_stock['row'][] = array($i, $month, $rd['display_name'], $created_date, $rd['product_sku_code'], $rd['product_sku_name'], $rd['quantity'], $rd['unit'], $rd['qty_kgl']);
+                    $i++;
+                }
+            }
+
+            return $pyh_stock;
+        }
+        else{
+            return false;
+        }
+
+
+    }
+
+
+    public function invoice_confirm_for_report($invoice_month, $po_no, $invoice_no, $user_id, $country_id, $page = null,$web_service=null)
+    {
+        $sql = 'SELECT * ';
+        $sql .= ' FROM bf_ishop_primary_sales AS ips ';
+        $sql .= 'WHERE 1 ';
+
+        if (isset($invoice_month) && !empty($invoice_month) && $invoice_month != '') {
+            $sql .= 'AND DATE_FORMAT(ips.invoice_date,"%Y-%m") =' . "'" . $invoice_month . "'" . ' ';
+        }
+        if (isset($po_no) && !empty($po_no) && $po_no != '') {
+            $sql .= 'AND ips.PO_no =' . $po_no . ' ';
+        }
+        if (isset($invoice_no) && !empty($invoice_no) && $invoice_no != '') {
+            $sql .= 'AND ips.invoice_no =' . $invoice_no . ' ';
+        }
+        $sql .= " AND ips.country_id= " . $country_id . " ";
+        $sql .= " AND ips.customer_id= " . $user_id . " ";
+        $sql .= " AND ips.invoice_recived_status = 0 ";
+        $sql .= " AND ips.status = 1 ";
+
+        $invoice_confirmation = $this->grid->get_result_res($sql,true,$page);
+
+        if (isset($invoice_confirmation['result']) && !empty($invoice_confirmation['result'])) {
+
+            $i = 1;
+
+            $invoice_confirmation_view['head'] = array('Sr. No.', 'PO No.', 'OTN', 'Invoice No.', 'Invoice Value', 'Received');
+
+            foreach ($invoice_confirmation['result'] as $ic) {
+
+                if ($ic['invoice_recived_status'] == '0') {
+                    $received_status = 'Pending';
+                } else {
+                    $received_status = 'Confirm';
+                }
+                $invoice_confirmation_view['row'][] = array($i, $ic['PO_no'], $ic['order_tracking_no'], $ic['invoice_no'], $ic['total_amount'], $received_status);
+                $i++;
+            }
+            return $invoice_confirmation_view;
+
+        }
+        else{
+            return false;
+        }
+
+    }
+
+
+
 
 
 }

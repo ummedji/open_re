@@ -102,3 +102,16 @@ $(document).on('click', 'div.middle_container_received .eye_i', function () {
 });
 /*Get Product Data*/
 
+
+$('#download_csv').on('click',function(){
+
+    var param = $("#invoice_confirmation").serialize();
+
+    var export_url = site_url + "ishop/invoice_confirm_details_csv_report?" + param+"&page="+$("input#page").val();
+
+    window.location.href = export_url;
+
+    return false;
+
+});
+

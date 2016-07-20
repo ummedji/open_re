@@ -197,9 +197,13 @@ $(document).on("click","button.freeze_data",function(e){
     
     e.preventDefault();
 
+    var parent_data = $(this).parent();
+
     var forecast_id = $("input#forecast_id").val();
     var text_data = $(this).text();
-    
+
+    var pbg_id = $("select.pbg_data").val();
+
    // var freeze_date = $("select#selected_month_data").val();
 
     var freeze_date = $(this).attr("rel");
@@ -328,17 +332,24 @@ $(document).on("click","button.freeze_data",function(e){
                 if(resp == 1){
 
                     if(text_data == "Freeze"){
-                        $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
+                      //  $("div#freeze_area").html('<button rel ="'+freezedate+'" type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
+
+                        parent_data.html('<button rel ="'+freeze_date+'" type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
 
                          message += 'Data freezed successfully.';
 
+                        get_pbg_product_sku_data(pbg_id);
+
                     }
                     else{
-                        $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
+                     //   $("div#freeze_area").html('<button rel ="'+freezedate+'" type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
+
+                        parent_data.html('<button rel ="'+freeze_date+'" type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
 
                          message += 'Data Unfreezed successfully.';
-                        
-                        
+
+                        get_pbg_product_sku_data(pbg_id);
+
                         $("input.forecast_qty").removeAttr("readonly");
                         $("select.assumption_data").removeAttr("disabled");
                         $("input.probablity_data").removeAttr("readonly");
@@ -407,7 +418,7 @@ $(document).on("click","a.lock_data",function(){
        
     var pbg_id = $("select.pbg_data").val();
     
-     alert(parent_data.parent().parent().html());
+    // alert(parent_data.parent().parent().html());
     
     $.ajax({
         type: 'POST',

@@ -68,10 +68,10 @@ echo form_open('esp/add_forecast',$attributes); ?>
 <div class="col-md-12">
     <div class="row">
         <div class="middle_form">
-            <div class="row" id="middle_filter">
+         <!--   <div class="row" id="middle_filter">
                 
                
-            </div>
+            </div> -->
             <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>

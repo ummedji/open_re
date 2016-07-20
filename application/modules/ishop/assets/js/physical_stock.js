@@ -774,5 +774,15 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
     return false;
 });
 
+$('#download_csv').on('click',function(){
 
+    var param = $("#add_physical_stock").serialize();
+
+    var export_url = site_url + "ishop/physical_stock_details_csv_report?" + param+"&page="+$("input#page").val();
+
+    window.location.href = export_url;
+
+    return false;
+
+});
 
