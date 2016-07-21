@@ -54,7 +54,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                         <!--<div class="col-md-4 col-sm-6 tp_form">-->
                             <div class="form-group">
                                 <label>Geo Level 2<span style="color: red">*</span></label>
-                                <select class="selectpicker" name="territory" id="geo_level_1" data-live-search="true">
+                                <select class="selectpicker" name="territory" id="geo_level_1" data-live-search="true" required>
                                     <option value="">Select Geo Location</option>
                                     <?php
                                     if(isset($geo_data) && !empty($geo_data))

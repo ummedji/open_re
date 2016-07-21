@@ -2565,8 +2565,8 @@ class Web_service extends Front_Controller
 
                 $final_array = array();
 
-                $final_array["target_data"]["month_data"] = "";
-                $final_array["target_data"]["data"] = "";
+                $final_array["target_data"]["month_data"] = array();
+                $final_array["target_data"]["data"] = array();
 
                 if(!empty($target_data) && !empty($target_month_data)){
 

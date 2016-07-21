@@ -61,9 +61,9 @@ $(document).ready(function(){
             year:{
                 required: true
             },
-            territory:{
+           /* territory:{
                 required: true
-            }
+            }*/
         }
     });
 

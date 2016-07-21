@@ -97,10 +97,9 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
 
 $(document).on('click', '.eye_i', function () {
 
-    alert('in');
     var id = $(this).attr('prdid');
 
-    $('div.po_acknowledgement').find('tr.bg_focus').removeClass();
+    $('div.report-box').find('tr.bg_focus').removeClass();
     $(this).parents("tr").addClass("bg_focus");
 
     var action_data = $('input.page_function').val();

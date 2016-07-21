@@ -4875,7 +4875,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
 
                             foreach ($orderdata['result'] as $od) {
-                                
+
                                 if ($od['read_status'] == 0) {
                                     $order_status = "Unread";
                                 } elseif ($od['read_status'] == 1) {
@@ -5594,6 +5594,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     public function update_order_detail_data($detail_data, $web_service = null)
     {
 
+
+       // testdata($_POST);
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $detail_data["order_product_id"] = explode(',', $detail_data["order_product_id"]);
             $detail_data["dispatched_quantity"] = explode(',', $detail_data["dispatched_quantity"]);
