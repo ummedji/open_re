@@ -1008,8 +1008,20 @@ class Ishop_model extends BF_Model
 
                     $rol['count'] = count($rol['head']);
                     foreach ($rol_details['result'] as $rd) {
+                        if($rd['units']=='packages')
+                        {
+                            $unit ='Packages';
+                        }
+                        elseif($rd['units']=='box')
+                        {
+                            $unit ='Box';
+                        }
+                        else{
+                            $unit ='Kg/Ltr';
+                        }
+
                         $product_sku_id = '<div class="prd_' . $rd["rol_id"] . '"><span class="prd_sku" style="display:none;" >' . $rd['product_sku_id'] . '</span></div>';
-                        $units = $product_sku_id . '<div class="units_' . $rd["rol_id"] . '"><span class="units">' . $rd['units'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $rd["rol_id"] . '"><span class="units">' . $unit . '</span></div>';
                         $rol_quantity = '<div class="rol_quantity_' . $rd["rol_id"] . '"><span class="rol_quantity">' . $rd['rol_quantity'] . '</span></div>';
                         $rol_quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $rd["rol_id"] . '"><span class="rol_quantity_kg_ltr">' . $rd['rol_quantity_Kg_Ltr'] . '</span></div>';
 
@@ -1033,8 +1045,19 @@ class Ishop_model extends BF_Model
                         $i = 1;
                     }
                     foreach ($rol_details['result'] as $rd) {
+                        if($rd['units']=='packages')
+                        {
+                            $unit ='Packages';
+                        }
+                        elseif($rd['units']=='box')
+                        {
+                            $unit ='Box';
+                        }
+                        else{
+                            $unit ='Kg/Ltr';
+                        }
                         $product_sku_id = '<div class="prd_' . $rd["rol_id"] . '"><span class="prd_sku" style="display:none;">' . $rd['product_sku_id'] . '</span></div>';
-                        $units = $product_sku_id . '<div class="units_' . $rd["rol_id"] . '"><span class="units">' . $rd['units'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $rd["rol_id"] . '"><span class="units">' . $unit . '</span></div>';
 
                         $rol_quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $rd["rol_id"] . '"><span class="rol_quantity_kg_ltr">' . $rd['rol_quantity_Kg_Ltr'] . '</span></div>';
 
@@ -4845,7 +4868,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "op_ackno";
+                                $order_status = "OP_Ackno";
                             }
 
                             $order_data = '<input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input id="check_data_' . $od['order_id'] . '" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
@@ -4923,7 +4946,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 } elseif ($od['order_status'] == 3) {
                                     $order_status = "Rejected";
                                 } elseif ($od['order_status'] == 4) {
-                                    $order_status = "op_ackno";
+                                    $order_status = "OP_Ackno";
                                 }
 
                                 $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -4935,11 +4958,23 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                     $t= date('g:i a',$time);
 
                                     $order_datetime = $order_date.' '.$t;
+
+                                    if(!empty($od["estimated_delivery_date"]))
+                                    {
+                                        $date1 = strtotime($od["estimated_delivery_date"]);
+                                        $estimated_date =  date($local_date,$date1);
+                                    }
+                                    else{
+                                        $estimated_date='';
+                                    }
+
                                 }
                                 else{
                                     $order_datetime = $od['order_date'];
+                                    $estimated_date =$od["estimated_delivery_date"];
+
                                 }
-                                $order_view['row'][] = array($i, $od['order_id'],$order_datetime, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                                $order_view['row'][] = array($i, $od['order_id'],$order_datetime, $od['PO_no'], $otn, $estimated_date, $od['total_amount'], $od['display_name'], $order_status);
                                 $i++;
 
 
@@ -4992,7 +5027,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($od['order_status'] == 3) {
                             $order_status = "Rejected";
                         } elseif ($od['order_status'] == 4) {
-                            $order_status = "op_ackno";
+                            $order_status = "OP_Ackno";
                         }
 
 
@@ -5040,8 +5075,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                                 $order_datetime = $order_date.' '.$t;
 
-                                $date1 = strtotime($od["estimated_delivery_date"]);
-                               $estimated_date =  date($local_date,$date1);
+                                if(!empty($od["estimated_delivery_date"]))
+                                {
+                                    $date1 = strtotime($od["estimated_delivery_date"]);
+                                    $estimated_date =  date($local_date,$date1);
+                                }
+                                else{
+
+                                    $estimated_date = '';
+                                }
+
 
                             }
                             else{
@@ -5085,7 +5128,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "op_ackno";
+                                $order_status = "OP_Ackno";
                             }
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' ."'".trim($od['PO_no'])."'". ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -5101,11 +5144,14 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                                 $order_datetime = $order_date.' '.$t;
 
-                                $date1 = strtotime($od["estimated_delivery_date"]);
-                                $estimated_date =  date($local_date,$date1);
-
-
-
+                                if(!empty($od["estimated_delivery_date"]))
+                                {
+                                    $date1 = strtotime($od["estimated_delivery_date"]);
+                                    $estimated_date =  date($local_date,$date1);
+                                }
+                                else{
+                                    $estimated_date = '';
+                                }
                             }
                             else{
                                 $order_datetime = $od['order_date'];

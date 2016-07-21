@@ -2921,6 +2921,10 @@ foreach($month_data as $monthkey => $monthvalue){
             $budget_id = "";
 
 
+            $freeze_child_forecast_array = array();
+
+            $freeze_child_flag = 0;
+
 
             foreach($pbg_sku_data as $skukey => $skuvalue){
                 $html .= '<tr>';
@@ -2970,7 +2974,8 @@ foreach($month_data as $monthkey => $monthvalue){
                     $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id,$login_user_id);
 
                     $child_user_data = $this->esp_model->get_user_selected_level_data($login_user_id,null);
-
+                    echo $login_user_id;
+                    dumpme($child_user_data);
                     $child_forecast_array = array();
 
                     $child_flag = 0;
@@ -2980,16 +2985,23 @@ foreach($month_data as $monthkey => $monthvalue){
 
                         $user_data = explode(",",$child_user_data["level_users"]);
 
-                        foreach($user_data as $user_key => $userdata){
-                            $child_forecast_data = $this->esp_model->get_budget_freeze_status($budget_id,$userdata);
 
-                            if($child_forecast_data != 0 && $child_forecast_data["freeze_status"] == 1)
-                                $child_forecast_array[] = $child_forecast_data;
 
+                        if(!empty($user_data)){
+                            foreach ($user_data as $user_key => $userdata) {
+                                $child_forecast_data = $this->esp_model->get_budget_freeze_status($budget_id, $userdata);
+
+                                if ($child_forecast_data != 0 && $child_forecast_data["freeze_status"] == 1)
+                                    $child_forecast_array[] = $child_forecast_data;
+                                    $freeze_child_forecast_array[] = $child_forecast_data;
+
+                            }
                         }
                     }
 
                     $child_forecast_array = array_filter($child_forecast_array);
+
+                  //  dumpme($freeze_child_forecast_array);
 
                     if(count($child_forecast_array) > 0){
                         $child_flag = 1;
@@ -3485,49 +3497,76 @@ foreach($month_data as $monthkey => $monthvalue){
 
             */
 
-            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
+                  $freeze_child_forecast_array = array_filter($freeze_child_forecast_array);
+
+                dumpme($freeze_child_forecast_array);
+
+            //      if(count($freeze_child_forecast_array) > 0){
+            //          $freeze_child_flag = 1;
+            //      }
+
+//testdata($freeze_child_forecast_array);
+//	if($freeze_child_flag != 1) {
+
+            //      $freeze_button = '';
+            //   $freeze_button_data = "";
+
+            //  }
+
+
+
+
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze1111</button></div>';
 
             $budget_freeze_data2 = $this->esp_model->get_budget_freeze_history_user_status_data($login_user_id,$budget_id);
 
-           // testdata($budget_freeze_data2);
+            //testdata($budget_freeze_data2);
 
-            if($budget_freeze_data2 != 0){
+            if(!empty($budget_freeze_data2)){
         if(!empty($budget_freeze_data2) && $budget_freeze_data2[0]["freeze_status"] == 0){
-            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze2222</button></div>';
 
 
             $freeze_button_data = 1;
 
         }
         else{
-            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Unfreeze</button></div>';
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Unfreeze3333</button></div>';
 
             $freeze_button_data = 0;
 
         }
     }else{
-        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
+        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze4444</button></div>';
 
         $freeze_button_data = 1;
 
     }
 
-           echo $login_user_highest_level_data." == ".$login_user_id;die;
+           //echo $login_user_highest_level_data." == ".$login_user_id;die;
 
 
             if($login_user_highest_level_data == $login_user_id){
-                $freeze_button = '';
+                $freeze_button = '5555';
             //    $freeze_button_data = "";
             }
 
 
+      //      $freeze_child_forecast_array = array_filter($freeze_child_forecast_array);
 
-	if($child_flag != 1) {
+            //    dumpme($child_forecast_array);
 
-        $freeze_button = '';
+      //      if(count($freeze_child_forecast_array) > 0){
+      //          $freeze_child_flag = 1;
+      //      }
+
+//testdata($freeze_child_forecast_array);
+//	if($freeze_child_flag != 1) {
+
+  //      $freeze_button = '';
      //   $freeze_button_data = "";
 
-    }
+  //  }
 
 
 			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){

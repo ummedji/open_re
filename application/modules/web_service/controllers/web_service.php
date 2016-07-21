@@ -589,7 +589,7 @@ class Web_service extends Front_Controller
                     array_push($order_array, $ord);
                 }
             }
-            
+
 
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
