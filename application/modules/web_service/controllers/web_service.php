@@ -4201,38 +4201,43 @@ class Web_service extends Front_Controller
             
             $check_month_data_locked = modules::run('esp/esp/get_forecast_lock_status', $data);
 		
-            if($check_month_data_locked != 1){
-            
-                $forecast_freeze_data = modules::run('esp/esp/update_forecast_freeze_status', $data);
+            if($check_month_data_locked != 1) {
 
-                if(!empty($forecast_freeze_data))
-                {
-                    if($forecast_freeze_data == 1){
+                $self_lock_data = $this->esp_model->get_senior_lock_status_data($user_id, $month_data, $forecast_id);
 
-                        if($freeze_status == 1){
-                            $freeze_status = 0;
+                if ($self_lock_data[0]["lock_status"] == 1){
+                    $forecast_freeze_data = modules::run('esp/esp/update_forecast_freeze_status', $data);
+
+                    if (!empty($forecast_freeze_data)) {
+                        if ($forecast_freeze_data == 1) {
+
+                            if ($freeze_status == 1) {
+                                $freeze_status = 0;
+                            } else {
+                                $freeze_status = 1;
+                            }
+
                         }
-                        else
-                        {
-                            $freeze_status = 1;
-                        }
 
+                        $result['status'] = true;
+                        $result['message'] = 'Successfull';
+                        $result['data'] = $freeze_status;
+                    } else {
+                        $result['status'] = false;
+                        $result['message'] = 'No data found';
+                        $result['data'] = "";
                     }
-
-                    $result['status'] = true;
-                    $result['message'] = 'Successfull';
-                    $result['data'] = $freeze_status;
                 }
-                else
-                {
+                else{
                     $result['status'] = false;
-                    $result['message'] = 'No data found';
+                    $result['message'] = 'Please Lock first and than process further.';
                     $result['data'] = "";
                 }
 
 
             }
-            else{
+            else
+            {
                 
                 $result['status'] = false;
                 $result['message'] = 'Selected months are locked by Senior employees.So No data is Freeze or unfreezed';
@@ -4544,36 +4549,42 @@ class Web_service extends Front_Controller
 			 );
             
             
-                
-            $budget_lock_data = modules::run('esp/esp/get_budget_lock_status', $data);            
+        $budget_lock_data = modules::run('esp/esp/get_budget_lock_status', $data);
 
-		if($budget_lock_data != 1){
-            
-                $budget_freeze_data = modules::run('esp/esp/update_budget_freeze_status', $data);
+		if($budget_lock_data != 1) {
 
-                if(!empty($budget_freeze_data))
-                {
-                    if($budget_freeze_data == 1){
+                $selef_lock_status = modules::run('esp/esp/get_self_budget_lock_status', $data);
 
-                        if($freeze_status == 1){
-                            $freeze_status = 0;
+                if ($selef_lock_status == 1){
+
+                    $budget_freeze_data = modules::run('esp/esp/update_budget_freeze_status', $data);
+
+                    if (!empty($budget_freeze_data)) {
+                        if ($budget_freeze_data == 1) {
+
+                            if ($freeze_status == 1) {
+                                $freeze_status = 0;
+                            } else {
+                                $freeze_status = 1;
+                            }
+
                         }
-                        else
-                        {
-                            $freeze_status = 1;
-                        }
 
+                        $result['status'] = true;
+                        $result['message'] = 'Successfull';
+                        $result['data'] = $freeze_status;
+                    } else {
+                        $result['status'] = false;
+                        $result['message'] = 'No data found';
+                        $result['data'] = "";
                     }
-
-                    $result['status'] = true;
-                    $result['message'] = 'Successfull';
-                    $result['data'] = $freeze_status;
                 }
-                else
-                {
+                else{
+
                     $result['status'] = false;
-                    $result['message'] = 'No data found';
-                    $result['data'] = "";
+                    $result['message'] = 'Please lock data first than process further.';
+                    $result['data'] = array();
+
                 }
             }
             else{

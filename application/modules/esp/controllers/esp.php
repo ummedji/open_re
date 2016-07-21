@@ -1706,6 +1706,54 @@ class Esp extends Front_Controller
         die;
         
     }
+
+
+    public function check_budget_login_user_lock_status(){
+
+        $user = $this->auth->user();
+        $login_user_id = $user->id;
+
+        $yeardata =   $_POST["yeardata"];
+        $budget_id = $_POST["budgetid"];
+
+        $from_month = $_POST["yeardata"]."-01-01";
+        $to_month = $_POST["yeardata"]."-12-01";
+
+        $month_data = $this->get_monthly_data($from_month,$to_month);
+
+        $lock_array = array();
+
+        //   foreach($freeze_date as $freeze_key => $freeze_date_data){
+
+        //  $freeze_data = $this->esp_model->update_forecast_freeze_status_data($user_id,$forecast_id,$text_data,$freeze_date_data);
+
+        foreach($month_data as $month_key=>$monthvalue) {
+
+            $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id, $monthvalue, $budget_id);
+
+            if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] != 0) {
+                $lock_array[] = $self_lock_data[0]["lock_status"];
+            }
+        }
+
+        //    }
+
+
+
+
+        if(!empty($lock_array)){
+
+            $res = 1;
+
+        }
+        else{
+            $res = 0;
+        }
+
+        echo $res;
+        die;
+
+    }
     
     public function check_login_user_level_status(){
         
@@ -2417,6 +2465,7 @@ class Esp extends Front_Controller
        // die;
         $final_lock_array = array();
 
+     //   $header_final_array["lockdata"] = 1;
 
         /*
 		if($lock_show_data != 0){
@@ -2697,8 +2746,8 @@ foreach($month_data as $monthkey => $monthvalue){
 
             // $nonclickable = 1;
 
-            //$header_final_array[$monthvalue]["lockdata"] = 1;
-            //$header_final_array[$monthvalue]["clickable"] = 0;
+            $final_lock_array["lockdata"] = 1;
+            $final_lock_array["clickable"] = 0;
 
             //  $lock_data = "lock";
 
@@ -2729,6 +2778,9 @@ foreach($month_data as $monthkey => $monthvalue){
                     //  $header_final_array[$monthvalue]['lockdata'] = 1;
 
 
+                    $final_lock_array["lockdata"] = 1;
+                    $final_lock_array["clickable"] = 1;
+
                     //$header_final_array[$monthvalue]["lockdata"] = 1;
                     //$header_final_array[$monthvalue]["clickable"] = 1;
 
@@ -2742,12 +2794,19 @@ foreach($month_data as $monthkey => $monthvalue){
 
                         //$header_final_array[$monthvalue]['lockdata'] = 0;
 
+
+                        $final_lock_array["lockdata"] = 0;
+                        $final_lock_array["clickable"] = 1;
+
                         // $header_final_array[$monthvalue]["lockdata"] = 0;
                         // $header_final_array[$monthvalue]["clickable"] = 1;
 
                     } else {
 
                         $lock_data = "rrrr";
+
+                        $final_lock_array["lockdata"] = "";
+                        $final_lock_array["clickable"] = "";
 
                         //$header_final_array[$monthvalue]['lockdata'] = 0;
 
@@ -2770,6 +2829,9 @@ foreach($month_data as $monthkey => $monthvalue){
 
                     $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />mmmmm</a></div>";
 
+                    $final_lock_array["lockdata"] = 0;
+                    $final_lock_array["clickable"] = 1;
+
                     //$header_final_array[$monthvalue]['lockdata'] = 0;
 
                     //	$header_final_array[$monthvalue]["lockdata"] = 0;
@@ -2780,6 +2842,8 @@ foreach($month_data as $monthkey => $monthvalue){
                     //	$header_final_array[$monthvalue]["lockdata"] = "";
                     //	$header_final_array[$monthvalue]["clickable"] = "";
 
+                    $final_lock_array["lockdata"] = "";
+                    $final_lock_array["clickable"] = "";
 
                     //	$freeze_button = '';
                     //	$freeze_button_data = "";
@@ -2932,13 +2996,13 @@ foreach($month_data as $monthkey => $monthvalue){
 
                 $l = 1;
 
-                foreach($month_data as $monthkey => $monthvalue){
+                foreach($month_data as $monthkey => $monthvalue) {
 
-                    $time=strtotime($monthvalue);
-                    $month=date("F",$time);
-                    $year=date("Y",$time);
+                    $time = strtotime($monthvalue);
+                    $month = date("F", $time);
+                    $year = date("Y", $time);
 
-                    $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+                    $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($businesscode, $skuvalue['product_sku_country_id'], $monthvalue);
 
                     $budget_qty = "";
                     $budget_value = "";
@@ -2949,7 +3013,7 @@ foreach($month_data as $monthkey => $monthvalue){
                     //    echo "<pre>";
                     //    print_r($employee_month_product_forecast_data);
 
-                    if($employee_month_product_budget_data != 0){
+                    if ($employee_month_product_budget_data != 0) {
 
                         $budget_qty = $employee_month_product_budget_data[0]['budget_quantity'];
                         $budget_value = $employee_month_product_budget_data[0]['budget_value'];
@@ -2964,49 +3028,53 @@ foreach($month_data as $monthkey => $monthvalue){
                     }
 
 
-                    if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                    if (isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])) {
                         $data_inner_array = array();
                     }
 
 
                     //$forecast_freeze_data = $this->esp_model->get_forecast_freeze_status($forecast_id,$login_user_id,$monthvalue);
 
-                    $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id,$login_user_id);
+                    $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id, $login_user_id);
 
-                    $child_user_data = $this->esp_model->get_user_selected_level_data($login_user_id,null);
-                    echo $login_user_id;
-                    dumpme($child_user_data);
+                    $child_user_data = $this->esp_model->get_user_selected_level_data($login_user_id, null);
+                    //    echo $login_user_id;
+                    //    dumpme($child_user_data);
                     $child_forecast_array = array();
 
                     $child_flag = 0;
 
 
-                    if(!empty($child_user_data["level_users"])){
+                    if (!empty($child_user_data["level_users"])) {
 
-                        $user_data = explode(",",$child_user_data["level_users"]);
+                        $user_data = explode(",", $child_user_data["level_users"]);
 
-
-
-                        if(!empty($user_data)){
+                        if (!empty($user_data)) {
                             foreach ($user_data as $user_key => $userdata) {
                                 $child_forecast_data = $this->esp_model->get_budget_freeze_status($budget_id, $userdata);
 
                                 if ($child_forecast_data != 0 && $child_forecast_data["freeze_status"] == 1)
                                     $child_forecast_array[] = $child_forecast_data;
-                                    $freeze_child_forecast_array[] = $child_forecast_data;
+                                $freeze_child_forecast_array[] = $child_forecast_data;
 
                             }
                         }
                     }
 
-                    $child_forecast_array = array_filter($child_forecast_array);
 
-                  //  dumpme($freeze_child_forecast_array);
+                    $child_user_data2 = $this->esp_model->get_user_selected_level_data($login_user_id, null);
 
-                    if(count($child_forecast_array) > 0){
+                    //  testdata($child_user_data1);
+                if ($child_user_data2["level_users"] != ""){
+
+                        $child_forecast_array = array_filter($child_forecast_array);
+
+                    //  dumpme($freeze_child_forecast_array);
+
+                    if (count($child_forecast_array) > 0) {
                         $child_flag = 1;
                     }
-
+                }
                     //GET ANY SENIOR USER LOCKED OR NOT DATA
 
                     /*   $senior_lock_data = array();
@@ -3030,19 +3098,20 @@ foreach($month_data as $monthkey => $monthvalue){
 
                        */
 
-
+                 //   dumpme($budget_freeze_data);
                     //CHECK DATA FREEZED OR NOT
 
 
                     if($budget_freeze_data != 0 || $child_flag == 1){
 
                         // echo "UMMED";
-                        //    dumpme($forecast_freeze_data);
+                      //      dumpme($budget_freeze_data);
                         //     echo $monthvalue."===".$forecast_freeze_data["created_by_user"]." ==". $login_user_id;
 
-                        if($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["created_by_user"] == $login_user_id){
+                      //  if($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["created_by_user"] == $login_user_id){
 
 
+                            if($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["freeze_status"] == 0){
                             //SHOW DATA
 
                             echo "1";
@@ -3077,7 +3146,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
                             $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id,$monthvalue,$budget_id);
 
-                            // dumpme($self_lock_data);
+                         //    dumpme($senior_lock_data);
 
                             if($login_user_highest_level_data == $login_user_id){
                                 $editable = "";
@@ -3103,10 +3172,10 @@ foreach($month_data as $monthkey => $monthvalue){
 
                                         $editable = "readonly";
                                     }
-                                    elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0){
+                                 //   elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0){
                                         //    echo "fff".$monthvalue."</br>";
-                                        $editable = "";
-                                    }
+                                 //       $editable = "";
+                                 //   }
                                     else{
                                         //   echo "eee".$monthvalue."</br>";
                                         $editable = "readonly";
@@ -3115,24 +3184,7 @@ foreach($month_data as $monthkey => $monthvalue){
                             }
 
 
-                            //    if($forecast_freeze_data["freeze_status"] == 0){
 
-                            //    }
-
-
-                            /*
-                               $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
-
-                               $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
-
-                                 if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
-                                       $data_inner_array["forecast_qty"] = $forecast_qty;
-                                       $data_inner_array["forecast_value"] = $forecast_value;
-
-                                       $data_inner_array["editable"] = $editable;
-                                 }
-
-                                */
 
                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.' /></td>';
 
@@ -3151,91 +3203,6 @@ foreach($month_data as $monthkey => $monthvalue){
                         {
 
                             echo "2";
-                            /*
-
-                            $editable = "";
-
-
-                             $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
-
-                             $locked_user_parent_data = $this->esp_model->get_freeze_user_parent_data($lock_by_id);
-                                  //   dumpme($locked_user_parent_data);
-
-
-                             $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
-
-                             $highest_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_highest_level_data,$monthvalue,$forecast_id);
-
-                             $logib_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
-
-
-                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
-
-                              if(!empty($login_user_all_parent_data)){
-                                 foreach($login_user_all_parent_data as $parent_key => $parentid){
-                                     $get_senioruser_lock_status = $this->esp_model->senior_forecast_lock_status($parentid,$forecast_id,$monthvalue);
-                                     if(!empty($get_senioruser_lock_status) || $get_senioruser_lock_status != 0){
-                                         if($get_senioruser_lock_status[0]["lock_status"] == 1){
-                                             $senior_lock_data[] = 1;
-                                         }
-                                     }
-
-                                 }
-                             }
-
-
-
-                              if($login_user_highest_level_data == $login_user_id){
-                                 $editable = "";
-
-                               //   echo "aaa".$monthvalue."</br>";
-                             }
-                             else{
-                                 if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
-
-                                     $editable = "readonly";
-                                   //  echo "bbb".$monthvalue."</br>";
-
-                                 }
-                                 elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
-
-                                     if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
-                                    //     echo "ccc".$monthvalue."</br>";
-                                         $editable = "";
-                                     }
-                                     elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
-                                    //     echo "ddd".$monthvalue."</br>";
-                                         $editable = "readonly";
-                                     }
-                                     elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
-                                         //    echo "fff".$monthvalue."</br>";
-                                         $editable = "";
-                                     }
-                                     else{
-                                     //    echo "eee".$monthvalue."</br>";
-                                         $editable = "readonly";
-                                     }
-
-
-                                 }
-                             }
-
-
-
-                             //SHOW DATA
-
-                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
-
-                             $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
-
-                               if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
-                                     $data_inner_array["forecast_qty"] = $forecast_qty;
-                                     $data_inner_array["forecast_value"] = $forecast_value;
-
-                                     $data_inner_array["editable"] = $editable;
-                               }
-
-                           */
 
 
                             $editable = "";
@@ -3294,10 +3261,10 @@ foreach($month_data as $monthkey => $monthvalue){
 
                                         $editable = "readonly";
                                     }
-                                    elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0){
+                                  //  elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0){
                                         //    echo "fff".$monthvalue."</br>";
-                                        $editable = "";
-                                    }
+                                  //      $editable = "";
+                                 //   }
                                     else{
                                         //   echo "eee".$monthvalue."</br>";
                                         $editable = "readonly";
@@ -3306,24 +3273,6 @@ foreach($month_data as $monthkey => $monthvalue){
                             }
 
 
-                            //    if($forecast_freeze_data["freeze_status"] == 0){
-
-                            //    }
-
-
-                            /*
-                               $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
-
-                               $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
-
-                                 if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
-                                       $data_inner_array["forecast_qty"] = $forecast_qty;
-                                       $data_inner_array["forecast_value"] = $forecast_value;
-
-                                       $data_inner_array["editable"] = $editable;
-                                 }
-
-                                */
 
                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.' /></td>';
 
@@ -3393,6 +3342,8 @@ foreach($month_data as $monthkey => $monthvalue){
 
                            */
 
+                            $editable = "";
+
 
                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.'  /></td>';
 
@@ -3461,62 +3412,12 @@ foreach($month_data as $monthkey => $monthvalue){
        $html .= '</table>';
 
             $freeze_button = "";
-            $freeze_button_data = 0;
-			
-         /*   if($login_user_parent_data != 0){
-                	
-                $freeze_show = 1;
-				
-                $freeze_history_user_status_data = $this->esp_model->get_budget_freeze_history_user_status_data($login_user_id,$budget_id);
-                
-                if(!empty($freeze_history_user_status_data) && isset($freeze_history_user_status_data[0]['freeze_status'])){
-                    
-                
-                    if($freeze_history_user_status_data[0]['freeze_status'] == 0){
-                    
-						$freeze_status = 0;
-						
-                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
-                    }
-                    else{
-                    	$freeze_status = 1;
-						
-                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
-                    }
-                    
-                }
-                else{
-                    $freeze_status = 0;
-                    $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
-                    
-                }
-            }
-			else{
-				$freeze_show = 0;
-			}
-
-            */
-
-                  $freeze_child_forecast_array = array_filter($freeze_child_forecast_array);
-
-                dumpme($freeze_child_forecast_array);
-
-            //      if(count($freeze_child_forecast_array) > 0){
-            //          $freeze_child_flag = 1;
-            //      }
-
-//testdata($freeze_child_forecast_array);
-//	if($freeze_child_flag != 1) {
-
-            //      $freeze_button = '';
-            //   $freeze_button_data = "";
-
-            //  }
 
 
 
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
 
-            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze1111</button></div>';
+            $freeze_button_data = "1";
 
             $budget_freeze_data2 = $this->esp_model->get_budget_freeze_history_user_status_data($login_user_id,$budget_id);
 
@@ -3524,20 +3425,20 @@ foreach($month_data as $monthkey => $monthvalue){
 
             if(!empty($budget_freeze_data2)){
         if(!empty($budget_freeze_data2) && $budget_freeze_data2[0]["freeze_status"] == 0){
-            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze2222</button></div>';
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
 
 
             $freeze_button_data = 1;
 
         }
         else{
-            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Unfreeze3333</button></div>';
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Unfreeze</button></div>';
 
             $freeze_button_data = 0;
 
         }
     }else{
-        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze4444</button></div>';
+        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
 
         $freeze_button_data = 1;
 
@@ -3547,26 +3448,32 @@ foreach($month_data as $monthkey => $monthvalue){
 
 
             if($login_user_highest_level_data == $login_user_id){
-                $freeze_button = '5555';
-            //    $freeze_button_data = "";
+                $freeze_button = '';
+                $freeze_button_data = "";
             }
 
 
-      //      $freeze_child_forecast_array = array_filter($freeze_child_forecast_array);
+            $child_user_data1 = $this->esp_model->get_user_selected_level_data($login_user_id,null);
 
-            //    dumpme($child_forecast_array);
+          //  testdata($child_user_data1);
 
-      //      if(count($freeze_child_forecast_array) > 0){
-      //          $freeze_child_flag = 1;
-      //      }
+            if($child_user_data1["level_users"] != "") {
 
-//testdata($freeze_child_forecast_array);
-//	if($freeze_child_flag != 1) {
 
-  //      $freeze_button = '';
-     //   $freeze_button_data = "";
+                $freeze_child_forecast_array = array_filter($freeze_child_forecast_array);
+                //   dumpme($freeze_child_forecast_array);
 
-  //  }
+                if(count($freeze_child_forecast_array) > 0){
+                    $freeze_child_flag = 1;
+                }
+
+
+                if ($freeze_child_flag != 1) {
+                    $freeze_button = '';
+                    $freeze_button_data = "";
+                }
+            }
+
 
 
 			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
@@ -3577,8 +3484,8 @@ foreach($month_data as $monthkey => $monthvalue){
 				
 				$final_array["budget_data"] = array_values($webservice_final_array);
 				$final_array["budget_id"] = $budget_id;
-				$final_array["freeze_status"] = $freeze_status;
-				$final_array["freeze_show"] = $freeze_show;
+				$final_array["freeze_status"] = $freeze_button_data;
+				//$final_array["freeze_show"] = $freeze_button_data;
 				
 				//testdata($final_array);
 				
@@ -3827,7 +3734,6 @@ foreach($month_data as $monthkey => $monthvalue){
             $budget_id = $webservice_data["budgetid"];
             $year_data = $webservice_data["yeardata"];
 
-            
             $login_user_id = $webservice_data["user_id"];
             
         }
@@ -3867,6 +3773,64 @@ foreach($month_data as $monthkey => $monthvalue){
         }
         
     }
+
+    public function get_self_budget_lock_status($webservice_data = null){
+
+    if($webservice_data == null){
+        $budget_id = $_POST["budgetid"];
+        $year_data = $_POST["yeardata"];
+
+        $user = $this->auth->user();
+        $login_user_id = $user->id;
+    }
+    else{
+
+        $budget_id = $webservice_data["budgetid"];
+        $year_data = $webservice_data["yeardata"];
+
+        $login_user_id = $webservice_data["user_id"];
+
+    }
+
+    $from_month = $year_data."-01-01";
+    $to_month = $year_data."-12-01";
+
+    $lock_status = 0;
+
+    //$login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+
+    //$login_user_highest_level_data = $this->esp_model->get_higher_level_employee_for_loginuser($login_user_id);
+
+
+    //$get_higher_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_highest_level_data,$budget_id,$from_month);
+
+
+
+
+
+    //if(($get_higher_user_lock_status != 0 || !empty($get_higher_user_lock_status)) && ($get_higher_user_lock_status[0]["lock_status"] == 1)){
+      //  $lock_status = 1;
+    //}
+    //else{
+      //  if($login_user_parent_data != 0){
+
+         //   $get_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_parent_data,$budget_id,$from_month);
+            $login_user_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id,$from_month,$budget_id);
+            if(($login_user_lock_data != 0 || !empty($login_user_lock_data)) && ($login_user_lock_data[0]["lock_status"] == 1)){
+                $lock_status = 1;
+            }
+     //   }
+  //  }
+
+    if($webservice_data == null){
+        echo $lock_status;
+        die;
+    }
+    else{
+        return $lock_status;
+    }
+
+}
 	
 	public function get_budget_value_data($webservice_data=NULL){
         

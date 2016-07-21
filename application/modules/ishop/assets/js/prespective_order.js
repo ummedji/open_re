@@ -59,6 +59,25 @@ $(document).ready(function(){
             return false;
         }
     });
+
+
+    $('#download_csv').on('click',function(){
+
+        var param = $("#prespective_order").serialize();
+
+        var $valid = $("#prespective_order").valid();
+        if(!$valid) {
+            prespective_order_validators.focusInvalid();
+            return false;
+        }
+        else {
+            var export_url = site_url + "ishop/prespective_order_details_csv_report?" + param+"&page="+$("input#page").val();
+
+            window.location.href = export_url;
+        }
+        return false;
+
+    });
     
 });
 

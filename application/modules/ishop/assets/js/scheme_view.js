@@ -93,6 +93,25 @@ $(document).ready(function(){
             return false;
         }
     });
+    $('#download_csv').on('click',function(){
+
+
+        var param = $("#view_schemes").serialize();
+        var $valid = $("#view_schemes").valid();
+        if(!$valid) {
+            scheme_view_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            var export_url = site_url + "ishop/schemes_view_details_csv_report?" + param+"&page="+$("input#page").val();
+
+            window.location.href = export_url;
+        }
+
+        return false;
+
+    });
 });
 
 
@@ -225,6 +244,7 @@ function get_retailer_by_geo_data(selected_geo_data){
     });
 
 }
+
 
 
 

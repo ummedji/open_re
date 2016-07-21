@@ -4799,6 +4799,315 @@ class Ishop extends Front_Controller
 	}
 
 
+	public function schemes_view_details_csv_report()
+	{
+
+		$this->load->library('excel');
+		$user = $this->auth->user();
+
+		$year = (isset($_GET['year']) ? $_GET['year'] : '');
+		$region = (isset($_GET['region']) ? $_GET['region'] : '');
+		$territory = (isset($_GET['territory']) ? $_GET['territory'] : '');
+		$retailer= (isset($_GET['fo_retailer_id']) ? $_GET['fo_retailer_id'] : '');
+
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+		$scheme_view=$this->ishop_model->view_schemes_detail_report($user->id,$user->country_id,$year,$region,$territory,$user->role_id,$retailer,$page);
+
+		$this->excel->setActiveSheetIndex(0);
+		$this->excel->getActiveSheet()->setTitle('Schemes');
+
+		if($user->role_id == 7)
+		{
+			if(!empty($scheme_view) && isset($scheme_view))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$scheme_view['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$scheme_view['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$scheme_view['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$scheme_view['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$scheme_view['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$scheme_view['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$scheme_view['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$scheme_view['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$scheme_view['head'][8]);
+				$this->excel->getActiveSheet()->setCellValue('J1',$scheme_view['head'][9]);
+				$this->excel->getActiveSheet()->setCellValue('K1',$scheme_view['head'][10]);
+				$this->excel->getActiveSheet()->setCellValue('L1',$scheme_view['head'][11]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:L1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:L1')->getFont()->setBold(true);
+
+			foreach(range('A1','L1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($scheme_view))
+			{
+				foreach($scheme_view['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+					$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+					$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+					$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+				}
+			}
+		}
+		if($user->role_id == 8)
+		{
+			if(!empty($scheme_view) && isset($scheme_view))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$scheme_view['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$scheme_view['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$scheme_view['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$scheme_view['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$scheme_view['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$scheme_view['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$scheme_view['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$scheme_view['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$scheme_view['head'][8]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
+
+			foreach(range('A1','I1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($scheme_view))
+			{
+				foreach($scheme_view['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+				}
+			}
+		}
+		if($user->role_id == 10)
+		{
+			if(!empty($scheme_view) && isset($scheme_view))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$scheme_view['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$scheme_view['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$scheme_view['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$scheme_view['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$scheme_view['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$scheme_view['head'][5]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:F1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:F1')->getFont()->setBold(true);
+
+			foreach(range('A1','F1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($scheme_view))
+			{
+				foreach($scheme_view['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+				}
+			}
+		}
+
+
+
+		$filename='schemes_'.date('d-m-y').'.xlsx';
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+		exit();
+
+
+	}
+
+	public function target_details_csv_report()
+	{
+
+		$this->load->library('excel');
+		$user = $this->auth->user();
+
+		if($user->role_id == 7){
+			$checked_type = (isset($_GET['radio1']) && !empty($_GET['radio1']) ) ? $_GET['radio1'] :'retailer';
+		}
+		else{
+			$checked_type=null;
+		}
+
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+		$target_data= $this->ishop_model->target_details_report($user->id,$user->country_id,$checked_type,$page);
+
+		$this->excel->setActiveSheetIndex(0);
+		$this->excel->getActiveSheet()->setTitle('Target');
+
+		if(!empty($target_data) && isset($target_data))
+		{
+			$this->excel->getActiveSheet()->setCellValue('A1',$target_data['head'][0]);
+			$this->excel->getActiveSheet()->setCellValue('B1',$target_data['head'][1]);
+			$this->excel->getActiveSheet()->setCellValue('C1',$target_data['head'][2]);
+			$this->excel->getActiveSheet()->setCellValue('D1',$target_data['head'][3]);
+			$this->excel->getActiveSheet()->setCellValue('E1',$target_data['head'][4]);
+			$this->excel->getActiveSheet()->setCellValue('F1',$target_data['head'][5]);
+			$this->excel->getActiveSheet()->setCellValue('G1',$target_data['head'][6]);
+		}
+
+		//change the font size
+		$this->excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setSize(12);
+		//make the font become bold
+		$this->excel->getActiveSheet()->getStyle('A1:G1')->getFont()->setBold(true);
+
+		foreach(range('A1','G1') as $columnID) {
+			$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+		}
+
+		if(!empty($invoice_received))
+		{
+			foreach($invoice_received['row'] as $k=>$row)
+			{
+				$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+				$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+				$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+				$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+				$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+				$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+				$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+			}
+		}
+
+		$filename='target_'.date('d-m-y').'.xlsx';
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+		exit();
+	}
+
+
+
+	public function prespective_order_details_csv_report()
+	{
+
+		$this->load->library('excel');
+
+		$user = $this->auth->user();
+
+		$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+		$prespective_order = $this->ishop_model->prespective_order_details_report($from_date,$todate,$user->role_id,$user->id,$page,null,$user->local_date);
+
+
+		$this->excel->setActiveSheetIndex(0);
+		$this->excel->getActiveSheet()->setTitle('Prespective Order');
+
+		if(!empty($prespective_order) && isset($prespective_order))
+		{
+			$this->excel->getActiveSheet()->setCellValue('A1',$prespective_order['head'][0]);
+			$this->excel->getActiveSheet()->setCellValue('B1',$prespective_order['head'][1]);
+			$this->excel->getActiveSheet()->setCellValue('C1',$prespective_order['head'][2]);
+			$this->excel->getActiveSheet()->setCellValue('D1',$prespective_order['head'][3]);
+			$this->excel->getActiveSheet()->setCellValue('E1',$prespective_order['head'][4]);
+			$this->excel->getActiveSheet()->setCellValue('F1',$prespective_order['head'][5]);
+			$this->excel->getActiveSheet()->setCellValue('G1',$prespective_order['head'][6]);
+			$this->excel->getActiveSheet()->setCellValue('H1',$prespective_order['head'][7]);
+			$this->excel->getActiveSheet()->setCellValue('I1',$prespective_order['head'][8]);
+		}
+
+		//change the font size
+		$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setSize(12);
+		//make the font become bold
+		$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
+
+		foreach(range('A1','I1') as $columnID) {
+			$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+		}
+
+		if(!empty($prespective_order))
+		{
+			foreach($prespective_order['row'] as $k=>$row)
+			{
+				$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+				$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+				$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+				$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+				$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+				$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+				$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+				$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+				$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+			}
+		}
+
+		$filename='prespective_order_'.date('d-m-y').'.xlsx';
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+		exit();
+
+	}
+
+
+	/*public function ewrt()
+	{
+		$this->load->library('excel');
+
+		$user = $this->auth->user();
+
+		$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+		$order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page,null,null,null,$user->local_date);
+	}*/
 
 
 	/*-----------------------Report Download--------------------------------------*/

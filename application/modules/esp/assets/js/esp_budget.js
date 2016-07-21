@@ -137,9 +137,9 @@ $(document).on("click","button#freeze_data",function(e){
     var text_data = $(this).text();
     
     var year_data = $("input#year_data").val();
-    
+    var pbg_id = $("select.pbg_data").val();
     var lock_status = "";
-    
+    /*
     $.ajax({
         type: 'POST',
         url: site_url+"esp/get_budget_lock_status",
@@ -171,6 +171,96 @@ $(document).on("click","button#freeze_data",function(e){
         
         
     }
+    */
+
+
+
+
+    var login_user_child_status = "";
+
+    if(text_data == "Freeze")
+    {
+        //CHECK FOR LOCK OF DATA FOR THAT MONTH IF LOCKED THAN MAKE IT FREEZE IF LOGIN USER IS NOT LOWEST USER
+
+        $.ajax({
+            type: 'POST',
+            url: site_url+"esp/check_login_user_level_status",
+            //    data: {forecastid:forecast_id,freezedate:freeze_date},
+            success: function(resp){
+                login_user_child_status = resp;
+            },
+            async:false
+        });
+
+        if(login_user_child_status == 1){
+
+            //CHECK FOR SELECTED MONTH DATA LOCKED OR NOT
+
+            var login_user_lock_status = "";
+
+            $.ajax({
+                type: 'POST',
+                url: site_url+"esp/check_budget_login_user_lock_status",
+                data: {budgetid:budget_id,yeardata:year_data},
+                success: function(resp){
+                    login_user_lock_status = resp;
+                },
+                async:false
+            });
+
+            if(login_user_lock_status != 1){
+
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>Please lock data before freezing data for selected months.</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+
+                return false;
+            }
+
+
+        }
+
+    }
+
+   // var lock_status = "";
+    $.ajax({
+        type: 'POST',
+        url: site_url+"esp/get_budget_lock_status",
+        data: {budgetid:budget_id,yeardata:year_data},
+        success: function(resp){
+            lock_status = resp;
+        },
+        async:false
+    });
+
+    if(lock_status == 1){
+
+        $('<div></div>').appendTo('body')
+            .html('<div><b>Selected months are locked by Senior employees.So No data is Freeze or unfreezed.</b></div>')
+            .dialog({
+                appendTo: "#success_file_popup",
+                modal: true,
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: true,
+                close: function (event, ui) {
+                    $(this).remove();
+                }
+            });
+
+        return false;
+    }
     else{
         $.ajax({
             type: 'POST',
@@ -185,13 +275,13 @@ $(document).on("click","button#freeze_data",function(e){
                         $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
 
                          message += 'Data freezed successfully.';
-
+                        get_pbg_product_sku_data(pbg_id);
                     }
                     else{
                         $("div#freeze_area").html('<button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
 
                          message += 'Data Unfreezed successfully.';
-
+                        get_pbg_product_sku_data(pbg_id);
                     }
 
                 }
@@ -271,14 +361,14 @@ $(document).on("click","a.lock_data",function(){
                     $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a>");
 
 
-                //    get_pbg_product_sku_data(pbg_id);
+                    get_pbg_product_sku_data(pbg_id);
                 }
                 else{
                   //   alert("cccc");
                     
                      $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
 
-                 //   get_pbg_product_sku_data(pbg_id);
+                    get_pbg_product_sku_data(pbg_id);
                 }
                 
             }

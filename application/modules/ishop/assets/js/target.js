@@ -215,7 +215,6 @@ $(document).ready(function(){
     var data_array = [];
 
     var target_validators = $("#target").validate({
-        //ignore:'.ignore',
         rules: {
             month_data:{
                 required: true
@@ -972,5 +971,18 @@ $(document).on("submit","#copy_popup",function() {
         //console.log(popup_data);
         return false;
     }
+
+});
+
+
+$('#download_csv').on('click',function(){
+
+    var param = $("#target").serialize();
+
+    var export_url = site_url + "ishop/target_details_csv_report?" + param+"&page="+$("input#page").val();
+
+    window.location.href = export_url;
+
+    return false;
 
 });
