@@ -23,10 +23,12 @@
                     <div class="slide_icon"><a href="#" title="Open Menu"><img src="<?php echo Template::theme_url('images/back_arrow.png'); ?>" alt=""></a></div>
                     <div class="right_nave">
                         <ul class="top_nv">
-                            <li><a href="#" title="Download"><img src="<?php echo Template::theme_url('images/download_i.svg'); ?>" class="hvr-push" alt=""></a></li>
-                            <li><a href="#" title="Share"><img src="<?php echo Template::theme_url('images/share_i.svg'); ?>" class="hvr-push" alt=""></a></li>
+                            <?php if(isset($segment) && ($segment == 'ishop' && ($segment2 == 'primary_sales_view_details' || $segment2 == 'set_rol' || $segment2 == 'company_current_stock' || $segment2 == 'secondary_sales_details_view' || $segment2 == 'physical_stock' || $segment2 == 'invoice_received_confirmation' || $segment2 == 'sales_view' ))){?>
+                                <li><a href="javascript: void(0);" id="download_csv" title="Download"><img src="<?php echo Template::theme_url('images/download_i.svg'); ?>" class="hvr-push" alt=""></a></li>
+                            <?php } ?>
+                            <li><a href="javascript: void(0);" title="Share"><img src="<?php echo Template::theme_url('images/share_i.svg'); ?>" class="hvr-push" alt=""></a></li>
                             <li><a href="<?php echo site_url('logout'); ?>" title="Logout"><img src="<?php echo Template::theme_url('images/logout_i.svg'); ?>"class="hvr-push" alt=""></a></li>
-                            <li class="nav_space"><a href="#" id="nav-expander" title="Nave"><img src="<?php echo Template::theme_url('images/nave_btn.svg'); ?>" alt=""></a></li>
+                            <li class="nav_space"><a href="javascript: void(0);" id="nav-expander" title="Nave"><img src="<?php echo Template::theme_url('images/nave_btn.svg'); ?>" alt=""></a></li>
                         </ul>
                     </div>
                     <div class="clearfix"></div>

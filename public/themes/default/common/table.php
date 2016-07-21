@@ -55,7 +55,7 @@ if(isset($table) && count($table)>0 && $table != false) {
                         <tbody class="tbl_body_row">
                         <?php foreach($table['row'] as $rkey => $rowary) {
                             ?>
-                            <tr class="bg_focus_par">
+                            <tr>
                                 <?php
                                 foreach($rowary as $rwkey => $row) {
                                     ?>
@@ -94,7 +94,7 @@ if(isset($table) && count($table)>0 && $table != false) {
                                             if(isset($table['eye']) && !empty($table['eye']))
                                             {
                                                 ?>
-                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="#middle_container_product"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
+                                                <div class="eye_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
                                                 <?php
                                             }
                                            if(isset($table['edit']) && !empty($table['edit'])) {

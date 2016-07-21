@@ -237,6 +237,7 @@
                     <div class="form-group">
                         <label>Geo L1<span style="color: red">*</span></label>
                         <select class="selectpicker geo_level_2_data" class="" id="geo_level_2_data" name="geo_level_1_data" data-live-search="true" required>
+                        <option value="">Select Geo L1</option>
                         </select>
 
                     </div>
@@ -270,7 +271,7 @@
                     <div class="form-group">
                         <label>Retailer Name<span style="color: red">*</span></label>
                         <select class="selectpicker" id="retailer_data" name="retailer_data" data-live-search="true" required>
-
+                            <option value="">Select Retailers</option>
                         </select>
                     </div>
                 </div>
@@ -290,7 +291,7 @@
                     <div class="form-group">
                         <label>Geo L1<span style="color: red">*</span></label>
                         <select class="selectpicker distributor_geo_level_2_data"  id="distributor_geo_level_2_data" name="geo_level_1_data" data-live-search="true" required>
-                            
+                            <option value="">Select Geo L1</option>
                         </select>
                     
                     </div>
@@ -354,10 +355,15 @@ if (!$this->input->is_ajax_request()) { ?>
 if(isset($login_customer_type) && $login_customer_type == 10){
 ?>
 <script type="text/javascript">
-    $(document).ready(function() {
-        setTimeout(function () {
-            $("button#order_status").trigger("click");
-        }, 1000);
-    });
+
+   /* $(document).ready(function() {
+        $("button#order_status").click(function(){
+            alert("button");
+        });
+      return false;
+    });*/
+    
+
+
 </script>
 <?php } ?>

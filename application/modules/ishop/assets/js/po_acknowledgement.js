@@ -71,7 +71,7 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
   
    
    $("div.unit_"+id).empty();
-   $("div.unit_"+id).append('<select name="units[]" class="select_unitdata" id="units_'+id+'"> <option '+selected_data1+' value="box">Box</option> <option '+selected_data3+' value="packages">Packages</option><option '+selected_data2+' value="kg/ltr">Kg/Ltr</option> </select>');
+   $("div.unit_"+id).append('<input type="hidden" name="order_data[]" value="'+id+'" /><select name="units[]" class="select_unitdata" id="units_'+id+'"> <option '+selected_data1+' value="box">Box</option> <option '+selected_data3+' value="packages">Packages</option><option '+selected_data2+' value="kg/ltr">Kg/Ltr</option> </select>');
    
    //QUANTITY
    
@@ -95,7 +95,9 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
 });
 
 
-$(document).on('click', 'div.po_acknowledgement .eye_i', function () {
+$(document).on('click', '.eye_i', function () {
+
+    alert('in');
     var id = $(this).attr('prdid');
 
     $('div.po_acknowledgement').find('tr.bg_focus').removeClass();
@@ -109,17 +111,13 @@ $(document).on('click', 'div.po_acknowledgement .eye_i', function () {
         url: site_url+'ishop/get_order_status_data_details',
         data: {id: id,logincustomertype:login_customer_type,segment_data:action_data},
         success: function(resp){
-            
-           // alert(resp);
-            
-            //$("div#middle_container_product").empty();
             $("#middle_container_product").html(resp);
         }
     });
     
-     $("body, html").animate({ 
+   /*  $("body, html").animate({
         scrollTop: $( $(this).attr('href') ).offset().top 
-     }, "slow");
+     }, "slow");*/
         
     
     return false;

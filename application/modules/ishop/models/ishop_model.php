@@ -4735,7 +4735,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     {
         //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
 
-        $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn ';
+        $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn,bio.created_on ';
 
         $sql .= ' FROM bf_ishop_orders as bio ';
         $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
@@ -4801,7 +4801,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $subsql = '';
         }
 
-        $sql .= ' AND bio.country_id = "' . $user_country_id . ' " '.$subsql.' ORDER BY bio.order_date DESC ';
+        $sql .= ' AND bio.country_id = "' . $user_country_id . ' " '.$subsql.' ORDER BY bio.created_on DESC ';
         
        // echo $action_data."</br>";
         
@@ -4854,7 +4854,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $order_data = '<input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input id="check_data_' . $od['order_id'] . '" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
 
-                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
                             $checkbox = $order_data . '<input id="order_status_' . $od['order_id'] . '" type="checkbox" name="change_order_status1[]" class="order_status" />';
 
@@ -4865,7 +4865,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     } else
                     {
-                        //testdata($orderdata['result']);
                         if($radio_checked == "retailer"){
                             $order_view['head'] = array('Sr. No.', 'Remove','Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                             $order_view['count'] = count($order_view['head']);
@@ -4887,15 +4886,20 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                     $order_status = "op_ackno";
                                 }
 
-                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
+                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
                                 if($local_date != null){
                                     $date = strtotime($od['order_date']);
                                     $order_date = date($local_date,$date);
+
+                                    $time= strtotime($od['created_on']);
+                                    $t= date('g:i a',$time);
+
+                                    $order_datetime = $order_date.' '.$t;
                                 }
                                 else{
-                                    $order_date = $od['order_date'];
+                                    $order_datetime = $od['order_date'];
                                 }
-                                $order_view['row'][] = array($i, $od['order_id'],$od['t_dn'],$order_date, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                                $order_view['row'][] = array($i, $od['order_id'],$od['t_dn'],$order_datetime, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
                                 $i++;
 
 
@@ -4929,15 +4933,20 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                     $order_status = "op_ackno";
                                 }
 
-                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
+                                $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
                                 if($local_date != null){
                                     $date = strtotime($od['order_date']);
                                     $order_date = date($local_date,$date);
+
+                                    $time= strtotime($od['created_on']);
+                                    $t= date('g:i a',$time);
+
+                                    $order_datetime = $order_date.' '.$t;
                                 }
                                 else{
-                                    $order_date = $od['order_date'];
+                                    $order_datetime = $od['order_date'];
                                 }
-                                $order_view['row'][] = array($i, $od['order_id'],$order_date, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                                $order_view['row'][] = array($i, $od['order_id'],$order_datetime, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
                                 $i++;
 
 
@@ -4994,7 +5003,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         }
 
 
-                        $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
+                        $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
 
                         if ($radio_checked == "farmer") {
@@ -5011,27 +5020,37 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
+
+                                $time= strtotime($od['created_on']);
+                                $t= date('g:i a',$time);
+
+                                $order_datetime = $order_date.' '.$t;
                             }
                             else{
-                                $order_date = $od['order_date'];
+                                $order_datetime = $od['order_date'];
                             }
 
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od['t_dn'], $order_date, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od['t_dn'], $order_datetime, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
 
                         } elseif ($radio_checked == "distributor") {
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
 
+                                $time= strtotime($od['created_on']);
+                                $t= date('g:i a',$time);
+
+                                $order_datetime = $order_date.' '.$t;
+
                                 $date1 = strtotime($od["estimated_delivery_date"]);
                                $estimated_date =  date($local_date,$date1);
 
                             }
                             else{
-                                $order_date = $od['order_date'];
+                                $order_datetime = $od['order_date'];
                                 $estimated_date = $od["estimated_delivery_date"] ;
                             }
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $order_date, $od["PO_no"], $otn, $estimated_date, $od["total_amount"], $od['display_name'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $order_datetime, $od["PO_no"], $otn, $estimated_date, $od["total_amount"], $od['display_name'], $order_status);
                         }
                         $i++;
                     }
@@ -5073,21 +5092,28 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' ."'".trim($od['PO_no'])."'". ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
-                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['PO_no'] . '</a></div>';
+                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript: void(0);">' . $od['PO_no'] . '</a></div>';
 
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
 
+                                $time= strtotime($od['created_on']);
+                                $t= date('g:i a',$time);
+
+                                $order_datetime = $order_date.' '.$t;
+
                                 $date1 = strtotime($od["estimated_delivery_date"]);
                                 $estimated_date =  date($local_date,$date1);
 
+
+
                             }
                             else{
-                                $order_date = $od['order_date'];
+                                $order_datetime = $od['order_date'];
                                 $estimated_date = $od["estimated_delivery_date"] ;
                             }
-                            $order_view['row'][] = array($i, '', $order_date, $po_no, $otn, $estimated_date, $od['total_amount'], $od['display_name'], $order_status);
+                            $order_view['row'][] = array($i, '', $order_datetime, $po_no, $otn, $estimated_date, $od['total_amount'], $od['display_name'], $order_status);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -5106,17 +5132,22 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         foreach ($orderdata['result'] as $od) {
 
 
-                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript: void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
+
+                                $time= strtotime($od['created_on']);
+                                $t= date('g:i a',$time);
+
+                                $order_datetime = $order_date.' '.$t;
                             }
                             else{
-                                $order_date = $od['order_date'];
+                                $order_datetime = $od['order_date'];
                             }
-                            $order_view['row'][] = array($i, $od['order_id'],$order_date, $otn, $od['display_name'], $po_no);
+                            $order_view['row'][] = array($i, $od['order_id'],$order_datetime, $otn, $od['display_name'], $po_no);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -5153,20 +5184,25 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a class="set_pono" onClick="show_po_popup(' . trim($od['order_id']) . ','."'".trim($od['PO_no'])."'".');" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
-                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['PO_no'] . '</a></div>';
+                            $po_no = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript: void(0);">' . $od['PO_no'] . '</a></div>';
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
+
+                                $time= strtotime($od['created_on']);
+                                $t= date('g:i a',$time);
+
+                                $order_datetime = $order_date.' '.$t;
 
                                 $date1 = strtotime($od["estimated_delivery_date"]);
                                 $estimated_date =  date($local_date,$date1);
 
                             }
                             else{
-                                $order_date = $od['order_date'];
+                                $order_datetime = $od['order_date'];
                                 $estimated_date = $od["estimated_delivery_date"] ;
                             }
-                            $order_view['row'][] = array($i, '', $od['t_dn'],$order_date, $po_no, $otn,$estimated_date, $od['total_amount'], $od['display_name'], $order_status);
+                            $order_view['row'][] = array($i, '', $od['t_dn'],$order_datetime, $po_no, $otn,$estimated_date, $od['total_amount'], $od['display_name'], $order_status);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -5186,18 +5222,23 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         foreach ($orderdata['result'] as $od) {
 
 
-                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="#middle_container_product">' . $od['order_tracking_no'] . '</a></div>';
+                            $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript: void(0);">' . $od['order_tracking_no'] . '</a></div>';
 
                             $po_no = '<div  prdid ="' . $od['order_id'] . '"><input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input type="text" name="po_no[]" value="' . $od['PO_no'] . '" /></div>';
 
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
+
+                                $time= strtotime($od['created_on']);
+                                $t= date('g:i a',$time);
+
+                                $order_datetime = $order_date.' '.$t;
                             }
                             else{
-                                $order_date = $od['order_date'];
+                                $order_datetime = $od['order_date'];
                             }
-                            $order_view['row'][] = array($i, $od['order_id'],$order_date, $otn, $od['f_dn'], $od['display_name'], $po_no);
+                            $order_view['row'][] = array($i, $od['order_id'],$order_datetime, $otn, $od['f_dn'], $od['display_name'], $po_no);
                             $i++;
                         }
                         $order_view['eye'] = '';
@@ -5712,7 +5753,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function update_order_data($orderdata, $web_service = null)
     {
-       // testdata($orderdata);
+
         if (!empty($orderdata)) {
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {

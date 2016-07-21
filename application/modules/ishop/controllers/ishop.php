@@ -1923,7 +1923,7 @@ class Ishop extends Front_Controller
         * */
         
         public function get_order_status_data_details() {
-            
+
                 $order_id = (isset($_POST['id']) ? $_POST['id'] : '');
                 $radiochecked = (isset($_POST['radiochecked']) ? $_POST['radiochecked'] : '');
                 $logincustomertype = $_POST['logincustomertype'];
@@ -1940,7 +1940,7 @@ class Ishop extends Front_Controller
                 //echo $action_data;die;
                 
                 if($action_data == "po_acknowledgement"){
-                 
+
                     Template::set('po_ack_table',$order_details);
                     
                 //    Template::set('po_acknowledgement_table',$order_details);
@@ -2062,8 +2062,9 @@ class Ishop extends Front_Controller
 			$per_page = (isset($_POST['per_page']) ? $_POST['per_page'] : '');
 			$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
-            if(isset($_POST) && !empty($_POST) && isset($per_page)&&  $per_page != ""){
-                
+            if(isset($_POST) && !empty($_POST)){
+
+
 				$update_order_data = $this->ishop_model->update_order_data($_POST);
 				echo $update_order_data;
 				die;

@@ -609,7 +609,35 @@ class Esp_model extends BF_Model
         
         
     }
-    
+
+    public function get_budget_senior_lock_status_data($login_user_parent_data,$monthvalue,$budget_id){
+
+        $this->db->select("*");
+        $this->db->from("bf_budget_lock_status_history as bblsh");
+
+        $this->db->where("bblsh.budget_id",$budget_id);
+        $this->db->where("bblsh.month_data",$monthvalue);
+        $this->db->where("bblsh.lock_by_id",$login_user_parent_data);
+
+        $user_lock_data = $this->db->get()->result_array();
+
+        // echo $this->db->last_query();
+
+
+
+        if(isset($user_lock_data) && !empty($user_lock_data)) {
+            // dumpme($user_lock_data);
+            return $user_lock_data;
+        } else{
+            //echo "INNN";
+            return "0";
+        }
+
+
+    }
+
+
+
     public function update_forecast_lock_status_data($user_id,$forecast_id,$monthval,$text_data){
         
         if($text_data == 'Lock'){
@@ -902,12 +930,13 @@ class Esp_model extends BF_Model
         
     }
 	
-	public function get_budget_freeze_status($budget_id){
+	public function get_budget_freeze_status($budget_id,$user_data){
         
         $this->db->select('*');
-        $this->db->from("bf_esp_budget as beb");
+        $this->db->from("bf_budget_freeze_status_history as bbfsh");
         
-        $this->db->where("beb.budget_id",$budget_id);
+        $this->db->where("bbfsh.budget_id",$budget_id);
+        $this->db->where("bbfsh.freeze_by_id",$user_data);
         
         $budget_data = $this->db->get()->result_array();
         
@@ -915,7 +944,7 @@ class Esp_model extends BF_Model
         
         if(!empty($budget_data)){
             $budget_array["budget_id"] = $budget_data[0]['budget_id'];
-            $budget_array["created_by_user"] = $budget_data[0]['created_by_user'];
+          //  $budget_array["created_by_user"] = $budget_data[0]['created_by_user'];
             $budget_array["freeze_status"] = $budget_data[0]['freeze_status'];
             $budget_array["freeze_user_id"] = $budget_data[0]['freeze_by_id'];
         }

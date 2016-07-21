@@ -171,7 +171,7 @@ class Esp extends Front_Controller
         
         $login_user_highest_level_data = $this->esp_model->get_higher_level_employee_for_loginuser($login_user_id);
         //dumpme($login_user_highest_level_data);
-      // testdata($login_user_higher_level_data);
+      // testdata($login_user_highest_level_data);
         
         $global_head_user = array();
         
@@ -242,17 +242,19 @@ class Esp extends Front_Controller
 
                                         }
 
-                                        if($login_user_highest_level_data == $login_user_id){
-                                            $freeze_button = '';
-                                            $freeze_button_data = "";
-                                        }
-
                                         $header_final_array[$monthvalue]["freeze_button"] = $freeze_button_data;
 
                                         break;
                                     }
 
                                 }
+
+                           // echo $login_user_highest_level_data ."== ".$login_user_id;
+
+                            if($login_user_highest_level_data == $login_user_id){
+                                $freeze_button = '';
+                                $freeze_button_data = "";
+                            }
                          
                             
                             //GET ANY SENIOR USER LOCKED OR NOT DATA
@@ -2405,13 +2407,13 @@ class Esp extends Front_Controller
                     else{
                         $higest_user_status = 1;
                     }
-                    
+
                     
                     if($senior_lock_status == 1)
                     {
                         //SENIOR RESPONSE
                         
-                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />1111</a></div>";
+                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$higest_level_user_status."' rel='".$selected_year."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />1111</a></div>";
                         
                         $final_lock_array["lockdata"] = 1;
                         $final_lock_array["seniorlock"] = 1;
@@ -2603,7 +2605,8 @@ class Esp extends Front_Controller
         $global_head_user = array();
         
         $login_user_all_parent_data = $this->esp_model->get_employee_for_loginuser($login_user_id,$global_head_user);
-        
+
+
        // testdata($login_user_all_parent_data);
         
         
@@ -2653,322 +2656,531 @@ class Esp extends Front_Controller
             $i = 1;
             
             $budget_id = "";
-            
+
+
+
             foreach($pbg_sku_data as $skukey => $skuvalue){
-              $html .= '<tr>';
-              $html .= '<td><input type="hidden" name="product_sku_id[]" value="'.$skuvalue['product_sku_country_id'].'" />'.$skuvalue['product_sku_name'].'</td>';
-                
+                $html .= '<tr>';
+                $html .= '<td><input type="hidden" name="product_sku_id[]" value="'.$skuvalue['product_sku_country_id'].'" />'.$skuvalue['product_sku_name'].'</td>';
+
                 $l = 1;
-                
+
                 foreach($month_data as $monthkey => $monthvalue){
-                    
+
                     $time=strtotime($monthvalue);
                     $month=date("F",$time);
                     $year=date("Y",$time);
-					
+
                     $employee_month_product_budget_data = $this->esp_model->get_employee_month_product_budget_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
-                    
+
                     $budget_qty = "";
                     $budget_value = "";
-                    
-                     $lock_status = "";
-                     $lock_by_id = "";
-                    
-                //    echo "<pre>";
-                //    print_r($employee_month_product_forecast_data);
-                    
+
+                    $lock_status = "";
+                    $lock_by_id = "";
+
+                    //    echo "<pre>";
+                    //    print_r($employee_month_product_forecast_data);
+
                     if($employee_month_product_budget_data != 0){
-                        
+
                         $budget_qty = $employee_month_product_budget_data[0]['budget_quantity'];
                         $budget_value = $employee_month_product_budget_data[0]['budget_value'];
-                        
-                        
+
+
                         $lock_status = $employee_month_product_budget_data[0]['lock_status'];
                         $lock_by_id = $employee_month_product_budget_data[0]['lock_by_id'];
-                        
+
                         $budget_id = $employee_month_product_budget_data[0]['budget_id'];
-                        
-                        
+
+
                     }
-                    
-					
-					if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
-						$data_inner_array = array();
-					}
-					
-					
+
+
+                    if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                        $data_inner_array = array();
+                    }
+
+
+                    //$forecast_freeze_data = $this->esp_model->get_forecast_freeze_status($forecast_id,$login_user_id,$monthvalue);
+
+                    $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id,$login_user_id);
+
+                    $child_user_data = $this->esp_model->get_user_selected_level_data($login_user_id,null);
+
+                    $child_forecast_array = array();
+
+                    $child_flag = 0;
+
+
+                    if(!empty($child_user_data["level_users"])){
+
+                        $user_data = explode(",",$child_user_data["level_users"]);
+
+                        foreach($user_data as $user_key => $userdata){
+                            $child_forecast_data = $this->esp_model->get_budget_freeze_status($budget_id,$userdata);
+
+                            if($child_forecast_data != 0 && $child_forecast_data["freeze_status"] == 1)
+                                $child_forecast_array[] = $child_forecast_data;
+
+                        }
+                    }
+
+                    $child_forecast_array = array_filter($child_forecast_array);
+
+                    if(count($child_forecast_array) > 0){
+                        $child_flag = 1;
+                    }
+
                     //GET ANY SENIOR USER LOCKED OR NOT DATA
-                    
-                    $senior_lock_data = array();
-                    
-                    if(!empty($login_user_all_parent_data)){
-                        
-                        foreach($login_user_all_parent_data as $parent_key => $parentid){
-                            
-                            $get_senioruser_lock_status = $this->esp_model->senior_budget_lock_status($parentid,$budget_id,$monthvalue);
-                            if(!empty($get_senioruser_lock_status)){
-                                if($get_senioruser_lock_status[0]["lock_status"] == 1){
-                                        
-                                    $senior_lock_data[] = 1;
+
+                    /*   $senior_lock_data = array();
+
+                       if(!empty($login_user_all_parent_data)){
+
+                           foreach($login_user_all_parent_data as $parent_key => $parentid){
+
+                               $get_senioruser_lock_status = $this->esp_model->senior_budget_lock_status($parentid,$budget_id,$monthvalue);
+                               if(!empty($get_senioruser_lock_status)){
+                                   if($get_senioruser_lock_status[0]["lock_status"] == 1){
+
+                                       $senior_lock_data[] = 1;
+
+                                   }
+                               }
+
+                           }
+
+                       }
+
+                       */
+
+
+                    //CHECK DATA FREEZED OR NOT
+
+
+                    if($budget_freeze_data != 0 || $child_flag == 1){
+
+                        // echo "UMMED";
+                        //    dumpme($forecast_freeze_data);
+                        //     echo $monthvalue."===".$forecast_freeze_data["created_by_user"]." ==". $login_user_id;
+
+                        if($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["created_by_user"] == $login_user_id){
+
+
+                            //SHOW DATA
+
+                            echo "1";
+
+                            $editable = "";
+
+
+                            $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($budget_freeze_data['freeze_user_id']);
+
+                            $locked_user_parent_data = $this->esp_model->get_freeze_user_parent_data($lock_by_id);
+                            //   dumpme($locked_user_parent_data);
+
+
+                            $senior_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_parent_data,$monthvalue,$budget_id);
+
+                            $highest_user_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_highest_level_data,$monthvalue,$budget_id);
+
+                            $logib_user_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id,$monthvalue,$budget_id);
+
+                            if(!empty($login_user_all_parent_data)){
+                                foreach($login_user_all_parent_data as $parent_key => $parentid){
+                                    $get_senioruser_lock_status = $this->esp_model->get_budget_senior_lock_status_data($parentid,$budget_id,$monthvalue);
+                                    if(!empty($get_senioruser_lock_status) || $get_senioruser_lock_status != 0){
+                                        if($get_senioruser_lock_status[0]["lock_status"] == 1){
+                                            $senior_lock_data[] = 1;
+                                        }
+                                    }
 
                                 }
                             }
-                            
-                        }
-                        
-                    }
-                    
-                    
-                    //CHECK DATA FREEZED OR NOT
-                    
-                    $budget_freeze_data = $this->esp_model->get_budget_freeze_status($budget_id);
-                    
-                    if($budget_freeze_data != 0)
-                    {
-                        //If data Freezed
-                        
-                        if($budget_freeze_data['freeze_status'] == 1){
-                            //DATA FREEZED
-                            
-                            if($login_user_id == $budget_freeze_data['freeze_user_id']){
-                                
+
+
+                            $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id,$monthvalue,$budget_id);
+
+                            // dumpme($self_lock_data);
+
+                            if($login_user_highest_level_data == $login_user_id){
                                 $editable = "";
 
-                                
-                                if(in_array(1,$senior_lock_data)){
-                                    $editable = "readonly";
-                                }
-                                
-                                
-                                
-                                echo "1";
-                                
-                                //check login user equal to freezed user if equal than make data visible and editable else not for login user
-                                
-                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'"  '.$editable.' /></td>';
-                    
-                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
-                                
-                                
-								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-									$data_inner_array["budget_qty"] = $budget_qty;
-									$data_inner_array["budget_value"] = $budget_value;
-                                    
-                                    $data_inner_array["editable"] = $editable;
-                                    
-							    }
-								
-								
-                            }else{
-                                
-                                
-                            $freeze_user_parent_data = $this->esp_model->get_freeze_user_parent_data($budget_freeze_data['freeze_user_id']);
-                            
-                            if($freeze_user_parent_data != 0){
-                                
-                                echo $login_user_id ."==". $freeze_user_parent_data;
-                                
-                                if($login_user_id == $freeze_user_parent_data){
-                                    
-                                    //If login user is parent of freezed user than he will able to see the forecast data entered by juinor else not
-                                    
-                                    //SHOW FREEZEED DATA
-                                    
-                                    echo "2";
-
+                                //   echo "aaa".$monthvalue."</br>";
+                            }
+                            else{
+                                if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
 
                                     $editable = "readonly";
-                                    
-                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.' /></td>';
-                    
-                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
-                                    
-									if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-										$data_inner_array["budget_qty"] = $budget_qty;
-										$data_inner_array["budget_value"] = $budget_value;
-                                        
-                                        $data_inner_array["editable"] = "";
-								    }
-									
-                                }
-                                elseif($login_user_id == $budget_freeze_data['created_by_user']){
-                                    
-                                    //GET LOCK STATUS
-                                    
-                                    echo "3";
+                                    //   echo "bbb".$monthvalue."</br>";
 
-                                    $editable = "";
-                                    if(in_array(1,$senior_lock_data)){
+                                }
+                                elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
+
+                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
+                                        //    echo "ccc".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
+                                        //    echo "ddd".$monthvalue."</br>";
+
+
                                         $editable = "readonly";
                                     }
-                                    
-                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.'  /></td>';
-                    
-                                     $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
-                                    
-									if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-										$data_inner_array["budget_qty"] = $budget_qty;
-										$data_inner_array["budget_value"] = $budget_value;
-                                        
-                                        $data_inner_array["editable"] = $editable;
-                                        
-								    }
-									
-                                }
-                                else{
-                                    
-                                    //SHOW FREEZED DATA BUT READONLY
-                                    
-                                    echo "4";
-                                    
-                                     $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value=""  /></td>';
-                    
-                                    $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
-                                    
-									if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-										$data_inner_array["budget_qty"] = "";
-										$data_inner_array["budget_value"] = "";
-                                        
-                                        $data_inner_array["editable"] = "";
-                                        
-								    }
-									
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
+                                        //    echo "fff".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
+                                    else{
+                                        //   echo "eee".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
                                 }
                             }
+
+
+                            //    if($forecast_freeze_data["freeze_status"] == 0){
+
+                            //    }
+
+
+                            /*
+                               $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
+
+                               $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+
+                                 if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                       $data_inner_array["forecast_qty"] = $forecast_qty;
+                                       $data_inner_array["forecast_value"] = $forecast_value;
+
+                                       $data_inner_array["editable"] = $editable;
+                                 }
+
+                                */
+
+                            $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.' /></td>';
+
+                            $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
+
+                            if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                $data_inner_array["budget_qty"] = $budget_qty;
+                                $data_inner_array["budget_value"] = $budget_value;
+
+                                $data_inner_array["editable"] = $editable;
+                            }
+
+
+                        }
+                        elseif($child_flag == 1)
+                        {
+
+                            echo "2";
+                            /*
+
+                            $editable = "";
+
+
+                             $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
+
+                             $locked_user_parent_data = $this->esp_model->get_freeze_user_parent_data($lock_by_id);
+                                  //   dumpme($locked_user_parent_data);
+
+
+                             $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data,$monthvalue,$forecast_id);
+
+                             $highest_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_highest_level_data,$monthvalue,$forecast_id);
+
+                             $logib_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
+
+
+                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
+
+                              if(!empty($login_user_all_parent_data)){
+                                 foreach($login_user_all_parent_data as $parent_key => $parentid){
+                                     $get_senioruser_lock_status = $this->esp_model->senior_forecast_lock_status($parentid,$forecast_id,$monthvalue);
+                                     if(!empty($get_senioruser_lock_status) || $get_senioruser_lock_status != 0){
+                                         if($get_senioruser_lock_status[0]["lock_status"] == 1){
+                                             $senior_lock_data[] = 1;
+                                         }
+                                     }
+
+                                 }
+                             }
+
+
+
+                              if($login_user_highest_level_data == $login_user_id){
+                                 $editable = "";
+
+                               //   echo "aaa".$monthvalue."</br>";
+                             }
+                             else{
+                                 if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
+
+                                     $editable = "readonly";
+                                   //  echo "bbb".$monthvalue."</br>";
+
+                                 }
+                                 elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
+
+                                     if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
+                                    //     echo "ccc".$monthvalue."</br>";
+                                         $editable = "";
+                                     }
+                                     elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
+                                    //     echo "ddd".$monthvalue."</br>";
+                                         $editable = "readonly";
+                                     }
+                                     elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
+                                         //    echo "fff".$monthvalue."</br>";
+                                         $editable = "";
+                                     }
+                                     else{
+                                     //    echo "eee".$monthvalue."</br>";
+                                         $editable = "readonly";
+                                     }
+
+
+                                 }
+                             }
+
+
+
+                             //SHOW DATA
+
+                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
+
+                             $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+
+                               if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                     $data_inner_array["forecast_qty"] = $forecast_qty;
+                                     $data_inner_array["forecast_value"] = $forecast_value;
+
+                                     $data_inner_array["editable"] = $editable;
+                               }
+
+                           */
+
+
+                            $editable = "";
+
+
+                            $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($budget_freeze_data['freeze_user_id']);
+
+                            $locked_user_parent_data = $this->esp_model->get_freeze_user_parent_data($lock_by_id);
+                            //   dumpme($locked_user_parent_data);
+
+
+                            $senior_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_parent_data,$monthvalue,$budget_id);
+
+                            $highest_user_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_highest_level_data,$monthvalue,$budget_id);
+
+                            $logib_user_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id,$monthvalue,$budget_id);
+
+                            if(!empty($login_user_all_parent_data)){
+                                foreach($login_user_all_parent_data as $parent_key => $parentid){
+                                    $get_senioruser_lock_status = $this->esp_model->get_budget_senior_lock_status_data($parentid,$forecast_id,$monthvalue);
+                                    if(!empty($get_senioruser_lock_status) || $get_senioruser_lock_status != 0){
+                                        if($get_senioruser_lock_status[0]["lock_status"] == 1){
+                                            $senior_lock_data[] = 1;
+                                        }
+                                    }
+
+                                }
+                            }
+
+
+                            $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id,$monthvalue,$forecast_id);
+
+                            // dumpme($self_lock_data);
+
+                            if($login_user_highest_level_data == $login_user_id){
+                                $editable = "";
+
+                                //   echo "aaa".$monthvalue."</br>";
+                            }
                             else{
-                                
-                                //NOT SHOW FREEZED DATA
-                                
-                                echo "5";
-                                    
-                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
-                    
-                                    $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
-                                
-								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-										$data_inner_array["budget_qty"] = "";
-										$data_inner_array["budget_value"] = "";
-                                    
-                                        $data_inner_array["editable"] = "";
-                                    
-								    }
-								
-                              }
-                                
+                                if($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1){
+
+                                    $editable = "readonly";
+                                    //   echo "bbb".$monthvalue."</br>";
+
+                                }
+                                elseif($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0){
+
+                                    if($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1){
+                                        //    echo "ccc".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0){
+                                        //    echo "ddd".$monthvalue."</br>";
+
+
+                                        $editable = "readonly";
+                                    }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
+                                        //    echo "fff".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
+                                    else{
+                                        //   echo "eee".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                }
+                            }
+
+
+                            //    if($forecast_freeze_data["freeze_status"] == 0){
+
+                            //    }
+
+
+                            /*
+                               $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'" '.$editable.'  /></td>';
+
+                               $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+
+                                 if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                       $data_inner_array["forecast_qty"] = $forecast_qty;
+                                       $data_inner_array["forecast_value"] = $forecast_value;
+
+                                       $data_inner_array["editable"] = $editable;
+                                 }
+
+                                */
+
+                            $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.' /></td>';
+
+                            $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
+
+                            if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                $data_inner_array["budget_qty"] = $budget_qty;
+                                $data_inner_array["budget_value"] = $budget_value;
+
+                                $data_inner_array["editable"] = $editable;
+                            }
+
+                        }
+                        else
+                        {
+
+                            echo "3";
+
+                            /*  $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
+
+                              $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+
+                                 if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                      $data_inner_array["forecast_qty"] = "";
+                                      $data_inner_array["forecast_value"] = "";
+
+                                      $data_inner_array["editable"] = "";
+                                }
+
+                                */
+
+                            $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value=""  /></td>';
+
+                            $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+
+                            if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                $data_inner_array["budget_qty"] = "";
+                                $data_inner_array["budget_value"] = "";
+
+                                $data_inner_array["editable"] = "";
+
+                            }
+
+
+                        }
+
+
+                    }
+                    else
+                    {
+
+                        //   dumpme($forecast_freeze_data);
+                        //    echo $login_user_id." == ".$forecast_freeze_data['created_by_user'];
+
+                        if($login_user_id == $employee_month_product_budget_data[0]['created_by_user']){
+
+                            /*  $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  /></td>';
+
+                             $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_value.'" readonly /></td>';
+
+                           if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                 $data_inner_array["forecast_qty"] = $forecast_qty;
+                                 $data_inner_array["forecast_value"] = $forecast_value;
+
+                               $data_inner_array["editable"] = "readonly";
                            }
-                            
+
+                           */
+
+
+                            $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" '.$editable.'  /></td>';
+
+                            $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
+
+                            if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                $data_inner_array["budget_qty"] = $budget_qty;
+                                $data_inner_array["budget_value"] = $budget_value;
+
+                                $data_inner_array["editable"] = $editable;
+
+                            }
+
                         }
                         else{
-                            
-                            if($login_user_id == $budget_freeze_data['freeze_user_id']){
-                                
-                                echo "6";
-                                
-                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
-                    
-                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
-                                
-								
-								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-									$data_inner_array["budget_qty"] = $budget_qty;
-									$data_inner_array["budget_value"] = $budget_value;
-                                    
-                                    $data_inner_array["editable"] = "";
-                                    
-								}
-								
+
+                            //NOT FREZEED
+                            /* $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
+
+                                 $html .= '<td><input id="forecast_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="forecast_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+
+                               if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                     $data_inner_array["forecast_qty"] = "";
+                                     $data_inner_array["forecast_value"] = "";
+
+                                   $data_inner_array["editable"] = "";
+                               }
+
+                               */
+
+
+                            $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value=""  /></td>';
+
+                            $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
+
+                            if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){
+                                $data_inner_array["budget_qty"] = "";
+                                $data_inner_array["budget_value"] = "";
+
+                                $data_inner_array["editable"] = "";
+
                             }
-                            elseif($login_user_id == $budget_freeze_data['created_by_user']){
-                                
-                                echo "7";
-                                
-                                $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_qty.'" /></td>';
-                    
-                                $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="'.$budget_value.'" readonly /></td>';
-                                
-								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-									$data_inner_array["budget_qty"] = $budget_qty;
-									$data_inner_array["budget_value"] = $budget_value;
-                                    
-                                    $data_inner_array["editable"] = "";
-								}
-								
-                            }
-                            else{
-                                
-                                echo "8";
-                                //NOT SHOW FREEZED DATA
-                                    
-                                    $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
-                    
-                                    $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
-                                
-								
-								if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){ 
-									$data_inner_array["budget_qty"] = "";
-									$data_inner_array["budget_value"] = "";
-                                    $data_inner_array["editable"] = "";
-							    }
-								
-                            }
+
+
+
                         }
 
-							if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))
-							{
-								
-								$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
-								$data_inner_array["productname"] = $skuvalue['product_sku_name'];
-								
-								$webservice_final_array[$monthvalue]["monthvalue"] = $monthvalue;
-								$webservice_final_array[$monthvalue]["monthname"] = $month."-".$year;
-								
-								$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
-								if($lock_status == ""){
-									$lock_status = 0;
-								}
-								$webservice_final_array[$monthvalue]["lock_status"] = $lock_status;
-							
-							}
+                    }
 
 
-                    }
-                    else{
-                        
-                        echo "9";
-                        
-                         $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="budget_qty" id="budget_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="budget_qty['.$skuvalue['product_sku_country_id'].'][]" value="" /></td>';
-                    
-                        $html .= '<td><input id="budget_value_'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" type="text" name="budget_value['.$skuvalue['product_sku_country_id'].'][]" value="" readonly /></td>';
-                            
-							
-							if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice']))
-							{
-							
-								$data_inner_array = array();
-								
-								//$data_inner_array["forecastid"] = $forecast_id;
-								
-								$data_inner_array["productid"] = $skuvalue['product_sku_country_id'];
-								$data_inner_array["productname"] = $skuvalue['product_sku_name'];
-								$data_inner_array["budget_qty"] = $budget_qty;
-								$data_inner_array["budget_value"] = $budget_value;
-								
-								$webservice_final_array[$monthvalue]["monthvalue"] = $monthvalue;
-								$webservice_final_array[$monthvalue]["monthname"] = $month."-".$year;
-								$webservice_final_array[$monthvalue]['productdata'][] = $data_inner_array;
-								$webservice_final_array[$monthvalue]["lock_status"] = 0;
-							
-							}
-							 	 								    
-                    }
-                        
+
+
+
                     $l++;
-                    
+
                 }
-               $html .= '<td></td>';
-               $html .= '</tr>';
-                
+                $html .= '<td></td>';
+                $html .= '</tr>';
+
             }
+
+
+
             
             $html .= '</tbody>';
        $html .= '</table>';

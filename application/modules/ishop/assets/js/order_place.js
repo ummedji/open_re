@@ -59,6 +59,7 @@ $(document).ready(function(){
        
                 var customer_selected = $("input#login_customer_id").val();
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
+               $("select#retailer_data").selectpicker('refresh');
 
            }
            
@@ -70,6 +71,7 @@ $(document).ready(function(){
            }
 
            $("#order_place_data").empty();
+
            
        }
        else if(customer_type_selected == "distributor"){
@@ -85,12 +87,12 @@ $(document).ready(function(){
        
                 var customer_selected = $("input#login_customer_id").val();
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
-
+               $("select#retailer_data").selectpicker('refresh');
            }
 
            $("#order_place_data").empty();
-           
-           
+
+
        }
        
        else if(customer_type_selected == "farmer"){
@@ -109,6 +111,7 @@ $(document).ready(function(){
            }
 
            $("#order_place_data").empty();
+           $("select#retailer_data").selectpicker('refresh');
        }
        
    });
@@ -604,8 +607,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                 });
 
                 $("div#farmer_checked select#geo_level_1_data").selectpicker('refresh');
-
-            }
+                }
                 
             }
             
@@ -670,6 +672,7 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
 
                     }
                 }
+
             }
         }
     });
@@ -934,7 +937,7 @@ function order_place_add_row()
                 +
             "</td>"+
             "<td data-title='Quantity'>" +
-                "<input class='quantity_data' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
+                "<input class='quantity_data allownumericwithdecimal' type='text' name='quantity[]' value='"+quantity+"' class='numeric' />" +
             "</td>"
             +
             "<td data-title='Qty'>" +

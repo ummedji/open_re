@@ -253,7 +253,9 @@ $(document).on("click","a.lock_data",function(){
     
     var year_val = $(this).attr("rel");
     var budget_id = $("input#budget_id").val();
-    
+
+    var pbg_id = $("select.pbg_data").val();
+
     $.ajax({
         type: 'POST',
         url: site_url+"esp/set_budget_lock_data",
@@ -267,11 +269,16 @@ $(document).on("click","a.lock_data",function(){
                      //alert("bbbb");
                     
                     $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a>");
+
+
+                    get_pbg_product_sku_data(pbg_id);
                 }
                 else{
                   //   alert("cccc");
                     
                      $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
+
+                    get_pbg_product_sku_data(pbg_id);
                 }
                 
             }
