@@ -591,6 +591,7 @@ class Web_service extends Front_Controller
                     array_push($order_array, $ord);
                 }
 
+                testdata($order_array);
 
                 $result['status'] = true;
                 $result['message'] = 'Retrieved Successfully.';
@@ -598,6 +599,7 @@ class Web_service extends Front_Controller
 
             }
             else{
+
 
                 $result['status'] = false;
                 $result['message'] = 'No data found.';
