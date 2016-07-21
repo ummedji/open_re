@@ -355,15 +355,10 @@ if (!$this->input->is_ajax_request()) { ?>
 if(isset($login_customer_type) && $login_customer_type == 10){
 ?>
 <script type="text/javascript">
-
    /* $(document).ready(function() {
-        $("button#order_status").click(function(){
-            alert("button");
-        });
-      return false;
+        setTimeout(function () {
+            $("button#order_status").trigger("click");
+        }, 1000);
     });*/
-    
-
-
 </script>
 <?php } ?>

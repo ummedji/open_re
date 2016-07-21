@@ -1754,7 +1754,7 @@ class Ishop extends Front_Controller
 
 			$page = (isset($_POST['page']) ? $_POST['page'] : '');
          $loginusertype = $_POST["login_customer_type"];
-            
+
          if($loginusertype == 7){
             
             //FOR HO
@@ -1880,7 +1880,7 @@ class Ishop extends Front_Controller
             
         }
         else if($loginusertype == 10){
-            
+
             //FOR RETAILER
             
              $from_date = $_POST["form_date"];

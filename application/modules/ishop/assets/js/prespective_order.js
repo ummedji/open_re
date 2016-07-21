@@ -93,7 +93,7 @@ function mark_as_read(order_id){
         success: function(resp){
           //  alert(resp);
             
-            $("a.read_"+order_id).parent().html("<a class='unread_"+order_id+"'  href='javascript:void(0);'  onclick = 'mark_as_unread("+order_id+");'>Mark as Unread</a>");
+            $("a.read_"+order_id).parent().html("Read");
             
              $("a.read_"+order_id).remove();
         }

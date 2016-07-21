@@ -4604,10 +4604,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     if ($po['read_status'] == 0) {
                         $read_status = "<a class='read_" . $po['order_id'] . "' href='javascript:void(0);' onclick = 'mark_as_read(" . $po['order_id'] . ");' >Mark as Read</a>";
                     } else {
-                        $read_status = "<a class='unread_" . $po['order_id'] . "'  href='javascript:void(0);'  onclick = 'mark_as_unread(" . $po['order_id'] . ");'>Mark as Unread</a>";
+                        $read_status = "Read";
                     }
 
-                    $otn = '<div class="eye_i" prdid ="' . $po['order_id'] . '"><a href="#middle_container_product">' . $po['order_tracking_no'] . '</a></div>';
+                    $otn = '<div class="eye_i" prdid ="' . $po['order_id'] . '"><a href="javascript:void(0);">' . $po['order_tracking_no'] . '</a></div>';
                     if($local_date != null)
                     {
                       $date = strtotime($po['order_date']);
@@ -4875,16 +4875,13 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
 
                             foreach ($orderdata['result'] as $od) {
-
-                                if ($od['order_status'] == 0) {
-                                    $order_status = "Pending";
-                                } elseif ($od['order_status'] == 1) {
-                                    $order_status = "Dispatched";
-                                } elseif ($od['order_status'] == 3) {
-                                    $order_status = "Rejected";
-                                } elseif ($od['order_status'] == 4) {
-                                    $order_status = "op_ackno";
+                                
+                                if ($od['read_status'] == 0) {
+                                    $order_status = "Unread";
+                                } elseif ($od['read_status'] == 1) {
+                                    $order_status = "Read";
                                 }
+
 
                                 $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
                                 if($local_date != null){
@@ -4983,11 +4980,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     foreach ($orderdata['result'] as $od) {
 
-                        if ($od['read_status'] == 0) {
+                       /* if ($od['read_status'] == 0) {
                             $read_status = "<a class='read_" . $od['order_id'] . "' href='javascript:void(0);' onclick = 'mark_as_read(" . $od['order_id'] . ");' >Mark as Read</a>";
                         } else {
                             $read_status = "<a class='unread_" . $od['order_id'] . "'  href='javascript:void(0);'  onclick = 'mark_as_unread(" . $od['order_id'] . ");'>Mark as Unread</a>";
-                        }
+                        }*/
 
 
                         if ($od['order_status'] == 0) {
@@ -5017,6 +5014,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_view['row'][] = array($i, "", $od['f_dn'] , $od['t_dn'], $otn, $od['display_name'], $read_status);
 
                         } elseif ($radio_checked == "retailer") {
+                            if ($od['read_status'] == 0) {
+                                $read_status = "Unread";
+                            } else {
+                                $read_status = "Read";
+                            }
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
                                 $order_date = date($local_date,$date);
@@ -5030,7 +5032,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $order_datetime = $od['order_date'];
                             }
 
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od['t_dn'], $order_datetime, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od['t_dn'], $order_datetime, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $read_status);
 
                         } elseif ($radio_checked == "distributor") {
                             if($local_date != null){
@@ -5169,16 +5171,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         foreach ($orderdata['result'] as $od) {
 
-                            if ($od['order_status'] == 0) {
-                                $order_status = "Pending";
-                            } elseif ($od['order_status'] == 1) {
-                                $order_status = "Dispatched";
-                            } elseif ($od['order_status'] == 2) {
-                                $order_status = "";
-                            } elseif ($od['order_status'] == 3) {
-                                $order_status = "Rejected";
-                            } elseif ($od['order_status'] == 4) {
-                                $order_status = "op_ackno";
+                            if ($od['read_status'] == 0) {
+                                $order_status = "Unread";
+                            } elseif ($od['read_status'] == 1) {
+                                $order_status = "Read";
                             }
 
 

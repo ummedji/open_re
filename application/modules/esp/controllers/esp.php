@@ -242,7 +242,7 @@ class Esp extends Front_Controller
 
                                         }
 
-                                        $header_final_array[$monthvalue]["freeze_button"] = $freeze_button_data;
+
 
                                         break;
                                     }
@@ -255,8 +255,36 @@ class Esp extends Front_Controller
                                 $freeze_button = '';
                                 $freeze_button_data = "";
                             }
-                         
-                            
+
+
+
+
+                            $child_user_data = $this->esp_model->get_user_selected_level_data($login_user_id,null);
+
+                            //testdata($child_user_data);
+
+                            $child_forecast_array = array();
+
+                            $child_flag = 0;
+
+                            if(!empty($child_user_data["level_users"])){
+
+                                $user_data = explode(",",$child_user_data["level_users"]);
+
+                                foreach($user_data as $user_key => $userdata){
+                                    $child_forecast_data = $this->esp_model->get_forecast_freeze_status($forecast_id,$userdata,$monthvalue);
+                                    if($child_forecast_data != 0 && $child_forecast_data["freeze_status"] == 1)
+                                        $child_forecast_array[] = $child_forecast_data;
+                                }
+                            }
+
+                            $child_forecast_array = array_filter($child_forecast_array);
+
+                            if(count($child_forecast_array) > 0){
+                                $child_flag = 1;
+                            }
+
+
                             //GET ANY SENIOR USER LOCKED OR NOT DATA
 
                             $senior_lock_data = array();
@@ -315,24 +343,60 @@ class Esp extends Front_Controller
                                          else
                                          {
 
-                                                 $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
 
-                                             //$header_final_array[$monthvalue]['lockdata'] = 0;
-                                             
-                                              $header_final_array[$monthvalue]["lockdata"] = 0;
-                                              $header_final_array[$monthvalue]["clickable"] = 1;
+                                             if($child_flag == 1) {
+
+
+                                                 $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+
+                                                 //$header_final_array[$monthvalue]['lockdata'] = 0;
+
+                                                 $header_final_array[$monthvalue]["lockdata"] = 0;
+                                                 $header_final_array[$monthvalue]["clickable"] = 1;
+
+                                             }
+                                             else{
+
+                                                 $lock_data = "";
+
+                                                 //$header_final_array[$monthvalue]['lockdata'] = 0;
+
+                                                 $header_final_array[$monthvalue]["lockdata"] = "";
+                                                 $header_final_array[$monthvalue]["clickable"] = "";
+
+                                                 $freeze_button = '';
+                                                 $freeze_button_data = "";
+
+                                             }
 
                                          }
                                         
                                     }
                                     else{
-                                        
-                                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='".$monthvalue."' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
-                                                         
-                                        //$header_final_array[$monthvalue]['lockdata'] = 0;
-                                        
-                                        $header_final_array[$monthvalue]["lockdata"] = 0;
-                                        $header_final_array[$monthvalue]["clickable"] = 1;
+
+                                       // $get_jouinor_freeze_status = $this->esp_modal->
+
+
+
+                                        if($child_flag == 1) {
+
+                                            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />mmmmm</a></div>";
+
+                                            //$header_final_array[$monthvalue]['lockdata'] = 0;
+
+                                            $header_final_array[$monthvalue]["lockdata"] = 0;
+                                            $header_final_array[$monthvalue]["clickable"] = 1;
+                                        }else{
+
+                                            $lock_data = "";
+                                            $header_final_array[$monthvalue]["lockdata"] = "";
+                                            $header_final_array[$monthvalue]["clickable"] = "";
+
+
+                                            $freeze_button = '';
+                                            $freeze_button_data = "";
+
+                                        }
                                         
                                     }
                                     
@@ -349,7 +413,8 @@ class Esp extends Front_Controller
                                 
                             }
 
-                            
+                            $header_final_array[$monthvalue]["freeze_button"] = $freeze_button_data;
+
                             $time=strtotime($monthvalue);
                             $month=date("F",$time);
                             $year=date("Y",$time);
