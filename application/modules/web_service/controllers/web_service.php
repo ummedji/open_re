@@ -705,8 +705,7 @@ class Web_service extends Front_Controller
             else{
                 $order_data = $this->ishop_model->get_order_data($role_id,$country_id,$radio,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
             }
-
-//testdata($order_data);
+;
             $order_array = array();
             if (!empty($order_data)) {
 
@@ -718,6 +717,7 @@ class Web_service extends Front_Controller
                 $result['total_rows'] = $total_rows;
                 $result['pages'] = $pages;
                 // For Pagination
+
 
                 foreach ($order_data as $order)
                 {
@@ -738,6 +738,16 @@ class Web_service extends Front_Controller
                         $order_status = "op_ackno";
                     }
 
+                    if($order['read_status']==0)
+                    {
+                       $read_status='Unread';
+                    }
+                    else{
+                        $read_status='Read';
+                    }
+
+
+
                     $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'],null,$role_id,$page_function,'web_service');
 
                     $ord = array();
@@ -754,7 +764,7 @@ class Web_service extends Front_Controller
                                 "order_date" => $order['order_date'],
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
-                                "order_status" => $order_status,
+                                "order_status" => $read_status,
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
@@ -779,12 +789,6 @@ class Web_service extends Front_Controller
                     {
                         if($radio == 'farmer')
                         {
-                            if($order['read_status']  == 0)
-                            {
-                                $read_status = "Unread";
-                            }else{
-                                $read_status = "Read";
-                            }
                             $ord = array(
                                 "id" => $order['order_id'],
                                 "farmer_name" => $order['f_dn'],
@@ -806,7 +810,7 @@ class Web_service extends Front_Controller
                                 "order_date" => $order['order_date'],
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
-                                "order_status" => $order_status,
+                                "order_status" => $read_status,
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }elseif($radio == 'distributor')
@@ -850,7 +854,7 @@ class Web_service extends Front_Controller
                             "order_date" => $order['order_date'],
                             "edd" => $order['estimated_delivery_date'],
                             "amount" => $order['total_amount'],
-                            "order_status" => $order_status,
+                            "order_status" => $read_status,
                             "details" => !empty($order_details) ? $order_details : array()
                         );
                     }

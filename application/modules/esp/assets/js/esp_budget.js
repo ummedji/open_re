@@ -271,14 +271,14 @@ $(document).on("click","a.lock_data",function(){
                     $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a>");
 
 
-                    get_pbg_product_sku_data(pbg_id);
+                //    get_pbg_product_sku_data(pbg_id);
                 }
                 else{
                   //   alert("cccc");
                     
                      $("div#lock_area").html("<a style='cursor:pointer;' rel='"+year_val+"' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a>");
 
-                    get_pbg_product_sku_data(pbg_id);
+                 //   get_pbg_product_sku_data(pbg_id);
                 }
                 
             }

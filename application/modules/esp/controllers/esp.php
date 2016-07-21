@@ -2408,6 +2408,10 @@ class Esp extends Front_Controller
         $login_user_highest_level_data = $this->esp_model->get_higher_level_employee_for_loginuser($login_user_id);
         
         ////////////////
+
+        $global_head_user = array();
+
+        $login_user_all_parent_data = $this->esp_model->get_employee_for_loginuser($login_user_id,$global_head_user);
         
        // echo $login_user_id."==".$login_user_parent_data."==".$login_user_highest_level_data;
        // die;
@@ -2621,6 +2625,9 @@ foreach($month_data as $monthkey => $monthvalue){
 
         $employee_month_product_budget_data1 = $this->esp_model->get_employee_month_product_budget_data($businesscode, $skuvalue['product_sku_country_id'], $monthvalue);
 
+
+        $lock_data = "";
+
         $lock_status = 0;
         $lock_by_id = "";
         $check_lock_budget_id = "";
@@ -2664,6 +2671,8 @@ foreach($month_data as $monthkey => $monthvalue){
 
 //GET ANY SENIOR USER LOCKED OR NOT DATA
 
+        //testdata($login_user_all_parent_data);
+
         $senior_lock_data = array();
 
         if (!empty($login_user_all_parent_data)) {
@@ -2678,11 +2687,13 @@ foreach($month_data as $monthkey => $monthvalue){
             }
         }
 
+     //   testdata($senior_lock_data);
+
         if (in_array(1, $senior_lock_data)) {
 
             //SHOW LOCK and make it NON CLICKABLE
 
-            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;pointer-events: none;opacity: 0.7;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;pointer-events: none;opacity: 0.7;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />qqqq</a></div>";
 
             // $nonclickable = 1;
 
@@ -2692,6 +2703,8 @@ foreach($month_data as $monthkey => $monthvalue){
             //  $lock_data = "lock";
 
         }
+
+//echo $lock_data;die;
 
 
         //GET HIS OWN DATA and make it CLICKABLE
@@ -2709,7 +2722,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
                 if ($self_lock_data[0]["lock_status"] != 0) {
 
-                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />wwww</a></div>";
 
                     //  $header_final_array[$monthvalue]['lockdata'] = 1;
 
@@ -2723,7 +2736,7 @@ foreach($month_data as $monthkey => $monthvalue){
                     if ($child_flag == 1) {
 
 
-                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />eeee</a></div>";
 
                         //$header_final_array[$monthvalue]['lockdata'] = 0;
 
@@ -2732,7 +2745,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
                     } else {
 
-                        $lock_data = "";
+                        $lock_data = "rrrr";
 
                         //$header_final_array[$monthvalue]['lockdata'] = 0;
 
@@ -2753,7 +2766,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
                 if ($child_flag == 1) {
 
-                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />mmmmm</a></div>";
+                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />mmmmm</a></div>";
 
                     //$header_final_array[$monthvalue]['lockdata'] = 0;
 
@@ -2761,7 +2774,7 @@ foreach($month_data as $monthkey => $monthvalue){
                     //	$header_final_array[$monthvalue]["clickable"] = 1;
                 } else {
 
-                    $lock_data = "";
+                    $lock_data = "tttt";
                     //	$header_final_array[$monthvalue]["lockdata"] = "";
                     //	$header_final_array[$monthvalue]["clickable"] = "";
 
@@ -2775,7 +2788,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
 
         } else {
-            $lock_data = "";
+            $lock_data = "yyyy";
 
 
             // $header_final_array[$monthvalue]["lockdata"] = "";
