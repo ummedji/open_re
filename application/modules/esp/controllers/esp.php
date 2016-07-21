@@ -2702,21 +2702,23 @@ foreach($month_data as $monthkey => $monthvalue){
 
             //  $lock_data = "lock";
 
-        }
+        }else {
 
 //echo $lock_data;die;
 
 
-        //GET HIS OWN DATA and make it CLICKABLE
+            //GET HIS OWN DATA and make it CLICKABLE
 
-        if ($lock_show_data != 0) {
+            //if ($lock_show_data != 0) {
 
             //IF USER HAVING CHILD
 
 
             //IF SENIOR IS NOT LOCKED AND USER HAVING CHILD DATA
 
-            $self_lock_data = $this->esp_model->senior_budget_lock_status($login_user_id, $monthvalue, $check_lock_budget_id);
+            $self_lock_data = $this->esp_model->senior_budget_lock_status($login_user_id, $check_lock_budget_id,$monthvalue);
+
+           // dumpme($self_lock_data);
 
             if ($self_lock_data != 0) {
 
@@ -2733,7 +2735,7 @@ foreach($month_data as $monthkey => $monthvalue){
                 } else {
 
 
-                    if ($child_flag == 1) {
+                    if ($child_flag == 1)  {
 
 
                         $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />eeee</a></div>";
@@ -2786,15 +2788,16 @@ foreach($month_data as $monthkey => $monthvalue){
 
             }
 
+        }
 
-        } else {
-            $lock_data = "yyyy";
+     //   } else {
+      //      $lock_data = "yyyy";
 
 
             // $header_final_array[$monthvalue]["lockdata"] = "";
             // $header_final_array[$monthvalue]["clickable"] = "";
 
-        }
+      //  }
     }
 
 }

@@ -3780,9 +3780,8 @@ class Ishop_model extends BF_Model
 
     public function invoice_confirmation_received_by_distributor($invoice_month, $po_no, $invoice_no, $user_id, $country_id, $page = null,$web_service=null)
     {
-        $sql = 'SELECT * ';
+        $sql = 'SELECT  SQL_CALC_FOUND_ROWS * ';
         $sql .= ' FROM bf_ishop_primary_sales AS ips ';
-        //$sql .= " LEFT JOIN `bf_ishop_orders` as bio ON (`bio`.`user_id` = `bu`.`id`)  ";
         $sql .= 'WHERE 1 ';
 
         if (isset($invoice_month) && !empty($invoice_month) && $invoice_month != '') {
@@ -3798,10 +3797,7 @@ class Ishop_model extends BF_Model
         $sql .= " AND ips.customer_id= " . $user_id . " ";
         $sql .= " AND ips.invoice_recived_status= 0 ";
         $sql .= " AND ips.status = 1 ";
-        //  echo $sql;
-        /*  $info = $this->db->query($sql);
-        $limit = $info->result_array();
-        $invoice_confirmation = array('result'=>$limit);*/
+
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
@@ -3809,8 +3805,8 @@ class Ishop_model extends BF_Model
             $limit = 10;
             $pagenum = $this->input->get_post('page');
             $page = !empty($pagenum) ? $pagenum : 1;
-            $offset = $page*$limit-$limit;
-            $sql .= ' LIMIT '.$offset.",".$limit;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
             $info = $this->db->query($sql);
             // For Pagination
 
