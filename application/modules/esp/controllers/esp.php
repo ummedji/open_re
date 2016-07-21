@@ -2832,7 +2832,9 @@ foreach($month_data as $monthkey => $monthvalue){
 	        $pbgid = $_POST["pbgid"];
 	        $from_month = $_POST["frommonth"];
 	        $to_month = $_POST["tomonth"];
-	        
+
+             $selected_year = date("Y",strtotime($from_month));
+
 	        $businesscode = $_POST["businesscode"];
         
 		}
@@ -3445,11 +3447,11 @@ foreach($month_data as $monthkey => $monthvalue){
             
             $html .= '</tbody>';
        $html .= '</table>';
-           
+
             $freeze_button = "";
-			$freeze_status = 0;
+            $freeze_button_data = 0;
 			
-            if($login_user_parent_data != 0){
+         /*   if($login_user_parent_data != 0){
                 	
                 $freeze_show = 1;
 				
@@ -3480,6 +3482,52 @@ foreach($month_data as $monthkey => $monthvalue){
 			else{
 				$freeze_show = 0;
 			}
+
+            */
+
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
+
+            $budget_freeze_data2 = $this->esp_model->get_budget_freeze_history_user_status_data($login_user_id,$budget_id);
+
+           // testdata($budget_freeze_data2);
+
+            if($budget_freeze_data2 != 0){
+        if(!empty($budget_freeze_data2) && $budget_freeze_data2[0]["freeze_status"] == 0){
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
+
+
+            $freeze_button_data = 1;
+
+        }
+        else{
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Unfreeze</button></div>';
+
+            $freeze_button_data = 0;
+
+        }
+    }else{
+        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="'.$selected_year.'">Freeze</button></div>';
+
+        $freeze_button_data = 1;
+
+    }
+
+           echo $login_user_highest_level_data." == ".$login_user_id;die;
+
+
+            if($login_user_highest_level_data == $login_user_id){
+                $freeze_button = '';
+            //    $freeze_button_data = "";
+            }
+
+
+
+	if($child_flag != 1) {
+
+        $freeze_button = '';
+     //   $freeze_button_data = "";
+
+    }
 
 
 			if(isset($webservice_data['webservice']) && !empty($webservice_data['webservice'])){

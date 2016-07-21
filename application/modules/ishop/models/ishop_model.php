@@ -3805,8 +3805,8 @@ class Ishop_model extends BF_Model
             $limit = 10;
             $pagenum = $this->input->get_post('page');
             $page = !empty($pagenum) ? $pagenum : 1;
-            $offset = $page * $limit - $limit;
-            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
             // For Pagination
 
