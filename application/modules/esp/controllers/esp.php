@@ -162,7 +162,9 @@ class Esp extends Front_Controller
 		
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
         $month_data = $this->get_monthly_data($from_month,$to_month);
-        
+
+        testdata($month_data);
+
         $assumption_data = $this->esp_model->get_assumption_data();
         
         $lock_show_data = $this->get_user_level_data($login_user_id);

@@ -230,7 +230,7 @@
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Geo L2<span style="color: red">*</span></label>
-                        <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
+                        <select class="selectpicker geo_level_1_data" id="geo_level_1_data" name="geo_level_2_data" data-live-search="true" required>
                         </select>
 
                     </div>
@@ -255,14 +255,14 @@
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Geo L3<span style="color: red">*</span></label>
-                        <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
+                        <select class="selectpicker retailer_geo_level_1_data" id="retailer_geo_level_1_data" name="geo_level_3_data" data-live-search="true" required>
 
                         </select>
 
                     </div>
                     <div class="form-group">
                         <label>Geo L2<span style="color: red">*</span></label>
-                        <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_1_data" data-live-search="true" required>
+                        <select class="selectpicker retailer_geo_level_2_data" id="retailer_geo_level_2_data" name="geo_level_2_data" data-live-search="true" required>
 
                         </select>
 
@@ -284,7 +284,7 @@
                     
                     <div class="form-group">
                         <label>Geo L2<span style="color: red">*</span></label>
-                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_1_data" data-live-search="true" required>
+                        <select class="selectpicker distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="geo_level_2_data" data-live-search="true" required>
                         </select>
                     </div>
 
