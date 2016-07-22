@@ -492,7 +492,7 @@ class Ishop_model extends BF_Model
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $primary_sales_id = explode(',', $this->input->post("primary_sales_detail"));
-            $invoice_no = explode(',', $this->input->post("invoice_no"));
+            //$invoice_no = explode(',', $this->input->post("invoice_no"));
             $PO_no = explode(',', $this->input->post("PO_no"));
             $order_tracking_no = explode(',', $this->input->post("order_tracking_no"));
             $primary_sales_product_id = explode(',', $this->input->post("primary_sales_product_detail"));
@@ -501,7 +501,7 @@ class Ishop_model extends BF_Model
             $amount = explode(',', $this->input->post("amount"));
         } else {
             $primary_sales_id = $this->input->post("primary_sales_detail");
-            $invoice_no = $this->input->post("invoice_no");
+           // $invoice_no = $this->input->post("invoice_no");
             $PO_no = $this->input->post("PO_no");
             $order_tracking_no = $this->input->post("order_tracking_no");
             $primary_sales_product_id = $this->input->post("primary_sales_product_detail");
@@ -540,7 +540,7 @@ class Ishop_model extends BF_Model
         if (isset($primary_sales_id) && !empty($primary_sales_id)) {
             foreach ($primary_sales_id as $key => $psi) {
                 $primary_sales_update = array(
-                    'invoice_no' => $invoice_no[$key],
+                    //'invoice_no' => $invoice_no[$key],
                     'PO_no' => $PO_no[$key],
                     'order_tracking_no' => $order_tracking_no[$key],
                     'modified_by_user' => $user_id,
@@ -1620,7 +1620,7 @@ class Ishop_model extends BF_Model
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $secondary_sales_id = explode(',', $this->input->post("secondary_sales_detail"));
-            $invoice_no = explode(',', $this->input->post("invoice_no"));
+           // $invoice_no = explode(',', $this->input->post("invoice_no"));
             $PO_no = explode(',', $this->input->post("PO_no"));
             $order_tracking_no = explode(',', $this->input->post("order_tracking_no"));
             $secondary_sales_product_id = explode(',', $this->input->post("secondary_sales_product"));
@@ -1630,7 +1630,7 @@ class Ishop_model extends BF_Model
             $amount = explode(',', $this->input->post("amount"));
         } else {
             $secondary_sales_id = $this->input->post("secondary_sales_detail");
-            $invoice_no = $this->input->post("invoice_no");
+           // $invoice_no = $this->input->post("invoice_no");
             $PO_no = $this->input->post("PO_no");
             $order_tracking_no = $this->input->post("order_tracking_no");
             $secondary_sales_product_id = $this->input->post("secondary_sales_product");
@@ -1673,11 +1673,11 @@ class Ishop_model extends BF_Model
             //testdata($secondary_sales_id);
             foreach ($secondary_sales_id as $key => $psi) {
                 $PO_n = isset($PO_no[$key]) ? $PO_no[$key] : '';
-                $invoice_n = isset($invoice_no[$key]) ? $invoice_no[$key] : '';
+              //  $invoice_n = isset($invoice_no[$key]) ? $invoice_no[$key] : '';
                 $order_tracking_n = isset($order_tracking_no[$key]) ? $order_tracking_no[$key] : '';
 
                 $secondary__sales_update = array(
-                    'invoice_no' => $invoice_n,
+                   // 'invoice_no' => $invoice_n,
                     'PO_no' =>$PO_n,
                     'order_tracking_no' => $order_tracking_n,
                     'modified_by_user' => $user_id,

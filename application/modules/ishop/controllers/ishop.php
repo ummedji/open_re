@@ -5680,13 +5680,7 @@ class Ishop extends Front_Controller
 	public function order_approval_details_csv_report(){
 		$this->load->library('excel');
 		$user = $this->auth->user();
-		//testdata($_GET);
 
-
-		/*[form_date] => 2016-04-24
-    [to_date] => 2016-07-25
-    [by_po_no] =>
-    [by_otn] => */
 
 		$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
@@ -5694,13 +5688,8 @@ class Ishop extends Front_Controller
 		$by_po_no = (isset($_GET['by_otn']) ? $_GET['by_otn'] : '');
 
 		$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
-
 		$page = (isset($_GET['page']) ? $_GET['page'] : '');
-
-		//$_GET["renderdata"],
 		$customer_id = $user->id;
-
-		//$order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
 
 		$order_data = $this->ishop_model->order_details_report($user->role_id,$user->country_id,null,$user->id,$customer_id,$from_date,$todate,$by_otn,$by_po_no,$page,$page_function,null,null,$user->local_date);
 
