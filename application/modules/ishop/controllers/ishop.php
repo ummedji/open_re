@@ -4204,7 +4204,7 @@ class Ishop extends Front_Controller
 		$user_id = (isset($_GET['login_customer_id']) ? $_GET['login_customer_id'] : '');
 		$country_id = (isset($_GET['login_customer_countryid']) ? $_GET['login_customer_countryid'] : '');
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
 
 		$rol= $this->ishop_model->get_all_rol_view_for_report($user_id,$country_id ,$role_id,$checked_type,$page);
 
@@ -5095,19 +5095,36 @@ class Ishop extends Front_Controller
 	}
 
 
-	/*public function ewrt()
+	public function order_details_csv_report()
 	{
 		$this->load->library('excel');
 
+		testdata($_GET);
 		$user = $this->auth->user();
 
+		if($user->role_id == 7)
+		{
+			$radio_checked = (isset($_GET['radio1']) && !empty($_GET['radio1']) ) ? $_GET['radio1'] :'distributor';
+		}
+		if($user->role_id == 8)
+		{
+
+		}
+		if($user->role_id == 9)
+		{
+
+		}
+		if($user->role_id == 10)
+		{
+
+		}
 		$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 
 		$page = (isset($_GET['page']) ? $_GET['page'] : '');
 
-		$order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page,null,null,null,$user->local_date);
-	}*/
+		//$order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page,null,null,null,$user->local_date);
+	}
 
 
 	/*-----------------------Report Download--------------------------------------*/

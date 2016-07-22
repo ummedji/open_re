@@ -254,45 +254,11 @@ $(document).on('click', 'div.order_status .edit_i', function () {
     var order_status = $("#order_status");
     order_status.validate();
 
-    /* var order_status_validators = $("#order_status").validate({
-           // ignore: ".ignore",
-            rules: {
-                dis_distributor_geo_level_1_data :{
-                    required: true
-                },
-                distributor_id :{
-                    required: true
-                },
-                retailer_geo_level_2_data:{
-                    required: true
-                },
-                retailer_geo_level_1_data:{
-                    required: true
-                },
-                retailer_distributor_id:{
-                    required: true
-                },
-                retailer_id :{
-                    required: true
-                },
-                form_date:{
-                    required: true
-                },
-                to_date:{
-                    required: true
-                },
-                geo_level_2_data:{
-                    required: true
-                }
-            }
-        });*/
-
     $("#order_status").on("submit",function(e){
         e.preventDefault();
         var param = $("form#order_status").serializeArray();
 
         var form_order_status = false;
-
         form_order_status = order_status.valid();
 
     if(form_order_status == false){
@@ -314,6 +280,26 @@ $(document).on('click', 'div.order_status .edit_i', function () {
             });
             return false;
         }
+
+    });
+
+    $('#download_csv').on('click',function(){
+
+        var param = $("#order_status").serialize();
+
+        var form_order_status = false;
+        form_order_status = order_status.valid();
+
+        if(form_order_status == false){
+            return false;
+        }
+        else
+        {
+            var export_url = site_url + "ishop/order_details_csv_report?" + param+"&page="+$("input#page").val();
+
+            window.location.href = export_url;
+        }
+        return false;
 
     });
     

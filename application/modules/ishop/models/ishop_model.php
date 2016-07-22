@@ -7323,7 +7323,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $target['row'][] = array($i, $rd['ishop_target_id'], $rd['political_geography_name'], $rd['user_code'], $rd['display_name'], $rd['product_sku_name'], $rd['quantity']);
                 $i++;
             }
-           testdata($target);
             return $target;
         }
         else{
