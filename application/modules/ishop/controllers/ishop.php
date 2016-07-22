@@ -4485,9 +4485,9 @@ class Ishop extends Front_Controller
 			$checked_type=null;
 		}
 		//$checked_type= $_POST['checked_type'];
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
 
-		$stock_month = (isset($_POST['stock_month']) ? $_POST['stock_month'] : '');
+		$stock_month = (isset($_GET['stock_month']) ? $_GET['stock_month'] : '');
 
 		$physical_stock= $this->ishop_model->physical_stock_by_for_report($user->id,$user->country_id,$logined_user_role,$checked_type,$page,null,$stock_month,$user->local_date);
 

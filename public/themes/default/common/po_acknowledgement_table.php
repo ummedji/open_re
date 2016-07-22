@@ -9,8 +9,7 @@ $user= $this->auth->user();
 $login_customer_type = $user->role_id;
 
  $_POST['radio1'] =  (isset($_POST['radio1']) ? $_POST['radio1'] : '');
- 
-//echo "ttttttt";
+
 
 if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
     if($login_customer_type == 9 || $login_customer_type == 10){
@@ -22,9 +21,8 @@ if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
         }
         else{
              $formname = "update_order_status_detail_data";
-             
              $url = 'ishop/update_po_acknowledgement_data';
-             
+
             
         }
         

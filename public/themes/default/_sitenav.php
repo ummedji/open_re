@@ -23,7 +23,7 @@
                     <div class="slide_icon"><a href="#" title="Open Menu"><img src="<?php echo Template::theme_url('images/back_arrow.png'); ?>" alt=""></a></div>
                     <div class="right_nave">
                         <ul class="top_nv">
-                            <?php if(isset($segment) && ($segment == 'ishop' && ($segment2 == 'primary_sales_view_details' || $segment2 == 'set_rol' || $segment2 == 'company_current_stock' || $segment2 == 'secondary_sales_details_view' || $segment2 == 'physical_stock' || $segment2 == 'invoice_received_confirmation' || $segment2 == 'sales_view' ))){?>
+                            <?php if(isset($segment) && ($segment == 'ishop' && ($segment2 == 'primary_sales_view_details' || $segment2 == 'set_rol' || $segment2 == 'company_current_stock' || $segment2 == 'secondary_sales_details_view' || $segment2 == 'physical_stock' || $segment2 == 'invoice_received_confirmation' || $segment2 == 'sales_view' || $segment2 == 'schemes_view' || $segment2 == 'target' || $segment2 == 'prespective_order' || $segment2 == 'po_acknowledgement' ))){?>
                                 <li><a href="javascript: void(0);" id="download_csv" title="Download"><img src="<?php echo Template::theme_url('images/download_i.svg'); ?>" class="hvr-push" alt=""></a></li>
                             <?php } ?>
                             <li><a href="javascript: void(0);" title="Share"><img src="<?php echo Template::theme_url('images/share_i.svg'); ?>" class="hvr-push" alt=""></a></li>

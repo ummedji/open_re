@@ -25,14 +25,13 @@
     if(isset($po_ack_table))
     {
         
-        
         $action_segment = $this->uri->segment(2);
        //  echo $action_segment;
        
         
         if($action_segment == "po_acknowledgement" || $action_segment == "get_order_status_data_details"){
             
-            
+
             
             echo theme_view('common/po_acknowledgement_table');
         }
