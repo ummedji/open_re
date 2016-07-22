@@ -98,7 +98,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-10 col-md-offset-1 distributore_form retailer_data" style="display:none;">
+                <div class="col-md-10 col-md-offset-1 distributore_form retailer_data_checked" style="display:none;">
                 <div class="row">
                     
                      <div class="col-md-4 col-sm-4 tp_form">
@@ -242,8 +242,8 @@
 
                     </div>
                     <div class="form-group">
-                        <label>Farmer Name</label>
-                        <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true">
+                        <label>Farmer Name<span style="color: red">*</span></label>
+                        <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true" required>
 
                         </select>
                     </div>

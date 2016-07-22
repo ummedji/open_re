@@ -61,6 +61,8 @@ echo Assets::js();
     $(document).on("keypress keyup blur",".allownumericwithdecimal",function (event) {
         //this.value = this.value.replace(/[^0-9\.]/g,'');
         $(this).val($(this).val().replace(/[^0-9\.]/g,''));
+       // $(".allownumericwithdecimal").val().length > 8
+        //$("#id").val().replace(/ /g,'').length
         if ((event.which != 46 || $(this).val().indexOf('.') != -1) && (event.which < 48 || event.which > 57)) {
             event.preventDefault();
         }

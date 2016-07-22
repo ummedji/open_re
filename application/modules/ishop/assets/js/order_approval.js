@@ -64,6 +64,24 @@ $(document).ready(function(){
        }
     });
 
+    $('#download_csv').on('click',function(){
+
+        var param = $("#order_approval").serialize();
+
+        var $valid = $("#order_approval").valid();
+        if(!$valid) {
+            order_approval_view_validators.focusInvalid();
+            return false;
+        }
+        else {
+            var export_url = site_url + "ishop/order_approval_details_csv_report?" + param+"&page="+$("input#page").val();
+
+            window.location.href = export_url;
+        }
+        return false;
+
+    });
+
 });
 
 $(document).on('click', 'input.order_status', function () {

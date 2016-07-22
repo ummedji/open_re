@@ -333,7 +333,46 @@ class Esp_model extends BF_Model
         }
         
     }
-    
+
+    public function get_user_data_from_bussinesscode($businesscode){
+
+        $this->db->select("bu.id,bu.display_name");
+      //  $this->db->from("bf_master_employee_reporting_person as bmerp");
+        $this->db->from("bf_users as bu");
+        $this->db->where("bu.bussiness_code",$businesscode);
+
+        $user_data = $this->db->get()->result_array();
+
+        if(isset($user_data) && !empty($user_data)) {
+            return $user_data;
+        } else{
+            return 0;
+        }
+
+    }
+
+    public function get_employee_product_forecast_data($businesscode,$pbg_id,$login_user_id){
+
+        $this->db->select('*');
+        $this->db->from("bf_esp_forecast as bef");
+
+        $this->db->join("bf_esp_forecast_product_details as befpd","befpd.forecast_id = bef.forecast_id");
+
+        $this->db->where("bef.business_code",$businesscode);
+        $this->db->where("bef.pbg_id",$pbg_id);
+        $this->db->where("bef.created_by_user",$login_user_id);
+       // $this->db->where("befpd.forecast_month",$monthvalue);
+
+        $forecast_data = $this->db->get()->result_array();
+
+        if(isset($forecast_data) && !empty($forecast_data)) {
+            return $forecast_data;
+        } else{
+            return 0;
+        }
+
+    }
+
     public function get_month_assumption_forecast_data($forecast_id,$monthvalue){
         
         $this->db->select('befa.*,bma1.assumption_name as assumption1,bma2.assumption_name as assumption2,bma3.assumption_name as assumption3');

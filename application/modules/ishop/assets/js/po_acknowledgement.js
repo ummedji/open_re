@@ -160,3 +160,15 @@ $(document).on("click",'form#update_po_data button#update_po_order_details',func
     });
     return false;
 });
+
+$('#download_csv').on('click',function(){
+
+    var param = $("#po_acknowledgement").serialize();
+
+    var export_url = site_url + "ishop/po_acknowledgement_details_csv_report?" + param+"&page="+$("input#page").val();
+
+    window.location.href = export_url;
+
+    return false;
+
+});

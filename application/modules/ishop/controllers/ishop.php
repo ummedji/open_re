@@ -1935,7 +1935,7 @@ class Ishop extends Front_Controller
 					$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
 				}
                
-            //testdata($order_details);
+           // testdata($order_details);
             
                 //echo $action_data;die;
                 
@@ -5053,14 +5053,19 @@ class Ishop extends Front_Controller
 			$this->excel->getActiveSheet()->setCellValue('G1',$prespective_order['head'][6]);
 			$this->excel->getActiveSheet()->setCellValue('H1',$prespective_order['head'][7]);
 			$this->excel->getActiveSheet()->setCellValue('I1',$prespective_order['head'][8]);
+			$this->excel->getActiveSheet()->setCellValue('J1',$prespective_order['head'][9]);
+			$this->excel->getActiveSheet()->setCellValue('K1',$prespective_order['head'][10]);
+			$this->excel->getActiveSheet()->setCellValue('L1',$prespective_order['head'][11]);
+			$this->excel->getActiveSheet()->setCellValue('M1',$prespective_order['head'][12]);
+			$this->excel->getActiveSheet()->setCellValue('N1',$prespective_order['head'][13]);
 		}
 
 		//change the font size
-		$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setSize(12);
+		$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(12);
 		//make the font become bold
-		$this->excel->getActiveSheet()->getStyle('A1:I1')->getFont()->setBold(true);
+		$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
 
-		foreach(range('A1','I1') as $columnID) {
+		foreach(range('A1','N1') as $columnID) {
 			$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
 		}
 
@@ -5077,6 +5082,11 @@ class Ishop extends Front_Controller
 				$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
 				$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
 				$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+				$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+				$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+				$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+				$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+				$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
 			}
 		}
 
@@ -5098,34 +5108,669 @@ class Ishop extends Front_Controller
 	public function order_details_csv_report()
 	{
 		$this->load->library('excel');
-
-		testdata($_GET);
+		//testdata($_GET);
 		$user = $this->auth->user();
 
-		if($user->role_id == 7)
-		{
-			$radio_checked = (isset($_GET['radio1']) && !empty($_GET['radio1']) ) ? $_GET['radio1'] :'distributor';
+		$this->excel->setActiveSheetIndex(0);
+		$this->excel->getActiveSheet()->setTitle('Order Status');
+
+		if($user->role_id == 7) {
+			$radio_checked = (isset($_GET['radio1']) && !empty($_GET['radio1'])) ? $_GET['radio1'] : 'distributor';
+
+			if ($radio_checked == 'distributor')
+			{
+				$customer_id = (isset($_GET['distributor_id']) ? $_GET['distributor_id'] : '');
+			}
+			else{
+				$customer_id = (isset($_GET['retailer_id']) ? $_GET['retailer_id'] : '');
+			}
+
+			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+
+			$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
+
+			$page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+			$order_data = $this->ishop_model->order_details_report($user->role_id,$user->country_id,$radio_checked,$user->id,$customer_id,$from_date,$todate,null,null,$page,$page_function,null,null,$user->local_date);
+
+
+			if($radio_checked == 'distributor')
+			{
+				if(!empty($order_data) && isset($order_data))
+				{
+					$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+					$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+					$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+					$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+					$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+					$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+					$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+					$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+					$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+					$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+					$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+					$this->excel->getActiveSheet()->setCellValue('L1',$order_data['head'][11]);
+					$this->excel->getActiveSheet()->setCellValue('M1',$order_data['head'][12]);
+					$this->excel->getActiveSheet()->setCellValue('N1',$order_data['head'][13]);
+				}
+
+				//change the font size
+				$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(12);
+				//make the font become bold
+				$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
+
+				foreach(range('A1','N1') as $columnID) {
+					$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+				}
+
+				if(!empty($order_data))
+				{
+					foreach($order_data['row'] as $k=>$row)
+					{
+						$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+						$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+						$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+						$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+						$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+						$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+						$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+						$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+						$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+						$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+						$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+						$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+						$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+						$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+					}
+				}
+
+			}
+			else{
+				if(!empty($order_data) && isset($order_data))
+				{
+					$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+					$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+					$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+					$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+					$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+					$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+					$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+					$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+					$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+					$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+					$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+					$this->excel->getActiveSheet()->setCellValue('L1',$order_data['head'][11]);
+					$this->excel->getActiveSheet()->setCellValue('M1',$order_data['head'][12]);
+					$this->excel->getActiveSheet()->setCellValue('N1',$order_data['head'][13]);
+				}
+
+				//change the font size
+				$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(12);
+				//make the font become bold
+				$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
+
+				foreach(range('A1','N1') as $columnID) {
+					$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+				}
+
+				if(!empty($order_data))
+				{
+					foreach($order_data['row'] as $k=>$row)
+					{
+						$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+						$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+						$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+						$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+						$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+						$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+						$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+						$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+						$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+						$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+						$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+						$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+						$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+						$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+					}
+				}
+			}
 		}
 		if($user->role_id == 8)
 		{
+			$radio_checked = (isset($_GET['radio1']) && !empty($_GET['radio1'])) ? $_GET['radio1'] : 'farmer';
+
+			if ($radio_checked == 'farmer')
+			{
+				$customer_id = (isset($_GET['farmer_data']) ? $_GET['farmer_data'] : '');
+			}
+			if($radio_checked == 'retailer')
+			{
+				$customer_id = (isset($_GET['retailer_data']) ? $_GET['retailer_data'] : '');
+			}
+			if($radio_checked == 'distributor')
+			{
+				$customer_id = (isset($_GET['distributor_data']) ? $_GET['distributor_data'] : '');
+			}
+
+			$order_tracking_no = (isset($_GET['order_tracking_no']) ? $_GET['order_tracking_no'] : null);
+			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+
+			$page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+			$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
+
+			$order_data = $this->ishop_model->order_details_report($user->role_id,$user->country_id,$radio_checked,$user->id,$customer_id,$from_date,$todate,$order_tracking_no,null,$page,$page_function,null,null,$user->local_date);
+
+			if($radio_checked == 'farmer')
+			{
+				if(!empty($order_data) && isset($order_data))
+				{
+					$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+					$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+					$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+					$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+					$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+					$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+					$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+					$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+					$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+					$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+					$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+				}
+
+				//change the font size
+				$this->excel->getActiveSheet()->getStyle('A1:K1')->getFont()->setSize(12);
+				//make the font become bold
+				$this->excel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);
+
+				foreach(range('A1','N1') as $columnID) {
+					$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+				}
+
+				if(!empty($order_data))
+				{
+					foreach($order_data['row'] as $k=>$row)
+					{
+						$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+						$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+						$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+						$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+						$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+						$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+						$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+						$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+						$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+						$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+						$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+					}
+				}
+
+			}
+			if($radio_checked == 'retailer')
+			{
+				if(!empty($order_data) && isset($order_data))
+				{
+					$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+					$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+					$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+					$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+					$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+					$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+					$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+					$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+					$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+					$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+					$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+					$this->excel->getActiveSheet()->setCellValue('L1',$order_data['head'][11]);
+					$this->excel->getActiveSheet()->setCellValue('M1',$order_data['head'][12]);
+					$this->excel->getActiveSheet()->setCellValue('N1',$order_data['head'][13]);
+					$this->excel->getActiveSheet()->setCellValue('O1',$order_data['head'][14]);
+					$this->excel->getActiveSheet()->setCellValue('P1',$order_data['head'][15]);
+					$this->excel->getActiveSheet()->setCellValue('Q1',$order_data['head'][16]);
+				}
+
+				//change the font size
+				$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setSize(12);
+				//make the font become bold
+				$this->excel->getActiveSheet()->getStyle('A1:Q1')->getFont()->setBold(true);
+
+				foreach(range('A1','Q1') as $columnID) {
+					$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+				}
+
+				if(!empty($order_data))
+				{
+					foreach($order_data['row'] as $k=>$row)
+					{
+						$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+						$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+						$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+						$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+						$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+						$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+						$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+						$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+						$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+						$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+						$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+						$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+						$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+						$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+						$this->excel->getActiveSheet()->setCellValue('O'.($k+2), $row['14']);
+						$this->excel->getActiveSheet()->setCellValue('P'.($k+2), $row['15']);
+						$this->excel->getActiveSheet()->setCellValue('Q'.($k+2), $row['16']);
+					}
+				}
+			}
+			if($radio_checked == 'distributor')
+			{
+				if(!empty($order_data) && isset($order_data))
+				{
+					$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+					$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+					$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+					$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+					$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+					$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+					$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+					$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+					$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+					$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+					$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+					$this->excel->getActiveSheet()->setCellValue('L1',$order_data['head'][11]);
+					$this->excel->getActiveSheet()->setCellValue('M1',$order_data['head'][12]);
+					$this->excel->getActiveSheet()->setCellValue('N1',$order_data['head'][13]);
+					$this->excel->getActiveSheet()->setCellValue('O1',$order_data['head'][14]);
+					$this->excel->getActiveSheet()->setCellValue('P1',$order_data['head'][15]);
+				}
+
+				//change the font size
+				$this->excel->getActiveSheet()->getStyle('A1:P1')->getFont()->setSize(12);
+				//make the font become bold
+				$this->excel->getActiveSheet()->getStyle('A1:P1')->getFont()->setBold(true);
+
+				foreach(range('A1','P1') as $columnID) {
+					$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+				}
+
+				if(!empty($order_data))
+				{
+					foreach($order_data['row'] as $k=>$row)
+					{
+						$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+						$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+						$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+						$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+						$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+						$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+						$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+						$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+						$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+						$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+						$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+						$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+						$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+						$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+						$this->excel->getActiveSheet()->setCellValue('O'.($k+2), $row['14']);
+						$this->excel->getActiveSheet()->setCellValue('P'.($k+2), $row['15']);
+					}
+				}
+			}
+
+
 
 		}
 		if($user->role_id == 9)
 		{
+			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+
+			$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
+
+			$page = (isset($_GET['page']) ? $_GET['page'] : '');
+			$customer_id=$user->id;
+
+			$order_data = $this->ishop_model->order_details_report($user->role_id,$user->country_id,null,$user->id,$customer_id,$from_date,$todate,null,null,$page,$page_function,null,null,$user->local_date);
+
+			if(!empty($order_data) && isset($order_data))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+				$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+				$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+				$this->excel->getActiveSheet()->setCellValue('L1',$order_data['head'][11]);
+				$this->excel->getActiveSheet()->setCellValue('M1',$order_data['head'][12]);
+				$this->excel->getActiveSheet()->setCellValue('N1',$order_data['head'][13]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
+
+			foreach(range('A1','N1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($order_data))
+			{
+				foreach($order_data['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+					$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+					$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+					$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+					$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+					$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+				}
+			}
 
 		}
 		if($user->role_id == 10)
 		{
+			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+
+			$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
+
+			$page = (isset($_GET['page']) ? $_GET['page'] : '');
+			$customer_id=$user->id;
+
+			$order_data = $this->ishop_model->order_details_report($user->role_id,$user->country_id,null,$user->id,$customer_id,$from_date,$todate,null,null,$page,$page_function,null,null,$user->local_date);
+
+			if(!empty($order_data) && isset($order_data))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+				$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+				$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+				$this->excel->getActiveSheet()->setCellValue('L1',$order_data['head'][11]);
+				$this->excel->getActiveSheet()->setCellValue('M1',$order_data['head'][12]);
+				$this->excel->getActiveSheet()->setCellValue('N1',$order_data['head'][13]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:N1')->getFont()->setBold(true);
+
+			foreach(range('A1','N1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($order_data))
+			{
+				foreach($order_data['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+					$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+					$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+					$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+					$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+					$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+				}
+			}
 
 		}
+
+		$filename='order_status_'.date('d-m-y').'.xlsx';
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+		exit();
+
+	}
+
+	public function po_acknowledgement_details_csv_report()
+	{
+		$this->load->library('excel');
+		$user = $this->auth->user();
+
+		$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
+		$page = (isset($_GET['page']) ? $_GET['page'] : '');
+		$customer_id=$user->id;
+
+		$order_data = $this->ishop_model->order_details_report($user->role_id,$user->country_id,null,$user->id,$customer_id,$from_date=null,$todate=null,null,null,$page,$page_function,null,null,$user->local_date);
+
+
+		$this->excel->setActiveSheetIndex(0);
+		$this->excel->getActiveSheet()->setTitle('PO Acknowledgement');
+
+		if($user->role_id == 9)
+		{
+			if(!empty($order_data) && isset($order_data))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+				$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:J1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:J1')->getFont()->setBold(true);
+
+			foreach(range('A1','J1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($order_data))
+			{
+				foreach($order_data['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+					$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+				}
+			}
+		}
+		else{
+			if(!empty($order_data) && isset($order_data))
+			{
+				$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+				$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+				$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+				$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+				$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+				$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+				$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+				$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+				$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+				$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+				$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+			}
+
+			//change the font size
+			$this->excel->getActiveSheet()->getStyle('A1:K1')->getFont()->setSize(12);
+			//make the font become bold
+			$this->excel->getActiveSheet()->getStyle('A1:K1')->getFont()->setBold(true);
+
+			foreach(range('A1','K1') as $columnID) {
+				$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+			}
+
+			if(!empty($order_data))
+			{
+				foreach($order_data['row'] as $k=>$row)
+				{
+					$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+					$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+					$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+					$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+					$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+					$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+					$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+					$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+					$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+					$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+					$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+				}
+			}
+
+		}
+
+
+
+		$filename='po_acknowledgement_'.date('d-m-y').'.xlsx';
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+		exit();
+
+	}
+
+	public function order_approval_details_csv_report(){
+		$this->load->library('excel');
+		$user = $this->auth->user();
+		//testdata($_GET);
+
+
+		/*[form_date] => 2016-04-24
+    [to_date] => 2016-07-25
+    [by_po_no] =>
+    [by_otn] => */
+
 		$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+		$by_otn = (isset($_GET['by_po_no']) ? $_GET['by_po_no'] : '');
+		$by_po_no = (isset($_GET['by_otn']) ? $_GET['by_otn'] : '');
+
+		$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
 
 		$page = (isset($_GET['page']) ? $_GET['page'] : '');
 
-		//$order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,null,null,$page,null,null,null,$user->local_date);
-	}
+		//$_GET["renderdata"],
+		$customer_id = $user->id;
 
+		//$order_data = $this->ishop_model->get_order_data($logined_user_type,$logined_user_countryid,$radio_checked,$logined_user_id,$customer_id,$from_date,$todate,$_POST["by_otn"],$_POST["by_po_no"],$page);
+
+		$order_data = $this->ishop_model->order_details_report($user->role_id,$user->country_id,null,$user->id,$customer_id,$from_date,$todate,$by_otn,$by_po_no,$page,$page_function,null,null,$user->local_date);
+
+		$this->excel->setActiveSheetIndex(0);
+		$this->excel->getActiveSheet()->setTitle('Order Approval');
+
+
+		if(!empty($order_data) && isset($order_data))
+		{
+			$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
+			$this->excel->getActiveSheet()->setCellValue('B1',$order_data['head'][1]);
+			$this->excel->getActiveSheet()->setCellValue('C1',$order_data['head'][2]);
+			$this->excel->getActiveSheet()->setCellValue('D1',$order_data['head'][3]);
+			$this->excel->getActiveSheet()->setCellValue('E1',$order_data['head'][4]);
+			$this->excel->getActiveSheet()->setCellValue('F1',$order_data['head'][5]);
+			$this->excel->getActiveSheet()->setCellValue('G1',$order_data['head'][6]);
+			$this->excel->getActiveSheet()->setCellValue('H1',$order_data['head'][7]);
+			$this->excel->getActiveSheet()->setCellValue('I1',$order_data['head'][8]);
+			$this->excel->getActiveSheet()->setCellValue('J1',$order_data['head'][9]);
+			$this->excel->getActiveSheet()->setCellValue('K1',$order_data['head'][10]);
+			$this->excel->getActiveSheet()->setCellValue('L1',$order_data['head'][11]);
+			$this->excel->getActiveSheet()->setCellValue('M1',$order_data['head'][12]);
+			$this->excel->getActiveSheet()->setCellValue('N1',$order_data['head'][13]);
+			$this->excel->getActiveSheet()->setCellValue('O1',$order_data['head'][14]);
+		}
+
+		//change the font size
+		$this->excel->getActiveSheet()->getStyle('A1:O1')->getFont()->setSize(12);
+		//make the font become bold
+		$this->excel->getActiveSheet()->getStyle('A1:O1')->getFont()->setBold(true);
+
+		foreach(range('A1','O1') as $columnID) {
+			$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+		}
+
+		if(!empty($order_data))
+		{
+			foreach($order_data['row'] as $k=>$row)
+			{
+				$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+				$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+				$this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+				$this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+				$this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+				$this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+				$this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+				$this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+				$this->excel->getActiveSheet()->setCellValue('I'.($k+2), $row['8']);
+				$this->excel->getActiveSheet()->setCellValue('J'.($k+2), $row['9']);
+				$this->excel->getActiveSheet()->setCellValue('K'.($k+2), $row['10']);
+				$this->excel->getActiveSheet()->setCellValue('L'.($k+2), $row['11']);
+				$this->excel->getActiveSheet()->setCellValue('M'.($k+2), $row['12']);
+				$this->excel->getActiveSheet()->setCellValue('N'.($k+2), $row['13']);
+				$this->excel->getActiveSheet()->setCellValue('O'.($k+2), $row['14']);
+			}
+		}
+
+
+		$filename='order_approval_'.date('d-m-y').'.xlsx';
+		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+		header('Cache-Control: max-age=0'); //no cache
+
+		//save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+		//if you want to save it as .XLSX Excel 2007 format
+		$objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+		//force user to download the Excel file without writing it to server's HD
+		$objWriter->save('php://output');
+		exit();
+	}
 
 	/*-----------------------Report Download--------------------------------------*/
         

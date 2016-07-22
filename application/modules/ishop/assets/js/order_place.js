@@ -33,7 +33,7 @@ $(document).ready(function(){
    }
    
    
-   $("input.select_customer_type").on("click",function(){
+   $("input.select_customer_type").on("change",function(){
 
        if($("#order_place").length > 0){
             var validator = $("#order_place").validate();
@@ -49,7 +49,7 @@ $(document).ready(function(){
        
        if(customer_type_selected == "retailer"){
            $("div.distributor_data").css("display","none");
-           $("div.retailer_data").css("display","block");
+           $("div.retailer_data_checked").css("display","block");
            
            $("div.distributor_checked").css("display","none");
            $("div.farmer_checked").css("display","none");
@@ -75,7 +75,7 @@ $(document).ready(function(){
            
        }
        else if(customer_type_selected == "distributor"){
-           $("div.retailer_data").css("display","none");
+           $("div.retailer_data_checked").css("display","none");
            $("div.distributor_data").css("display","block");
            
            $("div.distributor_checked").css("display","block");
@@ -94,9 +94,9 @@ $(document).ready(function(){
 
 
        }
-       
+
        else if(customer_type_selected == "farmer"){
-           $("div.retailer_data").css("display","none");
+           $("div.retailer_data_checked").css("display","none");
            $("div.distributor_data").css("display","none");
            
            $("div.distributor_checked").css("display","none");
@@ -104,7 +104,7 @@ $(document).ready(function(){
            $("div.retailer_checked").css("display","none");
            
            if(login_customer_type == 8){
-       
+
                 var customer_selected = $("input#login_customer_id").val();
                 get_geo_fo_userdata(customer_selected,customer_type_selected);
 
