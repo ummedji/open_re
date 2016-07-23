@@ -5993,36 +5993,38 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function add_target_data($target_data, $user_id, $web_service = null, $country_id = null, $role_id = null)
     {
-        //testdata($target_data);
+       // testdata($target_data);
         
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             
             if(isset($target_data) && !empty($target_data)) 
             {
                 
-                 foreach ($target_data as $key => $value) {
+                // foreach ($target_data as $key => $value) {
+
+                    // dumpme($value)
 
                     $target_array = array();
 
-                    $target_array["month_data"] = $value[0];
-                    $target_array["customer_id"] = $value[1];
-                    $target_array["product_sku_id"] = $value[2];
-                    $target_array["quantity"] = $value[3];
+                    $target_array["month_data"] = $target_data["month"]."-01";
+                    $target_array["customer_id"] = $target_data["customer_id"];
+                    $target_array["product_sku_id"] = $target_data["prod_sku"];
+                    $target_array["quantity"] = $target_data["quantity"];
 
                     $target_array["created_on"] = date("Y-m-d h:i:s");
                     $target_array["created_by_user"] = $user_id;
 
                      
-                    $check_already_data = $this->check_target_data($value[2], $value[0], $value[1]);
+                    $check_already_data = $this->check_target_data($target_data["prod_sku"], $target_data["month"]."-01", $target_data["customer_id"]);
                      
                     if ($check_already_data == 0) {
                        $id = $this->db->insert('bf_ishop_target', $target_array);
                     } else {
                         $target_update_data = array(
-                            'month_data' => $value[0],
-                            'customer_id' => $value[1],
-                            'product_sku_id' => $value[2],
-                            'quantity' => $value[3],
+                            'month_data' => $target_data["month"]."-01",
+                            'customer_id' => $target_data["customer_id"],
+                            'product_sku_id' => $target_data["prod_sku"],
+                            'quantity' => $target_data["quantity"],
                             'modified_by_user' => $user_id,
                             'country_id' => $country_id,
                             'status' => '1',
@@ -6034,7 +6036,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     }
                     
-                }
+              //  }
                 
                 
             }
