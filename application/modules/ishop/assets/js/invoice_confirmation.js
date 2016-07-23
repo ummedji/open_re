@@ -31,6 +31,7 @@ function get_invoice_confirmation_received(param)
         data: param,
         dataType : 'html',
         success: function(resp){
+            $("#middle_container_product").empty();
             $("#middle_container").html(resp);
         }
     });

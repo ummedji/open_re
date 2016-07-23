@@ -1478,7 +1478,7 @@ class Ishop_model extends BF_Model
             $sql .= 'AND iss.customer_id_to =' . $by_retailer . ' ';
         }
         if (isset($by_invoice_no) && !empty($by_invoice_no)) {
-            $sql .= 'AND iss.invoice_no =' . $by_invoice_no . ' ';
+            $sql .= 'AND iss.invoice_no ='.'"' . $by_invoice_no .'"'.' ';
         }
         if ((isset($form_date) && !empty($form_date) && (isset($to_date) && !empty($to_date)))) {
             $sql .= 'AND iss.invoice_date BETWEEN ' . '"' . $form_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
@@ -3820,10 +3820,10 @@ class Ishop_model extends BF_Model
             $sql .= 'AND DATE_FORMAT(ips.invoice_date,"%Y-%m") =' . "'" . $invoice_month . "'" . ' ';
         }
         if (isset($po_no) && !empty($po_no) && $po_no != '') {
-            $sql .= 'AND ips.PO_no =' . $po_no . ' ';
+            $sql .= 'AND ips.PO_no =' ."'" . $po_no ."'". ' ';
         }
         if (isset($invoice_no) && !empty($invoice_no) && $invoice_no != '') {
-            $sql .= 'AND ips.invoice_no =' . $invoice_no . ' ';
+            $sql .= 'AND ips.invoice_no =' ."'" . $invoice_no ."'". ' ';
         }
         $sql .= " AND ips.country_id= " . $country_id . " ";
         $sql .= " AND ips.customer_id= " . $user_id . " ";

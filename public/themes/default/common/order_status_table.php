@@ -11,7 +11,9 @@ $user= $this->auth->user();
 $login_customer_type = $user->role_id;
 
  $_POST['radio1'] =  (isset($_POST['radio1']) ? $_POST['radio1'] : '');
- 
+
+
+//dumpme($_POST);
 //echo "<pre>";print_r($order_table);die;
 
 if(isset($order_table) && count($order_table)>0 && $order_table != false) {
@@ -148,9 +150,13 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                 if($login_customer_type != 9 && $login_customer_type != 10){
                 ?>
                 <div class="col-md-12 save_btn save_btn_bottom">
-                    <?php  if($action_data == "get_order_status_data_details"){ ?>
-                        <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
-                    <?php }
+                    <?php
+                    if(isset($_POST["radiochecked"]) && $_POST["radiochecked"] !="farmer") {
+
+                        if ($action_data == "get_order_status_data_details") { ?>
+                            <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                        <?php }
+                    }
                   /*  else{ ?>
                         <button type="submit" id="orderstatus" class="btn btn-primary">Save</button>
                     <?php } */
