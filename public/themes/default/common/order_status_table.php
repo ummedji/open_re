@@ -52,9 +52,13 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                         </thead>
                         <?php if(isset($order_table['row']) && count($order_table['row']) ) {?>
                         <tbody class="tbl_body_row">
-                        <?php foreach($order_table['row'] as $rkey => $rowary) {
+                        <?php
+
+                        $j = 0;
+
+                        foreach($order_table['row'] as $rkey => $rowary) {
                             ?>
-                            <tr>
+                            <tr class="row_<?php echo $j; ?>">
                                 <?php
                                 foreach($rowary as $rwkey => $row) {
 
@@ -127,7 +131,9 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                                     ?>
                                 <?php } ?>
                             </tr>
-                        <?php } ?>
+                        <?php
+                            $j++;
+                        } ?>
                         </tbody>
                             <?php if(isset($td) && isset($pagination)){ ?>
                                 <tfoot>

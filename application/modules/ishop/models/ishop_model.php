@@ -5387,7 +5387,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $order_id_data = '<input type="hidden" name="order_id" value="' . $order_id . '">';
 
                     $i = 1;
-
+                    $k = 0;
                     foreach ($order_detail['result'] as $od) {
 
                         if($csv == 'csv')
@@ -5412,22 +5412,22 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                         }
                         else {
-                            $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
 
 
-                            $product_order_id = $order_id_data . '<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
+                            $product_order_id = $order_id_data . '<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
 
 
                             $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
                             $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $od['unit'] . '</span></div>';
                             $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
                             $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
-                            $amount = '<div class="amount_' . $od["product_order_id"] . '"><input type="hidden" class="amount_data" name="amount[]" value="' . $od['amount'] . '" /><span class="amount">' . $od['amount'] . '</span></div>';
+                            $amount = '<div class="amount_' . $od["product_order_id"] . '"><input type="hidden" class="amount_data" name="amount['.$k.']" value="' . $od['amount'] . '" /><span class="amount">' . $od['amount'] . '</span></div>';
 
 
                         if ($action_data == "order_approval")
                             {
-                                $dub_dispatched_data = '<input type="text" name="dispatched_quantity[]" class="dispatched_quantity" value="' . $od['dispatched_quantity'] . '" />';
+                                $dub_dispatched_data = '<input type="text" name="dispatched_quantity['.$k.']" class="dispatched_quantity" value="' . $od['dispatched_quantity'] . '" />';
                             } else {
                                 $dub_dispatched_data = '<span class="dispatched_quantity">' . $od['dispatched_quantity'] . '</span>';
                         }
@@ -5454,6 +5454,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                         }
                         $i++;
+                        $k++;
                     }
                     $product_view['eye'] = '';
 
@@ -5477,6 +5478,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $order_id_data = '<input type="hidden" name="order_id" value="' . $order_id . '">';
 
                     $i = 1;
+                    $k = 0;
                     foreach ($order_detail['result'] as $od) {
 
                         if ($radiochecked == "farmer") {
@@ -5492,10 +5494,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                             else
                             {
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
 
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5518,9 +5520,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                             else
                             {
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5537,6 +5539,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         }
                         $i++;
+                        $k++;
                     }
                     $product_view['eye'] = '';
 
@@ -5550,6 +5553,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $product_view['head'] = array('Sr. No.', 'Action', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
                         $product_view['count'] = count($product_view['head']);
                         $i = 1;
+                        $k = 0;
                         foreach ($order_detail['result'] as $od) {
 
                             if($csv == 'csv')
@@ -5558,9 +5562,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                             else
                             {
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5573,6 +5577,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
 
                             $i++;
+                            $k++;
                         }
                         $product_view['eye'] = '';
 
@@ -5605,6 +5610,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $product_view['head'] = array('Sr. No.', 'Action', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
                         $product_view['count'] = count($product_view['head']);
                         $i = 1;
+                        $k = 0;
                         foreach ($order_detail['result'] as $od) {
 
                             if($csv == 'csv')
@@ -5612,9 +5618,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'] , $od['quantity_kg_ltr']);
                             }
                             else{
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5627,6 +5633,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
 
                             $i++;
+                            $k++;
                         }
                         $product_view['eye'] = '';
 
