@@ -351,7 +351,7 @@ class Esp_model extends BF_Model
 
     }
 
-    public function get_employee_product_forecast_data($businesscode,$pbg_id,$login_user_id){
+    public function get_employee_product_forecast_data($businesscode,$pbg_id,$bussiness_user_id){
 
         $this->db->select('*');
         $this->db->from("bf_esp_forecast as bef");
@@ -360,7 +360,7 @@ class Esp_model extends BF_Model
 
         $this->db->where("bef.business_code",$businesscode);
         $this->db->where("bef.pbg_id",$pbg_id);
-        $this->db->where("bef.created_by_user",$login_user_id);
+        $this->db->where("bef.created_by_user",$bussiness_user_id);
        // $this->db->where("befpd.forecast_month",$monthvalue);
 
         $forecast_data = $this->db->get()->result_array();

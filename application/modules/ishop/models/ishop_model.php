@@ -7015,9 +7015,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $inner_array = array();
 
                     $inner_array = $val;
-                    $inner_array["product_sku_code"] =  '0';
-                    $inner_array["product_sku_name"] = '0';
+                    $inner_array["product_sku_code"] =  '';
+                    $inner_array["product_sku_name"] = '';
                     $inner_array["unit"] = '';
+                    $inner_array["quantity"] = '0';
                     $inner_array["qty_kgl"] = '0';
                     $inner_array["amount"] = '0';
 

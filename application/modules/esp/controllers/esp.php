@@ -198,6 +198,10 @@ class Esp extends Front_Controller
 
         $employee_month_product_forecast_data = 0;
 
+
+        $forecast_id = "";
+        $forecast_freeze_data2 = "";
+
         if($pbg_sku_data != 0){
             
             $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
@@ -205,8 +209,7 @@ class Esp extends Front_Controller
                     $html .= '<tr style="border-bottom: solid 1px #b1b1b1;">';
                         $html .= '<th></th>';
             
-                        $forecast_id = "";
-                        $forecast_freeze_data2 = "";
+
             
                         $lock_data = "";
                         $l_array = array();
@@ -466,7 +469,7 @@ class Esp extends Front_Controller
            $html .= '<tbody>';
             $i = 1;
             
-            $forecast_id = "";
+        //    $forecast_id = "";
             
 			
             foreach($pbg_sku_data as $skukey => $skuvalue){
@@ -497,7 +500,7 @@ class Esp extends Front_Controller
                      $lock_status = "";
                      $lock_by_id = "";
                     
-                    $freeze_by_id = "";
+                //    $freeze_by_id = "";
                     $freeze_status = "";
                     
                     
@@ -510,9 +513,12 @@ class Esp extends Front_Controller
                         $lock_status = $employee_month_product_forecast_data[0]['lock_status'];
                         $lock_by_id = $employee_month_product_forecast_data[0]['lock_by_id'];
                         
-                        $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
+                    //    $forecast_id = $employee_month_product_forecast_data[0]['forecast_id'];
                         
                     }
+
+                // echo $forecast_id;die;
+
 
                  //   dumpme($employee_month_product_forecast_data);
 
@@ -1500,10 +1506,9 @@ class Esp extends Front_Controller
                                 $html .= '</select>';
 
                                 $html .= '</div>
-        </div></td><td><input class="probablity_data" type="text" name="probablity'.$j.'[]" value="" />';
+        </div></td><td><input class="probablity_data" type="text" name="probablity'.$j.'[]" value="UMMED 111" />';
 
                             }
-
 
                         }
                         else
@@ -1584,9 +1589,7 @@ class Esp extends Front_Controller
                     $k++;
                  
             }
-            
-        //    die;
-            
+
             
             $html .= '</tbody>';
        $html .= '</table>';
@@ -1645,6 +1648,7 @@ class Esp extends Front_Controller
 				return $final_array;
 				//die;
 			}
+
            // '.$freeze_button.'
             
             $html2 .= '<div class="col-md-12 table_bottom text-center">
@@ -1965,8 +1969,10 @@ class Esp extends Front_Controller
             
             $pbg_id = $_POST['pbg_data'];
             $created_user_id = $_POST['login_user_id'];
-            
-            
+
+            $bussiness_user_id = "";
+
+
             //CHECK FOR EMMPLOYEE AND PBG RECORD ALREADY EXIST
             
             
@@ -1981,14 +1987,19 @@ class Esp extends Front_Controller
             if(!empty($_POST['month_data'])){
                 foreach($_POST['month_data'] as $month_key=>$month_value){
             
-                    $check_record_exist = $this->esp_model->check_forecast_data($pbg_id,$user_business_code,$month_value);
-                    
-                    if($check_record_exist != 0){
+                 //   $check_record_exist = $this->esp_model->check_forecast_data($pbg_id,$user_business_code,$month_value);
+
+                 //   $check_record_exist = get_employee_product_forecast_data($user_business_code,$pbg_id,$bussiness_user_id);
+
+                    //if($check_record_exist != 0){
+                    if(isset($_POST["forecast_id"]) && $_POST["forecast_id"] != ""){
                         
                         //UPDATE 
                         
-                        $old_forecast_id = $check_record_exist[0]['forecast_id'];
-                        
+                       // $old_forecast_id = $check_record_exist[0]['forecast_id'];
+
+                        $old_forecast_id = $_POST["forecast_id"];
+
                         //UPDATE MAIN TABLE RECORD
                         
                         $update_status = $this->esp_model->update_forecast_data($old_forecast_id,$created_user_id);
