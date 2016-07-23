@@ -452,11 +452,23 @@ class Web_service extends Front_Controller
                 $checks= $this->ishop_model->get_data_primary_sales_by_invoice_no($invoice_no,$customer_id);
                 if(!empty($checks))
                 {
-                    $check1= $this->ishop_model->get_data_primary_sales_product_by_invoice($checks['primary_sales_id']);
+
+                    $final_array = array();
+
+                    $primary_sales_id = $checks['primary_sales_id'];
+                    $check1= $this->ishop_model->get_data_primary_sales_product_by_invoice($primary_sales_id);
+                    if(!empty($check1))
+                    {
+                        $checks["details"]=$check1;
+                    }
+                    else{
+                        $checks["details"]=array();
+                    }
+                    $final_array[] = $checks;
 
                     $result['status'] = true;
                     $result['message'] = "";
-                    $result['data'] = $check1;
+                    $result['data'] = $final_array;
                 }
                 else{
                     $result['status'] = true;
@@ -486,20 +498,22 @@ class Web_service extends Front_Controller
 
             if(!empty($checks))
             {
-                $check1= $this->ishop_model->get_data_primary_sales_product_by_invoice($checks['primary_sales_id']);
+                $final_array = array();
 
+                $primary_sales_id = $checks['primary_sales_id'];
+                $check1= $this->ishop_model->get_data_primary_sales_product_by_invoice($primary_sales_id);
                 if(!empty($check1))
-               {
-                   $result['status'] = true;
-                   $result['message'] = "";
-                   $result['data'] = $check1;
-               }
-                else{
-                    $result['status'] = true;
-                    $result['message'] = "";
-                    $result['data'] = array();
+                {
+                    $checks["details"]=$check1;
                 }
+                else{
+                    $checks["details"]=array();
+                }
+                $final_array[] = $checks;
 
+               $result['status'] = true;
+               $result['message'] = "";
+               $result['data'] = $final_array;
             }
             else{
                 $result['status'] = true;
@@ -534,19 +548,23 @@ class Web_service extends Front_Controller
                 if(!empty($checks))
                 {
 
-                    $check1= $this->ishop_model->get_data_secondary_sales_product_by_invoice($checks['secondary_sales_id']);
+                    $final_array = array();
 
+                    $secondary_sales_id = $checks['secondary_sales_id'];
+                    $check1= $this->ishop_model->get_data_secondary_sales_product_by_invoice($secondary_sales_id);
                     if(!empty($check1))
                     {
-                        $result['status'] = true;
-                        $result['message'] = "";
-                        $result['data'] = $check1;
+                        $checks["details"]=$check1;
                     }
                     else{
-                        $result['status'] = true;
-                        $result['message'] = "";
-                        $result['data'] = array();
+                        $checks["details"]=array();
                     }
+                    $final_array[] = $checks;
+
+                    $result['status'] = true;
+                    $result['message'] = "";
+                    $result['data'] = $final_array;
+
                 }
                 else{
                     $result['status'] = true;
@@ -577,17 +595,23 @@ class Web_service extends Front_Controller
             if(!empty($checks))
             {
 
-                $check1= $this->ishop_model->get_data_secondary_sales_product_by_invoice($checks['secondary_sales_id']);
-                if($check1){
-                    $result['status'] = true;
-                    $result['message'] = "";
-                    $result['data'] = $check1;
+                $final_array = array();
+
+                $secondary_sales_id = $checks['secondary_sales_id'];
+                $check1= $this->ishop_model->get_data_secondary_sales_product_by_invoice($secondary_sales_id);
+                if(!empty($check1))
+                {
+                    $checks["details"]=$check1;
                 }
                 else{
-                    $result['status'] = true;
-                    $result['message'] = "";
-                    $result['data'] = array();
+                    $checks["details"]=array();
                 }
+                $final_array[] = $checks;
+
+                $result['status'] = true;
+                $result['message'] = "";
+                $result['data'] = $final_array;
+
             }
             else{
                 $result['status'] = true;

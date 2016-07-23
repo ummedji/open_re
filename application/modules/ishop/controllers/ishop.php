@@ -4971,6 +4971,8 @@ class Ishop extends Front_Controller
 
 		$target_data= $this->ishop_model->target_details_report($user->id,$user->country_id,$checked_type,$page);
 
+		//testdata($target_data);
+
 		$this->excel->setActiveSheetIndex(0);
 		$this->excel->getActiveSheet()->setTitle('Target');
 
@@ -4994,9 +4996,9 @@ class Ishop extends Front_Controller
 			$this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
 		}
 
-		if(!empty($invoice_received))
+		if(!empty($target_data))
 		{
-			foreach($invoice_received['row'] as $k=>$row)
+			foreach($target_data['row'] as $k=>$row)
 			{
 				$this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
 				$this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
@@ -5009,6 +5011,7 @@ class Ishop extends Front_Controller
 		}
 
 		$filename='target_'.date('d-m-y').'.xlsx';
+
 		header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
 		header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
 		header('Cache-Control: max-age=0'); //no cache
