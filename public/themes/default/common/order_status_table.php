@@ -5,6 +5,8 @@
 <?php
 $action_data = $this->uri->segment(2);
 
+//echo $action_data;
+
 $user= $this->auth->user();
 $login_customer_type = $user->role_id;
 
@@ -15,14 +17,13 @@ $login_customer_type = $user->role_id;
 if(isset($order_table) && count($order_table)>0 && $order_table != false) {
     if($login_customer_type != 9 && $login_customer_type != 10){
         if($action_data == "get_order_status_data_details"){
-
-            $attributes = array('class' => '', 'id' => 'order_status_data_details','name'=>'order_status_data_details');
-                echo form_open('',$attributes); 
-
+            $attributes = array('class' => '', 'id' => 'order_status_view_data','name'=>'order_status_view_data');
         }
+        else{
+            $attributes = array('class' => '', 'id' => 'order_status','name'=>'order_status');
+        }
+        echo form_open('',$attributes);
     }
-    
-    
     ?>
         <div class="col-md-12 ad_mr_top">
             <div class="row">
@@ -94,9 +95,7 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                                            <div class="delete_i" <?php echo $style; ?> prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
                                            
                                         </td>
-                                    <?php 
-                                       
-                                          
+                                    <?php
                                     }
                                     elseif($rwkey==1 && $row == ""){
                                     ?>    
@@ -147,16 +146,21 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                 </div>
                 <?php 
                 if($login_customer_type != 9 && $login_customer_type != 10){
-                    if($action_data == "get_order_status_data_details"){                   
                 ?>
                 <div class="col-md-12 save_btn save_btn_bottom">
+                    <?php  if($action_data == "get_order_status_data_details"){ ?>
                         <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                    <?php }
+                  /*  else{ ?>
+                        <button type="submit" id="orderstatus" class="btn btn-primary">Save</button>
+                    <?php } */
+
+                    ?>
                 </div>
-                    <?php
+                <?php
                         echo form_close();
-                } 
-                
-             }?>
+                    }
+                 ?>
             </div>
         </div>
         <div class="clearfix"></div>

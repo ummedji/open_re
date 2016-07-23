@@ -9,14 +9,16 @@
     {
          echo theme_view('common/table');
     }
+
     if(isset($scheme_table))
     {
         echo theme_view('common/scheme_table');
     }
+
     if(isset($order_table))
     {
         $action_segment = $this->uri->segment(2);
-        
+
         if($action_segment == "get_order_status_data" || $action_segment == "get_order_status_data_details"){
              echo theme_view('common/order_status_table');
         }
@@ -27,12 +29,8 @@
         
         $action_segment = $this->uri->segment(2);
        //  echo $action_segment;
-       
-        
-        if($action_segment == "po_acknowledgement" || $action_segment == "get_order_status_data_details"){
-            
 
-            
+        if($action_segment == "po_acknowledgement" || $action_segment == "get_order_status_data_details"){
             echo theme_view('common/po_acknowledgement_table');
         }
     }
@@ -46,7 +44,7 @@
         }
     }
     
-     if(isset($target_data))
+    if(isset($target_data))
     {
         echo theme_view('common/target_table');
     }

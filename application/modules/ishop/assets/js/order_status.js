@@ -222,15 +222,15 @@ $(document).on('click', 'div.order_status .edit_i', function () {
             url: site_url+'ishop/update_order_status_detail_data',
             data: order_data,
             success: function(resp){
+
                 var message = "";
                 if(resp == 1){
-
                     message += 'Data Updated successfully.';
                 }
                 else{
-
                     message += 'Data not Updated.';
                 }
+
                 $('<div></div>').appendTo('body')
                     .html('<div><b>'+message+'</b></div>')
                     .dialog({
@@ -249,7 +249,6 @@ $(document).on('click', 'div.order_status .edit_i', function () {
         });
         return false;
     });
-
 
     var order_status = $("#order_status");
     order_status.validate();

@@ -337,21 +337,28 @@ if ($this->input->is_ajax_request()) {
 }
 ?>
 <?php
-if (!$this->input->is_ajax_request()) { ?>
+
+
+
+if (!$this->input->is_ajax_request()){ ?>
     <?php
-    $attributes = array('class' => '', 'id' => 'order_status_view_data','name'=>'order_status_view_data');
-    echo form_open('',$attributes);
+   // $attributes = array('class' => '', 'id' => 'order_status_view_data','name'=>'order_status_view_data');
+   // echo form_open('',$attributes);
     ?>
-<div id="middle_container" class="order_status">
+        <div id="middle_container" class="order_status">
 
-</div>
-<div id="middle_container_product" class="order_status">
+        </div>
 
-</div>
-    <?php echo form_close(); ?>
+        <?php // echo form_close(); ?>
+
+        <div id="middle_container_product" class="order_status">
+
+        </div>
+
 <div class="clearfix"></div>
 <?php
 }
+
 if(isset($login_customer_type) && $login_customer_type == 10){
 ?>
 <script type="text/javascript">

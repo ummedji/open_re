@@ -431,7 +431,176 @@ class Web_service extends Front_Controller
 
 
 
+
     /* ---------------------------------------------- HO --------------------------------------------------- */
+
+    public function checkInvoiceByCustomerPrimarySales()
+    {
+        $invoice_no = $this->input->get_post('invoice_no');
+        $customer_id = $this->input->get_post('customer_id');
+
+        if(!empty($invoice_no) && !empty($customer_id))
+        {
+            $check= $this->ishop_model->check_duplicate_data_for_primary_sales($customer_id,$invoice_no);
+           // testdata($check);
+            if($check == 1)
+            {
+                $result['status'] = false;
+                $result['message'] = "Invoice Number already Assign!";
+            }
+            elseif($check == 2){
+                $checks= $this->ishop_model->get_data_primary_sales_by_invoice_no($invoice_no,$customer_id);
+                if(!empty($checks))
+                {
+                    $check1= $this->ishop_model->get_data_primary_sales_product_by_invoice($checks['primary_sales_id']);
+
+                    $result['status'] = true;
+                    $result['message'] = "";
+                    $result['data'] = $check1;
+                }
+                else{
+                    $result['status'] = true;
+                    $result['message'] = "";
+                }
+
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = "";
+            }
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function checkInvoicePrimarySales()
+    {
+        $invoice_no = $this->input->get_post('invoice_no');
+
+        if(!empty($invoice_no))
+        {
+            $checks= $this->ishop_model->get_data_primary_sales_by_invoice_no($invoice_no,'');
+
+            if(!empty($checks))
+            {
+                $check1= $this->ishop_model->get_data_primary_sales_product_by_invoice($checks['primary_sales_id']);
+
+                if(!empty($check1))
+               {
+                   $result['status'] = true;
+                   $result['message'] = "";
+                   $result['data'] = $check1;
+               }
+                else{
+                    $result['status'] = true;
+                    $result['message'] = "";
+                    $result['data'] = array();
+                }
+
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = "";
+            }
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    public function checkInvoiceByCustomerSecondarySales()
+    {
+        $invoice_no = $this->input->get_post('invoice_no');
+        $customer_id = $this->input->get_post('customer_id');
+        $user_id = $this->input->get_post('user_id');
+
+        if(!empty($invoice_no) && !empty($customer_id) && !empty($user_id))
+        {
+            $check= $this->ishop_model->check_duplicate_data_for_secondary_sales($customer_id,$invoice_no,$user_id);
+            // testdata($check);
+            if($check == 1)
+            {
+                $result['status'] = false;
+                $result['message'] = "Invoice Number already Assign!";
+            }
+            elseif($check == 2){
+                $checks=  $this->ishop_model->get_data_secondary_sales_by_invoice_no($invoice_no,$user_id,$customer_id);
+                if(!empty($checks))
+                {
+
+                    $check1= $this->ishop_model->get_data_secondary_sales_product_by_invoice($checks['secondary_sales_id']);
+
+                    if(!empty($check1))
+                    {
+                        $result['status'] = true;
+                        $result['message'] = "";
+                        $result['data'] = $check1;
+                    }
+                    else{
+                        $result['status'] = true;
+                        $result['message'] = "";
+                        $result['data'] = array();
+                    }
+                }
+                else{
+                    $result['status'] = true;
+                    $result['message'] = "";
+                }
+
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = "";
+            }
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function checkInvoiceSecondarySales()
+    {
+        $invoice_no = $this->input->get_post('invoice_no');
+        $user_id = $this->input->get_post('user_id');
+
+        if(!empty($invoice_no) && !empty($user_id))
+        {
+            $checks=  $this->ishop_model->get_data_secondary_sales_by_invoice_no($invoice_no,$user_id,'');
+            if(!empty($checks))
+            {
+
+                $check1= $this->ishop_model->get_data_secondary_sales_product_by_invoice($checks['secondary_sales_id']);
+                if($check1){
+                    $result['status'] = true;
+                    $result['message'] = "";
+                    $result['data'] = $check1;
+                }
+                else{
+                    $result['status'] = true;
+                    $result['message'] = "";
+                    $result['data'] = array();
+                }
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = "";
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
     /**
      * @ Function Name        : savePrimarySales
      * @ Function Params    : user_id,distributor_id,invoice_no,invoice_date,order_tracking_no,PO_no,product_sku_id,quantity,dispatched_quantity,amount,country_id (POST)

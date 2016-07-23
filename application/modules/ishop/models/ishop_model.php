@@ -1417,12 +1417,16 @@ class Ishop_model extends BF_Model
         }
     }
 
-    public function get_data_secondary_sales_by_invoice_no($invoice_no,$login_id)
+    public function get_data_secondary_sales_by_invoice_no($invoice_no,$login_id,$customer_id)
     {
         $this->db->select('*');
         $this->db->from('ishop_secondary_sales');
         $this->db->where('invoice_no', $invoice_no);
         $this->db->where('customer_id_from', $login_id);
+        if(isset($customer_id) && !empty($customer_id))
+        {
+            $this->db->where('customer_id_to', $customer_id);
+        }
         $data = $this->db->get()->row_array();
 
         if (isset($data) && !empty($data)) {
@@ -5711,6 +5715,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $detail_data["amount"] = explode(',', @$detail_data["amount"]);
         }
 
+        $final_array = array();
+
         if (!empty($detail_data["order_product_id"])) {
 
             $total_amount = 0;
@@ -5769,19 +5775,32 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $this->db->where('product_order_id', $order_product_id);
                 $this->db->update('bf_ishop_product_order', $update_array);
 
+                if($this->db->affected_rows() > 0){
+                    $final_array[] = 1;
+                }
+
                 $amount_data = array(
                     'total_amount' => $total_amount
                 );
 
                 $id = $this->db->update('bf_ishop_orders', $amount_data, array('order_id' => $detail_data["order_id"]));
+
             }
 
         }
-        if($this->db->affected_rows() > 0){
-            return 1;
+        if(in_array(1,$final_array)){
+            $res = 1;
         }
         else{
-            return 0;
+            $res = 0;
+        }
+
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            return $res;
+        }
+        else{
+            echo $res;
+            die;
         }
 
     }

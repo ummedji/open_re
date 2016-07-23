@@ -335,8 +335,9 @@ class Ishop extends Front_Controller
 	{
 		$invoice_no = $this->input->post("invoice_no");
 		$login_id = $this->input->post("login_id");
+		$customer_id = $this->input->post("customer_id");
 
-		$check= $this->ishop_model->get_data_secondary_sales_by_invoice_no($invoice_no,$login_id);
+		$check= $this->ishop_model->get_data_secondary_sales_by_invoice_no($invoice_no,$login_id,$customer_id);
 		echo json_encode($check);
 		die;
 	}
@@ -1991,7 +1992,6 @@ class Ishop extends Front_Controller
         * */
         
         public function update_order_status_detail_data() {
-           
             $detail_data = $_POST;
             $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
             echo $detail_update;
@@ -2063,7 +2063,6 @@ class Ishop extends Front_Controller
 			$page = (isset($_POST['page']) ? $_POST['page'] : '');
 
             if(isset($_POST) && !empty($_POST)){
-
 
 				$update_order_data = $this->ishop_model->update_order_data($_POST);
 				echo $update_order_data;

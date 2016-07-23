@@ -75,7 +75,7 @@ $(function () {
                         $('#invoice_no_error').html('Invoice Number already Assign!');
                     }
                     else if(resp == 2){
-                        get_scondary_sales_data(invoice_no,login_customer_id);
+                        get_scondary_sales_data(invoice_no,login_customer_id,customer_id);
                     }
                     else{
                         already_assign_error = 0;
@@ -86,15 +86,15 @@ $(function () {
             });
         }
         else if(invoice_no !=''){
-            get_scondary_sales_data(invoice_no,login_customer_id);
+            get_scondary_sales_data(invoice_no,login_customer_id,customer_id);
         }
     });
 
-    function get_scondary_sales_data(invoice_no,login_customer_id){
+    function get_scondary_sales_data(invoice_no,login_customer_id,customer_id){
         $.ajax({
             type: 'POST',
             url: site_url + "ishop/get_data_secondary_sales_by_invoice",
-            data: {invoice_no:invoice_no,login_id:login_customer_id},
+            data: {invoice_no:invoice_no,login_id:login_customer_id,customer_id:customer_id},
             //dataType : 'json',
             success: function (resp) {
                 if(resp){
