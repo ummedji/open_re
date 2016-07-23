@@ -5302,6 +5302,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     }
                 }
 
+
                 $order_view['pagination'] = $orderdata['pagination'];
                 return $order_view;
             }
@@ -5356,8 +5357,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $sql .= ' AND bipo.order_id =' . $order_id . ' ';
 
-       echo $sql;
-die;
+    //   echo $sql;
+//die;
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);
