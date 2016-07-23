@@ -2734,7 +2734,7 @@ class Ishop_model extends BF_Model
             $batch_mfg_date = $this->input->post("batch_mfg_date");
 
 
-            $product = $this->check_products($product_sku_id, $batch);
+            $product = $this->check_products($product_sku_id);
 
             if ($product == 0) {
                 $current_stock = array(
@@ -2804,7 +2804,7 @@ class Ishop_model extends BF_Model
                     'batch_mfg_date' => $batch_mfg_date,
                     'country_id' => $country_id,
                     'created_by_user' => $user_id,
-                    'modified_by_user' => '0',
+                    'modified_by_user' => $user_id,
                     'log_date' => date('Y-m-d H:i:s'),
                     'status' => '1',
                     'created_on' => date('Y-m-d H:i:s'),
@@ -2826,7 +2826,7 @@ class Ishop_model extends BF_Model
                     $date = $value[6];
 
 
-                    $product = $this->check_products($product_sku_id, $batch);
+                    $product = $this->check_products($product_sku_id);
 
                     if ($product == 0) {
                         $current_stock = array(
@@ -3010,12 +3010,11 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function check_products($product_sku_id, $batch)
+    public function check_products($product_sku_id)
     {
         $this->db->select('product_sku_id,stock_id');
         $this->db->from('ishop_company_current_stock');
         $this->db->where('product_sku_id', $product_sku_id);
-        $this->db->where('batch', $batch);
         $data = $this->db->get()->result_array();
         if (isset($data) && !empty($data)) {
             return $data;
@@ -5357,8 +5356,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $sql .= ' AND bipo.order_id =' . $order_id . ' ';
 
-      // echo $sql;
-//die;
+       echo $sql;
+die;
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $info = $this->db->query($sql);

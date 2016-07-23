@@ -9,9 +9,9 @@ $action_data1 = $this->uri->segment(3);
 $user= $this->auth->user();
 $login_customer_type = $user->role_id;
 
- $_POST['radio1'] =  (isset($_POST['radio1']) ? $_POST['radio1'] : '');
- 
- //echo "<pre>";print_r($order_approval_table);die;
+$_POST['radio1'] = (isset($_POST['radio1']) ? $_POST['radio1'] : '');
+
+ echo "<pre>";print_r($order_approval_table);die;
 if(isset($order_approval_table) && count($order_approval_table)>0 && $order_approval_table != false) {
     
         if($action_data == "order_approval"){

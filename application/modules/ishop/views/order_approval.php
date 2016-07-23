@@ -63,9 +63,13 @@
     <div class="clearfix"></div>
 </div>
 <?php }?>
+
 <div id="middle_container" class="order_approval">
-<?php echo theme_view('common/middle'); ?>
+<?php //if ($this->input->is_ajax_request()) { ?>
+    <?php echo theme_view('common/middle'); ?>
+<?php //} ?>
 </div>
+
 <div id="middle_container_product" class="primary_product">
 
 </div>

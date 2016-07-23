@@ -1936,7 +1936,7 @@ class Ishop extends Front_Controller
 					$order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
 				}
                
-           // testdata($order_details);
+            testdata($order_details);
             
                 //echo $action_data;die;
                 
