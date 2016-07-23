@@ -72,9 +72,11 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                         </thead>
                         <?php if(isset($order_approval_table['row']) && count($order_approval_table['row']) ) {?>
                         <tbody class="tbl_body_row">
-                        <?php foreach($order_approval_table['row'] as $rkey => $rowary) {
+                        <?php
+                        $j = 0;
+                        foreach($order_approval_table['row'] as $rkey => $rowary) {
                             ?>
-                            <tr>
+                            <tr class="row_<?php echo $j; ?>">
                                 <?php
                                 
                                
@@ -139,7 +141,9 @@ if(isset($order_approval_table) && count($order_approval_table)>0 && $order_appr
                                 }
                                 ?>
                             </tr>
-                        <?php } ?>
+                        <?php
+                            $j++;
+                        } ?>
                         </tbody>
                             <?php if(isset($td) && isset($pagination)){ ?>
                                 <tfoot>

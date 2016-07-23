@@ -37,13 +37,13 @@
                 </li>
                 <li title="E Assassments">
                     <span>
-                        <a href="#"><span class="e_assassments_icon"></span><div class="li_title pr_title">E Assassments</div></a>
+                        <a href="#"><span class="e_assassments_icon"></span><div class="li_title pr_title">E- Assessment</div></a>
                     </span>
                     <div class="clearfix"></div>
                 </li>
                 <li title="E Learnings">
                     <span>
-                        <a href="#"><span class="e_learning_icon"></span><div class="li_title pr_title">E Learnings</div></a>
+                        <a href="#"><span class="e_learning_icon"></span><div class="li_title pr_title">E- Learnings</div></a>
                     </span>
                     <div class="clearfix"></div>
                 </li>

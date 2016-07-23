@@ -65,8 +65,8 @@ echo theme_view('common/middle');
 
 if (!$this->input->is_ajax_request()) { ?>
 <?php
-$attributes = array('class' => '', 'id' => 'update_po_data','name'=>'update_po_data');
-echo form_open('',$attributes);
+//$attributes = array('class' => '', 'id' => 'update_po_data','name'=>'update_po_data');
+//echo form_open('',$attributes);
 ?>
 
 <div id="middle_container" class="po_acknowledgement">
@@ -75,7 +75,7 @@ echo form_open('',$attributes);
 <div id="middle_container_product">
 
 </div>
-<?php echo form_close(); ?>
+<?php //echo form_close(); ?>
 
 
 <div class="clearfix"></div>
