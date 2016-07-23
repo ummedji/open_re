@@ -98,7 +98,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-10 col-md-offset-1 distributore_form retailer_data_checked" style="display:none;">
+                <div class="col-md-10 col-md-offset-1 distributore_form retailer_data" style="display:none;">
                 <div class="row">
                     
                      <div class="col-md-4 col-sm-4 tp_form">

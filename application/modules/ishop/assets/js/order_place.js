@@ -49,8 +49,9 @@ $(document).ready(function(){
        
        if(customer_type_selected == "retailer"){
            $("div.distributor_data").css("display","none");
-           $("div.retailer_data_checked").css("display","block");
-           
+           $("div.retailer_data").css("display","block");
+          // $("div.retailer_data_checked").css("display","block");
+
            $("div.distributor_checked").css("display","none");
            $("div.farmer_checked").css("display","none");
            $("div.retailer_checked").css("display","block");
@@ -75,7 +76,8 @@ $(document).ready(function(){
            
        }
        else if(customer_type_selected == "distributor"){
-           $("div.retailer_data_checked").css("display","none");
+           $("div.retailer_data").css("display","none");
+           //$("div.retailer_data_checked").css("display","none");
            $("div.distributor_data").css("display","block");
            
            $("div.distributor_checked").css("display","block");
@@ -96,7 +98,8 @@ $(document).ready(function(){
        }
 
        else if(customer_type_selected == "farmer"){
-           $("div.retailer_data_checked").css("display","none");
+           $("div.retailer_data").css("display","none");
+          // $("div.retailer_data_checked").css("display","none");
            $("div.distributor_data").css("display","none");
            
            $("div.distributor_checked").css("display","none");
