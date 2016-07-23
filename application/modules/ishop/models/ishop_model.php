@@ -204,12 +204,14 @@ class Ishop_model extends BF_Model
 
 
                 $primary_sales_id = $insert_id;
+
                 foreach ($product_sku_id as $key => $prd_sku) {
+                    $qty = (isset($quantity[$key]) && !empty($quantity[$key])) ? $quantity[$key] : '0';
                     $primary_sales_product_data = array(
 
                         'primary_sales_id' => $primary_sales_id,
                         'product_sku_id' => $prd_sku,
-                        'quantity' => $quantity[$key],
+                        'quantity' => $qty,
                         'dispatched_quantity' => $dispatched_quantity[$key],
                         'amount' => $amount[$key],
                     );
@@ -223,7 +225,7 @@ class Ishop_model extends BF_Model
                     'invoice_date' => (isset($invoice_date) && !empty($invoice_date)) ? $invoice_date : '',
                     'order_tracking_no' => (isset($order_tracking_no) && !empty($order_tracking_no)) ? $order_tracking_no : '',
                     'PO_no' => (isset($PO_no) && !empty($PO_no)) ? $PO_no : '',
-                    'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '',
+                    'total_amount' => (isset($total_amount) && !empty($total_amount)) ? $total_amount : '0',
                     'invoice_recived_status' => '0',
                     'modified_by_user' => $user_id,
                     'country_id' => $country_id,
@@ -237,11 +239,12 @@ class Ishop_model extends BF_Model
                 $this->db->delete('bf_ishop_primary_sales_product');
 
                 foreach ($product_sku_id as $key => $prd_sku) {
+                    $qty = (isset($quantity[$key]) && !empty($quantity[$key])) ? $quantity[$key] : '0';
                     $primary_sales_product_data = array(
 
                         'primary_sales_id' => $validat[0]['primary_sales_id'],
                         'product_sku_id' => $prd_sku,
-                        'quantity' => $quantity[$key],
+                        'quantity' => $qty,
                         'dispatched_quantity' => $dispatched_quantity[$key],
                         'amount' => $amount[$key],
                     );
@@ -289,11 +292,12 @@ class Ishop_model extends BF_Model
 
                         $primary_sales_id = $insert_id;
 
+                        $qty = (isset($quantity) && !empty($quantity)) ? $quantity : '0';
                         $primary_sales_product_data = array(
 
                             'primary_sales_id' => $primary_sales_id,
                             'product_sku_id' => $product_sku_id,
-                            'quantity' => $quantity,
+                            'quantity' => $qty,
                             'dispatched_quantity' => $dispatched_quantity,
                             'amount' => $amount,
                         );
@@ -303,11 +307,12 @@ class Ishop_model extends BF_Model
                     } else {
                         // echo 'sachin';die;
                         $total_amount = $validat[0]['total_amount'] + $amount;
+                        $qty = (isset($quantity) && !empty($quantity)) ? $quantity : '0';
                         $primary_sales_product_data = array(
 
                             'primary_sales_id' => $validat[0]['primary_sales_id'],
                             'product_sku_id' => $product_sku_id,
-                            'quantity' => $quantity,
+                            'quantity' => $qty,
                             'dispatched_quantity' => $dispatched_quantity,
                             'amount' => $amount,
                         );
@@ -516,9 +521,9 @@ class Ishop_model extends BF_Model
         if (isset($primary_sales_product_id) && !empty($primary_sales_product_id)) {
             foreach ($primary_sales_product_id as $k => $pspi) {
                 $primary_sales_product_update = array(
-                    'quantity' => $quantity[$k],
-                    'dispatched_quantity' => $dispatched_quantity[$k],
-                    'amount' => $amount[$k],
+                    'quantity' => (isset($quantity[$k]) && !empty($quantity[$k])) ? $quantity[$k] : 0,
+                    'dispatched_quantity' => (isset($dispatched_quantity[$k]) && !empty($dispatched_quantity[$k])) ? $dispatched_quantity[$k] : 0,
+                    'amount' => (isset($amount[$k]) && !empty($amount[$k])) ? $amount[$k] : 0,
                 );
 
                 $this->db->where('primary_sales_product_id', $primary_sales_product_id[$k]);
@@ -527,7 +532,7 @@ class Ishop_model extends BF_Model
             $primary_sales = $this->get_sales_id_by_sales_product_id($primary_sales_product_id);
 
             $primary_sales_update_by_product = array(
-                'total_amount' => $total_amt,
+                'total_amount' => (isset($total_amt) && !empty($total_amt)) ? $total_amt : 0,
                 'modified_by_user' => $user_id,
                 'modified_on' => date('Y-m-d H:i:s')
             );
@@ -541,8 +546,8 @@ class Ishop_model extends BF_Model
             foreach ($primary_sales_id as $key => $psi) {
                 $primary_sales_update = array(
                     //'invoice_no' => $invoice_no[$key],
-                    'PO_no' => $PO_no[$key],
-                    'order_tracking_no' => $order_tracking_no[$key],
+                    'PO_no' => (isset($PO_no[$key]) && !empty($PO_no[$key])) ? $PO_no[$key] : '',
+                    'order_tracking_no' => (isset($order_tracking_no[$key]) && !empty($order_tracking_no[$key])) ? $order_tracking_no[$key] : '',
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
@@ -5788,6 +5793,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             }
 
         }
+
+        testdata($final_array);
+
         if(in_array(1,$final_array)){
             $res = 1;
         }

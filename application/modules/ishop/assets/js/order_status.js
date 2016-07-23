@@ -222,6 +222,10 @@ $(document).on('click', 'div.order_status .edit_i', function () {
             url: site_url+'ishop/update_order_status_detail_data',
             data: order_data,
             success: function(resp){
+                console.log(resp);
+                alert(resp);
+
+                return false;
 
                 var message = "";
                 if(resp == 1){
