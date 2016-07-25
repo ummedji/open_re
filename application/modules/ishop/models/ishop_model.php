@@ -6355,7 +6355,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     public function get_budget_details($user_id, $country_id, $checked_type = null, $page = null, $web_service = null)
     {
         // $sql =' SELECT * ';
-        $sql = ' SELECT mpgd.political_geography_name,ib.ishop_budget_id,bu.user_code,bu.display_name,mpsc.product_sku_name,ib.quantity ';
+        $sql = ' SELECT SQL_CALC_FOUND_ROWS mpgd.political_geography_name,ib.ishop_budget_id,bu.user_code,bu.display_name,mpsc.product_sku_name,ib.quantity ';
         $sql .= ' FROM bf_ishop_budget AS ib ';
         $sql .= ' JOIN bf_users AS bu  ON (bu.id = ib.customer_id) ';
         $sql .= ' JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ib.product_sku_id) ';
