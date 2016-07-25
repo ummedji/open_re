@@ -4760,6 +4760,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function get_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null,$local_date=null)
     {
+
         //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
 
         $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn,bio.created_on ';
@@ -4818,8 +4819,17 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $sql .= ' AND bio.order_status != 4 ';
 
         }
-        
-        if($action_data == "get_order_status_data")
+
+        if($loginusertype == '9')
+        {
+            $subsql = ' AND  f_bu.role_id ="'.$loginusertype.'" ';
+
+        }
+        elseif($loginusertype == '10')
+        {
+            $subsql = ' AND  f_bu.role_id = "'.$loginusertype.'" ';
+        }
+        elseif($action_data == "get_order_status_data")
         {
            $subsql = ' AND bu.role_id="'.$loginusertype.'" ';
         }
@@ -4832,8 +4842,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         
        // echo $action_data."</br>";
         
-        //echo $sql;
-      //  die;
+      //  echo $sql;
+       // die;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             // For Pagination

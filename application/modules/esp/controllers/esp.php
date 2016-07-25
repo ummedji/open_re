@@ -572,7 +572,7 @@ class Esp extends Front_Controller
 
                                 //SHOW DATA
                             
-                            echo "1";
+                            //echo "1";
                             
                            $editable = "";
 
@@ -663,7 +663,7 @@ class Esp extends Front_Controller
                         elseif($child_flag == 1)
                         {
                            
-                            echo "2";
+                         //   echo "2";
                             
                                        
                            $editable = "";
@@ -755,7 +755,7 @@ class Esp extends Front_Controller
                         else
                         {
                             
-                            echo "3";
+                          //  echo "3";
                             
                             $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
                     
@@ -781,7 +781,7 @@ class Esp extends Front_Controller
                         
                         if($login_user_id == $employee_month_product_forecast_data[0]['created_by_user']){
 
-                            echo "4";
+                       //     echo "4";
 
                              $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  /></td>';
                     
@@ -797,7 +797,7 @@ class Esp extends Front_Controller
                         }
                         else{
 
-                            echo "5";
+                       //     echo "5";
                         //NOT FREZEED
                         $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
                     
@@ -1988,21 +1988,21 @@ class Esp extends Front_Controller
             
                   //  $check_record_exist = $this->esp_model->check_forecast_data($pbg_id,$user_business_code,$month_value);
 
-                    echo $user_business_code."====".$pbg_id."====".$bussiness_user_id."</br>";
+                  //  echo $user_business_code."====".$pbg_id."====".$bussiness_user_id."</br>";
 
                     $check_record_exist = $this->esp_model->get_employee_product_forecast_data($user_business_code,$pbg_id,$bussiness_user_id);
 
 
-                   // dumpme($check_record_exist);
+                //    dumpme($check_record_exist);
 
                     if($check_record_exist != 0){
                    // if(isset($_POST["forecast_id"]) && $_POST["forecast_id"] != ""){
                         
                         //UPDATE 
                         
-                       // $old_forecast_id = $check_record_exist[0]['forecast_id'];
+                        $old_forecast_id = $check_record_exist[0]['forecast_id'];
 
-                        $old_forecast_id = $_POST["forecast_id"];
+                      //  $old_forecast_id = $_POST["forecast_id"];
 
                         //UPDATE MAIN TABLE RECORD
                         
@@ -2011,8 +2011,8 @@ class Esp extends Front_Controller
                     }else{
                     
                         //INSERT
-                        if($forecast_insert_id == ""){
-                                $forecast_insert_id = $this->esp_model->insert_forecast_data($pbg_id,$created_user_id,$user_business_code,$_POST['login_user_id']);
+                        if($old_forecast_id == ""){
+                            $old_forecast_id = $this->esp_model->insert_forecast_data($pbg_id,$created_user_id,$user_business_code,$_POST['login_user_id']);
                         }
                         
                     }
@@ -2057,7 +2057,7 @@ class Esp extends Front_Controller
             if(!empty($final_array)){
                 foreach($final_array as $key_data => $data){
                     
-                    $old_forecast_id = "";
+                 //   $old_forecast_id = "";
                     
                     $month_data = $key_data;
                     
@@ -2073,13 +2073,13 @@ class Esp extends Front_Controller
                             //UPDATE MAIN TABLE RECORD
                             
                             
-                            if($forecast_insert_id == "")
-							{
+                        //    if($forecast_insert_id == "")
+						//	{
 								$fid = $old_forecast_id;
-							}
-							else{
-								$fid = $forecast_insert_id;
-							}
+						//	}
+						//	else{
+							//	$fid = $forecast_insert_id;
+							//}
                             
                             //echo "a";
                             
@@ -2097,13 +2097,13 @@ class Esp extends Front_Controller
 
                         }else{
 
-							if($forecast_insert_id == "")
-							{
+						//	if($forecast_insert_id == "")
+						//	{
 								$fid = $old_forecast_id;
-							}
-							else{
-								$fid = $forecast_insert_id;
-							}
+						//	}
+						//	else{
+						//		$fid = $forecast_insert_id;
+						//	}
 
 
                             $this->esp_model->insert_forecast_product_details($fid,$businss_data,$product_id,$month_data,$forecast_qty,$forecast_value);
