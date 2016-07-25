@@ -1086,6 +1086,7 @@ class Ishop_model extends BF_Model
 
     public function update_rol_limit_detail($user_id, $country_id, $web_service = null)
     {
+       /* testdata($_POST);*/
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $rol_id = explode(',', $this->input->post("rol_id"));
             $units = explode(',', $this->input->post("units"));
@@ -1101,9 +1102,9 @@ class Ishop_model extends BF_Model
         if (isset($rol_id) && !empty($rol_id)) {
             foreach ($rol_id as $k => $ri) {
                 $rol_update = array(
-                    'rol_quantity' => $quantity[$k],
-                    'units' => $units[$k],
-                    'rol_quantity_Kg_Ltr' => $rol_qty_kg_ltr[$k],
+                    'rol_quantity' => (isset($quantity[$k]) && !empty($quantity[$k])) ? $quantity[$k] : '0',
+                    'units' => (isset($units[$k]) && !empty($units[$k])) ? $units[$k] : '',
+                    'rol_quantity_Kg_Ltr' => (isset($rol_qty_kg_ltr[$k]) && !empty($rol_qty_kg_ltr[$k])) ? $rol_qty_kg_ltr[$k] : '',
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );

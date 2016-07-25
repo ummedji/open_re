@@ -493,7 +493,8 @@ $(document).on('click', '.edit_i', function () {
 
 $(document).on('click', 'div.check_save_btn #check_save', function () {
     var rol_data = $("#update_rol_limit").serializeArray();
-
+    /*console.log(rol_data);
+    return false;*/
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/update_rol_limit_details',

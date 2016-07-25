@@ -193,6 +193,7 @@
 <?php }?>
 <?php echo form_close(); ?>
 <!--------------------------------------Table-------------------------------------------------->
+
 <?php if ($this->input->is_ajax_request()) { ?>
     <?php
     echo theme_view('common/middle');

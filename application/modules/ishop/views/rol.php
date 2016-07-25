@@ -154,11 +154,21 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    <?php echo form_close(); ?>
 <?php }?>
+    <?php echo form_close(); ?>
+
 <!--------------------------------------End Filter------------------------------------------>
 
 <!--------------------------------------Table-------------------------------------------------->
+<?php if ($this->input->is_ajax_request()) { ?>
+<?php
+echo theme_view('common/middle');
+?>
+<?php } ?>
+
+
+<?php if (!$this->input->is_ajax_request()) { ?>
+
 <?php $attributes = array('class' => '', 'id' => 'update_rol_limit','name'=>'update_rol_limit');
 echo form_open('',$attributes); ?>
 
@@ -169,6 +179,8 @@ echo form_open('',$attributes); ?>
 </div>
 
 <?php echo form_close(); ?>
+
+<?php } ?>
 <!--------------------------------------Save & Upload Data-------------------------------------------------->
 <div class="clearfix"></div>
 <?php
