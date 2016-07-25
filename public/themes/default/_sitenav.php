@@ -21,7 +21,7 @@
             <div class="row">
                 <div class="top_setting">
                     <div class="slide_icon">
-                        <a href="#">
+                        <a href="javascript: void(0);">
                             <img src="<?php echo Template::theme_url('images/open_arrow.png'); ?>" class="opn_btn" alt="" title="Open Menu">
                             <img src="<?php echo Template::theme_url('images/back_arrow.png'); ?>" class="cls_btn" alt="" title="Close Menu">
                         </a>

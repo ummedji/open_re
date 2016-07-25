@@ -20,7 +20,7 @@ if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
         }
         else{
              $formname = "update_order_status_detail_data";
-             $url = 'ishop/update_po_acknowledgement_data';
+             //$url = 'ishop/update_po_acknowledgement_data';
         }
         
         $attributes = array('class' => '', 'id' => $formname,'name'=>$formname);
