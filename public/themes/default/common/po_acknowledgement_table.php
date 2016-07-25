@@ -14,17 +14,17 @@ $login_customer_type = $user->role_id;
 
 if(isset($po_ack_table) && count($po_ack_table)>0 && $po_ack_table != false) {
     if($login_customer_type == 9 || $login_customer_type == 10){
-        if($action_data == "po_acknowledgement"){
-            $formname = "po_acknowledgement";
-            $url = "ishop/po_acknowledgement";
-        }
-        else{
-             $formname = "update_order_status_detail_data";
-             //$url = 'ishop/update_po_acknowledgement_data';
-        }
-        
-        $attributes = array('class' => '', 'id' => $formname,'name'=>$formname);
-        echo form_open($url,$attributes);
+            if($action_data == "po_acknowledgement"){
+                $formname = "po_acknowledgement";
+                $url = "ishop/po_acknowledgement";
+            }
+            else{
+                $formname = "update_order_status_detail_data";
+                $url = 'ishop/update_po_acknowledgement_data';
+            }
+
+            $attributes = array('class' => '', 'id' => $formname,'name'=>$formname);
+            echo form_open($url,$attributes);
     }
     ?>
         <div class="col-md-12 ad_mr_top">
