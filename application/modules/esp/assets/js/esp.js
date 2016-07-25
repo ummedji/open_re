@@ -210,7 +210,7 @@ $(document).on("click","button.freeze_data",function(e){
     
     //alert(forecast_id+"==="+freeze_date+"===="+text_data);
     
-    //alert(freeze_date);
+   // alert(freeze_date);
    // return false;
     if(freeze_date == null){
         

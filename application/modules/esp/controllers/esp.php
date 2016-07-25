@@ -630,10 +630,9 @@ class Esp extends Front_Controller
 
                                         $editable = "readonly";
                                     }
-                                  //  elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
-                                    //    echo "fff".$monthvalue."</br>";
-                                  //      $editable = "";
-                                  //  }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){                                    //echo "fff".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
                                     else{
                                      //   echo "eee".$monthvalue."</br>";
                                         $editable = "readonly";
@@ -1120,10 +1119,10 @@ class Esp extends Front_Controller
 
                             $data_assumption_inner_array = array();
 
-                            $webservice_final_array[$monthvalue]['assumptiondata'] = "";
-                            $webservice_final_array[$monthvalue]['assumption_name_data'] = "";
+                            $webservice_final_array[$monthvalue]['assumptiondata'] = array("","","");
+                            $webservice_final_array[$monthvalue]['assumption_name_data'] = array("","","");
 
-                            $webservice_final_array[$monthvalue]['probablitydata'] = "";
+                            $webservice_final_array[$monthvalue]['probablitydata'] = array("","","");
 
                         }
                     }
@@ -1155,10 +1154,10 @@ class Esp extends Front_Controller
 
                             $data_assumption_inner_array = array();
 
-                            $webservice_final_array[$monthvalue]['assumptiondata'] = array();
-                            $webservice_final_array[$monthvalue]['assumption_name_data'] = array();
+                            $webservice_final_array[$monthvalue]['assumptiondata'] = array("","","");
+                            $webservice_final_array[$monthvalue]['assumption_name_data'] = array("","","");
 
-                            $webservice_final_array[$monthvalue]['probablitydata'] = array();
+                            $webservice_final_array[$monthvalue]['probablitydata'] = array("","","");
 
                         }
 
@@ -1321,11 +1320,11 @@ class Esp extends Front_Controller
                                          $probablity_editable = "readonly";
                                         
                                     }
-                                  //  elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0){
                                         //    echo "fff".$monthvalue."</br>";
-                                  //      $assumption_editable = "";
-                                  //      $probablity_editable = "";
-                                  //  }
+                                        $assumption_editable = "";
+                                        $probablity_editable = "";
+                                    }
                                     else{
                                     //    echo "eee".$monthvalue."</br>";
                                       //  $editable = "readonly";

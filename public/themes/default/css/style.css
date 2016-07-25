@@ -1860,7 +1860,7 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
 }
 .tp_form .errors{
     float: right;
-    color: red !important;
+    color: #982e0d !important;
 }
 .input_remove_border{
     border: none;

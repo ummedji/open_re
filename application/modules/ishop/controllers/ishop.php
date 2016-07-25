@@ -1619,7 +1619,7 @@ class Ishop extends Front_Controller
         
         public function order_status() {
             
-            Assets::add_module_js('ishop', 'order_place.js');
+           // Assets::add_module_js('ishop', 'order_place.js');
             Assets::add_module_js('ishop', 'order_status.js');
             
             $user= $this->auth->user();

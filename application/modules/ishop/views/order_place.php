@@ -75,7 +75,7 @@ echo form_open('',$attributes); ?>
                         </div>
                     </div>
                 </div>
-                <div class="col-md-10 col-md-offset-1 distributore_form retailer_data" style="display:none;">
+                <div class="col-md-10 col-md-offset-1 distributore_form retailer_data_checked" style="display:none;">
                 <div class="row">
                     
                      <div class="col-md-3 col-sm-6 tp_form">
@@ -248,7 +248,7 @@ echo form_open('',$attributes); ?>
             
             </div>
             
-            <div class="retailer_checked" id="retailer_checked" style="display:none;">
+            <div class="retailer_checked " id="retailer_checked" style="display:none;">
                 
                 <div class="col-md-12 tp_form">
                     <div class="row">
