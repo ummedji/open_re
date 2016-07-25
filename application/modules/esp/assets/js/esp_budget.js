@@ -417,8 +417,8 @@ function get_pbg_product_sku_data(pbg_id){
     	
     	var year_data = $("input#year_data").val();
     	
-    	var from_month = year_data+"-01-01";
-    	var to_month = year_data+"-12-01";
+    	var from_month = year_data+"-01";
+    	var to_month = year_data+"-12";
     	
     }else{
     	
