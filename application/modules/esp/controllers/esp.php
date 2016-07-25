@@ -3031,11 +3031,11 @@ foreach($month_data as $monthkey => $monthvalue){
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
 
 
-        echo $from_month."====".$to_month."</br>";
+        //echo $from_month."====".$to_month."</br>";
 
         $month_data = $this->get_monthly_data($from_month,$to_month);
 
-        testdata($month_data);
+      //  testdata($month_data);
 
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
