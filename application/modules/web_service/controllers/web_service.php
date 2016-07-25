@@ -5256,11 +5256,14 @@ class Web_service extends Front_Controller
     public function get_budget_lock_data(){
         
         $user_id = $this->input->get_post('user_id');
-		$businesscode = $this->input->get_post('businesscode');
+		$business_emp_id = $this->input->get_post('emp_id');
 		$year_val = $this->input->get_post('yearval');
         $pbgid = $this->input->get_post('pbgid');
-		
-		
+
+        //GET BUSSINESS CODE
+
+        $businesscode = $this->esp_model->get_business_code($business_emp_id);
+
 		$webservice = "webservice";
 		
 		if($user_id != "" && $year_val != ""  && $businesscode != ""  && $pbgid != ""){

@@ -487,19 +487,19 @@ function get_lower_geo_by_parent_geo(selected_geo_id){
            
                if(login_customer_type == 7){
                     
-                    $("div.retailer_data select#retailer_geo_level_2_data").empty();
-                    $("div.retailer_data select#retailer_geo_level_2_data").selectpicker('refresh');
+                    $("div.retailer_data_checked select#retailer_geo_level_2_data").empty();
+                    $("div.retailer_data_checked select#retailer_geo_level_2_data").selectpicker('refresh');
 
                     if(resp.length > 0){
 
-                        $("div.retailer_data select#retailer_geo_level_2_data").append('<option value="">Select Geo Location</option>');
+                        $("div.retailer_data_checked select#retailer_geo_level_2_data").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function(key, value) {
 
-                            $('div.retailer_data select#retailer_geo_level_2_data').append('<option  value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                            $('div.retailer_data_checked select#retailer_geo_level_2_data').append('<option  value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
                         });
 
-                        $("div.retailer_data select#retailer_geo_level_2_data").selectpicker('refresh');
+                        $("div.retailer_data_checked select#retailer_geo_level_2_data").selectpicker('refresh');
 
                     }
                     
@@ -638,20 +638,20 @@ function get_geo_fo_userdata(customer_selected,customer_type_selected){
                 
                 if(login_customer_type == 7){
                     
-                    $("div.retailer_data select#retailer_geo_level_1_data").empty();
-                    $("div.retailer_data select#retailer_geo_level_1_data").selectpicker('refresh');
+                    $("div.retailer_data_checked select#retailer_geo_level_1_data").empty();
+                    $("div.retailer_data_checked select#retailer_geo_level_1_data").selectpicker('refresh');
 
 
                     if(resp.length > 0){
 
-                        $("div.retailer_data select#retailer_geo_level_1_data").append('<option value="">Select Geo Location</option>');
+                        $("div.retailer_data_checked select#retailer_geo_level_1_data").append('<option value="">Select Geo Location</option>');
 
                         $.each(resp, function(key, value) {
 
-                            $('div.retailer_data select#retailer_geo_level_1_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
+                            $('div.retailer_data_checked select#retailer_geo_level_1_data').append('<option value="' + value.political_geo_id + '" >' +value.political_geography_name+ '</option>');
                         });
 
-                        $("div.retailer_data select#retailer_geo_level_1_data").selectpicker('refresh');
+                        $("div.retailer_data_checked select#retailer_geo_level_1_data").selectpicker('refresh');
 
                     }
                     

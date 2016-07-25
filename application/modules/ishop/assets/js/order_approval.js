@@ -236,3 +236,43 @@ $(document).on('click', 'a.update_order_status', function () {
     return false;
     
 });
+
+
+$(document).on("click",'form#update_order_status_detail_data button#update_order_details',function(e){
+    e.preventDefault();
+    var param = $("form#update_order_status_detail_data").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ishop/update_order_approval_detail_data",
+        data: param,
+        success: function(resp){
+
+
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Updated successfully.';
+            }
+            else{
+
+                message += 'Data not Updated.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+        }
+    });
+    return false;
+});

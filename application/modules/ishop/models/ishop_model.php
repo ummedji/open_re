@@ -5894,7 +5894,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function update_order_data($orderdata, $web_service = null)
     {
-
         if (!empty($orderdata)) {
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
@@ -5911,6 +5910,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $orderdata["po_no"]= explode(',',$orderdata["po_no"]);
                 }
             }
+
+
+            $return = array();
 
             foreach ($orderdata["order_data"] as $key => $value) {
 
@@ -5946,11 +5948,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $this->db->where('order_id', $value);
                     $id = $this->db->update('bf_ishop_orders', $update_array);
 
+
+                    if($this->db->affected_rows() > 0){
+                        $return[]=1;
+                    }
+
                 }
             }
         }
 
-        if($this->db->affected_rows() > 0){
+        if(in_array(1,$return)){
             return 1;
         }
         else{
