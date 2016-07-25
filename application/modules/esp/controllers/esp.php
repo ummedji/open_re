@@ -1986,12 +1986,12 @@ class Esp extends Front_Controller
             if(!empty($_POST['month_data'])){
                 foreach($_POST['month_data'] as $month_key=>$month_value){
             
-                 //   $check_record_exist = $this->esp_model->check_forecast_data($pbg_id,$user_business_code,$month_value);
+                  //  $check_record_exist = $this->esp_model->check_forecast_data($pbg_id,$user_business_code,$month_value);
 
-                 //   $check_record_exist = get_employee_product_forecast_data($user_business_code,$pbg_id,$bussiness_user_id);
+                    $check_record_exist = $this->esp_model->get_employee_product_forecast_data($user_business_code,$pbg_id,$bussiness_user_id);
 
-                    //if($check_record_exist != 0){
-                    if(isset($_POST["forecast_id"]) && $_POST["forecast_id"] != ""){
+                    if($check_record_exist != 0){
+                   // if(isset($_POST["forecast_id"]) && $_POST["forecast_id"] != ""){
                         
                         //UPDATE 
                         
@@ -3006,6 +3006,9 @@ foreach($month_data as $monthkey => $monthvalue){
 
             $selected_year = date("Y",strtotime($from_month));
 
+
+
+
 	        $businesscode = $_POST["businesscode"];
         
 		}
@@ -3026,9 +3029,13 @@ foreach($month_data as $monthkey => $monthvalue){
 		}	
 			
         $pbg_sku_data = $this->esp_model->get_pbg_sku_data($pbgid);
+
+
+        echo $from_month."====".$to_month."</br>";
+
         $month_data = $this->get_monthly_data($from_month,$to_month);
 
-        //testdata($month_data);
+        testdata($month_data);
 
         $login_user_parent_data = $this->esp_model->get_freeze_user_parent_data($login_user_id);
         
