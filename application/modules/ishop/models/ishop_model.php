@@ -6034,6 +6034,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $target_array["customer_id"] = $target_data["customer_id"];
                     $target_array["product_sku_id"] = $target_data["prod_sku"];
                     $target_array["quantity"] = $target_data["quantity"];
+                    $target_array["country_id"] = $country_id;
 
                     $target_array["created_on"] = date("Y-m-d h:i:s");
                     $target_array["created_by_user"] = $user_id;

@@ -2715,6 +2715,14 @@ class Ishop extends Front_Controller
 
                                 } else {
 
+                                    if(count($headerdata) != 5 && $headerdata["A"] != "Distributor Code"  && $headerdata["B"] != "Distributor Name"  && $headerdata["C"] != "Retailer Code"  && $headerdata["D"] != "Retailer Name"  && $headerdata["E"] != "Invoice No"   && $headerdata["F"] != "Invoice Date"   && $headerdata["G"] != "PO No"   && $headerdata["H"] != "Order Tracking No"   && $headerdata["I"] != "Product SKU Code" && $headerdata["J"] != "Product SKU Name" && $headerdata["K"] != "Unit" && $headerdata["L"] != "Quantity" && $headerdata["M"] != "Amount"){
+
+                                        $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                        echo json_encode($error_array);
+                                        die;
+
+                                    }
+
                                 }
 
                             } elseif ($filename[0] == "primarysales") {
