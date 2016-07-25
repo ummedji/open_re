@@ -398,12 +398,11 @@ class Ishop_model extends BF_Model
 
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
 
                 } else {
                     $i = 1;
                 }
-
 
                 foreach ($primary_sales['result'] as $ps) {
 
@@ -1005,7 +1004,7 @@ class Ishop_model extends BF_Model
 
                     if ($page != null || $page != "") {
 
-                        $i = $page * 10 - 9;
+                        $i = (($page * 10) - 9);
 
                     } else {
                         $i = 1;
@@ -1044,7 +1043,7 @@ class Ishop_model extends BF_Model
 
                     if ($page != null || $page != "") {
 
-                        $i = $page * 10 - 9;
+                        $i = (($page * 10) - 9);
 
                     } else {
                         $i = 1;
@@ -1516,7 +1515,7 @@ class Ishop_model extends BF_Model
                 $secondary['count'] = count($secondary['head']);
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
 
                 } else {
                     $i = 1;
@@ -1820,7 +1819,7 @@ class Ishop_model extends BF_Model
 
                     if ($page != null || $page != "") {
 
-                        $i = $page * 10 - 9;
+                        $i = (($page * 10) - 9);
 
                     } else {
                         $i = 1;
@@ -1845,7 +1844,7 @@ class Ishop_model extends BF_Model
 
                     if ($page != null || $page != "") {
 
-                        $i = $page * 10 - 9;
+                        $i = (($page * 10) - 9);
 
                     } else {
                         $i = 1;
@@ -2490,7 +2489,7 @@ class Ishop_model extends BF_Model
 
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
 
                 } else {
                     $i = 1;
@@ -3063,7 +3062,7 @@ class Ishop_model extends BF_Model
 
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
 
                 } else {
                     $i = 1;
@@ -3353,7 +3352,7 @@ class Ishop_model extends BF_Model
                 $credit_limit_view['count'] = count($credit_limit_view['head']);
 
                 if ($page != null || $page != "") {
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }
@@ -3647,7 +3646,7 @@ class Ishop_model extends BF_Model
                 if ($login_user == 7) {
                     $scheme_allocation_view['count'] = '14';
                     if ($page != null || $page != "") {
-                        $i = $page * 10 - 9;
+                        $i = (($page * 10) - 9);
                     } else {
                         $i = 1;
                     }
@@ -3661,7 +3660,7 @@ class Ishop_model extends BF_Model
                     $scheme_allocation_view['head'] = array('Sr. No.', 'Retailer Name', 'Retailer Code', 'Scheme Code', 'Scheme Name', 'Product SKU Name', 'Slab No.', '1 pt = ? Kg per Ltr', 'Actual Sales');
                     $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
                     if ($page != null || $page != "") {
-                        $i = $page * 10 - 9;
+                        $i = (($page * 10) - 9);
                     } else {
                         $i = 1;
                     }
@@ -3682,7 +3681,7 @@ class Ishop_model extends BF_Model
                     $scheme_allocation_view['head'] = array('Sr. No.', 'Scheme Code', 'Scheme Name', 'Product SKU Name', 'Slab No.', '1 pt = ? Kg per Ltr');
                     $scheme_allocation_view['count'] = count($scheme_allocation_view['head']);
                     if ($page != null || $page != "") {
-                        $i = $page * 10 - 9;
+                        $i = (($page * 10) - 9);
                     } else {
                         $i = 1;
                     }
@@ -3850,7 +3849,7 @@ class Ishop_model extends BF_Model
             if (isset($invoice_confirmation['result']) && !empty($invoice_confirmation['result'])) {
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
 
                 } else {
                     $i = 1;
@@ -4621,7 +4620,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $prespective['count'] = count($prespective['head']);
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
 
                 } else {
                     $i = 1;
@@ -4862,7 +4861,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['head'] = array('', 'Sr. No.', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.', 'Credit Limit', 'Amount', 'Status');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
-                            $i = $page * 10 - 9;
+                            $i = (($page * 10) - 9);
                         } else {
                             $i = 1;
                         }
@@ -4896,7 +4895,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_view['head'] = array('Sr. No.', 'Remove','Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                             $order_view['count'] = count($order_view['head']);
                             if ($page != null || $page != "") {
-                                $i = $page * 10 - 9;
+                                $i = (($page * 10) - 9);
                             } else {
                                 $i = 1;
                             }
@@ -4940,7 +4939,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_view['head'] = array('Sr. No.', 'Remove', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                             $order_view['count'] = count($order_view['head']);
                             if ($page != null || $page != "") {
-                                $i = $page * 10 - 9;
+                                $i = (($page * 10) - 9);
                             } else {
                                 $i = 1;
                             }
@@ -5119,7 +5118,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         //testdata($page);
                         if ($page != null || $page != "") {
-                            $i = $page * 10 - 9;
+                            $i = (($page * 10) - 9);
                         } else {
                             $i = 1;
                         }
@@ -5176,7 +5175,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.', 'Entered By', 'Enter PO No.');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
-                            $i = $page * 10 - 9;
+                            $i = (($page * 10) - 9);
                         } else {
                             $i = 1;
                         }
@@ -5214,7 +5213,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['head'] = array('Sr. No.', '', 'Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
-                            $i = $page * 10 - 9;
+                            $i = (($page * 10) - 9);
                         } else {
                             $i = 1;
                         }
@@ -5271,7 +5270,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.', 'Distributor', 'Entered By', 'Enter PO No.');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
-                            $i = $page * 10 - 9;
+                            $i = (($page * 10) - 9);
                         } else {
                             $i = 1;
                         }
@@ -6159,7 +6158,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
 
                 } else {
                     $i = 1;
@@ -6372,7 +6371,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 if ($page != null || $page != "") {
 
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }

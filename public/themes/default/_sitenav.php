@@ -20,7 +20,12 @@
         <div class="col-md-12 header">
             <div class="row">
                 <div class="top_setting">
-                    <div class="slide_icon"><a href="#" title="Open Menu"><img src="<?php echo Template::theme_url('images/back_arrow.png'); ?>" alt=""></a></div>
+                    <div class="slide_icon">
+                        <a href="#">
+                            <img src="<?php echo Template::theme_url('images/open_arrow.png'); ?>" class="opn_btn" alt="" title="Open Menu">
+                            <img src="<?php echo Template::theme_url('images/back_arrow.png'); ?>" class="cls_btn" alt="" title="Close Menu">
+                        </a>
+                    </div>
                     <div class="right_nave">
                         <ul class="top_nv">
                             <?php if(isset($segment) && ($segment == 'ishop' && ($segment2 == 'primary_sales_view_details' || $segment2 == 'set_rol' || $segment2 == 'company_current_stock' || $segment2 == 'secondary_sales_details_view' || $segment2 == 'physical_stock' || $segment2 == 'invoice_received_confirmation' || $segment2 == 'sales_view' || $segment2 == 'schemes_view' || $segment2 == 'target' || $segment2 == 'prespective_order' || $segment2 == 'po_acknowledgement' || $segment2 == 'order_status' || $segment2 == 'order_approval' ))){ ?>

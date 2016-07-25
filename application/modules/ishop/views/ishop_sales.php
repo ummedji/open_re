@@ -280,11 +280,11 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-3 upload_file_space">
                     <div class="input-group">
                 <span class="input-group-btn">
-                    <span class="btn btn-primary btn-file">
-                        Browse <input type="file" name="upload_file_data" id="upload_file_data" />
+                    <span class="btn btn-primary btn-file fileUpload">
+                        Browse <input type="file" class="upload" name="upload_file_data" id="upload_file_data" multiple="multiple"/>
                     </span>
                 </span>
-                        <input type="text" class="form-control" readonly>
+                        <input type="text" id="filename" class="form-control" readonly>
                     </div>
                     <div class="clearfix"></div>
                 </div>

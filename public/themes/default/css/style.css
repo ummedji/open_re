@@ -73,6 +73,9 @@ body a {
         width: 100% !important;
     }
 }*/
+.cls_btn, .opn_btn_par { display: none;}
+.cls_btn_par { display: block;}
+
 #wrapper {
     min-height: 100%;
     height: 100%;
@@ -1025,6 +1028,9 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     background: red;
     cursor: inherit;
     display: block;
+}
+#filename {
+    padding: 0 25px 0 5px;
 }
 input[readonly] {
     background-color: white !important;

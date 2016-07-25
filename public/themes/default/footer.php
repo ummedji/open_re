@@ -30,8 +30,30 @@ echo Assets::js();
             /*$(".pr_footer").toggleClass("footer");*/
             $(".toggle_wieght_sp").toggleClass("wieght_sp");
             $(".left_contain_big").toggleClass("left_contain");
-
+            $(".opn_btn").toggleClass("opn_btn_par");
+            $(".cls_btn").toggleClass("cls_btn_par");
         });
+        //<![CDATA[
+        $(window).load(function(){
+            document.getElementById("upload_file_data").onchange = function () {
+                document.getElementById("FileoadFile").value = this.value;
+            };
+
+            document.getElementById('upload_file_data').onchange = uploadOnChange;
+
+            function uploadOnChange() {
+                var filename = this.value;
+                var lastIndex = filename.lastIndexOf("\\");
+                if (lastIndex >= 0) {
+                    filename = filename.substring(lastIndex + 1);
+                }
+                var files = $('#upload_file_data')[0].files;
+                for (var i = 0; i < files.length; i++) {
+                    $("#upload_prev").append(files[i].name);
+                }
+                document.getElementById('filename').value = filename;
+            }
+        });//]]>
 
         $(".zoom_in_btn").click(function(e){
             $(".zoom_out_btn").toggleClass("intro");

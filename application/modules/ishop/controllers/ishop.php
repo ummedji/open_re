@@ -166,9 +166,15 @@ class Ishop extends Front_Controller
 		$by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
 		$by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
 
-
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 
 		$primary_sales_details = $this->ishop_model->get_primary_details_view($form_date, $to_date, $by_distributor, $by_invoice_no,null,$page,$user->local_date);
 
@@ -235,7 +241,16 @@ class Ishop extends Front_Controller
 			$checked_type=null;
 		}
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
+	//	dumpme($page);
 		$rol= $this->ishop_model->get_all_rol_by_user($user->id,$user->country_id,$logined_user_role,$checked_type,null,$page);
 
 		Template::set('td', $rol['count']);
@@ -461,7 +476,16 @@ class Ishop extends Front_Controller
 		$by_retailer = (isset($_POST['by_retailer']) ? $_POST['by_retailer'] : '');
 		$by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
+
 
 		$secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view($form_date, $to_date, $by_retailer, $by_invoice_no,$user->id,$user->country_id,$sales_view=null,null,null,null,null,$page,null,$user->local_date);
 
@@ -545,8 +569,14 @@ class Ishop extends Front_Controller
 			$checked_type=null;
 		}
 		//$checked_type= $_POST['checked_type'];
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
-
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 		$stock_month = (isset($_POST['stock_month']) ? $_POST['stock_month'] : '');
 		$physical_stock= $this->ishop_model->get_all_physical_stock_by_user($user->id,$user->country_id,$user->role_id,$checked_type,$page,null,$stock_month,$user->local_date);
 
@@ -615,7 +645,14 @@ class Ishop extends Front_Controller
 		$invoice_month = (isset($_POST['invoice_month']) ? $_POST['invoice_month'] : '');
 		$po_no = (isset($_POST['po_no']) ? $_POST['po_no'] : '');
 		$invoice_no = (isset($_POST['invoice_no']) ? $_POST['invoice_no'] : '');
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 
 		$invoice_receved = $this->ishop_model->invoice_confirmation_received_by_distributor($invoice_month,$po_no,$invoice_no,$user->id,$user->country_id,$page);
 
@@ -735,7 +772,14 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 		$check_redio = (isset($_POST['radio1']) ? $_POST['radio1'] : '');
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 
 		if($check_redio == 'retailer')
 		{
@@ -836,7 +880,14 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 		$current_stock= $this->ishop_model->get_all_company_current_stock($user->country_id,null,$page,$user->local_date);
 
 		Template::set('td', $current_stock['count']);
@@ -895,7 +946,14 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 		$distributor = $this->ishop_model->get_distributor_by_user_id($user->country_id);
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 
 		$credit_limit= $this->ishop_model->get_all_distributors_credit_limit($user->country_id,null,$page,$user->local_date);
 
@@ -1055,7 +1113,14 @@ class Ishop extends Front_Controller
 		$region = $this->input->post("region");
 		$territory = $this->input->post("territory");
 		$retailer = $this->input->post("fo_retailer_id");
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 
 		$scheme_view=$this->ishop_model->view_schemes_detail($user_id,$user->country_id,$year,$region,$territory,$login_user_role,$retailer,$page);
 	//	testdata($scheme_view);
@@ -1524,7 +1589,14 @@ class Ishop extends Front_Controller
             $todate = $_POST["to_date"];
             $loginusertype = $_POST["login_customer_type"];
             $loginuserid = $_POST["login_customer_id"];
-			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+			if($pag > 0)
+			{
+				$page = $pag;
+			}
+			else{
+				$page = 1;
+			}
 
 			$user = $this->auth->user();
 
@@ -1567,8 +1639,6 @@ class Ishop extends Front_Controller
 
 			Template::set('prespective_order_data',$order_details);
 
-		//	Template::set('td', $order_details['count']);
-			//Template::set('pagination', (isset($order_details['pagination']) && !empty($order_details['pagination'])) ? $order_details['pagination'] : '' );
 
 		}
 		Template::set_view('ishop/prespective_order');
@@ -1753,7 +1823,14 @@ class Ishop extends Front_Controller
              *  GETTING POST FROM DATA HERE
              */
 
-			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+			if($pag > 0)
+			{
+				$page = $pag;
+			}
+			else{
+				$page = 1;
+			}
          $loginusertype = $_POST["login_customer_type"];
 
          if($loginusertype == 7){
@@ -2063,7 +2140,14 @@ class Ishop extends Front_Controller
             $action_data = $this->uri->segment(2);
 
 			$per_page = (isset($_POST['per_page']) ? $_POST['per_page'] : '');
-			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+			if($pag > 0)
+			{
+				$page = $pag;
+			}
+			else{
+				$page = 1;
+			}
 
             if(isset($_POST) && !empty($_POST)){
 
@@ -2127,7 +2211,14 @@ class Ishop extends Front_Controller
             $sub_action_data = $this->uri->segment(3);
             $order_data = "";
 
-			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+			if($pag > 0)
+			{
+				$page = $pag;
+			}
+			else{
+				$page = 1;
+			}
             if(isset($_POST) && !empty($_POST) && $_POST["form_date"] != "" && $_POST["to_date"] != ""){
 
                    $from_date = $_POST["form_date"];
@@ -2184,7 +2275,14 @@ class Ishop extends Front_Controller
 			$default_type_selected = 9;
 
 			$get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
-			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+			if($pag > 0)
+			{
+				$page = $pag;
+			}
+			else{
+				$page = 1;
+			}
 			$target_data= $this->ishop_model->get_target_details($user->id,$user->country_id,$checked_type,$page);
 			Template::set('td', $target_data['count']);
 			Template::set('pagination', (isset($target_data['pagination']) && !empty($target_data['pagination'])) ? $target_data['pagination'] : '' );
@@ -2313,7 +2411,14 @@ class Ishop extends Front_Controller
 			$default_type_selected = 9;
 			$get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
 
-			$page = (isset($_POST['page']) ? $_POST['page'] : '');
+			$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+			if($pag > 0)
+			{
+				$page = $pag;
+			}
+			else{
+				$page = 1;
+			}
 			$budget_data= $this->ishop_model->get_budget_details($user->id,$user->country_id,$checked_type,$page);
 
 
@@ -4193,7 +4298,6 @@ class Ishop extends Front_Controller
 
 	}
 
-
 	public function rol_details_csv_report()
 	{
 
@@ -4322,8 +4426,6 @@ class Ishop extends Front_Controller
 
 	}
 
-
-
 	public function current_stock_details_csv_report()
 	{
 		$this->load->library('excel');
@@ -4385,8 +4487,6 @@ class Ishop extends Front_Controller
 		exit();
 
 	}
-
-
 
 	public function secondary_sales_details_csv_report()
 	{
@@ -4469,8 +4569,6 @@ class Ishop extends Front_Controller
 		$objWriter->save('php://output');
 		exit();
 	}
-
-
 
 	public function physical_stock_details_csv_report()
 	{
@@ -4591,8 +4689,6 @@ class Ishop extends Front_Controller
 
 	}
 
-
-
 	public function invoice_confirm_details_csv_report()
 	{
 		$this->load->library('excel');
@@ -4655,7 +4751,6 @@ class Ishop extends Front_Controller
 		exit();
 
 	}
-
 
 	public function sales_view_details_csv_report()
 	{
@@ -4799,7 +4894,6 @@ class Ishop extends Front_Controller
 		exit();
 
 	}
-
 
 	public function schemes_view_details_csv_report()
 	{
@@ -5027,8 +5121,6 @@ class Ishop extends Front_Controller
 		exit();
 	}
 
-
-
 	public function prespective_order_details_csv_report()
 	{
 
@@ -5108,7 +5200,6 @@ class Ishop extends Front_Controller
 		exit();
 
 	}
-
 
 	public function order_details_csv_report()
 	{

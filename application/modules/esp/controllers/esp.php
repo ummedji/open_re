@@ -1990,6 +1990,9 @@ class Esp extends Front_Controller
 
                     $check_record_exist = $this->esp_model->get_employee_product_forecast_data($user_business_code,$pbg_id,$bussiness_user_id);
 
+
+                    dumpme($check_record_exist);
+
                     if($check_record_exist != 0){
                    // if(isset($_POST["forecast_id"]) && $_POST["forecast_id"] != ""){
                         
@@ -2041,7 +2044,10 @@ class Esp extends Front_Controller
                      $i++;
                 }
             }
-             
+
+
+            die;
+
           //  dumpme($final_array);
             
             $fid = "";
