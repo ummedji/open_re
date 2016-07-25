@@ -837,10 +837,7 @@ class Esp extends Front_Controller
                         $webservice_final_array[$monthvalue]["lock_status"] = $lock_status;
 
                     }
-                    
-                    
-                  //  dumpme($forecast_freeze_data);
-                  
+
                     $l++;
                 }
 
@@ -1255,7 +1252,7 @@ class Esp extends Front_Controller
                         
                             if($forecast_freeze_data["freeze_status"] == 1 || $forecast_freeze_data["created_by_user"] == $login_user_id){
 
-
+                                echo "1";
                                     //SHOW DATA
                              
                             
@@ -1368,7 +1365,7 @@ class Esp extends Front_Controller
                             {
                                 //SHOW DATA
 
-                              
+                                echo "2";
                                           
                            $editable = "";
 
@@ -1483,7 +1480,7 @@ class Esp extends Front_Controller
                             {
                                 //DONT SHOW
                                 
-                               // echo "3";
+                                echo "3";
                                 
                                  $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -1513,12 +1510,12 @@ class Esp extends Front_Controller
                         else
                         {
                             //DONT SHOW
-                            
-                         //   echo "4";
+
+                           echo $login_user_id.'===='. $employee_month_product_forecast_data[0]['created_by_user'];
                             
                             if($login_user_id == $employee_month_product_forecast_data[0]['created_by_user']){
-                                
-                                
+
+                                echo "4";
                                 
                                  $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -1545,8 +1542,8 @@ class Esp extends Front_Controller
 
                             }
                             else{
-                            
-                            
+
+                                echo "5";
                             
                             $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
