@@ -2505,1470 +2505,1428 @@ class Ishop extends Front_Controller
                 }else{
                     $filename[] = $_POST["file_name"];
                 }
-                
-                $ext = explode(".",$filename[1]);
-                
-                
-                if($ext[1] == "xlsx")
-                {
-                
-                //load the excel library
-                $this->load->library('excel');
 
-                //read file from path
-                $objPHPExcel = PHPExcel_IOFactory::load($file);
+           //     dumpme($filename);
+///die;
+                $ext = explode(".",$filename[0]);
 
-                //get only the Cell Collection
-                $cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
+               // testdata($ext);
                 
-                $arr_data = array();
-                //extract to a PHP readable array format
-                foreach ($cell_collection as $cell) {
+                if($ext[1] == "xlsx") {
 
-                    $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
-                    $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
-                    $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
+                    //load the excel library
+                    $this->load->library('excel');
 
-                    if($filename[0] == "target" || $filename[0] == "budget"){
-                        
-                        if($column == 'A' && $row != 1 && $data_value != ""){
+                    //read file from path
+                    $objPHPExcel = PHPExcel_IOFactory::load($file);
 
-                                $phpexcepDate = $data_value-25569; //to offset to Unix epoch
-                                $data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-                                $data_value = date("Y-m",$data_value); 
-                                
-                                $data_value = $data_value."-01"; 
+                    $sheetCount = $objPHPExcel->getSheetCount();
+                    $sheetNames = $objPHPExcel->getSheetNames();
+
+                    $new_file_name = $sheetNames[0];
+
+                    $newfilename = explode("_",$new_file_name);
+                    $filename[0] = $newfilename[0];
+
+                  // echo $newfilename[0];
+
+                  //  dumpme($sheetNames);
+
+                  //  die;
+                    if($sheetCount == 1){
+
+
+                        //get only the Cell Collection
+                        $cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
+
+                    $arr_data = array();
+                    //extract to a PHP readable array format
+                    foreach ($cell_collection as $cell) {
+
+                        $column = $objPHPExcel->getActiveSheet()->getCell($cell)->getColumn();
+                        $row = $objPHPExcel->getActiveSheet()->getCell($cell)->getRow();
+                        $data_value = $objPHPExcel->getActiveSheet()->getCell($cell)->getValue();
+
+                        if ($filename[0] == "target" || $filename[0] == "budget") {
+
+                            if ($column == 'A' && $row != 1 && $data_value != "") {
+
+                                $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
+                                $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
+                                $data_value = date("Y-m", $data_value);
+
+                                $data_value = $data_value . "-01";
+
+                            }
+
+                        } elseif ($filename[0] == "companycurrentstock") {
+
+                            if (($column == 'H' && $row != 1 && $data_value != "") || ($column == 'F' && $row != 1 && $data_value != "") || ($column == 'G' && $row != 1 && $data_value != "")) {
+
+                                $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
+                                $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
+                                $data_value = date("Y-m-d", $data_value);
+
+                            }
+                        } elseif ($filename[0] == "creditlimit") {
+
+                            if ($column == 'E' && $row != 1 && $data_value != "") {
+
+                                $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
+                                $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
+                                $data_value = date("Y-m-d", $data_value);
+
+                            }
+
+                        } elseif ($filename[0] == "secondarysales") {
+                            if ($user->role_id == 8) {
+                                if ($column == 'F' && $row != 1 && $data_value != "") {
+
+                                    $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
+                                    $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
+                                    $data_value = date("Y-m-d", $data_value);
+
+                                }
+                            } else {
+                                if ($column == 'D' && $row != 1 && $data_value != "") {
+
+                                    $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
+                                    $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
+                                    $data_value = date("Y-m-d", $data_value);
+
+                                }
+                            }
+
+                        } elseif ($filename[0] == "primarysales") {
+
+                            if ($column == 'D' && $row != 1 && $data_value != "") {
+
+                                $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
+                                $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
+                                $data_value = date("Y-m-d", $data_value);
+
+                            }
+
+                        } elseif ($filename[0] == "physicalstock") {
+
+                            if ($column == 'A' && $row != 1 && $data_value != "") {
+
+                                $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
+                                $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
+
+                                $data_value = date("Y-m", $data_value);
+                                $data_value = $data_value . "-01";
+
+                                //$data_value = date("Y-m-d",$data_value);
+
+                            }
 
                         }
-                        
-                    }
-                    elseif($filename[0] == "companycurrentstock"){
-                    
-                        if(($column == 'H' && $row != 1 && $data_value != "") || ($column == 'F' && $row != 1 && $data_value != "") || ($column == 'G' && $row != 1 && $data_value != "")){
 
-                                $phpexcepDate = $data_value-25569; //to offset to Unix epoch
-                                $data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-                                $data_value = date("Y-m-d",$data_value); 
-
+                        //header will/should be in row 1 only. of course this can be modified to suit your need.
+                        if ($row == 1) {
+                            $header[$row][$column] = $data_value;
+                        } else {
+                            $arr_data[$row][$column] = $data_value;
                         }
                     }
-                    elseif($filename[0] == "creditlimit"){
-                        
-                        if($column == 'E' && $row != 1 && $data_value != ""){
 
-                                $phpexcepDate = $data_value-25569; //to offset to Unix epoch
-                                $data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-                                $data_value = date("Y-m-d",$data_value); 
+                    //send the data in an array format
+                    $data['header'] = $header;
+                    $data['values'] = $arr_data;
+
+                    //testdata($data);
+
+                    $error_array = array();
+                    $final_array = array();
+
+                    //  testdata($data['values']);
+
+                    $dist_invoice_ret_mapp_data_array = array();
+                    $dist_invoice_product_mapp_data_array = array();
+                    $dist_invoice_otn_mapp_data_array = array();
+
+                        //CHECK HEADER DATA IS VALID OR NOT
+
+
+                    if(!empty($data['header'])){
+                        foreach ($data['header'] as $key => $headerdata) {
+
+                            if ($filename[0] == "target"){
+
+                                //testdata($headerdata);
+                               if(count($headerdata) != 6 && $headerdata["A"] != "Month"  && ($headerdata["B"] != "Distributor Code" || $headerdata["B"] != "Retailer Code")  && ($headerdata["C"] != "Distributor Name" || $headerdata["B"] != "Retailer Name")  && $headerdata["D"] != "Product SKU Code"  && $headerdata["E"] != "Product SKU Name"  && $headerdata["F"] != "Quantity(Kg/Ltr)"){
+
+                                   $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                   echo json_encode($error_array);
+                                   die;
+
+                               }
+                             //   if($headerdata)
+
+
+                            }
+                            elseif($filename[0] == "budget"){
+
+
+                                if(count($headerdata) != 6 && $headerdata["A"] != "Month"  && ($headerdata["B"] != "Distributor Code" || $headerdata["B"] != "Retailer Name")  && ($headerdata["C"] != "Distributor Name" || $headerdata["B"] != "Retailer Code")  && $headerdata["D"] != "Product SKU Code"  && $headerdata["E"] != "Product SKU Name"  && $headerdata["F"] != "Quantity(Kg/Ltr)"){
+
+                                    $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                    echo json_encode($error_array);
+                                    die;
+
+                                }
+
+                            }
+                            elseif ($filename[0] == "companycurrentstock") {
+
+                                if(count($headerdata) != 8 && $headerdata["A"] != "Product SKU Code"  && $headerdata["B"] != "Product SKU Name"  && $headerdata["C"] != "Batch No"  && $headerdata["D"] != "Unrestricted Qty"  && $headerdata["E"] != "In Transit Qty"  && $headerdata["F"] != "Expiry Date" && $headerdata["F"] != "Mfg. Date" && $headerdata["F"] != "Date Data"){
+
+                                    $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                    echo json_encode($error_array);
+                                    die;
+
+                                }
+
+
+                            } elseif ($filename[0] == "creditlimit") {
+
+                                if(count($headerdata) != 5 && $headerdata["A"] != "Distributor Code"  && $headerdata["B"] != "Distributor Name"  && $headerdata["C"] != "Credit Limit"  && $headerdata["D"] != "Current Outstanding"  && $headerdata["E"] != "Date Data"){
+
+                                    $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                    echo json_encode($error_array);
+                                    die;
+
+                                }
+
+
+                            } elseif ($filename[0] == "secondarysales") {
+                                if ($user->role_id == 8) {
+
+
+                                    if(count($headerdata) != 5 && $headerdata["A"] != "Distributor Code"  && $headerdata["B"] != "Distributor Name"  && $headerdata["C"] != "Retailer Code"  && $headerdata["D"] != "Retailer Name"  && $headerdata["E"] != "Invoice No"   && $headerdata["F"] != "Invoice Date"   && $headerdata["G"] != "PO No"   && $headerdata["H"] != "Order Tracking No"   && $headerdata["I"] != "Product SKU Code" && $headerdata["J"] != "Product SKU Name" && $headerdata["K"] != "Unit" && $headerdata["L"] != "Quantity" && $headerdata["M"] != "Amount"){
+
+                                        $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                        echo json_encode($error_array);
+                                        die;
+
+                                    }
+
+
+                                } else {
+
+                                }
+
+                            } elseif ($filename[0] == "primarysales") {
+
+
+                            } elseif ($filename[0] == "physicalstock") {
+
+
+                            }
 
                         }
-                        
+
                     }
-                    elseif($filename[0] == "secondarysales"){
-                        if($user->role_id == 8)
-						{
-							if($column == 'F' && $row != 1 && $data_value != ""){
 
-								$phpexcepDate = $data_value-25569; //to offset to Unix epoch
-								$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-								$data_value = date("Y-m-d",$data_value);
 
-							}
-						}
-						else{
-							if($column == 'D' && $row != 1 && $data_value != ""){
+                    // CHECK DATA IS PRESENT AND VALID
 
-								$phpexcepDate = $data_value-25569; //to offset to Unix epoch
-								$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-								$data_value = date("Y-m-d",$data_value);
+                    if (!empty($data['values'])) {
+                        foreach ($data['values'] as $key => $data) {
 
-							}
-						}
-                        
-                    }
-					elseif($filename[0] == "primarysales"){
+                            $inner_array = array();
 
-						if($column == 'D' && $row != 1 && $data_value != ""){
+                            /*
+                             *  NEED TO CHANGE AS PER EXCEL FILE
+                             */
+                            if ($filename[0] == "target" || $filename[0] == "budget") {
 
-							$phpexcepDate = $data_value-25569; //to offset to Unix epoch
-							$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-							$data_value = date("Y-m-d",$data_value);
+                                if (!isset($data["A"])) {
+                                    $month_data = "";
+                                } else {
+                                    $month_data = $data["A"];
+                                }
 
-						}
+                                if (!isset($data["B"])) {
+                                    $distributor_code = "";
+                                } else {
+                                    $distributor_code = $data["B"];
+                                }
 
-					}
-					elseif($filename[0] == "physicalstock"){
+                                if (!isset($data["C"])) {
+                                    $distributor_name = "";
+                                } else {
+                                    $distributor_name = $data["C"];
+                                }
 
-						if($column == 'A' && $row != 1 && $data_value != ""){
+                                if (!isset($data["D"])) {
+                                    $product_code = "";
+                                } else {
+                                    $product_code = $data["D"];
+                                }
 
-							$phpexcepDate = $data_value-25569; //to offset to Unix epoch
-							$data_value = strtotime("+$phpexcepDate days", mktime(0,0,0,1,1,1970));
-                            
-                            $data_value = date("Y-m",$data_value); 
-                            $data_value = $data_value."-01"; 
-                            
-							//$data_value = date("Y-m-d",$data_value);
+                                if (!isset($data["E"])) {
+                                    $product_name = "";
+                                } else {
+                                    $product_name = $data["E"];
+                                }
 
-						}
+                                if (!isset($data["F"])) {
+                                    $quantity = "";
+                                } else {
+                                    $quantity = $data["F"];
+                                }
 
-					}
 
-                    //header will/should be in row 1 only. of course this can be modified to suit your need.
-                    if ($row == 1) {
-                        $header[$row][$column] = $data_value;
+                                if ($month_data == "" || $distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $quantity == "") {
+                                    //CHECK DATA BLANK
+
+                                    if (!isset($error_array["error"]["header"])) {
+                                        $error_array["error"]["header"] = $header;
+                                    }
+
+                                    $error_array["error"][] = $month_data . "~" . $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $quantity . "~" . "Some row data blank";
+                                } else {
+
+                                    //CHECK PROPER DATA
+
+                                    // DISTRIBUTOR AND PRODUCT CHECK
+
+                                    $user_data = $this->ishop_model->check_user_data($distributor_code, $distributor_name);
+                                    $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+                                    if ($user_data != 0 && $product_data != 0) {
+                                        //ADD DATA TO DATA ARRAY
+
+                                        // $month_data1 = explode("-",$month_data);
+                                        // $new_month_data = $month_data1[0]."-".$month_data1[1]."-01";
+
+                                        $inner_array[] = $month_data;
+                                        $inner_array[] = $user_data;
+                                        $inner_array[] = $product_data;
+                                        //   $inner_array[] = $product_code;
+                                        //   $inner_array[] = $product_name;
+                                        $inner_array[] = $quantity;
+
+                                        $final_array["success"][] = $inner_array;
+
+                                    } else {
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+                                        if ($user_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "User data not matched with DB data";
+                                        }
+                                        if ($product_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "Product data not matched with DB data";
+                                        }
+                                        if ($user_data == 0 && $product_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "User Data and Product data not matched with DB data";
+                                        }
+
+                                        $error_array["error"][] = $month_data . "~" . $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $quantity . "~" . $error_message;
+                                    }
+
+                                }
+
+                            } elseif ($filename[0] == "companycurrentstock") {
+
+                                if (!isset($data["A"])) {
+                                    $product_code = "";
+                                } else {
+                                    $product_code = $data["A"];
+                                }
+
+                                if (!isset($data["B"])) {
+                                    $product_name = "";
+                                } else {
+                                    $product_name = $data["B"];
+                                }
+
+                                if (!isset($data["C"])) {
+                                    $batch_no = "";
+                                } else {
+                                    $batch_no = $data["C"];
+                                }
+
+                                if (!isset($data["D"])) {
+                                    $Unrestricted_Qty = "";
+                                } else {
+                                    $Unrestricted_Qty = $data["D"];
+                                }
+
+                                if (!isset($data["E"])) {
+                                    $In_Transit_Qty = "";
+                                } else {
+                                    $In_Transit_Qty = $data["E"];
+                                }
+
+                                if (!isset($data["F"])) {
+                                    $Expiry_Date = "";
+                                } else {
+                                    $Expiry_Date = $data["F"];
+                                }
+
+                                if (!isset($data["G"])) {
+                                    $Mfg_Date = "";
+                                } else {
+                                    $Mfg_Date = $data["G"];
+                                }
+
+                                if (!isset($data["H"])) {
+                                    $Date_data = "";
+                                } else {
+                                    $Date_data = $data["H"];
+                                }
+
+
+                                if ($product_code == "" || $product_name == "" || $batch_no == "" || $Unrestricted_Qty == "" || $In_Transit_Qty == "" || $Expiry_Date == "" || $Mfg_Date == "") {
+                                    //CHECK DATA BLANK
+
+                                    if (!isset($error_array["error"]["header"])) {
+                                        $error_array["error"]["header"] = $header;
+                                    }
+
+                                    $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . "Some row data blank";
+                                } else {
+
+                                    //CHECK PROPER DATA
+
+                                    //PRODUCT CHECK
+
+                                    $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+                                    if ($product_data != 0) {
+                                        //ADD DATA TO DATA ARRAY
+
+                                        if ($Date_data == "") {
+                                            $Date_data = date("Y-m-d");
+                                        } else {
+                                            $Date_data = $Date_data;
+                                        }
+
+                                        $inner_array[] = $product_data;
+                                        $inner_array[] = $batch_no;
+                                        $inner_array[] = $Unrestricted_Qty;
+                                        $inner_array[] = $In_Transit_Qty;
+                                        $inner_array[] = $Expiry_Date;
+                                        $inner_array[] = $Mfg_Date;
+                                        $inner_array[] = $Date_data;
+
+                                        $final_array["success"][] = $inner_array;
+
+                                    } else {
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+
+                                        if ($product_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "Product data not matched with DB data";
+                                        }
+
+                                        $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . $error_message;
+                                    }
+
+                                }
+                            } elseif ($filename[0] == "creditlimit") {
+
+                                if (!isset($data["A"])) {
+                                    $distributor_code = "";
+                                } else {
+                                    $distributor_code = $data["A"];
+                                }
+
+                                if (!isset($data["B"])) {
+                                    $distributor_name = "";
+                                } else {
+                                    $distributor_name = $data["B"];
+                                }
+
+                                if (!isset($data["C"])) {
+                                    $credit_limit = "";
+                                } else {
+                                    $credit_limit = $data["C"];
+                                }
+
+                                if (!isset($data["D"])) {
+                                    $current_outstanding = "";
+                                } else {
+                                    $current_outstanding = $data["D"];
+                                }
+
+                                if (!isset($data["E"])) {
+                                    $Date_data = "";
+                                } else {
+                                    $Date_data = $data["E"];
+                                }
+
+
+                                if ($distributor_code == "" || $distributor_name == "" || $credit_limit == "" || $current_outstanding == "" || $Date_data == "") {
+                                    //CHECK DATA BLANK
+
+                                    if (!isset($error_array["error"]["header"])) {
+                                        $error_array["error"]["header"] = $header;
+                                    }
+
+                                    $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $credit_limit . "~" . $current_outstanding . "~" . $Date_data . "~" . "Some row data blank";
+                                } else {
+
+                                    //CHECK PROPER DATA
+
+                                    //PRODUCT CHECK
+
+                                    $user_data = $this->ishop_model->check_user_data($distributor_code, $distributor_name);
+
+
+                                    if ($user_data != 0) {
+                                        //ADD DATA TO DATA ARRAY
+
+                                        if ($Date_data == "") {
+                                            $Date_data = date("Y-m-d");
+                                        } else {
+                                            $Date_data = $Date_data;
+                                        }
+
+                                        $inner_array[] = $user_data;
+                                        $inner_array[] = $credit_limit;
+                                        $inner_array[] = $current_outstanding;
+                                        $inner_array[] = $Date_data;
+
+                                        $final_array["success"][] = $inner_array;
+
+                                    } else {
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+                                        if ($user_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "User data not matched with DB data";
+                                        }
+
+                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $credit_limit . "~" . $current_outstanding . "~" . $Date_data . "~" . $error_message;
+                                    }
+
+                                }
+                            } elseif ($filename[0] == "rol") {
+
+
+                                if ($logined_user_type == 7) {
+
+                                    //FOR HO LOGIN
+
+                                    if (!isset($data["A"])) {
+                                        $distributor_code = "";
+                                    } else {
+                                        $distributor_code = $data["A"];
+                                    }
+
+                                    if (!isset($data["B"])) {
+                                        $distributor_name = "";
+                                    } else {
+                                        $distributor_name = $data["B"];
+                                    }
+
+                                    if (!isset($data["C"])) {
+                                        $product_code = "";
+                                    } else {
+                                        $product_code = $data["C"];
+                                    }
+
+                                    if (!isset($data["D"])) {
+                                        $product_name = "";
+                                    } else {
+                                        $product_name = $data["D"];
+                                    }
+
+                                    if (!isset($data["E"])) {
+                                        $unit_data = "";
+                                    } else {
+                                        $unit_data = $data["E"];
+                                    }
+
+                                    if (!isset($data["F"])) {
+                                        $rol_quantity_data = "";
+                                    } else {
+                                        $rol_quantity_data = $data["F"];
+                                    }
+
+
+                                    if ($distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $unit_data == "" || $rol_quantity_data == "") {
+                                        //CHECK DATA BLANK
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" . "Some row data blank";
+                                    } else {
+
+                                        //CHECK PROPER DATA
+
+                                        //PRODUCT CHECK
+
+                                        $user_data = $this->ishop_model->check_user_data($distributor_code, $distributor_name);
+                                        $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+                                        if ($user_data != 0 && $product_data != 0) {
+                                            //ADD DATA TO DATA ARRAY
+
+
+                                            $inner_array[] = $user_data;
+                                            $inner_array[] = $product_data;
+                                            $inner_array[] = $unit_data;
+                                            $inner_array[] = $rol_quantity_data;
+
+                                            $final_array["success"][] = $inner_array;
+
+                                        } else {
+                                            if ($user_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Excel User data not matched with DB data";
+                                            }
+
+                                            if ($product_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Product data not matched with DB data";
+                                            }
+
+                                            if ($user_data == 0 && $product_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Excel User or Product data not matched with DB data";
+                                            }
+
+                                            if (!isset($error_array["error"]["header"])) {
+                                                $error_array["error"]["header"] = $header;
+                                            }
+                                            $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" . $error_message;
+                                        }
+
+                                    }
+
+                                } elseif ($logined_user_type == 9 || $logined_user_type == 10) {
+
+                                    //FOR DISTRIBUTOR OR RETAILER LOGIN
+
+                                    if (!isset($data["A"])) {
+                                        $product_code = "";
+                                    } else {
+                                        $product_code = $data["A"];
+                                    }
+
+                                    if (!isset($data["B"])) {
+                                        $product_name = "";
+                                    } else {
+                                        $product_name = $data["B"];
+                                    }
+
+                                    if (!isset($data["C"])) {
+                                        $unit_data = "";
+                                    } else {
+                                        $unit_data = $data["C"];
+                                    }
+
+                                    if (!isset($data["D"])) {
+                                        $rol_quantity_data = "";
+                                    } else {
+                                        $rol_quantity_data = $data["D"];
+                                    }
+
+                                    if ($product_code == "" || $product_name == "" || $unit_data == "" || $rol_quantity_data == "") {
+                                        //CHECK DATA BLANK
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+                                        $error_array["error"][] = $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" . "Some row data blank";
+                                    } else {
+
+                                        //CHECK PROPER DATA
+
+                                        //PRODUCT CHECK
+
+                                        $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+                                        if ($product_data != 0) {
+                                            //ADD DATA TO DATA ARRAY
+
+                                            $inner_array[] = $product_data;
+                                            $inner_array[] = $unit_data;
+                                            $inner_array[] = $rol_quantity_data;
+
+                                            $final_array["success"][] = $inner_array;
+
+                                        } else {
+
+                                            if (!isset($error_array["error"]["header"])) {
+                                                $error_array["error"]["header"] = $header;
+                                            }
+
+                                            if ($product_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Product data not matched with DB data";
+                                            }
+
+                                            $error_array["error"][] = $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" . $error_message;
+                                        }
+
+                                    }
+
+                                }
+
+                            } elseif ($filename[0] == "primarysales") {
+
+                                if (!isset($data["A"])) {
+                                    $distributor_code = "";
+                                } else {
+                                    $distributor_code = $data["A"];
+                                }
+
+                                if (!isset($data["B"])) {
+                                    $distributor_name = "";
+                                } else {
+                                    $distributor_name = $data["B"];
+                                }
+
+                                if (!isset($data["C"])) {
+                                    $invoice_no = "";
+                                } else {
+                                    $invoice_no = $data["C"];
+                                }
+
+                                if (!isset($data["D"])) {
+                                    $invoice_date = "";
+                                } else {
+                                    $invoice_date = $data["D"];
+                                }
+
+                                if (!isset($data["E"])) {
+                                    $otn = "";
+                                } else {
+                                    $otn = $data["E"];
+                                }
+
+                                if (!isset($data["F"])) {
+                                    $po_no = "";
+                                } else {
+                                    $po_no = $data["F"];
+                                }
+
+                                if (!isset($data["G"])) {
+                                    $product_code = "";
+                                } else {
+                                    $product_code = $data["G"];
+                                }
+                                if (!isset($data["H"])) {
+                                    $product_name = "";
+                                } else {
+                                    $product_name = $data["H"];
+                                }
+                                if (!isset($data["I"])) {
+                                    $po_qty = "";
+                                } else {
+                                    $po_qty = $data["I"];
+                                }
+
+                                if (!isset($data["J"])) {
+                                    $dispatch_qty = "";
+                                } else {
+                                    $dispatch_qty = $data["J"];
+                                }
+                                if (!isset($data["K"])) {
+                                    $amt = "";
+                                } else {
+                                    $amt = $data["K"];
+                                }
+
+                                if ($distributor_code == "" || $distributor_name == "" || $invoice_no == "" || $invoice_date == "" || $otn == "" || $po_no == "" || $product_code == "" || $product_name == "" || $po_qty == "" || $dispatch_qty == "" || $amt == "") {
+                                    //CHECK DATA BLANK
+                                    //$error_array["error"] = 'asdasdasa';
+                                    if (!isset($error_array["error"]["header"])) {
+                                        $error_array["error"]["header"] = $header;
+                                    }
+
+                                    $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $otn . "~" . $po_no . "~" . $product_code . "~" . $product_name . "~" . $po_qty . "~" . $dispatch_qty . "~" . $amt . "~" . "Some row data blank";
+                                } else {
+                                    //CHECK PROPER DATA
+                                    //PRODUCT CHECK
+                                    $user_data = $this->ishop_model->check_user_data($distributor_code, $distributor_name);
+                                    $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+                                    if ($user_data != 0 && $product_data != 0) {
+                                        //ADD DATA TO DATA ARRAY
+                                        $check_invoice_data = $this->ishop_model->check_invoice_data($invoice_no, $user_data);
+                                        //  testdata($check_invoice_data);
+                                        //  $check_otn_data = $this->ishop_model->check_otn_data($otn);
+
+                                        if ($check_invoice_data == 1) {
+                                            // $error_array["error"][]='dsfsdfasdfadsfa';
+                                            $error_message = "";
+                                            if ($check_invoice_data == 1) {
+                                                $error_message = "Invoice data already exist in DB";
+                                            }
+
+                                            if (!isset($error_array["error"]["header"])) {
+                                                $error_array["error"]["header"] = $header;
+                                            }
+
+                                            $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $otn . "~" . $po_no . "~" . $product_code . "~" . $product_name . "~" . $po_qty . "~" . $dispatch_qty . "~" . $amt . "~" . $error_message;
+                                        } else {
+                                            if (!isset($dist_invoice_otn_mapp_data_array[$invoice_no][$otn])) {
+
+                                                $dist_invoice_otn_mapp_data_array[$invoice_no][$otn] = $user_data;
+                                                $inner_array[] = $user_data;
+                                                $inner_array[] = $invoice_no;
+                                                $inner_array[] = $invoice_date;
+                                                $inner_array[] = $otn;
+                                                $inner_array[] = $po_no;
+                                                $inner_array[] = $product_data;
+                                                $inner_array[] = $po_qty;
+                                                $inner_array[] = $dispatch_qty;
+                                                $inner_array[] = $amt;
+
+                                                $final_array["success"][] = $inner_array;
+
+
+                                            } else {
+                                                if ($dist_invoice_otn_mapp_data_array[$invoice_no][$otn] != $user_data) {
+
+                                                    //SAME INVOICE ASSIGNED TO OTHER RETAILER
+                                                    if (!isset($error_array["error"]["header"])) {
+                                                        $error_array["error"]["header"] = $header;
+                                                    }
+                                                    $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $otn . "~" . $po_no . "~" . $product_code . "~" . $product_name . "~" . $po_qty . "~" . $dispatch_qty . "~" . $amt . "~" . "Same invoice assigned to other Distributor";
+
+                                                } else {
+                                                    $inner_array[] = $user_data;
+                                                    $inner_array[] = $invoice_no;
+                                                    $inner_array[] = $invoice_date;
+                                                    $inner_array[] = $otn;
+                                                    $inner_array[] = $po_no;
+                                                    $inner_array[] = $product_data;
+                                                    $inner_array[] = $po_qty;
+                                                    $inner_array[] = $dispatch_qty;
+                                                    $inner_array[] = $amt;
+
+                                                    $final_array["success"][] = $inner_array;
+
+                                                }
+                                            }
+                                        }
+
+                                    } else {
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+                                        if ($user_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "Excel User data not matched with DB data";
+                                        }
+
+                                        if ($product_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "Product data not matched with DB data";
+                                        }
+
+                                        if ($user_data == 0 && $product_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "User and Product data not matched with DB data";
+                                        }
+
+                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $otn . "~" . $po_no . "~" . $product_code . "~" . $product_name . "~" . $po_qty . "~" . $dispatch_qty . "~" . $amt . "~" . $error_message;
+                                    }
+
+                                }
+                            } elseif ($filename[0] == "secondarysales") {
+                                if ($logined_user_type == 8) {
+                                    if (!isset($data["A"])) {
+                                        $distributor_code = "";
+                                    } else {
+                                        $distributor_code = $data["A"];
+                                    }
+
+                                    if (!isset($data["B"])) {
+                                        $distributor_name = "";
+                                    } else {
+                                        $distributor_name = $data["B"];
+                                    }
+
+                                    if (!isset($data["C"])) {
+                                        $retailer_code = "";
+                                    } else {
+                                        $retailer_code = $data["C"];
+                                    }
+
+                                    if (!isset($data["D"])) {
+                                        $retailer_name = "";
+                                    } else {
+                                        $retailer_name = $data["D"];
+                                    }
+
+                                    if (!isset($data["E"])) {
+                                        $invoice_no = "";
+                                    } else {
+                                        $invoice_no = $data["E"];
+                                    }
+
+                                    if (!isset($data["F"])) {
+                                        $invoice_date = "";
+                                    } else {
+                                        $invoice_date = $data["F"];
+                                    }
+
+                                    if (!isset($data["G"])) {
+                                        $po_no = "";
+                                    } else {
+                                        $po_no = $data["G"];
+                                    }
+
+                                    if (!isset($data["H"])) {
+                                        $otn = "";
+                                    } else {
+                                        $otn = $data["H"];
+                                    }
+
+                                    if (!isset($data["I"])) {
+                                        $product_code = "";
+                                    } else {
+                                        $product_code = $data["I"];
+                                    }
+
+                                    if (!isset($data["J"])) {
+                                        $product_name = "";
+                                    } else {
+                                        $product_name = $data["J"];
+                                    }
+
+                                    if (!isset($data["K"])) {
+                                        $unit = "";
+                                    } else {
+                                        $unit = $data["K"];
+                                    }
+
+                                    if (!isset($data["L"])) {
+                                        $quantity = "";
+                                    } else {
+                                        $quantity = $data["L"];
+                                    }
+
+                                    if (!isset($data["M"])) {
+                                        $amount = "";
+                                    } else {
+                                        $amount = $data["M"];
+                                    }
+
+
+                                    if ($distributor_code == "" || $distributor_name == "" || $retailer_code == "" || $retailer_name == "" || $invoice_no == "" || $invoice_date == "" || $po_no == "" || $otn == "" || $product_code == "" || $product_name == "" || $unit == "" || $quantity == "" || $amount == "") {
+                                        //CHECK DATA BLANK
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Some row data blank";
+                                    } else {
+                                        //CHECK PROPER DATA
+                                        //PRODUCT CHECK
+                                        $user_distributor_data = $this->ishop_model->check_user_data($distributor_code, $distributor_name);
+                                        $user_retailer_data = $this->ishop_model->check_user_data($retailer_code, $retailer_name);
+
+                                        $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+                                        if ($user_distributor_data != 0 && $product_data != 0 && $user_retailer_data != 0) {
+                                            //CHECK DISTRIBUTOR RETAILER ASSOCATION
+                                            $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user_distributor_data, $user_retailer_data);
+
+                                            // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
+                                            //  dumpme($dist_invoice_ret_mapp_data_array);
+
+                                            if ($distributor_retailer_mapping_data == 1) {
+
+
+                                                if (!isset($dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no])) {
+
+                                                    $dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] = $user_retailer_data;
+
+                                                    if (!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])) {
+                                                        $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no] = array();
+                                                    }
+
+                                                    $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no, $user_retailer_data, $user_distributor_data);
+
+                                                    if ($invoice_retailer_data == 1) {
+
+                                                        $error_message = "Invoice No for Retailer already exist in DB. ";
+
+                                                        if (!isset($error_array["error"]["header"])) {
+                                                            $error_array["error"]["header"] = $header;
+                                                        }
+                                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
+
+                                                    } else {
+                                                        if (!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no]) && !in_array($product_data, $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])) {
+
+                                                            $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+
+                                                            $inner_array[] = $user_distributor_data;
+                                                            $inner_array[] = $user_retailer_data;
+                                                            $inner_array[] = $invoice_no;
+                                                            $inner_array[] = $invoice_date;
+                                                            $inner_array[] = $po_no;
+                                                            $inner_array[] = $otn;
+                                                            $inner_array[] = $product_data;
+                                                            $inner_array[] = $unit;
+                                                            $inner_array[] = $quantity;
+                                                            $inner_array[] = $amount;
+
+                                                            $final_array["success"][] = $inner_array;
+
+                                                        } else {
+                                                            if (in_array($product_data, $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])) {
+
+                                                                //DUPLICATE DATA IN FILE ERROR
+
+                                                                if (!isset($error_array["error"]["header"])) {
+                                                                    $error_array["error"]["header"] = $header;
+                                                                }
+                                                                $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate product data";
+
+                                                            } else {
+                                                                $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
+
+                                                                $inner_array[] = $user_distributor_data;
+                                                                $inner_array[] = $user_retailer_data;
+                                                                $inner_array[] = $invoice_no;
+                                                                $inner_array[] = $invoice_date;
+                                                                $inner_array[] = $po_no;
+                                                                $inner_array[] = $otn;
+                                                                $inner_array[] = $product_data;
+                                                                $inner_array[] = $unit;
+                                                                $inner_array[] = $quantity;
+                                                                $inner_array[] = $amount;
+
+                                                                $final_array["success"][] = $inner_array;
+                                                            }
+                                                        }
+                                                    }
+
+                                                } else {
+                                                    if ($dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] == $user_retailer_data) {
+
+                                                        //DUPLICATE DATA IN FILE ERROR
+
+                                                        if (!isset($error_array["error"]["header"])) {
+                                                            $error_array["error"]["header"] = $header;
+                                                        }
+                                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate data";
+
+                                                    } else {
+                                                        //SAME INVOICE ASSIGNED TO OTHER RETAILER
+                                                        if (!isset($error_array["error"]["header"])) {
+                                                            $error_array["error"]["header"] = $header;
+                                                        }
+                                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Same invoice assigned to other Retailer";
+                                                    }
+                                                }
+                                            } else {
+                                                //DISTRIBUTOR RETAILER MAPPING ERROR
+                                                if (!isset($error_array["error"]["header"])) {
+                                                    $error_array["error"]["header"] = $header;
+                                                }
+                                                $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Distributor and Retailer not correctly mapped.";
+                                            }
+                                        } else {
+
+                                            if (!isset($error_array["error"]["header"])) {
+                                                $error_array["error"]["header"] = $header;
+                                            }
+
+
+                                            if ($user_distributor_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Distributor data not matched with DB data";
+                                            }
+
+                                            if ($user_retailer_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Retailer data not matched with DB data";
+                                            }
+
+
+                                            if ($product_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Product data not matched with DB data";
+                                            }
+
+                                            if ($user_distributor_data == 0 && $user_retailer_data == 0 && $product_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Distributor data and Retailer data and Product data not matched with DB data";
+                                            }
+
+
+                                            $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
+                                        }
+                                    }
+                                } elseif ($logined_user_type == 9) {
+                                    if (!isset($data["A"])) {
+                                        $retailer_code = "";
+                                    } else {
+                                        $retailer_code = $data["A"];
+                                    }
+
+                                    if (!isset($data["B"])) {
+                                        $retailer_name = "";
+                                    } else {
+                                        $retailer_name = $data["B"];
+                                    }
+
+                                    if (!isset($data["C"])) {
+                                        $invoice_no = "";
+                                    } else {
+                                        $invoice_no = $data["C"];
+                                    }
+
+                                    if (!isset($data["D"])) {
+                                        $invoice_date = "";
+                                    } else {
+                                        $invoice_date = $data["D"];
+                                    }
+
+                                    if (!isset($data["E"])) {
+                                        $po_no = "";
+                                    } else {
+                                        $po_no = $data["E"];
+                                    }
+
+                                    if (!isset($data["F"])) {
+                                        $otn = "";
+                                    } else {
+                                        $otn = $data["F"];
+                                    }
+
+                                    if (!isset($data["G"])) {
+                                        $product_code = "";
+                                    } else {
+                                        $product_code = $data["G"];
+                                    }
+
+                                    if (!isset($data["H"])) {
+                                        $product_name = "";
+                                    } else {
+                                        $product_name = $data["H"];
+                                    }
+
+                                    if (!isset($data["I"])) {
+                                        $unit = "";
+                                    } else {
+                                        $unit = $data["I"];
+                                    }
+
+                                    if (!isset($data["J"])) {
+                                        $quantity = "";
+                                    } else {
+                                        $quantity = $data["J"];
+                                    }
+
+                                    if (!isset($data["K"])) {
+                                        $amount = "";
+                                    } else {
+                                        $amount = $data["K"];
+                                    }
+
+
+                                    if ($retailer_code == "" || $retailer_name == "" || $invoice_no == "" || $invoice_date == "" || $po_no == "" || $otn == "" || $product_code == "" || $product_name == "" || $unit == "" || $quantity == "" || $amount == "") {
+                                        //CHECK DATA BLANK
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+                                        $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Some row data blank";
+                                    } else {
+
+                                        //CHECK PROPER DATA
+
+                                        //PRODUCT CHECK
+
+                                        // $user_distributor_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
+                                        $user_retailer_data = $this->ishop_model->check_user_data($retailer_code, $retailer_name);
+
+                                        $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+
+                                        if ($product_data != 0 && $user_retailer_data != 0) {
+
+
+                                            $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no, $user_retailer_data, $user->id);
+                                            if ($invoice_retailer_data == 1) {
+                                                $error_message = "Invoice data already exist in DB";
+
+                                                if (!isset($error_array["error"]["header"])) {
+                                                    $error_array["error"]["header"] = $header;
+                                                }
+
+                                                $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
+                                            } else {
+                                                //CHECK DISTRIBUTOR RETAILER ASSOCATION
+
+                                                $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user->id, $user_retailer_data);
+
+                                                // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
+
+                                                //  dumpme($dist_invoice_ret_mapp_data_array);
+
+
+                                                if ($distributor_retailer_mapping_data == 1) {
+
+                                                    if (!isset($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no])) {
+
+                                                        $dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] = $user_retailer_data;
+
+
+                                                        if (!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
+                                                            $dist_invoice_product_mapp_data_array[$user->id][$invoice_no] = array();
+                                                        }
+
+
+                                                        if (!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no]) && !in_array($product_data, $dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
+
+                                                            $dist_invoice_product_mapp_data_array[$user->id][$invoice_no][] = $product_data;
+
+
+                                                            $inner_array[] = $user_retailer_data;
+                                                            $inner_array[] = $invoice_no;
+                                                            $inner_array[] = $invoice_date;
+                                                            $inner_array[] = $po_no;
+                                                            $inner_array[] = $otn;
+                                                            $inner_array[] = $product_data;
+                                                            $inner_array[] = $unit;
+                                                            $inner_array[] = $quantity;
+                                                            $inner_array[] = $amount;
+
+                                                            $final_array["success"][] = $inner_array;
+
+                                                        } else {
+
+                                                            if (in_array($product_data, $dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
+
+                                                                //DUPLICATE DATA IN FILE ERROR
+
+                                                                if (!isset($error_array["error"]["header"])) {
+                                                                    $error_array["error"]["header"] = $header;
+                                                                }
+                                                                $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate product data";
+                                                                //$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate data";
+                                                            } else {
+
+                                                                $dist_invoice_product_mapp_data_array[$user->id][$invoice_no][] = $product_data;
+
+                                                                $inner_array[] = $user_retailer_data;
+                                                                $inner_array[] = $invoice_no;
+                                                                $inner_array[] = $invoice_date;
+                                                                $inner_array[] = $po_no;
+                                                                $inner_array[] = $otn;
+                                                                $inner_array[] = $product_data;
+                                                                $inner_array[] = $unit;
+                                                                $inner_array[] = $quantity;
+                                                                $inner_array[] = $amount;
+
+                                                                $final_array["success"][] = $inner_array;
+
+                                                            }
+
+
+                                                        }
+
+                                                    } else {
+                                                        if ($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] == $user_retailer_data) {
+
+                                                            //DUPLICATE DATA IN FILE ERROR
+
+                                                            if (!isset($error_array["error"]["header"])) {
+                                                                $error_array["error"]["header"] = $header;
+                                                            }
+                                                            $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate data";
+
+                                                        } else {
+
+                                                            //SAME INVOICE ASSIGNED TO OTHER RETAILER
+
+                                                            if (!isset($error_array["error"]["header"])) {
+                                                                $error_array["error"]["header"] = $header;
+                                                            }
+                                                            $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Same invoice assigned to other Retailer";
+
+                                                        }
+                                                    }
+
+                                                } else {
+
+                                                    //DISTRIBUTOR RETAILER MAPPING ERROR
+
+                                                    if (!isset($error_array["error"]["header"])) {
+                                                        $error_array["error"]["header"] = $header;
+                                                    }
+                                                    $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Distributor and Retailer not correctly mapped.";
+
+                                                }
+
+
+                                            }
+                                        } else {
+
+                                            if (!isset($error_array["error"]["header"])) {
+                                                $error_array["error"]["header"] = $header;
+                                            }
+
+
+                                            if ($user_retailer_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Retailer data not matched with DB data";
+                                            }
+
+
+                                            if ($product_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Product data not matched with DB data";
+                                            }
+
+                                            if ($user_retailer_data == 0 && $product_data == 0) {
+                                                //USER ERROR MESSAGE
+                                                $error_message = "Retailer data and Product data not matched with DB data";
+                                            }
+
+
+                                            $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
+                                        }
+
+                                    }
+                                }
+                            } elseif ($filename[0] == "physicalstock") {
+
+                                if (!isset($data["A"])) {
+                                    $month = "";
+                                } else {
+                                    $month = $data["A"];
+                                }
+
+                                if (!isset($data["B"])) {
+                                    $product_code = "";
+                                } else {
+                                    $product_code = $data["B"];
+                                }
+                                if (!isset($data["C"])) {
+                                    $product_name = "";
+                                } else {
+                                    $product_name = $data["C"];
+                                }
+
+                                if (!isset($data["D"])) {
+                                    $qty = "";
+                                } else {
+                                    $qty = $data["D"];
+                                }
+                                if (!isset($data["E"])) {
+                                    $unit = "";
+                                } else {
+                                    $unit = $data["E"];
+                                }
+
+
+                                if ($month == "" || $product_code == "" || $product_name == "" || $qty == "" || $unit == "") {
+                                    //CHECK DATA BLANK
+
+                                    if (!isset($error_array["error"]["header"])) {
+                                        $error_array["error"]["header"] = $header;
+                                    }
+
+                                    $error_array["error"][] = $month . "~" . $product_code . "~" . $product_name . "~" . $qty . "~" . $unit . "~" . "Some row data blank";
+                                } else {
+
+                                    //CHECK PROPER DATA
+
+                                    //PRODUCT CHECK
+
+                                    $product_data = $this->ishop_model->check_product_data($product_code, $product_name);
+
+                                    //  testdata($product_data);
+                                    if ($product_data != 0) {
+
+
+                                        $inner_array[] = $month;
+                                        $inner_array[] = $product_data;
+                                        $inner_array[] = $qty;
+                                        $inner_array[] = $unit;
+
+                                        $final_array["success"][] = $inner_array;
+
+
+                                    } else {
+
+                                        if (!isset($error_array["error"]["header"])) {
+                                            $error_array["error"]["header"] = $header;
+                                        }
+
+
+                                        if ($product_data == 0) {
+                                            //USER ERROR MESSAGE
+                                            $error_message = "Product data not matched with DB data";
+                                        }
+
+
+                                        $error_array["error"][] = $month . "~" . $product_code . "~" . $product_name . "~" . $qty . "~" . $unit . "~" . $error_message;
+                                    }
+
+                                }
+                            }
+
+                        }
+
                     } else {
-                        $arr_data[$row][$column] = $data_value;
+                        $error_array["error"][] = "No data found";
+                        echo json_encode($error_array);
+                        die;
                     }
-                }
+                    header('Content-Type: application/json');
 
-                //send the data in an array format
-                $data['header'] = $header;
-                $data['values'] = $arr_data;
 
-                //testdata($data);
-                
-                $error_array = array();
-                $final_array = array();
-                
-              //  testdata($data['values']);
-                
-                $dist_invoice_ret_mapp_data_array = array();
-                $dist_invoice_product_mapp_data_array = array();
-                $dist_invoice_otn_mapp_data_array = array();
-                
-                // CHECK DATA IS PRESENT AND VALID
-           if(!empty($data['values'])){   
-                foreach($data['values'] as $key=>$data){
-                   
-                   $inner_array = array();
-                   
-                   /*
-                    *  NEED TO CHANGE AS PER EXCEL FILE
-                    */
-                  if($filename[0] == "target" || $filename[0] == "budget"){
-                      
-                        if(!isset($data["A"])){
-                            $month_data = "";
-                        } 
-                        else{
-                            $month_data = $data["A"];
+                    if (empty($error_array)) {
+                        // testdata($final_array);
+                        if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
+                            echo json_encode($final_array);
+                            die;
+                        } else {
+                            return $final_array;
                         }
 
-                        if(!isset($data["B"])){
-                            $distributor_code = "";
+                    } else {
+                        if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
+                            echo json_encode($error_array);
+                            die;
+                        } else {
+                            return $error_array;
                         }
-                        else{
-                             $distributor_code = $data["B"];
-                        }
-
-                        if(!isset($data["C"])){
-                             $distributor_name = "";
-                        }
-                        else{
-                             $distributor_name = $data["C"];
-                        }
-
-                        if(!isset($data["D"])){
-                            $product_code = "";
-                        }
-                        else{
-                            $product_code = $data["D"];
-                        }
-
-                        if(!isset($data["E"])){
-                            $product_name = "";
-                        }
-                        else{
-                            $product_name = $data["E"];
-                        }
-
-                        if(!isset($data["F"])){
-                             $quantity = "";
-                        }
-                        else{
-                             $quantity = $data["F"];
-                        }
-
-
-                        if($month_data == "" || $distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $quantity == "")
-                        {
-                            //CHECK DATA BLANK
-
-                            if(!isset($error_array["error"]["header"])){
-                                 $error_array["error"]["header"] = $header;
-                            } 
-
-                            $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~"."Some row data blank";
-                        }
-                        else
-                        {
-
-                            //CHECK PROPER DATA
-
-                            // DISTRIBUTOR AND PRODUCT CHECK
-
-                            $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
-                            $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-                            if($user_data != 0 && $product_data != 0)
-                            {
-                                //ADD DATA TO DATA ARRAY
-
-                               // $month_data1 = explode("-",$month_data);
-                               // $new_month_data = $month_data1[0]."-".$month_data1[1]."-01";
-
-                                     $inner_array[] = $month_data;
-                                     $inner_array[] = $user_data;
-                                     $inner_array[] = $product_data;
-                                  //   $inner_array[] = $product_code;
-                                  //   $inner_array[] = $product_name;
-                                     $inner_array[] = $quantity;
-
-                                     $final_array["success"][] = $inner_array;
-                                
-                            }
-                            else{
-
-                                if(!isset($error_array["error"]["header"])){
-                                     $error_array["error"]["header"] = $header;
-                                }
-                                
-                                if($user_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "User data not matched with DB data";
-                                }
-                                if($product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Product data not matched with DB data";
-                                }
-                                if($user_data == 0 && $product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "User Data and Product data not matched with DB data";
-                                }
-                                
-                                $error_array["error"][] = $month_data."~".$distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$quantity."~".$error_message;
-                            }
-
-                        }
-                   
                     }
-                    elseif($filename[0] == "companycurrentstock")
-                    {
-                       
-                        if(!isset($data["A"])){
-                            $product_code = "";
-                        }
-                        else{
-                            $product_code = $data["A"];
-                        }
 
-                        if(!isset($data["B"])){
-                            $product_name = "";
-                        }
-                        else{
-                            $product_name = $data["B"];
-                        }
-                        
-                        if(!isset($data["C"])){
-                            $batch_no = "";
-                        } 
-                        else{
-                            $batch_no = $data["C"];
-                        }
-
-                        if(!isset($data["D"])){
-                            $Unrestricted_Qty = "";
-                        }
-                        else{
-                             $Unrestricted_Qty = $data["D"];
-                        }
-
-                        if(!isset($data["E"])){
-                             $In_Transit_Qty = "";
-                        }
-                        else{
-                             $In_Transit_Qty = $data["E"];
-                        }
-
-                        if(!isset($data["F"])){
-                             $Expiry_Date = "";
-                        }
-                        else{
-                             $Expiry_Date = $data["F"];
-                        }
-                        
-                        if(!isset($data["G"])){
-                             $Mfg_Date = "";
-                        }
-                        else{
-                             $Mfg_Date = $data["G"];
-                        }
-                        
-                        if(!isset($data["H"])){
-                             $Date_data = "";
-                        }
-                        else{
-                             $Date_data = $data["H"];
-                        }
-                        
-                        
-                        if($product_code == "" || $product_name == "" || $batch_no == "" || $Unrestricted_Qty == "" || $In_Transit_Qty == "" || $Expiry_Date == "" || $Mfg_Date == "")
-                        {
-                            //CHECK DATA BLANK
-
-                            if(!isset($error_array["error"]["header"])){
-                                 $error_array["error"]["header"] = $header;
-                            }
-
-                            $error_array["error"][] = $product_code."~".$product_name."~".$batch_no."~".$Unrestricted_Qty."~".$In_Transit_Qty."~".$Expiry_Date."~".$Mfg_Date."~".$Date_data."~"."Some row data blank";
-                        }
-                        else
-                        {
-                          
-                            //CHECK PROPER DATA
-
-                            //PRODUCT CHECK
-
-                            $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-                            if($product_data != 0)
-                            {
-                                //ADD DATA TO DATA ARRAY
-
-                                if($Date_data == ""){
-                                    $Date_data = date("Y-m-d");
-                                }
-                                else{
-                                    $Date_data = $Date_data;
-                                }
-                                
-                                     $inner_array[] = $product_data;
-                                     $inner_array[] = $batch_no;
-                                     $inner_array[] = $Unrestricted_Qty;
-                                     $inner_array[] = $In_Transit_Qty;
-                                     $inner_array[] = $Expiry_Date;
-                                     $inner_array[] = $Mfg_Date;
-                                     $inner_array[] = $Date_data;
-
-                                     $final_array["success"][] = $inner_array;
-                                
-                            }
-                            else{
-
-                                if(!isset($error_array["error"]["header"])){
-                                     $error_array["error"]["header"] = $header;
-                                }
-                                
-                                
-                                if($product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Product data not matched with DB data";
-                                }
-                                
-                                $error_array["error"][] = $product_code."~".$product_name."~".$batch_no."~".$Unrestricted_Qty."~".$In_Transit_Qty."~".$Expiry_Date."~".$Mfg_Date."~".$Date_data."~".$error_message;
-                            }
-                            
-                        }
-                   }
-                   elseif($filename[0] == "creditlimit")
-                   {
-                       
-                        if(!isset($data["A"])){
-                            $distributor_code = "";
-                        }
-                        else{
-                            $distributor_code = $data["A"];
-                        }
-
-                        if(!isset($data["B"])){
-                            $distributor_name = "";
-                        }
-                        else{
-                            $distributor_name = $data["B"];
-                        }
-                        
-                        if(!isset($data["C"])){
-                            $credit_limit = "";
-                        } 
-                        else{
-                            $credit_limit = $data["C"];
-                        }
-
-                        if(!isset($data["D"])){
-                            $current_outstanding = "";
-                        }
-                        else{
-                             $current_outstanding = $data["D"];
-                        }
-
-                        if(!isset($data["E"])){
-                             $Date_data = "";
-                        }
-                        else{
-                             $Date_data = $data["E"];
-                        }
-
-                        
-                        if($distributor_code == "" || $distributor_name == "" || $credit_limit == "" || $current_outstanding == "" || $Date_data == "")
-                        {
-                            //CHECK DATA BLANK
-
-                            if(!isset($error_array["error"]["header"])){
-                                 $error_array["error"]["header"] = $header;
-                            }
-
-                            $error_array["error"][] = $distributor_code."~".$distributor_name."~".$credit_limit."~".$current_outstanding."~".$Date_data."~"."Some row data blank";
-                        }
-                        else
-                        {
-                          
-                            //CHECK PROPER DATA
-
-                            //PRODUCT CHECK
-                            
-                            $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
-                           
-
-                            if($user_data != 0)
-                            {
-                                //ADD DATA TO DATA ARRAY
-
-                                if($Date_data == ""){
-                                    $Date_data = date("Y-m-d");
-                                }
-                                else{
-                                    $Date_data = $Date_data;
-                                }
-                                
-                                     $inner_array[] = $user_data;
-                                     $inner_array[] = $credit_limit;
-                                     $inner_array[] = $current_outstanding;
-                                     $inner_array[] = $Date_data;
-
-                                     $final_array["success"][] = $inner_array;
-                                
-                            }
-                            else{
-
-                                if(!isset($error_array["error"]["header"])){
-                                     $error_array["error"]["header"] = $header;
-                                }
-                                
-                                if($user_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "User data not matched with DB data";
-                                }
-                                
-                                $error_array["error"][] = $distributor_code."~".$distributor_name."~".$credit_limit."~".$current_outstanding."~".$Date_data."~".$error_message;
-                            }
-                            
-                        }
-                   }
-                   elseif($filename[0] == "rol")
-                   {
-                       
-                       
-                       if($logined_user_type == 7)
-                       {
-                           
-                           //FOR HO LOGIN
-                       
-                            if(!isset($data["A"])){
-                                $distributor_code = "";
-                            }
-                            else{
-                                $distributor_code = $data["A"];
-                            }
-
-                            if(!isset($data["B"])){
-                                $distributor_name = "";
-                            }
-                            else{
-                                $distributor_name = $data["B"];
-                            }
-
-                            if(!isset($data["C"])){
-                                $product_code = "";
-                            } 
-                            else{
-                                $product_code = $data["C"];
-                            }
-
-                            if(!isset($data["D"])){
-                                $product_name = "";
-                            }
-                            else{
-                                 $product_name = $data["D"];
-                            }
-
-                            if(!isset($data["E"])){
-                                 $unit_data = "";
-                            }
-                            else{
-                                 $unit_data = $data["E"];
-                            }
-
-                            if(!isset($data["F"])){
-                                 $rol_quantity_data = "";
-                            }
-                            else{
-                                 $rol_quantity_data = $data["F"];
-                            }
-
-
-                            if($distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $unit_data == "" || $rol_quantity_data == "")
-                            {
-                                //CHECK DATA BLANK
-
-                                if(!isset($error_array["error"]["header"])){
-                                     $error_array["error"]["header"] = $header;
-                                }
-
-                                $error_array["error"][] = $distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~"."Some row data blank";
-                            }
-                            else
-                            {
-
-                                //CHECK PROPER DATA
-
-                                //PRODUCT CHECK
-
-                                $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
-                                $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-                                if($user_data != 0 && $product_data != 0)
-                                {
-                                    //ADD DATA TO DATA ARRAY
-
-
-                                         $inner_array[] = $user_data;
-                                         $inner_array[] = $product_data;
-                                         $inner_array[] = $unit_data;
-                                         $inner_array[] = $rol_quantity_data;
-
-                                         $final_array["success"][] = $inner_array;
-
-                                }
-                                else{
-                                    if($user_data == 0){
-                                        //USER ERROR MESSAGE
-                                        $error_message = "Excel User data not matched with DB data";
-                                    }
-                                    
-                                    if($product_data == 0){
-                                        //USER ERROR MESSAGE
-                                        $error_message = "Product data not matched with DB data";
-                                    }
-                                    
-                                    if($user_data == 0 && $product_data == 0){
-                                        //USER ERROR MESSAGE
-                                        $error_message = "Excel User or Product data not matched with DB data";
-                                    }
-
-                                    if(!isset($error_array["error"]["header"])){
-                                         $error_array["error"]["header"] = $header;
-                                    }
-                                    $error_array["error"][] = $distributor_code."~".$distributor_name."~".$product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~".$error_message;
-                                }
-
-                            }
-
-                       }elseif($logined_user_type == 9 || $logined_user_type == 10){
-                           
-                           //FOR DISTRIBUTOR OR RETAILER LOGIN
-                           
-                            if(!isset($data["A"])){
-                                $product_code = "";
-                            } 
-                            else{
-                                $product_code = $data["A"];
-                            }
-
-                            if(!isset($data["B"])){
-                                $product_name = "";
-                            }
-                            else{
-                                 $product_name = $data["B"];
-                            }
-
-                            if(!isset($data["C"])){
-                                 $unit_data = "";
-                            }
-                            else{
-                                 $unit_data = $data["C"];
-                            }
-
-                            if(!isset($data["D"])){
-                                 $rol_quantity_data = "";
-                            }
-                            else{
-                                 $rol_quantity_data = $data["D"];
-                            }
-
-                            if($product_code == "" || $product_name == "" || $unit_data == "" || $rol_quantity_data == "")
-                            {
-                                //CHECK DATA BLANK
-
-                                if(!isset($error_array["error"]["header"])){
-                                     $error_array["error"]["header"] = $header;
-                                }
-
-                                $error_array["error"][] = $product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~"."Some row data blank";
-                            }
-                            else
-                            {
-
-                                //CHECK PROPER DATA
-
-                                //PRODUCT CHECK
-
-                                $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-                                if($product_data != 0)
-                                {
-                                    //ADD DATA TO DATA ARRAY
-
-                                         $inner_array[] = $product_data;
-                                         $inner_array[] = $unit_data;
-                                         $inner_array[] = $rol_quantity_data;
-
-                                         $final_array["success"][] = $inner_array;
-
-                                }
-                                else{
-
-                                    if(!isset($error_array["error"]["header"])){
-                                         $error_array["error"]["header"] = $header;
-                                    }
-                                    
-                                    if($product_data == 0){
-                                        //USER ERROR MESSAGE
-                                        $error_message = "Product data not matched with DB data";
-                                    }
-                                    
-                                    $error_array["error"][] = $product_code."~".$product_name."~".$unit_data."~".$rol_quantity_data."~".$error_message;
-                                }
-
-                            }
-                           
-                       }
-                       
-                   }
-                    elseif($filename[0] == "primarysales")
-				  {
-
-					  if(!isset($data["A"])){
-						  $distributor_code = "";
-					  }
-					  else{
-						  $distributor_code = $data["A"];
-					  }
-
-					  if(!isset($data["B"])){
-						  $distributor_name = "";
-					  }
-					  else{
-						  $distributor_name = $data["B"];
-					  }
-
-					  if(!isset($data["C"])){
-						  $invoice_no = "";
-					  }
-					  else{
-						  $invoice_no = $data["C"];
-					  }
-
-					  if(!isset($data["D"])){
-						  $invoice_date = "";
-					  }
-					  else{
-						  $invoice_date = $data["D"];
-					  }
-
-					  if(!isset($data["E"])){
-						  $otn = "";
-					  }
-					  else{
-						  $otn = $data["E"];
-					  }
-
-					  if(!isset($data["F"])){
-						  $po_no = "";
-					  }
-					  else{
-						  $po_no = $data["F"];
-					  }
-
-					  if(!isset($data["G"])){
-						  $product_code = "";
-					  }
-					  else{
-						  $product_code = $data["G"];
-					  }
-					  if(!isset($data["H"])){
-						  $product_name = "";
-					  }
-					  else{
-						  $product_name = $data["H"];
-					  }
-					  if(!isset($data["I"])){
-						  $po_qty = "";
-					  }
-					  else{
-						  $po_qty = $data["I"];
-					  }
-
-					  if(!isset($data["J"])){
-						  $dispatch_qty = "";
-					  }
-					  else{
-						  $dispatch_qty = $data["J"];
-					  }
-					  if(!isset($data["K"])){
-						  $amt = "";
-					  }
-					  else{
-						  $amt = $data["K"];
-					  }
-
-					  if($distributor_code == "" || $distributor_name == "" || $invoice_no == "" || $invoice_date == "" || $otn == "" || $po_no=="" || $product_code =="" || $product_name == "" || $po_qty == "" || $dispatch_qty =="" || $amt=="")
-					  {
-						  //CHECK DATA BLANK
-						  //$error_array["error"] = 'asdasdasa';
-						  if(!isset($error_array["error"]["header"])){
-							  $error_array["error"]["header"] = $header;
-						  }
-
-						  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Some row data blank";
-					  }
-					  else
-					  {
-						  //CHECK PROPER DATA
-						  //PRODUCT CHECK
-						  $user_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
-						  $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-						  if($user_data != 0 && $product_data != 0)
-						  {
-							  //ADD DATA TO DATA ARRAY
-							  $check_invoice_data = $this->ishop_model->check_invoice_data($invoice_no,$user_data);
-							//  testdata($check_invoice_data);
-							//  $check_otn_data = $this->ishop_model->check_otn_data($otn);
-
-							  if($check_invoice_data == 1)
-							  {
-								 // $error_array["error"][]='dsfsdfasdfadsfa';
-								  $error_message = "";
-								  if($check_invoice_data == 1) {
-									  $error_message = "Invoice data already exist in DB";
-								  }
-
-								  if(!isset($error_array["error"]["header"])){
-									  $error_array["error"]["header"] = $header;
-								  }
-
-								  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
-							  }
-							  else{
-								  if(!isset($dist_invoice_otn_mapp_data_array[$invoice_no][$otn])){
-
-									  $dist_invoice_otn_mapp_data_array[$invoice_no][$otn] = $user_data;
-									  $inner_array[] = $user_data;
-									  $inner_array[] = $invoice_no;
-									  $inner_array[] = $invoice_date;
-									  $inner_array[] = $otn;
-									  $inner_array[] = $po_no;
-									  $inner_array[] = $product_data;
-									  $inner_array[] = $po_qty;
-									  $inner_array[] = $dispatch_qty;
-									  $inner_array[] = $amt;
-
-									  $final_array["success"][] = $inner_array;
-
-
-								  }
-								  else{
-									  if($dist_invoice_otn_mapp_data_array[$invoice_no][$otn] != $user_data){
-
-										  //SAME INVOICE ASSIGNED TO OTHER RETAILER
-										  if(!isset($error_array["error"]["header"])){
-											  $error_array["error"]["header"] = $header;
-										  }
-										  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~"."Same invoice assigned to other Distributor";
-
-									  }
-									  else{
-										  $inner_array[] = $user_data;
-										  $inner_array[] = $invoice_no;
-										  $inner_array[] = $invoice_date;
-										  $inner_array[] = $otn;
-										  $inner_array[] = $po_no;
-										  $inner_array[] = $product_data;
-										  $inner_array[] = $po_qty;
-										  $inner_array[] = $dispatch_qty;
-										  $inner_array[] = $amt;
-
-										  $final_array["success"][] = $inner_array;
-
-									  }
-								  }
-							  }
-
-						  }
-						  else{
-
-							  if(!isset($error_array["error"]["header"])){
-								  $error_array["error"]["header"] = $header;
-							  }
-                              
-                                if($user_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Excel User data not matched with DB data";
-                                }
-
-                                if($product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Product data not matched with DB data";
-                                }
-
-                                if($user_data == 0 && $product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "User and Product data not matched with DB data";
-                                }
-                              
-							  $error_array["error"][] = $distributor_code."~".$distributor_name."~".$invoice_no."~".$invoice_date."~".$otn."~".$po_no."~".$product_code."~".$product_name."~".$po_qty."~".$dispatch_qty."~".$amt."~".$error_message;
-						  }
-
-					  }
-                   }
-                   elseif($filename[0] == "secondarysales")
-                   {
-					   if($logined_user_type == 8)
-					   {
-						   if(!isset($data["A"])){
-							   $distributor_code = "";
-						   }
-						   else{
-							   $distributor_code = $data["A"];
-						   }
-
-						   if(!isset($data["B"])){
-							   $distributor_name = "";
-						   }
-						   else{
-							   $distributor_name = $data["B"];
-						   }
-
-						   if(!isset($data["C"])){
-							   $retailer_code = "";
-						   }
-						   else{
-							   $retailer_code = $data["C"];
-						   }
-
-						   if(!isset($data["D"])){
-							   $retailer_name = "";
-						   }
-						   else{
-							   $retailer_name = $data["D"];
-						   }
-
-						   if(!isset($data["E"])){
-							   $invoice_no = "";
-						   }
-						   else{
-							   $invoice_no = $data["E"];
-						   }
-
-						   if(!isset($data["F"])){
-							   $invoice_date = "";
-						   }
-						   else{
-							   $invoice_date = $data["F"];
-						   }
-
-						   if(!isset($data["G"])){
-							   $po_no = "";
-						   }
-						   else{
-							   $po_no = $data["G"];
-						   }
-
-						   if(!isset($data["H"])){
-							   $otn = "";
-						   }
-						   else{
-							   $otn = $data["H"];
-						   }
-
-						   if(!isset($data["I"])){
-							   $product_code = "";
-						   }
-						   else{
-							   $product_code = $data["I"];
-						   }
-
-						   if(!isset($data["J"])){
-							   $product_name = "";
-						   }
-						   else{
-							   $product_name = $data["J"];
-						   }
-
-						   if(!isset($data["K"])){
-							   $unit = "";
-						   }
-						   else{
-							   $unit = $data["K"];
-						   }
-
-						   if(!isset($data["L"])){
-							   $quantity = "";
-						   }
-						   else{
-							   $quantity = $data["L"];
-						   }
-
-						   if(!isset($data["M"])){
-							   $amount = "";
-						   }
-						   else{
-							   $amount = $data["M"];
-						   }
-
-
-						   if($distributor_code == "" || $distributor_name == "" || $retailer_code == "" || $retailer_name == "" || $invoice_no == "" || $invoice_date == "" || $po_no == "" || $otn == "" || $product_code == "" || $product_name == "" || $unit == "" || $quantity == "" || $amount == "")
-						   {
-							   //CHECK DATA BLANK
-							   if(!isset($error_array["error"]["header"])){
-								   $error_array["error"]["header"] = $header;
-							   }
-
-							   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Some row data blank";
-						   }
-						   else
-						   {
-							   //CHECK PROPER DATA
-							   //PRODUCT CHECK
-							   $user_distributor_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
-							   $user_retailer_data = $this->ishop_model->check_user_data($retailer_code,$retailer_name);
-
-							   $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-							   if($user_distributor_data != 0 && $product_data != 0 &&  $user_retailer_data != 0)
-							   {
-								   //CHECK DISTRIBUTOR RETAILER ASSOCATION
-								   $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user_distributor_data,$user_retailer_data);
-
-								   // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
-								   //  dumpme($dist_invoice_ret_mapp_data_array);
-
-								   if($distributor_retailer_mapping_data == 1){
-
-
-									   if(!isset($dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no]) ){
-
-										   $dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] = $user_retailer_data;
-
-										   if(!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
-											   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no] = array();
-										   }
-
-										   $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no,$user_retailer_data,$user_distributor_data);
-
-										  	if($invoice_retailer_data == 1){
-
-												$error_message = "Invoice No for Retailer already exist in DB. ";
-
-												if(!isset($error_array["error"]["header"])){
-													$error_array["error"]["header"] = $header;
-												}
-												$error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
-
-											}
-										   else{
-											   if(!isset($dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no]) && !in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
-
-												   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
-
-												   $inner_array[] = $user_distributor_data;
-												   $inner_array[] = $user_retailer_data;
-												   $inner_array[] = $invoice_no;
-												   $inner_array[] = $invoice_date;
-												   $inner_array[] = $po_no;
-												   $inner_array[] = $otn;
-												   $inner_array[] = $product_data;
-												   $inner_array[] = $unit;
-												   $inner_array[] = $quantity;
-												   $inner_array[] = $amount;
-
-												   $final_array["success"][] = $inner_array;
-
-											   }
-											   else{
-												   if(in_array($product_data,$dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no])){
-
-													   //DUPLICATE DATA IN FILE ERROR
-
-													   if(!isset($error_array["error"]["header"])){
-														   $error_array["error"]["header"] = $header;
-													   }
-													   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate product data";
-
-												   }
-												   else{
-													   $dist_invoice_product_mapp_data_array[$user_distributor_data][$invoice_no][] = $product_data;
-
-													   $inner_array[] = $user_distributor_data;
-													   $inner_array[] = $user_retailer_data;
-													   $inner_array[] = $invoice_no;
-													   $inner_array[] = $invoice_date;
-													   $inner_array[] = $po_no;
-													   $inner_array[] = $otn;
-													   $inner_array[] = $product_data;
-													   $inner_array[] = $unit;
-													   $inner_array[] = $quantity;
-													   $inner_array[] = $amount;
-
-													   $final_array["success"][] = $inner_array;
-												   }
-											   }
-										   }
-
-									   }
-									   else{
-										   if($dist_invoice_ret_mapp_data_array[$user_distributor_data][$invoice_no] == $user_retailer_data){
-
-											   //DUPLICATE DATA IN FILE ERROR
-
-											   if(!isset($error_array["error"]["header"])){
-												   $error_array["error"]["header"] = $header;
-											   }
-											   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate data";
-
-										   }
-										   else{
-											   //SAME INVOICE ASSIGNED TO OTHER RETAILER
-											   if(!isset($error_array["error"]["header"])){
-												   $error_array["error"]["header"] = $header;
-											   }
-											   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Same invoice assigned to other Retailer";
-										   }
-									   }
-								   }
-								   else{
-									   //DISTRIBUTOR RETAILER MAPPING ERROR
-									   if(!isset($error_array["error"]["header"])){
-										   $error_array["error"]["header"] = $header;
-									   }
-									   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Distributor and Retailer not correctly mapped.";
-								   }
-							   }
-							   else{
-
-								   if(!isset($error_array["error"]["header"])){
-									   $error_array["error"]["header"] = $header;
-								   }
-                                   
-                                   
-                                if($user_distributor_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Distributor data not matched with DB data";
-                                }
-                                   
-                                if($user_retailer_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Retailer data not matched with DB data";
-                                }
-                                   
-
-                                if($product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Product data not matched with DB data";
-                                }
-
-                                if($user_distributor_data == 0 && $user_retailer_data == 0  && $product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Distributor data and Retailer data and Product data not matched with DB data";
-                                }
-                                   
-                                   
-								   $error_array["error"][] = $distributor_code."~".$distributor_name."~".$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
-							   }
-						   }
-					   }
-					   elseif($logined_user_type == 9)
-					   {
-						   if(!isset($data["A"])){
-							   $retailer_code = "";
-						   }
-						   else{
-							   $retailer_code = $data["A"];
-						   }
-
-						   if(!isset($data["B"])){
-							   $retailer_name = "";
-						   }
-						   else{
-							   $retailer_name = $data["B"];
-						   }
-
-						   if(!isset($data["C"])){
-							   $invoice_no = "";
-						   }
-						   else{
-							   $invoice_no = $data["C"];
-						   }
-
-						   if(!isset($data["D"])){
-							   $invoice_date = "";
-						   }
-						   else{
-							   $invoice_date = $data["D"];
-						   }
-
-						   if(!isset($data["E"])){
-							   $po_no = "";
-						   }
-						   else{
-							   $po_no = $data["E"];
-						   }
-
-						   if(!isset($data["F"])){
-							   $otn = "";
-						   }
-						   else{
-							   $otn = $data["F"];
-						   }
-
-						   if(!isset($data["G"])){
-							   $product_code = "";
-						   }
-						   else{
-							   $product_code = $data["G"];
-						   }
-
-						   if(!isset($data["H"])){
-							   $product_name = "";
-						   }
-						   else{
-							   $product_name = $data["H"];
-						   }
-
-						   if(!isset($data["I"])){
-							   $unit = "";
-						   }
-						   else{
-							   $unit = $data["I"];
-						   }
-
-						   if(!isset($data["J"])){
-							   $quantity = "";
-						   }
-						   else{
-							   $quantity = $data["J"];
-						   }
-
-						   if(!isset($data["K"])){
-							   $amount = "";
-						   }
-						   else{
-							   $amount = $data["K"];
-						   }
-
-
-						   if($retailer_code == "" || $retailer_name == "" || $invoice_no == "" || $invoice_date == "" || $po_no == "" || $otn == "" || $product_code == "" || $product_name == "" || $unit == "" || $quantity == "" || $amount == "")
-						   {
-							   //CHECK DATA BLANK
-
-							   if(!isset($error_array["error"]["header"])){
-								   $error_array["error"]["header"] = $header;
-							   }
-
-							   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Some row data blank";
-						   }
-						   else
-						   {
-
-							   //CHECK PROPER DATA
-
-							   //PRODUCT CHECK
-
-							  // $user_distributor_data = $this->ishop_model->check_user_data($distributor_code,$distributor_name);
-							   $user_retailer_data = $this->ishop_model->check_user_data($retailer_code,$retailer_name);
-
-							   $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-
-
-							   if($product_data != 0 &&  $user_retailer_data != 0)
-							   {
-
-
-								   $invoice_retailer_data = $this->ishop_model->check_secondary_invoice_retailer_data($invoice_no, $user_retailer_data, $user->id);
-								   if ($invoice_retailer_data == 1) {
-										   $error_message = "Invoice data already exist in DB";
-
-										   if (!isset($error_array["error"]["header"])) {
-											   $error_array["error"]["header"] = $header;
-										   }
-
-										   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
-									   } else {
-										   //CHECK DISTRIBUTOR RETAILER ASSOCATION
-
-										   $distributor_retailer_mapping_data = $this->ishop_model->check_distributor_retailer_mapping_data($user->id, $user_retailer_data);
-
-										   // $dist_invoice_ret_mapp_data_array[] = $distributor_retailer_mapping_data;
-
-										   //  dumpme($dist_invoice_ret_mapp_data_array);
-
-
-										   if ($distributor_retailer_mapping_data == 1) {
-
-											   if (!isset($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no])) {
-
-												   $dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] = $user_retailer_data;
-
-
-												   if (!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
-													   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no] = array();
-												   }
-
-
-												   if (!isset($dist_invoice_product_mapp_data_array[$user->id][$invoice_no]) && !in_array($product_data, $dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
-
-													   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no][] = $product_data;
-
-
-													   $inner_array[] = $user_retailer_data;
-													   $inner_array[] = $invoice_no;
-													   $inner_array[] = $invoice_date;
-													   $inner_array[] = $po_no;
-													   $inner_array[] = $otn;
-													   $inner_array[] = $product_data;
-													   $inner_array[] = $unit;
-													   $inner_array[] = $quantity;
-													   $inner_array[] = $amount;
-
-													   $final_array["success"][] = $inner_array;
-
-												   } else {
-
-													   if (in_array($product_data, $dist_invoice_product_mapp_data_array[$user->id][$invoice_no])) {
-
-														   //DUPLICATE DATA IN FILE ERROR
-
-														   if (!isset($error_array["error"]["header"])) {
-															   $error_array["error"]["header"] = $header;
-														   }
-														   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate product data";
-														   //$retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~"."Excel file having duplicate data";
-													   } else {
-
-														   $dist_invoice_product_mapp_data_array[$user->id][$invoice_no][] = $product_data;
-
-														   $inner_array[] = $user_retailer_data;
-														   $inner_array[] = $invoice_no;
-														   $inner_array[] = $invoice_date;
-														   $inner_array[] = $po_no;
-														   $inner_array[] = $otn;
-														   $inner_array[] = $product_data;
-														   $inner_array[] = $unit;
-														   $inner_array[] = $quantity;
-														   $inner_array[] = $amount;
-
-														   $final_array["success"][] = $inner_array;
-
-													   }
-
-
-												   }
-
-											   } else {
-												   if ($dist_invoice_ret_mapp_data_array[$user->id][$invoice_no] == $user_retailer_data) {
-
-													   //DUPLICATE DATA IN FILE ERROR
-
-													   if (!isset($error_array["error"]["header"])) {
-														   $error_array["error"]["header"] = $header;
-													   }
-													   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Excel file having duplicate data";
-
-												   } else {
-
-													   //SAME INVOICE ASSIGNED TO OTHER RETAILER
-
-													   if (!isset($error_array["error"]["header"])) {
-														   $error_array["error"]["header"] = $header;
-													   }
-													   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Same invoice assigned to other Retailer";
-
-												   }
-											   }
-
-										   } else {
-
-											   //DISTRIBUTOR RETAILER MAPPING ERROR
-
-											   if (!isset($error_array["error"]["header"])) {
-												   $error_array["error"]["header"] = $header;
-											   }
-											   $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Distributor and Retailer not correctly mapped.";
-
-										   }
-
-
-									   }
-							   }
-							   else{
-
-								   if(!isset($error_array["error"]["header"])){
-									   $error_array["error"]["header"] = $header;
-								   }
-                                   
-                                   
-                                if($user_retailer_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Retailer data not matched with DB data";
-                                }
-                                   
-
-                                if($product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Product data not matched with DB data";
-                                }
-
-                                if($user_retailer_data == 0  && $product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Retailer data and Product data not matched with DB data";
-                                }
-                                   
-                                   
-								   $error_array["error"][] = $retailer_code."~".$retailer_name."~".$invoice_no."~".$invoice_date."~".$po_no."~".$otn."~".$product_code."~".$product_name."~".$unit."~".$quantity."~".$amount."~".$error_message;
-							   }
-
-						   }
-					   }
-                   }
-				  elseif($filename[0] == "physicalstock")
-				  {
-
-					  if(!isset($data["A"])){
-						  $month = "";
-					  }
-					  else{
-						  $month = $data["A"];
-					  }
-
-					  if(!isset($data["B"])){
-						  $product_code = "";
-					  }
-					  else{
-						  $product_code = $data["B"];
-					  }
-					  if(!isset($data["C"])){
-						  $product_name = "";
-					  }
-					  else{
-						  $product_name = $data["C"];
-					  }
-
-					  if(!isset($data["D"])){
-						  $qty = "";
-					  }
-					  else{
-						  $qty = $data["D"];
-					  }
-					  if(!isset($data["E"])){
-						  $unit = "";
-					  }
-					  else{
-						  $unit = $data["E"];
-					  }
-
-
-					  if($month == "" || $product_code =="" || $product_name == "" || $qty == "" || $unit =="")
-					  {
-						  //CHECK DATA BLANK
-
-						  if(!isset($error_array["error"]["header"])){
-							  $error_array["error"]["header"] = $header;
-						  }
-
-						  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~"."Some row data blank";
-					  }
-					  else
-					  {
-
-						  //CHECK PROPER DATA
-
-						  //PRODUCT CHECK
-
-						  $product_data = $this->ishop_model->check_product_data($product_code,$product_name);
-
-						//  testdata($product_data);
-						  if($product_data != 0)
-						  {
-							 
-
-								  $inner_array[] = $month;
-								  $inner_array[] = $product_data;
-								  $inner_array[] = $qty;
-								  $inner_array[] = $unit;
-
-								  $final_array["success"][] = $inner_array;
-
-
-						  }
-						  else{
-							 
-							  if(!isset($error_array["error"]["header"])){
-								  $error_array["error"]["header"] = $header;
-							  }
-                              
-                             
-                                   
-
-                                if($product_data == 0){
-                                    //USER ERROR MESSAGE
-                                    $error_message = "Product data not matched with DB data";
-                                }
-
-                              
-							  $error_array["error"][] = $month."~".$product_code."~".$product_name."~".$qty."~".$unit."~".$error_message;
-						  }
-
-					  }
-				  }
-                   
-                }
-               
-            }
-            else{
-                $error_array["error"][] = "No data found";
-                echo json_encode($error_array); die;
-            }
-                header('Content-Type: application/json');
-                
-                
-                
-                if(empty($error_array)){
-                // testdata($final_array);
-					if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
-						echo  json_encode($final_array); die;
-					}
-					else{
-						  return $final_array;
-					}
 
                 }
                 else{
-					if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
-						echo json_encode($error_array); die;
-					}
-					else{
-						return $error_array;
-					}
+
+                    $error_array["error"][] = "File must contain single sheet only.";
+                    echo json_encode($error_array); die;
+
                 }
                 
               }

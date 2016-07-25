@@ -1768,9 +1768,13 @@ class Web_service extends Front_Controller
             {
                 $id = $this->ishop_model->delete_schemes_by_id($id);
             }
-            elseif($mode == "order")
+            elseif($mode == "order_detail")
             {
                 $id = $this->ishop_model->delete_order_detail_data($id);
+            }
+            elseif($mode == "order")
+            {
+                $id = $this->ishop_model->delete_order_data($id);
             }
             elseif($mode == "budget"){
                 $id = $this->ishop_model->delete_budget_detail($id);
@@ -1801,7 +1805,7 @@ class Web_service extends Front_Controller
                 $id = $this->ecp_model->delete_leave_detail($id);
             }
 
-            if($id)
+            if($id == 1)
             {
                 $result['status'] = true;
                 $result['message'] = 'Deleted Successfully ('.$mode.')';
