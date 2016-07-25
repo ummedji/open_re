@@ -5924,7 +5924,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
             $return = array();
-            $orderdata=array();
+          //  $orderdata=array();
             foreach ($orderdata["order_data"] as $key => $value) {
 
 
