@@ -908,7 +908,7 @@ class Esp_model extends BF_Model
 			//INSERT / UPDATE DATA FROM WEBSERVICE
 			
 			if(!empty($assumption_data['data'])){
-				
+                $data_array = array();
 				foreach($assumption_data['data'] as $assumption_key => $impact_data){
 					
 					//$impact1 = $impact_data['impact1'];
@@ -941,11 +941,25 @@ class Esp_model extends BF_Model
 					}
 					
 					*/
+
+                    if($this->db->affected_rows() > 0){
+                        $data_array[] =  1;
+                    }
+                    else
+                    {
+                        $data_array[] = 0;
+                    }
 			        
 				}
-				
-				return 1;
-				
+
+                if(in_array(1,$data_array)){
+                    return 1;
+                }
+                else{
+                    return 0;
+                }
+
+
 			}
 			else{
 				return 0;
