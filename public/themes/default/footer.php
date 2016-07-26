@@ -16,7 +16,8 @@ echo Assets::js();
 
 </script>
 <script type="text/javascript">
-    $('.nav.nav-tabs').listslider({
+    /*$('.nav.nav-tabs').listslider({*/
+        $('.nav.nav-tabs').listslider({
         left_label: '<span class="bre_lf_arrow"></span>',
         right_label: '<span class="bre_rt_arrow"></span>'
     });

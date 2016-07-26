@@ -662,6 +662,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     display: block;
     text-align: right;
 }
+.middle_form .tp_form .form-group .btn-group>.btn { margin-bottom: 0;}
 .tp_form .form-group .btn-group>.btn {
     font-family:'Exo2-Regular';
     font-size: 14px;
@@ -673,6 +674,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     height: 28px;
     box-shadow: none;
     padding: 0px 30px 0 12px;
+    margin-bottom: 2px;
 }
 .tp_form .form-group .btn-group {
     font-family:'Exo2-Regular';
@@ -890,7 +892,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     text-decoration: none;
 }
 #no-more-tables tr td {
-    padding: 5px 10px;
+    padding: 5px 0px;
     border: solid 1px #dcdeeb !important;
     /*border-bottom: solid 1px #dcdeeb !important;
     border-top: solid 1px #dcdeeb !important;
@@ -1042,7 +1044,7 @@ input[readonly] {
 	/*border: 0px;*/
     text-align: center;
 }
-.quantity_data, .qty_1 { text-align: right !important;}
+.quantity_data, .qty_1, .amount_rt_a { text-align: right !important;}
 [name="Qty[]"] { text-align: right !important;}
 /*#order_place_data tr td:first-child { width: 50px;}*/
 #no-more-tables th.first_th { min-width: 90px !important; max-width: 90px !important; width: 90px;}

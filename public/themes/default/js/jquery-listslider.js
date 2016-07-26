@@ -9,11 +9,11 @@ jQuery.fn.extend({
         }
 
         if(config.left_label === undefined){
-            config.left_label = 'left';
+            config.left_label = "left";
         }
 
         if(config.right_label === undefined){
-            config.right_label = 'right';
+            config.right_label = "right";
         }
 
         if(config.scroll_offset === undefined){
@@ -68,7 +68,7 @@ jQuery.fn.extend({
 
             self.getSummedWidthOfListItems = function(){
                 var sum = 0;
-                var list_items = self.ul.find('li');
+                var list_items = self.ul.find("li");
                 for (var i = 0 ; i < list_items.length ; i++){
                     sum += $(list_items[i]).outerWidth();
                 }
@@ -77,27 +77,27 @@ jQuery.fn.extend({
 
             self.setupParentDiv = function(){
                 self.parent = self.ul.parent();
-                self.parent.css('position', 'relative');
+                self.parent.css("position", "relative");
             };
 
             self.showPaginationIfWrapperIsHidden = function(){
                 var wrapper_width = self.getSummedWidthOfListItems();
                 if($(self.parent).width() < wrapper_width){
-                    $(self.parent).find('.listslider-arrow').addClass('active');
+                    $(self.parent).find('.listslider-arrow').addClass("active");
                 }  else{
-                    $(self.parent).find('.listslider-arrow').removeClass('active');
+                    $(self.parent).find('.listslider-arrow').removeClass("active");
                 }
             };
 
             self.addWrapper = function(){
                 self.ul.wrap('<div class="listslider-container"><div class="listslider-wrapper"></div></div>');
-                self.wrapper = $(self.ul.closest('.listslider-wrapper'));
+                self.wrapper = $(self.ul.closest(".listslider-wrapper"));
                 var wrapper_width = self.getSummedWidthOfListItems();
-                self.wrapper.css('width', wrapper_width + 'px');
+                self.wrapper.css("width", wrapper_width + "px");
             };
 
             self.addContainer = function(){
-                self.container = $(self.ul.closest('.listslider-container'));
+                self.container = $(self.ul.closest(".listslider-container"));
             };
 
             self.addArrows = function(){
@@ -144,8 +144,8 @@ jQuery.fn.extend({
                 });
 
 
-                $(self.parent).on('click', '.listslider-arrow', function(){
-                    if($(this).hasClass('listslider-left')){
+                $(self.parent).on('click', ".listslider-arrow", function(){
+                    if($(this).hasClass("listslider-left")){
                         self.scroll(-1 * config.scroll_offset);
                     }else{
                         self.scroll(config.scroll_offset);
@@ -157,7 +157,7 @@ jQuery.fn.extend({
 
 
                 self.ul = $(element);
-                self.ul.addClass('listslider');
+                self.ul.addClass("listslider");
 
                 self.setupParentDiv();
                 self.addWrapper();
@@ -170,9 +170,9 @@ jQuery.fn.extend({
                 if($("ul.nav.nav-tabs.listslider li.active").length > 0)
                 {
                     var activePos = $("ul.nav.nav-tabs.listslider li.active").position();
-                    if(typeof activePos['left'] != 'undefined')
+                    if(typeof activePos["left"] != "undefined")
                     {
-                        self.scroll(activePos['left']);
+                        self.scroll(activePos["left"]);
                     }
                 }
             } catch(err) {
