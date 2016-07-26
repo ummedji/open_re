@@ -858,7 +858,9 @@ class Esp_model extends BF_Model
 		if($webservice_flag == 0){
 			
 			if(!empty($assumption_data['assumption_id'])){
-				
+
+                $data_array = array();
+
 				foreach($assumption_data['assumption_id'] as $assumption_key => $impact_data){
 					
 					//$impact1 = $assumption_data['impact1'][$assumption_key];
@@ -879,13 +881,21 @@ class Esp_model extends BF_Model
 			        $this->db->update('bf_esp_forecast_assumption' ,$data);
 			        
 			        if($this->db->affected_rows() > 0){
-			        	return 1;
+                        $data_array[] =  1;
 			        }
 					else{
-						return 0;
+                        $data_array[] = 0;
 					}
 			        
 				}
+
+                if(in_array(1,$data_array)){
+                    return 1;
+                }
+                else{
+                    return 0;
+                }
+
 				
 			}
 			else{
