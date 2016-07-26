@@ -22,30 +22,43 @@ echo form_open('ecp/material_request',$attributes); ?>
                 </div>
                 <div class="form-group">
                     <label>Material<span style="color: red">*</span></label>
-                    <select class="selectpicker" id="promotional_country_id" name="promotional_country_id" data-live-search="true">
-                        <option value="">Select Materials</option>
-                        <?php
-                        if(isset($materials) && !empty($materials))
-                        {
-                            foreach($materials as $key=>$val_material)
+                    <div class="inln_fld_top text-left">
+                        <select class="selectpicker" id="promotional_country_id" name="promotional_country_id" data-live-search="true">
+                            <option value="">Select Materials</option>
+                            <?php
+                            if(isset($materials) && !empty($materials))
                             {
-                                ?>
-                                <option value="<?php echo $val_material['promotional_country_id']; ?>"><?php echo $val_material['promotional_material_country_name']; ?></option>
-                                <?php
+                                foreach($materials as $key=>$val_material)
+                                {
+                                    ?>
+                                    <option value="<?php echo $val_material['promotional_country_id']; ?>"><?php echo $val_material['promotional_material_country_name']; ?></option>
+                                    <?php
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                        <div class="clearfix"></div>
+                        <label id="promotional_country_id-error" class="error" for="promotional_country_id"></label>
+                    </div>
+
                 </div>
                 <div class="form-group">
                     <label for="invoice_no">Quantity<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="quantity" id="quantity" placeholder="">
+                    <div class="inln_fld_top text-left">
+                        <input type="text" class="form-control" name="quantity" id="quantity" placeholder="">
+                        <div class="clearfix"></div>
+                        <label id="quantity-error" class="error" for="quantity"></label>
+                    </div>
                 </div>
             </div>
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label for="remark">Remark<span style="color: red">*</span></label>
-                    <textarea rows="2" cols="50" class="form-control" name="remark" id="remark"></textarea>
+                    <div class="inln_fld_top text-left">
+                        <textarea rows="2" cols="50" class="form-control" name="remark" id="remark"></textarea>
+                        <div class="clearfix"></div>
+                        <label id="remark-error" class="error" for="remark"></label>
+                    </div>
                 </div>
             </div>
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px; margin-bottom: 20px;">

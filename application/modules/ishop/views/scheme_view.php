@@ -24,7 +24,11 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                    <!-- <div class="col-md-4 col-sm-6 tp_form">-->
                         <div class="form-group">
                             <label>Year<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="year" id="year" placeholder="" autocomplete="off" >
+                            <div class="inln_fld_top">
+                                <input type="text" class="form-control" name="year" id="year" placeholder="" autocomplete="off" >
+                                <div class="clearfix"></div>
+                                <label id="year-error" class="error" for="year"></label>
+                            </div>
                         </div>
                     <!--</div>-->
                     <?php if($current_user->role_id == 7){
@@ -54,20 +58,24 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                         <!--<div class="col-md-4 col-sm-6 tp_form">-->
                             <div class="form-group">
                                 <label>Geo Level 2<span style="color: red">*</span></label>
-                                <select class="selectpicker" name="territory" id="geo_level_1" data-live-search="true" required>
-                                    <option value="">Select Geo Location</option>
-                                    <?php
-                                    if(isset($geo_data) && !empty($geo_data))
-                                    {
-                                        foreach($geo_data as $k=> $geo_val)
+                                <div class="inln_fld_top text-left">
+                                    <select class="selectpicker" name="territory" id="geo_level_1" data-live-search="true" required>
+                                        <option value="">Select Geo Location</option>
+                                        <?php
+                                        if(isset($geo_data) && !empty($geo_data))
                                         {
-                                            ?>
-                                        <option value="<?php echo $geo_val['business_geo_id']; ?>" attr-name="<?php echo $geo_val['business_georaphy_name']; ?>"><?php echo $geo_val['business_georaphy_name']; ?></option>
-                                    <?php
+                                            foreach($geo_data as $k=> $geo_val)
+                                            {
+                                                ?>
+                                                <option value="<?php echo $geo_val['business_geo_id']; ?>" attr-name="<?php echo $geo_val['business_georaphy_name']; ?>"><?php echo $geo_val['business_georaphy_name']; ?></option>
+                                                <?php
+                                            }
                                         }
-                                    }
-                                    ?>
-                                </select>
+                                        ?>
+                                    </select>
+                                    <div class="clearfix"></div>
+                                    <label id="geo_level_1-error" class="error" for="geo_level_1"></label>
+                                </div>
                             </div>
                         <!--</div>-->
                        <!-- <div class="col-md-4 col-sm-6 tp_form">-->

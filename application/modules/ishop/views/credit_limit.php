@@ -37,19 +37,31 @@ echo form_open('',$attributes); ?>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
                             <label for="credit_limit">Credit Limit<span style="color: red">*</span></label>
-                            <input type="text" class="form-control allownumericwithdecimal" name="credit_limit" id="credit_limit" placeholder="">
+                            <div class="inln_fld">
+                                <input type="text" class="form-control allownumericwithdecimal" name="credit_limit" id="credit_limit" placeholder="">
+                                <div class="clearfix"></div>
+                                <label id="credit_limit-error" class="error" for="credit_limit"></label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
                             <label for="invoice_date">Current Outstanding<span style="color: red">*</span></label>
-                            <input type="text" class="form-control allownumericwithdecimal" name="curr_outstanding" id="curr_outstanding" placeholder="">
+                            <div class="inln_fld">
+                                <input type="text" class="form-control allownumericwithdecimal" name="curr_outstanding" id="curr_outstanding" placeholder="">
+                                <div class="clearfix"></div>
+                                <label id="curr_outstanding-error" class="error" for="curr_outstanding"></label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
                             <label for="curr_date">Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="curr_date" id="curr_date" placeholder="">
+                            <div class="inln_fld">
+                                <input type="text" class="form-control" name="curr_date" id="curr_date" placeholder="">
+                                <div class="clearfix"></div>
+                                <label id="curr_date-error" class="error" for="curr_date"></label>
+                            </div>
                         </div>
                     </div>
                     <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>

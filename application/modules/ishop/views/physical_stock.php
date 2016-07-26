@@ -117,7 +117,11 @@
                     <div class="col-md-4 col-md-offset-4 tp_form text-center_form" >
                         <div class="form-group">
                             <label>Month<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" >
+                            <div class="inln_fld_top text-left">
+                                <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" >
+                                <div class="clearfix"></div>
+                                <label id="stock_month-error" class="error" for="stock_month"></label>
+                            </div>
                             <!--<div class="cal_icon">
                                 <a href="">
                                     <i class="fa fa-calendar" aria-hidden="true"></i>
@@ -148,37 +152,51 @@
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Product Sku<span style="color: red">*</span></label>
-                        <select class="selectpicker" name="phy_prod_sku" id="phy_prod_sku" data-live-search="true">
-                            <option value="">Product Name</option>
-                            <?php
-                            if(isset($product_sku) && !empty($product_sku))
-                            {
-                                foreach($product_sku as $k=> $prd_sku)
+                        <div class="inln_fld">
+                            <select class="selectpicker" name="phy_prod_sku" id="phy_prod_sku" data-live-search="true">
+                                <option value="">Product Name</option>
+                                <?php
+                                if(isset($product_sku) && !empty($product_sku))
                                 {
-                                    ?>
-                                    <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                    <?php
+                                    foreach($product_sku as $k=> $prd_sku)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                        <?php
+                                    }
                                 }
-                            }
-                            ?>
-                        </select>
+                                ?>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="phy_prod_sku-error" class="error" for="phy_prod_sku"></label>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label>Unit<span style="color: red">*</span></label>
-                        <select class="selectpicker" name="sec_sel_unit" id="sec_sel_unit">
-                            <option value="">Units</option>
-                            <option value="box">Box</option>
-                            <option value="packages">Packages</option>
-                            <option value="kg/ltr">Kg/Ltr</option>
-                        </select>
+                        <div class="inln_fld">
+                            <select class="selectpicker" name="sec_sel_unit" id="sec_sel_unit">
+                                <option value="">Units</option>
+                                <option value="box">Box</option>
+                                <option value="packages">Packages</option>
+                                <option value="kg/ltr">Kg/Ltr</option>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="sec_sel_unit-error" class="error" for="sec_sel_unit"></label>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" name="phy_qty" id="phy_qty" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" name="phy_qty" id="phy_qty" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="phy_qty-error" class="error" for="phy_qty"></label>
+                        </div>
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>

@@ -174,18 +174,18 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-12 text-center radio_space">
                     
                      <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="farmer" checked="checked"/>
-                        <label for="radio1">Farmer</label>
+                        <input class="select_customer_type" type="radio" name="radio1" id="farmer" value="farmer" checked="checked"/>
+                        <label for="farmer">Farmer</label>
                     </div>
                     
                      <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="retailer" />
-                        <label for="radio1">Retailer</label>
+                        <input class="select_customer_type" type="radio" name="radio1" id="retailer" value="retailer" />
+                        <label for="retailer">Retailer</label>
                     </div>
                     
                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio2" value="distributor" />
-                        <label for="radio2">Distributor</label>
+                        <input class="select_customer_type" type="radio" name="radio1" id="distributor" value="distributor" />
+                        <label for="distributor">Distributor</label>
                     </div>
                    
                     <div class="clearfix"></div>
@@ -196,41 +196,58 @@ echo form_open('',$attributes); ?>
                 <div class="form-group">
                     <div class="form-group">
                         <label>Date<span style="color: red">*</span></label>
-                        <input type="text" name="order_date" class="order_date form-control" id="order_date"  required/>
+                        <div class="inln_fld_top text-left">
+                            <input type="text" name="order_date" class="order_date form-control" id="order_date"  required/>
+                            <div class="clearfix"></div>
+                            <label id="order_date-error" class="error" for="order_date"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="form-group">
                     <label>Geo L2<span style="color: red">*</span></label>
-                    <select class="selectpicker geo_level_1_data" id="farmer_geo_level_1_data" name="farmer_geo_level_1_data" data-live-search="true" required>
-                        <option value="">Select Geo Level</option>
-                        <?php
-                        if(isset($geo_level_data) && !empty($geo_level_data))
-                        {
-                            foreach($geo_level_data as $key=>$val_geo_level_data)
+                    <div class="inln_fld_top text-left">
+                        <select class="selectpicker geo_level_1_data" id="farmer_geo_level_1_data" name="farmer_geo_level_1_data" data-live-search="true" required>
+                            <option value="">Select Geo Level</option>
+                            <?php
+                            if(isset($geo_level_data) && !empty($geo_level_data))
                             {
-                                ?>
-                                <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
-                                <?php
+                                foreach($geo_level_data as $key=>$val_geo_level_data)
+                                {
+                                    ?>
+                                    <option value="<?php echo $val_geo_level_data['political_geo_id']; ?>"><?php echo $val_geo_level_data['political_geography_name']; ?></option>
+                                    <?php
+                                }
                             }
-                        }
-                        ?>
-                    </select>
+                            ?>
+                        </select>
+                        <div class="clearfix"></div>
+                        <label id="farmer_geo_level_1_data-error" class="error" for="farmer_geo_level_1_data"></label>
+                    </div>
 
                 </div>
                 <div class="form-group">
                     <label>Geo L1<span style="color: red">*</span></label>
-                    <select class="selectpicker geo_level_2_data" class="" id="farmer_geo_level_2_data" name="farmer_geo_level_2_data" data-live-search="true" required >
+                    <div class="inln_fld_top text-left">
+                        <select class="selectpicker geo_level_2_data" class="" id="farmer_geo_level_2_data" name="farmer_geo_level_2_data" data-live-search="true" required >
 
-                    </select>
+                        </select>
+                        <div class="clearfix"></div>
+                        <label id="farmer_geo_level_2_data-error" class="error" for="farmer_geo_level_2_data"></label>
+                    </div>
+
 
                 </div>
             </div>
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Farmer Name<span style="color: red">*</span></label>
-                        <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true" required>
+                        <div class="inln_fld_top text-left">
+                            <select class="selectpicker" id="farmer_data" name="farmer_data" data-live-search="true" required>
 
-                        </select>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="farmer_data-error" class="error" for="farmer_data"></label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>Mobile No</label>
@@ -238,9 +255,13 @@ echo form_open('',$attributes); ?>
                     </div>
                     <div class="form-group">
                         <label>Retailer Name<span style="color: red">*</span></label>
-                        <select class="selectpicker retailer_data" id="farmer_retailer_data" name="farmer_retailer_data" data-live-search="true" required >
+                        <div class="inln_fld_top text-left">
+                            <select class="selectpicker retailer_data" id="farmer_retailer_data" name="farmer_retailer_data" data-live-search="true" required >
 
-                        </select>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="farmer_retailer_data-error" class="error" for="farmer_retailer_data"></label>
+                        </div>
 
                     </div>
                 </div>
@@ -326,40 +347,52 @@ echo form_open('',$attributes); ?>
     <div class="row">
         <div class="middle_form">
             <div class="row">
-                <div class="col-md-4_ tp_form">
+                <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label>Product Sku Name<span style="color: red">*</span></label>
-                        <select class="selectpicker lva" id="prod_sku" data-live-search="true" name="prod_sku" required>
-                            <option value="">Product Name</option>
-                            <?php
-                            if(isset($product_sku) && !empty($product_sku))
-                            {
-                                foreach($product_sku as $k=> $prd_sku)
+                        <div class="inln_fld">
+                            <select class="selectpicker lva" id="prod_sku" data-live-search="true" name="prod_sku" required>
+                                <option value="">Product Name</option>
+                                <?php
+                                if(isset($product_sku) && !empty($product_sku))
                                 {
-                                    ?>
-                                    <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                    <?php
+                                    foreach($product_sku as $k=> $prd_sku)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                        <?php
+                                    }
                                 }
-                            }
-                            ?>
-                        </select>
+                                ?>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="prod_sku-error" class="error" for="prod_sku"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Units<span style="color: red">*</span></label>
-                        <select class="selectpicker lva" id="units" data-live-search="true" name="units" required>
-                            <option value="">Select Unit</option>
-                            <option value="box">Box</option>
-                            <option value="packages">Packages</option>
-                            <option value="kg/ltr">Kg/Ltr</option>
-                        </select>
+                        <div class="inln_fld">
+                            <select class="selectpicker lva" id="units" data-live-search="true" name="units" required>
+                                <option value="">Select Unit</option>
+                                <option value="box">Box</option>
+                                <option value="packages">Packages</option>
+                                <option value="kg/ltr">Kg/Ltr</option>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="units-error" class="error" for="units"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal lva" name="quantity" id="quantity" placeholder="" required>
+                        <div class="inln_fld">
+                           <input type="text" class="form-control allownumericwithdecimal lva" name="quantity" id="quantity" placeholder="" required>
+                            <div class="clearfix"></div>
+                            <label id="quantity-error" class="error" for="quantity"></label>
+                        </div>
                     </div>
 
                 </div>

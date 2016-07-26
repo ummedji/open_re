@@ -92,14 +92,22 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" name="sec_qty" id="sec_qty" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" name="sec_qty" id="sec_qty" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="sec_qty-error" class="error" for="sec_qty"></label>
+                        </div>
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Amount<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" name="sec_amt" id="sec_amt" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" name="sec_amt" id="sec_amt" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="sec_amt-error" class="error" for="sec_amt"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="plus_btn"><a href="javascript: void(0);"id="sec_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>

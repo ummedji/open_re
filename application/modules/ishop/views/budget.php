@@ -180,7 +180,11 @@ echo form_open('',$attributes);
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
                             <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                            <input type="text" class="form-control allownumericwithdecimal" id="quantity" name="quantity" placeholder="">
+                            <div class="inln_fld">
+                                <input type="text" class="form-control allownumericwithdecimal" id="quantity" name="quantity" placeholder="">
+                                <div class="clearfix"></div>
+                                <label id="quantity-error" class="error" for="quantity"></label>
+                            </div>
                         </div>
 
                     </div>

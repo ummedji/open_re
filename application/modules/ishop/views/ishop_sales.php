@@ -172,44 +172,61 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Product Sku<span style="color: red">*</span></label>
-                        <select class="selectpicker lva" name="sales_prod_sku" id="sales_prod_sku" data-live-search="true">
-                            <option value="">Product Name</option>
-                            <?php
-                            if(isset($product_sku) && !empty($product_sku))
-                            {
-                                foreach($product_sku as $k=> $prd_sku)
+                        <div class="inln_fld">
+                            <select class="selectpicker lva" name="sales_prod_sku" id="sales_prod_sku" data-live-search="true">
+                                <option value="">Product Name</option>
+                                <?php
+                                if(isset($product_sku) && !empty($product_sku))
                                 {
-                                    ?>
-                                    <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                    <?php
+                                    foreach($product_sku as $k=> $prd_sku)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                        <?php
+                                    }
                                 }
-                            }
-                            ?>
-                        </select>
+                                ?>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="sales_prod_sku-error" class="error" for="sales_prod_sku"></label>
+                        </div>
+
                     </div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label>Unit<span style="color: red">*</span></label>
-                        <select class="selectpicker lva" name="sec_sel_unit" id="sec_sel_unit">
-                            <option value="">Units</option>
-                            <option value="box">Box</option>
-                            <option value="packages">Packages</option>
-                            <option value="kg/ltr">Kg/Ltr</option>
-                        </select>
+                        <div class="inln_fld">
+                            <select class="selectpicker lva" name="sec_sel_unit" id="sec_sel_unit">
+                                <option value="">Units</option>
+                                <option value="box">Box</option>
+                                <option value="packages">Packages</option>
+                                <option value="kg/ltr">Kg/Ltr</option>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="sec_sel_unit-error" class="error" for="sec_sel_unit"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Quantity<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal lva" name="sales_qty" id="sales_qty" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal lva" name="sales_qty" id="sales_qty" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="sec_qty-error" class="error" for="sec_qty"></label>
+                        </div>
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Amount<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal lva" name="amt" id="amt" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal lva" name="amt" id="amt" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="sec_amt-error" class="error" for="sec_amt"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="plus_btn"><a href="javascript: void(0);" id="add_sales_stock_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>

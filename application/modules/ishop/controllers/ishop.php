@@ -2749,6 +2749,21 @@ class Ishop extends Front_Controller
 
 
                             }
+                            elseif ($filename[0] == "rol") {
+
+
+                                if(count($headerdata) != 5 && $headerdata["A"] != "Month"  && $headerdata["B"] != "Product SKU Code"  && $headerdata["C"] != "Product SKU Name"  && $headerdata["D"] != "Quantity"  && $headerdata["E"] != "Unit" ){
+
+                                    $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                    echo json_encode($error_array);
+                                    die;
+
+                                }
+
+
+                            }
+
+
 
                         }
 

@@ -113,39 +113,51 @@
                     <div class="col-md-4_ tp_form">
                         <div class="form-group">
                             <label>Product SKU Name<span style="color: red">*</span></label>
-                            <select class="selectpicker" name="prod_sku" id="prod_sku" data-live-search="true" >
-                                <option value="">Product Name</option>
-                                <?php
-                                if(isset($product_sku) && !empty($product_sku))
-                                {
-                                    foreach($product_sku as $k=> $prd_sku)
+                            <div class="inln_fld">
+                                <select class="selectpicker" name="prod_sku" id="prod_sku" data-live-search="true" >
+                                    <option value="">Product Name</option>
+                                    <?php
+                                    if(isset($product_sku) && !empty($product_sku))
                                     {
-                                        ?>
-                                        <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>" attr-pbg="<?php echo $prd_sku['product_type_label_name'] ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                        <?php
+                                        foreach($product_sku as $k=> $prd_sku)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>" attr-pbg="<?php echo $prd_sku['product_type_label_name'] ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                            <?php
+                                        }
                                     }
-                                }
-                                ?>
-                            </select>
+                                    ?>
+                                </select>
+                                <div class="clearfix"></div>
+                                <label id="prod_sku-error" class="error" for="prod_sku"></label>
+                            </div>
+
                         </div>
                     </div>
                     <div class="col-md-4_ tp_form">
                         <div class="form-group">
                             <label>Units<span style="color: red">*</span></label>
-                            <select class="selectpicker" name="unit" id="unit_id">
-                                <option value="">Units</option>
-                                <option value="box">Box</option>
-                                <option value="packages">Packages</option>
-                                <option value="kg/ltr">Kg/Ltr</option>
-                            </select>
+                            <div class="inln_fld">
+                                <select class="selectpicker" name="unit" id="unit_id">
+                                    <option value="">Units</option>
+                                    <option value="box">Box</option>
+                                    <option value="packages">Packages</option>
+                                    <option value="kg/ltr">Kg/Ltr</option>
+                                </select>
+                                <div class="clearfix"></div>
+                                <label id="unit_id-error" class="error" for="unit_id"></label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
                             <label for="po_qty">ROL Quantity<span style="color: red">*</span></label>
-                            <input type="text" class="form-control allownumericwithdecimal" name="rol_qty" id="rol_qty" placeholder="">
+                            <div class="inln_fld">
+                                <input type="text" class="form-control allownumericwithdecimal" name="rol_qty" id="rol_qty" placeholder="">
+                                <div class="clearfix"></div>
+                                <label id="rol_qty-error" class="error" for="rol_qty"></label>
+                            </div>
                         </div>
-                        <label id="rol_qty-error" class="error" for="rol_qty"></label>
                     </div>
                     <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>
                 </div>

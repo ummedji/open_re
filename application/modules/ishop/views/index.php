@@ -63,6 +63,7 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Product Sku<span style="color: red">*</span></label>
+                        <div class="inln_fld">
                         <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true">
                             <option value="">Product Name</option>
                             <?php
@@ -77,8 +78,11 @@ echo form_open('',$attributes); ?>
                             }
                             ?>
                         </select>
+                        <label id="prod_sku-error" class="error" for="prod_sku"></label>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
-                    <label id="prod_sku-error" class="error" for="prod_sku"></label>
+
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
@@ -91,17 +95,24 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Dispatched Qty.<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" id="dispatched_qty" name="dispatched_qty" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" id="dispatched_qty" name="dispatched_qty" placeholder="">
+                            <label id="dispatched_qty-error" class="error" for="dispatched_qty"></label>
+                            <div class="clearfix"></div>
+                        </div>
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
-                    <label id="dispatched_qty-error" class="error" for="dispatched_qty"></label>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Amount<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" id="amt" name="amt" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" id="amt" name="amt" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="amt-error" class="error" for="amt"></label>
+                        </div>
                     </div>
-                    <label id="amt-error" class="error" for="amt"></label>
+
                 </div>
                 <div class="plus_btn"><a href="javascript: void(0);" id="add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>

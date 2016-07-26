@@ -103,33 +103,45 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Our Product<span style="color: red">*</span></label>
-                        <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true">
-                            <option value="">Product Name</option>
-                            <?php
-                             if(isset($product_sku) && !empty($product_sku))
-                             {
-                                 foreach($product_sku as $k=> $prd_sku)
-                                 {
-                            ?>
-                                    <option value="<?php echo $prd_sku['product_sku_country_id'];?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                    <?php
-                                 }
-                             }
-                            ?>
-                        </select>
+                        <div class="inln_fld">
+                            <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true">
+                                <option value="">Product Name</option>
+                                <?php
+                                if(isset($product_sku) && !empty($product_sku))
+                                {
+                                    foreach($product_sku as $k=> $prd_sku)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $prd_sku['product_sku_country_id'];?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="prod_sku-error" class="error" for="prod_sku"></label>
+                        </div>
+
                     </div>
-                    <label id="prod_sku-error" class="error" for="prod_sku"></label>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Compititor Product<span style="color: red">*</span></label>
-                        <input type="text" class="form-control " id="comp_prd" name="comp_prd" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control " id="comp_prd" name="comp_prd" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="comp_prd-error" class="error" for="comp_prd"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Qty.<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" id="qty" name="qty" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" id="qty" name="qty" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="qty-error" class="error" for="qty"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="plus_btn"><a href="#" id="add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>

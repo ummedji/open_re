@@ -133,11 +133,19 @@
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
                             <label>From Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                            <div class="inln_fld_top">
+                                <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                                <label id="form_date-error" class="error" for="form_date"></label>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>To Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                            <div class="inln_fld_top">
+                                <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                                <label id="to_date-error" class="error" for="to_date"></label>
+                            </div>
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
                     </div>
@@ -152,11 +160,19 @@
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                    <div class="inln_fld_top">
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                        <div class="clearfix"></div>
+                        <label id="form_date-error" class="error" for="form_date"></label>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                    <div class="inln_fld_top">
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                        <div class="clearfix"></div>
+                        <label id="to_date-error" class="error" for="to_date"></label>
+                    </div>
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>
@@ -179,11 +195,19 @@
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" value="<?php echo $from_date; ?>" required />
+                    <div class="inln_fld_top text-left">
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" value="<?php echo $from_date; ?>" required />
+                        <div class="clearfix"></div>
+                        <label id="form_date-error" class="error" for="form_date"></label>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" value="<?php echo $to_date; ?>" required />
+                    <div class="inln_fld_top text-left">
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" value="<?php echo $to_date; ?>" required />
+                        <div class="clearfix"></div>
+                        <label id="to_date-error" class="error" for="to_date"></label>
+                    </div>
                 </div>
                 <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
             </div>
@@ -308,11 +332,19 @@
                     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                         <div class="form-group">
                             <label>From Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                            <div class="inln_fld_top text-left">
+                                <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                                <label id="form_date-error" class="error" for="form_date"></label>
+                            </div>
                         </div>
                         <div class="form-group">
                             <label>To Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                            <div class="inln_fld_top text-left">
+                                <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                                <div class="clearfix"></div>
+                                <label id="to_date-error" class="error" for="to_date"></label>
+                            </div>
                         </div>
                         <div class="inl_button save_btn"><button id="order_status" type="submit" class="btn btn-primary gren_btn">Execute</button></div>
                     </div>

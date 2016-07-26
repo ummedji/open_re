@@ -9,7 +9,11 @@ echo form_open('ishop/company_current_stock',$attributes); ?>
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="current_date" id="current_date" placeholder="" autocomplete="off" >
+                        <div class="inln_fld_top">
+                            <input type="text" class="form-control" name="current_date" id="current_date" placeholder="" autocomplete="off" >
+                            <div class="clearfix"></div>
+                            <label id="current_date-error" class="error" for="current_date"></label>
+                        </div>
                     </div>
                 </div>
                 <div class="col-md-4 col-sm-4 tp_form">
@@ -55,20 +59,33 @@ echo form_open('ishop/company_current_stock',$attributes); ?>
                     <div class="col-md-2_ tp_form">
                         <div class="form-group">
                             <label for="batch">Batch<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="batch" id="batch" placeholder="">
+                            <div class="inln_fld">
+                                <input type="text" class="form-control" name="batch" id="batch" placeholder="">
+                                <div class="clearfix"></div>
+                                <label id="batch-error" class="error" for="batch"></label>
+                            </div>
                         </div>
                         <div class="wieght_sp toggle_wieght_sp"></div>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
                             <label for="batch_mfg_date">Batch Mfg.Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="" autocomplete="off" >
+                            <div class="inln_fld">
+                                <input type="text" class="form-control" name="batch_mfg_date" id="batch_mfg_date" placeholder="" autocomplete="off" >
+                                <div class="clearfix"></div>
+                                <label id="batch_mfg_date-error" class="error" for="batch_mfg_date"></label>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-3_ tp_form">
                         <div class="form-group">
                             <label for="batch_expiry_date">Batch Expiry Date<span style="color: red">*</span></label>
-                            <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="" autocomplete="off" >
+                            <div class="inln_fld">
+                                <input type="text" class="form-control" name="batch_expiry_date" id="batch_expiry_date" placeholder="" autocomplete="off" >
+                                <div class="clearfix"></div>
+                                <label id="batch_expiry_date-error" class="error" for="batch_expiry_date"></label>
+                            </div>
+
                         </div>
                     </div>
                     <div class="svn_btn"><button type="submit" class="btn btn-primary gren_btn">Save</button></div>

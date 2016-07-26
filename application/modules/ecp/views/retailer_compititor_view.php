@@ -44,12 +44,20 @@ echo form_open('ecp/retailer_compititor_details_view',$attributes);
                         <div class="row">
                             <div class="form-group">
                                 <label for="from_month">From Month<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="from_month" id="from_month" placeholder="">
+                                <div class="inln_fld_top">
+                                    <input type="text" class="form-control" name="from_month" id="from_month" placeholder="">
+                                    <div class="clearfix"></div>
+                                    <label id="from_month-error" class="error" for="from_month"></label>
+                                </div>
                             </div>
 
                             <div class="form-group">
                                 <label for="to_month">To Month<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
+                                <div class="inln_fld_top">
+                                    <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
+                                    <div class="clearfix"></div>
+                                    <label id="to_month-error" class="error" for="to_month"></label>
+                                </div>
                             </div>
 
                             <div class="form-group">

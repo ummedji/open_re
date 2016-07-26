@@ -82,29 +82,35 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-4_ tp_form">
                     <div class="form-group">
                         <label>Compititors Name</label>
-                        <select class="selectpicker" id="compititor_id" name="compititor_id" data-live-search="true">
-                            <option value="">Compititors Name</option>
-                            <?php
-                            if(isset($compititor) && !empty($compititor))
-                            {
-                                foreach($compititor as $k=> $val_compititor)
+                        <div class="inln_fld">
+                            <select class="selectpicker" id="compititor_id" name="compititor_id" data-live-search="true">
+                                <option value="">Compititors Name</option>
+                                <?php
+                                if(isset($compititor) && !empty($compititor))
                                 {
-                                    ?>
-                                    <option value="<?php echo $val_compititor['compititor_id']; ?>" attr-name="<?php echo $val_compititor['compititor_name']; ?>"><?php echo $val_compititor['compititor_name']; ?></option>
-                                    <?php
+                                    foreach($compititor as $k=> $val_compititor)
+                                    {
+                                        ?>
+                                        <option value="<?php echo $val_compititor['compititor_id']; ?>" attr-name="<?php echo $val_compititor['compititor_name']; ?>"><?php echo $val_compititor['compititor_name']; ?></option>
+                                        <?php
+                                    }
                                 }
-                            }
-                            ?>
-                        </select>
+                                ?>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="compititor_id-error" class="error" for="compititor_id"></label>
+                        </div>
                     </div>
-                    <label id="prod_sku-error" class="error" for="prod_sku"></label>
                 </div>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Amount<span style="color: red">*</span></label>
-                        <input type="text" class="form-control allownumericwithdecimal" id="amt" name="amt" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" id="amt" name="amt" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="amt-error" class="error" for="amt"></label>
+                        </div>
                     </div>
-                    <label id="amt-error" class="error" for="amt"></label>
                 </div>
                 <div class="plus_btn"><a href="#" id="add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
             </div>

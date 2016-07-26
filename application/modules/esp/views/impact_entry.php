@@ -29,7 +29,11 @@ echo form_open('esp/add_impact_entry',$attributes); ?>
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 20px;">
                 <div class="form-group">
                     <label for="From Month">From Month<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="from_month" id="from_month" placeholder="">
+                    <div class="inln_fld_top">
+                        <input type="text" class="form-control" name="from_month" id="from_month" placeholder="">
+                        <div class="clearfix"></div>
+                        <label id="from_month-error" class="error" for="from_month"></label>
+                    </div>
                 </div>
                 <div class="inl_button save_btn">
                     <button type="button" id="view_impact_entry" href="javascript:void(0);" class="btn btn-primary gren_btn">View</button>

@@ -6373,7 +6373,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-           
+
             // For Pagination
             $limit = 10;
             $pagenum = $this->input->get_post('page');

@@ -29,12 +29,19 @@ echo form_open('esp/add_forecast',$attributes); ?>
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 20px;">
                 <div class="form-group">
                     <label for="From Month">From Month<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="from_month" id="from_month" placeholder="">
-                    <label id="invoice_no_error" class="error" for="invoice_no"></label>
+                    <div class="inln_fld_top">
+                        <input type="text" class="form-control" name="from_month" id="from_month" placeholder="">
+                        <div class="clearfix"></div>
+                        <label id="invoice_no_error" class="error" for="invoice_no"></label>
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="To Month">To Month<span style="color: red">*</span></label>
-                    <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
+                    <div class="inln_fld_top">
+                        <input type="text" class="form-control" name="to_month" id="to_month" placeholder="">
+                        <div class="clearfix"></div>
+                        <label id="to_month-error" class="error" for="to_month"></label>
+                    </div>
                 </div>
                 <div class="inl_button save_btn">
                     <button type="button" id="exeute" href="javascript:void(0);" class="btn btn-primary gren_btn">Execute</button>
