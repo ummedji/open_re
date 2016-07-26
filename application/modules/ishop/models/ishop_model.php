@@ -6373,7 +6373,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+           
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page*$limit-$limit;
+            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
+            // For Pagination
+
             $budget_details = $info->result_array();
             return $budget_details;
         } else {

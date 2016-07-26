@@ -403,7 +403,7 @@ class Esp extends Front_Controller
 
                                         if($child_flag == 1) {
 
-                                            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />mmmmm</a></div>";
+                                            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
 
                                             //$header_final_array[$monthvalue]['lockdata'] = 0;
 
@@ -1261,7 +1261,7 @@ class Esp extends Front_Controller
                         
                             if($forecast_freeze_data["freeze_status"] == 1 || $forecast_freeze_data["created_by_user"] == $login_user_id){
 
-                                echo "1";
+                               // echo "1";
                                     //SHOW DATA
                              
                             
@@ -1374,7 +1374,7 @@ class Esp extends Front_Controller
                             {
                                 //SHOW DATA
 
-                                echo "2";
+                              //  echo "2";
                                           
                            $editable = "";
 
@@ -1489,7 +1489,7 @@ class Esp extends Front_Controller
                             {
                                 //DONT SHOW
                                 
-                                echo "3";
+                                //echo "3";
                                 
                                  $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -1524,7 +1524,7 @@ class Esp extends Front_Controller
                             
                             if($login_user_id == $employee_month_product_forecast_data[0]['created_by_user']){
 
-                                echo "4";
+                                //echo "4";
                                 
                                  $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -1552,7 +1552,7 @@ class Esp extends Front_Controller
                             }
                             else{
 
-                                echo "5";
+                           //     echo "5";
                             
                             $html .= '<div class="tp_form">
             <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption'.$j.'[]" >
@@ -2863,7 +2863,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
             //SHOW LOCK and make it NON CLICKABLE
 
-            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;pointer-events: none;opacity: 0.7;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />qqqq</a></div>";
+            $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;pointer-events: none;opacity: 0.7;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
 
             // $nonclickable = 1;
 
@@ -2894,7 +2894,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
                 if ($self_lock_data[0]["lock_status"] != 0) {
 
-                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' />wwww</a></div>";
+                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
 
                     //  $header_final_array[$monthvalue]['lockdata'] = 1;
 
@@ -2911,7 +2911,7 @@ foreach($month_data as $monthkey => $monthvalue){
                     if ($child_flag == 1)  {
 
 
-                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />eeee</a></div>";
+                        $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
 
                         //$header_final_array[$monthvalue]['lockdata'] = 0;
 
@@ -2948,7 +2948,7 @@ foreach($month_data as $monthkey => $monthvalue){
 
                 if ($child_flag == 1) {
 
-                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' />mmmmm</a></div>";
+                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $selected_year . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
 
                     $final_lock_array["lockdata"] = 0;
                     $final_lock_array["clickable"] = 1;
@@ -3244,7 +3244,7 @@ foreach($month_data as $monthkey => $monthvalue){
                             if($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["freeze_status"] == 0){
                             //SHOW DATA
 
-                            echo "1";
+                          //  echo "1";
 
                             $editable = "";
 
@@ -3332,7 +3332,7 @@ foreach($month_data as $monthkey => $monthvalue){
                         elseif($child_flag == 1)
                         {
 
-                            echo "2";
+                           /// echo "2";
 
 
                             $editable = "";
@@ -3419,7 +3419,7 @@ foreach($month_data as $monthkey => $monthvalue){
                         else
                         {
 
-                            echo "3";
+                        //    echo "3";
 
                             /*  $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
 
