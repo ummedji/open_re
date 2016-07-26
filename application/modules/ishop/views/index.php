@@ -87,18 +87,21 @@ echo form_open('',$attributes); ?>
                 <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">PO Qty.</label>
-                        <input type="text" class="form-control allownumericwithdecimal" id="po_qty" name="po_qty" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control allownumericwithdecimal" id="po_qty" name="po_qty" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="po_qty-error" class="error" for="po_qty"></label>
+                        </div>
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
-                    <label id="po_qty-error" class="error" for="po_qty"></label>
                 </div>
                 <div class="col-md-3_ tp_form">
                     <div class="form-group">
                         <label for="invoice_date">Dispatched Qty.<span style="color: red">*</span></label>
                         <div class="inln_fld">
                             <input type="text" class="form-control allownumericwithdecimal" id="dispatched_qty" name="dispatched_qty" placeholder="">
-                            <label id="dispatched_qty-error" class="error" for="dispatched_qty"></label>
                             <div class="clearfix"></div>
+                            <label id="dispatched_qty-error" class="error" for="dispatched_qty"></label>
                         </div>
                     </div>
                     <div class="wieght_sp toggle_wieght_sp">Kg/Ltr</div>
