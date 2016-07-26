@@ -2480,6 +2480,9 @@ class Ishop extends Front_Controller
         
         public function upload_data() {
 
+            $action_data = $this->uri->segment(3);
+            //testdata($action_data);
+
             $web_service = @$_POST['flag'];
             if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
                 $user= $this->auth->user();
@@ -2513,7 +2516,6 @@ class Ishop extends Front_Controller
 
                 $ext = explode(".",$filename[0]);
 
-                $action_data = $this->uri->segment(2);
 
              //   dumpme($ext);
              //   die;
@@ -2537,6 +2539,15 @@ class Ishop extends Front_Controller
                  //  testdata($newfilename);
 
                     $filename[0] = $newfilename[0];
+
+                    if($action_data != $filename[0]){
+
+                        $error_array["error"][] = "Please upload desired file.";
+                        echo json_encode($error_array);
+                        die;
+
+                    }
+
 
                   // echo $newfilename[0];
 
@@ -2668,19 +2679,9 @@ class Ishop extends Front_Controller
                         if(!empty($data['header'])){
                             foreach ($data['header'] as $key => $headerdata) {
 
-                                if ($filename[0] == "target"){
+                                if ($filename[0] == "target"  ){
 
-                                //    testdata($headerdata);
 
-/*
-                                    if(  $row == 1 && ( $column == 'A' && $data_value != "Month" ) &&
-                                        ($column == 'B' && ($data_value != "Distributor Code" || $data_value != "Retailer Code")) &&
-                                        $column == 'C' && ($data_value != "Distributor Name" || $data_value != "Retailer Name") &&
-                                        $column == 'D' && $data_value != "Product SKU Code" &&
-                                        $column == 'E' && $data_value != "Product SKU Name" &&
-                                        $column == 'F' && $data_value != "Quantity(Kg/Ltr)" ){
-
-*/
                                            if(count($headerdata) != 6 || $headerdata["A"] != "Month"  || ($headerdata["B"] != "Distributor Code" || $headerdata["B"] != "Retailer Code")  || ($headerdata["C"] != "Distributor Name" || $headerdata["B"] != "Retailer Name")  || $headerdata["D"] != "Product SKU Code"  && $headerdata["E"] != "Product SKU Name"  || $headerdata["F"] != "Quantity(Kg/Ltr)"){
 
 

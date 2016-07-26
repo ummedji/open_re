@@ -57,6 +57,9 @@ Route::any('activate', 'users/activate');
 Route::any('activate/(:any)', 'users/activate/$1');
 Route::any('resend_activation', 'users/resend_activation');
 
+
+Route::any('upload_data/(:any)', 'ishop/upload_data/$1');
+
 // Contexts
 Route::prefix(SITE_AREA, function(){
     Route::context('dashboard', array('home' => SITE_AREA .'/dashboard/index'));

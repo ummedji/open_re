@@ -160,20 +160,25 @@ echo form_open('',$attributes);
                     <div class="col-md-4_ tp_form">
                         <div class="form-group">
                             <label>Product Sku Name<span style="color: red">*</span></label>
-                            <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true">
-                                <option value="">Product Name</option>
-                                <?php
-                                if(isset($product_sku) && !empty($product_sku))
-                                {
-                                    foreach($product_sku as $k=> $prd_sku)
+                            <div class="inln_fld">
+                                <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true">
+                                    <option value="">Product Name</option>
+                                    <?php
+                                    if(isset($product_sku) && !empty($product_sku))
                                     {
-                                        ?>
-                                        <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                        <?php
+                                        foreach($product_sku as $k=> $prd_sku)
+                                        {
+                                            ?>
+                                            <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                            <?php
+                                        }
                                     }
-                                }
-                                ?>
-                            </select>
+                                    ?>
+                                </select>
+                                <div class="clearfix"></div>
+                                <label id="prod_sku-error" class="error" for="prod_sku"></label>
+                            </div>
+
                         </div>
                     </div>
 
