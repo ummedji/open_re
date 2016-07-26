@@ -871,6 +871,16 @@ class Esp extends Front_Controller
                      
                 $month_assumption_forecast_data = $this->esp_model->get_month_assumption_forecast_data($forecast_id,$monthvalue);
               //  dumpme($month_assumption_forecast_data);
+
+
+                $employee_month_product_forecast_data = 0;
+
+                foreach($pbg_sku_data as $skukey => $skuvalue){
+
+                    $employee_month_product_forecast_data = $this->esp_model->get_employee_month_product_forecast_data($businesscode,$skuvalue['product_sku_country_id'],$monthvalue);
+                }
+
+
                 
                 if($month_assumption_forecast_data != 0)
                 {
