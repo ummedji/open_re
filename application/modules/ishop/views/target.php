@@ -369,7 +369,7 @@ if (!$this->input->is_ajax_request()) {
                                 <label>Selecte Year</label>
                                 <input type="text" name="to_year_data"  class="form-control" id="to_copy_popup_datepicker"  />
                             </div>
-
+                            <div class="clearfix"></div>
                             <div id="month_data">
 
                                 <fieldset>
@@ -385,14 +385,20 @@ if (!$this->input->is_ajax_request()) {
                                         <div class="col-md-2 col-sm-2 col-xs-3 text-center">
                                             <div class="radio_bb">
                                                 <input type="checkbox" name="checkbox_popup_month_data[]" id="<?php echo $month; ?>" value="<?php echo $j; ?>" />
-                                                <label for="<?php echo $month; ?>"><span></span> <?php echo $month; ?> </label>
+                                                <label for="<?php echo $month; ?>">
+                                                    <span></span> <?php echo $month; ?>
+                                                    <div class="clearfix"></div>
+                                                </label>
+                                                <div class="clearfix"></div>
                                             </div>
+                                            <div class="clearfix"></div>
                                         </div>
                                         <?php
                                     }
                                     ?>
                                     <label id="checkbox_popup_month_data[]-error" class="error" for="checkbox_popup_month_data[]"></label>
                                 </fieldset>
+                                <div class="clearfix"></div>
                             </div>
                         </div>
                     </div>

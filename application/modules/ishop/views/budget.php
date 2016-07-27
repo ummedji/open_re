@@ -341,7 +341,7 @@ if (!$this->input->is_ajax_request()) {
 
                               ?>
                           <label id="radio_from_popup_month_data-error" class="error" for="radio_from_popup_month_data"></label>
-                              <div class="clearfix"></div>
+                          <div class="clearfix"></div>
                       </div>
                   </div>
                   <div class="col-md-6 col-sm-6 tp_form">
@@ -393,6 +393,7 @@ if (!$this->input->is_ajax_request()) {
                                   <?php
                               }
                               ?>
+                              <label id="checkbox_popup_month_data[]-error" class="error" for="checkbox_popup_month_data[]"></label>
                           </fieldset>
                       </div>
                   </div>

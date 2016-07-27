@@ -572,7 +572,7 @@ $(document).on('submit', '#upload_rol_data', function (e) {
     }
     else {
         $.ajax({
-            url: site_url + "ishop/upload_data", // Url to which the request is send
+            url: site_url + "ishop/upload_data/rol", // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
             data: file_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
             contentType: false,       // The content type used when sending data to the server.
