@@ -571,8 +571,8 @@ class Esp extends Front_Controller
                         
 
                                 //SHOW DATA
-                            
-                            //echo "1";
+
+                          //  echo "1";
                             
                            $editable = "";
 
@@ -663,7 +663,7 @@ class Esp extends Front_Controller
                         elseif($child_flag == 1)
                         {
                            
-                         //   echo "2";
+                          //  echo "2";
                             
                                        
                            $editable = "";
@@ -781,7 +781,7 @@ class Esp extends Front_Controller
                         
                         if($login_user_id == $employee_month_product_forecast_data[0]['created_by_user']){
 
-                       //     echo "4";
+                         //   echo "4";
 
                              $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value="'.$forecast_qty.'"  /></td>';
                     
@@ -791,13 +791,13 @@ class Esp extends Front_Controller
                                 $data_inner_array["forecast_qty"] = $forecast_qty;
                                 $data_inner_array["forecast_value"] = $forecast_value;
                               
-                              $data_inner_array["editable"] = "readonly";
+                              $data_inner_array["editable"] = "";
                           }
                             
                         }
                         else{
 
-                       //     echo "5";
+                         //  echo "5";
                         //NOT FREZEED
                         $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
                     
@@ -836,6 +836,10 @@ class Esp extends Front_Controller
                         }
                         $webservice_final_array[$monthvalue]["lock_status"] = $lock_status;
 
+
+
+
+
                     }
 
                     $l++;
@@ -845,6 +849,8 @@ class Esp extends Front_Controller
                $html .= '</tr>';
                 
             }
+           // dumpme($webservice_final_array);
+           // die;
             
             $html .= '<tr>';
                 $html .= '<th>';
