@@ -4206,7 +4206,6 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
-
     public function getAllMaterialRequest()
     {
         $user_id = $this->input->get_post('user_id');
@@ -4271,7 +4270,177 @@ class Web_service extends Front_Controller
 
     public function getActivityPlanning()
     {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $code = $this->input->get_post('activity_code');
+        $activity_id = $this->input->get_post('activity_id');
 
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($code) && !empty($code)) && (isset($activity_id) && !empty($activity_id)))
+        {
+            $final_array= array();
+            if($code =='RMP003' || $code =='RVP004' )
+            {
+
+                $role_id = 10;
+
+                $get_geo_level_data = $this->ecp_model->get_customer_type_geo_data($role_id,$country_id,$user_id,null,null);
+                if (!empty($get_geo_level_data))
+                {
+                    foreach ($get_geo_level_data as $k2 => $geolevel2) {
+                        $g2 = array(
+                            "id" => $geolevel2['political_geo_id'],
+                            "political_geography_name" => $geolevel2['political_geography_name'],
+                        );
+                        $final_array['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
+
+                        $parent_geo_id = $geolevel2['political_geo_id'];
+
+                        $get_geo_level_3 = $this->ecp_model->get_customer_type_geo_data($role_id,$country_id,$user_id,$parent_geo_id,null);
+
+
+                        if(!empty($get_geo_level_3))
+                        {
+                            foreach ($get_geo_level_3 as $k3 => $geolevel3) {
+                                $g3 = array(
+                                    "id" => $geolevel3['political_geo_id'],
+                                    "political_geography_name" => $geolevel3['political_geography_name'],
+                                );
+                                $final_array['geolevel2'][$k2]['geolevel3'][] = $g3; // Add Geo Level 2 Into Final Array
+                            }
+                        }
+                        else{
+                            $final_array['geolevel2'][$k2]['geolevel3'] = array();
+                        }
+                    }
+                }
+            }
+            else
+            {
+                $role_id = 11;
+
+                $get_geo_level_data = $this->ecp_model->get_customer_type_geo_data($role_id,$country_id,$user_id,null,null);
+
+                if (!empty($get_geo_level_data))
+                {
+                    foreach ($get_geo_level_data as $k2 => $geolevel2) {
+                        $g2 = array(
+                            "id" => $geolevel2['political_geo_id'],
+                            "political_geography_name" => $geolevel2['political_geography_name'],
+                        );
+                        $final_array['geolevel2'][] = $g2; // Add Geo Level 2 Into Final Array
+
+                        $parent_geo_id = $geolevel2['political_geo_id'];
+
+                        $get_geo_level_3 = $this->ecp_model->get_customer_type_geo_data($role_id,$country_id,$user_id,$parent_geo_id,'second_perent');
+
+                        if(!empty($get_geo_level_3))
+                        {
+                            foreach ($get_geo_level_3 as $k3 => $geolevel3) {
+                                $g3 = array(
+                                    "id" => $geolevel3['political_geo_id'],
+                                    "political_geography_name" => $geolevel3['political_geography_name'],
+                                );
+                                $final_array['geolevel2'][$k2]['geolevel3'][] = $g3; // Add Geo Level 2 Into Final Array
+
+                                $parent_geo_id1 = $geolevel3['political_geo_id'];
+
+                                $get_geo_level_4 = $this->ecp_model->get_customer_type_geo_data($role_id,$country_id,$user_id,$parent_geo_id1,null);
+
+                                if (!empty($get_geo_level_4)) {
+                                    foreach ($get_geo_level_4 as $k1 => $geolevel4) {
+                                        $g4 = array(
+                                            "id" => $geolevel4['political_geo_id'],
+                                            "political_geography_name" => $geolevel4['political_geography_name'],
+                                        );
+                                        $final_array['geolevel2'][$k2]['geolevel3'][$k3]['geolevel4'][] = $g4; // Add Geo Level 1 Into Final Array
+                                    }
+                                }
+                                else{
+                                    $final_array['geolevel2'][$k2]['geolevel3'][$k3]['geolevel4'] = array();
+                                }
+                            }
+                        }
+                        else{
+                            $final_array['geolevel2'][$k2]['geolevel3'] = array();
+                        }
+                    }
+                }
+
+            }
+
+            $DigitalLibrary = $this->ecp_model->getDigitalLibraryDataByCountry($activity_id,$country_id);
+           // testdata($DigitalLibrary);
+
+            $DigitalLibrary_array = array();
+            if (!empty($DigitalLibrary)) {
+                foreach ($DigitalLibrary as $Digital) {
+                    $Digitals = array(
+                        "id" => $Digital['digital_library_id'],
+                        "library_name" => $Digital['library_name'],
+                        "link" => $Digital['link'],
+                    );
+                    array_push($DigitalLibrary_array, $Digitals);
+                }
+            }
+
+            $data = array('geo_level'=>$final_array,'digital_library'=>$DigitalLibrary_array);
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = $data;
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    public function saveActivityPlanning()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)))
+        {
+            $insert=$this->ecp_model->addActivityPlanning($user_id,$country_id,'web_service');
+            if($insert != 0)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $insert;
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+    public function submitActivityPlanning()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $activity_planning_id = $this->input->get_post('activity_planning_id');
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($activity_planning_id) && !empty($activity_planning_id)))
+        {
+            $submit= $this->ecp_model->submitActivityPlanning($activity_planning_id,$user_id,$country_id);
+            if($submit != 0)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = '';
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
     }
 
 

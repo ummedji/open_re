@@ -1499,7 +1499,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $query = $this->db->query($query1);
         $geo_loc_data = $query->result_array();
         // echo $this->db->last_query();
-        //die;
+       // die;
         return $geo_loc_data;
     }
 
@@ -1711,11 +1711,10 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     }
 
 
-    public function addActivityPlanning($user_id,$country_id,$local_date=null,$web_service=null)
+    public function addActivityPlanning($user_id,$country_id,$web_service=null)
     {
        // testdata($_POST);
         $activity_type_id = $this->input->post("activity_type_id");
-
         $geo_level_4 = $this->input->post("geo_level_4");
         $geo_level_3 = $this->input->post("geo_level_3");
         if(isset($geo_level_4) && !empty($geo_level_4))
@@ -1738,19 +1737,19 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $pl_time = $this->input->post("planning_time");
             $date_time= $planning_date.' '.$pl_time;
             $planning_date_time = date('Y-m-d h:i:s', strtotime($date_time));
-            $crop = $this->input->post("crop");
-            $product_sku = $this->input->post("product_sku");
-            $diseases = $this->input->post("diseases");
-            $farmers = $this->input->post("farmers");
-            $farmer_num = $this->input->post("farmer_num");
-            $digital_id  = $this->input->post("digital_id");
-            $joint_id  = $this->input->post("joint_id");
-            $product_samples = $this->input->post("product_samples");
-            $product_samples_qty = $this->input->post("product_samples_qty");
-            $product_materials = $this->input->post("product_materials");
-            $product_materials_qty = $this->input->post("product_materials_qty");
-            $materials = $this->input->post("materials");
-            $materials_qty = $this->input->post("materials_qty");
+            $crop =  explode(',',$this->input->post("crop"));
+            $product_sku =  explode(',',$this->input->post("product_sku"));
+            $diseases =  explode(',',$this->input->post("diseases"));
+            $farmers =  explode(',',$this->input->post("farmers"));
+            $farmer_num =  explode(',',$this->input->post("farmer_num"));
+            $digital_id  =  explode(',',$this->input->post("digital_id"));
+            $joint_id  =  explode(',',$this->input->post("joint_id"));
+            $product_samples =  explode(',',$this->input->post("product_samples"));
+            $product_samples_qty =  explode(',',$this->input->post("product_samples_qty"));
+            $product_materials =  explode(',',$this->input->post("product_materials"));
+            $product_materials_qty =  explode(',',$this->input->post("product_materials_qty"));
+            $materials =  explode(',',$this->input->post("materials"));
+            $materials_qty =  explode(',',$this->input->post("materials_qty"));
         }
         else{
             $plan_date = $this->input->post("planning_date");
@@ -1935,6 +1934,10 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
             return $insert_id;
         }
+        else{
+            return 0;
+        }
+
 
     }
 
