@@ -2724,7 +2724,12 @@ class Ishop_model extends BF_Model
 
     public function add_company_current_stock_detail($user_id, $country_id, $xl_data = null, $xl_flag = null)
     {
-        if ($xl_flag == null) {
+
+
+
+        if($xl_flag == null)
+        {
+
             $date = $this->input->post("current_date");
             $product_sku_id = $this->input->post("product_sku");
             $intrum_quantity = $this->input->post("intransist_qty");
@@ -2735,6 +2740,8 @@ class Ishop_model extends BF_Model
 
 
             $product = $this->check_products($product_sku_id);
+
+          //  testdata($product);
 
             if ($product == 0) {
                 $current_stock = array(
@@ -2752,6 +2759,8 @@ class Ishop_model extends BF_Model
                     'created_on' => date('Y-m-d H:i:s'),
 
                 );
+
+
                 if ($this->db->insert('ishop_company_current_stock', $current_stock)) {
                     $insert_id = $this->db->insert_id();
                 }
@@ -2773,7 +2782,17 @@ class Ishop_model extends BF_Model
                 );
                 // testdata($current_stock_log);
                 $id = $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+
+                if($this->db->affected_rows() > 0){
+                    return 1;
+                }
+                else{
+                    return 0;
+                }
+
+
             } else {
+
                 // update
                 $current_update_stock = array(
                     'date' => $date,
@@ -2789,6 +2808,8 @@ class Ishop_model extends BF_Model
                     'modified_on' => date('Y-m-d H:i:s'),
 
                 );
+
+                //testdata($product);
 
                 $this->db->where('product_sku_id', $product[0]['product_sku_id']);
                 $this->db->update('ishop_company_current_stock', $current_update_stock);
@@ -2810,8 +2831,17 @@ class Ishop_model extends BF_Model
                     'created_on' => date('Y-m-d H:i:s'),
                 );
                 $id = $this->db->insert('ishop_company_current_stock_log', $current_stock_log);
+
+                if($this->db->affected_rows() > 0){
+                    return 1;
+                }
+                else{
+                    return 0;
+                }
+
+
             }
-            return $id;
+            //return $id;
         } else {
 
             if ($xl_data != null) {
