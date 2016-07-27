@@ -4333,7 +4333,9 @@ foreach($month_data as $monthkey => $monthvalue){
 			if($webservice_data != NULL){
 				$m = count($user_level_formdata);
 			}
-			
+
+            //testdata($user_level_formdata);
+
 			foreach($user_level_formdata as $user_data_key1 => $user_level_data1){
 					
 				
@@ -4349,8 +4351,13 @@ foreach($month_data as $monthkey => $monthvalue){
 				else{
 					$level_user_data = $user_level_data1["employee_level_data"];
 				}
-				$users_forecast_update_status_data = $this->esp_model->get_update_user_detail_data($level_user_data,$month_data);
-				
+
+                if(!empty($level_user_data)) {
+                    $users_forecast_update_status_data = $this->esp_model->get_update_user_detail_data($level_user_data, $month_data);
+                }else{
+                    $users_forecast_update_status_data = 0;
+                }
+
 				if($users_forecast_update_status_data > $max_count)
 				{
 					$max_count = count($users_forecast_update_status_data);
@@ -4368,9 +4375,11 @@ foreach($month_data as $monthkey => $monthvalue){
 				}
 				
 			}
-			
+
+         //   testdata($data_array);
+
 		//	dumpme($data_array);
-			
+
 			for($i=0;$i<$max_count;$i++)
 			{
 				$html .= '<tr>';

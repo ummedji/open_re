@@ -1398,8 +1398,16 @@ class Esp_model extends BF_Model
 		foreach($user_data as $key => $userid){
 				
 			$user_detail_data = $this->db->query("SELECT display_name from bf_users where id = '".$userid."'")->row_array();
-			
-			$user_name = $user_detail_data["display_name"];
+
+           // dumpme($user_detail_data);
+
+            if(!empty($user_detail_data)){
+                $user_name = $user_detail_data["display_name"];
+            }
+            else{
+                $user_name = "";
+            }
+
 			
 			$forecast_update_status = "";
 			
