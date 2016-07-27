@@ -953,6 +953,7 @@ class Web_service extends Front_Controller
                 $order_data = $this->ishop_model->get_order_data($role_id,$country_id,$radio,$user_id,$customer_id,$form_date,$to_date,null,null,null,$page_function,null,'web_service');
             }
 ;
+           // testdata($order_data);
             $order_array = array();
             if (!empty($order_data)) {
 
@@ -1047,6 +1048,8 @@ class Web_service extends Front_Controller
                         {
                             $ord = array(
                                 "id" => $order['order_id'],
+                                "retailer_code" => $order['f_u_code'],
+                                "retailer_name" => $order['f_dn'],
                                 "distributor_name" => $order['t_dn'],
                                 "entered_by" => $order['display_name'],
                                 "po_no" => $order['PO_no'],
