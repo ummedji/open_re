@@ -7,11 +7,23 @@ echo form_open('',$attributes);
         <div class="col-md-12 text-center plng_sub_nave">
             <div class="inn_sub_nave">
                 <ul>
-                    <li class="active"><a href="#">Planning</a></li>
-                    <li><a href="#">Approvel</a></li>
-                    <li><a href="#">Execution</a></li>
-                    <li><a href="#">Unplanned</a></li>
-                    <li><a href="#">View</a></li>
+                    <?php
+                    if($child_user_data['tot'] !=0)
+                    {
+                        ?>
+                        <li><a href="<?php echo base_url('ecp/activity_approval')?>">Approval</a></li>
+                        <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
+                    <?php
+                    }
+                    else{
+                        ?>
+                        <li class="active"><a href="<?php echo base_url('ecp/activity_planning')?>">Planning</a></li>
+                        <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
+                        <li><a href="<?php echo base_url('ecp/')?>">Unplanned</a></li>
+                        <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
+                    <?php
+                    }
+                    ?>
                 </ul>
                 <div class="clearfix"></div>
             </div>
@@ -268,7 +280,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                             <label>Digital Library</label>
-                                            <select class="selectpicker" name="digital_id" id="digital_id" data-live-search="true" multiple>
+                                            <select class="selectpicker" name="digital_id[]" id="digital_id" data-live-search="true" multiple>
                                                 <option value="">Select Digital Library</option>
                                             </select>
                                         </div>
@@ -291,7 +303,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                             <label>Joint Visit</label>
-                                            <select class="selectpicker" name="joint_id" id="joint_id" data-live-search="true" multiple>
+                                            <select class="selectpicker" name="joint_id[]" id="joint_id" data-live-search="true" multiple>
                                                 <option value="">Select Joint Visit</option>
                                                  <?php
                                                  if(isset($employee_visit) && !empty($employee_visit)) {
@@ -513,23 +525,25 @@ echo form_open('',$attributes);
                     </div>
                 </div>
             </div>
+            <input class="activity_planning_id" type="hidden" name="inserted_activity_planning_id" id="activity_planning_id" value="" />
+            <input class="current_user_id" type="hidden" name="current_user_id" id="current_user_id" value="<?php echo $current_user->id ;?>" />
+            <input class="current_role_id" type="hidden" name="current_role_id" id="current_role_id" value="<?php echo $current_user->role_id ;?>" />
+            <input class="current_country_id" type="hidden" name="current_country_id" id="current_country_id" value="<?php echo $current_user->country_id;?>" />
+            <input class="current_local_date" type="hidden" name="current_local_date" id="current_local_date" value="<?php echo $current_user->local_date;?>" />
+
             <div class="col-md-12 table_bottom pln_table_bottom">
                 <div class="row">
                     <div class="save_btn">
                         <button type="button" class="btn btn-primary" id="check_save">Save</button>
                         <button type="button" class="btn btn-primary" id="check_cancel">Cancel</button>
                         <button type="button" class="btn btn-primary" id="check_submit">Submit</button>
+                        <button type="button" class="btn btn-primary" id="check_save_as_new">Save As New</button>
                     </div>
                 </div>
             </div>
             <div class="clearfix"></div>
         </div>
         <?php echo form_close(); ?>
-
-
-
-
-
 
 
 
@@ -551,7 +565,7 @@ echo form_open('',$attributes);
                             <div class="tab-pane fade in active" id="tab1default">
                                 <div class="calendar_space">
                                     <div id="calendar">
-                                        <? echo $cal_data; ?>
+                                        <?php echo $cal_data; ?>
                                     </div>
                                     <div class="clearfix"></div>
                                 </div>
@@ -559,69 +573,61 @@ echo form_open('',$attributes);
                                     <button type="button" class="btn btn-primary">Add New</button>
                                 </div>
                                 <div id="accordion" class="as_accordion" role="tablist" aria-multiselectable="true">
+                                    <?php
+                                        foreach($activity_data as $k=>$activity_val)
+                                        {
+                                            ?>
                                     <div class="panel panel-default">
-                                        <div class="panel-heading" role="tab" id="headingOne">
-                                            <ul class="acc_list">
-                                                <li>
-                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                                                        1 <img src="<?php echo Template::theme_url('images/list_arrow.png')?>" alt="" style="vertical-align: middle;">
-                                                    </a>
-                                                </li>
-                                                <li>Activity Name 1</li>
-                                                <li>2:38 PM</li>
-                                                <li>Geo 3</li>
-                                                <li>Geo 4</li>
-                                            </ul>
-                                        </div>
-                                        <div id="collapseOne" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                            <ul class="acc_list">
-                                                <li>
-                                                    &nbsp;
-                                                </li>
-                                                <li>Activity Name 1</li>
-                                                <li>2:38 PM</li>
-                                                <li>Geo 3</li>
-                                                <li>Geo 4</li>
-                                            </ul>
-                                            <ul class="acc_list">
-                                                <li>
-                                                    &nbsp;
-                                                </li>
-                                                <li>Activity Name 1</li>
-                                                <li>2:38 PM</li>
-                                                <li>Geo 3</li>
-                                                <li>Geo 4</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading" role="tab" id="headingTwo">
-                                            <ul class="acc_list">
-                                                <li>
-                                                    <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="true" aria-controls="collapseOne">
-                                                        2 <img src="<?php echo Template::theme_url('images/list_arrow.png')?>" alt="" style="vertical-align: middle;">
-                                                    </a>
-                                                </li>
-                                                <li>Activity Name 1</li>
-                                                <li>2:38 PM</li>
-                                                <li>Geo 3</li>
-                                                <li>Geo 4</li>
-                                            </ul>
-                                        </div>
-                                        <div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
-                                            <ul class="acc_list">
-                                                <li>
-                                                    &nbsp;
-                                                </li>
-                                                <li>Activity Name 1</li>
-                                                <li>2:38 PM</li>
-                                                <li>Geo 3</li>
-                                                <li>Geo 4</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                </div>
+                                            <?php
+                                            $i=0;
+                                            foreach($activity_val as $key =>$val)
+                                            {
+                                                if($i == 0) {
+                                                    ?>
+                                                    <div class="panel-heading" role="tab" id="headingOne">
+                                                        <ul class="acc_list">
+                                                            <li>
+                                                                <a data-toggle="collapse" data-parent="#accordion"
+                                                                   href="#collapse_<?php echo strtotime($val['activity_planning_date']); ?>" aria-expanded="true"
+                                                                   aria-controls="collapse_<?php echo strtotime($val['activity_planning_date']); ?>">
+                                                                    <?php echo date('d',strtotime($val['activity_planning_date']))?>  <img
+                                                                        src="<?php echo Template::theme_url('images/list_arrow.png') ?>"
+                                                                        alt="" style="vertical-align: middle;">
+                                                                </a>
+                                                            </li>
+                                                            <li><?php echo $val['activity_type_country_name']?></li>
+                                                            <li><?php echo date('h:i:A',strtotime($val['activity_planning_time']))?></li>
+                                                            <li><?php echo $val['political_geography_name']?></li>
+                                                        </ul>
 
+                                                    </div>
+
+                                                    <div id="collapse_<?php echo strtotime($val['activity_planning_date']); ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
+                                                    <?php
+                                                }
+                                                else{
+                                                    ?>
+                                                        <ul class="acc_list">
+                                                            <li>
+                                                                &nbsp;
+                                                            </li>
+                                                            <li><?php echo $val['activity_type_country_name']?></li>
+                                                            <li><?php echo $val['activity_planning_time']?></li>
+                                                            <li><?php echo $val['political_geography_name']?></li>
+                                                        </ul>
+                                        <?php
+                                                }
+                                            ?>
+                                                </div>
+                                                        <?php
+                                                $i++;
+                                            }
+                                           ?>
+                                    </div>
+                                    <?php
+                                        }
+                                        ?>
+                                </div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="tab-pane fade" id="tab2default">Default 2</div>

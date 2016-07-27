@@ -120,43 +120,43 @@ $(document).on('click', 'div.current_stock_container .edit_i', function () {
     //product_sku_id
     var product_sku_id = $("div.product_sku_id_"+id+" span.product_sku_id").text();
     $("div.product_sku_id_"+id).empty();
-    $("div.product_sku_id_"+id).append('<input type="hidden" name="product_sku_id[]" value="'+product_sku_id+'" />');
+    $("div.product_sku_id_"+id).append('<input type="hidden" name="product_sku_id[]" value="'+product_sku_id+'" required />');
 
     //cur_date
 
     var cur_date = $("div.date_"+id+" span.date").text();
 
     $("div.date_"+id).empty();
-    $("div.date_"+id).append('<input type="hidden" name="cur_date[]" value="'+cur_date+'" />');
+    $("div.date_"+id).append('<input type="hidden" name="cur_date[]" value="'+cur_date+'" required/>');
 
 
     var int_qty_value = $("div.int_qty_"+id+" span.int_qty").text();
     $("div.int_qty_"+id).empty();
-    $("div.int_qty_"+id).append('<input type="hidden" name="stock_id[]" value="'+id+'" /><input id="int_qty_'+id+'" type="text" class="int_qty allownumericwithdecimal" name="int_qty[]" value="'+int_qty_value+'"/>');
+    $("div.int_qty_"+id).append('<input type="hidden" name="stock_id[]" value="'+id+'" /><input id="int_qty_'+id+'" type="text" class="int_qty allownumericwithdecimal" name="int_qty[]" value="'+int_qty_value+'" required/>');
 
     //unrestricted_quantity
 
     var unrtd_qty = $("div.unrtd_qty_"+id+" span.unrtd_qty").text();
     $("div.unrtd_qty_"+id).empty();
-    $("div.unrtd_qty_"+id).append('<input id="unrtd_qty_'+id+'" type="text" class="allownumericwithdecimal" name="unrtd_qty[]" value="'+unrtd_qty+'"/>');
+    $("div.unrtd_qty_"+id).append('<input id="unrtd_qty_'+id+'" type="text" class="allownumericwithdecimal" name="unrtd_qty[]" value="'+unrtd_qty+'" required/>');
 
     //batch
 
     var batch = $("div.batch_"+id+" span.batch").text();
     $("div.batch_"+id).empty();
-    $("div.batch_"+id).append('<input id="batch_'+id+'" type="text" name="batch[]" value="'+batch+'"/>');
+    $("div.batch_"+id).append('<input id="batch_'+id+'" type="text" name="batch[]" value="'+batch+'" required/>');
 
     //batch_exp_date
 
     var batch_exp_date = $("div.batch_exp_date_"+id+" span.batch_exp_date").text();
     $("div.batch_exp_date_"+id).empty();
-    $("div.batch_exp_date_"+id).append('<input id="batch_exp_date_'+id+'" class="expiry_date" type="text" name="batch_exp_date[]" value="'+batch_exp_date+'"/>');
+    $("div.batch_exp_date_"+id).append('<input id="batch_exp_date_'+id+'" class="expiry_date" type="text" name="batch_exp_date[]" value="'+batch_exp_date+'" required/>');
 
     //batch_mfg_date
 
     var batch_mfg_date = $("div.batch_mfg_date_"+id+" span.batch_mfg_date").text();
     $("div.batch_mfg_date_"+id).empty();
-    $("div.batch_mfg_date_"+id).append('<input id="batch_mfg_date_'+id+'"  class="mfg_date" type="text" name="batch_mfg_date[]" value="'+batch_mfg_date+'"/>');
+    $("div.batch_mfg_date_"+id).append('<input id="batch_mfg_date_'+id+'"  class="mfg_date" type="text" name="batch_mfg_date[]" value="'+batch_mfg_date+'" required/>');
 
     $(this).prop("disabled",true);
     return false;

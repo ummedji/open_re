@@ -28,6 +28,7 @@ class Ecp extends Front_Controller
 
 		$this->load->model('ecp_model');
 		$this->load->model('ishop/ishop_model');
+		$this->load->model('esp/esp_model');
 
 		$this->set_current_user();
 		//Assets::add_module_js('ecp', 'ecp.js');
@@ -50,7 +51,14 @@ class Ecp extends Front_Controller
 		$user = $this->auth->user();
 		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 		//$materials_request = array();
 		$materials_request =  $this->ecp_model->get_all_materials_by_country_id($user->country_id,$page,$user->local_date);
 		Template::set('td', $materials_request['count']);
@@ -114,7 +122,14 @@ class Ecp extends Front_Controller
 		$status_id = (isset($_POST['status_id']) ? $_POST['status_id'] : '');
 		$employee_id = (isset($_POST['employee_id']) ? $_POST['employee_id'] : '');
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 
 		$materials_request_details = $this->ecp_model->get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id,$page,$user->local_date,$user->country_id);
 
@@ -214,7 +229,14 @@ class Ecp extends Front_Controller
 		$from_month = (isset($_POST['from_month']) ? $_POST['from_month'] : '');
 		$to_month = (isset($_POST['to_month']) ? $_POST['to_month'] : '');
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 
 		if($radio == 'total'){
 			$retailer_compititor_details = $this->ecp_model->get_retailer_compititor_details_view($from_month, $to_month,$page,$user->local_date,$user->country_id);
@@ -303,8 +325,14 @@ class Ecp extends Front_Controller
 		$from_month = (isset($_POST['from_month']) ? $_POST['from_month'] : '');
 		$to_month = (isset($_POST['to_month']) ? $_POST['to_month'] : '');
 
-		$page = (isset($_POST['page']) ? $_POST['page'] : '');
-
+		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
+		if($pag > 0)
+		{
+			$page = $pag;
+		}
+		else{
+			$page = 1;
+		}
 		if($radio == 'total'){
 			$distributor_compititor_details = $this->ecp_model->get_distributor_compititor_details_view($from_month, $to_month,$page,$user->local_date,$user->country_id);
 		}
@@ -734,13 +762,18 @@ class Ecp extends Front_Controller
 		$diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
 		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user->id,$user->country_id);
 		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
-
+		$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
 		$global_head_user = array();
 
 		$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+
 		$cur_month=date('n');
 		$cal_data = $this->getActivityDetailByMonth($cur_month);
-
+		$activity_data = $this->getActivityDetailPlanByMonth($cur_month);
+ 	//	testdata($activity_data);
+		Template::set('child_user_data', $child_user_data);
+		Template::set('activity_data', $activity_data);
+		Template::set('current_user', $user);
 		Template::set('activity_type', $activity_type);
 		Template::set('crop_details', $crop_details);
 		Template::set('product_sku', $product_sku);
@@ -757,7 +790,7 @@ class Ecp extends Front_Controller
 	public function getActivityDetailByMonth($curr_month = '')
 	{
 
-		Assets::add_module_js('ecp', 'activity_planning.js');
+		//Assets::add_module_js('ecp', 'activity_planning.js');
 		if($curr_month !='' && !empty($curr_month))
 		{
 			$cur_month = $curr_month;
@@ -767,6 +800,7 @@ class Ecp extends Front_Controller
 
 		}
 		$user = $this->auth->user();
+
 		$activity_detail = $this->ecp_model->all_activity_planning_details($user->id,$user->country_id,null,$cur_month);
 
 		$action ='activity_planning';
@@ -780,6 +814,37 @@ class Ecp extends Front_Controller
 		}
 		else{
 			return $cal_data;
+		}
+	}
+
+
+	public function getActivityDetailPlanByMonth($curr_month = '')
+	{
+		if($curr_month !='' && !empty($curr_month))
+		{
+			$cur_month = $curr_month;
+		}
+		else{
+			@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
+
+		}
+		$user = $this->auth->user();
+
+		$activity_detail = $this->ecp_model->all_activity_planning($user->id,$user->country_id,null,$cur_month);
+
+	//	testdata($activity_detail);
+		$action ='activity_planning';
+
+		//$cal_data = $this->activity_planning_sidebar_calender($activity_detail,$action);
+
+		if($curr_month =='')
+		{
+			echo json_encode($activity_detail);
+			die;
+		}
+		else{
+			//return $cal_data;
+			return $activity_detail;
 		}
 	}
 
@@ -889,10 +954,11 @@ class Ecp extends Front_Controller
 
 					if(!empty($activity_details) && !empty($action))
 					{
-						if($action == 'no_working'){
+
+						if($action == 'activity_planning'){
 							foreach($activity_details as $k => $ld)
 							{
-								if($dates == strtotime($ld['no_working_date']))
+								if($dates == strtotime($ld['activity_planning_date']))
 								{
 									$style1 = "background-color: yellow;";
 								}
@@ -915,10 +981,10 @@ class Ecp extends Front_Controller
 					$style1 = "";
 					if(!empty($activity_details) && !empty($action))
 					{
-						if($action == 'no_working'){
+						if($action == 'activity_planning_date'){
 							foreach($activity_details as $k => $ld)
 							{
-								if($activity_date == strtotime($ld['no_working_date']))
+								if($activity_date == strtotime($ld['activity_planning_date']))
 								{
 									$style1 = "background-color: yellow;";
 								}
@@ -956,11 +1022,11 @@ class Ecp extends Front_Controller
 
 		$sCalendarItself .= '<div class="navigation">';
 
-		$sCalendarItself .= '<a class="prev" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__prev_month__"].'\')"></a> ';
+		$sCalendarItself .= '<a class="prev" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__prev_month__"].'\'); getActivityPlanData(\''.$aKeys["__prev_month__"].'\');"></a> ';
 
 		$sCalendarItself .= '<div class="title" >'.$aKeys['__cal_caption__'].'</div>';
 
-		$sCalendarItself .= '<a class="next" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__next_month__"].'\')"></a>';
+		$sCalendarItself .= '<a class="next" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__next_month__"].'\'); getActivityPlanData(\''.$aKeys["__next_month__"].'\');"></a>';
 
 		$sCalendarItself .= '</div><table>
     <tr>
@@ -1032,6 +1098,78 @@ class Ecp extends Front_Controller
 		$user = $this->auth->user();
 		$get_geo_level_data = $this->ecp_model->get_demonstration_data_by_id($user->country_id);
 	}
+
+	public function check_planning_date_in_leave()
+	{
+		$planning_date = $_POST['planning_date'];
+
+		$user = $this->auth->user();
+		$check_date = $this->ecp_model->check_planning_date_in_leaves($user->id,$user->country_id,$planning_date);
+		echo $check_date;
+		die;
+
+	}
+
+	public function add_activity_planning_details()
+	{
+		$user = $this->auth->user();
+		$add= $this->ecp_model->addActivityPlanning($user->id,$user->country_id,$user->local_date);
+		echo $add;
+		die;
+	}
+
+	public function submit_activity_planning_details()
+	{
+
+		$user = $this->auth->user();
+		$activity_planning_id = isset($_POST['activity_planning_id']) ? $_POST['activity_planning_id'] : '';
+		$submit= $this->ecp_model->submitActivityPlanning($activity_planning_id,$user->id,$user->country_id);
+		echo $submit;
+		die;
+	}
+
+	public function activity_approval()
+	{
+		$user = $this->auth->user();
+		$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
+		//testdata($child_user_data);
+		$cur_month=date('Y-m');
+
+		$cal_data = $this->getApprovalActivityByMonth($cur_month);
+		Template::set('td', $cal_data['count']);
+		Template::set('pagination', (isset($cal_data['pagination']) && !empty($cal_data['pagination'])) ? $cal_data['pagination'] : '' );
+		Template::set('table', $cal_data);
+		Template::set('child_user_data', $child_user_data);
+		Template::set('current_user', $user);
+		Template::set_view('ecp/activity_approval');
+		Template::render();
+	}
+
+	public function getApprovalActivityByMonth($cur_month = '')
+		{
+			$user = $this->auth->user();
+			$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
+
+			$page = isset($_POST['page']) ?  $_POST['page'] : '';
+			$cal_data = $this->ecp_model->getApprovalActivityDetailByMonth($cur_month,$child_user_data['level_users'],$user->id,$user->country_id,$user->local_date,$page);
+
+			if($cur_month =='')
+			{
+				Template::set('td', $cal_data['count']);
+				Template::set('pagination', (isset($cal_data['pagination']) && !empty($cal_data['pagination'])) ? $cal_data['pagination'] : '' );
+				Template::set('table', $cal_data);
+				Template::set_view('ecp/activity_approval');
+
+			}
+			else{
+				return 	$cal_data;
+			}
+
+
+		}
+
+
+
 
 
 

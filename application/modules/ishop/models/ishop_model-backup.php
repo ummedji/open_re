@@ -3,6 +3,9 @@
 class Ishop_model extends BF_Model
 {
 
+    /**
+     *
+     */
     public function __construct()
     {
 
@@ -1086,7 +1089,6 @@ class Ishop_model extends BF_Model
 
     public function update_rol_limit_detail($user_id, $country_id, $web_service = null)
     {
-       /* testdata($_POST);*/
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $rol_id = explode(',', $this->input->post("rol_id"));
             $units = explode(',', $this->input->post("units"));
@@ -1102,9 +1104,9 @@ class Ishop_model extends BF_Model
         if (isset($rol_id) && !empty($rol_id)) {
             foreach ($rol_id as $k => $ri) {
                 $rol_update = array(
-                    'rol_quantity' => (isset($quantity[$k]) && !empty($quantity[$k])) ? $quantity[$k] : '0',
-                    'units' => (isset($units[$k]) && !empty($units[$k])) ? $units[$k] : '',
-                    'rol_quantity_Kg_Ltr' => (isset($rol_qty_kg_ltr[$k]) && !empty($rol_qty_kg_ltr[$k])) ? $rol_qty_kg_ltr[$k] : '',
+                    'rol_quantity' => $quantity[$k],
+                    'units' => $units[$k],
+                    'rol_quantity_Kg_Ltr' => $rol_qty_kg_ltr[$k],
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
@@ -3874,11 +3876,15 @@ class Ishop_model extends BF_Model
                 $invoice_confirmation_view['no_margin'] = '';
                 $invoice_confirmation_view['pagination'] = $invoice_confirmation['pagination'];
                 return $invoice_confirmation_view;
+
             }
             else{
                 return false;
             }
+
         }
+
+
     }
 
     public function update_invoice_confirmation_received_by_distributor($sales_id, $user_id, $country_id)
@@ -4756,7 +4762,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function get_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null,$local_date=null)
     {
-
         //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
 
         $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn,bio.created_on ';
@@ -4815,17 +4820,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $sql .= ' AND bio.order_status != 4 ';
 
         }
-
-        if($loginusertype == '9')
-        {
-            $subsql = ' AND  f_bu.role_id ="'.$loginusertype.'" ';
-
-        }
-        elseif($loginusertype == '10')
-        {
-            $subsql = ' AND  f_bu.role_id = "'.$loginusertype.'" ';
-        }
-        elseif($action_data == "get_order_status_data")
+        
+        if($action_data == "get_order_status_data")
         {
            $subsql = ' AND bu.role_id="'.$loginusertype.'" ';
         }
@@ -4838,8 +4834,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         
        // echo $action_data."</br>";
         
-      //  echo $sql;
-       // die;
+        //echo $sql;
+      //  die;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             // For Pagination
@@ -5308,7 +5304,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     }
                 }
 
-
                 $order_view['pagination'] = $orderdata['pagination'];
                 return $order_view;
             }
@@ -5363,7 +5358,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $sql .= ' AND bipo.order_id =' . $order_id . ' ';
 
-    //   echo $sql;
+      // echo $sql;
 //die;
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
@@ -5393,7 +5388,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $order_id_data = '<input type="hidden" name="order_id" value="' . $order_id . '">';
 
                     $i = 1;
-                    $k = 0;
+
                     foreach ($order_detail['result'] as $od) {
 
                         if($csv == 'csv')
@@ -5418,22 +5413,22 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                         }
                         else {
-                            $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
 
 
-                            $product_order_id = $order_id_data . '<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
+                            $product_order_id = $order_id_data . '<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
 
 
                             $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
                             $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $od['unit'] . '</span></div>';
                             $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
                             $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
-                            $amount = '<div class="amount_' . $od["product_order_id"] . '"><input type="hidden" class="amount_data" name="amount['.$k.']" value="' . $od['amount'] . '" /><span class="amount">' . $od['amount'] . '</span></div>';
+                            $amount = '<div class="amount_' . $od["product_order_id"] . '"><input type="hidden" class="amount_data" name="amount[]" value="' . $od['amount'] . '" /><span class="amount">' . $od['amount'] . '</span></div>';
 
 
                         if ($action_data == "order_approval")
                             {
-                                $dub_dispatched_data = '<input type="text" name="dispatched_quantity['.$k.']" class="dispatched_quantity" value="' . $od['dispatched_quantity'] . '" />';
+                                $dub_dispatched_data = '<input type="text" name="dispatched_quantity[]" class="dispatched_quantity" value="' . $od['dispatched_quantity'] . '" />';
                             } else {
                                 $dub_dispatched_data = '<span class="dispatched_quantity">' . $od['dispatched_quantity'] . '</span>';
                         }
@@ -5460,7 +5455,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                         }
                         $i++;
-                        $k++;
                     }
                     $product_view['eye'] = '';
 
@@ -5481,10 +5475,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     }
 
 
-                    $order_id_data = '<input type="hidden" name="order_id" value="' . $order_id . '">';
-
                     $i = 1;
-                    $k = 0;
                     foreach ($order_detail['result'] as $od) {
 
                         if ($radiochecked == "farmer") {
@@ -5500,10 +5491,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                             else
                             {
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
 
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = '<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5526,9 +5517,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                             else
                             {
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = '<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5545,7 +5536,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         }
                         $i++;
-                        $k++;
                     }
                     $product_view['eye'] = '';
 
@@ -5554,12 +5544,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     if ($action_data == "po_acknowledgement") {
 
-                        $order_id_data = '<input type="hidden" name="order_id" value="' . $order_id . '" />';
 
                         $product_view['head'] = array('Sr. No.', 'Action', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
                         $product_view['count'] = count($product_view['head']);
                         $i = 1;
-                        $k = 0;
                         foreach ($order_detail['result'] as $od) {
 
                             if($csv == 'csv')
@@ -5568,9 +5556,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
                             else
                             {
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = '<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5583,7 +5571,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
 
                             $i++;
-                            $k++;
                         }
                         $product_view['eye'] = '';
 
@@ -5611,12 +5598,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     if ($action_data == "po_acknowledgement") {
 
-                        $order_id_data = '<input type="hidden" name="order_id" value="' . $order_id . '" />';
 
                         $product_view['head'] = array('Sr. No.', 'Action', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
                         $product_view['count'] = count($product_view['head']);
                         $i = 1;
-                        $k = 0;
                         foreach ($order_detail['result'] as $od) {
 
                             if($csv == 'csv')
@@ -5624,9 +5609,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'] , $od['quantity_kg_ltr']);
                             }
                             else{
-                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
+                                $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr[]" value="' . $od['quantity_kg_ltr'] . '">';
 
-                                $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
+                                $product_order_id = '<input type="hidden" name="order_product_id[]" value="' . $od["product_order_id"] . '">';
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
@@ -5639,7 +5624,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             }
 
                             $i++;
-                            $k++;
                         }
                         $product_view['eye'] = '';
 
@@ -5737,8 +5721,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $detail_data["amount"] = explode(',', @$detail_data["amount"]);
         }
 
-        $final_array = array();
-
         if (!empty($detail_data["order_product_id"])) {
 
             $total_amount = 0;
@@ -5797,35 +5779,19 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $this->db->where('product_order_id', $order_product_id);
                 $this->db->update('bf_ishop_product_order', $update_array);
 
-                if($this->db->affected_rows() > 0){
-                    $final_array[] = 1;
-                }
-
                 $amount_data = array(
                     'total_amount' => $total_amount
                 );
 
                 $id = $this->db->update('bf_ishop_orders', $amount_data, array('order_id' => $detail_data["order_id"]));
-
             }
 
         }
-
-        //testdata($final_array);
-
-        if(in_array(1,$final_array)){
-            $res = 1;
+        if($this->db->affected_rows() > 0){
+            return 1;
         }
         else{
-            $res = 0;
-        }
-
-        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-            return $res;
-        }
-        else{
-            echo $res;
-            die;
+            return 0;
         }
 
     }
@@ -5901,6 +5867,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function update_order_data($orderdata, $web_service = null)
     {
+
         if (!empty($orderdata)) {
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
@@ -5918,9 +5885,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 }
             }
 
-
-            $return = array();
-          //  $orderdata=array();
             foreach ($orderdata["order_data"] as $key => $value) {
 
 
@@ -5955,16 +5919,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $this->db->where('order_id', $value);
                     $id = $this->db->update('bf_ishop_orders', $update_array);
 
-
-                    if($this->db->affected_rows() > 0){
-                        $return[]=1;
-                    }
-
                 }
             }
         }
 
-        if(in_array(1,$return)){
+        if($this->db->affected_rows() > 0){
             return 1;
         }
         else{
@@ -6013,39 +5972,36 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function add_target_data($target_data, $user_id, $web_service = null, $country_id = null, $role_id = null)
     {
-       // testdata($target_data);
+        //testdata($target_data);
         
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             
             if(isset($target_data) && !empty($target_data)) 
             {
                 
-                // foreach ($target_data as $key => $value) {
-
-                    // dumpme($value)
+                 foreach ($target_data as $key => $value) {
 
                     $target_array = array();
 
-                    $target_array["month_data"] = $target_data["month"]."-01";
-                    $target_array["customer_id"] = $target_data["customer_id"];
-                    $target_array["product_sku_id"] = $target_data["prod_sku"];
-                    $target_array["quantity"] = $target_data["quantity"];
-                    $target_array["country_id"] = $country_id;
+                    $target_array["month_data"] = $value[0];
+                    $target_array["customer_id"] = $value[1];
+                    $target_array["product_sku_id"] = $value[2];
+                    $target_array["quantity"] = $value[3];
 
                     $target_array["created_on"] = date("Y-m-d h:i:s");
                     $target_array["created_by_user"] = $user_id;
 
                      
-                    $check_already_data = $this->check_target_data($target_data["prod_sku"], $target_data["month"]."-01", $target_data["customer_id"]);
+                    $check_already_data = $this->check_target_data($value[2], $value[0], $value[1]);
                      
                     if ($check_already_data == 0) {
                        $id = $this->db->insert('bf_ishop_target', $target_array);
                     } else {
                         $target_update_data = array(
-                            'month_data' => $target_data["month"]."-01",
-                            'customer_id' => $target_data["customer_id"],
-                            'product_sku_id' => $target_data["prod_sku"],
-                            'quantity' => $target_data["quantity"],
+                            'month_data' => $value[0],
+                            'customer_id' => $value[1],
+                            'product_sku_id' => $value[2],
+                            'quantity' => $value[3],
                             'modified_by_user' => $user_id,
                             'country_id' => $country_id,
                             'status' => '1',
@@ -6057,7 +6013,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     }
                     
-              //  }
+                }
                 
                 
             }
@@ -6351,7 +6307,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     public function get_budget_details($user_id, $country_id, $checked_type = null, $page = null, $web_service = null)
     {
         // $sql =' SELECT * ';
-        $sql = ' SELECT SQL_CALC_FOUND_ROWS mpgd.political_geography_name,ib.ishop_budget_id,bu.user_code,bu.display_name,mpsc.product_sku_name,ib.quantity ';
+        $sql = ' SELECT mpgd.political_geography_name,ib.ishop_budget_id,bu.user_code,bu.display_name,mpsc.product_sku_name,ib.quantity ';
         $sql .= ' FROM bf_ishop_budget AS ib ';
         $sql .= ' JOIN bf_users AS bu  ON (bu.id = ib.customer_id) ';
         $sql .= ' JOIN bf_master_product_sku_country AS mpsc ON (mpsc.product_sku_id = ib.product_sku_id) ';
@@ -6369,16 +6325,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-
-            // For Pagination
-            $limit = 10;
-            $pagenum = $this->input->get_post('page');
-            $page = !empty($pagenum) ? $pagenum : 1;
-            $offset = $page*$limit-$limit;
-            $sql .= ' LIMIT '.$offset.",".$limit;
             $info = $this->db->query($sql);
-            // For Pagination
-
             $budget_details = $info->result_array();
             return $budget_details;
         } else {
@@ -7121,8 +7068,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             return false;
         }
     }
-
-
 
     public function physical_stock_by_for_report($user_id, $country_id, $role_id, $checked_type = null, $page = null, $web_service = null,$stock_month=null,$local_date = null)
     {

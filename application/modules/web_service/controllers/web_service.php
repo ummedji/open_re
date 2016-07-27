@@ -278,6 +278,13 @@ class Web_service extends Front_Controller
             $compititor = $this->ecp_model->get_all_copititor_data($country_id);
             $reason=$this->ecp_model->all_reason_noworking_details($country_id);
             $leave_type=$this->ecp_model->all_leave_type_details($country_id);
+            $diseases_details = $this->ecp_model->get_diseases_by_user_id($country_id);
+            $activity_type = $this->ecp_model->activity_type_details($country_id);
+            $crop_details = $this->ecp_model->crop_details_by_country_id($country_id);
+            $key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user_id,$country_id);
+            $global_head_user = array();
+            $employee_visit = $this->ecp_model->get_employee_for_loginuser($user_id,$global_head_user);
+            //testdata($employee_visit);
 
             $dist_array = array();
             if (!empty($distributors)) {
@@ -372,8 +379,65 @@ class Web_service extends Front_Controller
                 }
             }
 
+            $diseases_array = array();
+            if (!empty($diseases_details)) {
+                foreach ($diseases_details as $diseases) {
+                    $disease = array(
+                        "id" => $diseases['disease_country_id'],
+                        "disease_name" => $diseases['disease_name'],
+                    );
+                    array_push($diseases_array, $disease);
+                }
+            }
 
-            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units,"materials" => $mtl_array,"compititor" =>$comp_array,"reasons" => $reason_array,"leave_type" =>$leave_type_array ,"status" =>$status);
+            $crop_array = array();
+            if (!empty($crop_details)) {
+                foreach ($crop_details as $crops) {
+                    $crop = array(
+                        "id" => $crops['crop_country_id'],
+                        "crop_name" => $crops['crop_name'],
+                    );
+                    array_push($crop_array, $crop);
+                }
+            }
+
+            $activity_array = array();
+            if (!empty($activity_type)) {
+                foreach ($activity_type as $activity) {
+                    $activitys = array(
+                        "id" => $activity['activity_type_country_id'],
+                        "activity_code" => $activity['activity_type_code'],
+                        "activity_name" => $activity['activity_type_country_name'],
+                    );
+                    array_push($activity_array, $activitys);
+                }
+            }
+
+            $farmers_array = array();
+            if (!empty($key_farmer)) {
+                foreach ($key_farmer as $farmer) {
+                    $farmers = array(
+                        "id" => $farmer['id'],
+                        "farmer_name" => $farmer['display_name'],
+                        "mobile" => $farmer['primary_mobile_no'],
+                    );
+                    array_push($farmers_array, $farmers);
+                }
+            }
+
+            $employee_array = array();
+            if (!empty($employee_visit)) {
+                foreach ($employee_visit as $employee) {
+                    $employees = array(
+                        "id" => $employee['id'],
+                        "employee_name" => $employee['display_name'],
+                    );
+                    array_push($employee_array, $employees);
+                }
+            }
+
+
+            $data = array("distributors" => $dist_array,"retailers" =>$ret_array, "products_skus" => $sku_array, "units" => $units,"materials" => $mtl_array,"compititor" =>$comp_array,"reasons" => $reason_array,"leave_type" =>$leave_type_array ,"status" =>$status , "diseases" => $diseases_array, "crops" => $crop_array,"activity" => $activity_array, "key_farmers"=>$farmers_array,"joint_visit"=>$employee_array);
         //  testdata($data);
             $result['status'] = true;
             $result['message'] = 'Success';
@@ -4203,6 +4267,11 @@ class Web_service extends Front_Controller
             $result['message'] = "All Fields are Required.";
         }
         $this->do_json($result);
+    }
+
+    public function getActivityPlanning()
+    {
+
     }
 
 

@@ -155,7 +155,7 @@ class Ecp_model extends BF_Model
                 $material['head'] = array('Sr. No.', 'Action', 'Date', 'Mr.Id', 'Material', 'Quantity', 'Employee Name', 'Status', 'Received', 'Last Update', 'Last Updated By', 'Dispatch Date');
                 $material['count'] = count($material['head']);
                 if ($page != null || $page != "") {
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }
@@ -296,7 +296,7 @@ class Ecp_model extends BF_Model
                 $material['head'] = array('Sr. No.', 'Action', 'Mr.Id', 'Employee Code', 'Employee Name', 'Designation', 'Requested Date', 'Requested Material', 'Requested Quantity', 'Dispatched Date', 'Dispatched Quantity', 'Remark', 'Status', 'Received Status', 'Executor Remark',);
                 $material['count'] = count($material['head']);
                 if ($page != null || $page != "") {
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }
@@ -336,7 +336,7 @@ class Ecp_model extends BF_Model
                     }
 
                     if ($rm['material_request_status'] == '0') {
-                        $request_status = '<select name="request_status" class="request_status" id="request_status" ><option value="0">Pending</option><option  value="1">Approve</option><option  value="1">Reject</option></select>
+                        $request_status = '<select name="request_status" class="request_status" id="request_status" ><option value="0">Pending</option><option  value="1">Approve</option><option  value="2">Reject</option></select>
                     <input type="hidden" id="mr_id" class="mr_id" name="mr_id[]" value="' . $rm['material_request_id'] . '">';
                     } elseif ($rm['material_request_status'] == '1') {
                         $request_status = 'Approve';
@@ -761,7 +761,7 @@ class Ecp_model extends BF_Model
                 $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date', 'Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Amount');
                 $analysis['count'] = count($analysis['head']);
                 if ($page != null || $page != "") {
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }
@@ -832,7 +832,7 @@ class Ecp_model extends BF_Model
                 $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date', 'Month', 'Geo Level', 'Retailer Code', 'Retailer Name', 'Compititor Name', 'Compititor Product Name', 'Quantity', 'Our Product');
                 $analysis['count'] = count($analysis['head']);
                 if ($page != null || $page != "") {
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }
@@ -902,7 +902,7 @@ class Ecp_model extends BF_Model
                 $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date', 'Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Amount');
                 $analysis['count'] = count($analysis['head']);
                 if ($page != null || $page != "") {
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }
@@ -975,7 +975,7 @@ class Ecp_model extends BF_Model
                 $analysis['head'] = array('Sr. No.', 'Action', 'Entry Date', 'Month', 'Geo Level', 'Distributor Code', 'Distributor Name', 'Compititor Name', 'Compititor Product Name', 'Quantity', 'Our Product');
                 $analysis['count'] = count($analysis['head']);
                 if ($page != null || $page != "") {
-                    $i = $page * 10 - 9;
+                    $i = (($page * 10) - 9);
                 } else {
                     $i = 1;
                 }
@@ -1534,11 +1534,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
-    public function get_KeyFarmer_by_user_id($user_id, $country_id)
+    public function get_KeyFarmer_by_user_id($user_id,$country_id)
     {
-        $this->db->select('bu.id,bu.display_name');
+        $this->db->select('bu.id,bu.display_name,mucd.primary_mobile_no');
         $this->db->from('bf_master_employe_to_customer as metc');
         $this->db->join('users as bu', 'bu.id=metc.customer_id');
+        $this->db->join('master_user_contact_details as mucd', 'mucd.user_id = bu.id');
         $this->db->where('bu.country_id', $country_id);
         $this->db->where('employee_id', $user_id);
         $this->db->where('bu.role_id', '11');
@@ -1617,16 +1618,20 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     public function all_activity_planning_details($user_id, $country_id, $web_service = null,$cur_month=null)
     {
         if (isset($web_service) && !empty($web_service) && $web_service == 'web_service') {
-            $this->db->select('*');
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
         } else {
-            $this->db->select('activity_planning_date');
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_id');
         }
-        $this->db->from('ecp_activity_planning');
-        $this->db->where('country_id', $country_id);
-        $this->db->where('employee_id', $user_id);
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd','mpgd.political_geo_id = eap.geo_level_id');
+
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.employee_id', $user_id);
         if (!isset($web_service) && empty($web_service) && $web_service != 'web_service') {
-            $this->db->where('DATE_FORMAT(activity_planning_date,"%c")', $cur_month);
+            $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%c")', $cur_month);
         }
+
         $activity_details = $this->db->get()->result_array();
 
         if (isset($activity_details) && !empty($activity_details)) {
@@ -1635,4 +1640,413 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             return false;
         }
     }
+
+    public function all_activity_planning($user_id, $country_id, $web_service = null,$cur_month=null)
+    {
+        // testdata($cur_month);
+        if (isset($web_service) && !empty($web_service) && $web_service == 'web_service') {
+            $this->db->select('*');
+        } else {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        }
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd','mpgd.political_geo_id = eap.geo_level_id');
+
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.employee_id', $user_id);
+        if (!isset($web_service) && empty($web_service) && $web_service != 'web_service') {
+            $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%c")', $cur_month);
+        }
+        $this->db->order_by('eap.activity_planning_date', 'ASC');
+
+        $activity_details = $this->db->get()->result_array();
+
+       // testdata($activity_details);
+
+        if (isset($activity_details) && !empty($activity_details)) {
+
+            $date_array = array();
+
+            foreach ($activity_details as $k => $val)
+            {
+                $date_array[$val["activity_planning_date"]][] = $val;
+            }
+
+          //  testdata($date_array);
+            return $date_array;
+        } else {
+            return false;
+        }
+    }
+
+
+    public function check_planning_date_in_leaves($user_id, $country_id,$planning_date)
+    {
+        $this->db->select("*");
+        $this->db->from("ecp_leave");
+        $this->db->where("employee_id",$user_id);
+        $this->db->where("country_id",$country_id);
+        $this->db->where("leave_date", $planning_date);
+        $query = $this->db->get();
+        $rowcount = $query->num_rows();
+        if ($rowcount > 0) {
+            return 1;
+        } else {
+            $this->db->select("*");
+            $this->db->from("ecp_no_wokring");
+            $this->db->where("employee_id",$user_id);
+            $this->db->where("country_id",$country_id);
+            $this->db->where("no_working_date", $planning_date);
+            $query = $this->db->get();
+            $rowcount = $query->num_rows();
+
+        }
+        if ($rowcount > 0) {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
+    public function addActivityPlanning($user_id,$country_id,$local_date=null,$web_service=null)
+    {
+       // testdata($_POST);
+        $activity_type_id = $this->input->post("activity_type_id");
+
+        $geo_level_4 = $this->input->post("geo_level_4");
+        $geo_level_3 = $this->input->post("geo_level_3");
+        if(isset($geo_level_4) && !empty($geo_level_4))
+        {
+            $geo_level = $geo_level_4;
+        }
+        else{
+            $geo_level = $geo_level_3;
+        }
+        $activity_address = $this->input->post("activity_address");
+        $pod = $this->input->post("pod");
+        $set_alert = $this->input->post("set_alert");
+        $attandence_count = $this->input->post("attandence_count");
+        $size_of_plot = $this->input->post("size_of_plot");
+        $spray_volume = $this->input->post("spray_volume");
+
+        if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
+        {
+            $planning_date = $this->input->post("planning_date");
+            $pl_time = $this->input->post("planning_time");
+            $date_time= $planning_date.' '.$pl_time;
+            $planning_date_time = date('Y-m-d h:i:s', strtotime($date_time));
+            $crop = $this->input->post("crop");
+            $product_sku = $this->input->post("product_sku");
+            $diseases = $this->input->post("diseases");
+            $farmers = $this->input->post("farmers");
+            $farmer_num = $this->input->post("farmer_num");
+            $digital_id  = $this->input->post("digital_id");
+            $joint_id  = $this->input->post("joint_id");
+            $product_samples = $this->input->post("product_samples");
+            $product_samples_qty = $this->input->post("product_samples_qty");
+            $product_materials = $this->input->post("product_materials");
+            $product_materials_qty = $this->input->post("product_materials_qty");
+            $materials = $this->input->post("materials");
+            $materials_qty = $this->input->post("materials_qty");
+        }
+        else{
+            $plan_date = $this->input->post("planning_date");
+            $pl_date = str_replace('/', '-', $plan_date);
+            $planning_date = date('Y-m-d', strtotime($pl_date));
+
+            $pl_time = $this->input->post("planning_time");
+            $date_time= $planning_date.' '.$pl_time;
+            $planning_date_time = date('Y-m-d h:i:s', strtotime($date_time));
+            $crop = $this->input->post("crop");
+            $product_sku = $this->input->post("product_sku");
+            $diseases = $this->input->post("diseases");
+            $farmers = $this->input->post("farmers");
+            $farmer_num = $this->input->post("farmer_num");
+            $digital_id  = $this->input->post("digital_id");
+            $joint_id  = $this->input->post("joint_id");
+            $product_samples = $this->input->post("product_samples");
+            $product_samples_qty = $this->input->post("product_samples_qty");
+            $product_materials = $this->input->post("product_materials");
+            $product_materials_qty = $this->input->post("product_materials_qty");
+            $materials = $this->input->post("materials");
+            $materials_qty = $this->input->post("materials_qty");
+        }
+
+        $activity_planning = array(
+            'activity_planning_date' => isset($planning_date) ? $planning_date : '',
+            'activity_planning_time' => isset($planning_date_time) ? $planning_date_time : '',
+            'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
+            'geo_level_id' => isset($geo_level) ? $geo_level : '',
+            'location' => isset($activity_address) ? $activity_address :''   ,
+            'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : '',
+            'point_discussion' => isset($pod) ? $pod : '',
+            'alert' => isset($set_alert) ? $set_alert : '',
+            'size_of_plot' => isset($size_of_plot) ? $size_of_plot : '',
+            'spray_volume' => isset($spray_volume) ? $spray_volume : '',
+            'amount' => '0',
+            'employee_id' => $user_id,
+            'country_id' => $country_id,
+            'status' => '0',
+            'submit_status' => '0',
+            'reference_type' => '0',
+            'reference_id' => '0',
+            'created_by_user' => $user_id,
+            'created_on' => date('Y-m-d H:i:s'),
+            'modified_on' => date('Y-m-d H:i:s'),
+
+        );
+
+        if ($this->db->insert('ecp_activity_planning', $activity_planning)) {
+
+            $insert_id = $this->db->insert_id();
+
+            if(isset($crop) && !empty($crop)){
+
+                foreach ($crop as $key => $crp) {
+                    $corp_detail = array(
+                        'activity_planning_id' => $insert_id,
+                        'crop_id' => isset($crp) ? $crp : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_crop_details', $corp_detail);
+                }
+            }
+
+            if(isset($product_sku) && !empty($product_sku)){
+                foreach ($product_sku as $key => $prd_sku) {
+                    $product_detail = array(
+                        'activity_planning_id' => $insert_id,
+                        'product_sku_id' => isset($prd_sku) ? $prd_sku : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_product_details', $product_detail);
+
+                }
+            }
+
+
+            if(isset($diseases) && !empty($diseases)){
+
+                foreach ($diseases as $key => $val) {
+                    $diseases_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'diseases_id' => isset($val) ? $val : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_diseases_details', $diseases_details);
+
+                }
+            }
+
+            if(isset($farmers) && !empty($farmers)){
+
+                foreach($farmers as $k => $val_frm)
+                {
+                    $key_farmer_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'customer_id' => isset($val_frm) ? $val_frm : '',
+                        'mobile_no' => isset($farmer_num[$k]) ? $farmer_num[$k] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_key_customer_details', $key_farmer_details);
+                }
+            }
+
+
+            if(isset($digital_id) && !empty($digital_id)){
+
+                foreach($digital_id as $k => $val_digital)
+                {
+
+                    $digital_library_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'digital_library_id' => isset($val_digital) ? $val_digital : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_digital_library_details', $digital_library_details);
+                }
+            }
+
+
+            if(isset($joint_id) && !empty($joint_id)){
+
+                foreach($joint_id as $k =>$val_joint)
+                {
+                    $joint_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'employee_id' => isset($val_joint) ? $val_joint : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_joint_visit_details', $joint_details);
+                }
+
+            }
+
+
+            if(isset($product_samples) && !empty($product_samples)){
+
+                foreach($product_samples as $K=> $val_product)
+                {
+                    $product_samples_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'product_sku_id' => isset($val_product) ? $val_product : '',
+                        'quantity' => isset($product_samples_qty[$K]) ? $product_samples_qty[$K] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_promo_sample_details', $product_samples_details);
+                }
+
+            }
+
+
+            if(isset($product_materials) && !empty($product_materials)){
+
+                foreach($product_materials as $K=> $vals)
+                {
+                    $product_materials_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'product_sku_id' => isset($vals) ? $vals :'',
+                        'quantity' => isset($product_materials_qty[$K]) ? $product_materials_qty[$K] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_required_product_details', $product_materials_details);
+                }
+
+            }
+
+
+            if(isset($materials) && !empty($materials)){
+
+                foreach($materials as $K=> $val_materials)
+                {
+                    $materials_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'material_id' => isset($val_materials) ? $val_materials : '',
+                        'quantity' => isset($materials_qty[$K]) ? $materials_qty[$K] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_required_material_details', $materials_details);
+                }
+
+            }
+
+            return $insert_id;
+        }
+
+    }
+
+    public function submitActivityPlanning($activity_planning_id,$user_id,$country_id)
+    {
+        $submit_activity = array(
+            'status' => '1',
+            'submit_status' => '1',
+            'submit_date' =>  date('Y-m-d H:i:s'),
+            'modified_by_user' => $user_id,
+            'modified_on' => date('Y-m-d H:i:s')
+        );
+
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $this->db->where('employee_id',$user_id);
+        $this->db->where('country_id',$country_id);;
+        $this->db->update('ecp_activity_planning', $submit_activity);
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public function getApprovalActivityDetailByMonth($cur_month,$child_user,$id,$country_id,$local_date = null,$page=null)
+    {
+       // $sql = 'SELECT * ';
+        $sql = 'SELECT eap.activity_planning_id,eap.activity_planning_date,bu.display_name,bu.user_code,mdc.desigination_country_name,eamc.activity_type_country_name,eap.status ';
+        $sql .= 'FROM bf_ecp_activity_planning AS eap ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = eap.employee_id) ';
+        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.role_id = bu.role_id) ';
+        $sql .= 'JOIN bf_master_designation_country AS mdc ON (mdc.desigination_country_id = mdr.desigination_role_id) ';
+        $sql .= 'JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND eap.employee_id  IN ('. $child_user .')';
+        $sql .= ' AND eap.country_id ="' . $country_id . '" ';
+        $sql .= ' AND eap.status != 0 ';
+        $sql .= ' AND DATE_FORMAT(eap.activity_planning_date,"%Y-%m") ="'. $cur_month . '" ';
+        $sql .= 'ORDER BY eap.activity_planning_id  DESC ';
+
+        if (!empty($web_service) && $web_service == 'web_service') {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
+            $info = $this->db->query($sql);
+            // For Pagination
+            $material = $info->result_array();
+            return $material;
+        } else
+        {
+            $activity_approval = $this->grid->get_result_res($sql);
+            //testdata($activity_approval);
+            if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
+
+                $activity['head'] = array('Sr. No.', 'Edit', 'Employee Name', 'Employee Code', 'Designation', 'Activity Planned Date', 'Activity Type','Action');
+
+                $activity['count'] = count($activity['head']);
+                if ($page != null || $page != "") {
+                    $i = (($page * 10) - 9);
+                } else {
+                    $i = 1;
+                }
+
+                foreach ($activity_approval['result'] as $rm) {
+
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['activity_planning_date']);
+                        $activity_date = date($local_date, $date3);
+
+                    } else {
+                        $activity_date = $rm['activity_planning_date'];
+                    }
+                    if($rm['status'] == 1)
+                    {
+                        $approval_status = '<select name="status" class="approval_status" id="approval_status" >
+                                            <option  value="2">Approve</option><option  value="3">Reject</option></select>
+                    <input type="hidden" id="activity_id" class="activity_id" name="activity_id[]" value="' . $rm['activity_planning_id'] . '">';
+                    }
+                    else{
+                        if($rm['status'] == '2')
+                        {
+                            $approval_status = 'Approve';
+                        }
+                        elseif($rm['status'] == '3'){
+                            $approval_status = 'Reject';
+                        }
+                        elseif($rm['status'] == '4'){
+                            $approval_status = 'Executed';
+                        }
+                        else{
+                            $approval_status = 'Canceled';
+                        }
+                    }
+
+
+                    $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['user_code'], $rm['desigination_country_name'],$activity_date, $rm['activity_type_country_name'],$approval_status );
+                    $i++;
+                }
+                $activity['eye'] = '';
+                $activity['action'] = 'is_action';
+                $activity['edit'] = 'is_edit';
+                $activity['delete'] = '';
+                $activity['pagination'] = $activity_approval['pagination'];
+               // testdata($activity);
+                return $activity;
+            } else {
+                return false;
+            }
+        }
+    }
+
 }

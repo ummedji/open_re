@@ -1,13 +1,12 @@
 $(document).ready(function() {
-
-    $('#to_date').datepicker({
+    $('#planning_date').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true
+    }).on('changeDate',function(e){
+        dateChangeEvent(e);
     });
 
-    $('#timepicker1').timepicker({
-        format: "hh:mm",
-        autoclose:true
+    $('#planning_time').timepicker({
 
     });
 
@@ -24,117 +23,92 @@ $(document).ready(function() {
 
     });
 
+    /*Validation Rule*/
+
+    var activity_planning_validators = $("#activity_planning").validate({
+        ignore: ".ignore",
+        rules: {
+            planning_date:{
+                required: true
+            },
+            planning_time:{
+                required: true
+            },
+            activity_type_id:{
+                required: true
+            },
+            geo_level_2:{
+                required: true
+            },
+            geo_level_3:{
+                required: true
+            },
+            geo_level_4:{
+                required: true
+            },
+            activity_address:{
+                required: true
+            },
+            crop_id:{
+                required: true
+            },
+            product_sku_id:{
+                required: true
+            },
+            diseases_id:{
+                required: true
+            },
+            farmer_id:
+            {
+                required: true
+            },
+            farmer_no:
+            {
+                required: true
+            },
+            /*   farmer_id:
+             {
+             required: true
+             },
+             farmer_id:
+             {
+             required: true
+             }*/
+        }
+    });
+
+    /*Validation Rule*/
+
+
+
     $("#add_farmer").click(function() {
 
-        add_farmer();
+        $('#farmer_id').removeClass('ignore');
+        $('#farmer_no').removeClass('ignore');
 
-      /*  $('#prod_sku').removeClass('ignore');
-        $('#dispatched_qty').removeClass('ignore');
-        $('#amt').removeClass('ignore');
-        // alert(already_assign_error);
-        var $valid = $("#primary_sales").valid();
-        if(!$valid || already_assign_error == 1) {
-
-            primary_sales_validators.focusInvalid();
-            if(already_assign_error == 1) {
-                $('.errors').css('display', 'block');
-                $('#invoice_no_error').html('Invoice Number already Assign!');
-            }
-            else{
-                already_assign_error = 0;
-                $('.errors').css('display','none');
-                $('#invoice_no_error').empty();
-            }
+        var $valid = $("#activity_planning").valid();
+        if(!$valid) {
+            activity_planning_validators.focusInvalid();
             return false;
         }
         else
         {
-            add_row();
-        }*/
-
+            add_farmer();
+        }
     });
 
 
 
     $("#add_product").click(function() {
         add_product();
-        /*  $('#prod_sku').removeClass('ignore');
-         $('#dispatched_qty').removeClass('ignore');
-         $('#amt').removeClass('ignore');
-         // alert(already_assign_error);
-         var $valid = $("#primary_sales").valid();
-         if(!$valid || already_assign_error == 1) {
-
-         primary_sales_validators.focusInvalid();
-         if(already_assign_error == 1) {
-         $('.errors').css('display', 'block');
-         $('#invoice_no_error').html('Invoice Number already Assign!');
-         }
-         else{
-         already_assign_error = 0;
-         $('.errors').css('display','none');
-         $('#invoice_no_error').empty();
-         }
-         return false;
-         }
-         else
-         {
-         add_row();
-         }*/
     });
 
     $("#add_product_material").click(function() {
         add_product_material();
-        /*  $('#prod_sku').removeClass('ignore');
-         $('#dispatched_qty').removeClass('ignore');
-         $('#amt').removeClass('ignore');
-         // alert(already_assign_error);
-         var $valid = $("#primary_sales").valid();
-         if(!$valid || already_assign_error == 1) {
-
-         primary_sales_validators.focusInvalid();
-         if(already_assign_error == 1) {
-         $('.errors').css('display', 'block');
-         $('#invoice_no_error').html('Invoice Number already Assign!');
-         }
-         else{
-         already_assign_error = 0;
-         $('.errors').css('display','none');
-         $('#invoice_no_error').empty();
-         }
-         return false;
-         }
-         else
-         {
-         add_row();
-         }*/
     });
 
     $("#add_material").click(function() {
         add_material();
-        /*  $('#prod_sku').removeClass('ignore');
-         $('#dispatched_qty').removeClass('ignore');
-         $('#amt').removeClass('ignore');
-         // alert(already_assign_error);
-         var $valid = $("#primary_sales").valid();
-         if(!$valid || already_assign_error == 1) {
-
-         primary_sales_validators.focusInvalid();
-         if(already_assign_error == 1) {
-         $('.errors').css('display', 'block');
-         $('#invoice_no_error').html('Invoice Number already Assign!');
-         }
-         else{
-         already_assign_error = 0;
-         $('.errors').css('display','none');
-         $('#invoice_no_error').empty();
-         }
-         return false;
-         }
-         else
-         {
-         add_row();
-         }*/
     });
 
 
@@ -148,20 +122,20 @@ function add_farmer()
     var farmer_name = $('#farmer_id option:selected').attr('attr-name');
     var farmer_no = $('#farmer_no').val();
 
-    $("#farmer_detail").append(
-        "<tr>"+
+    var d =  "<tr>"+
         "<td data-title='Key Farmer'>" +
         "<input class='input_remove_border' type='text' value='"+farmer_name+"' readonly/>" +
-        "<input type='hidden' name='farmer_id[]' value='"+farmer_id+"'/>" +
+        "<input type='hidden' name='farmers[]' value='"+farmer_id+"'/>" +
         "</td>"+
         "<td data-title='Mobile No.'>" +
-        "<input type='text' class='input_remove_border' name='farmer_no[]' value='"+farmer_no+"' readonly/>" +
+        "<input type='text' class='input_remove_border' name='farmer_num[]' value='"+farmer_no+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i farmer_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
         "</td>"+
-        "</tr>"
-    );
+        "</tr>";
+
+    $("#farmer_detail").append(d);
     $('#farmer_id').selectpicker('val', '');
     $('#farmer_no').val('');
 }
@@ -186,10 +160,10 @@ function add_product()
         "<tr>"+
         "<td data-title='Products'>" +
         "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
-        "<input type='hidden' name='product_sample_id[]' value='"+sku_id+"'/>" +
+        "<input type='hidden' name='product_samples[]' value='"+sku_id+"'/>" +
         "</td>"+
         "<td data-title='Qty.'>" +
-        "<input type='text' class='input_remove_border allownumericwithdecimal' name='qty[]' value='"+qty+"' readonly/>" +
+        "<input type='text' class='input_remove_border allownumericwithdecimal' name='product_samples_qty[]' value='"+qty+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i product_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -221,10 +195,10 @@ function add_product_material()
         "<tr>"+
         "<td data-title='Products'>" +
         "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +
-        "<input type='hidden' name='product_material_id[]' value='"+sku_id+"'/>" +
+        "<input type='hidden' name='product_materials[]' value='"+sku_id+"'/>" +
         "</td>"+
         "<td data-title='Qty.'>" +
-        "<input type='text' class='input_remove_border allownumericwithdecimal' name='qty_product[]' value='"+qty+"' readonly/>" +
+        "<input type='text' class='input_remove_border allownumericwithdecimal' name='product_materials_qty[]' value='"+qty+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i product_material_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -255,10 +229,10 @@ function add_material()
         "<tr>"+
         "<td data-title='Materials'>" +
         "<input class='input_remove_border' type='text' value='"+material_name+"' readonly/>" +
-        "<input type='hidden' name='material_id[]' value='"+material_id+"'/>" +
+        "<input type='hidden' name='materials[]' value='"+material_id+"'/>" +
         "</td>"+
         "<td data-title='Qty.'>" +
-        "<input type='text' class='input_remove_border' name='qty_material[]' value='"+qty+"' readonly/>" +
+        "<input type='text' class='input_remove_border' name='materials_qty[]' value='"+qty+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i material_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -309,18 +283,18 @@ function set_activity_type(activity_type_selected){
         get_geo_fo_userdata(activity_type_selected);
 
         var geo_1 = '';
-        geo_1 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
+        geo_1 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
             '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
             '<option value="">Select Geo 2</option>'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
             '</select>'+
@@ -348,18 +322,18 @@ function set_activity_type(activity_type_selected){
         get_geo_fo_userdata(activity_type_selected);
 
         var geo_2 = '';
-        geo_2 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
+        geo_2 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
             '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
             '<option value="">Select Geo 2</option>'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
             '</select>'+
@@ -376,13 +350,13 @@ function set_activity_type(activity_type_selected){
         get_geo_fo_userdata(activity_type_selected);
 
         var geo_3 = '';
-        geo_3 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
+        geo_3 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
             '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
             '<option value="">Select Geo 2</option>'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
             '</select>'+
@@ -415,10 +389,10 @@ function set_activity_type(activity_type_selected){
         geo_4 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
             '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
-            '<option value="">Select Geo 2</option>'+
+            '<option value="">Select Geo 2<span style="color: red">*</span></option>'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
             '</select>'+
@@ -436,18 +410,18 @@ function set_activity_type(activity_type_selected){
         get_geo_fo_userdata(activity_type_selected);
 
         var geo_5 = '';
-        geo_5 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
+        geo_5 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
             '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
             '<option value="">Select Geo 2</option>'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
             '</select>'+
@@ -503,18 +477,18 @@ function set_activity_type(activity_type_selected){
         //get_demonstration_data();
 
         var geo_6 = '';
-        geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
+        geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
             '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
             '<option value="">Select Geo 2</option>'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
             '</select>'+
             '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4</label></div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select">'+
             '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
             '</select>'+
@@ -747,6 +721,7 @@ function get_mobile_number_by_farmer_id(farmer_id)
         data: {farmer_id:farmer_id},
         dataType : 'json',
         success: function(resp){
+            alert('in');
             $("input#farmer_no").val(resp.primary_mobile_no);
         }
     });
@@ -796,7 +771,7 @@ function selectCrop(select)
     var text = document.createTextNode(option.firstChild.data);
 
     input.type = 'hidden';
-    input.name = 'crop_id[]';
+    input.name = 'crop[]';
     input.value = option.value;
 
     li.appendChild(input);
@@ -823,7 +798,7 @@ function selectProducts(select)
     var text = document.createTextNode(option.firstChild.data);
 
     input.type = 'hidden';
-    input.name = 'product_sku_id[]';
+    input.name = 'product_sku[]';
     input.value = option.value;
 
     li.appendChild(input);
@@ -850,7 +825,7 @@ function selectDiseases(select)
     var text = document.createTextNode(option.firstChild.data);
 
     input.type = 'hidden';
-    input.name = 'diseases_id[]';
+    input.name = 'diseases[]';
     input.value = option.value;
 
     li.appendChild(input);
@@ -886,8 +861,6 @@ $(document).ready(function() {
 
 function getActivityCalenderData(iMonth)
 {
-
-
     $.ajax({
         type: 'POST',
         url: site_url + "ecp/getActivityDetailByMonth",
@@ -898,3 +871,269 @@ function getActivityCalenderData(iMonth)
     });
 
 }
+function getActivityPlanData(iMonth)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/getActivityDetailPlanByMonth",
+        data: {cur_month:iMonth},
+        success: function (resp) {
+            $('#').html(resp);
+        }
+    });
+
+}
+
+function dateChangeEvent(eDate)
+{
+    var eventDate = new Date(eDate.date);
+    //var planning_date = $('#planning_date').val();
+    var planning_date = eventDate.getFullYear()+'-'+("0"+(eventDate.getMonth()+1)).slice(-2)+'-'+("0"+eventDate.getDate()).slice(-2);
+
+        $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/check_planning_date_in_leave",
+        data: {planning_date:planning_date},
+        //dataType : 'json',
+        success: function (resp) {
+
+            if(resp == 1){
+                var message='';
+
+                message += 'You are Leave On this Date.';
+
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                      $('#planning_date').val('');
+                    }
+                });
+                return false;
+            }
+        }
+    });
+
+}
+
+
+
+
+$(document).on('click', '#check_save', function () {
+    $('#farmer_id').addClass('ignore');
+    $('#farmer_no').addClass('ignore');
+
+    var param = $("#activity_planning").serializeArray();
+       // console.log(param);
+    var $valid = $("#activity_planning").valid();
+    if(!$valid) {
+        activity_planning_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        if($("#farmer_detail").children().length <= 0)
+        {
+            var message = "";
+            message += 'No Data in Key Farmer Details.';
+
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                    }
+                });
+            return false;
+        }
+        else {
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_activity_planning_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        console.log(resp);
+                        $('#activity_planning_id').val(resp);
+                        message += 'Data Inserted successfully.';
+                    }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
+        }
+    }
+    return false;
+});
+
+
+$(document).on('click', '#check_save_as_new', function () {
+    $('#farmer_id').addClass('ignore');
+    $('#farmer_no').addClass('ignore');
+
+    var param = $("#activity_planning").serializeArray();
+    // console.log(param);
+    var $valid = $("#activity_planning").valid();
+    if(!$valid) {
+        activity_planning_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        if($("#farmer_detail").children().length <= 0)
+        {
+            var message = "";
+            message += 'No Data in Key Farmer Details.';
+
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                    }
+                });
+            return false;
+        }
+        else {
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_activity_planning_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        console.log(resp);
+                        $('#activity_planning_id').val(resp);
+                        message += 'Data Save As New successfully.';
+                    }
+                    else{
+
+                        message += 'Data not Save As New .';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
+        }
+    }
+    return false;
+});
+
+$(document).on('click', '#check_submit', function (e) {
+
+    e.preventDefault(e);
+    var activity_planning_id = $("#activity_planning_id").val();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/submit_activity_planning_details",
+        data: {activity_planning_id:activity_planning_id},
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+
+                message += 'Data Submitted successfully.';
+            }
+            else{
+
+                message += 'Data not Submitted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+
+                    }
+                });
+        }
+    });
+
+
+    return false;
+});
+
+$(document).on('click', '#check_cancel', function (e) {
+
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure Cancel Form ?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure Cancel Form ?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+                    location.reload();
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
+    return false;
+});
+
+
