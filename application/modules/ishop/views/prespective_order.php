@@ -5,12 +5,17 @@
         $attributes = array('class' => '', 'id' => 'prespective_order','name'=>'prespective_order');
         echo form_open('ishop/get_prespective_order',$attributes); ?>
 
+        <?php
+            $from_date = date("Y-m-01");
+            $to_date = date("Y-m-t", strtotime($from_date));
+        ?>
+
         <div class="row">
                 <div class="col-md-12 text-center tp_form inline-parent">
                     <div class="form-group">
                         <label>From Date<span style="color: red">*</span></label>
                         <div class="inln_fld_top text-left">
-                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" >
+                            <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" value="<?php echo $from_date; ?>" />
                             <div class="clearfix"></div>
                             <label id="form_date-error" class="error" for="form_date"></label>
                         </div>
@@ -18,7 +23,7 @@
                     <div class="form-group">
                         <label>To Date<span style="color: red">*</span></label>
                         <div class="inln_fld_top text-left">
-                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" >
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" value="<?php echo $to_date; ?>" />
                             <div class="clearfix"></div>
                             <label id="to_date-error" class="error" for="to_date"></label>
                         </div>
@@ -53,4 +58,14 @@ echo theme_view('common/middle');
 <div id="middle_container_product">
 
 </div>
+
+<script type="text/javascript">
+
+    $( window ).on("load",function() {
+        setTimeout(function(){
+            $("button#get_prespective_order").trigger("click");
+        }, 500);
+    });
+
+</script>
 

@@ -169,7 +169,10 @@ $(document).on('click', 'div.current_stock_container .edit_i', function () {
 
 
 $(document).on('click', 'div.check_save_btn #check_save', function () {
+
     var current_stock_data = $("#update_current_stock").serializeArray();
+
+    var check_blank_data = [];
 
     $.ajax({
         type: 'POST',

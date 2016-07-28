@@ -45,7 +45,10 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
-            
+            <?php
+                $from_date = date("Y-m-01");
+                $to_date = date("Y-m-t", strtotime($from_date));
+            ?>
             <?php 
                 if($login_customer_type == 7){
             ?>
@@ -161,7 +164,7 @@
                 <div class="form-group">
                     <label>From Date<span style="color: red">*</span></label>
                     <div class="inln_fld_top">
-                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" required>
+                        <input type="text" class="form-control" name="form_date" id="form_date" placeholder="" autocomplete="off" value="<?php echo $from_date; ?>" required>
                         <div class="clearfix"></div>
                         <label id="form_date-error" class="error" for="form_date"></label>
                     </div>
@@ -169,7 +172,7 @@
                 <div class="form-group">
                     <label>To Date<span style="color: red">*</span></label>
                     <div class="inln_fld_top">
-                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" required>
+                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="" autocomplete="off" value="<?php echo $to_date; ?>" required>
                         <div class="clearfix"></div>
                         <label id="to_date-error" class="error" for="to_date"></label>
                     </div>
@@ -185,12 +188,7 @@
                     
                 </div>
                 
-            <?php 
-            
-                $from_date = date("Y-m-01");
-                $to_date = date("Y-m-t", strtotime($from_date));
-            
-            ?>
+
 
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
@@ -391,13 +389,15 @@ if (!$this->input->is_ajax_request()){ ?>
 <?php
 }
 
-if(isset($login_customer_type) && $login_customer_type == 10){
+if(isset($login_customer_type) && ($login_customer_type == 10 || $login_customer_type == 9)){
 ?>
 <script type="text/javascript">
-   /* $(document).ready(function() {
-        setTimeout(function () {
+
+    $( window ).on("load",function() {
+        setTimeout(function(){
             $("button#order_status").trigger("click");
-        }, 1000);
-    });*/
+        }, 500);
+    });
+
 </script>
 <?php } ?>

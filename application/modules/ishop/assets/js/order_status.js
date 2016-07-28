@@ -3,7 +3,6 @@
  */
 $(document).ready(function(){
 
-
     $("#form_date").datepicker({
       format: "yyyy-mm-dd",
       autoclose: true
@@ -258,10 +257,15 @@ $(document).ready(function(){
         });
 
 
-
+/*
         $("body, html").animate({ 
             scrollTop: $( $(this).attr('href') ).offset().top 
         }, "slow");
+
+        */
+
+        $(window).scrollTop($("div#middle_container_product").offset().top);
+
         
         return false;
     });
@@ -321,6 +325,9 @@ $(document).on('click','div#middle_container_product div.delete_i',function(){
     }
 
 });
+
+
+   //
 
 $(document).on('click','div#middle_container div.delete_i',function(){
 
