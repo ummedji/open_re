@@ -1065,6 +1065,8 @@ class Web_service extends Front_Controller
                         {
                             $ord = array(
                                 "id" => $order['order_id'],
+                                "distributor_code" => $order['f_u_code'],
+                                "distributor_name" => $order['f_dn'],
                                 "entered_by" => $order['display_name'],
                                 "po_no" => $order['PO_no'],
                                 "order_tracking_no" => $order['order_tracking_no'],

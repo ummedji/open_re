@@ -558,7 +558,7 @@ function mark_as_unread(order_id){
 function show_po_popup(order_id,PO_no){
 
     $("div#myModal #save_po_data").removeAttr("disabled");
-    
+
     $("div#myModal input#order_data").empty();
     $("div#myModal input#po_number_data").empty();
     

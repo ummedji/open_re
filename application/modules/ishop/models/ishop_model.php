@@ -4618,6 +4618,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $sql .= 'AND bio.customer_id_to =' . $loginuserid . ' ';
 
+        $sql .= ' AND bio.order_status != 4 ';
+
         $sql .= 'ORDER BY order_date DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
