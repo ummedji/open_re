@@ -1,37 +1,5 @@
-<?php
-$attributes = array('class' => '', 'id' => 'activity_planning','name'=>'activity_planning');
-echo form_open('',$attributes);
-?>
+
 <div class="col-md-12 full-height">
-    <div class="row">
-        <div class="col-md-12 text-center plng_sub_nave">
-            <div class="inn_sub_nave">
-                <ul>
-                    <?php
-                    if($child_user_data['tot'] !=0)
-                    {
-                        ?>
-                        <li class="active"><a href="<?php echo base_url('ecp/activity_planning')?>">Planning</a></li>
-                        <li><a href="<?php echo base_url('ecp/activity_approval')?>">Approval</a></li>
-                        <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
-                        <li><a href="<?php echo base_url('ecp/activity_unplanned')?>">Unplanned</a></li>
-                        <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
-                    <?php
-                    }
-                    else{
-                        ?>
-                        <li class="active"><a href="<?php echo base_url('ecp/activity_planning')?>">Planning</a></li>
-                        <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
-                        <li><a href="<?php echo base_url('ecp/activity_unplanned')?>">Unplanned</a></li>
-                        <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
-                    <?php
-                    }
-                    ?>
-                </ul>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-        <div class="col-md-9">
             <div class="top_form planning_parent">
                 <div class="row">
                     <div class="col-md-12">
@@ -44,7 +12,6 @@ echo form_open('',$attributes);
 
                                 <div class="form-group">
                                     <label>Time<span style="color: red">*</span></label>
-                                    <!--<input  type="text" class="form-control input-append" data-format="hh:mm" id="timepicker1"  />-->
                                     <div class="bootstrap-timepicker bootstrap-timepicker-as">
                                         <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append">
                                     </div>
@@ -58,13 +25,13 @@ echo form_open('',$attributes);
                                 <div class="row form-group">
                                     <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Select Activity Type<span style="color: red">*</span></label></div>
                                     <div class="col-md-4 col-sm-8 cont_size_select mrg_bottom_30" >
-                                        <select class="selectpicker" id="activity_type_id" name="activity_type_id" data-live-search="true">
+                                        <select class="selectpicker" id="activity_type_id" name="activity_type_id" data-live-search="true" disabled>
                                             <option value="">Select Activity Type</option>
                                             <?php
                                             if(isset($activity_type) && !empty($activity_type)) {
                                                 foreach ($activity_type as $key => $val) {
                                                     ?>
-                                                    <option value="<?php echo $val['activity_type_country_id']; ?>" code="<?php echo $val['activity_type_code']; ?>"><?php echo $val['activity_type_country_name']; ?></option>
+                                                    <option <?php if(isset($activity["activity_type_id"]) && $activity["activity_type_id"]== $val['activity_type_country_id']){ echo "selected"; } ?> value="<?php echo $val['activity_type_country_id']; ?>" code="<?php echo $val['activity_type_code']; ?>"><?php echo $val['activity_type_country_name']; ?></option>
                                                     <?php
                                                 }
                                             }
@@ -81,32 +48,50 @@ echo form_open('',$attributes);
 
                                 <!--GEO  Dropdown-->
                                 <div class="row form-group" id="geo">
-                                    <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>
-                                    <div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">
-                                        <select class="selectpicker" data-live-search="true" name="geo_level_2" id="geo_level_2">
-                                            <option value="">Select Geo 2</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>
-                                    <div class="col-md-2 col-sm-8 cont_size_select">
-                                        <select class="selectpicker" data-live-search="true" name="geo_level_3" id="geo_level_3">
-                                            <option value="">Select Geo 3</option>
-                                        </select>
-                                    </div>
-                                    <div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>
-                                    <div class="col-md-2 col-sm-8 cont_size_select">
-                                        <select class="selectpicker" data-live-search="true" name="geo_level_4" id="geo_level_4">
-                                            <option value="">Select Geo 4</option>
-                                        </select>
-                                    </div>
+                                    <?php  if(isset($geo_level_2) && !empty($geo_level_2))
+                                    {
+                                    ?>
+                                        <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>
+                                        <div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">
+                                            <select class="selectpicker" data-live-search="true" name="geo_level_2" id="geo_level_2" disabled>
+                                                <option value="<?php echo $geo_level_2['political_geo_id'] ?>"><?php echo $geo_level_2['political_geography_name'] ?></option>
+                                            </select>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                    <?php  if(isset($geo_level_3) && !empty($geo_level_3))
+                                    {
+                                    ?>
+                                        <div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>
+                                        <div class="col-md-2 col-sm-8 cont_size_select">
+                                            <select class="selectpicker" data-live-search="true" name="geo_level_3" id="geo_level_3" disabled>
+                                                <option value="<?php echo $geo_level_3['political_geo_id'] ?>"><?php echo $geo_level_3['political_geography_name'] ?></option>
+                                            </select>
+                                        </div>
+                                        <?php
+                                    }
+                                    ?>
+                                   <?php  if(isset($geo_level_4) && !empty($geo_level_4))
+                                   {
+                                       ?>
+                                       <div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>
+                                       <div class="col-md-2 col-sm-8 cont_size_select">
+                                           <select class="selectpicker" data-live-search="true" name="geo_level_4" id="geo_level_4" disabled>
+                                               <option value="<?php echo $geo_level_4['political_geo_id'] ?>"><?php echo $geo_level_4['political_geography_name'] ?></option>
+                                           </select>
+                                       </div>
+                                    <?php
+                                   }
+                                   ?>
+
                                 </div>
 
                                 <!--GEO  Dropdown-->
-
                                 <div class="row form-group">
                                     <div class="col-md-3 col-sm-3 first_lb"><label>Address<span style="color: red">*</span></label></div>
                                     <div class="col-md-8 col-sm-8">
-                                        <textarea class="form-control" rows="4" name="activity_address" id="activity_address"></textarea>
+                                        <textarea class="form-control" rows="4" name="activity_address" id="activity_address" disabled><?php echo $activity['location'] ?></textarea>
                                     </div>
 
                                 </div>
@@ -128,12 +113,12 @@ echo form_open('',$attributes);
                                 <div class="row">
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
-                                           <label>Corp<span style="color: red">*</span></label>
+                                            <label>Corp<span style="color: red">*</span></label>
                                             <select id="crop_id" name="crop_id" onchange="selectCrop(this);">
                                                 <option value="">Select Corp</option>
 
-                                        <!--    <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
-                                                <option value="" selected="selected">Select Corp</option>-->
+                                                <!--    <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
+                                                        <option value="" selected="selected">Select Corp</option>-->
 
                                                 <?php
                                                 if(isset($crop_details) && !empty($crop_details)) {
@@ -145,7 +130,7 @@ echo form_open('',$attributes);
                                                 }
                                                 ?>
                                             </select>
-                                        <!--    <div class="js-example-tags-container"></div>-->
+                                            <!--    <div class="js-example-tags-container"></div>-->
 
                                             <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                             <!--<div class="js-example-tags-container"></div>-->
@@ -308,15 +293,15 @@ echo form_open('',$attributes);
                                             <label>Joint Visit</label>
                                             <select class="selectpicker" name="joint_id[]" id="joint_id" data-live-search="true" multiple>
                                                 <option value="">Select Joint Visit</option>
-                                                 <?php
-                                                 if(isset($employee_visit) && !empty($employee_visit)) {
-                                                     foreach ($employee_visit as $key => $val) {
-                                                     ?>
-                                                    <option value="<?php echo $val['id']; ?>" attr-name="<?php echo $val['display_name']; ?>"><?php echo $val['display_name']; ?></option>
-                                                    <?php
-                                                     }
-                                                 }
-                                                 ?>
+                                                <?php
+                                                if(isset($employee_visit) && !empty($employee_visit)) {
+                                                    foreach ($employee_visit as $key => $val) {
+                                                        ?>
+                                                        <option value="<?php echo $val['id']; ?>" attr-name="<?php echo $val['display_name']; ?>"><?php echo $val['display_name']; ?></option>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
@@ -507,24 +492,6 @@ echo form_open('',$attributes);
                                 <div class="clearfix"></div>
                             </div>
                         </div>
-                       <!-- <div class="default_box_grey">
-                            <div class="col-md-12 tp_form inline-parent">
-                                <div class="form-group" style="margin-bottom: 0px;">
-                                    <label>Visual Aid</label>
-                                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-                        <div class="default_box_grey">
-                            <div class="col-md-12 tp_form inline-parent">
-                                <div class="form-group" style="margin-bottom: 0px;">
-                                    <label>Joint Visit</label>
-                                    <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>-->
                     </div>
                 </div>
             </div>
@@ -539,109 +506,10 @@ echo form_open('',$attributes);
                     <div class="save_btn">
                         <button type="button" class="btn btn-primary" id="check_save">Save</button>
                         <button type="button" class="btn btn-primary" id="check_cancel">Cancel</button>
-                        <button type="button" class="btn btn-primary" id="check_submit">Submit</button>
-                        <button type="button" class="btn btn-primary" id="check_save_as_new">Save As New</button>
                     </div>
                 </div>
             </div>
             <div class="clearfix"></div>
         </div>
         <?php echo form_close(); ?>
-
-
-
-
-        <div class="col-md-3 right_planning">
-            <div class="top_form planning_parent" style="padding: 10px 5px 10px 5px;">
-                <div class="panel act_panel with-nav-tabs panel-default">
-                    <div class="panel-heading">
-                        <ul class="activity_list">
-                            <li class="active"><a href="#tab1default" data-toggle="tab">Incomplete Entry</a></li>
-                            <li><a href="#tab2default" data-toggle="tab">Approved</a></li>
-                            <li><a href="#tab3default" data-toggle="tab">Rejected</a></li>
-                            <li><a href="#tab4default" data-toggle="tab">Pending</a>
-                            </li>
-                        </ul>
-                    </div>
-                    <div class="panel-body">
-                        <div class="tab-content">
-                            <div class="tab-pane fade in active" id="tab1default">
-                                <div class="calendar_space">
-                                    <div id="calendar">
-                                        <?php echo $cal_data; ?>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
-                                <div class="add_new_space text-right save_btn">
-                                    <button type="button" class="btn btn-primary">Add New</button>
-                                </div>
-                                <div id="accordion" class="as_accordion" role="tablist" aria-multiselectable="true">
-                                    <?php
-                                        foreach($activity_data as $k=>$activity_val)
-                                        {
-                                            ?>
-                                    <div class="panel panel-default">
-                                            <?php
-                                            $i=0;
-                                            foreach($activity_val as $key =>$val)
-                                            {
-                                                if($i == 0) {
-                                                    ?>
-                                                    <div class="panel-heading" role="tab" id="headingOne">
-                                                        <ul class="acc_list">
-                                                            <li>
-                                                                <a data-toggle="collapse" data-parent="#accordion"
-                                                                   href="#collapse_<?php echo strtotime($val['activity_planning_date']); ?>" aria-expanded="true"
-                                                                   aria-controls="collapse_<?php echo strtotime($val['activity_planning_date']); ?>">
-                                                                    <?php echo date('d',strtotime($val['activity_planning_date']))?>  <img
-                                                                        src="<?php echo Template::theme_url('images/list_arrow.png') ?>"
-                                                                        alt="" style="vertical-align: middle;">
-                                                                </a>
-                                                            </li>
-                                                            <li><?php echo $val['activity_type_country_name']?></li>
-                                                            <li><?php echo date('h:i:A',strtotime($val['activity_planning_time']))?></li>
-                                                            <li><?php echo $val['political_geography_name']?></li>
-                                                        </ul>
-
-                                                    </div>
-
-                                                    <div id="collapse_<?php echo strtotime($val['activity_planning_date']); ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                                    <?php
-                                                }
-                                                else{
-                                                    ?>
-                                                        <ul class="acc_list">
-                                                            <li>
-                                                                &nbsp;
-                                                            </li>
-                                                            <li><?php echo $val['activity_type_country_name']?></li>
-                                                            <li><?php echo $val['activity_planning_time']?></li>
-                                                            <li><?php echo $val['political_geography_name']?></li>
-                                                        </ul>
-                                        <?php
-                                                }
-                                            ?>
-                                                </div>
-                                                        <?php
-                                                $i++;
-                                            }
-                                           ?>
-                                    </div>
-                                    <?php
-                                        }
-                                        ?>
-                                </div>
-                                <div class="clearfix"></div>
-                            </div>
-                            <div class="tab-pane fade" id="tab2default">Default 2</div>
-                            <div class="tab-pane fade" id="tab3default">Default 3</div>
-                            <div class="tab-pane fade" id="tab4default">Default 4</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
-</div>
 

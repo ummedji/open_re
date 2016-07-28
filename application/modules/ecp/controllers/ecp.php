@@ -1130,6 +1130,7 @@ class Ecp extends Front_Controller
 
 	public function activity_approval()
 	{
+		Assets::add_module_js('ecp', 'activity_approval.js');
 		$user = $this->auth->user();
 		$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
 		//testdata($child_user_data);
@@ -1167,6 +1168,113 @@ class Ecp extends Front_Controller
 
 
 		}
+
+	public function change_status_activity()
+	{
+		$status_id = (isset($_POST["status_id"]) ? $_POST["status_id"] : '');
+		$planning_id = (isset($_POST["planning_id"]) ? $_POST["planning_id"] : null);
+		$user = $this->auth->user();
+		$status = $this->ecp_model->changeActivityStatus($status_id,$planning_id,$user->id);
+		echo $status;
+		die;
+	}
+
+	public function activity_planning_edit_view()
+	{
+		$user = $this->auth->user();
+		$id = (isset($_POST["id"]) ? $_POST["id"] : null);
+		$activity = $this->ecp_model->editViewActivityPlanning($id);
+
+		if($activity["geo_level_id_2"] != '')
+		{
+			$geo_level_2 = $this->ecp_model->get_geo_data($activity["geo_level_id_2"]);
+		//	testdata($geo_level_2);
+		}
+		else{
+			$geo_level_2 = '';
+		}
+		if($activity["geo_level_id_3"] != '')
+		{
+			$geo_level_3 = $this->ecp_model->get_geo_data($activity["geo_level_id_3"]);
+		}
+		else{
+			$geo_level_3 = '';
+		}
+
+		if($activity["geo_level_id_4"] != '')
+		{
+			$geo_level_4 = $this->ecp_model->get_geo_data($activity["geo_level_id_4"]);
+		}
+		else{
+			$geo_level_4 = '';
+		}
+
+		$activity_type = $this->ecp_model->activity_type_details($user->country_id);
+		$crop_details = $this->ecp_model->crop_details_by_country_id($user->country_id);
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+		$diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
+		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user->id,$user->country_id);
+		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
+		$global_head_user = array();
+
+		$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+		Template::set('geo_level_2', $geo_level_2);
+		Template::set('geo_level_3', $geo_level_3);
+		Template::set('geo_level_4', $geo_level_4);
+		Template::set('activity', $activity);
+		Template::set('current_user', $user);
+		Template::set('activity_type', $activity_type);
+		Template::set('crop_details', $crop_details);
+		Template::set('product_sku', $product_sku);
+		Template::set('diseases_details', $diseases_details);
+		Template::set('key_farmer', $key_farmer);
+		Template::set('materials', $materials);
+		Template::set('employee_visit', $employee_visit);
+		Template::set_view('ecp/activity_approval');
+		Template::render();
+
+	}
+
+
+	public function activity_unplanned()
+	{
+		Assets::add_module_js('ecp', 'activity_unplanned.js');
+		$user = $this->auth->user();
+		$activity_type = $this->ecp_model->activity_type_details($user->country_id);
+		$crop_details = $this->ecp_model->crop_details_by_country_id($user->country_id);
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+		$diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
+		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user->id,$user->country_id);
+		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
+		$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
+		$global_head_user = array();
+		$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+
+		Template::set('child_user_data', $child_user_data);
+		Template::set('current_user', $user);
+		Template::set('activity_type', $activity_type);
+		Template::set('crop_details', $crop_details);
+		Template::set('product_sku', $product_sku);
+		Template::set('diseases_details', $diseases_details);
+		Template::set('key_farmer', $key_farmer);
+		Template::set('materials', $materials);
+		Template::set('employee_visit', $employee_visit);
+		Template::set_view('ecp/activity_unplanned');
+		Template::render();
+	}
+
+
+	public function add_activity_unplanned_details()
+	{
+		//testdata($_POST);
+		$user = $this->auth->user();
+		$add= $this->ecp_model->addActivityUnplanned($user->id,$user->country_id,$user->local_date);
+		echo $add;
+		die;
+	}
+
+
+
 
 
 

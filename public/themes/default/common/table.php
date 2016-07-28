@@ -97,6 +97,21 @@ if(isset($table) && count($table)>0 && $table != false) {
                                                 <div class="eye_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-eye" aria-hidden="true"></i></a></div>
                                                 <?php
                                             }
+                                            if(isset($table['edit_disabled']) && !empty($table['edit_disabled'])){
+
+                                             //   echo "bbbb".$table['edit_disabled'][$rkey]."aaaa".$rkey;
+
+                                                if($table['edit_disabled'][$rkey] == 1){
+                                                    $style = "style='pointer-events: none;opacity: 0.4;'";
+                                                }
+                                                else{
+                                                    $style = "";
+                                                }
+                                                ?>
+                                                <div class="edit_i" prdid ="<?php echo $row;?>" <?php echo $style; ?>><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
+                                                <?php
+
+                                            }
                                            if(isset($table['edit']) && !empty($table['edit'])) {
                                                ?>
                                                <div class="edit_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>

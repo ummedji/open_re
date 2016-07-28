@@ -1,9 +1,9 @@
 <?php
 //var_dump($table);die;
-   /* if(isset($filter))
+   if(isset($activity))
     {
-        echo theme_view('common/filter');
-    }*/
+        echo theme_view('common/activity');
+    }
 
     if(isset($table))
     {
@@ -57,5 +57,6 @@
             echo theme_view('common/prespective_order_table');
         }
     }
+
     
 ?>

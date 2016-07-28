@@ -17,7 +17,10 @@
                                     if($child_user_data['tot'] !=0)
                                     {
                                         ?>
+                                        <li class="active"><a href="<?php echo base_url('ecp/activity_planning')?>">Planning</a></li>
                                         <li><a href="<?php echo base_url('ecp/activity_approval')?>">Approval</a></li>
+                                        <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
+                                        <li><a href="<?php echo base_url('ecp/activity_unplanned')?>">Unplanned</a></li>
                                         <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
                                         <?php
                                     }
@@ -25,7 +28,7 @@
                                         ?>
                                         <li class="active"><a href="<?php echo base_url('ecp/activity_planning')?>">Planning</a></li>
                                         <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
-                                        <li><a href="<?php echo base_url('ecp/')?>">Unplanned</a></li>
+                                        <li><a href="<?php echo base_url('ecp/activity_unplanned')?>">Unplanned</a></li>
                                         <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
                                         <?php
                                     }
@@ -39,7 +42,7 @@
                             <div class="form-group">
                                 <label>Month<span style="color: red">*</span></label>
                                 <div class="inln_fld_top text-left">
-                                    <input type="text" class="form-control" name="stock_month" id="stock_month" placeholder="" >
+                                    <input type="text" class="form-control" name="month" id="month" placeholder="" >
                                     <div class="clearfix"></div>
                                     <label id="stock_month-error" class="error" for="stock_month"></label>
                                 </div>
@@ -77,6 +80,9 @@ echo form_open('',$attributes); ?>
         <?php
         echo theme_view('common/middle');
         ?>
+    </div>
+    <div id="middle_container_product" >
+
     </div>
 <?php  } ?>
 <?php echo form_close(); ?>

@@ -12,7 +12,7 @@
 
     <?php
     Assets::add_css(array('bootstrap.min.css', 'style.css','green.css','hover.css','jquery.mCustomScrollbar.css',
-        'bootstrap-select.min.css','bootstrap-datepicker.min.css','calendar.css','bootstrap-timepicker.min.css','select2.min.css'));
+        'bootstrap-select.min.css','bootstrap-datepicker.min.css','calendar.css','bootstrap-timepicker.min.css','select2.min.css','jquery.rateyo.css'));
     //Assets::add_js('bootstrap.min.js');
     $inline  = '$(".dropdown-toggle").dropdown();';
     $inline .= '$(".tooltips").tooltip();';
