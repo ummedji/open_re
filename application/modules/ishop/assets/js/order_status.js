@@ -412,6 +412,99 @@ $(document).on('click', 'div.order_status .edit_i', function () {
 });
 
 
+
+    $("body").on("change","select.select_unitdata",function(){
+
+        var pathname = window.location.pathname;
+
+        var action_segment = pathname.split("/");
+
+        action_segment = action_segment[action_segment.length-1];
+
+        if(action_segment == "order_place"){
+            var selected_row_id = $(this).parent().parent().attr("id");
+
+            var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+
+            var units = $(this).val();
+
+            var quantity = $(this).parent().parent().find("input.quantity_data").val();
+
+            var unit_data = get_data_conversion(sku_id,quantity,units);
+
+            $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+
+        }
+        else
+        {
+
+            var selected_row_id = $(this).attr('id');
+            var product_row_id = selected_row_id.split("_");
+            product_row_id = product_row_id[1];
+
+            var sku_id = $("input#sku_"+$.trim(product_row_id)).val();
+            var units = $(this).val();
+            var quantity = $("input#quantity_"+$.trim(product_row_id)).val();
+
+            var unit_data = get_data_conversion(sku_id,quantity,units);
+
+            $("input#qty_kg_ltr_"+$.trim(product_row_id)).val(unit_data);
+            $("div.quantity_kg_ltr_"+$.trim(product_row_id) +" span.quantity_kg_ltr").text(unit_data);
+
+        }
+
+
+    });
+
+
+    $("body").on("keyup","input.quantity_data",function(){
+
+
+        var pathname = window.location.pathname;
+
+        var action_segment = pathname.split("/");
+
+        action_segment = action_segment[action_segment.length-1];
+
+        if(action_segment == "order_place"){
+
+            var selected_row_id = $(this).parent().parent().attr("id");
+
+            var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
+
+            var units = $(this).parent().parent().find("select.select_unitdata").val()
+
+            var quantity = $(this).val();
+
+            var unit_data = get_data_conversion(sku_id,quantity,units);
+
+            $("input.qty_"+$.trim(selected_row_id)).val(unit_data);
+
+        }
+        else
+        {
+
+            var selected_row_id = $(this).attr('id');
+            var product_row_id = selected_row_id.split("_");
+            product_row_id = product_row_id[1];
+
+            var sku_id = $("input#sku_"+$.trim(product_row_id)).val();
+            var units = $("select#units_"+$.trim(product_row_id)).val();
+            var quantity = $(this).val();
+
+            var unit_data = get_data_conversion(sku_id,quantity,units);
+
+            //  alert(sku_id+"==="+units+"==="+quantity+"==="+unit_data);
+
+            $("input#qty_kg_ltr_"+$.trim(product_row_id)).val(unit_data);
+            $("div.quantity_kg_ltr_"+$.trim(product_row_id) +" span.quantity_kg_ltr").text(unit_data);
+
+        }
+
+    });
+
+
+
  $("input.select_customer_type").on("click",function(){
        
         $("div#middle_container").empty();

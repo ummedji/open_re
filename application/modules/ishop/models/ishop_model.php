@@ -5037,7 +5037,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         }
                     }
-                } else if ($loginusertype == 8) {
+                }
+                else if ($loginusertype == 8) {
                     //FOR FO
                     if ($radio_checked == "farmer") {
 
@@ -5053,7 +5054,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['count'] = count($order_view['head']);
                     }
 
-                    $i = 1;
+                    if ($page != null || $page != "") {
+                        $i = (($page * 10) - 9);
+                    } else {
+                        $i = 1;
+                    }
 
                     foreach ($orderdata['result'] as $od) {
 
@@ -5144,7 +5149,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $order_view['eye'] = '';
 
 
-                } else if ($loginusertype == 9) {
+                }
+                else if ($loginusertype == 9) {
 
                     //FOR DISTRIBUTOR
 
@@ -5243,7 +5249,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['eye'] = '';
                     }
 
-                } else if ($loginusertype == 10)
+                }
+                else if ($loginusertype == 10)
                 {
                     //FOR RETAILER
                     $action_data = $this->uri->segment(2);

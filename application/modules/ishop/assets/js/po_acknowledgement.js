@@ -158,6 +158,7 @@ $(document).on("click",'form#po_acknowledgement button#update_po_order_details',
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
+                        $('input:checkbox').removeAttr('checked');
                         location.reload()
                     }
                 });
