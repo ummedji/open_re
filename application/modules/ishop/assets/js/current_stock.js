@@ -174,37 +174,72 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
 
     var check_blank_data = [];
 
-    $.ajax({
-        type: 'POST',
-        url: site_url+'ishop/update_current_stock_details',
-        data: current_stock_data,
-        success: function(resp){
+    $("#update_current_stock input").each(function( index ) {
 
-            var message = "";
-            if(resp == 1){
-
-                message += 'Data Updated successfully.';
-            }
-            else{
-
-                message += 'Data not Updated.';
-            }
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                        location.reload()
-                    }
-                });
+        if($( this ).val() == ""){
+            check_blank_data.push(1);
         }
+
+       // alert( index + ": " + $( this ).val() );
     });
+
+    if($.inArray(1,check_blank_data) == -1){
+
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/update_current_stock_details',
+            data: current_stock_data,
+            success: function(resp){
+
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Updated successfully.';
+                }
+                else{
+
+                    message += 'Data not Updated.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
+            }
+        });
+
+    }
+    else
+    {
+        var message = "Please add data to to all fields.";
+
+        $('<div></div>').appendTo('body')
+            .html('<div><b>'+message+'</b></div>')
+            .dialog({
+                appendTo: "#success_file_popup",
+                modal: true,
+                zIndex: 10000,
+                autoOpen: true,
+                width: 'auto',
+                resizable: true,
+                close: function (event, ui) {
+                    $(this).remove();
+                   // location.reload()
+                }
+            });
+
+    }
+
+
     return false;
 });
 
