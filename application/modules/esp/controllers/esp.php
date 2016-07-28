@@ -4193,7 +4193,8 @@ foreach($month_data as $monthkey => $monthvalue){
 				
 				$html .= "<form id='user_data_form' name='user_data_form'>";
 				
-				
+				//echo $role_degigination_data."</br>";
+
 				for($n=1;$n<$role_degigination_data;$n++){
 				
 					$inner_array = array();
@@ -4201,6 +4202,9 @@ foreach($month_data as $monthkey => $monthvalue){
 					$level = $n;
 				
 					$levle_data = $this->esp_model->get_user_selected_level_data($level_user_id,$level);
+
+                   // echo $level_user_id."===".$level."</br>";
+                   // dumpme($levle_data);
 					
 					$level_user_id = $levle_data['level_users']; 
 					
@@ -4226,11 +4230,11 @@ foreach($month_data as $monthkey => $monthvalue){
 						$webservice_final_array[$month_data]["statusdata"][] = $inner_array;
 				
 				}
-				
+
 				$html .= "</form>";
 				
 			}
-			 
+			// die;
 			
 			$html .= "</tr></table></td>";
 			
@@ -4334,7 +4338,7 @@ foreach($month_data as $monthkey => $monthvalue){
 				$m = count($user_level_formdata);
 			}
 
-            //testdata($user_level_formdata);
+
 
 			foreach($user_level_formdata as $user_data_key1 => $user_level_data1){
 					

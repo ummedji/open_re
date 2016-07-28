@@ -26,7 +26,7 @@ echo form_open('',$attributes);
             if($login_customer_type == 7){
                 ?>
                 <div class="copy_btn">
-                    <a href="javascript:void(0);" id="target_copy"  data-toggle="modal" data-target="#TargetCopyModal">Copy</a>
+                    <a href="#" id="target_copy"  data-toggle="modal" data-target="#TargetCopyModal">Copy</a>
                 </div>
 
             <?php } ?>
@@ -309,6 +309,7 @@ if (!$this->input->is_ajax_request()) {
                             <div class="form-group" id="from_customer_data">
                                 <label>Customer Data</label>
                                 <select class="selectpicker" name="from_customer_data" id="from_customer_data">
+                                    <option value="">Select Customer</option>
                                 </select>
                             </div>
                             <div class="form-group" id="year_data">

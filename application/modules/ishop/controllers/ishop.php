@@ -2149,8 +2149,11 @@ class Ishop extends Front_Controller
 				$page = 1;
 			}
 
-            if(isset($_POST) && !empty($_POST)){
+            if(isset($_POST) && !empty($_POST) && isset($_POST["order_data"])){
 
+
+                //echo "INNNN";
+                //die;
 				$update_order_data = $this->ishop_model->update_order_data($_POST);
 				echo $update_order_data;
 				die;

@@ -28,7 +28,7 @@ $(document).ready(function(){
     var login_customer_type = $("input#login_customer_type").val();
 
 
-    $("input.select_customer_type").on("click",function(){
+    $("input.select_customer_type").on("change",function(){
         var validator = $("#target").validate();
         validator.resetForm();
 
@@ -73,13 +73,15 @@ $(document).ready(function(){
             //FOR COPY POPUP
 
             $("h4.modal-title").empty();
-            $("h4.modal-title").append("Copy Retailer Data");
+            $("h4.modal-title").html("Copy Retailer Data");
 
             $("select#from_customer_data").empty();
             $("select#to_customer_data").empty();
 
-            $("select#from_customer_data").selectpicker('refresh');
-            $("select#to_customer_data").selectpicker('refresh');
+           /* $("select#from_customer_data").selectpicker('refresh');
+            $("select#to_customer_data").selectpicker('refresh');*/
+
+            $(".selectpicker").selectpicker('refresh');
 
             $("input#from_copy_popup_datepicker").val('');
             $("input#to_copy_popup_datepicker").val('');
@@ -138,14 +140,15 @@ $(document).ready(function(){
             //FOR COPY POPUP
 
             $("h4.modal-title").empty();
-            $("h4.modal-title").append("Copy Distributor Data");
+            $("h4.modal-title").html("Copy Distributor Data");
 
             $("select#from_customer_data").empty();
             $("select#to_customer_data").empty();
 
-            $("select#from_customer_data").selectpicker('refresh');
-            $("select#to_customer_data").selectpicker('refresh');
+           /* $("select#from_customer_data").selectpicker('refresh');
+            $("select#to_customer_data").selectpicker('refresh');*/
 
+            $(".selectpicker").selectpicker('refresh');
             $("input#from_copy_popup_datepicker").val('');
             $("input#to_copy_popup_datepicker").val('');
 
