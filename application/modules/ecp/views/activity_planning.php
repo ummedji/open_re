@@ -580,7 +580,7 @@ echo form_open('',$attributes);
                                     //testdata($activity_data);
                                     $j=0;
                                     foreach($activity_data as $k=>$activity_val) { ?>
-                                    <div class="panel panel-default">
+                                    <div class="panel panel-default" id="data_<?php echo date("j",strtotime($k));?>">
                                         <?php foreach($activity_val as $key =>$val) { ?>
                                         <?php if($key==0) {?>
                                         <div class="panel-heading" role="tab">

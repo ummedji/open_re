@@ -995,7 +995,7 @@ class Ecp extends Front_Controller
 
 				}
 
-				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="leave_date" style="'.$style1.'" rel="'.$activity_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date" style="'.$style1.'" rel="'.$activity_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
 
 				// Next day
 				$iCurrentDay++;

@@ -3858,12 +3858,21 @@ class Web_service extends Front_Controller
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
+        $type = $this->input->get_post('type');
         if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id))) {
             $insert = $this->ecp_model->addActivityPlanning($user_id, $country_id, 'web_service');
             if ($insert != 0) {
                 $result['status'] = true;
                 $result['message'] = 'Success.';
-                $result['data'] = $insert;
+                if($type == 'save')
+                {
+                    $result['data'] = $insert;
+                }
+                else{
+                    $result['data'] = 0;
+                }
+
+
             }
 
         } else {

@@ -610,10 +610,41 @@ echo form_open('',$attributes);
 
                         <div class="col-md-12 table_bottom pln_table_bottom">
                             <div class="row">
-                                <div class="save_btn">
-                                    <button type="button" class="btn btn-primary" name="follow_up" id="followup">Add Followup Meetings</button>
+                                <div class="col-md-3">
+                                    <div class="save_btn">
+                                        <button type="button" class="btn btn-primary" name="follow_up" id="followup">Add Followup Meetings</button>
+                                    </div>
+                                </div>
+                                <div class="col-md-9" id="follow_up" style="display: none">
+                                    <div class="col-md-3 form-group">
+                                        <label>Planning Date<span style="color: red">*</span></label>
+                                        <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="">
+                                    </div>
+
+                                    <div class="col-md-3 form-group">
+                                        <label>Planning Time<span style="color: red">*</span></label>
+
+                                        <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                            <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 form-group">
+                                        <div class="row">
+                                            <div class="save_btn">
+                                                <button type="button" class="btn btn-primary" id="planning_save">Save</button>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="save_btn">
+                                                <button type="button" class="btn btn-primary" id="planning_close">close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
                                 </div>
                             </div>
+
                         </div>
                             </div>
                             <div class="clearfix"></div>

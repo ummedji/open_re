@@ -10,6 +10,19 @@ $(document).ready(function() {
 
     });
 
+
+    $('#planning_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    }).on('changeDate',function(e){
+        dateChangeEvent(e);
+    });
+
+    $('#planning_time').timepicker({
+
+    });
+
+
     $("select#activity_type_id").on("change",function() {
         var activity_type_selected = $('option:selected', this).attr('code');
         set_activity_type(activity_type_selected);
@@ -32,6 +45,12 @@ $(document).ready(function() {
                 required: true
             },
             execution_time:{
+                required: true
+            },
+            planning_date:{
+                required: true
+            },
+            planning_time:{
                 required: true
             },
             activity_type_id:{
@@ -895,7 +914,7 @@ $(document).ready(function() {
 
         var $list = $('<ul>');
         $selected.each(function(k, v) {
-            var $li = $('<li class="tag-selected"><a class="destroy-tag-selected">×</a>' + $(v).text() + '</li>');
+            var $li = $('<li class="tag-selected"><a class="destroy-tag-selected">ï¿½</a>' + $(v).text() + '</li>');
             $li.children('a.destroy-tag-selected')
                 .off('click.select2-copy')
                 .on('click.select2-copy', function(e) {
@@ -1001,6 +1020,8 @@ $(document).on('click', '#check_save', function () {
     }
     return false;
 });
+
+
 
 
 /*$(document).on('click', '#followup', function () {

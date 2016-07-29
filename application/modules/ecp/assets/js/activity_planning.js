@@ -1137,3 +1137,13 @@ $(document).on('click', '#check_cancel', function (e) {
 });
 
 
+$(".activity_date").on('click',function(e){
+    var elem = $(e.target).text();
+    if(typeof $("#data_"+elem) != 'undefined')
+    {
+        var slide_to = ($("#data_"+elem).offset().top - $("#main").offset().top)-10;
+        $('#main').animate({
+            scrollTop: slide_to
+        }, 1000);
+    }
+});
