@@ -1269,7 +1269,7 @@ class Ecp extends Front_Controller
 	{
 		//testdata($_POST);
 		$user = $this->auth->user();
-		$add= $this->ecp_model->addActivityUnplanned($user->id,$user->country_id,$user->local_date);
+		$add= $this->ecp_model->addActivityUnplanned($user->id,$user->country_id,null,$user->local_date);
 		echo $add;
 		die;
 	}

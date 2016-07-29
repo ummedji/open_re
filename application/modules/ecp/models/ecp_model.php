@@ -1748,6 +1748,21 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $attandence_count = $this->input->post("attandence_count");
         $size_of_plot = $this->input->post("size_of_plot");
         $spray_volume = $this->input->post("spray_volume");
+        $referenc = $this->input->post("reference_type");
+        if(isset($referenc) && !empty($referenc) )
+        {
+            if($referenc == 'follow_up')
+            {
+                $reference_type = '1';
+            }
+            else{
+                $reference_type = '0';
+            }
+        }
+        else{
+            $reference_type = '0';
+        }
+
 
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
         {
@@ -1811,7 +1826,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             'country_id' => $country_id,
             'status' => '0',
             'submit_status' => '0',
-            'reference_type' => '0',
+
+            'reference_type' => $reference_type,
             'reference_id' => '0',
             'created_by_user' => $user_id,
             'created_on' => date('Y-m-d H:i:s'),
@@ -2148,7 +2164,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     }
 
 
-    public function addActivityUnplanned($user_id,$country_id,$local_date)
+    public function addActivityUnplanned($user_id,$country_id,$web_service = null,$local_date = null)
     {
          //testdata($_POST);
         $activity_type_id = $this->input->post("activity_type_id");
@@ -2188,8 +2204,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $product_materials_qty =  explode(',',$this->input->post("product_materials_qty"));
             $materials =  explode(',',$this->input->post("materials"));
             $materials_qty =  explode(',',$this->input->post("materials_qty"));
-            $customer_no = $this->input->post("customer_no");
-            $customer_name = $this->input->post("customer_name");
+            $customer_no = explode(',',$this->input->post("customer_no"));
+            $customer_name =explode(',', $this->input->post("customer_name"));
             $activity_note = $this->input->post("activity_note");
             $rating = $this->input->post("rating");
             $amount = $this->input->post("amount");

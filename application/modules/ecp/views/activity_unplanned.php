@@ -631,6 +631,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-3 form-group">
                                         <div class="row">
                                             <div class="save_btn">
+                                                <input type="hidden" class="form-control" name="reference_type" id="" value="follow_up" placeholder="">
                                                 <button type="button" class="btn btn-primary" id="planning_save">Save</button>
                                             </div>
                                         </div>

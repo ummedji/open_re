@@ -3942,6 +3942,36 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+    public function saveActivityUnplanned()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id))) {
+
+            if(isset($_POST['execution_date']) && !empty($_POST['execution_date'])){
+                $insert = $this->ecp_model->addActivityUnplanned($user_id, $country_id, 'web_service');
+            }
+            else{
+                $insert = $this->ecp_model->addActivityPlanning($user_id, $country_id, 'web_service');
+            }
+
+
+            if ($insert != 0) {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $insert;
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
+
 
 
 

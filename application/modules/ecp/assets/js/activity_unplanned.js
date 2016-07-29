@@ -2,8 +2,6 @@ $(document).ready(function() {
     $('#execution_date').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true
-    }).on('changeDate',function(e){
-        dateChangeEvent(e);
     });
 
     $('#execution_time').timepicker({
@@ -99,19 +97,10 @@ $(document).ready(function() {
     /*Validation Rule*/
 
     $("#add_farmer").click(function() {
-
         $('#farmer_id').removeClass('ignore');
         $('#farmer_no').removeClass('ignore');
+        add_farmer();
 
-        var $valid = $("#activity_unplanned").valid();
-        if(!$valid) {
-            activity_unplanned_validators.focusInvalid();
-            return false;
-        }
-        else
-        {
-            add_farmer();
-        }
     });
 
 
@@ -980,6 +969,7 @@ $(document).on('click', '#check_save', function () {
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
+                        location.reload();
                     }
                 });
             return false;
@@ -1021,10 +1011,19 @@ $(document).on('click', '#check_save', function () {
     return false;
 });
 
+$(document).on('click', '#followup', function () {
+    $("#follow_up").css('display','block');
+});
+
+$(document).on('click', '#planning_close', function () {
+    $("#follow_up").css('display','none');
+});
 
 
 
-/*$(document).on('click', '#followup', function () {
+
+$(document).on('click', '#planning_save', function () {
+
     $('#farmer_id').addClass('ignore');
     $('#farmer_no').addClass('ignore');
     $('#customer_name').addClass('ignore');
@@ -1032,7 +1031,6 @@ $(document).on('click', '#check_save', function () {
 
     var param = $("#activity_unplanned").serializeArray();
 
-    //console.log(param);die;
     var $valid = $("#activity_unplanned").valid();
     if(!$valid) {
         activity_unplanned_validators.focusInvalid();
@@ -1094,4 +1092,4 @@ $(document).on('click', '#check_save', function () {
         }
     }
     return false;
-});*/
+});
