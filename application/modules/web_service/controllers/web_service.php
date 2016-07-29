@@ -2986,8 +2986,10 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         $role_id = $this->input->get_post('role_id');
 
+        $checked_type = $this->input->get_post('check_type');
+
         if (isset($user_id)) {
-            $physical_stock = $this->ishop_model->get_all_physical_stock_by_user($user_id, $country_id, $role_id, null, null, 'web_service');
+            $physical_stock = $this->ishop_model->get_all_physical_stock_by_user($user_id, $country_id, $role_id, $checked_type, null, 'web_service');
             if (!empty($physical_stock)) {
                 // For Pagination
                 $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
