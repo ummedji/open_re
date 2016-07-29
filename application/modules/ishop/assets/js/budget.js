@@ -738,7 +738,14 @@ $(document).on('submit', '#upload_budget_data', function (e) {
      
      var file_data = new FormData(this);
      var dir_name = "budget";
-     
+
+    if($("input.select_customer_type").length > 0) {
+        var select_customer_type = $('input[name=radio1]:checked', '#target').val();
+    }
+    else{
+        var select_customer_type = "";
+    }
+
       var month = new Array();
         month[0] = "Jan";
         month[1] = "Feb";
@@ -761,7 +768,7 @@ $(document).on('submit', '#upload_budget_data', function (e) {
     }
     else {
         $.ajax({
-            url: site_url + "ishop/upload_data/budget", // Url to which the request is send
+            url: site_url + "ishop/upload_data/budget"+select_customer_type, // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
             data: file_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
             contentType: false,       // The content type used when sending data to the server.
@@ -921,6 +928,7 @@ $(document).on('submit', '#upload_budget_data', function (e) {
                                             data: {val: value, dirname: dir_name}, // Data sent to server, a set of key/value pairs
                                             success: function (data)   // A function to be called if request succeeds
                                             {
+                                                location.reload();
                                             }
                                         });
 

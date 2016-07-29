@@ -94,7 +94,12 @@ $(document).on('submit', '#upload_credit_limit_data', function (e) {
      
      var file_data = new FormData(this);
      var dir_name = "credit_limit";
-     
+    if($("input.select_customer_type").length > 0) {
+        var select_customer_type = $('input[name=radio1]:checked', '#target').val();
+    }
+    else{
+        var select_customer_type = "";
+    }
     var month = new Array();
         month[0] = "Jan";
         month[1] = "Feb";
@@ -119,7 +124,7 @@ $(document).on('submit', '#upload_credit_limit_data', function (e) {
     }
     else {
         $.ajax({
-            url: site_url + "ishop/upload_data/creditlimit", // Url to which the request is send
+            url: site_url + "ishop/upload_data/creditlimit"+select_customer_type, // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
             data: file_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
             contentType: false,       // The content type used when sending data to the server.

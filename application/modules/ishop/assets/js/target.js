@@ -754,12 +754,16 @@ $(document).on('submit', '#upload_target_data', function (e) {
     var file_data = new FormData(this);
     var dir_name = "target";
 
+
+
     if($("input.select_customer_type").length > 0) {
-        var select_customer_type = $("input.select_customer_type").val();
+        var select_customer_type = $('input[name=radio1]:checked', '#target').val();
     }
     else{
         var select_customer_type = "";
     }
+
+    //alert(select_customer_type);return false;
 
     var header_array = [];
 
