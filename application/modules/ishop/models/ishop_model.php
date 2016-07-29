@@ -5896,6 +5896,15 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $final_amount = $order_amount_data - $amount_data;
 
+
+        $this->db->select('*');
+        $this->db->from('bf_ishop_product_order');
+        $this->db->where('order_id', $order_id);
+        $order_data1 = $this->db->get()->result_array();
+
+        $count_order = count($order_data1);
+
+
         $update_data = array(
             'total_amount' => $final_amount
         );
@@ -5904,6 +5913,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $this->db->update('bf_ishop_orders', $update_data);
 
         $this->db->delete('bf_ishop_product_order', array('product_order_id' => $order_product_id));
+
+        if($count_order == 1){
+            $this->db->delete('bf_ishop_orders', array('order_id' => $order_id));
+        }
+
         if($this->db->affected_rows() > 0){
             return 1;
         }
