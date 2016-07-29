@@ -2524,9 +2524,9 @@ class Ishop extends Front_Controller
 
              //   dumpme($ext);
              //   die;
-              //  testdata($action_data);
+             //   testdata($ext[1]);
                 
-                if($ext[1] == "xlsx" || $ext[1] == "xls") {
+                if($ext[1] === "xlsx" || $ext[1] === "xls") {
 
                     //load the excel library
                     $this->load->library('excel');
