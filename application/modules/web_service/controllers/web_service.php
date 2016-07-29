@@ -182,13 +182,13 @@ class Web_service extends Front_Controller
             if ($info = (isset($login, $password) && true === $this->auth->login($login, $password))) {
                 $this->db->select('*');
                 $this->db->from('users');
+                $this->db->join('countries as co', 'users.country_id = co.counrty_id');
                 $this->db->where('email', $login);
-                $this->db->where('deleted', 0);
+                $this->db->where('users.deleted', 0);
                 $this->db->where('banned', 0);
                 $this->db->where('active', 1);
                 $c_data = $this->db->get();
                 $code_data = $c_data->row_array();
-
                 if (!empty($code_data))
                 {
                     $data[] = array('user_id' => $code_data['id'],
@@ -199,7 +199,7 @@ class Web_service extends Front_Controller
                                     'role_id' => $code_data['role_id'],
                                     'bussinescode' => $code_data['bussiness_code'],
                                     'country_id' => $code_data['country_id'],
-                                    'local_date' => $code_data['local_date'],
+                                    'local_date' => $code_data['local_date_formet'],
                                     );
 
                     $id = $code_data['id'];

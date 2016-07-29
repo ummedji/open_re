@@ -58,7 +58,7 @@ Route::any('activate/(:any)', 'users/activate/$1');
 Route::any('resend_activation', 'users/resend_activation');
 
 
-Route::any('upload_data/(:any)', 'ishop/upload_data/$1');
+Route::any('upload_data/(:any)', 'ishop/upload_data/$1/$2');
 
 // Contexts
 Route::prefix(SITE_AREA, function(){

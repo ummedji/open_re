@@ -2489,6 +2489,7 @@ class Ishop extends Front_Controller
                 $logined_user_type = $user->role_id;
 				$files = $_POST["upload_file_data"];
                 $action_data = $this->uri->segment(3);
+                $sub_action_data = $this->uri->segment(4);
 
             }
 			else{
@@ -2496,6 +2497,8 @@ class Ishop extends Front_Controller
 				$logined_user_type =$_POST["role_id"];
 				$files = $_FILES["upload_file_data"];
                 $action_data = $_POST["action_data"];
+
+                $sub_action_data = $_POST["select_action_data"];
 			}
 
             if(isset($files) && !empty($files))
@@ -2684,22 +2687,39 @@ class Ishop extends Front_Controller
                                 if ($filename[0] == "target"  ){
 
 
-                                   // testdata($headerdata);
+                                    if($sub_action_data == "distributor"){
 
-                                      //     if(count($headerdata) != 6 || trim($headerdata["A"]) != "Month"  || (trim($headerdata["B"]) != "Distributor Code" || trim($headerdata["B"]) != "Retailer Code")  || (trim($headerdata["C"]) != "Distributor Name" || trim($headerdata["C"]) != "Retailer Name")  || trim($headerdata["D"]) != "Product SKU Code"  && trim($headerdata["E"]) != "Product SKU Name"  || trim($headerdata["F"]) != "Quantity(Kg/Ltr)"){
-
-
-                                               if(count($headerdata) != 6 && trim($headerdata["A"]) != "Month"  && (trim($headerdata["B"]) != "Distributor Code" || trim($headerdata["B"]) != "Retailer Code")  && (trim($headerdata["C"]) != "Distributor Name" || trim($headerdata["C"]) != "Retailer Name")  && trim($headerdata["D"]) != "Product SKU Code"  && trim($headerdata["E"]) != "Product SKU Name"  && trim($headerdata["F"]) != "Quantity(Kg/Ltr)"){       
+                                        if(count($headerdata) != 6 && trim($headerdata["A"]) != "Month"  || (trim($headerdata["B"]) != "Distributor Code")  || (trim($headerdata["C"]) != "Distributor Name")  || trim($headerdata["D"]) != "Product SKU Code"  || trim($headerdata["E"]) != "Product SKU Name"  || trim($headerdata["F"]) != "Quantity(Kg/Ltr)"){
 
 
-                                        $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
-                                        echo json_encode($error_array);
-                                        die;
+                                            echo count($headerdata);
+
+
+                                            $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                            echo json_encode($error_array);
+                                            die;
+
+                                        }
+
 
                                     }
+                                    else{
 
-                                    //   if($headerdata)
 
+
+                                        if(count($headerdata) != 6 && trim($headerdata["A"]) != "Month"  || (trim($headerdata["B"]) != "Retailer Code")  || (trim($headerdata["C"]) != "Retailer Name")  || trim($headerdata["D"]) != "Product SKU Code"  || trim($headerdata["E"]) != "Product SKU Name"  || trim($headerdata["F"]) != "Quantity(Kg/Ltr)"){
+
+
+                                            echo count($headerdata);
+
+
+                                            $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                            echo json_encode($error_array);
+                                            die;
+
+                                        }
+
+                                    }
 
                                 }
                                 elseif($filename[0] == "budget"){

@@ -754,6 +754,13 @@ $(document).on('submit', '#upload_target_data', function (e) {
     var file_data = new FormData(this);
     var dir_name = "target";
 
+    if($("input.select_customer_type").length > 0) {
+        var select_customer_type = $("input.select_customer_type").val();
+    }
+    else{
+        var select_customer_type = "";
+    }
+
     var header_array = [];
 
     var $valid = $("#upload_target_data").valid();
@@ -763,7 +770,7 @@ $(document).on('submit', '#upload_target_data', function (e) {
     }
     else {
         $.ajax({
-            url: site_url+"ishop/upload_data/target", // Url to which the request is send
+            url: site_url+"ishop/upload_data/target/"+select_customer_type, // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
             data: file_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
             contentType: false,       // The content type used when sending data to the server.
