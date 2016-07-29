@@ -577,59 +577,39 @@ echo form_open('',$attributes);
                                 </div>
                                 <div id="accordion" class="as_accordion" role="tablist" aria-multiselectable="true">
                                     <?php
-                                        foreach($activity_data as $k=>$activity_val)
-                                        {
-                                            ?>
+                                    //testdata($activity_data);
+                                    $j=0;
+                                    foreach($activity_data as $k=>$activity_val) { ?>
                                     <div class="panel panel-default">
-                                            <?php
-                                            $i=0;
-                                            foreach($activity_val as $key =>$val)
-                                            {
-                                                if($i == 0) {
-                                                    ?>
-                                                    <div class="panel-heading" role="tab" id="headingOne">
-                                                        <ul class="acc_list">
-                                                            <li>
-                                                                <a data-toggle="collapse" data-parent="#accordion"
-                                                                   href="#collapse_<?php echo strtotime($val['activity_planning_date']); ?>" aria-expanded="true"
-                                                                   aria-controls="collapse_<?php echo strtotime($val['activity_planning_date']); ?>">
-                                                                    <?php echo date('d',strtotime($val['activity_planning_date']))?>  <img
-                                                                        src="<?php echo Template::theme_url('images/list_arrow.png') ?>"
-                                                                        alt="" style="vertical-align: middle;">
-                                                                </a>
-                                                            </li>
-                                                            <li><?php echo $val['activity_type_country_name']?></li>
-                                                            <li><?php echo date('h:i:A',strtotime($val['activity_planning_time']))?></li>
-                                                            <li><?php echo $val['political_geography_name']?></li>
-                                                        </ul>
-
-                                                    </div>
-
-                                                    <div id="collapse_<?php echo strtotime($val['activity_planning_date']); ?>" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                                                    <?php
-                                                }
-                                                else{
-                                                    ?>
-                                                        <ul class="acc_list">
-                                                            <li>
-                                                                &nbsp;
-                                                            </li>
-                                                            <li><?php echo $val['activity_type_country_name']?></li>
-                                                            <li><?php echo $val['activity_planning_time']?></li>
-                                                            <li><?php echo $val['political_geography_name']?></li>
-                                                        </ul>
-                                        <?php
-                                                }
-                                            ?>
-                                                </div>
-                                                        <?php
-                                                $i++;
-                                            }
-                                           ?>
+                                        <?php foreach($activity_val as $key =>$val) { ?>
+                                        <?php if($key==0) {?>
+                                        <div class="panel-heading" role="tab">
+                                                <ul class="acc_list">
+                                                    <li><a data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $j;?>" aria-expanded="true" aria-controls="collapse<?php echo $j;?>"><?php echo date('d',strtotime($val['activity_planning_date']))?> <img src="<?php echo Template::theme_url('images/list_arrow.png') ?>" alt="" style="vertical-align: middle;"></a></li>
+                                                    <li><a href="#"><?php echo $val['activity_type_country_name']?></a></li>
+                                                    <li><?php echo date('h:i A',strtotime($val['activity_planning_time']))?></li>
+                                                    <li><?php echo $val['political_geography_name']?></li>
+                                                </ul>
+                                        </div>
+                                        <?php } else { ?>
+                                        <?php if($key==1) { ?><div id="collapse<?php echo $j;?>" class="panel-collapse collapse" role="tabpanel"><?php } ?>
+                                                <ul class="acc_list">
+                                                    <li>&nbsp;</li>
+                                                    <li><a href="#"><?php echo $val['activity_type_country_name'];?></a></li>
+                                                    <li><?php echo date('h:i A',strtotime($val['activity_planning_time']));?></li>
+                                                    <li><?php echo $val['political_geography_name'];?></li>
+                                                </ul>
+                                        <?php if($key==count($activity_val)) { ?></div><?php } ?>
+                                        <?php } ?>
+                                        <?php } ?>
                                     </div>
-                                    <?php
-                                        }
-                                        ?>
+                                    <?php $j++;} ?>
+                                </div>
+
+                                <div id="accordion" class="as_accordion" role="tablist" aria-multiselectable="true">
+
+
+
                                 </div>
                                 <div class="clearfix"></div>
                             </div>

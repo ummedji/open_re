@@ -198,7 +198,8 @@ class Web_service extends Front_Controller
                                     'language' => $code_data['language'],
                                     'role_id' => $code_data['role_id'],
                                     'bussinescode' => $code_data['bussiness_code'],
-                                    'country_id' => $code_data['country_id']
+                                    'country_id' => $code_data['country_id'],
+                                    'local_date' => $code_data['local_date'],
                                     );
 
                     $id = $code_data['id'];
@@ -2958,6 +2959,7 @@ class Web_service extends Front_Controller
         fclose($file);
         $user_id = $this->input->get_post('user_id');
         $file_name = $this->input->get_post('file_name');
+        $role_id = $this->input->get_post('role_id');
         if(isset($user_id)) {
             // testdata($_POST);
             $_POST['flag'] = 'web_service';
