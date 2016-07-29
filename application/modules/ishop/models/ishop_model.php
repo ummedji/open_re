@@ -330,6 +330,7 @@ class Ishop_model extends BF_Model
 
         }
         if($this->db->affected_rows() > 0){
+
             return 1;
         }
         else{
@@ -337,7 +338,7 @@ class Ishop_model extends BF_Model
         }
     }
 
-    public function check_valid_primary_sales_data($invoice_no, $order_tracking_no, $PO_no)
+    public function check_valid_primary_sales_data($invoice_no)
     {
         $this->db->select('primary_sales_id,total_amount');
         $this->db->from('ishop_primary_sales');

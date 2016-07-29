@@ -199,7 +199,7 @@ class Web_service extends Front_Controller
                                     'role_id' => $code_data['role_id'],
                                     'bussinescode' => $code_data['bussiness_code'],
                                     'country_id' => $code_data['country_id'],
-                                    'local_date' => $code_data['local_date_formet'],
+                                    'local_date' => $code_data['app_date_formet'],
                                     );
 
                     $id = $code_data['id'];

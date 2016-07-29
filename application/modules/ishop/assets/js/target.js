@@ -779,6 +779,34 @@ $(document).on('submit', '#upload_target_data', function (e) {
             success: function(data)   // A function to be called if request succeeds
             {
                 $.each( data, function( key, value ) {
+
+                    if(key =="fileerror"){
+
+                        $('<div></div>').appendTo('body')
+                                .html('<div>'+value+'</div>')
+                                .dialog({
+                                    appendTo: "#success_file_popup",
+                                    modal: true,
+                                    title: 'Save Data',
+                                    zIndex: 10000,
+                                    autoOpen: true,
+                                    width: 'auto',
+                                    resizable: true,
+                                    buttons:{
+                                        close: function (event, ui) {
+                                            $(this).remove();
+                                        }
+                                    },
+                                    close: function (event, ui) {
+                                        $(this).remove();
+                                    }
+
+                        });
+
+                        return false;
+                    }
+
+
                     if(key == "error"){
 
                         var value_data = JSON.stringify(value);
