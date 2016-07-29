@@ -11,21 +11,21 @@
     <meta name="author" content="<?php e(isset($meta_author) ? $meta_author : ''); ?>">
 
     <?php
-    Assets::add_css(array('bootstrap.min.css', 'style.css','green.css','hover.css','jquery.mCustomScrollbar.css',
-        'bootstrap-select.min.css','bootstrap-datepicker.min.css','calendar.css','bootstrap-timepicker.min.css','select2.min.css','jquery.rateyo.css'));
+    Assets::add_css(array('bootstrap.min.css', 'style.css', 'green.css', 'hover.css', 'jquery.mCustomScrollbar.css',
+        'bootstrap-select.min.css', 'bootstrap-datepicker.min.css', 'calendar.css', 'bootstrap-timepicker.min.css', 'select2.min.css', 'jquery.rateyo.css'));
     //Assets::add_js('bootstrap.min.js');
-    $inline  = '$(".dropdown-toggle").dropdown();';
+    $inline = '$(".dropdown-toggle").dropdown();';
     $inline .= '$(".tooltips").tooltip();';
     Assets::add_js($inline, 'inline');
     ?>
 
     <!-- Custom Fonts -->
-    <link href="<?php echo Template::theme_url('font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet" type="text/css">
+    <link href="<?php echo Template::theme_url('font-awesome/css/font-awesome.min.css'); ?>" rel="stylesheet"
+          type="text/css">
     <!--[if lt IE 9]>
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
-
 
 
     <?php echo Assets::css(); ?>
@@ -38,7 +38,9 @@
     </script>
 
     <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
-  <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
-
+    <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+    <script>
+        var date_format = '<?php if(!is_null(@constant("js_date"))) { echo js_date; } else { echo "yyyy-mm-dd"; }?>';
+    </script>
 </head>
 <body>

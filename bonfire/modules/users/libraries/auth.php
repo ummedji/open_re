@@ -311,6 +311,11 @@ class Auth
 
         $local_date = $this->ci->country_master_model->find($user->country_id);
         @$user->local_date = $local_date->local_date_formet;
+        @$user->js_date = $local_date->js_date_formet;
+
+        if(trim($user->js_date)!=''){
+            define('js_date',strtolower(@$user->js_date));
+        }
 
 
         // Load the security helper for the do_hash() function.

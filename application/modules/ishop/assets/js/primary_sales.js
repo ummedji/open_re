@@ -3,10 +3,9 @@
  */
 $(function () {
     $('#invoice_date').datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: true
-        });
-
+            format: date_format,
+            autoclose: true
+    });
 
 
 // START ::: Added By Vishal Malaviya For Validation
