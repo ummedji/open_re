@@ -4867,7 +4867,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         
        // echo $action_data."</br>";
         
-        echo $sql;
+        //echo $sql;
        // die;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
