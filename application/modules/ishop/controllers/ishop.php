@@ -2724,19 +2724,34 @@ class Ishop extends Front_Controller
                                 }
                                 elseif($filename[0] == "budget"){
 
+                                    if($sub_action_data == "distributor"){
 
-                                    if(count($headerdata) != 6 || $headerdata["A"] != "Month"  || ($headerdata["B"] != "Distributor Code" || $headerdata["B"] != "Retailer Name")  || ($headerdata["C"] != "Distributor Name" || $headerdata["B"] != "Retailer Code")  || $headerdata["D"] != "Product SKU Code"  || $headerdata["E"] != "Product SKU Name"  || $headerdata["F"] != "Quantity(Kg/Ltr)"){
+                                        if(count($headerdata) != 6 || $headerdata["A"] != "Month"  || ($headerdata["B"] != "Distributor Code")  || ($headerdata["C"] != "Distributor Name")  || $headerdata["D"] != "Product SKU Code"  || $headerdata["E"] != "Product SKU Name"  || $headerdata["F"] != "Quantity(Kg/Ltr)"){
 
-                                        $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
-                                        echo json_encode($error_array);
-                                        die;
+                                            $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                            echo json_encode($error_array);
+                                            die;
+
+                                        }
+
+
+                                    }else{
+
+                                        if(count($headerdata) != 6 || $headerdata["A"] != "Month"  || ($headerdata["B"] != "Retailer Name")  || ($headerdata["C"] != "Retailer Code")  || $headerdata["D"] != "Product SKU Code"  || $headerdata["E"] != "Product SKU Name"  || $headerdata["F"] != "Quantity(Kg/Ltr)"){
+
+                                            $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                            echo json_encode($error_array);
+                                            die;
+
+                                        }
 
                                     }
+
 
                                 }
                                 elseif ($filename[0] == "companycurrentstock") {
 
-                                    if(count($headerdata) != 8 && $headerdata["A"] != "Product SKU Code"  && $headerdata["B"] != "Product SKU Name"  && $headerdata["C"] != "Batch No"  && $headerdata["D"] != "Unrestricted Qty"  && $headerdata["E"] != "In Transit Qty"  && $headerdata["F"] != "Expiry Date" && $headerdata["F"] != "Mfg. Date" && $headerdata["F"] != "Date Data"){
+                                    if(count($headerdata) != 8 || $headerdata["A"] != "Product SKU Code"  || $headerdata["B"] != "Product SKU Name"  || $headerdata["C"] != "Batch No"  || $headerdata["D"] != "Unrestricted Qty"  || $headerdata["E"] != "In Transit Qty"  || $headerdata["F"] != "Expiry Date" || $headerdata["F"] != "Mfg. Date" || $headerdata["F"] != "Date Data"){
 
                                         $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
                                         echo json_encode($error_array);
@@ -2809,13 +2824,30 @@ class Ishop extends Front_Controller
 
                                     if ($user->role_id == 7){
 
-                                        if (count($headerdata) != 6 || ($headerdata["A"] != "Distributor Code" || $headerdata["A"] != "Retailer Code") || ($headerdata["B"] != "Distributor Name" || $headerdata["B"] != "Retailer Name") || $headerdata["C"] != "Product SKU Code" || $headerdata["D"] != "Product SKU Name" || $headerdata["E"] != "Unit"  || $headerdata["E"] != "Rol Quantity") {
+                                        if($sub_action_data == "distributor"){
 
-                                            $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
-                                            echo json_encode($error_array);
-                                            die;
+                                            if (count($headerdata) != 6 || ($headerdata["A"] != "Distributor Code") || ($headerdata["B"] != "Distributor Name") || $headerdata["C"] != "Product SKU Code" || $headerdata["D"] != "Product SKU Name" || $headerdata["E"] != "Unit"  || $headerdata["E"] != "Rol Quantity") {
+
+                                                $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                                echo json_encode($error_array);
+                                                die;
+
+                                            }
+
+                                        }else{
+
+                                            if (count($headerdata) != 6 || ($headerdata["A"] != "Retailer Code") || ($headerdata["B"] != "Retailer Name") || $headerdata["C"] != "Product SKU Code" || $headerdata["D"] != "Product SKU Name" || $headerdata["E"] != "Unit"  || $headerdata["E"] != "Rol Quantity") {
+
+                                                $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
+                                                echo json_encode($error_array);
+                                                die;
+
+                                            }
+
 
                                         }
+
+
                                     }
                                     else{
 
