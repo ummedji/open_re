@@ -1023,6 +1023,9 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
         $role_id = $this->input->get_post('role_id');
+
+        //$action_data = $this->input->get_post('action_data');
+
         if (isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id) && (isset($role_id) && !empty($role_id))) {
             $page_function = 'po_acknowledgement';
             $order_data = $this->ishop_model->get_order_data($role_id, $country_id, null, $user_id, $user_id, null, null, null, null, null, $page_function, null, 'web_service');
