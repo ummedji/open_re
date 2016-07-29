@@ -768,9 +768,10 @@ class Ecp extends Front_Controller
 		$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
 
 		$cur_month=date('n');
-		$cal_data = $this->getActivityDetailByMonth($cur_month);
-		$activity_data = $this->getActivityDetailPlanByMonth($cur_month);
- 	//	testdata($activity_data);
+		$cur_year=date('Y');
+		$cal_data = $this->getActivityDetailByMonth($cur_month,$cur_year);
+		$activity_data = $this->getActivityDetailPlanByMonth($cur_month,$cur_year);
+
 		Template::set('child_user_data', $child_user_data);
 		Template::set('activity_data', $activity_data);
 		Template::set('current_user', $user);
@@ -787,13 +788,12 @@ class Ecp extends Front_Controller
 	}
 
 
-	public function getActivityDetailByMonth($curr_month = '')
+	public function getActivityDetailByMonth($curr_month = '', $curr_year = '')
 	{
-
-		//Assets::add_module_js('ecp', 'activity_planning.js');
-		if($curr_month !='' && !empty($curr_month))
+		if(($curr_month !='' && !empty($curr_month)) &&  ($curr_year != '' && !empty($curr_year)) )
 		{
 			$cur_month = $curr_month;
+			$cur_year = $curr_year;
 		}
 		else{
 			@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
@@ -801,7 +801,7 @@ class Ecp extends Front_Controller
 		}
 		$user = $this->auth->user();
 
-		$activity_detail = $this->ecp_model->all_activity_planning_details($user->id,$user->country_id,null,$cur_month);
+		$activity_detail = $this->ecp_model->all_activity_planning_details($user->id,$user->country_id,null,$cur_month,$cur_year);
 
 		$action ='activity_planning';
 
@@ -818,11 +818,12 @@ class Ecp extends Front_Controller
 	}
 
 
-	public function getActivityDetailPlanByMonth($curr_month = '')
+	public function getActivityDetailPlanByMonth($curr_month = '' , $curr_year = '')
 	{
-		if($curr_month !='' && !empty($curr_month))
+		if($curr_month !='' && !empty($curr_month) && ($curr_year != '' && !empty($curr_year)))
 		{
 			$cur_month = $curr_month;
+			$cur_year = $curr_year;
 		}
 		else{
 			@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
@@ -830,7 +831,7 @@ class Ecp extends Front_Controller
 		}
 		$user = $this->auth->user();
 
-		$activity_detail = $this->ecp_model->all_activity_planning($user->id,$user->country_id,null,$cur_month);
+		$activity_detail = $this->ecp_model->all_activity_planning($user->id,$user->country_id,null,$cur_month,$cur_year);
 
 	//	testdata($activity_detail);
 		$action ='activity_planning';

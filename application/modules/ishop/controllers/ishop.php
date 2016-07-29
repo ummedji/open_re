@@ -2861,17 +2861,11 @@ class Ishop extends Front_Controller
 
                                     }
 
-
                                 }
-
-
 
                             }
 
                         }
-
-
-
 
 
                         // CHECK DATA IS PRESENT AND VALID
@@ -2926,11 +2920,35 @@ class Ishop extends Front_Controller
                                 if ($month_data == "" || $distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $quantity == "") {
                                     //CHECK DATA BLANK
 
+                                    $error_message = "";
+
+                                    if($month_data == ""){
+                                        $error_message .= " Month data is blank. ";
+                                    }
+                                    if($distributor_code == ""){
+                                        $error_message .= " Distributor code data is blank. ";
+                                    }
+                                    if($distributor_name == ""){
+                                        $error_message .= " Distributor name data is blank. ";
+                                    }
+
+                                    if($product_code == ""){
+                                        $error_message .= " Product code data is blank. ";
+                                    }
+                                    if($product_name == ""){
+                                        $error_message .= " Product name data is blank. ";
+                                    }
+
+                                    if($quantity == ""){
+                                        $error_message .= " Quantity data is blank. ";
+                                    }
+
+
                                     if (!isset($error_array["error"]["header"])) {
                                         $error_array["error"]["header"] = $header;
                                     }
 
-                                    $error_array["error"][] = $month_data . "~" . $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $quantity . "~" . "Some row data blank";
+                                    $error_array["error"][] = $month_data . "~" . $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $quantity . "~" .$error_message;
                                 } else {
 
                                     //CHECK PROPER DATA
@@ -3037,7 +3055,37 @@ class Ishop extends Front_Controller
                                         $error_array["error"]["header"] = $header;
                                     }
 
-                                    $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . "Some row data blank";
+
+                                    $error_message = "";
+
+                                    if($batch_no == ""){
+                                        $error_message .= " Batch No. data is blank. ";
+                                    }
+                                    if($Unrestricted_Qty == ""){
+                                        $error_message .= " Unrestricted quantity data is blank. ";
+                                    }
+                                    if($In_Transit_Qty == ""){
+                                        $error_message .= " Intransist Quantity data is blank. ";
+                                    }
+
+                                    if($product_code == ""){
+                                        $error_message .= " Product code data is blank. ";
+                                    }
+                                    if($product_name == ""){
+                                        $error_message .= " Product name data is blank. ";
+                                    }
+
+                                    if($Expiry_Date == ""){
+                                        $error_message .= " Expiary date data is blank. ";
+                                    }
+
+                                    if($Mfg_Date == ""){
+                                        $error_message .= " MFG date data is blank. ";
+                                    }
+
+
+
+                                    $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . $error_message;
                                 } else {
 
                                     //CHECK PROPER DATA
@@ -3121,7 +3169,29 @@ class Ishop extends Front_Controller
                                         $error_array["error"]["header"] = $header;
                                     }
 
-                                    $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $credit_limit . "~" . $current_outstanding . "~" . $Date_data . "~" . "Some row data blank";
+
+                                    $error_message = "";
+
+                                    if($distributor_code == ""){
+                                        $error_message .= " Distributor Code data is blank. ";
+                                    }
+                                    if($distributor_name == ""){
+                                        $error_message .= " Distributor name data is blank. ";
+                                    }
+                                    if($credit_limit == ""){
+                                        $error_message .= " Credit Limit data is blank. ";
+                                    }
+
+                                    if($current_outstanding == ""){
+                                        $error_message .= " Current outstanding data is blank. ";
+                                    }
+                                    if($Date_data == ""){
+                                        $error_message .= " Date data is blank. ";
+                                    }
+
+
+
+                                    $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $credit_limit . "~" . $current_outstanding . "~" . $Date_data . "~" .$error_message;
                                 } else {
 
                                     //CHECK PROPER DATA
@@ -3209,12 +3279,36 @@ class Ishop extends Front_Controller
                                     if ($distributor_code == "" || $distributor_name == "" || $product_code == "" || $product_name == "" || $unit_data == "" || $rol_quantity_data == "") {
                                         //CHECK DATA BLANK
 
+
+                                        $error_message = "";
+
+                                        if($distributor_code == ""){
+                                            $error_message .= " Distributor Code data is blank. ";
+                                        }
+                                        if($distributor_name == ""){
+                                            $error_message .= " Distributor name data is blank. ";
+                                        }
+                                        if($product_code == ""){
+                                            $error_message .= " Product code data is blank. ";
+                                        }
+
+                                        if($product_name == ""){
+                                            $error_message .= " Product name data is blank. ";
+                                        }
+                                        if($unit_data == ""){
+                                            $error_message .= " Unit data is blank. ";
+                                        }
+                                        if($rol_quantity_data == ""){
+                                            $error_message .= " Rol Qty data is blank. ";
+                                        }
+
+
+
                                         if (!isset($error_array["error"]["header"])) {
                                             $error_array["error"]["header"] = $header;
                                         }
 
-                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" . "Some row data blank";
-                                    } else {
+                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" .$error_message;                             } else {
 
                                         //CHECK PROPER DATA
 
@@ -3293,7 +3387,25 @@ class Ishop extends Front_Controller
                                             $error_array["error"]["header"] = $header;
                                         }
 
-                                        $error_array["error"][] = $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" . "Some row data blank";
+                                        $error_message = "";
+
+
+                                        if($product_code == ""){
+                                            $error_message .= " Product code data is blank. ";
+                                        }
+
+                                        if($product_name == ""){
+                                            $error_message .= " Product name data is blank. ";
+                                        }
+                                        if($unit_data == ""){
+                                            $error_message .= " Unit data is blank. ";
+                                        }
+                                        if($rol_quantity_data == ""){
+                                            $error_message .= " Rol Qty data is blank. ";
+                                        }
+
+
+                                        $error_array["error"][] = $product_code . "~" . $product_name . "~" . $unit_data . "~" . $rol_quantity_data . "~" . $error_message;
                                     } else {
 
                                         //CHECK PROPER DATA
@@ -3401,7 +3513,51 @@ class Ishop extends Front_Controller
                                         $error_array["error"]["header"] = $header;
                                     }
 
-                                    $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $otn . "~" . $po_no . "~" . $product_code . "~" . $product_name . "~" . $po_qty . "~" . $dispatch_qty . "~" . $amt . "~" . "Some row data blank";
+                                    $error_message = "";
+
+                                    if($distributor_code == ""){
+                                        $error_message .= " Distributor code data is blank. ";
+                                    }
+
+                                    if($distributor_name == ""){
+                                        $error_message .= " Distributor name data is blank. ";
+                                    }
+
+                                    if($invoice_no == ""){
+                                        $error_message .= " Invoice Number data is blank. ";
+                                    }
+
+                                    if($invoice_date == ""){
+                                        $error_message .= " Invoice date data is blank. ";
+                                    }
+                                    if($otn == ""){
+                                        $error_message .= " Otn data is blank. ";
+                                    }
+
+                                    if($po_no == ""){
+                                        $error_message .= " PO No. data is blank. ";
+                                    }
+                                    if($po_qty == ""){
+                                        $error_message .= " Quantity data is blank. ";
+                                    }
+
+                                    if($dispatch_qty == ""){
+                                        $error_message .= " Dispatched Quantity data is blank. ";
+                                    }
+                                    if($amt == ""){
+                                        $error_message .= " Amount data is blank. ";
+                                    }
+
+                                    if($product_code == ""){
+                                        $error_message .= " Product code data is blank. ";
+                                    }
+
+                                    if($product_name == ""){
+                                        $error_message .= " Product name data is blank. ";
+                                    }
+
+
+                                    $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $otn . "~" . $po_no . "~" . $product_code . "~" . $product_name . "~" . $po_qty . "~" . $dispatch_qty . "~" . $amt . "~" .$error_message;
                                 } else {
                                     //CHECK PROPER DATA
                                     //PRODUCT CHECK
@@ -3581,7 +3737,63 @@ class Ishop extends Front_Controller
                                             $error_array["error"]["header"] = $header;
                                         }
 
-                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Some row data blank";
+
+                                        $error_message = "";
+
+
+                                        if($distributor_code == ""){
+                                            $error_message .= " Distributor code data is blank. ";
+                                        }
+
+                                        if($distributor_name == ""){
+                                            $error_message .= " Distributor name data is blank. ";
+                                        }
+
+                                        if($retailer_code == ""){
+                                            $error_message .= " Distributor code data is blank. ";
+                                        }
+
+                                        if($retailer_name == ""){
+                                            $error_message .= " Distributor name data is blank. ";
+                                        }
+
+                                        if($invoice_no == ""){
+                                            $error_message .= " Invoice Number data is blank. ";
+                                        }
+
+                                        if($invoice_date == ""){
+                                            $error_message .= " Invoice date data is blank. ";
+                                        }
+                                        if($otn == ""){
+                                            $error_message .= " Otn data is blank. ";
+                                        }
+
+                                        if($po_no == ""){
+                                            $error_message .= " PO No. data is blank. ";
+                                        }
+                                        if($unit == ""){
+                                            $error_message .= " Unit data is blank. ";
+                                        }
+
+                                        if($quantity == ""){
+                                            $error_message .= " Quantity data is blank. ";
+                                        }
+                                        if($amount == ""){
+                                            $error_message .= " Amount data is blank. ";
+                                        }
+
+                                        if($product_code == ""){
+                                            $error_message .= " Product code data is blank. ";
+                                        }
+
+                                        if($product_name == ""){
+                                            $error_message .= " Product name data is blank. ";
+                                        }
+
+
+
+
+                                        $error_array["error"][] = $distributor_code . "~" . $distributor_name . "~" . $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
                                     } else {
                                         //CHECK PROPER DATA
                                         //PRODUCT CHECK
@@ -3798,7 +4010,56 @@ class Ishop extends Front_Controller
                                             $error_array["error"]["header"] = $header;
                                         }
 
-                                        $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . "Some row data blank";
+
+
+                                        $error_message = "";
+
+
+                                        if($retailer_code == ""){
+                                            $error_message .= " Distributor code data is blank. ";
+                                        }
+
+                                        if($retailer_name == ""){
+                                            $error_message .= " Distributor name data is blank. ";
+                                        }
+
+                                        if($invoice_no == ""){
+                                            $error_message .= " Invoice Number data is blank. ";
+                                        }
+
+                                        if($invoice_date == ""){
+                                            $error_message .= " Invoice date data is blank. ";
+                                        }
+                                        if($otn == ""){
+                                            $error_message .= " Otn data is blank. ";
+                                        }
+
+                                        if($po_no == ""){
+                                            $error_message .= " PO No. data is blank. ";
+                                        }
+                                        if($unit == ""){
+                                            $error_message .= " Unit data is blank. ";
+                                        }
+
+                                        if($quantity == ""){
+                                            $error_message .= " Quantity data is blank. ";
+                                        }
+                                        if($amount == ""){
+                                            $error_message .= " Amount data is blank. ";
+                                        }
+
+                                        if($product_code == ""){
+                                            $error_message .= " Product code data is blank. ";
+                                        }
+
+                                        if($product_name == ""){
+                                            $error_message .= " Product name data is blank. ";
+                                        }
+
+
+
+
+                                        $error_array["error"][] = $retailer_code . "~" . $retailer_name . "~" . $invoice_no . "~" . $invoice_date . "~" . $po_no . "~" . $otn . "~" . $product_code . "~" . $product_name . "~" . $unit . "~" . $quantity . "~" . $amount . "~" . $error_message;
                                     } else {
 
                                         //CHECK PROPER DATA
@@ -3996,7 +4257,30 @@ class Ishop extends Front_Controller
                                         $error_array["error"]["header"] = $header;
                                     }
 
-                                    $error_array["error"][] = $month . "~" . $product_code . "~" . $product_name . "~" . $qty . "~" . $unit . "~" . "Some row data blank";
+                                    $error_message = "";
+
+
+                                    if($unit == ""){
+                                        $error_message .= " Unit data is blank. ";
+                                    }
+
+                                    if($month == ""){
+                                        $error_message .= " Month data is blank. ";
+                                    }
+                                    if($qty == ""){
+                                        $error_message .= " Quantity data is blank. ";
+                                    }
+
+                                    if($product_code == ""){
+                                        $error_message .= " Product code data is blank. ";
+                                    }
+
+                                    if($product_name == ""){
+                                        $error_message .= " Product name data is blank. ";
+                                    }
+
+
+                                    $error_array["error"][] = $month . "~" . $product_code . "~" . $product_name . "~" . $qty . "~" . $unit . "~" .$error_message;
                                 } else {
 
                                     //CHECK PROPER DATA
