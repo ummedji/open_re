@@ -6049,12 +6049,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function add_target_data($target_data, $user_id, $web_service = null, $country_id = null, $role_id = null,$excel_data = null)
     {
-       // testdata($target_data);
 
-      //  dumpme($target_data);
-      //  dumpme($web_service);
 
-      //  die;
+        $response_arrray = array();
 
         if($excel_data != "" || !empty($excel_data))
         {
@@ -6062,32 +6059,30 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             if(isset($target_data) && !empty($target_data))
             {
 
-                foreach ($target_data as $key => $value) {
-
-                    // dumpme($value)
+                foreach ($target_data as $key => $value)
+                {
 
                     $target_array = array();
 
-                    $target_array["month_data"] = $target_data["month"]."-01";
-                    $target_array["customer_id"] = $target_data["customer_id"];
-                    $target_array["product_sku_id"] = $target_data["prod_sku"];
-                    $target_array["quantity"] = $target_data["quantity"];
+                    $target_array["month_data"] = $value[0];
+                    $target_array["customer_id"] = $value[1];
+                    $target_array["product_sku_id"] = $value[2];
+                    $target_array["quantity"] = $value[3];
                     $target_array["country_id"] = $country_id;
 
                     $target_array["created_on"] = date("Y-m-d h:i:s");
                     $target_array["created_by_user"] = $user_id;
 
-
-                    $check_already_data = $this->check_target_data($target_data["prod_sku"], $target_data["month"]."-01", $target_data["customer_id"]);
+                    $check_already_data = $this->check_target_data($target_array["product_sku_id"], $target_array["month_data"]."-01", $target_array["customer_id"]);
 
                     if ($check_already_data == 0) {
                         $id = $this->db->insert('bf_ishop_target', $target_array);
                     } else {
                         $target_update_data = array(
-                            'month_data' => $target_data["month"]."-01",
-                            'customer_id' => $target_data["customer_id"],
-                            'product_sku_id' => $target_data["prod_sku"],
-                            'quantity' => $target_data["quantity"],
+                            'month_data' => $value[0],
+                            'customer_id' => $value[1],
+                            'product_sku_id' => $value[2],
+                            'quantity' => $value[3],
                             'modified_by_user' => $user_id,
                             'country_id' => $country_id,
                             'status' => '1',
@@ -6099,14 +6094,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     }
 
+                    if($this->db->affected_rows() > 0){
+                        $response_arrray[] = 1;
+                    }
+
                 }
-
-
             }
 
-
         }
-        else{
+        else
+        {
 
             if ($role_id == 8) {
                 $target_data['radio1'] = 'distributor';
@@ -6153,6 +6150,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
             }
 
+            if($this->db->affected_rows() > 0){
+                $response_arrray[] = 1;
+            }
+
         }
 
 
@@ -6171,7 +6172,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         
         
         
-        if($this->db->affected_rows() > 0){
+        if(in_array(1,$response_arrray)){
             return 1;
         }
         else{
