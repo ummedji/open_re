@@ -2684,33 +2684,46 @@ class Ishop extends Front_Controller
                         if(!empty($data['header'])){
                             foreach ($data['header'] as $key => $headerdata) {
 
-                                if ($filename[0] == "target"  ){
+                                if ($filename[0] == "target"  ) {
+
+                                    if ($logined_user_type == 7){
+                                        if ($sub_action_data == "distributor") {
+
+                                            if (count($headerdata) != 6 && trim($headerdata["A"]) != "Month" || (trim($headerdata["B"]) != "Distributor Code") || (trim($headerdata["C"]) != "Distributor Name") || trim($headerdata["D"]) != "Product SKU Code" || trim($headerdata["E"]) != "Product SKU Name" || trim($headerdata["F"]) != "Quantity(Kg/Ltr)") {
 
 
-                                    if($sub_action_data == "distributor"){
-
-                                        if(count($headerdata) != 6 && trim($headerdata["A"]) != "Month"  || (trim($headerdata["B"]) != "Distributor Code")  || (trim($headerdata["C"]) != "Distributor Name")  || trim($headerdata["D"]) != "Product SKU Code"  || trim($headerdata["E"]) != "Product SKU Name"  || trim($headerdata["F"]) != "Quantity(Kg/Ltr)"){
+                                                //   echo count($headerdata);
 
 
-                                         //   echo count($headerdata);
+                                                $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
+                                                echo json_encode($error_array);
+                                                die;
+
+                                            }
 
 
-                                            $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
-                                            echo json_encode($error_array);
-                                            die;
+                                        } else {
+
+
+                                            if (count($headerdata) != 6 && trim($headerdata["A"]) != "Month" || (trim($headerdata["B"]) != "Retailer Code") || (trim($headerdata["C"]) != "Retailer Name") || trim($headerdata["D"]) != "Product SKU Code" || trim($headerdata["E"]) != "Product SKU Name" || trim($headerdata["F"]) != "Quantity(Kg/Ltr)") {
+
+
+                                                //   echo count($headerdata);
+
+
+                                                $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
+                                                echo json_encode($error_array);
+                                                die;
+
+                                            }
 
                                         }
-
-
-                                    }
+                                }
                                     else{
+                                        if (count($headerdata) != 6 && trim($headerdata["A"]) != "Month" || (trim($headerdata["B"]) != "Distributor Code") || (trim($headerdata["C"]) != "Distributor Name") || trim($headerdata["D"]) != "Product SKU Code" || trim($headerdata["E"]) != "Product SKU Name" || trim($headerdata["F"]) != "Quantity(Kg/Ltr)") {
 
 
-
-                                        if(count($headerdata) != 6 && trim($headerdata["A"]) != "Month"  || (trim($headerdata["B"]) != "Retailer Code")  || (trim($headerdata["C"]) != "Retailer Name")  || trim($headerdata["D"]) != "Product SKU Code"  || trim($headerdata["E"]) != "Product SKU Name"  || trim($headerdata["F"]) != "Quantity(Kg/Ltr)"){
-
-
-                                         //   echo count($headerdata);
+                                            //   echo count($headerdata);
 
 
                                             $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
@@ -2718,7 +2731,6 @@ class Ishop extends Front_Controller
                                             die;
 
                                         }
-
                                     }
 
                                 }
@@ -2772,7 +2784,7 @@ class Ishop extends Front_Controller
 
 
                                 } elseif ($filename[0] == "secondarysales") {
-                                    if ($user->role_id == 8) {
+                                    if ($logined_user_type == 8) {
 
 
                                         if(count($headerdata) != 13 || $headerdata["A"] != "Distributor Code"  || $headerdata["B"] != "Distributor Name"  || $headerdata["C"] != "Retailer Code"  || $headerdata["D"] != "Retailer Name"  || $headerdata["E"] != "Invoice No"   || $headerdata["F"] != "Invoice Date"   || $headerdata["G"] != "PO No"   || $headerdata["H"] != "Order Tracking No"   || $headerdata["I"] != "Product SKU Code" || $headerdata["J"] != "Product SKU Name" || $headerdata["K"] != "Unit" || $headerdata["L"] != "Quantity" || $headerdata["M"] != "Amount"){
@@ -2822,7 +2834,7 @@ class Ishop extends Front_Controller
                                 }
                                 elseif ($filename[0] == "rol") {
 
-                                    if ($user->role_id == 7){
+                                    if ($logined_user_type == 7){
 
                                         if($sub_action_data == "distributor"){
 
