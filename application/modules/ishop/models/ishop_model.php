@@ -181,7 +181,7 @@ class Ishop_model extends BF_Model
 
             $total_amount = array_sum($amount);
 
-            $validat = $this->check_valid_primary_sales_data($invoice_no, $order_tracking_no, $PO_no);
+            $validat = $this->check_valid_primary_sales_data($invoice_no);
 
             if ($validat == 0) {
                 $primary_sales_data = array(
@@ -267,7 +267,7 @@ class Ishop_model extends BF_Model
                     $amount = $value[8];
 
                     //IF INVOIVE , OTN, PO data already exist or make them to insert only single time
-                    $validat = $this->check_valid_primary_sales_data($invoice_no, $order_tracking_no, $PO_no);
+                    $validat = $this->check_valid_primary_sales_data($invoice_no);
 
                     if ($validat == 0) {
                         //  echo 'in';die;
@@ -342,8 +342,6 @@ class Ishop_model extends BF_Model
         $this->db->select('primary_sales_id,total_amount');
         $this->db->from('ishop_primary_sales');
         $this->db->where('invoice_no', $invoice_no);
-        $this->db->where('order_tracking_no', $order_tracking_no);
-        $this->db->where('PO_no', $PO_no);
         $primary_sales = $this->db->get()->result_array();
         if (isset($primary_sales) && !empty($primary_sales)) {
             return $primary_sales;
@@ -1218,7 +1216,7 @@ class Ishop_model extends BF_Model
 
             $rand_data = $this->get_random_no($rand_type, $table);
 
-            $validat = $this->check_valid_secondary_sales_data($invoice_no, $order_tracking_no, $PO_no);
+            $validat = $this->check_valid_secondary_sales_data($invoice_no);
 
             if($validat == 0){
                 $secondary_sales_data = array(
@@ -1315,7 +1313,7 @@ class Ishop_model extends BF_Model
 
                     $qty_kgl = $this->get_product_conversion_data($product_sku_id, $quantity, $units);
                     // testdata($qty_kgl);
-                    $validat = $this->check_valid_secondary_sales_data($invoice_no, $order_tracking_no, $PO_no);
+                    $validat = $this->check_valid_secondary_sales_data($invoice_no);
 
                     $rand_type = 'etn';
                     $table = 'ishop_secondary_sales';
@@ -2275,7 +2273,7 @@ class Ishop_model extends BF_Model
 
                 $rand_data = $this->get_random_no($rand_type, $table);
 
-                $validat = $this->check_valid_secondary_sales_data($invoice_no, $otn, $PO_no);
+                $validat = $this->check_valid_secondary_sales_data($invoice_no);
 
                 if($validat == 0){
 
@@ -2371,7 +2369,7 @@ class Ishop_model extends BF_Model
 
                     $qty_kgl = $this->get_product_conversion_data($product_sku_id, $quantity, $units);
                     // testdata($qty_kgl);
-                    $validat = $this->check_valid_secondary_sales_data($invoice_no, $order_tracking_no, $PO_no);
+                    $validat = $this->check_valid_secondary_sales_data($invoice_no);
                     if ($validat == 0) {
 
                         $total_amount = $amount;
@@ -2445,13 +2443,11 @@ class Ishop_model extends BF_Model
         }
     }
 
-    public function check_valid_secondary_sales_data($invoice_no, $order_tracking_no, $PO_no)
+    public function check_valid_secondary_sales_data($invoice_no)
     {
         $this->db->select('secondary_sales_id,total_amount');
         $this->db->from('ishop_secondary_sales');
         $this->db->where('invoice_no', $invoice_no);
-        $this->db->where('order_tracking_no', $order_tracking_no);
-        $this->db->where('PO_no', $PO_no);
         $secondary_sales = $this->db->get()->result_array();
         // testdata($secondary_sales);
         if (isset($secondary_sales) && !empty($secondary_sales)) {

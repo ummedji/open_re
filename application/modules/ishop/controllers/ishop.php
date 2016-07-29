@@ -2692,7 +2692,7 @@ class Ishop extends Front_Controller
                                         if(count($headerdata) != 6 && trim($headerdata["A"]) != "Month"  || (trim($headerdata["B"]) != "Distributor Code")  || (trim($headerdata["C"]) != "Distributor Name")  || trim($headerdata["D"]) != "Product SKU Code"  || trim($headerdata["E"]) != "Product SKU Name"  || trim($headerdata["F"]) != "Quantity(Kg/Ltr)"){
 
 
-                                            echo count($headerdata);
+                                         //   echo count($headerdata);
 
 
                                             $error_array["error"][] = "Upload file is not proper. Please download proper format file.";
