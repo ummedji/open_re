@@ -113,23 +113,13 @@ $(document).on('click', 'div.primary_cont .eye_i', function () {
         data: {id: id},
         success: function(resp){
             $("#middle_container_product").html(resp);
-            
-       //      $("#middle_container_product").animate({ 
-       //         scrollTop: $("#middle_container_product").offset().top 
-      //      }, "slow");
-            
         }
     });
-    
- //   alert($(this).find("a").attr('href'));
-    
-    
-    
-  //  $("body, html").animate({ 
-  //      scrollTop: $( $(this).find("a").attr('href') ).offset().top 
-  //   }, "slow");
-        
-    
+
+    $('#main').animate({
+        scrollTop: $(document).height()
+    }, 1000);
+
     return false;
 });
 /*Get  Primary Sales Data*/

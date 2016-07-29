@@ -4271,10 +4271,9 @@ class Ishop extends Front_Controller
             
             $user_id = $user->id;
             $country_id = $user->country_id;
-            
-            
+
             if($_POST["dirname"] == "target"){
-                $target_data = $this->ishop_model->add_target_data($_POST["val"],$user_id,'web_service',$country_id);
+                $target_data = $this->ishop_model->add_target_data($_POST["val"],$user_id,null,$country_id,null,'excel');
             }
             elseif($_POST["dirname"] == "budget"){
                 $budget_data = $this->ishop_model->add_budget_data($_POST["val"]);

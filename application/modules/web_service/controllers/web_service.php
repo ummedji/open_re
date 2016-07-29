@@ -1026,6 +1026,7 @@ class Web_service extends Front_Controller
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
                                 "order_status" => $order_status,
+                                "status_id" => $order['order_status'],
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
@@ -1075,6 +1076,7 @@ class Web_service extends Front_Controller
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
                                 "order_status" => $order_status,
+                                "status_id" => $order['order_status'],
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
@@ -1090,6 +1092,7 @@ class Web_service extends Front_Controller
                             "edd" => $order['estimated_delivery_date'],
                             "amount" => $order['total_amount'],
                             "order_status" => $order_status,
+                            "status_id" => $order['order_status'],
                             "details" => !empty($order_details) ? $order_details : array()
                         );
                     }
