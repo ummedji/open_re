@@ -2526,7 +2526,7 @@ class Ishop extends Front_Controller
              //   die;
               //  testdata($action_data);
                 
-                if($ext[1] == "xlsx") {
+                if($ext[1] == "xlsx" || $ext[1] == "xls") {
 
                     //load the excel library
                     $this->load->library('excel');
@@ -3300,7 +3300,7 @@ class Ishop extends Front_Controller
                                             else{
                                                 $error_message .= " Retailer name data is blank. ";
                                             }
-                                            
+
                                         }
                                         if($product_code == ""){
                                             $error_message .= " Product code data is blank. ";
