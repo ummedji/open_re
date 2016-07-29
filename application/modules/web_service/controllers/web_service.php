@@ -2958,7 +2958,7 @@ class Web_service extends Front_Controller
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
-
+        $checked_type = $this->input->get_post('check_type');
         if (isset($user_id)) {
             $id = $this->ishop_model->add_physical_stock_detail($user_id, $country_id, null, null, null);
             if ($id) {
