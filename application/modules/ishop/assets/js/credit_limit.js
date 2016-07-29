@@ -131,6 +131,35 @@ $(document).on('submit', '#upload_credit_limit_data', function (e) {
 
                     if (key == "error") {
 
+
+                        if(key =="fileerror"){
+
+                            $('<div></div>').appendTo('body')
+                                .html('<div>'+value+'</div>')
+                                .dialog({
+                                    appendTo: "#success_file_popup",
+                                    modal: true,
+                                    title: 'Save Data',
+                                    zIndex: 10000,
+                                    autoOpen: true,
+                                    width: 'auto',
+                                    resizable: true,
+                                    buttons:{
+                                        close: function (event, ui) {
+                                            $(this).remove();
+                                        }
+                                    },
+                                    close: function (event, ui) {
+                                        $(this).remove();
+                                    }
+
+                                });
+
+                            return false;
+                        }
+
+
+
                         var value_data = JSON.stringify(value);
                         var error_message = "";
                         var t_data = "<table><thead>";

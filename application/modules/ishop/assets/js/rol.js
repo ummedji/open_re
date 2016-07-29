@@ -584,6 +584,33 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                 console.log(data);
                 $.each(data, function (key, value) {
 
+                    if(key =="fileerror"){
+
+                        $('<div></div>').appendTo('body')
+                            .html('<div>'+value+'</div>')
+                            .dialog({
+                                appendTo: "#success_file_popup",
+                                modal: true,
+                                title: 'Save Data',
+                                zIndex: 10000,
+                                autoOpen: true,
+                                width: 'auto',
+                                resizable: true,
+                                buttons:{
+                                    close: function (event, ui) {
+                                        $(this).remove();
+                                    }
+                                },
+                                close: function (event, ui) {
+                                    $(this).remove();
+                                }
+
+                            });
+
+                        return false;
+                    }
+
+
                     //alert(key+"==="+ value);
 
                     if (key == "error") {
