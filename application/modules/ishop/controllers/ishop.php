@@ -3283,10 +3283,24 @@ class Ishop extends Front_Controller
                                         $error_message = "";
 
                                         if($distributor_code == ""){
-                                            $error_message .= " Distributor Code data is blank. ";
+
+                                            if($sub_action_data == "distributor"){
+                                                $error_message .= " Distributor Code data is blank. ";
+                                            }
+                                            else{
+                                                $error_message .= " Retailer Code data is blank. ";
+                                            }
+
                                         }
                                         if($distributor_name == ""){
-                                            $error_message .= " Distributor name data is blank. ";
+
+                                            if($sub_action_data == "distributor"){
+                                                $error_message .= " Distributor name data is blank. ";
+                                            }
+                                            else{
+                                                $error_message .= " Retailer name data is blank. ";
+                                            }
+                                            
                                         }
                                         if($product_code == ""){
                                             $error_message .= " Product code data is blank. ";
