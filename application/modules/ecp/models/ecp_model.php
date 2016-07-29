@@ -1583,6 +1583,48 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
+    /* Get Junior Data */
+    public function get_jr_employee_for_loginuser($login_user_id,&$global_jr_user)
+    {
+        $u_data = $this->get_user_junior_data($login_user_id);
+
+        if($u_data != 0 && count($u_data)>0)
+        {
+            foreach($u_data as $ud)
+            {
+                $global_jr_user[] = $ud;
+                $login_user_id = $ud['user_id'];
+                $this->get_jr_employee_for_loginuser($login_user_id,$global_jr_user);
+            }
+            return $global_jr_user;
+        }
+        else
+        {
+            return $global_jr_user;
+        }
+
+    }
+
+    public function get_user_junior_data($user_id)
+    {
+        $this->db->select("bu.id,bu.display_name,bmerp.user_id");
+        $this->db->from("bf_master_employee_reporting_person as bmerp");
+        $this->db->join("bf_users as bu", 'bu.id = bmerp.user_id');
+        $this->db->where("bmerp.reporting_user_id", $user_id);
+        $this->db->where("bmerp.to_date", NULL);
+        $user_level_data = $this->db->get()->result_array();
+        /*echo $this->db->last_query();
+        echo "<br/>";*/
+
+        if (isset($user_level_data) && !empty($user_level_data)) {
+            return $user_level_data;
+        } else {
+            return 0;
+        }
+    }
+    /* Get Junior Data */
+
+
     public function get_employee_for_loginuser($login_user_id,&$global_head_user)
     {
 

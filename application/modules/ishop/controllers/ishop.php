@@ -161,8 +161,14 @@ class Ishop extends Front_Controller
 	{
 		$user = $this->auth->user();
 
-		$form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
-		$to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$f_date = str_replace('/', '-', $form_dt);
+		$form_date = date('Y-m-d', strtotime($f_date));
+
+		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$t_date = str_replace('/', '-', $to_dt);
+		$to_date = date('Y-m-d', strtotime($t_date));
+
 		$by_distributor = (isset($_POST['by_distributor']) ? $_POST['by_distributor'] : '');
 		$by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
 
@@ -471,8 +477,19 @@ class Ishop extends Front_Controller
 	{
 		//testdata($_POST);
 		$user = $this->auth->user();
-		$form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+
+	/*	$form_date = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
 		$to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		*/
+		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$f_date = str_replace('/', '-', $form_dt);
+		$form_date = date('Y-m-d', strtotime($f_date));
+
+		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$t_date = str_replace('/', '-', $to_dt);
+		$to_date = date('Y-m-d', strtotime($t_date));
+
+
 		$by_retailer = (isset($_POST['by_retailer']) ? $_POST['by_retailer'] : '');
 		$by_invoice_no = (isset($_POST['by_invoice_no']) ? $_POST['by_invoice_no'] : '');
 
@@ -1566,11 +1583,13 @@ class Ishop extends Front_Controller
             $logined_user_type = $user->role_id;
             $logined_user_id = $user->id;
             $logined_user_countryid = $user->country_id;
-            
+            $local_date = $user->local_date;
+
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
-            
+            Template::set('local_date',$local_date);
+
             Template::set_view('ishop/prespective_order');
             Template::render();
         }
@@ -1584,10 +1603,15 @@ class Ishop extends Front_Controller
         
         public function get_prespective_order() {
 
-			//var_dump($_POST);
-            $from_date = $_POST["form_date"];
-            $todate = $_POST["to_date"];
-            $loginusertype = $_POST["login_customer_type"];
+			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$f_date = str_replace('/', '-', $form_dt);
+			$from_date = date('Y-m-d', strtotime($f_date));
+
+			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$t_date = str_replace('/', '-', $to_dt);
+			$todate = date('Y-m-d', strtotime($t_date));
+
+			$loginusertype = $_POST["login_customer_type"];
             $loginuserid = $_POST["login_customer_id"];
 			$pag = (isset($_POST['page']) ? $_POST['page'] : '');
 			if($pag > 0)
@@ -1703,7 +1727,8 @@ class Ishop extends Front_Controller
             $logined_user_type = $user->role_id;
             $logined_user_id = $user->id;
             $logined_user_countryid = $user->country_id;
-            
+            $local_date = $user->local_date;
+
             $get_geo_level_data = "";
             $action_data = $this->uri->segment(2);
 
@@ -1747,7 +1772,8 @@ class Ishop extends Front_Controller
             Template::set('login_customer_type',$logined_user_type);
             Template::set('login_customer_id',$logined_user_id);
             Template::set('login_customer_countryid',$logined_user_countryid);
-            
+            Template::set('local_date',$local_date);
+
             Template::set('distributor',$distributor);
             Template::set('retailer',$retailer);
             Template::set('product_sku',$product_sku);
@@ -1839,9 +1865,15 @@ class Ishop extends Front_Controller
             $radio_checked = $_POST["radio1"];
             
             if($radio_checked == "distributor"){
-                
-                $from_date = $_POST["form_date"];
-                $todate = $_POST["to_date"];
+
+
+				$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+				$f_date = str_replace('/', '-', $form_dt);
+				$from_date = date('Y-m-d', strtotime($f_date));
+
+				$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+				$t_date = str_replace('/', '-', $to_dt);
+				$todate = date('Y-m-d', strtotime($t_date));
 
                 $loginuserid = $_POST["login_customer_id"];
 
@@ -1857,8 +1889,13 @@ class Ishop extends Front_Controller
          }
          elseif($radio_checked == "retailer"){
              
-                $from_date = $_POST["form_date"];
-                $todate = $_POST["to_date"];
+			 $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			 $f_date = str_replace('/', '-', $form_dt);
+			 $from_date = date('Y-m-d', strtotime($f_date));
+
+			 $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			 $t_date = str_replace('/', '-', $to_dt);
+			 $todate = date('Y-m-d', strtotime($t_date));
 
                 $loginuserid = $_POST["login_customer_id"];
 
@@ -1880,9 +1917,14 @@ class Ishop extends Front_Controller
               $radio_checked = $_POST["radio1"];
               
             if($radio_checked == "farmer"){
-                
-                $from_date = $_POST["form_date"];
-                $todate = $_POST["to_date"];
+
+				$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+				$f_date = str_replace('/', '-', $form_dt);
+				$from_date = date('Y-m-d', strtotime($f_date));
+
+				$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+				$t_date = str_replace('/', '-', $to_dt);
+				$todate = date('Y-m-d', strtotime($t_date));
 
                 $loginuserid = $_POST["login_customer_id"];
 
@@ -1907,10 +1949,14 @@ class Ishop extends Front_Controller
                 
                 
          }elseif($radio_checked == "distributor"){
-                
-                $from_date = $_POST["form_date"];
-                $todate = $_POST["to_date"];
 
+				$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+				$f_date = str_replace('/', '-', $form_dt);
+				$from_date = date('Y-m-d', strtotime($f_date));
+
+				$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+				$t_date = str_replace('/', '-', $to_dt);
+				$todate = date('Y-m-d', strtotime($t_date));
                 $loginuserid = $_POST["login_customer_id"];
 
 
@@ -1924,9 +1970,14 @@ class Ishop extends Front_Controller
                 
          }
          elseif($radio_checked == "retailer"){
-             
-                $from_date = $_POST["form_date"];
-                $todate = $_POST["to_date"];
+
+			 $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			 $f_date = str_replace('/', '-', $form_dt);
+			 $from_date = date('Y-m-d', strtotime($f_date));
+
+			 $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			 $t_date = str_replace('/', '-', $to_dt);
+			 $todate = date('Y-m-d', strtotime($t_date));
 
                 $loginuserid = $_POST["login_customer_id"];
 
@@ -1946,9 +1997,14 @@ class Ishop extends Front_Controller
         else if($loginusertype == 9){
             
             //FOR DISTRIBUTOR
-           
-             $from_date = $_POST["form_date"];
-             $todate = $_POST["to_date"];
+
+			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$f_date = str_replace('/', '-', $form_dt);
+			$from_date = date('Y-m-d', strtotime($f_date));
+
+			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$t_date = str_replace('/', '-', $to_dt);
+			$todate = date('Y-m-d', strtotime($t_date));
 
             $loginuserid = $_POST["login_customer_id"];
             $radio_checked = "";
@@ -1960,9 +2016,14 @@ class Ishop extends Front_Controller
         else if($loginusertype == 10){
 
             //FOR RETAILER
-            
-             $from_date = $_POST["form_date"];
-             $todate = $_POST["to_date"];
+
+			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$f_date = str_replace('/', '-', $form_dt);
+			$from_date = date('Y-m-d', strtotime($f_date));
+
+			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$t_date = str_replace('/', '-', $to_dt);
+			$todate = date('Y-m-d', strtotime($t_date));
 
             $loginuserid = $_POST["login_customer_id"];
             $radio_checked = "";
@@ -2224,8 +2285,14 @@ class Ishop extends Front_Controller
 			}
             if(isset($_POST) && !empty($_POST) && $_POST["form_date"] != "" && $_POST["to_date"] != ""){
 
-                   $from_date = $_POST["form_date"];
-				   $todate = $_POST["to_date"];
+				$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+				$f_date = str_replace('/', '-', $form_dt);
+				$from_date = date('Y-m-d', strtotime($f_date));
+
+				$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+				$t_date = str_replace('/', '-', $to_dt);
+				$todate = date('Y-m-d', strtotime($t_date));
+
                    $radio_checked = "";
                    $customer_id = $logined_user_id;
 
@@ -4625,7 +4692,7 @@ class Ishop extends Front_Controller
         
         public function copy_data(){
             $user= $this->auth->user();
-             $copy_data = $this->ishop_model->copy_data($_POST,$user->id);
+             $copy_data = $this->ishop_model->copy_data($_POST,$user->id,'webservice');
             echo $copy_data;
            
             die;
@@ -4641,8 +4708,17 @@ class Ishop extends Front_Controller
 		$this->load->library('excel');
 		$user = $this->auth->user();
 
-		$form_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-		$to_date = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+		/*$form_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+		$to_date = (isset($_GET['to_date']) ? $_GET['to_date'] : '');*/
+
+		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$f_date = str_replace('/', '-', $form_dt);
+		$form_date = date('Y-m-d', strtotime($f_date));
+
+		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$t_date = str_replace('/', '-', $to_dt);
+		$to_date = date('Y-m-d', strtotime($t_date));
+
 		$by_distributor = (isset($_GET['by_distributor']) ? $_GET['by_distributor'] : '');
 		$by_invoice_no = (isset($_GET['by_invoice_no']) ? $_GET['by_invoice_no'] : '');
 
@@ -4904,8 +4980,14 @@ class Ishop extends Front_Controller
 		$this->load->library('excel');
 		$user = $this->auth->user();
 
-		$form_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-		$to_date = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$f_date = str_replace('/', '-', $form_dt);
+		$form_date = date('Y-m-d', strtotime($f_date));
+
+		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$t_date = str_replace('/', '-', $to_dt);
+		$to_date = date('Y-m-d', strtotime($t_date));
+
 		$by_retailer = (isset($_GET['by_retailer']) ? $_GET['by_retailer'] : '');
 		$by_invoice_no = (isset($_GET['by_invoice_no']) ? $_GET['by_invoice_no'] : '');
 
@@ -5539,8 +5621,13 @@ class Ishop extends Front_Controller
 
 		$user = $this->auth->user();
 
-		$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$f_date = str_replace('/', '-', $form_dt);
+		$from_date = date('Y-m-d', strtotime($f_date));
+
+		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$t_date = str_replace('/', '-', $to_dt);
+		$todate = date('Y-m-d', strtotime($t_date));
 
 		$page = (isset($_GET['page']) ? $_GET['page'] : '');
 
@@ -5632,8 +5719,13 @@ class Ishop extends Front_Controller
 				$customer_id = (isset($_GET['retailer_id']) ? $_GET['retailer_id'] : '');
 			}
 
-			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$f_date = str_replace('/', '-', $form_dt);
+			$from_date = date('Y-m-d', strtotime($f_date));
+
+			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$t_date = str_replace('/', '-', $to_dt);
+			$todate = date('Y-m-d', strtotime($t_date));
 
 			$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
 
@@ -5761,8 +5853,14 @@ class Ishop extends Front_Controller
 			}
 
 			$order_tracking_no = (isset($_GET['order_tracking_no']) ? $_GET['order_tracking_no'] : null);
-			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+
+			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$f_date = str_replace('/', '-', $form_dt);
+			$from_date = date('Y-m-d', strtotime($f_date));
+
+			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$t_date = str_replace('/', '-', $to_dt);
+			$todate = date('Y-m-d', strtotime($t_date));
 
 			$page = (isset($_GET['page']) ? $_GET['page'] : '');
 
@@ -5931,8 +6029,13 @@ class Ishop extends Front_Controller
 		}
 		if($user->role_id == 9)
 		{
-			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$f_date = str_replace('/', '-', $form_dt);
+			$from_date = date('Y-m-d', strtotime($f_date));
+
+			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$t_date = str_replace('/', '-', $to_dt);
+			$todate = date('Y-m-d', strtotime($t_date));
 
 			$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
 
@@ -5992,8 +6095,13 @@ class Ishop extends Front_Controller
 		}
 		if($user->role_id == 10)
 		{
-			$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-			$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$f_date = str_replace('/', '-', $form_dt);
+			$from_date = date('Y-m-d', strtotime($f_date));
+
+			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$t_date = str_replace('/', '-', $to_dt);
+			$todate = date('Y-m-d', strtotime($t_date));
 
 			$page_function = (isset($_GET['page_function']) ? $_GET['page_function'] : '');
 
@@ -6189,8 +6297,16 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 
 
-		$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
-		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
+		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$f_date = str_replace('/', '-', $form_dt);
+		$from_date = date('Y-m-d', strtotime($f_date));
+
+		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$t_date = str_replace('/', '-', $to_dt);
+		$todate = date('Y-m-d', strtotime($t_date));
+
+		/*$from_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
+		$todate = (isset($_GET['to_date']) ? $_GET['to_date'] : '');*/
 		$by_otn = (isset($_GET['by_po_no']) ? $_GET['by_po_no'] : '');
 		$by_po_no = (isset($_GET['by_otn']) ? $_GET['by_otn'] : '');
 

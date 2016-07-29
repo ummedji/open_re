@@ -9,7 +9,7 @@ $(function () {
 
     });
     $('#invoice_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     });
 });

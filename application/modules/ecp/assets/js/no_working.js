@@ -1,4 +1,10 @@
+$(document).on("focusin", "#cur_date", function(event) {
+    $(this).prop('readonly', true);
+});
 
+$(document).on("focusout", "#cur_date", function(event) {
+    $(this).prop('readonly', false);
+});
 
 $(document).on('click','.leave_date', function(){
    var date= $(this).attr('rel');
@@ -79,7 +85,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#no_working").on("submit",function(){
+    $("#no_working #submit").on("click",function(){
 
         var param = $("#no_working").serializeArray();
 

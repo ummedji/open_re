@@ -1,7 +1,7 @@
 /**
  * Created by webclues on 5/17/2016.
  */
-
+var target_pop_up_validators;
 $(document).ready(function(){
 
     $( ".month_data" ).datepicker({
@@ -9,20 +9,6 @@ $(document).ready(function(){
         autoclose: true,
         viewMode: "months",
         minViewMode: "months"
-    });
-
-    $( "#from_copy_popup_datepicker" ).datepicker({
-        format: "yyyy",
-        autoclose: true,
-        viewMode: "years",
-        minViewMode: "years"
-    });
-
-    $( "#to_copy_popup_datepicker" ).datepicker({
-        format: "yyyy",
-        autoclose: true,
-        viewMode: "years",
-        minViewMode: "years"
     });
 
     var login_customer_type = $("input#login_customer_type").val();
@@ -36,6 +22,8 @@ $(document).ready(function(){
 
         //  alert(customer_type_selected);
         if(customer_type_selected == "retailer"){
+
+            $("#TargetCopyModal").remove();
 
             $("a#retailer_xl").css("display","inline-block");
             $("a#distributor_xl").css("display","none");
@@ -66,29 +54,34 @@ $(document).ready(function(){
                 //dataType : 'json',
                 success: function(resp){
                     $(".target_container").html(resp);
+                },complete: function (data) {
+                    //FOR COPY POPUP
+
+                    $("h4.modal-title").empty();
+                    $("h4.modal-title").html("Copy Retailer Data");
+
+                    $("select#from_customer_data").empty();
+                    $("select#to_customer_data").empty();
+
+                    /* $("select#from_customer_data").selectpicker('refresh');
+                     $("select#to_customer_data").selectpicker('refresh');*/
+
+                    $(".selectpicker").selectpicker('refresh');
+
+                    $("input#from_copy_popup_datepicker").val('');
+                    $("input#to_copy_popup_datepicker").val('');
+
+                    $('input[name="radio_from_popup_month_data"]').prop('checked', false);
+                    $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
+                    get_copy_popup_geo_data(customer_type_selected);
+
+                    target_pop_up_validators = copy_validation();
+
                 }
             });
 
 
-            //FOR COPY POPUP
 
-            $("h4.modal-title").empty();
-            $("h4.modal-title").html("Copy Retailer Data");
-
-            $("select#from_customer_data").empty();
-            $("select#to_customer_data").empty();
-
-           /* $("select#from_customer_data").selectpicker('refresh');
-            $("select#to_customer_data").selectpicker('refresh');*/
-
-            $(".selectpicker").selectpicker('refresh');
-
-            $("input#from_copy_popup_datepicker").val('');
-            $("input#to_copy_popup_datepicker").val('');
-
-            $('input[name="radio_from_popup_month_data"]').prop('checked', false);
-            $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
-            get_copy_popup_geo_data(customer_type_selected);
 
            $('#month_data').val('');
            $('#distributor_geo_level_1_data').selectpicker('val', '');
@@ -99,7 +92,9 @@ $(document).ready(function(){
         }
 
         else if(customer_type_selected == "distributor"){
-            // alert("2222");
+
+            $("#TargetCopyModal").remove();
+
             $("a#retailer_xl").css("display","none");
             $("a#distributor_xl").css("display","inline-block");
 
@@ -131,32 +126,33 @@ $(document).ready(function(){
                 data: {checked_type:'distributor'},
                 //dataType : 'json',
                 success: function(resp){
-
                     $(".target_container").html(resp);
+                },complete: function (data) {
+                    //FOR COPY POPUP
+
+                    $("h4.modal-title").empty();
+                    $("h4.modal-title").html("Copy Distributor Data");
+
+                    $("select#from_customer_data").empty();
+                    $("select#to_customer_data").empty();
+
+                    /* $("select#from_customer_data").selectpicker('refresh');
+                     $("select#to_customer_data").selectpicker('refresh');*/
+
+                    $(".selectpicker").selectpicker('refresh');
+                    $("input#from_copy_popup_datepicker").val('');
+                    $("input#to_copy_popup_datepicker").val('');
+
+                    $('input[name="radio_from_popup_month_data"]').prop('checked', false);
+
+                    $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
+
+                    get_copy_popup_geo_data(customer_type_selected);
+
+                    target_pop_up_validators = copy_validation();
+
                 }
             });
-
-
-            //FOR COPY POPUP
-
-            $("h4.modal-title").empty();
-            $("h4.modal-title").html("Copy Distributor Data");
-
-            $("select#from_customer_data").empty();
-            $("select#to_customer_data").empty();
-
-           /* $("select#from_customer_data").selectpicker('refresh');
-            $("select#to_customer_data").selectpicker('refresh');*/
-
-            $(".selectpicker").selectpicker('refresh');
-            $("input#from_copy_popup_datepicker").val('');
-            $("input#to_copy_popup_datepicker").val('');
-
-            $('input[name="radio_from_popup_month_data"]').prop('checked', false);
-
-            $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
-
-            get_copy_popup_geo_data(customer_type_selected);
 
             $('#ret_month_data').val('');
             $('#retailer_geo_level_1_data').selectpicker('val', '');
@@ -164,7 +160,6 @@ $(document).ready(function(){
             $('#retailer_id').selectpicker('val', '');
             $('#prod_sku').selectpicker('val', '');
             $('#quantity').val('');
-
         }
     });
 
@@ -201,17 +196,6 @@ $(document).ready(function(){
 
     });
 
-    //CODE FOR COPY POPUP DATA
-
-    $("select#from_popup_geo_data").on("change",function(){
-        var selected_geo_data = $(this).val();
-        get_user_by_geo_data(selected_geo_data,'from_data');
-    });
-
-    $("select#to_popup_geo_data").on("change",function(){
-        var selected_geo_data = $(this).val();
-        get_user_by_geo_data(selected_geo_data,'to_data');
-    });
 
     //ON ENTERING MOBILE NO GETTING GEO LOCATION DATA AND ASSOCIATED FARMER DATA AND THERE RETAILERS
 
@@ -298,6 +282,38 @@ $(document).ready(function(){
         }
     });
 });
+
+
+//CODE FOR COPY POPUP DATA
+
+$(document).on("change","select#from_popup_geo_data",function(){
+    var selected_geo_data = $(this).val();
+    get_user_by_geo_data(selected_geo_data,'from_data');
+});
+
+$(document).on("change","select#to_popup_geo_data",function(){
+    var selected_geo_data = $(this).val();
+    get_user_by_geo_data(selected_geo_data,'to_data');
+});
+
+$('body').on('focus',"#from_copy_popup_datepicker", function(){
+    $(this).datepicker({
+        format: "yyyy",
+        autoclose: true,
+        viewMode: "years",
+        minViewMode: "years"
+    });
+});
+
+$('body').on('focus',"#to_copy_popup_datepicker", function(){
+    $(this).datepicker({
+        format: "yyyy",
+        autoclose: true,
+        viewMode: "years",
+        minViewMode: "years"
+    });
+});
+
 
 function get_lower_geo_by_parent_geo(selected_geo_id){
 
@@ -588,6 +604,23 @@ function get_copy_popup_geo_data(customer_type_selected){
 
                 $("select#to_popup_geo_data").selectpicker('refresh');
             }
+
+
+            $("select#from_popup_geo_data").val("");
+            $("select#from_popup_geo_data").selectpicker('refresh');
+            $("select#to_popup_geo_data").val("");
+            $("select#to_popup_geo_data").selectpicker('refresh');
+
+
+            $("select#from_customer_data").val("");
+            $("select#from_customer_data").selectpicker('refresh');
+            $("select#to_customer_data").val("");
+            $("select#to_customer_data").selectpicker('refresh');
+
+            $("input#from_copy_popup_datepicker").val("");
+            $("input#to_copy_popup_datepicker").val("");
+
+
         }
     });
 }
@@ -944,36 +977,41 @@ $(document).on('submit', '#upload_target_data', function (e) {
 });
 
 
+function copy_validation(){
 
 
-var target_pop_up_validators = $("#copy_popup").validate({
-    rules: {
-        from_popup_geo_data: {
-            required: true
-        },
-        from_customer_data :{
-            required: true
-        },
-        from_year_data:{
-            required: true
-        },
-        radio_from_popup_month_data:{
-            required: true
-        },
-        to_popup_geo_data:{
-            required: true
-        },
-        to_customer_data:{
-            required: true
-        },
-        to_year_data:{
-            required: true
-        },
-        'checkbox_popup_month_data[]':{
-            required: true
+    var target_pop_up_validators = $("#copy_popup").validate({
+        rules: {
+            from_popup_geo_data: {
+                required: true
+            },
+            from_customer_data :{
+                required: true
+            },
+            from_year_data:{
+                required: true
+            },
+            radio_from_popup_month_data:{
+                required: true
+            },
+            to_popup_geo_data:{
+                required: true
+            },
+            "to_customer_data[]":{
+                required: true
+            },
+            to_year_data:{
+                required: true
+            },
+            'checkbox_popup_month_data[]':{
+                required: true
+            }
         }
-    }
-});
+    });
+    return target_pop_up_validators;
+}
+
+target_pop_up_validators = copy_validation();
 
 $(document).on("submit","#copy_popup",function() {
 

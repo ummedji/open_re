@@ -6,8 +6,15 @@
         echo form_open('ishop/get_prespective_order',$attributes); ?>
 
         <?php
-            $from_date = date("Y-m-01");
-            $to_date = date("Y-m-t", strtotime($from_date));
+          /*  $from_date = date("Y-m-01");
+            $to_date = date("Y-m-t", strtotime($from_date));*/
+
+        //$local_date
+        $f_date = date("Y-m-01");
+        $from_date = date($local_date,strtotime($f_date));
+        $t_date = date("Y-m-t", strtotime($f_date));
+        // testdata($t_date);
+        $to_date = date($local_date, strtotime($t_date));
         ?>
 
         <div class="row">

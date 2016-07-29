@@ -160,7 +160,9 @@ class Ishop_model extends BF_Model
     {
         if ($xl_flag == null) {
             $invoice_no = $this->input->post("invoice_no");
-            $invoice_date = $this->input->post("invoice_date");
+            $invoice_dt = $this->input->post("invoice_date");
+            $invo_date = str_replace('/', '-', $invoice_dt);
+            $invoice_date = date('Y-m-d', strtotime($invo_date));
             $order_tracking_no = $this->input->post("order_tracking_no");
             $PO_no = $this->input->post("PO_no");
 
@@ -1192,7 +1194,10 @@ class Ishop_model extends BF_Model
         if ($xl_flag == null) {
             $customer_id = $this->input->post("customer_id");
             $invoice_no = $this->input->post("invoice_no");
-            $invoice_date = $this->input->post("invoice_date");
+            $invoice_dt = $this->input->post("invoice_date");
+            $invo_date = str_replace('/', '-', $invoice_dt);
+            $invoice_date = date('Y-m-d', strtotime($invo_date));
+
             $order_tracking_no = $this->input->post("order_tracking_no");
             $PO_no = $this->input->post("PO_no");
 
@@ -2727,18 +2732,29 @@ class Ishop_model extends BF_Model
         if($xl_flag == null)
         {
 
-            $date = $this->input->post("current_date");
+
             $product_sku_id = $this->input->post("product_sku");
             $intrum_quantity = $this->input->post("intransist_qty");
             $unrestricted_quantity = $this->input->post("unrusticted_qty");
-            $batch = $this->input->post("batch");
-            $batch_exp_date = $this->input->post("batch_expiry_date");
-            $batch_mfg_date = $this->input->post("batch_mfg_date");
 
+            $batch = $this->input->post("batch");
+
+            $dt = $this->input->post("current_date");
+            $b_date = str_replace('/', '-', $dt);
+            $date = date('Y-m-d', strtotime($b_date));
+
+            $b_exp_date = $this->input->post("batch_expiry_date");
+            $b_e_date = str_replace('/', '-', $b_exp_date);
+            $batch_exp_date = date('Y-m-d', strtotime($b_e_date));
+
+
+            $b_mfg_date = $this->input->post("batch_mfg_date");
+            $b_m_date = str_replace('/', '-', $b_mfg_date);
+            $batch_mfg_date = date('Y-m-d', strtotime($b_m_date));
 
             $product = $this->check_products($product_sku_id);
 
-          //  testdata($product);
+           // testdata($product);
 
             if ($product == 0) {
                 $current_stock = array(
@@ -2951,8 +2967,16 @@ class Ishop_model extends BF_Model
             $int_qty = explode(',', $this->input->get_post("int_qty"));
             $unrtd_qty = explode(',', $this->input->get_post("unrtd_qty"));
             $batch = explode(',', $this->input->get_post("batch"));
-            $batch_exp_date = explode(',', $this->input->get_post("batch_exp_date"));
-            $batch_mfg_date = explode(',', $this->input->get_post("batch_mfg_date"));
+
+            $b_exp_date = explode(',', $this->input->get_post("batch_exp_date"));
+            $b_e_date = str_replace('/', '-', $b_exp_date);
+            $batch_exp_date = date('Y-m-d', strtotime($b_e_date));
+
+            $b_mfg_date = explode(',', $this->input->get_post("batch_mfg_date"));
+            $b_m_date = str_replace('/', '-', $b_mfg_date);
+            $batch_mfg_date = date('Y-m-d', strtotime($b_m_date));
+
+
         } else {
             $product_sku_id = $this->input->post("product_sku_id");
             /*$cur_date = $this->input->post("cur_date");*/
@@ -2961,19 +2985,21 @@ class Ishop_model extends BF_Model
             $unrtd_qty = $this->input->post("unrtd_qty");
             $batch = $this->input->post("batch");
 
-            $batch_exp_date = $this->input->post("batch_exp_date");
-            $batch_mfg_date = $this->input->post("batch_mfg_date");
+            $b_exp_date = $this->input->get_post("batch_exp_date");
+            $b_mfg_date = $this->input->get_post("batch_mfg_date");
+
         }
 
 
         if (isset($stock_id) && !empty($stock_id)) {
             foreach ($stock_id as $k => $si) {
 
-                $exp_date = str_replace('/', '-', $batch_exp_date[$k]);
+                $mfg_date = str_replace('/', '-', $b_mfg_date[$k]);
+                $batch_mfg_date = date('Y-m-d', strtotime($mfg_date));
+
+                $exp_date = str_replace('/', '-', $b_exp_date[$k]);
                 $batch_exp_date = date('Y-m-d', strtotime($exp_date));
 
-                $mfg_date = str_replace('/', '-', $batch_mfg_date[$k]);
-                $batch_mfg_date = date('Y-m-d', strtotime($mfg_date));
 
                 $stock_update = array(
                     'intrum_quantity' => $int_qty[$k],
@@ -3085,7 +3111,7 @@ class Ishop_model extends BF_Model
             $stock_detail = $this->grid->get_result_res($sql);
 
             if (isset($stock_detail['result']) && !empty($stock_detail['result'])) {
-                $stock_view['head'] = array('Sr. No.', 'Action', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrusticted Qty.', 'Batch', 'Batch Expiry Date', 'Batch Mfg. Date');
+                $stock_view['head'] = array('Sr. No.', 'Action', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrusticted Qty.', 'Batch', 'Batch Mfg. Date', 'Batch Expiry Date');
                 $stock_view['count'] = count($stock_view['head']);
 
                 if ($page != null || $page != "") {
@@ -3130,7 +3156,7 @@ class Ishop_model extends BF_Model
 
                     $batch_mfg_date = '<div class="batch_mfg_date_' . $sd["stock_id"] . '"><span class="batch_mfg_date">' . $mfg_date . '</span></div>';
 
-                    $stock_view['row'][] = array($i, $sd['stock_id'], $c_date, $sd['product_sku_name'], $intrum_quantity, $unrestricted_quantity, $batch, $batch_exp_date, $batch_mfg_date);
+                    $stock_view['row'][] = array($i, $sd['stock_id'], $c_date, $sd['product_sku_name'], $intrum_quantity, $unrestricted_quantity, $batch,$batch_mfg_date, $batch_exp_date);
                     $i++;
                 }
                 $stock_view['eye'] = '';
@@ -3161,9 +3187,14 @@ class Ishop_model extends BF_Model
             $dist_limit = $this->input->post("dist_limit");
             $credit_limit = $this->input->post("credit_limit");
             $curr_outstanding = $this->input->post("curr_outstanding");
-            $curr_date = $this->input->post("curr_date");
+            $cur_date = $this->input->post("curr_date");
+            $cur_dt = str_replace('/', '-', $cur_date);
+            $curr_date = date('Y-m-d', strtotime($cur_dt));
+
+
 
             $distributor = $this->check_distributor($dist_limit);
+
 
             // testdata($distributor);
             if ($distributor == 0) {
@@ -4110,7 +4141,9 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $this->input->post("farmer_id");
                     $customer_id_to = $this->input->post("retailer_id");
                     $order_taken_by_id = $user_id;
-                    $order_date = date("Y-m-d", strtotime($this->input->post("order_date")));
+                    $o_dt = $this->input->post("order_date");
+                    $f_date = str_replace('/', '-', $o_dt);
+                    $order_date = date('Y-m-d', strtotime($f_date));
 
                 } elseif ($this->input->post("radio1") == "retailer") {
 
@@ -6676,6 +6709,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             $copy_data['checkbox_popup_month_data'] = explode(',', $copy_data['checkbox_popup_month_data']);
+
+            $to_user_id = explode(",",$copy_data['to_customer_data']);
+
+        }
+        else{
+            $to_user_id = $copy_data['to_customer_data'];
         }
 
         //GET FROM USER DATA FOR SELECTED USER AND MONTH
@@ -6700,65 +6739,68 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $from_data = $this->db->get()->result_array();
 
-        //testdata($from_target_data);
+
 
         if (isset($from_data) && !empty($from_data)) {
 
             foreach ($copy_data['checkbox_popup_month_data'] as $key => $month_data) {
 
                 $to_date_data = $copy_data['to_year_data'] . "-" . $month_data . "-01";
-                $to_user_id = $copy_data['to_customer_data'];
-
-                foreach ($from_data as $from_key => $fromdata) {
-
-                    $target_id = $fromdata[$ishop_data_id];
-                    $month_data = $fromdata["month_data"];
-                    $customer_id = $fromdata["customer_id"];
-                    $product_sku_id = $fromdata["product_sku_id"];
-                    $quantity = $fromdata["quantity"];
-                    $created_by_user = $fromdata["created_by_user"];
 
 
-                    $this->db->select('*');
-                    $this->db->from($table);
 
-                    $this->db->where('month_data', $to_date_data);
-                    $this->db->where('customer_id', $to_user_id);
-                    $this->db->where('product_sku_id', $product_sku_id);
+                foreach ($to_user_id as $to_key => $to_user_data)
+                {
 
-                    $check_data = $this->db->get()->result_array();
+                    foreach ($from_data as $from_key => $fromdata) {
 
-                    if (!empty($check_data)) {
-                        //UPDATE
+                        $target_id = $fromdata[$ishop_data_id];
+                        $month_data = $fromdata["month_data"];
+                        $customer_id = $fromdata["customer_id"];
+                        $product_sku_id = $fromdata["product_sku_id"];
+                        $quantity = $fromdata["quantity"];
+                        $created_by_user = $fromdata["created_by_user"];
 
-                        $update_data = array(
-                            'month_data' => $to_date_data,
-                            'customer_id' => $to_user_id,
-                            'product_sku_id' => $product_sku_id,
-                            'quantity' => $quantity,
-                            'modified_by_user' => $userid,
-                            'modified_on' => date("Y-m-d h:i:s")
-                        );
 
-                        $this->db->where($ishop_data_id, $check_data[0][$ishop_data_id]);
-                        $this->db->update($table, $update_data);
+                        $this->db->select('*');
+                        $this->db->from($table);
 
-                    } else {
-                        //INSERT
+                        $this->db->where('month_data', $to_date_data);
+                        $this->db->where('customer_id', $to_user_data);
+                        $this->db->where('product_sku_id', $product_sku_id);
 
-                        $insert_data = array(
-                            'month_data' => $to_date_data,
-                            'customer_id' => $to_user_id,
-                            'product_sku_id' => $product_sku_id,
-                            'quantity' => $quantity,
-                            'created_by_user' => $userid,
-                            'created_on' => date("Y-m-d h:i:s")
-                        );
+                        $check_data = $this->db->get()->result_array();
 
-                        $this->db->insert($table, $insert_data);
+                        if (!empty($check_data)) {
+                            //UPDATE
+
+                            $update_data = array(
+                                'month_data' => $to_date_data,
+                                'customer_id' => $to_user_data,
+                                'product_sku_id' => $product_sku_id,
+                                'quantity' => $quantity,
+                                'modified_by_user' => $userid,
+                                'modified_on' => date("Y-m-d h:i:s")
+                            );
+
+                            $this->db->where($ishop_data_id, $check_data[0][$ishop_data_id]);
+                            $this->db->update($table, $update_data);
+
+                        } else {
+                            //INSERT
+
+                            $insert_data = array(
+                                'month_data' => $to_date_data,
+                                'customer_id' => $to_user_data,
+                                'product_sku_id' => $product_sku_id,
+                                'quantity' => $quantity,
+                                'created_by_user' => $userid,
+                                'created_on' => date("Y-m-d h:i:s")
+                            );
+
+                            $this->db->insert($table, $insert_data);
+                        }
                     }
-
-
                 }
 
             }

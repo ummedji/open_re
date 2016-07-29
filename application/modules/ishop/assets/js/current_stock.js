@@ -4,15 +4,15 @@
 
 $(function () {
     $('#current_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     });
     $('#batch_expiry_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     });
     $('#batch_mfg_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     }).on('changeDate', function(selected){
         $('#batch_expiry_date').val('');
@@ -102,15 +102,20 @@ $(document).ready(function(){
 
 $(document).on('focus',".expiry_date", function(){
     $(this).datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     });
 });
 
 $(document).on('focus',".mfg_date", function(){
     $(this).datepicker({
-        format: "yyyy-mm-dd",
+        format:date_format,
         autoclose: true
+    }).on('changeDate', function(selected){
+        $('.expiry_date').val('');
+        startDate = new Date(selected.date.valueOf());
+        startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
+        $('.expiry_date').datepicker('setStartDate', startDate);
     });
 });
 

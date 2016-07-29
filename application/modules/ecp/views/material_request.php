@@ -45,7 +45,7 @@ echo form_open('ecp/material_request',$attributes); ?>
                 <div class="form-group">
                     <label for="invoice_no">Quantity<span style="color: red">*</span></label>
                     <div class="inln_fld_top text-left">
-                        <input type="text" class="form-control" name="quantity" id="quantity" placeholder="">
+                        <input type="text" class="form-control allownumericwithdecimal" name="quantity" id="quantity" placeholder="">
                         <div class="clearfix"></div>
                         <label id="quantity-error" class="error" for="quantity"></label>
                     </div>
@@ -53,7 +53,7 @@ echo form_open('ecp/material_request',$attributes); ?>
             </div>
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                 <div class="form-group">
-                    <label for="remark">Remark<span style="color: red">*</span></label>
+                    <label for="remark">Remark</label>
                     <div class="inln_fld_top text-left">
                         <textarea rows="2" cols="50" class="form-control" name="remark" id="remark"></textarea>
                         <div class="clearfix"></div>

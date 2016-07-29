@@ -395,8 +395,6 @@ class Ecp extends Front_Controller
 
 	public function getNoWorkingDetailByMonth($curr_month = '')
 	{
-		Assets::add_module_js('ecp', 'no_working.js');
-
 		if($curr_month !='' && !empty($curr_month))
 		{
 			$cur_month = $curr_month;
@@ -440,7 +438,6 @@ class Ecp extends Front_Controller
 
 	public function getLeaveDetailByMonth($curr_month = '')
 	{
-		Assets::add_module_js('ecp', 'leave.js');
 		if($curr_month !='' && !empty($curr_month))
 		{
 			$cur_month = $curr_month;
@@ -764,8 +761,17 @@ class Ecp extends Front_Controller
 		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
 		$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
 		$global_head_user = array();
+		$global_jr_user = array();
 
-		$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+		$sr_employee_visit = array();
+		$jr_employee_visit = array();
+
+		$sr_employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+		$jr_employee_visit = $this->ecp_model->get_jr_employee_for_loginuser($user->id,$global_jr_user);
+
+		//dumpme($jr_employee_visit);
+
+		$employee_visit = array_merge($sr_employee_visit,$jr_employee_visit) ;
 
 		$cur_month=date('n');
 		$cur_year=date('Y');

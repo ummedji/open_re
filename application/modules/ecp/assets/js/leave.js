@@ -1,3 +1,11 @@
+
+$(document).on("focusin", "#cur_date", function(event) {
+    $(this).prop('readonly', true);
+});
+
+$(document).on("focusout", "#cur_date", function(event) {
+    $(this).prop('readonly', false);
+});
 $(document).on('click','.leave_date', function(){
     var date= $(this).attr('rel');
     $('#cur_date').val(date);
@@ -52,7 +60,7 @@ $(document).ready(function() {
         }
     });
 
-    $("#leave_set").on("submit",function(){
+    $("#leave_set #submit").on("click",function(){
 
         var param = $("#leave_set").serializeArray();
 

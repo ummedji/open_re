@@ -1,6 +1,7 @@
 /**
  * Created by webclues on 5/17/2016.
  */
+var budget_pop_up_validators;
 
 $(document).ready(function(){
     $( ".month_data" ).datepicker({
@@ -9,15 +10,7 @@ $(document).ready(function(){
         viewMode: "months",
         minViewMode: "months"
     });
-    $( "#from_copy_popup_datepicker" ).datepicker({
-        format: "yyyy",
-        autoclose: true
-    });
 
-    $( "#to_copy_popup_datepicker" ).datepicker({
-        format: "yyyy",
-        autoclose: true
-    });
 
     var login_customer_type = $("input#login_customer_type").val();
 
@@ -59,26 +52,38 @@ $(document).ready(function(){
                 //dataType : 'json',
                 success: function(resp){
                     $(".budget_container").html(resp);
+                },
+                complete: function (data) {
+                    //FOR COPY POPUP
+
+                    //FOR COPY POPUP
+
+                    $("h4.modal-title").empty();
+                    $("h4.modal-title").append("Copy Retailer Data");
+
+                    $("select#from_customer_data").empty();
+                    $("select#to_customer_data").empty();
+
+                    $("select#from_customer_data").selectpicker('refresh');
+                    $("select#to_customer_data").selectpicker('refresh');
+
+                    $("input#from_copy_popup_datepicker").val('');
+                    $("input#to_copy_popup_datepicker").val('');
+
+                    $('input[name="radio_from_popup_month_data"]').prop('checked', false);
+                    $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
+                    get_copy_popup_geo_data(customer_type_selected);
+
+                    budget_pop_up_validators = copy_validation();
+
+
+                    console.log(target_validators);
                 }
+
+
             });
 
-            //FOR COPY POPUP
 
-            $("h4.modal-title").empty();
-            $("h4.modal-title").append("Copy Retailer Data");
-
-            $("select#from_customer_data").empty();
-            $("select#to_customer_data").empty();
-
-            $("select#from_customer_data").selectpicker('refresh');
-            $("select#to_customer_data").selectpicker('refresh');
-
-            $("input#from_copy_popup_datepicker").val('');
-            $("input#to_copy_popup_datepicker").val('');
-
-            $('input[name="radio_from_popup_month_data"]').prop('checked', false);
-            $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
-            get_copy_popup_geo_data(customer_type_selected);
 
             $('#month_data').val('');
             $('#distributor_geo_level_1_data').selectpicker('val', '');
@@ -117,29 +122,33 @@ $(document).ready(function(){
                 success: function(resp){
 
                     $(".budget_container").html(resp);
+                },
+                complete: function (data) {
+
+                    //FOR COPY POPUP
+
+                    $("h4.modal-title").empty();
+                    $("h4.modal-title").append("Copy Distributor Data");
+
+                    $("select#from_customer_data").empty();
+                    $("select#to_customer_data").empty();
+
+                    $("select#from_customer_data").selectpicker('refresh');
+                    $("select#to_customer_data").selectpicker('refresh');
+
+                    $("input#from_copy_popup_datepicker").val('');
+                    $("input#to_copy_popup_datepicker").val('');
+
+                    $('input[name="radio_from_popup_month_data"]').prop('checked', false);
+
+                    $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
+
+                    get_copy_popup_geo_data(customer_type_selected);
+
+                    budget_pop_up_validators = copy_validation();
+
                 }
             });
-
-
-            //FOR COPY POPUP
-
-            $("h4.modal-title").empty();
-            $("h4.modal-title").append("Copy Distributor Data");
-
-            $("select#from_customer_data").empty();
-            $("select#to_customer_data").empty();
-
-            $("select#from_customer_data").selectpicker('refresh');
-            $("select#to_customer_data").selectpicker('refresh');
-
-            $("input#from_copy_popup_datepicker").val('');
-            $("input#to_copy_popup_datepicker").val('');
-
-            $('input[name="radio_from_popup_month_data"]').prop('checked', false);
-
-            $('input[name="checkbox_popup_month_data[]"]').prop('checked', false);
-
-            get_copy_popup_geo_data(customer_type_selected);
 
             $('#ret_month_data').val('');
             $('#retailer_geo_level_1_data').selectpicker('val', '');
@@ -151,18 +160,7 @@ $(document).ready(function(){
         }
     });
 
-    $("select#distributor_geo_level_1_data").on("change",function(){
 
-        var selected_geo_data = $(this).val();
-        get_user_by_geo_data(selected_geo_data);
-    });
-
-    $("select#distributor_geo_level_2_data").on("change",function(){
-
-        var selected_geo_data = $(this).val();
-        get_user_by_geo_data(selected_geo_data);
-
-    });
 
     $("select#retailer_geo_level_1_data").on("change",function(){
 
@@ -183,7 +181,7 @@ $(document).ready(function(){
     });
 
     //CODE FOR COPY POPUP DATA
-
+/*
     $("select#from_popup_geo_data").on("change",function(){
         var selected_geo_data = $(this).val();
         get_user_by_geo_data(selected_geo_data,'from_data');
@@ -193,6 +191,8 @@ $(document).ready(function(){
         var selected_geo_data = $(this).val();
         get_user_by_geo_data(selected_geo_data,'to_data');
     });
+
+    */
 
     //ON ENTERING MOBILE NO GETTING GEO LOCATION DATA AND ASSOCIATED FARMER DATA AND THERE RETAILERS
 
@@ -231,53 +231,146 @@ $(document).ready(function(){
         }
     });
 
-    $("#budget").on("submit",function(){
 
-        var param = $("#budget").serializeArray();
 
-        var $valid = $("#budget").valid();
-        if(!$valid) {
+});
 
-            target_validators.focusInvalid();
-            return false;
-        }
-        else
-        {
-            $.ajax({
-                type: 'POST',
-                url: site_url+"ishop/add_budget_data",
-                data: param,
-                //dataType : 'json',
-                success: function(resp){
-                    var message = "";
-                    if(resp == 1){
+function copy_validation(){
 
-                        message += 'Data Inserted successfully.';
-                    }
-                    else{
-
-                        message += 'Data not Inserted.';
-                    }
-                    $('<div></div>').appendTo('body')
-                        .html('<div><b>'+message+'</b></div>')
-                        .dialog({
-                            appendTo: "#success_file_popup",
-                            modal: true,
-                            zIndex: 10000,
-                            autoOpen: true,
-                            width: 'auto',
-                            resizable: true,
-                            close: function (event, ui) {
-                                $(this).remove();
-                                location.reload()
-                            }
-                        });
-                }
-            });
-            return false;
+    var budget_pop_up_validators = $("#copy_popup").validate({
+        rules: {
+            from_popup_geo_data: {
+                required: true
+            },
+            from_customer_data :{
+                required: true
+            },
+            from_year_data:{
+                required: true
+            },
+            radio_from_popup_month_data:{
+                required: true
+            },
+            to_popup_geo_data:{
+                required: true
+            },
+            "to_customer_data[]":{
+                required: true
+            },
+            to_year_data:{
+                required: true
+            },
+            'checkbox_popup_month_data[]':{
+                required: true
+            }
         }
     });
+
+    return budget_pop_up_validators;
+
+}
+
+//CODE FOR COPY POPUP DATA
+
+$(document).on("change","select#from_popup_geo_data",function(){
+    var selected_geo_data = $(this).val();
+    get_user_by_geo_data(selected_geo_data,'from_data');
 });
+
+$(document).on("change","select#to_popup_geo_data",function(){
+    var selected_geo_data = $(this).val();
+    get_user_by_geo_data(selected_geo_data,'to_data');
+});
+
+$(document).on("change","select#distributor_geo_level_1_data",function(){
+    var selected_geo_data = $(this).val();
+    get_user_by_geo_data(selected_geo_data,'from_data');
+});
+
+$(document).on("change","select#distributor_geo_level_2_data",function(){
+    var selected_geo_data = $(this).val();
+    get_user_by_geo_data(selected_geo_data,'to_data');
+});
+
+$('body').on('focus',"#from_popup_geo_data", function(){
+    $(this).datepicker({
+        format: "yyyy",
+        autoclose: true,
+        viewMode: "years",
+        minViewMode: "years"
+    });
+});
+
+$('body').on('focus',"#to_popup_geo_data", function(){
+    $(this).datepicker({
+        format: "yyyy",
+        autoclose: true,
+        viewMode: "years",
+        minViewMode: "years"
+    });
+});
+
+$('body').on('focus',"#from_copy_popup_datepicker", function(){
+    $(this).datepicker({
+        format: "yyyy",
+        autoclose: true
+    });
+});
+
+$('body').on('focus',"#to_copy_popup_datepicker", function(){
+    $(this).datepicker({
+        format: "yyyy",
+        autoclose: true
+    });
+});
+
+
+$(document).on("submit","#budget",function(){
+
+    var param = $("#budget").serializeArray();
+
+    var $valid = $("#budget").valid();
+    if(!$valid) {
+        target_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url+"ishop/add_budget_data",
+            data: param,
+            //dataType : 'json',
+            success: function(resp){
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
+            }
+        });
+        return false;
+    }
+});
+
 
 function get_lower_geo_by_parent_geo(selected_geo_id){
 
@@ -571,7 +664,22 @@ function get_copy_popup_geo_data(customer_type_selected){
 
                 $("select#to_popup_geo_data").selectpicker('refresh');
             }
+
+            $("select#from_popup_geo_data").val("");
+            $("select#from_popup_geo_data").selectpicker('refresh');
+            $("select#to_popup_geo_data").val("");
+            $("select#to_popup_geo_data").selectpicker('refresh');
+
+
+            $("select#from_customer_data").val("");
+            $("select#from_customer_data").selectpicker('refresh');
+            $("select#to_customer_data").val("");
+            $("select#to_customer_data").selectpicker('refresh');
+
+            $("input#from_copy_popup_datepicker").val("");
+            $("input#to_copy_popup_datepicker").val("");
         }
+
     });
 }
 
@@ -953,34 +1061,7 @@ $(document).on('submit', '#upload_budget_data', function (e) {
     
 });
 
-var budget_pop_up_validators = $("#copy_popup").validate({
-    rules: {
-        from_popup_geo_data: {
-            required: true
-        },
-        from_customer_data :{
-            required: true
-        },
-        from_year_data:{
-            required: true
-        },
-        radio_from_popup_month_data:{
-            required: true
-        },
-        to_popup_geo_data:{
-            required: true
-        },
-        to_customer_data:{
-            required: true
-        },
-        to_year_data:{
-            required: true
-        },
-        'checkbox_popup_month_data[]':{
-            required: true
-        }
-    }
-});
+budget_pop_up_validators = copy_validation();
 
 $(document).on("submit","#copy_popup",function(){
     

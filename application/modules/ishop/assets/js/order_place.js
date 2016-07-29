@@ -5,7 +5,7 @@ $(document).ready(function(){
 
     
     $( "#order_date" ).datepicker({
-        dateFormat: "yy-mm-dd",
+        dateFormat: date_format,
         showOn: "button",
         buttonImage: site_url + "/public/themes/default/images/calendar.gif",
         buttonImageOnly: true,

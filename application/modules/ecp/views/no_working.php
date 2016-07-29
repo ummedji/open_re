@@ -20,7 +20,7 @@ echo form_open('',$attributes); ?>
                         <div class="col-md-6 text-center radio_space tp_form inline-parent">
                             <div class="form-group">
                                 <label for="cur_date">Date</label>
-                                <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder="" readonly >
+                                <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder=""  >
                             </div>
                             <div class="col-md-6 col-md-offset-3 check_no_worh">
                             <?php
@@ -58,7 +58,7 @@ echo form_open('',$attributes); ?>
                         <div class="save_button">
                             <div class="row">
                                 <div class="col-md-3 save_btn">
-                                    <button type="submit" class="btn btn-primary">Save</button>
+                                    <button type="button" id="submit" class="btn btn-primary">Save</button>
                                 </div>
                                 <div class="delete_button" style="display: none">
                                     <div class="col-md-3 save_btn">

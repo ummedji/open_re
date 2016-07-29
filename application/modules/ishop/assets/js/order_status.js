@@ -4,7 +4,7 @@
 $(document).ready(function(){
 
     $("#form_date").datepicker({
-      format: "yyyy-mm-dd",
+      format: date_format,
       autoclose: true
     }).on('changeDate', function(selected){
         $('#to_date').val('');
@@ -15,7 +15,7 @@ $(document).ready(function(){
     
     
     $("#to_date").datepicker({
-      format: "yyyy-mm-dd",
+      format: date_format,
       autoclose: true
     });
 

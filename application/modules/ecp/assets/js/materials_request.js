@@ -12,9 +12,6 @@ $(document).ready(function() {
             },
             quantity:{
                 required: true
-            },
-            remark:{
-                required: true
             }
         }
     });
