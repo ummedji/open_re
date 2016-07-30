@@ -3909,7 +3909,6 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
-
     public function getMonthDataByMonth()
     {
         $user_id = $this->input->get_post('user_id');
@@ -3970,11 +3969,6 @@ class Web_service extends Front_Controller
 
         $this->do_json($result);
     }
-
-
-
-
-
 
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/

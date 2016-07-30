@@ -1706,7 +1706,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
        // testdata($activity_details);
 
-
         if (isset($activity_details) && !empty($activity_details)) {
 
             if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
@@ -1861,11 +1860,11 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             'geo_level_id_4' => isset($geo_level_4) ? $geo_level_4 : '',
             'geo_level_id' => isset($geo_level) ? $geo_level : '',
             'location' => isset($activity_address) ? $activity_address :''   ,
-            'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : '',
+            'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : 0,
             'point_discussion' => isset($pod) ? $pod : '',
             'alert' => isset($set_alert) ? $set_alert : '',
-            'size_of_plot' => isset($size_of_plot) ? $size_of_plot : '',
-            'spray_volume' => isset($spray_volume) ? $spray_volume : '',
+            'size_of_plot' => isset($size_of_plot) ? $size_of_plot : 0,
+            'spray_volume' => isset($spray_volume) ? $spray_volume : 0,
             'amount' => '0',
             'employee_id' => $user_id,
             'country_id' => $country_id,
@@ -2291,11 +2290,11 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             'geo_level_id_4' => isset($geo_level_4) ? $geo_level_4 : '',
             'geo_level_id' => isset($geo_level) ? $geo_level : '',
             'location' => isset($activity_address) ? $activity_address :''   ,
-            'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : '',
+            'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : 0,
             'point_discussion' => isset($pod) ? $pod : '',
             'alert' => isset($set_alert) ? $set_alert : '',
-            'size_of_plot' => isset($size_of_plot) ? $size_of_plot : '',
-            'spray_volume' => isset($spray_volume) ? $spray_volume : '',
+            'size_of_plot' => isset($size_of_plot) ? $size_of_plot : 0,
+            'spray_volume' => isset($spray_volume) ? $spray_volume : 0,
             'amount' => isset($amount) ? $amount : 0,
             'rating' => isset($rating) ? $rating : 0,
             'activity_note' => isset($activity_note) ? $activity_note : '',

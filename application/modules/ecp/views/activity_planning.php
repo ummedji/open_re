@@ -577,7 +577,7 @@ echo form_open('',$attributes);
                                 </div>
                                 <div id="accordion" class="as_accordion" role="tablist" aria-multiselectable="true">
                                     <?php
-                                    //testdata($activity_data);
+                                   // testdata($activity_data);
                                     $j=0;
                                     foreach($activity_data as $k=>$activity_val) { ?>
                                     <div class="panel panel-default" id="data_<?php echo date("j",strtotime($k));?>">
@@ -586,7 +586,7 @@ echo form_open('',$attributes);
                                         <div class="panel-heading" role="tab">
                                                 <ul class="acc_list">
                                                     <li><a data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $j;?>" aria-expanded="true" aria-controls="collapse<?php echo $j;?>"><?php echo date('d',strtotime($val['activity_planning_date']))?> <img src="<?php echo Template::theme_url('images/list_arrow.png') ?>" alt="" style="vertical-align: middle;"></a></li>
-                                                    <li><a href="#"><?php echo $val['activity_type_country_name']?></a></li>
+                                                    <li><a href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>)"><?php echo $val['activity_type_country_name']?></a></li>
                                                     <li><?php echo date('h:i A',strtotime($val['activity_planning_time']))?></li>
                                                     <li><?php echo $val['political_geography_name']?></li>
                                                 </ul>

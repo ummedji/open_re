@@ -4933,13 +4933,15 @@ foreach($month_data as $monthkey => $monthvalue){
 					}
 					
 				}
-			
+
+            testdata($final_array);
+
 		}
 		else{
 			
 			//NO PBG DATA FOUND
 			
-			$final_array[$monthvalue] = "No Data Found";
+			$final_array[] = "No Data Found";
 		}
 		$xl_data =  $this->create_budget_data_xl($final_array);
 		die;
