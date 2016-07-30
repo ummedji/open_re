@@ -105,6 +105,7 @@ echo Assets::js();
             $('body').removeClass('nav-expanded');
         });
 
+
     });
 
         $(document).on('click',".zoom_in_btn",function(e){

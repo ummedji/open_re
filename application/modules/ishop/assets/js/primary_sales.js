@@ -192,13 +192,13 @@ function add_row()
                 "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
             "</td>"+
             "<td data-title='PO Qty'>" +
-                "<input type='text' class='allownumericwithdecimal' name='quantity[]' value='"+po_qty+"'/>" +
+                "<input type='text' class='amount_rt_a allownumericwithdecimal' name='quantity[]' value='"+po_qty+"'/>" +
             "</td>"+
             "<td data-title='Dispatched Qty'>" +
-                "<input type='text' class='allownumericwithdecimal' name='dispatched_quantity[]' value='"+dispatched_qty+"'/>" +
+                "<input type='text' class='amount_rt_a allownumericwithdecimal' name='dispatched_quantity[]' value='"+dispatched_qty+"'/>" +
             "</td>"+
             "<td data-title='Amount'>" +
-                "<input type='text' class ='allownumericwithdecimal' name='amount[]' value='"+amt+"'/>" +
+                "<input type='text' class ='amount_rt_a allownumericwithdecimal' name='amount[]' value='"+amt+"'/>" +
             "</td>"+
         "</tr>"
     );

@@ -12,7 +12,7 @@
 
     <?php
     Assets::add_css(array('bootstrap.min.css', 'style.css', 'green.css', 'hover.css', 'jquery.mCustomScrollbar.css',
-        'bootstrap-select.min.css', 'bootstrap-datepicker.min.css', 'calendar.css', 'bootstrap-timepicker.min.css', 'select2.min.css', 'jquery.rateyo.css'));
+        'bootstrap-select.min.css', 'bootstrap-datepicker.min.css', 'calendar.css', 'bootstrap-timepicker.min.css', 'select2.min.css', 'jquery.rateyo.css','jquery-ui.css'));
     //Assets::add_js('bootstrap.min.js');
     $inline = '$(".dropdown-toggle").dropdown();';
     $inline .= '$(".tooltips").tooltip();';
@@ -37,7 +37,7 @@
         window.site_url = "<?php echo site_url(); ?>";
     </script>
 
-    <link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">
+    <!--<link rel="stylesheet" href="//code.jquery.com/ui/1.11.4/themes/smoothness/jquery-ui.css">-->
     <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
     <script>
         var date_format = '<?php if(!is_null(@constant("js_date"))) { echo js_date; } else { echo "yyyy-mm-dd"; }?>';

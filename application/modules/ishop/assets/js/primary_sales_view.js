@@ -177,7 +177,7 @@ $(document).on('click', 'div.primary_products .edit_i', function () {
 
     var dispatched_quantity_value = $("div.primary_products div.dispatched_quantity_"+id+" span.dispatched_quantity").text();
     $("div.primary_products div.dispatched_quantity_"+id).empty();
-    $("div.primary_products div.dispatched_quantity_"+id).append('<input id="dispatched_quantity_'+id+'" type="text" class="allownumericwithdecimal" name="dispatched_quantity[]" value="'+dispatched_quantity_value+'"/>');
+    $("div.primary_products div.dispatched_quantity_"+id).append('<input id="dispatched_quantity_'+id+'" type="text" class="amount_rt_a allownumericwithdecimal" name="dispatched_quantity[]" value="'+dispatched_quantity_value+'"/>');
 
     $(this).prop("disabled",true);
     return false;

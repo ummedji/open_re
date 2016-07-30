@@ -478,7 +478,7 @@ $(document).on('click', 'div.sales_product .edit_i', function () {
 
     var amount = $(" div.amount_"+id+" span.amount").text();
     $("div.amount_"+id).empty();
-    $("div.amount_"+id).append('<input id="amount_'+id+'" type="text" calss="allownumericwithdecimal" name="amount[]" value="'+amount+'"/>');
+    $("div.amount_"+id).append('<input id="amount_'+id+'" type="text" calss="amount_rt_a allownumericwithdecimal" name="amount[]" value="'+amount+'"/>');
 
     $(this).prop("disabled",true);
     return false;
