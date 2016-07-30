@@ -35,7 +35,7 @@
                     </span>
                     <div class="clearfix"></div>
                 </li>
-                <li title="E Assassments">
+                <li title="E Assessments">
                     <span>
                         <a href="#"><span class="e_assassments_icon"></span><div class="li_title pr_title">E- Assessment</div></a>
                     </span>

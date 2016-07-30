@@ -1454,6 +1454,7 @@ a.set_pono, .eye_i a {
 }
 .inl_button button { margin-bottom: 5px;}
 .datepicker { z-index: 99999 !important;}
+.datepicker.datepicker-orient-bottom { z-index: 99 !important;}
 
 nav {
     background: #ffffff;

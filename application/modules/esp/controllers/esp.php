@@ -5164,7 +5164,7 @@ foreach($month_data as $monthkey => $monthvalue){
                         $data_array['pbg_data'] = $pbg_id;
                         $data_array['pbg_data'] = $pbg_id;
 
-                        $upload_data = $this->upload_xl_budget_data($pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data["monthdata"]);
+                        $upload_data = $this->upload_xl_budget_data($user_id,$pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data["monthdata"]);
 
                     }
 
@@ -5174,11 +5174,55 @@ foreach($month_data as $monthkey => $monthvalue){
 
 	}
 
-public function upload_xl_budget_data($pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data){
+public function upload_xl_budget_data($user_id,$pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data){
 
 
+    $year = date("Y");
+
+    $from_month = $year."-01-01";
+    $to_month = $year."-12-01";
+
+    $month_data = $this->get_monthly_data($from_month,$to_month);
+    $i = 0;
+    foreach($month_data as $month_key => $monthvalue){
+
+        $check_record_exist = $this->esp_model->check_budget_data($pbg_id, $bussiness_code, $monthvalue);
+
+        $budget_insert_id = "";
+
+        if($check_record_exist != 0){
+            $old_budget_id = $check_record_exist[0]['budget_id'];
+            //UPDATE MAIN TABLE RECORD
+            $update_status = $this->esp_model->update_budget_data($old_budget_id,$user_id);
+        }else{
+            //INSERT
+            if($budget_insert_id == ""){
+                $budget_insert_id = $this->esp_model->insert_budget_data($pbg_id,$user_id,$bussiness_code,$user_id);
+            }
+        }
+
+        $budget_qty = $budget_data[$i];
+        $budget_value = $this->esp_model->get_budget_data($sku_id,$monthvalue);
+
+        $get_product_old_data = $this->esp_model->get_budget_product_details($bussiness_code,$sku_id,$monthvalue);
+
+        if($get_product_old_data != 0){
+            //UPDATE MAIN TABLE RECORD
+
+            $budget_product_id = $get_product_old_data[0]['budget_product_id'];
+            $old_budget_id = $get_product_old_data[0]['budget_id'];
+
+            $update_status = $this->esp_model->update_budget_product_details($budget_product_id,$budget_qty,$budget_value);
+
+        }else{
+            $this->esp_model->insert_budget_product_details($budget_insert_id,$bussiness_code,$sku_id,$monthvalue,$budget_qty,$budget_value);
+        }
 
 
+        $i++;
+    }
+
+    die;
 }
 
 

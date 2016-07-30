@@ -3889,10 +3889,10 @@ class Ishop_model extends BF_Model
         if (isset($invoice_month) && !empty($invoice_month) && $invoice_month != '') {
             $sql .= 'AND DATE_FORMAT(ips.invoice_date,"%Y-%m") =' . "'" . $invoice_month . "'" . ' ';
         }
-        if (isset($po_no) && !empty($po_no) && $po_no != '') {
+        if (isset($po_no) && !empty($po_no) && $po_no != ''  && $po_no != '0') {
             $sql .= 'AND ips.PO_no =' ."'" . $po_no ."'". ' ';
         }
-        if (isset($invoice_no) && !empty($invoice_no) && $invoice_no != '') {
+        if (isset($invoice_no) && !empty($invoice_no) && $invoice_no != '' && $invoice_no != '0') {
             $sql .= 'AND ips.invoice_no =' ."'" . $invoice_no ."'". ' ';
         }
         $sql .= " AND ips.country_id= " . $country_id . " ";
