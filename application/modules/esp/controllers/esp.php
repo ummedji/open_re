@@ -5071,7 +5071,11 @@ foreach($month_data as $monthkey => $monthvalue){
 
 	
 	public function upload_budget_data(){
-			
+
+            $user = $this->auth->user();
+            $user_country_id = $user->country_id;
+            $bussiness_code = $user->bussiness_code;
+
             if(!empty($_FILES))
             {
                 
@@ -5123,10 +5127,10 @@ foreach($month_data as $monthkey => $monthvalue){
 
                 $data['values'] = $arr_data;
 
-                echo "<pre>";
-                print_r($data);
 
-                die;
+                 echo "<pre>";
+                 print_r($data);
+
 
                 foreach($data['values'] as $key=>$budget_data){
 
@@ -5140,19 +5144,34 @@ foreach($month_data as $monthkey => $monthvalue){
 					else{
 						$sku_id = ""; 
 					}
+
 					
 					if($pbg != ""){
-						$pbg_id = $this->esp_model->get_pbg_data($pbg);
+						$pbg_id = $this->esp_model->get_pbg_detail_data($pbg,$user_country_id);
 					}
 					else{
-						$pbg_id = ""; 
+						$pbg_id = "";
 					}
+
+                    if(($sku_id != "" || $sku_id != 0) && ($pbg_id != "" || $pbg_id != 0))
+                    {
+
+                        $upload_data = $this->upload_xl_budget_data($pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data["monthdata"]);
+
+                    }
 
                 }
 
             }
 
 	}
+
+public function upload_xl_budget_data($pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data){
+
+
+
+}
+
 
     public function forecast_freeze_check_lock($webservice_data){
         

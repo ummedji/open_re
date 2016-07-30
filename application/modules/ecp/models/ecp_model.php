@@ -2157,39 +2157,198 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function editViewActivityPlanning($activity_planning_id)
     {
-      //  $this->db->select('*');
-        $this->db->select('eap.activity_planning_id,eap.activity_planning_date,eap.activity_planning_time,eap.activity_type_id,eap.geo_level_id_2,eap.geo_level_id_3,eap.geo_level_id_4,eap.geo_level_id,eap.location,eap.proposed_attandence_count,eap.point_discussion,eap.alert,eap.size_of_plot,eap.spray_volume,eap.amount,eap.activity_note,eap.employee_id,eapcd.activity_planning_crop_details_id,eapcd.crop_id,eapdld.digital_library_details_id,eapdld.digital_library_id,eapdd.activity_planning_diseases_details_id,eapdd.diseases_id,eapjvd.joint_visit_details_id,eapjvd.employee_id,eapkcd.key_customer_details_id,eapkcd.customer_id,eapkcd.mobile_no,eappd.activity_planning_product_details_id,eappd.product_sku_id,eappsd.promo_sample_details_id,eappsd.product_sku_id,eappsd.quantity,eaprmd.required_material_details_id,eaprmd.material_id,eaprmd.quantity,eaprpd.required_product_details_id,eaprpd.product_sku_id,eaprpd.quantity,beamc.activity_type_country_name,mcc.crop_name,mdc.disease_name,mpsc.product_sku_name,mpscs.product_sku_name as sample_product,mpscr.product_sku_name as request_product,buf.display_name');
+        $this->db->select('eap.activity_planning_id,eap.activity_planning_date,eap.activity_planning_time,eap.execution_date,eap.execution_time,eap.meeting_duration,eap.activity_type_id,eap.geo_level_id_2,eap.geo_level_id_3,eap.geo_level_id_4,eap.location,eap.proposed_attandence_count,eap.point_discussion,eap.alert,eap.size_of_plot,eap.spray_volume,eap.amount,eap.rating,eap.activity_note,eap.employee_id,amc.activity_type_code,amc.activity_type_country_name,mpgd2.political_geography_name as geo_level_name_2,,mpgd3.political_geography_name as geo_level_name_3,mpgd4.political_geography_name as geo_level_name_4');
         $this->db->from('ecp_activity_planning as eap');
-        $this->db->join('ecp_activity_planning_attendees_details as eapad','eapad.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_crop_details as eapcd','eapcd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_digital_library_details as eapdld','eapdld.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_diseases_details as eapdd','eapdd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_joint_visit_details as eapjvd','eapjvd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_key_customer_details as eapkcd','eapkcd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_product_details as eappd','eappd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_promo_sample_details as eappsd','eappsd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_required_material_details as eaprmd','eaprmd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_required_product_details as eaprpd','eaprpd.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_planning_upload_details as eapud','eapud.activity_planning_id = eap.activity_planning_id','LEFT');
-        $this->db->join('ecp_activity_master_country as beamc','beamc.activity_type_country_id = eap.activity_type_id','LEFT');
-        $this->db->join('master_crop_country as mcc','mcc.crop_country_id = eapcd.crop_id');
-        $this->db->join('master_disease_country as mdc','mdc.disease_country_id = eapdd.activity_planning_diseases_details_id');
-        $this->db->join('master_product_sku_country as mpsc','mpsc.product_sku_country_id = eappd.product_sku_id');
-        $this->db->join('master_product_sku_country as mpscs','mpscs.product_sku_country_id = eappsd.product_sku_id');
-        $this->db->join('master_product_sku_country as mpscr','mpscr.product_sku_country_id = eaprpd.product_sku_id');
-        $this->db->join('users as buf','buf.id = eapkcd.customer_id');
-
+        $this->db->join('ecp_activity_master_country as amc','amc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2');
+        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = eap.geo_level_id_3');
+        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = eap.geo_level_id_4');
         $this->db->where('eap.activity_planning_id',$activity_planning_id);
-        $activity = $this->db->get()->result_array();
+        $activity = $this->db->get()->row_array();
 
-      // testdata($activity[0]);
+        $activity['crop'] = $this->getCropDetails($activity_planning_id);
+        $activity['products'] = $this->getProductDetails($activity_planning_id);
+        $activity['diseases'] = $this->getDiseasesDetails($activity_planning_id);
+        if($activity['activity_type_code'] == 'RMP003' ||$activity['activity_type_code'] == 'RVP004')
+        {
+            $activity['key_retailer'] = $this->getKeyRetailerDetails($activity_planning_id);
+        }
+        else{
+            $activity['key_farmer'] = $this->getKeyFarmerDetails($activity_planning_id);
+        }
+        $activity['digital_library'] = $this->getDigitalLibraryDetails($activity_planning_id);
+        $activity['join_visit'] = $this->getJointVisitEnployee($activity_planning_id);
+        $activity['products_sample'] = $this->getProductsSample($activity_planning_id);
+        $activity['products_request'] = $this->getProductsRequest($activity_planning_id);
+        $activity['material_request'] = $this->getMaterialRequest($activity_planning_id);
 
         if(!empty($activity))
-            return $activity[0];
+
+            return $activity;
+
         else
-            return 0;
+            return array();
 
     }
+
+    public function getCropDetails($activity_planning_id)
+    {
+        $this->db->select('eapcd.crop_id,mcc.crop_name');
+        $this->db->from('ecp_activity_planning_crop_details as eapcd');
+        $this->db->join('master_crop_country as mcc','mcc.crop_country_id = eapcd.crop_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $Crop= $this->db->get()->result_array();
+        if(isset($Crop) && !empty($Crop))
+        {
+            return $Crop;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getProductDetails($activity_planning_id){
+        $this->db->select('eappd.product_sku_id,mpsc.product_sku_name');
+        $this->db->from('ecp_activity_planning_product_details as eappd');
+        $this->db->join('master_product_sku_country as mpsc','mpsc.product_sku_country_id = eappd.product_sku_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $Product= $this->db->get()->result_array();
+        if(isset($Product) && !empty($Product))
+        {
+            return $Product;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getDiseasesDetails($activity_planning_id){
+        $this->db->select('eapdd.diseases_id,mdc.disease_name');
+        $this->db->from('ecp_activity_planning_diseases_details as eapdd');
+        $this->db->join('master_disease_country as mdc','mdc.disease_country_id = eapdd.activity_planning_diseases_details_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $Diseases= $this->db->get()->result_array();
+        if(isset($Diseases) && !empty($Diseases))
+        {
+            return $Diseases;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getKeyFarmerDetails($activity_planning_id){
+
+        $this->db->select('eapkcd.customer_id,buf.display_name,eapkcd.mobile_no');
+        $this->db->from('ecp_activity_planning_key_customer_details as eapkcd');
+        $this->db->join('users as buf','buf.id = eapkcd.customer_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $KeyFarmer = $this->db->get()->result_array();
+        if(isset($KeyFarmer) && !empty($KeyFarmer))
+        {
+            return $KeyFarmer;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getKeyRetailerDetails($activity_planning_id){
+        $this->db->select('eapkcd.customer_id,buf.display_name,eapkcd.mobile_no');
+        $this->db->from('ecp_activity_planning_key_customer_details as eapkcd');
+        $this->db->join('users as buf','buf.id = eapkcd.customer_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $KeyRetailer = $this->db->get()->result_array();
+        if(isset($KeyRetailer) && !empty($KeyRetailer))
+        {
+            return $KeyRetailer;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getDigitalLibraryDetails($activity_planning_id){
+
+        $this->db->select('eapdld.digital_library_id,edlm.library_name');
+        $this->db->from('ecp_activity_planning_digital_library_details as eapdld');
+        $this->db->join('ecp_digital_library_master as edlm','edlm.digital_library_id = eapdld.digital_library_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $DigitalLibrary = $this->db->get()->result_array();
+        if(isset($DigitalLibrary) && !empty($DigitalLibrary))
+        {
+            return $DigitalLibrary;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getJointVisitEnployee($activity_planning_id){
+
+        $this->db->select('eapjvd.joint_visit_details_id,eapjvd.employee_id,v_emp.display_name');
+        $this->db->from('ecp_activity_planning_joint_visit_details as eapjvd');
+        $this->db->join('users as v_emp','v_emp.id = eapjvd.employee_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $VisitEnployee= $this->db->get()->result_array();
+        if(isset($VisitEnployee) && !empty($VisitEnployee))
+        {
+            return $VisitEnployee;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getProductsSample($activity_planning_id){
+        $this->db->select('eappsd.product_sku_id,mpsc.product_sku_name,eappsd.quantity');
+        $this->db->from('ecp_activity_planning_promo_sample_details as eappsd');
+        $this->db->join('master_product_sku_country as mpsc','mpsc.product_sku_country_id = eappsd.product_sku_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $ProductsSample = $this->db->get()->result_array();
+        if(isset($ProductsSample) && !empty($ProductsSample))
+        {
+            return $ProductsSample;
+        }
+        else{
+            return array();
+        }
+
+    }
+
+    public function getProductsRequest($activity_planning_id){
+
+        $this->db->select('eaprpd.product_sku_id,mpsc.product_sku_name,eaprpd.quantity');
+        $this->db->from('ecp_activity_planning_required_product_details as eaprpd');
+        $this->db->join('master_product_sku_country as mpsc','mpsc.product_sku_country_id = eaprpd.product_sku_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $ProductsRequest = $this->db->get()->result_array();
+        if(isset($ProductsRequest) && !empty($ProductsRequest))
+        {
+            return $ProductsRequest;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getMaterialRequest($activity_planning_id){
+
+        $this->db->select('eaprmd.material_id,mpmc.promotional_material_country_name,eaprmd.quantity');
+        $this->db->from('ecp_activity_planning_required_material_details as eaprmd');
+        $this->db->join('master_promotional_material_country as mpmc','mpmc.promotional_country_id= eaprmd.material_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $MaterialRequest= $this->db->get()->result_array();
+        if(isset($MaterialRequest) && !empty($MaterialRequest))
+        {
+            return $MaterialRequest;
+        }
+        else{
+            return array();
+        }
+    }
+
+
 
     public function get_geo_data($geo_level_id)
     {

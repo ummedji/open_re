@@ -2498,7 +2498,7 @@ class Ishop_model extends BF_Model
         else
         {
             $sales_detail = $this->grid->get_result_res($sql);
-            
+
             if (isset($sales_detail['result']) && !empty($sales_detail['result'])) {
                 $sales_view['head'] = array('Sr. No.', 'Action', 'Month', 'Retailer Code', 'Retailer Name');
 

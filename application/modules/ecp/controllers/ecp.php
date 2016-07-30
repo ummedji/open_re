@@ -791,6 +791,16 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
+	public function activity_planning_view_edit()
+	{
+		$user = $this->auth->user();
+		$id = (isset($_POST["id"]) ? $_POST["id"] : null);
+
+		$activity  = $this->ecp_model->editViewActivityPlanning($id);
+		testdata($activity);
+	}
+
+
 
 	public function getActivityDetailByMonth($curr_month = '', $curr_year = '')
 	{

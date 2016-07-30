@@ -3496,7 +3496,6 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
-
     public function updateCompitiorAnalysis()
     {
         $id = $this->input->get_post('id');
@@ -3969,6 +3968,37 @@ class Web_service extends Front_Controller
         }
 
         $this->do_json($result);
+    }
+
+    public function getActivityByActivityId()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $id = $this->input->get_post('activity_id');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id) && (isset($id) && !empty($id)))) {
+
+            $activity_detail = $this->ecp_model->editViewActivityPlanning($id);
+
+            if(isset($activity_detail) && !empty($activity_detail))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $activity_detail;
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'No ddata.';
+                $result['data'] = '';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+
     }
 
 

@@ -1136,7 +1136,6 @@ $(document).on('click', '#check_cancel', function (e) {
     return false;
 });
 
-
 $(".activity_date").on('click',function(e){
     var elem = $(e.target).text();
     if(typeof $("#data_"+elem) != 'undefined')
@@ -1147,3 +1146,16 @@ $(".activity_date").on('click',function(e){
         }, 1000);
     }
 });
+
+function getActivityById(activity_planning_id)
+{
+    alert(activity_planning_id);
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/activity_planning_view_edit",
+        data: {id:activity_planning_id},
+        //dataType : 'json',
+        success: function (resp) {
+        }
+    });
+}

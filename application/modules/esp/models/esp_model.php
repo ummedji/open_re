@@ -46,6 +46,44 @@ class Esp_model extends BF_Model
         }
         
     }
+
+    public function get_sku_data($sku_code){
+
+        $this->db->select('bmpsc.product_sku_country_id');
+        $this->db->from("bf_master_product_sku_country as bmpsc");
+
+        $this->db->join("bf_master_product_sku_regional as bmpsr","bmpsr.product_sku_id = bmpsc.product_sku_id","LEFT");
+        $this->db->where("bmpsr.product_sku_code",$sku_code);
+
+        $pbg_sku_data = $this->db->get()->result_array();
+
+        if(isset($pbg_sku_data) && !empty($pbg_sku_data)) {
+            return $pbg_sku_data[0]["product_sku_country_id"];
+        } else{
+            return 0;
+        }
+
+    }
+
+    public function get_pbg_detail_data($pbg,$country_id){
+
+
+        $this->db->select('bmptnc.product_country_id');
+        $this->db->from("bf_master_product_type_name_country as bmptnc");
+
+      //  $this->db->join("bf_master_product_sku_regional as bmpsr","bmpsr.product_sku_id = bmpsc.product_sku_id","LEFT");
+        $this->db->where("bmptnc.product_country_name",$pbg);
+        $this->db->where("bmptnc.country_id",$country_id);
+
+        $pbg_data = $this->db->get()->result_array();
+
+        if(isset($pbg_data) && !empty($pbg_data)) {
+            return $pbg_data[0]["product_country_id"];
+        } else{
+            return 0;
+        }
+    }
+
     
     public function get_pbg_sku_data($pbgid){
         

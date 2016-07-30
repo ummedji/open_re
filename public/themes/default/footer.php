@@ -21,6 +21,18 @@ echo Assets::js();
         left_label: '<span class="bre_lf_arrow"></span>',
         right_label: '<span class="bre_rt_arrow"></span>'
     });
+    /*var checkout = $(".month_data").datepicker({});
+    $( "#main" ).scroll(function() {
+        $('.month_data').datepicker('place')
+    });*/
+    var datePicker = $().datepicker({});
+    var t;
+    $(window).on('DOMMouseScroll mousewheel scroll', function() {
+        window.clearTimeout(t);
+        t = window.setTimeout(function() {
+            $('.month_data').datepicker('place');
+        }, 50);
+    });
 </script>
 <script type="text/javascript">
     (function($){

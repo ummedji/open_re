@@ -1045,53 +1045,53 @@ input[readonly] {
     text-align: center;
 }
 .quantity_data, .qty_1, .amount_rt_a { text-align: right !important;}
+
+/*#no-more-tables tbody tr td[data-title="Credit Limit"],*/
+/*#no-more-tables tbody tr td[data-title="Product SKU Code"] input,*/
+/*#no-more-tables tbody tr td[data-title="PO No."],*/
+/*#no-more-tables tbody tr td[data-title="Order Tracking No."],*/
+/*#no-more-tables tbody tr td[data-title="Product Code"],*/
+/*#no-more-tables tbody tr td[data-title="Current Stock"],*/
+/*#no-more-tables tbody tr td[data-title="Target Points"],*/
+/*#no-more-tables tbody tr td[data-title="Programme Value"],*/
+/*#no-more-tables tbody tr td[data-title="Territory Code"],
+#no-more-tables tbody tr td[data-title="Scheme Code"],*/
+/*#no-more-tables tbody tr td[data-title="Batch"],*/
+/*#no-more-tables tbody tr td[data-title="Current Outstanding"],
+#no-more-tables tbody tr td[data-title="Employee Code"],*/
+/*#no-more-tables tbody tr td[data-title="Compititor Product Name"],
+#no-more-tables tbody tr td[data-title="Enter PO No."],
+#no-more-tables tbody tr td[data-title="Enter PO No."] input,*/
+/*#no-more-tables tbody tr td[data-title="Product SKU Code"],*/
+/*#no-more-tables tbody tr td[data-title="Product SKU Code"],
+#no-more-tables tbody tr td[data-title="Product SKU Code"] input,
+#no-more-tables tbody tr td[data-title="Actual Sales"],
+#no-more-tables tbody tr td[data-title="Compititor Product Name"],
+#no-more-tables tbody tr td[data-title="Compititor Product Name"] input*/
+
 #no-more-tables tbody tr td[data-title="Amount"],
 #no-more-tables tbody tr td[data-title="Amount"] input,
-#no-more-tables tbody tr td[data-title="Credit Limit"],
 #no-more-tables tbody tr td[data-title="Dispatch Amount"],
-#no-more-tables tbody tr td[data-title="Distributor Code"],
-#no-more-tables tbody tr td[data-title="Product SKU Code"] input,
-#no-more-tables tbody tr td[data-title="PO No."],
-#no-more-tables tbody tr td[data-title="Order Tracking No."],
-#no-more-tables tbody tr td[data-title="Product Code"],
 #no-more-tables tbody tr td[data-title="Quantity"] input,
 #no-more-tables tbody tr td[data-title="Quantity"],
 #no-more-tables tbody tr td[data-title="Qty. Kg/Ltr"],
-#no-more-tables tbody tr td[data-title="Current Stock"],
 #no-more-tables tbody tr td[data-title="Dispatched Quantity"] input,
-#no-more-tables tbody tr td[data-title="Retailer Code"],
 #no-more-tables tbody tr td[data-title="ROL Quantity"],
 #no-more-tables tbody tr td[data-title="ROL Qty Kg/Ltr"],
 #no-more-tables tbody tr td[data-title="1 point:?kg/ltr"],
 #no-more-tables tbody tr td[data-title="Value Per Kg. per Ltr"],
 #no-more-tables tbody tr td[data-title="Value Per Point"],
 #no-more-tables tbody tr td[data-title="Target Kg/Ltr"],
-#no-more-tables tbody tr td[data-title="Target Points"],
-#no-more-tables tbody tr td[data-title="Programme Value"],
-#no-more-tables tbody tr td[data-title="Territory Code"],
-#no-more-tables tbody tr td[data-title="Scheme Code"],
 #no-more-tables tbody tr td[data-title="Value Per Kg/Ltr"],
 #no-more-tables tbody tr td[data-title="Intransist Qty."],
 #no-more-tables tbody tr td[data-title="Unrusticted Qty."],
-#no-more-tables tbody tr td[data-title="Batch"],
-#no-more-tables tbody tr td[data-title="Current Outstanding"],
-#no-more-tables tbody tr td[data-title="Employee Code"],
 #no-more-tables tbody tr td[data-title="Requested Quantity"],
-#no-more-tables tbody tr td[data-title="Compititor Product Name"],
-#no-more-tables tbody tr td[data-title="Enter PO No."],
-#no-more-tables tbody tr td[data-title="Enter PO No."] input,
-#no-more-tables tbody tr td[data-title="Product SKU Code"],
 #no-more-tables tbody tr td[data-title="Approved Quantity"],
 #no-more-tables tbody tr td[data-title="Qty Kg/Ltr"],
 #no-more-tables tbody tr td[data-title="PO No"],
 #no-more-tables tbody tr td[data-title="OTN"],
 #no-more-tables tbody tr td[data-title="Mr.Id"],
-#no-more-tables tbody tr td[data-title="1 pt = ? Kg per Ltr"],
-#no-more-tables tbody tr td[data-title="Product SKU Code"],
-#no-more-tables tbody tr td[data-title="Product SKU Code"] input,
-#no-more-tables tbody tr td[data-title="Actual Sales"],
-#no-more-tables tbody tr td[data-title="Compititor Product Name"],
-#no-more-tables tbody tr td[data-title="Compititor Product Name"] input
+#no-more-tables tbody tr td[data-title="1 pt = ? Kg per Ltr"]
 
 { text-align: right; padding-right: 5px;}
 

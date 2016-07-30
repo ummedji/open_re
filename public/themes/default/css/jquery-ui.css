@@ -526,7 +526,7 @@ button.ui-button::-moz-focus-inner {
 	position: relative;
 }
 .ui-resizable-handle {
-	position: absolute;
+	position: relative;
 	font-size: 0.1px;
 	display: block;
 	-ms-touch-action: none;
