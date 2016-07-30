@@ -4887,7 +4887,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         {
             $subsql = ' AND  f_bu.role_id = "'.$loginusertype.'" ';
         }
-        elseif($action_data == "get_order_status_data")
+        elseif($action_data == "get_order_status_data" || $action_data == "order_status")
         {
            $subsql = ' AND bu.role_id="'.$loginusertype.'" ';
         }
