@@ -21,18 +21,27 @@ echo Assets::js();
         left_label: '<span class="bre_lf_arrow"></span>',
         right_label: '<span class="bre_rt_arrow"></span>'
     });
-    /*var checkout = $(".month_data").datepicker({});
+    var checkout = $(".datepicker");
     $( "#main" ).scroll(function() {
         $('.month_data').datepicker('place')
-    });*/
-    var datePicker = $().datepicker({});
-    var t;
-    $(window).on('DOMMouseScroll mousewheel scroll', function() {
-        window.clearTimeout(t);
-        t = window.setTimeout(function() {
-            $('.month_data').datepicker('place');
-        }, 50);
+        $('#form_date').datepicker('place')
+        $('#to_date').datepicker('place')
+        $('#invoice_date').datepicker('place')
+        $('#cur_year').datepicker('place')
+        $('#year').datepicker('place')
+        $('#current_date').datepicker('place')
+        $('#batch_mfg_date').datepicker('place')
+        $('#batch_expiry_date').datepicker('place')
+        $('#curr_date').datepicker('place')
+        $('#planning_date').datepicker('place')
+        $('#month').datepicker('place')
+        $('#execution_date').datepicker('place')
+        $('#month_da').datepicker('place')
+        $('#stock_month').datepicker('place')
+        $('#invoice_month').datepicker('place')
+        $('#order_date').datepicker('place')
     });
+
 </script>
 <script type="text/javascript">
     (function($){

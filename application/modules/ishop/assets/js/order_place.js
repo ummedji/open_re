@@ -923,7 +923,7 @@ function order_place_add_row()
             
             "<td data-title='Product SKU Code' class='numeric'>" +
                 "<input class='sku_"+sr_no+"' type='hidden' value='"+sku_id+"' readonly/>"+
-                "<input class='amount_rt_a input_remove_border' type='text' value='"+sku_code+"' readonly/>" +
+                "<input class='input_remove_border' type='text' value='"+sku_code+"' readonly/>" +
             "</td>"+
             "<td data-title='Product SKU Name'>" +
                 "<input class='input_remove_border' type='text' value='"+sku_name+"' readonly/>" +

@@ -35,7 +35,7 @@ if(isset($target_data) && count($target_data)>0 && $target_data !=false) {
                     ?>
                     <tr>
                         <td><?php echo $i; ?></td>
-                        <td class="amount_rt_a"><?php echo $product_data[1]; ?></td>
+                        <td><?php echo $product_data[1]; ?></td>
                         <td><?php echo $product_data[2]; ?></td>
                        <?php foreach($data as $k=>$q_data){ ?>
                             <td><?php echo $q_data; ?></td>

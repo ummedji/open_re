@@ -5073,6 +5073,8 @@ foreach($month_data as $monthkey => $monthvalue){
 	public function upload_budget_data(){
 
             $user = $this->auth->user();
+
+            $user_id = $user->id;
             $user_country_id = $user->country_id;
             $bussiness_code = $user->bussiness_code;
 
@@ -5156,6 +5158,12 @@ foreach($month_data as $monthkey => $monthvalue){
                     if(($sku_id != "" || $sku_id != 0) && ($pbg_id != "" || $pbg_id != 0))
                     {
 
+                        $data_array = array();
+                        $data_array['emp_id'] = $user_id;
+                        $data_array['login_user_id'] = $user_id;
+                        $data_array['pbg_data'] = $pbg_id;
+                        $data_array['pbg_data'] = $pbg_id;
+
                         $upload_data = $this->upload_xl_budget_data($pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data["monthdata"]);
 
                     }
@@ -5167,6 +5175,7 @@ foreach($month_data as $monthkey => $monthvalue){
 	}
 
 public function upload_xl_budget_data($pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data){
+
 
 
 

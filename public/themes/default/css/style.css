@@ -1091,10 +1091,15 @@ input[readonly] {
 #no-more-tables tbody tr td[data-title="PO No"],
 #no-more-tables tbody tr td[data-title="OTN"],
 #no-more-tables tbody tr td[data-title="Mr.Id"],
-#no-more-tables tbody tr td[data-title="1 pt = ? Kg per Ltr"]
+#no-more-tables tbody tr td[data-title="1 pt = ? Kg per Ltr"],
+#no-more-tables tbody tr td[data-title="Enter PO No."],
+#no-more-tables tbody tr td[data-title="Enter PO No."] input
 
 { text-align: right; padding-right: 5px;}
 
+#no-more-tables tbody tr td[data-title="Product SKU Code"],
+#no-more-tables tbody tr td[data-title="Product SKU Code"] .amount_rt_a,
+{ text-align: center !important;}
 #no-more-tables thead>tr>th:last-child .rts_bordet { display: none;}
 
 
