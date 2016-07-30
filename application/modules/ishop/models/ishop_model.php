@@ -2466,6 +2466,7 @@ class Ishop_model extends BF_Model
 
     public function view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null,$web_service = null,$local_date=null)
     {
+
         $sql = 'SELECT itsp.tertiary_sales_id,itsp.sales_month,bu.user_code,bu.display_name ';
         $sql .= 'FROM bf_ishop_tertiary_sales AS itsp ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = itsp.customer_id) ';
@@ -2473,20 +2474,31 @@ class Ishop_model extends BF_Model
         if ((isset($from_month) && !empty($from_month)) && (isset($to_month) && !empty($to_month))) {
             $sql .= 'AND DATE_FORMAT(itsp.sales_month,"%Y-%m") BETWEEN ' . '"' . $from_month . '"' . ' AND ' . '"' . $to_month . '"' . ' ';
         }
-        if ((isset($geo_level_0) && !empty($geo_level_0)) && (isset($geo_level_1) && !empty($geo_level_1)) && (isset($retailer_id) && !empty($retailer_id))) {
+
+        if ((isset($retailer_id) && !empty($retailer_id))) {
             $sql .= 'AND  itsp.customer_id =' . $retailer_id . ' ';
         }
+
         $sql .= 'AND itsp.created_by_user =' . $user_id . ' ';
         $sql .= 'AND itsp.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_id DESC ';
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+            // For Pagination
+            $limit = 10;
+            $pagenum = $this->input->get_post('page');
+            $page = !empty($pagenum) ? $pagenum : 1;
+            $offset = $page * $limit - $limit;
+            $sql .= ' LIMIT ' . $offset . "," . $limit;
             $info = $this->db->query($sql);
+            // For Pagination
             $sales_detail = $info->result_array();
             return $sales_detail;
-        } else {
+        }
+        else
+        {
             $sales_detail = $this->grid->get_result_res($sql);
-
+            
             if (isset($sales_detail['result']) && !empty($sales_detail['result'])) {
                 $sales_view['head'] = array('Sr. No.', 'Action', 'Month', 'Retailer Code', 'Retailer Name');
 
@@ -2510,6 +2522,7 @@ class Ishop_model extends BF_Model
                 $sales_view['edit'] = '';
                 $sales_view['delete'] = 'is_delete';
                 $sales_view['pagination'] = $sales_detail['pagination'];
+
                 return $sales_view;
             } else {
                 return false;

@@ -4934,7 +4934,7 @@ foreach($month_data as $monthkey => $monthvalue){
 					
 				}
 
-            testdata($final_array);
+         //   testdata($final_array);
 
 		}
 		else{
@@ -5006,6 +5006,9 @@ foreach($month_data as $monthkey => $monthvalue){
                     
                 $objWorkSheet->getProtection()->setSheet(true);
                 $u = 2;
+
+               // testdata($final_array);
+
                 foreach($final_array as $key_data => $final_data){
                     
 
@@ -5026,33 +5029,79 @@ foreach($month_data as $monthkey => $monthvalue){
                     );
 
                     $i = 2;
-                    foreach($final_data["budget_quantity"] as $budget_key=>$budget_data){
-                        
-                        $objWorkSheet->setCellValue("D$u", $budget_data);
-                        $objWorkSheet->setCellValue("E$u", $budget_data);
-                        $objWorkSheet->setCellValue("F$u", $budget_data);
-                        $objWorkSheet->setCellValue("G$u", $budget_data);
-                        $objWorkSheet->setCellValue("H$u", $budget_data);
-                        $objWorkSheet->setCellValue("I$u", $budget_data);
-                        $objWorkSheet->setCellValue("J$u", $budget_data);
-                        $objWorkSheet->setCellValue("K$u", $budget_data);
-                        $objWorkSheet->setCellValue("L$u", $budget_data);
-                        $objWorkSheet->setCellValue("M$u", $budget_data);
-                        $objWorkSheet->setCellValue("N$u", $budget_data);
-                        $objWorkSheet->setCellValue("O$u", $budget_data);
 
-                        $objWorkSheet->getStyle("D$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("E$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("F$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("G$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("H$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("I$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("L$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("M$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("N$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("O$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        
+                    $final_data["budget_quantity"] = array_values($final_data["budget_quantity"]);
+
+                    dumpme( $final_data["budget_quantity"]);
+
+                    echo "D".$u."===="."===".$final_array[$u]["budget_quantity"][$u]."</br>";
+
+                 //   foreach($final_data["budget_quantity"] as $budget_key=>$budget_data){
+/*
+                        echo "D".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "E".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "F".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "G".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "H".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "I".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "J".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "K".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "L".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "M".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "N".$i."====".$budget_key."===".$budget_data."</br>";
+                        echo "O".$i."====".$budget_key."===".$budget_data."</br>";
+*/
+                  /*  $k = 0;
+                    foreach($final_data["budget_quantity"] as $budget_key=>$budget_data) {
+
+
+                        echo "D".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "E".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "F".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "G".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "H".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "I".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "J".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "K".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "L".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "M".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "N".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+                        echo "O".$u."====".$budget_key."===".$final_data["budget_quantity"][$k]."</br>";
+
+
+                        $objWorkSheet->setCellValue("D$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("E$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("F$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("G$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("H$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("I$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("J$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("K$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("L$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("M$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("N$u", $final_data["budget_quantity"][$k]);
+                        $objWorkSheet->setCellValue("O$u", $final_data["budget_quantity"][$k]);
+                    $k++;
                     }
+                    */
+/*
+                  foreach($final_data["budget_quantity"] as $budget_key=>$budget_data){
+                        $objWorkSheet->getStyle("D$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("E$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("F$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("G$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("H$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("I$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("L$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("M$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("N$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("O$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+
+                        $i++;
+
+                    }
+
+                    */
                     
                     /* $objWorkSheet->setCellValue('A1', 'Hello'.$u)
                      ->setCellValue('B2', 'world!')
@@ -5064,7 +5113,10 @@ foreach($month_data as $monthkey => $monthvalue){
                     // $objWorkSheet->setTitle("$key_data");
                             
                     $u++;
+                    //$k++;
                  }
+
+                die;
             }
 
                 // $filename='just_some_random_name.xls'; //save our workbook as this file name
