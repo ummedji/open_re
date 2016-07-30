@@ -5370,7 +5370,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             else{
                                 $order_datetime = $od['order_date'];
                             }
-                            $order_view['row'][] = array($i, $od['order_id'],$order_datetime, $otn, $od['f_dn'], $od['display_name'], $po_no);
+                            $order_view['row'][] = array($i, $od['order_id'],$order_datetime, $otn, $od['t_dn'], $od['display_name'], $po_no);
                             $i++;
                         }
                         $order_view['eye'] = '';

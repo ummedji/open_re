@@ -1796,13 +1796,16 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             if($referenc == 'follow_up')
             {
                 $reference_type = '1';
+                $submit_status = '1';
             }
             else{
                 $reference_type = '0';
+                $submit_status = '0';
             }
         }
         else{
             $reference_type = '0';
+            $submit_status = '0';
         }
 
 
@@ -1867,8 +1870,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             'employee_id' => $user_id,
             'country_id' => $country_id,
             'status' => '0',
-            'submit_status' => '0',
-
+            'submit_status' => $submit_status,
             'reference_type' => $reference_type,
             'reference_id' => '0',
             'created_by_user' => $user_id,

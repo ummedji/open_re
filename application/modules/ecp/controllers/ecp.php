@@ -157,8 +157,6 @@ class Ecp extends Front_Controller
 	}
 
 
-
-
 	public function retailer_compititor_analysis()
 	{
 		Assets::add_module_js('ecp', 'retailer_compititor.js');
@@ -1172,8 +1170,6 @@ class Ecp extends Front_Controller
 			else{
 				return 	$cal_data;
 			}
-
-
 		}
 
 	public function change_status_activity()
@@ -1273,22 +1269,11 @@ class Ecp extends Front_Controller
 
 	public function add_activity_unplanned_details()
 	{
-		//testdata($_POST);
 		$user = $this->auth->user();
 		$add= $this->ecp_model->addActivityUnplanned($user->id,$user->country_id,null,$user->local_date);
 		echo $add;
 		die;
 	}
-
-
-
-
-
-
-
-
-
-
 
 
 }

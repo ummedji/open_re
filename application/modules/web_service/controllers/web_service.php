@@ -3946,15 +3946,16 @@ class Web_service extends Front_Controller
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
+        $type = $this->input->get_post('reference_type');
         if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id))) {
 
-            if(isset($_POST['execution_date']) && !empty($_POST['execution_date'])){
-                $insert = $this->ecp_model->addActivityUnplanned($user_id, $country_id, 'web_service');
-            }
-            else{
+            if(isset($type) && !empty($type) && $type == 'follow_up')
+            {
                 $insert = $this->ecp_model->addActivityPlanning($user_id, $country_id, 'web_service');
             }
-
+            else{
+                $insert = $this->ecp_model->addActivityUnplanned($user_id, $country_id, 'web_service');
+            }
 
             if ($insert != 0) {
                 $result['status'] = true;
