@@ -4403,6 +4403,8 @@ class Esp extends Front_Controller
 
         }
 
+        $assumption_arr[] = "Banjir";
+
         //echo "'".$assumptiondata."'";
         //die;
         //testdata($final_array);

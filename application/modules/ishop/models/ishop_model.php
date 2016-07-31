@@ -2051,13 +2051,13 @@ class Ishop_model extends BF_Model
                 foreach ($xl_data as $key => $value) {
                     $stock_month = $value[0];
                     $prod_sku = $value[1];
-                    $qty = $value[2];
+                    $rol_qty = $value[2];
                     $unit = $value[3];
 
                     $stock_month = strtotime($stock_month);
                     $stock_month = date('Y-m', $stock_month);
 
-                    $qty_kgl = $this->get_product_conversion_data($prod_sku, $qty, $unit);
+                    $qty_kgl = $this->get_product_conversion_data($prod_sku, $rol_qty, $unit);
 
                     $login_customer_role = $user_role;
                     $cust_id = $user_id;
@@ -2072,8 +2072,8 @@ class Ishop_model extends BF_Model
                                 'customer_id' => $user_id,
                                 'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                                 'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : 0,
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : 0,
                                 'modified_by_user' => $user_id,
                                 'country_id' => $country_id,
                                 'status' => '1',
@@ -2086,8 +2086,8 @@ class Ishop_model extends BF_Model
                                 'customer_id' => $user_id,
                                 'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                                 'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'quantity' => (isset($rol_qty) && !empty($rol_qty)) ? $rol_qty : 0,
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : 0,
                                 'modified_by_user' => $user_id,
                                 'country_id' => $country_id,
                                 'status' => '1',
@@ -2104,8 +2104,8 @@ class Ishop_model extends BF_Model
                                 'customer_id' => $user_id,
                                 'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                                 'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : 0,
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : 0,
                                 'created_by_user' => $user_id,
                                 'modified_by_user' => $user_id,
                                 'country_id' => $country_id,
@@ -2120,8 +2120,8 @@ class Ishop_model extends BF_Model
                                 'customer_id' => $user_id,
                                 'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                                 'unit' => (isset($unit) && !empty($unit)) ? $unit : '',
-                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : '',
-                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : '',
+                                'quantity' => (isset($qty) && !empty($qty)) ? $qty : 0,
+                                'qty_kgl' => (isset($qty_kgl) && !empty($qty_kgl)) ? $qty_kgl : 0,
                                 'created_by_user' => $user_id,
                                 'modified_by_user' => $user_id,
                                 'country_id' => $country_id,
