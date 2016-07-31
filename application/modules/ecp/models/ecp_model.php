@@ -1898,7 +1898,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 'modified_on' => date('Y-m-d H:i:s'),
 
             );
-            testdata($activity_planning);
+          //  testdata($activity_planning);
             $update_array=array();
 
             $this->db->where('activity_planning_id',$activity_planning_id);

@@ -4476,7 +4476,7 @@ class Esp extends Front_Controller
 
                         $objWorkSheet->setCellValue("C$i", "0.00");
                         $objWorkSheet->setCellValue("D$i", "0.00");
-
+                    /*
                         $assumption1 = $pbgdata["assumption1"];
                         $assumption2 = $pbgdata["assumption2"];
                         $assumption3 = $pbgdata["assumption3"];
@@ -4485,6 +4485,7 @@ class Esp extends Front_Controller
                         $assumption2_name = $this->esp_model->get_assumption_name($assumption2);
                         $assumption3_name = $this->esp_model->get_assumption_name($assumption3);
 
+                        */
                        // $objWorkSheet->setCellValue("E$i", $assumption1_name);
                         $objWorkSheet->setCellValue("E$i", "Curah hujan");
 
