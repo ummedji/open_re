@@ -4481,6 +4481,11 @@ class Esp extends Front_Controller
                         $assumption2 = $pbgdata["assumption2"];
                         $assumption3 = $pbgdata["assumption3"];
 
+                        $assumption1_name = $this->esp_model->get_assumption_name($assumption1);
+                        $assumption2_name = $this->esp_model->get_assumption_name($assumption2);
+                        $assumption3_name = $this->esp_model->get_assumption_name($assumption3);
+
+                       // $objWorkSheet->setCellValue("E$i", $assumption1_name);
                         $objWorkSheet->setCellValue("E$i", "Curah hujan");
 
                         $objValidation = $objWorkSheet->getCell("E$i")->getDataValidation();
@@ -4496,7 +4501,8 @@ class Esp extends Front_Controller
                         $objValidation->setPrompt('Please pick a value from the drop-down list.');
                         $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
 
-                        $objWorkSheet->setCellValue("G$i", "Kelembaban");
+                       // $objWorkSheet->setCellValue("G$i",$assumption2_name);
+                        $objWorkSheet->setCellValue("G$i","Harga Naik");
 
                         $objValidation = $objWorkSheet->getCell("G$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
@@ -4511,7 +4517,8 @@ class Esp extends Front_Controller
                         $objValidation->setPrompt('Please pick a value from the drop-down list.');
                         $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
 
-                        $objWorkSheet->setCellValue("I$i", "Distribusi sampel gratis");
+                        //$objWorkSheet->setCellValue("I$i", $assumption3_name);
+                        $objWorkSheet->setCellValue("I$i", "Kelembaban");
 
                         $objValidation = $objWorkSheet->getCell("I$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);

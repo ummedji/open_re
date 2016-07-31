@@ -1339,6 +1339,17 @@ class Esp_model extends BF_Model
         
     }
 
+    public function get_assumption_name($assumption_id){
+
+        $this->db->select('*');
+        $this->db->from("bf_master_assumptions as bma");
+        $this->db->where("bma.assumption_id",$assumption_id);
+
+        $assumption_data = $this->db->get()->result_array();
+        return $assumption_data[0]["assumption_name"];
+
+    }
+
 	public function get_employee_month_product_budget_lock_data($login_user_id,$check_lock_budget_id,$monthvalue){
         
         $this->db->select('*');
