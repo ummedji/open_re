@@ -4209,12 +4209,19 @@ class Esp extends Front_Controller
         }
     }
 
-    public function generate_forecast_xl_data()
+    public function generate_forecast_xl_data($webservice_data = null)
     {
 
-        $user = $this->auth->user();
-        $user_country_id = $user->country_id;
-        $bussiness_code = $user->bussiness_code;
+        if ($webservice_data == null) {
+            $user = $this->auth->user();
+            $user_country_id = $user->country_id;
+            $bussiness_code = $user->bussiness_code;
+        } else {
+            $user = $webservice_data["user_id"];
+            $user_country_id = $webservice_data["country_id"];
+            $bussiness_code = $webservice_data["bussiness_code"];
+        }
+
 
         $pbgdata = $this->esp_model->get_pbg_data($user_country_id);
 
@@ -4367,14 +4374,24 @@ class Esp extends Front_Controller
             $final_array[] = "No Data Found";
         }
 
-        $xl_data = $this->create_forecast_data_xl($final_array);
 
-        die;
+        if ($webservice_data == null) {
+
+            $xl_data = $this->create_forecast_data_xl($final_array,null);
+
+            die;
+        } else {
+
+            $xl_data = $this->create_forecast_data_xl($final_array,"webservice");
+
+            return $xl_data;
+
+        }
 
     }
 
 
-    public function create_forecast_data_xl($final_array)
+    public function create_forecast_data_xl($final_array, $webservice = null)
     {
         //testdata($final_array);
         $this->load->library('excel');
@@ -4614,12 +4631,6 @@ class Esp extends Front_Controller
                     $i++;
                 }
 
-                /* $objWorkSheet->setCellValue('A1', 'Hello'.$u)
-					 ->setCellValue('B2', 'world!')
-					 ->setCellValue('C1', 'Hello')
-					 ->setCellValue('D2', 'world!');
-					 */
-
                 // Rename sheet
                 $objWorkSheet->setTitle("$key_data");
 
@@ -4633,56 +4644,167 @@ class Esp extends Front_Controller
         header('Content-Disposition: attachment;filename="' . $filename . '"'); //tell browser what's the file name
         header('Cache-Control: max-age=0'); //no cache
 
-
-        //  $filename='Data_'.strtotime(date('d-m-y h:i:s')).'.xlsx';
-        //   header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
-        //  header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
-        //  header('Cache-Control: max-age=0'); //no cache
-
-        //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
-        //if you want to save it as .XLSX Excel 2007 format
         $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel2007');
         //force user to download the Excel file without writing it to server's HD
 
-        /*
-                 * NEED TO CHANGE AS PER UPLOADED FILE 
-                 */
+        if($webservice == "webservice")
+        {
+            if (file_exists(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename)) {
+                unlink(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename);
+            }
+            $objWriter->save(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename);
 
-        /*  if($_SERVER['SERVER_NAME'] == "localhost"){
-                       $folder = "open_re/trunk";
-                   }
-                   elseif($_SERVER['SERVER_NAME'] == "webcluesglobal.com"){
-                       $folder = "qa/re";
-                   }*/
+            $result['status'] = true;
+            $result['message'] = 'Retrieved Successfully.';
+            $result['data'] = base_url()."assets/uploads/Uploads/esp_forecast/".$filename;
+            echo json_encode($result);
+            die;
+        }
+        else
+        {
+            $objWriter->save('php://output');
+            exit();
+        }
+
+    }
+
+    public function upload_forecast_data($webservice_data = null)
+    {
+
+        if ($webservice_data == null) {
+
+            $user = $this->auth->user();
+            $user_id = $user->id;
+            $user_country_id = $user->country_id;
+            $bussiness_code = $user->bussiness_code;
+            $files = $_POST["upload_file_data"];
+
+        } else {
+            $user_id = $_POST["user_id"];
+            $files = $_FILES["upload_file_data"];
+            $user_country_id = $_POST["country_id"];
+            $bussiness_code = $_POST["bussiness_code"];
+        }
 
 
-        //if(file_exists($_SERVER['DOCUMENT_ROOT']."/".$folder."/public/assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
-        // if(file_exists(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename)){
 
-        //    unlink(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+        if (!empty($files)) {
 
-        // }
+            $file = $_POST["upload_file_data"]["tmp_name"];
+
+            $filename = explode("_", $_POST["upload_file_data"]["name"]);
+
+            //$filename[] = $_POST["upload_file_data"]["name"];
 
 
-        //   $objWriter->save(FCPATH."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename);
+            $ext = explode(".", $_POST["upload_file_data"]["name"]);
 
-        //   $web_service = @$_POST['flag'];
-        //   if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
-        //       $result['status'] = true;
-        //       $result['message'] = 'Retrieved Successfully.';
-        //      $result['data'] = base_url()."assets/uploads/Uploads/".$_POST["dirname"]."/".$filename;
-        //      echo json_encode($result);
-        //  }
-        //   else
-        //   {
-        //   echo $filename;
-        //  }
+            if ($ext[1] == "xls" || $ext[1] == "xlsx") {
 
-        //  $objWriter = PHPExcel_IOFactory::createWriter($obj, 'Excel5');
+                //load the excel library
+                $this->load->library('excel');
 
-        $objWriter->save('php://output');
-        exit();
+                //read file from path
+                $objPHPExcel = PHPExcel_IOFactory::load($file);
+
+                $sheetCount = $objPHPExcel->getSheetCount();
+                $sheetNames = $objPHPExcel->getSheetNames();
+
+                if ($sheetCount == 12) {
+
+               /*     if ($sheetNames[0] == "budget") {
+
+                    */
+
+
+                        /*    } else {
+                                //SHEET NAME ERROR
+
+                                $error_array["fileerror"][] = "Please upload desired file.";
+                                echo json_encode($error_array);
+                                die;
+
+                            }
+ */
+                    for($j = 0; $j<$sheetCount;$j++){
+
+                        $sheetName = $sheetNames[$j];
+
+                        $cell_collection = $objPHPExcel->getActiveSheet($j)->getCellCollection();
+
+
+                        $arr_data = array();
+                        //extract to a PHP readable array format
+
+                        $i = 1;
+
+                        $final_array = array();
+
+                        foreach ($cell_collection as $cell) {
+
+                            $inner_array = array();
+
+                            //if($i != 1){
+                            $column = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getColumn();
+                            $row = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getRow();
+                            $data_value = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getValue();
+
+                            if ($row == 1) {
+
+                                $header[$row][$column] = $data_value;
+
+                            }
+
+                            /*if ($row != 1) {
+                                if ($column == "A" || $column == "B" || $column == "C") {
+                                    $arr_data[$row][$column] = $data_value;
+                                } else {
+                                    $arr_data[$row]["monthdata"][$column] = $data_value;
+                                }
+                            }
+
+                            */
+
+                            if ($row == 10) {
+                                break;
+                                //die;
+                            }
+                            $i++;
+
+                        }
+
+                        testdata($header);
+
+
+                    }
+
+
+
+                        } else {
+                            //SHEEET COUNT ERROR
+
+                            $error_array["fileerror"][] = "File must contain twelve sheets only.";
+                            echo json_encode($error_array);
+                            die;
+                        }
+
+
+
+            } else {
+                //EXTENSION ERROR
+
+                $error_array["fileerror"][] = "Incorrect format. Please upload xlsx or xls format file.";
+                echo json_encode($error_array);
+                die;
+            }
+
+        } else {
+            $error_array["fileerror"][] = "No file uploaded.";
+            echo json_encode($error_array);
+            die;
+        }
+
     }
 
 

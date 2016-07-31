@@ -95,8 +95,18 @@ class Web_service extends Front_Controller
     public function getPrimarySalesInvoices2()
     {
         $user_id = $this->input->get_post('user_id');
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
+
+        $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $form_date = date('Y-m-d', strtotime($f_date));
+
+        $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+/*        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');*/
+
         $by_distributor = $this->input->get_post('by_distributor');
         $by_invoice_no = $this->input->get_post('by_invoice_no');
 
@@ -667,8 +677,17 @@ class Web_service extends Front_Controller
     public function getPrimarySalesInvoices()
     {
         $user_id = $this->input->get_post('user_id');
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
+
+        $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $form_date = date('Y-m-d', strtotime($f_date));
+
+        $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+/*        $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');*/
         $by_distributor = $this->input->get_post('by_distributor');
         $by_invoice_no = $this->input->get_post('by_invoice_no');
 
@@ -719,8 +738,16 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         $role_id = $this->input->get_post('role_id');
 
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
+        $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $form_date = date('Y-m-d', strtotime($f_date));
+
+        $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+        /*$form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');*/
         $by_otn = $this->input->get_post('by_otn');
         $by_po_no = $this->input->get_post('by_po_no');
         $order_status = $this->input->get_post('order_status'); // dispatched,pending,reject,op_ackno,all
@@ -845,8 +872,17 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         $role_id = $this->input->get_post('role_id');
 
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
+        $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $form_date = date('Y-m-d', strtotime($f_date));
+
+        $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+
+/*      $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date')*/
         $customer_id = $this->input->get_post('customer_id');
         $order_tracking_no = $this->input->get_post('otn');
         $check_type = $this->input->get_post('check_type');
@@ -2853,8 +2889,16 @@ class Web_service extends Front_Controller
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
-        $form_date = $this->input->get_post('form_date');
-        $to_date = $this->input->get_post('to_date');
+
+        $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $form_date = date('Y-m-d', strtotime($f_date));
+        $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+/*      $form_date = $this->input->get_post('form_date');
+        $to_date = $this->input->get_post('to_date');*/
         $by_retailer = $this->input->get_post('by_retailer');
         $by_invoice_no = $this->input->get_post('by_invoice_no');
 
@@ -3148,8 +3192,16 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         $role_id = $this->input->get_post('role_id');
 
-        $from_date = $this->input->get_post('from_date');
-        $to_date = $this->input->get_post('to_date');
+        $form_dt = (isset($_POST['from_date']) ? $_POST['from_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $from_date = date('Y-m-d', strtotime($f_date));
+
+        $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+/*       $from_date = $this->input->get_post('from_date');
+        $to_date = $this->input->get_post('to_date');*/
 
         if (isset($user_id) && !empty($user_id)
             && isset($country_id) && !empty($country_id)

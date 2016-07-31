@@ -2038,7 +2038,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                         $product_samples_details = array(
                             'activity_planning_id' => $activity_planning_id,
                             'product_sku_id' => (isset($val_product) && !empty($val_product)) ? $val_product : 0,
-                            'quantity' => isset($product_samples_qty[$K]) ? $product_samples_qty[$K] : 0,
+                            'quantity' =>(isset($product_samples_qty[$K]) && !empty($product_samples_qty[$K]))? $product_samples_qty[$K] : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_promo_sample_details', $product_samples_details);
@@ -2046,8 +2046,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                             $update_array[]=1;
                         }
                     }
-
-
                 }
 
 
@@ -2060,8 +2058,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     {
                         $product_materials_details = array(
                             'activity_planning_id' => $activity_planning_id,
-                            'product_sku_id' => isset($vals) ? $vals :0,
-                            'quantity' => isset($product_materials_qty[$K]) ? $product_materials_qty[$K] : 0,
+                            'product_sku_id' => (isset($vals) && !empty($vals)) ? $vals :0,
+                            'quantity' => (isset($product_materials_qty[$K]) && !empty($product_materials_qty[$K])) ? $product_materials_qty[$K] : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_required_product_details', $product_materials_details);
@@ -2082,8 +2080,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     {
                         $materials_details = array(
                             'activity_planning_id' => $activity_planning_id,
-                            'material_id' => isset($val_materials) ? $val_materials : 0,
-                            'quantity' => isset($materials_qty[$K]) ? $materials_qty[$K] : 0,
+                            'material_id' => (isset($val_materials) && !empty($val_materials))  ? $val_materials : 0,
+                            'quantity' => (isset($materials_qty[$K]) && !empty($materials_qty[$K])) ? $materials_qty[$K] : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_required_material_details', $materials_details);
@@ -2100,16 +2098,16 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 'activity_planning_date' => isset($planning_date) ? $planning_date : '',
                 'activity_planning_time' => isset($planning_date_time) ? $planning_date_time : '',
                 'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
-                'geo_level_id_2' => isset($geo_level_2) ? $geo_level_2 : 0,
-                'geo_level_id_3' => isset($geo_level_3) ? $geo_level_3 : 0,
-                'geo_level_id_4' => isset($geo_level_4) ? $geo_level_4 : 0,
-                'geo_level_id' => isset($geo_level) ? $geo_level : '',
+                'geo_level_id_2' => (isset($geo_level_2) && !empty($geo_level_2)) ? $geo_level_2 : 0,
+                'geo_level_id_3' => (isset($geo_level_3) && !empty($geo_level_3)) ? $geo_level_3 : 0,
+                'geo_level_id_4' => (isset($geo_level_4) && !empty($geo_level_4)) ? $geo_level_4 : 0,
+                'geo_level_id' => (isset($geo_level) && !empty($geo_level)) ? $geo_level : 0,
                 'location' => isset($activity_address) ? $activity_address :''   ,
-                'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : 0,
+                'proposed_attandence_count' => (isset($attandence_count) && !empty($attandence_count)) ? $attandence_count : '0',
                 'point_discussion' => isset($pod) ? $pod : '',
                 'alert' => isset($set_alert) ? $set_alert : '',
-                'size_of_plot' => isset($size_of_plot) ? $size_of_plot : 0,
-                'spray_volume' => isset($spray_volume) ? $spray_volume : 0,
+                'size_of_plot' => (isset($size_of_plot) && !empty($size_of_plot)) ? $size_of_plot : 0,
+                'spray_volume' => (isset($spray_volume) && !empty($spray_volume)) ? $spray_volume : 0,
                 'amount' => '0',
                 'employee_id' => $user_id,
                 'country_id' => $country_id,
@@ -2132,7 +2130,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     foreach ($crop as $key => $crp) {
                         $corp_detail = array(
                             'activity_planning_id' => $insert_id,
-                            'crop_id' => isset($crp) ? $crp : 0,
+                            'crop_id' => (isset($crp) && !empty($crp)) ? $crp : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_crop_details', $corp_detail);
@@ -2143,7 +2141,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     foreach ($product_sku as $key => $prd_sku) {
                         $product_detail = array(
                             'activity_planning_id' => $insert_id,
-                            'product_sku_id' => isset($prd_sku) ? $prd_sku : '',
+                            'product_sku_id' => (isset($prd_sku) && !empty($prd_sku)) ? $prd_sku : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_product_details', $product_detail);
@@ -2157,7 +2155,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     foreach ($diseases as $key => $val) {
                         $diseases_details = array(
                             'activity_planning_id' => $insert_id,
-                            'diseases_id' => isset($val) ? $val : '',
+                            'diseases_id' => (isset($val) && !empty($val)) ? $val : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_diseases_details', $diseases_details);
@@ -2171,7 +2169,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     {
                         $key_farmer_details = array(
                             'activity_planning_id' => $insert_id,
-                            'customer_id' => isset($val_frm) ? $val_frm : '',
+                            'customer_id' => (isset($val_frm) && !empty($val_frm)) ? $val_frm : 0,
                             'mobile_no' => isset($farmer_num[$k]) ? $farmer_num[$k] : '',
                         );
 
@@ -2187,7 +2185,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
                         $digital_library_details = array(
                             'activity_planning_id' => $insert_id,
-                            'digital_library_id' => isset($val_digital) ? $val_digital : '',
+                            'digital_library_id' => (isset($val_digital) && !empty($val_digital)) ? $val_digital : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_digital_library_details', $digital_library_details);
@@ -2201,7 +2199,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     {
                         $joint_details = array(
                             'activity_planning_id' => $insert_id,
-                            'employee_id' => isset($val_joint) ? $val_joint : '',
+                            'employee_id' =>  (isset($val_joint) && !empty($val_joint)) ? $val_joint : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_joint_visit_details', $joint_details);
@@ -2216,8 +2214,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     {
                         $product_samples_details = array(
                             'activity_planning_id' => $insert_id,
-                            'product_sku_id' => isset($val_product) ? $val_product : '',
-                            'quantity' => isset($product_samples_qty[$K]) ? $product_samples_qty[$K] : '',
+                            'product_sku_id' => (isset($val_product) && !empty($val_product)) ? $val_product : 0,
+                            'quantity' => (isset($product_samples_qty[$K]) && !empty($product_samples_qty[$K])) ? $product_samples_qty[$K] : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_promo_sample_details', $product_samples_details);
@@ -2232,15 +2230,13 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     {
                         $product_materials_details = array(
                             'activity_planning_id' => $insert_id,
-                            'product_sku_id' => isset($vals) ? $vals :'',
-                            'quantity' => isset($product_materials_qty[$K]) ? $product_materials_qty[$K] : '',
+                            'product_sku_id' => (isset($vals) && !empty($vals)) ? $vals : 0,
+                            'quantity' => (isset($product_materials_qty[$K]) && !empty($product_materials_qty[$K]))  ? $product_materials_qty[$K] : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_required_product_details', $product_materials_details);
                     }
-
                 }
-
 
                 if(isset($materials) && !empty($materials)){
 
@@ -2248,8 +2244,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     {
                         $materials_details = array(
                             'activity_planning_id' => $insert_id,
-                            'material_id' => isset($val_materials) ? $val_materials : '',
-                            'quantity' => isset($materials_qty[$K]) ? $materials_qty[$K] : '',
+                            'material_id' => (isset($val_materials) && !empty($val_materials)) ? $val_materials : 0,
+                            'quantity' => (isset($materials_qty[$K]) && !empty($materials_qty[$K])) ? $materials_qty[$K] : 0,
                         );
 
                         $this->db->insert('ecp_activity_planning_required_material_details', $materials_details);
