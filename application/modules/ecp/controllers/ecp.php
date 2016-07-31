@@ -791,6 +791,20 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
+	public function getActivitySidebar()
+	{
+		@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
+
+		$cal_data = $this->getActivityDetailByMonth($cur_month,$cur_year);
+		$activity_data = $this->getActivityDetailPlanByMonth($cur_month,$cur_year);
+
+		Template::set('cal_data', $cal_data);
+		Template::set('activity_data', $activity_data);
+
+		Template::set_view('ecp/activity_sidebar');
+		echo Template::render();
+	}
+
 	public function KeyFarmer_by_user_id()
 	{
 		$user = $this->auth->user();
@@ -977,6 +991,8 @@ class Ecp extends Front_Controller
 			$sCalTblRows .= '<tr>';
 			for ($j = 0; $j < 7; $j++) { // 7 days a week
 
+				$clr = array('i','a','r','p');
+
 				$sClass = '';
 				if ($iNowYear == $iYear && $iNowMonth == $iMonth && $iNowDay == $iCurrentDay && !$bPreviousMonth && !$bNextMonth) {
 					$sClass = 'today';
@@ -1059,10 +1075,11 @@ class Ecp extends Front_Controller
 							}
 						}
 					}
-
 				}
 
-				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date" style="'.$style1.'" rel="'.$activity_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+				$actClass = array_rand($clr,1);
+
+				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date act_'.$clr[$actClass].'" style="'.$style1.'" rel="'.$activity_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
 
 				// Next day
 				$iCurrentDay++;
@@ -1089,13 +1106,9 @@ class Ecp extends Front_Controller
 		$sCalendarItself = '';
 
 		$sCalendarItself .= '<div class="navigation">';
-
-		$sCalendarItself .= '<a class="prev" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__prev_month__"].'\'); getActivityPlanData(\''.$aKeys["__prev_month__"].'\');"></a> ';
-
+		$sCalendarItself .= '<a class="prev" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__prev_month__"].'\');"></a> ';
 		$sCalendarItself .= '<div class="title" >'.$aKeys['__cal_caption__'].'</div>';
-
-		$sCalendarItself .= '<a class="next" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__next_month__"].'\'); getActivityPlanData(\''.$aKeys["__next_month__"].'\');"></a>';
-
+		$sCalendarItself .= '<a class="next" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__next_month__"].'\');"></a>';
 		$sCalendarItself .= '</div><table>
     <tr>
         <th class="weekday">Sun</th>
@@ -1111,8 +1124,9 @@ class Ecp extends Front_Controller
 		$sCalendarItself .= '</table>';
 
 		if ($this->input->is_ajax_request()) {
-			echo $sCalendarItself;
-			die;
+//			echo $sCalendarItself;
+//			die;
+			return $sCalendarItself;
 		}
 		else{
 			return $sCalendarItself;

@@ -2439,8 +2439,10 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
 
+        $role_id = $this->input->get_post('role_id');
+
         if (isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id)) {
-            $id = $this->ishop_model->add_target_data($this->input->post(), $user_id, 'web_service', $country_id);
+            $id = $this->ishop_model->add_target_data($this->input->post(), $user_id, 'web_service', $country_id,$role_id);
             if ($id) {
                 $result['status'] = true;
                 $result['message'] = 'Saved Successfully.';
@@ -2760,6 +2762,40 @@ class Web_service extends Front_Controller
           $this->do_json($result);
       }*/
 
+
+    public function create_esp_forecast_xl_data(){
+
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $bussiness_code = $this->input->get_post('bussiness_code');
+
+        if($user_id != "" && $country_id != "" && $bussiness_code != ""){
+
+            $data = array("user_id" => $user_id,
+                "country_id" => $country_id,
+                "bussiness_code" => $bussiness_code
+            );
+
+            $forecast_xl_data = modules::run('esp/esp/generate_forecast_xl_data', $data);
+
+            /* if(!empty($budget_xl_data)) {
+                 $result['status'] = true;
+                 $result['message'] = "successfull";
+                 $result['data'] = $budget_xl_data;
+             }
+             else{
+                 $result['status'] = false;
+                 $result['message'] = "No data found.";
+             }
+             */
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
 
     public function create_esp_budget_xl_data(){
 

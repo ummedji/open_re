@@ -11,11 +11,7 @@ $(document).ready(function() {
     });
 
     $("select#activity_type_id").on("change",function() {
-        var activity_type_selected = $('option:selected', this).attr('code');
-        set_activity_type(activity_type_selected);
-        var activity_type_id = $('option:selected', this).val();
-        getDigitalLibrary(activity_type_id);
-
+        activityTypeChange();
     });
 
     /*Validation Rule*/
@@ -76,7 +72,7 @@ $(document).ready(function() {
 
 
 
-    $("#add_farmer").click(function() {
+    $(document).on("click","#add_farmer",function() {
 
         $('#farmer_id').removeClass('ignore');
         $('#farmer_no').removeClass('ignore');
@@ -91,7 +87,8 @@ $(document).ready(function() {
             add_farmer();
         }
     });
-    $("#add_retailer").click(function() {
+
+    $(document).on("click","#add_retailer",function() {
 
         $('#retailer_id').removeClass('ignore');
         $('#retailer_no').removeClass('ignore');
@@ -571,21 +568,11 @@ $(document).on('click', 'div.material_detail', function () {
 
 
 $(document).on("change","select#geo_level_2",function() {
-
-    var  activity_type_selected= $('select#activity_type_id option:selected').val();
-    var  perent_id= $('option:selected', this).val();
-    var  second_perent= 'second_perent';
-
-    get_child_by_perent_id(activity_type_selected,perent_id,second_perent);
-
+    geolevel_2_Change();
 });
 
 $(document).on("change","select#geo_level_3",function() {
-
-    var  activity_type_selected= $('select#activity_type_id option:selected').val();
-    var  perent_id= $('option:selected', this).val();
-    get_child_by_parent_parent_id(activity_type_selected,perent_id);
-
+    geolevel_3_Change();
 });
 
 function retailerDetails()
@@ -1333,16 +1320,19 @@ function getActivityCalenderData(iMonth)
 {
     $.ajax({
         type: 'POST',
-        url: site_url + "ecp/getActivityDetailByMonth",
+        //url: site_url + "ecp/getActivityDetailByMonth",
+        url: site_url + "ecp/getActivitySidebar",
         data: {cur_month:iMonth},
         success: function (resp) {
-            $('#calendar').html(resp);
+            $('#activity_sidebar').html(resp);
         }
     });
 
 }
 function getActivityPlanData(iMonth)
 {
+    return false;
+
     $.ajax({
         type: 'POST',
         url: site_url + "ecp/getActivityDetailPlanByMonth",
@@ -1393,10 +1383,10 @@ function dateChangeEvent(eDate)
 
 }
 
-
-$(".activity_date").on('click',function(e){
+$(document).on('click','.activity_date',function(e)
+{
     var elem = $(e.target).text();
-    if(typeof $("#data_"+elem) != 'undefined')
+    if($("#data_"+elem).length != 0)
     {
         var slide_to = ($("#data_"+elem).offset().top - $("#main").offset().top)-10;
         $('#main').animate({
@@ -1405,18 +1395,46 @@ $(".activity_date").on('click',function(e){
     }
 });
 
+function activityTypeChange()
+{
+    var selElem = $('select#activity_type_id option:selected');
+    var activity_type_selected = selElem.attr('code');
+    set_activity_type(activity_type_selected);
+    var activity_type_id = selElem.val();
+    getDigitalLibrary(activity_type_id);
+}
+
+function geolevel_2_Change()
+{
+    var  activity_type_selected= $('select#activity_type_id option:selected').val();
+    var  perent_id= $('select#geo_level_2 option:selected').val();
+    var  second_perent= 'second_perent';
+
+    get_child_by_perent_id(activity_type_selected,perent_id,second_perent);
+}
+
+function geolevel_3_Change()
+{
+    var  activity_type_selected= $('select#activity_type_id option:selected').val();
+    var  perent_id= $('select#geo_level_3 option:selected').val();
+    get_child_by_parent_parent_id(activity_type_selected,perent_id);
+}
+
 function getActivityById(activity_planning_id)
 {
-    alert(activity_planning_id);
     $.ajax({
         type: 'POST',
         url: site_url + "ecp/activity_planning_view_edit",
         data: {id:activity_planning_id},
         //dataType : 'json',
         success: function (resp) {
-            alert("INNNN");
-            $("#hamara_id").html(resp);
+            $("#activity_main").html(resp);
             $("select.selectpicker").selectpicker('refresh');
+        },
+        complete:function(){
+            //activityTypeChange();
+            //geolevel_2_Change();
+            //geolevel_3_Change();
         }
     });
 }

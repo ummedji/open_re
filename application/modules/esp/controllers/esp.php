@@ -4727,19 +4727,24 @@ class Esp extends Front_Controller
 
                             }
  */
+
+                    $final_array = array();
+
                     for($j = 0; $j<$sheetCount;$j++){
 
                         $sheetName = $sheetNames[$j];
 
+                        $objWorkSheet = $objPHPExcel->setActiveSheetIndex($j);
+
                         $cell_collection = $objPHPExcel->getActiveSheet($j)->getCellCollection();
 
-
-                        $arr_data = array();
                         //extract to a PHP readable array format
 
                         $i = 1;
 
-                        $final_array = array();
+                        $arr_data = array();
+
+                       // testdata($cell_collection);
 
                         foreach ($cell_collection as $cell) {
 
@@ -4750,34 +4755,73 @@ class Esp extends Front_Controller
                             $row = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getRow();
                             $data_value = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getValue();
 
+                          //  echo $row."===".$column."===".$data_value."</br>";
+
                             if ($row == 1) {
-
                                 $header[$row][$column] = $data_value;
-
                             }
+                            elseif($row == 3){
 
-                            /*if ($row != 1) {
-                                if ($column == "A" || $column == "B" || $column == "C") {
-                                    $arr_data[$row][$column] = $data_value;
-                                } else {
-                                    $arr_data[$row]["monthdata"][$column] = $data_value;
-                                }
+                                //echo $row."===".$column."===".$data_value."</br>";
+
+                                $arr_data[$row][$column] = $data_value;
+                            }
+//die;
+
+
+                            /*
+                            if($column == "B" && $data_value == "") {
+                                $arr_data[$data_value]["assumption"] = array();
+                                $arr_data[$data_value]["probablity"] = array();
+                                $arr_data[$data_value]["skudata"] = array();
                             }
 
                             */
 
+                         /*   if ($row != 1) {
+                                if ($column == "A") {
+                                    $inner_array["prod_data"] = $data_value;
+                                }
+                                elseif($column == "B") {
+                                    $inner_array["sku_code"] = $data_value;
+                                }
+                               elseif($column == "D"){
+                                   // $arr_data[$row]["forecast"][$column] = $data_value;
+                                   $inner_array["forecast"] = $data_value;
+                                }
+                                elseif($column == "E" || $column == "G" || $column == "I"){
+                                    $inner_array["assumption"][] = $data_value;
+                                    //$arr_data[$row]["assumption"][$column] = $data_value;
+                                }
+                                elseif($column == "F" || $column == "H" || $column == "J"){
+                                    $inner_array["probablity"][] = $data_value;
+                                   // $arr_data[$row]["probablity"][$column] = $data_value;
+                                }
+
+                            }
+
+                            */
+
+
                             if ($row == 10) {
                                 break;
-                                //die;
+                               // die;
                             }
                             $i++;
 
+                           // $arr_data[] = $inner_array;
+
                         }
 
-                        testdata($header);
+                        $data['values'] = $arr_data;
+                        $data['header'] = $header[1];
+
+                        $final_array[$sheetName] = $data;
 
 
                     }
+
+                    testdata($final_array);
 
 
 

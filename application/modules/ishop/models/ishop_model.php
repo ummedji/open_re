@@ -6173,15 +6173,37 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         else
         {
 
+            //testdata($target_data);
+
             if ($role_id == 8) {
+
                 $target_data['radio1'] = 'distributor';
+
             }
+
             if ($target_data['radio1'] == 'distributor') {
-                $month_data = $target_data["month_data"] . "-01";
-                $customers_id = isset($target_data['distributor_distributor_id']) ? $target_data['distributor_distributor_id'] : '';
+
+                if(isset($web_service) && !empty($web_service) && $web_service== 'web_service')
+                {
+                    $month_data = $target_data["month"] . "-01";
+                    $customers_id = $target_data['customer_id'];
+                }
+                else{
+                    $month_data = $target_data["month_data"] . "-01";
+                    $customers_id = isset($target_data['distributor_distributor_id']) ? $target_data['distributor_distributor_id'] : '';
+                }
+
             } elseif ($target_data['radio1'] == 'retailer') {
-                $month_data = $target_data["ret_month_data"] . "-01";
-                $customers_id = $target_data['retailer_id'];
+                if(isset($web_service) && !empty($web_service) && $web_service== 'web_service')
+                {
+                    $month_data = $target_data["month"] . "-01";
+                    $customers_id = $target_data['customer_id'];
+                }
+                else{
+                      $month_data = $target_data["ret_month_data"] . "-01";
+                      $customers_id = $target_data['retailer_id'];
+                }
+
             }
 
             $prod_sku = $target_data['prod_sku'];

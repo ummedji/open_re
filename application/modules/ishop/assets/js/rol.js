@@ -561,11 +561,14 @@ $(document).on('submit', '#upload_rol_data', function (e) {
      var file_data = new FormData(this);
      var dir_name = "rol";
     if($("input.select_customer_type").length > 0) {
-        var select_customer_type = $('input[name=radio1]:checked', '#rol_limit').val();
+        var select_customer_type = $('input[name=checked_type]:checked', '#rol_limit').val();
     }
     else{
         var select_customer_type = "";
     }
+
+   // alert(select_customer_type);
+  //  return false;
     var header_array = [];
 
      //file_data.push(dir_name);
