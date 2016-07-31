@@ -856,16 +856,28 @@ $(document).on('submit', '#upload_target_data', function (e) {
 
                             if(key5 == "header"){
 
+
+                              //  console.log(des_value5);
+
                                 t_data += "<tr>";
                                 $.each( des_value5, function( key2, header_desc_value ){
+
+                                  //  console.log(header_desc_value);
+
                                     $.each( header_desc_value, function( key6, header_desc_value6 ){
-                                        t_data += "<th style='/*border:1px solid;*/text-align:center;'>"+header_desc_value6+"<span class='rts_bordet'></span></th>";
+                                        t_data += "<th style='text-align:center;'>"+header_desc_value6+"<span class='rts_bordet'></span></th>";
                                         header_array.push(header_desc_value6);
                                     });
+
+
+
+
                                 });
                                 t_data += "<th style='/*border:1px solid;*/text-align:center;'>Error Description</th></tr>";
 
-                                header_array.push(header_desc_value6);
+                                //header_array.push(header_desc_value6);
+
+                                header_array.push('Error Description');
 
                                 t_data += "</thead><tbody>";
                             }
@@ -888,11 +900,10 @@ $(document).on('submit', '#upload_target_data', function (e) {
                         });
                         t_data += "</tbody></table>";
 
-
                         $('<div id="no-more-tables"></div>').appendTo('body')
                             .html('<div>'+t_data+'</div>')
                             .dialog({
-                                appendTo: "#success_file_popup",
+                                appendTo: "#error_file_popup",
                                 modal: true,
                                 title: 'The following data is incorrect Kindly upload correct data.',
                                 zIndex: 10000,

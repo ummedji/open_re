@@ -2816,7 +2816,7 @@ class Ishop extends Front_Controller
 
                                     }else{
 
-                                        if(count($headerdata) != 6 || $headerdata["A"] != "Month"  || ($headerdata["B"] != "Retailer Name")  || ($headerdata["C"] != "Retailer Code")  || $headerdata["D"] != "Product SKU Code"  || $headerdata["E"] != "Product SKU Name"  || $headerdata["F"] != "Quantity(Kg/Ltr)"){
+                                        if(count($headerdata) != 6 || $headerdata["A"] != "Month"  || ($headerdata["B"] != "Retailer Code")  || ($headerdata["C"] != "Retailer Name")  || $headerdata["D"] != "Product SKU Code"  || $headerdata["E"] != "Product SKU Name"  || $headerdata["F"] != "Quantity(Kg/Ltr)"){
 
                                             $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
                                             echo json_encode($error_array);
@@ -2830,7 +2830,9 @@ class Ishop extends Front_Controller
                                 }
                                 elseif ($filename[0] == "companycurrentstock") {
 
-                                    if(count($headerdata) != 8 || $headerdata["A"] != "Product SKU Code"  || $headerdata["B"] != "Product SKU Name"  || $headerdata["C"] != "Batch No"  || $headerdata["D"] != "Unrestricted Qty"  || $headerdata["E"] != "In Transit Qty"  || $headerdata["F"] != "Expiry Date" || $headerdata["F"] != "Mfg. Date" || $headerdata["F"] != "Date Data"){
+
+
+                                    if(count($headerdata) != 8 || $headerdata["A"] != "Product SKU Code"  || $headerdata["B"] != "Product SKU Name"  || $headerdata["C"] != "Batch No"  || $headerdata["D"] != "Unrestricted Qty"  || $headerdata["E"] != "In Transit Qty"  || $headerdata["F"] != "Expiry Date" || $headerdata["G"] != "Mfg. Date" || $headerdata["H"] != "Date Data"){
 
                                         $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
                                         echo json_encode($error_array);
@@ -3004,11 +3006,22 @@ class Ishop extends Front_Controller
                                     if($month_data == ""){
                                         $error_message .= " Month data is blank. ";
                                     }
-                                    if($distributor_code == ""){
-                                        $error_message .= " Distributor code data is blank. ";
+
+                                    if ($sub_action_data == "distributor") {
+                                        if ($distributor_code == "") {
+                                            $error_message .= " Distributor code data is blank. ";
+                                        }
+                                        if ($distributor_name == "") {
+                                            $error_message .= " Distributor name data is blank. ";
+                                        }
                                     }
-                                    if($distributor_name == ""){
-                                        $error_message .= " Distributor name data is blank. ";
+                                    else{
+                                        if ($distributor_code == "") {
+                                            $error_message .= " Retailer code data is blank. ";
+                                        }
+                                        if ($distributor_name == "") {
+                                            $error_message .= " Retailer name data is blank. ";
+                                        }
                                     }
 
                                     if($product_code == ""){
