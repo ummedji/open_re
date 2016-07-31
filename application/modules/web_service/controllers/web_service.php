@@ -3999,8 +3999,6 @@ class Web_service extends Front_Controller
                 else{
                     $result['data'] = 0;
                 }
-
-
             }
 
         } else {
@@ -4032,14 +4030,76 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+    public function approvalActivityPlanning()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $cur_month = $this->input->get_post('cur_month');
+
+        if((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) &&  (isset($cur_month) && !empty($cur_month)) )
+        {
+            $child_user_data = $this->esp_model->get_user_selected_level_data($user_id,null);
+
+            $approval_activity = $this->ecp_model->getApprovalActivityDetailByMonth($cur_month,$child_user_data['level_users'],$user_id,$country_id,null,null,'web_service');
+
+            if(isset($approval_activity) && !empty($approval_activity))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $approval_activity;
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'No Data Available.';
+                $result['data'] = array();
+            }
+        }
+        else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+    public function approvalStatusActivityPlanning()
+    {
+        $status_id = $this->input->get_post('status_id');
+        $planning_id = $this->input->get_post('planning_id');
+        $user_id = $this->input->get_post('user_id');
+        if((isset($status_id) && !empty($status_id)) && (isset($planning_id) && !empty($user_id)) && (isset($user_id) && !empty($user_id)))
+        {
+            $status = $this->ecp_model->changeActivityStatus($status_id,$planning_id,$user_id);
+            if(isset($status) && !empty($status))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = '';
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = 'Something Went Wrong.';
+                $result['data'] = '';
+            }
+
+
+        }
+        else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
+
     public function getMonthDataByMonth()
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
         $cur_month = $this->input->get_post('month');
         $cur_year = $this->input->get_post('year');
-
-
 
         if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($cur_month) && !empty($cur_month)) && (isset($cur_year) && !empty($cur_year))) {
             $activity_detail = $this->ecp_model->all_activity_planning($user_id,$country_id,'web_service',$cur_month,$cur_year);

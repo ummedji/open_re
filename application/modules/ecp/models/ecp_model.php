@@ -2291,7 +2291,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
-    public function getApprovalActivityDetailByMonth($cur_month,$child_user,$id,$country_id,$local_date = null,$page=null)
+    public function getApprovalActivityDetailByMonth($cur_month,$child_user,$id,$country_id,$local_date = null,$page=null,$web_service=null)
     {
        // $sql = 'SELECT * ';
         $sql = 'SELECT eap.activity_planning_id,eap.activity_planning_date,bu.display_name,bu.user_code,mdc.desigination_country_name,eamc.activity_type_country_name,eap.status ';
@@ -2318,7 +2318,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             // For Pagination
             $material = $info->result_array();
             return $material;
-        } else
+        }
+        else
         {
             $activity_approval = $this->grid->get_result_res($sql);
             //testdata($activity_approval);

@@ -4386,7 +4386,7 @@ class Esp extends Front_Controller
 
         $assumption_arr = array();
 
-        if (!empty($assumption_data)) {
+     /*   if (!empty($assumption_data)) {
             foreach ($assumption_data as $k => $ass_data) {
 
                 $assumption_arr[] = $ass_data["assumption_name"];
@@ -4402,8 +4402,18 @@ class Esp extends Front_Controller
             $assumptiondata = "'" . $assumptiondata . "'";
 
         }
+        */
 
         $assumption_arr[] = "Banjir";
+        $assumption_arr[] = "Curah hujan";
+        $assumption_arr[] = "Distribusi sampel demo";
+        $assumption_arr[] = "Distribusi sampel gratis";
+        $assumption_arr[] = "Dosis penyemprotan";
+        $assumption_arr[] = "Harga Naik";
+        $assumption_arr[] = "Harga turun";
+        $assumption_arr[] = "Hari kegiatan lapangan";
+        $assumption_arr[] = "Kelembaban";
+        $assumption_arr[] = "Mitra kerja baru";
 
         //echo "'".$assumptiondata."'";
         //die;
@@ -4467,6 +4477,12 @@ class Esp extends Front_Controller
                         $objWorkSheet->setCellValue("C$i", "0.00");
                         $objWorkSheet->setCellValue("D$i", "0.00");
 
+                        $assumption1 = $pbgdata["assumption1"];
+                        $assumption2 = $pbgdata["assumption2"];
+                        $assumption3 = $pbgdata["assumption3"];
+
+                        $objWorkSheet->setCellValue("E$i", "Curah hujan");
+
                         $objValidation = $objWorkSheet->getCell("E$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
                         $objValidation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
@@ -4478,7 +4494,9 @@ class Esp extends Front_Controller
                         $objValidation->setError('Value is not in list.');
                         $objValidation->setPromptTitle('Pick from list');
                         $objValidation->setPrompt('Please pick a value from the drop-down list.');
-                        $objValidation->setFormula1($assumptiondata);
+                        $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
+
+                        $objWorkSheet->setCellValue("G$i", "Kelembaban");
 
                         $objValidation = $objWorkSheet->getCell("G$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
@@ -4491,7 +4509,9 @@ class Esp extends Front_Controller
                         $objValidation->setError('Value is not in list.');
                         $objValidation->setPromptTitle('Pick from list');
                         $objValidation->setPrompt('Please pick a value from the drop-down list.');
-                        $objValidation->setFormula1('"Item A,Item B,Item C"');
+                        $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
+
+                        $objWorkSheet->setCellValue("I$i", "Distribusi sampel gratis");
 
                         $objValidation = $objWorkSheet->getCell("I$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
@@ -4504,7 +4524,7 @@ class Esp extends Front_Controller
                         $objValidation->setError('Value is not in list.');
                         $objValidation->setPromptTitle('Pick from list');
                         $objValidation->setPrompt('Please pick a value from the drop-down list.');
-                        $objValidation->setFormula1('"Item A,Item B,Item C"');
+                        $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
 
 
                         $objWorkSheet->getStyle("E$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
