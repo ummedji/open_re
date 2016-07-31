@@ -791,13 +791,66 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
+	public function KeyFarmer_by_user_id()
+	{
+		$user = $this->auth->user();
+		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user->id,$user->country_id);
+		echo json_encode($key_farmer);
+		die;
+	}
+
+	public function KeyRetailer_by_user_id()
+	{
+		$user = $this->auth->user();
+		$key_retailer = $this->ecp_model->get_KeyRetailer_by_user_id($user->id,$user->country_id);
+		echo json_encode($key_retailer);
+		die;
+	}
+
+
 	public function activity_planning_view_edit()
 	{
 		$user = $this->auth->user();
 		$id = (isset($_POST["id"]) ? $_POST["id"] : null);
 
 		$activity  = $this->ecp_model->editViewActivityPlanning($id);
-		testdata($activity);
+
+
+		Assets::add_module_js('ecp', 'activity_planning.js');
+		$user = $this->auth->user();
+		$activity_type = $this->ecp_model->activity_type_details($user->country_id);
+
+		$crop_details = $this->ecp_model->crop_details_by_country_id($user->country_id);
+		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+		$diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
+		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user->id,$user->country_id);
+		$key_retailer = $this->ecp_model->get_KeyRetailer_by_user_id($user->id,$user->country_id);
+		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
+		$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
+		$global_head_user = array();
+		$global_jr_user = array();
+
+		$sr_employee_visit = array();
+		$jr_employee_visit = array();
+		$sr_employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+		$jr_employee_visit = $this->ecp_model->get_jr_employee_for_loginuser($user->id,$global_jr_user);
+
+
+		$employee_visit = array_merge($sr_employee_visit,$jr_employee_visit) ;
+
+		Template::set('activity_planning', $activity);
+		Template::set('child_user_data', $child_user_data);
+		Template::set('current_user', $user);
+		Template::set('activity_type', $activity_type);
+		Template::set('crop_details', $crop_details);
+		Template::set('product_sku', $product_sku);
+		Template::set('diseases_details', $diseases_details);
+		Template::set('key_retailer', $key_retailer);
+		Template::set('key_farmer', $key_farmer);
+		Template::set('materials', $materials);
+		Template::set('employee_visit', $employee_visit);
+		Template::set_view('ecp/activity_planning');
+		Template::render();
 	}
 
 

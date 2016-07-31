@@ -4,6 +4,10 @@
     {
         echo theme_view('common/activity');
     }
+    if(isset($activity_planning))
+    {
+        echo theme_view('common/activity_planning');
+    }
 
     if(isset($table))
     {

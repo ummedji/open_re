@@ -1069,7 +1069,7 @@ class Esp_model extends BF_Model
         return $budget_freeze_history_data;
     }
 	
-	public function check_budget_data($pbg_id,$user_business_code,$month_data){
+	public function check_budget_data($pbg_id,$user_business_code,$month_data=null){
         
         $this->db->select('*');
         $this->db->from("bf_esp_budget as beb");
@@ -1078,7 +1078,10 @@ class Esp_model extends BF_Model
         
         $this->db->where("beb.pbg_id",$pbg_id);
         $this->db->where("beb.business_code",$user_business_code);
-        $this->db->where("bebpd.budget_month",$month_data);
+
+        if($month_data != null) {
+            $this->db->where("bebpd.budget_month", $month_data);
+        }
        
         $budget_data = $this->db->get()->result_array();
         

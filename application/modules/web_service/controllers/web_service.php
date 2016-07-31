@@ -2725,6 +2725,98 @@ class Web_service extends Front_Controller
       }*/
 
 
+    public function create_esp_budget_xl_data(){
+
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $bussiness_code = $this->input->get_post('bussiness_code');
+
+        if($user_id != "" && $country_id != "" && $bussiness_code != ""){
+
+            $data = array("user_id" => $user_id,
+                "country_id" => $country_id,
+                "bussiness_code" => $bussiness_code
+            );
+
+            $budget_xl_data = modules::run('esp/esp/generate_budget_xl_data', $data);
+
+           /* if(!empty($budget_xl_data)) {
+                $result['status'] = true;
+                $result['message'] = "successfull";
+                $result['data'] = $budget_xl_data;
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = "No data found.";
+            }
+            */
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function upload_esp_budget_xl_data(){
+
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $bussiness_code = $this->input->get_post('bussiness_code');
+
+        if($user_id != "" && $country_id != "" && $bussiness_code != ""){
+
+            $data = array("user_id" => $user_id,
+                "country_id" => $country_id,
+                "bussiness_code" => $bussiness_code
+            );
+
+            $upload_budget_xl_data = modules::run('esp/esp/upload_budget_data', $_POST, $_FILES);
+
+            if(!empty($upload_budget_xl_data)){
+
+                $result['status'] = true;
+                $result['message'] = "successfull";
+                $result['data'] = $upload_budget_xl_data;
+
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = "No data found.";
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function add_esp_budget_xl_data(){
+
+        $file_data = $this->input->get_post('val');
+
+        if($file_data != "") {
+            $data = array("val" => $file_data);
+
+            $add_budget_xl_data = modules::run('esp/esp/upload_xl_budget_data', $data);
+
+            //testdata($add_budget_xl_data);
+
+            $result['status'] = true;
+            $result['message'] = "Upload Successfull.";
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
     /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */
     /**
      * @ Function Name        : saveSecondarySales
@@ -3866,6 +3958,37 @@ class Web_service extends Front_Controller
         $type = $this->input->get_post('type');
         if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id))) {
             $insert = $this->ecp_model->addActivityPlanning($user_id, $country_id, 'web_service');
+            if ($insert != 0) {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                if($type == 'save')
+                {
+                    $result['data'] = $insert;
+                }
+                else{
+                    $result['data'] = 0;
+                }
+
+
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+    public function updateActivityPlanning()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $type = $this->input->get_post('type');
+        $id = $this->input->get_post('inserted_activity_planning_id');
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) &&(isset($id) && !empty($id))) {
+            $insert = $this->ecp_model->addActivityPlanning($user_id, $country_id, 'web_service');
+            
             if ($insert != 0) {
                 $result['status'] = true;
                 $result['message'] = 'Success.';

@@ -1555,6 +1555,26 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
+    public function get_KeyRetailer_by_user_id($user_id,$country_id)
+    {
+        $this->db->select('bu.id,bu.display_name,mucd.primary_mobile_no');
+        $this->db->from('bf_master_employe_to_customer as metc');
+        $this->db->join('users as bu', 'bu.id=metc.customer_id');
+        $this->db->join('master_user_contact_details as mucd', 'mucd.user_id = bu.id');
+        $this->db->where('bu.country_id', $country_id);
+        $this->db->where('employee_id', $user_id);
+        $this->db->where('bu.role_id', '10');
+        $this->db->where('DATE_FORMAT(metc.year,"%Y")', date('Y'));
+        $this->db->where('metc.status', '1');
+        $this->db->where('metc.deleted', '0');
+        $retailer = $this->db->get()->result_array();
+        if (isset($retailer) && !empty($retailer)) {
+            return $retailer;
+        } else {
+            return 0;
+        }
+    }
+
     public function get_mobile_number_by_farmer_id($farmer_id)
     {
         $this->db->select('primary_mobile_no');
@@ -1771,7 +1791,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function addActivityPlanning($user_id,$country_id,$web_service=null)
     {
-        //testdata($_POST);
+      //  testdata($_POST);
+        $activity_planning_id = $this->input->post("inserted_activity_planning_id");
         $activity_type_id = $this->input->post("activity_type_id");
         $geo_level_4 = $this->input->post("geo_level_4");
         $geo_level_3 = $this->input->post("geo_level_3");
@@ -1851,172 +1872,400 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $materials_qty = $this->input->post("materials_qty");
         }
 
-        $activity_planning = array(
-            'activity_planning_date' => isset($planning_date) ? $planning_date : '',
-            'activity_planning_time' => isset($planning_date_time) ? $planning_date_time : '',
-            'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
-            'geo_level_id_2' => isset($geo_level_2) ? $geo_level_2 : '',
-            'geo_level_id_3' => isset($geo_level_3) ? $geo_level_3 : '',
-            'geo_level_id_4' => isset($geo_level_4) ? $geo_level_4 : '',
-            'geo_level_id' => isset($geo_level) ? $geo_level : '',
-            'location' => isset($activity_address) ? $activity_address :''   ,
-            'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : 0,
-            'point_discussion' => isset($pod) ? $pod : '',
-            'alert' => isset($set_alert) ? $set_alert : '',
-            'size_of_plot' => isset($size_of_plot) ? $size_of_plot : 0,
-            'spray_volume' => isset($spray_volume) ? $spray_volume : 0,
-            'amount' => '0',
-            'employee_id' => $user_id,
-            'country_id' => $country_id,
-            'status' => '0',
-            'submit_status' => $submit_status,
-            'reference_type' => $reference_type,
-            'reference_id' => '0',
-            'created_by_user' => $user_id,
-            'created_on' => date('Y-m-d H:i:s'),
-            'modified_on' => date('Y-m-d H:i:s'),
+        if(isset($activity_planning_id) && !empty($activity_planning_id))
+        {
+            $activity_planning = array(
+                'activity_planning_date' => isset($planning_date) ? $planning_date : '',
+                'activity_planning_time' => isset($planning_date_time) ? $planning_date_time : '',
+                'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
+                'geo_level_id_2' => isset($geo_level_2) ? $geo_level_2 : 0,
+                'geo_level_id_3' => isset($geo_level_3) ? $geo_level_3 : 0,
+                'geo_level_id_4' => isset($geo_level_4) ? $geo_level_4 : 0,
+                'geo_level_id' => isset($geo_level) ? $geo_level : '',
+                'location' => isset($activity_address) ? $activity_address :''   ,
+                'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : 0,
+                'point_discussion' => isset($pod) ? $pod : '',
+                'alert' => isset($set_alert) ? $set_alert : '',
+                'size_of_plot' => isset($size_of_plot) ? $size_of_plot : 0,
+                'spray_volume' => isset($spray_volume) ? $spray_volume : 0,
+                'amount' => '0',
+                'employee_id' => $user_id,
+                'country_id' => $country_id,
+                'status' => '0',
+                'submit_status' => $submit_status,
+                'reference_type' => $reference_type,
+                'reference_id' => '0',
+                'modified_by_user' => $user_id,
+                'modified_on' => date('Y-m-d H:i:s'),
 
-        );
+            );
 
-        if ($this->db->insert('ecp_activity_planning', $activity_planning)) {
+            $update_array=array();
 
-            $insert_id = $this->db->insert_id();
+            $this->db->where('activity_planning_id',$activity_planning_id);
+            $this->db->update('ecp_activity_planning', $activity_planning);
 
-            if(isset($crop) && !empty($crop)){
 
-                foreach ($crop as $key => $crp) {
-                    $corp_detail = array(
-                        'activity_planning_id' => $insert_id,
-                        'crop_id' => isset($crp) ? $crp : '',
-                    );
-
-                    $this->db->insert('ecp_activity_planning_crop_details', $corp_detail);
-                }
+            if ($this->db->affected_rows() > 0) {
+                $update_array[]=1;
             }
 
-            if(isset($product_sku) && !empty($product_sku)){
-                foreach ($product_sku as $key => $prd_sku) {
-                    $product_detail = array(
-                        'activity_planning_id' => $insert_id,
-                        'product_sku_id' => isset($prd_sku) ? $prd_sku : '',
-                    );
+                if(isset($crop) && !empty($crop)){
 
-                    $this->db->insert('ecp_activity_planning_product_details', $product_detail);
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_crop_details');
 
-                }
-            }
+                    foreach ($crop as $key => $crp) {
+                        $corp_detail = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'crop_id' => isset($crp) ? $crp : '',
+                        );
 
+                        $this->db->insert('ecp_activity_planning_crop_details', $corp_detail);
 
-            if(isset($diseases) && !empty($diseases)){
-
-                foreach ($diseases as $key => $val) {
-                    $diseases_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'diseases_id' => isset($val) ? $val : '',
-                    );
-
-                    $this->db->insert('ecp_activity_planning_diseases_details', $diseases_details);
-
-                }
-            }
-
-            if(isset($farmers) && !empty($farmers)){
-
-                foreach($farmers as $k => $val_frm)
-                {
-                    $key_farmer_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'customer_id' => isset($val_frm) ? $val_frm : '',
-                        'mobile_no' => isset($farmer_num[$k]) ? $farmer_num[$k] : '',
-                    );
-
-                    $this->db->insert('ecp_activity_planning_key_customer_details', $key_farmer_details);
-                }
-            }
-
-
-            if(isset($digital_id) && !empty($digital_id)){
-
-                foreach($digital_id as $k => $val_digital)
-                {
-
-                    $digital_library_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'digital_library_id' => isset($val_digital) ? $val_digital : '',
-                    );
-
-                    $this->db->insert('ecp_activity_planning_digital_library_details', $digital_library_details);
-                }
-            }
-
-
-            if(isset($joint_id) && !empty($joint_id)){
-
-                foreach($joint_id as $k =>$val_joint)
-                {
-                    $joint_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'employee_id' => isset($val_joint) ? $val_joint : '',
-                    );
-
-                    $this->db->insert('ecp_activity_planning_joint_visit_details', $joint_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
                 }
 
-            }
+                if(isset($product_sku) && !empty($product_sku)){
 
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_product_details');
 
-            if(isset($product_samples) && !empty($product_samples)){
+                    foreach ($product_sku as $key => $prd_sku) {
+                        $product_detail = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'product_sku_id' => isset($prd_sku) ? $prd_sku : '',
+                        );
 
-                foreach($product_samples as $K=> $val_product)
-                {
-                    $product_samples_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'product_sku_id' => isset($val_product) ? $val_product : '',
-                        'quantity' => isset($product_samples_qty[$K]) ? $product_samples_qty[$K] : '',
-                    );
-
-                    $this->db->insert('ecp_activity_planning_promo_sample_details', $product_samples_details);
+                        $this->db->insert('ecp_activity_planning_product_details', $product_detail);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
                 }
 
-            }
 
+                if(isset($diseases) && !empty($diseases)){
 
-            if(isset($product_materials) && !empty($product_materials)){
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_diseases_details');
 
-                foreach($product_materials as $K=> $vals)
-                {
-                    $product_materials_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'product_sku_id' => isset($vals) ? $vals :'',
-                        'quantity' => isset($product_materials_qty[$K]) ? $product_materials_qty[$K] : '',
-                    );
+                    foreach ($diseases as $key => $val) {
+                        $diseases_details = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'diseases_id' => isset($val) ? $val : '',
+                        );
 
-                    $this->db->insert('ecp_activity_planning_required_product_details', $product_materials_details);
+                        $this->db->insert('ecp_activity_planning_diseases_details', $diseases_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
                 }
 
-            }
+                if(isset($farmers) && !empty($farmers)){
 
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_key_customer_details');
 
-            if(isset($materials) && !empty($materials)){
+                    foreach($farmers as $k => $val_frm)
+                    {
+                        $key_farmer_details = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'customer_id' => isset($val_frm) ? $val_frm : '',
+                            'mobile_no' => isset($farmer_num[$k]) ? $farmer_num[$k] : '',
+                        );
 
-                foreach($materials as $K=> $val_materials)
-                {
-                    $materials_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'material_id' => isset($val_materials) ? $val_materials : '',
-                        'quantity' => isset($materials_qty[$K]) ? $materials_qty[$K] : '',
-                    );
-
-                    $this->db->insert('ecp_activity_planning_required_material_details', $materials_details);
+                        $this->db->insert('ecp_activity_planning_key_customer_details', $key_farmer_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
                 }
 
-            }
 
-            return $insert_id;
+                if(isset($digital_id) && !empty($digital_id)){
+
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_digital_library_details');
+
+                    foreach($digital_id as $k => $val_digital)
+                    {
+
+                        $digital_library_details = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'digital_library_id' => isset($val_digital) ? $val_digital : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_digital_library_details', $digital_library_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
+                }
+
+
+                if(isset($joint_id) && !empty($joint_id)){
+
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_joint_visit_details');
+
+                    foreach($joint_id as $k =>$val_joint)
+                    {
+                        $joint_details = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'employee_id' => isset($val_joint) ? $val_joint : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_joint_visit_details', $joint_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
+
+                }
+
+
+                if(isset($product_samples) && !empty($product_samples)){
+
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_promo_sample_details');
+
+                    foreach($product_samples as $K=> $val_product)
+                    {
+                        $product_samples_details = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'product_sku_id' => isset($val_product) ? $val_product : '',
+                            'quantity' => isset($product_samples_qty[$K]) ? $product_samples_qty[$K] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_promo_sample_details', $product_samples_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
+
+
+                }
+
+
+                if(isset($product_materials) && !empty($product_materials)){
+
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_required_product_details');
+
+                    foreach($product_materials as $K=> $vals)
+                    {
+                        $product_materials_details = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'product_sku_id' => isset($vals) ? $vals :'',
+                            'quantity' => isset($product_materials_qty[$K]) ? $product_materials_qty[$K] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_required_product_details', $product_materials_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
+
+
+                }
+
+                if(isset($materials) && !empty($materials)){
+
+                    $this->db->where('activity_planning_id',$activity_planning_id);
+                    $this->db->delete('ecp_activity_planning_required_material_details');
+
+                    foreach($materials as $K=> $val_materials)
+                    {
+                        $materials_details = array(
+                            'activity_planning_id' => $activity_planning_id,
+                            'material_id' => isset($val_materials) ? $val_materials : '',
+                            'quantity' => isset($materials_qty[$K]) ? $materials_qty[$K] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_required_material_details', $materials_details);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[]=1;
+                        }
+                    }
+                }
+
+           return $update_array;
         }
         else{
-            return 0;
+            testdata('out');
+            $activity_planning = array(
+                'activity_planning_date' => isset($planning_date) ? $planning_date : '',
+                'activity_planning_time' => isset($planning_date_time) ? $planning_date_time : '',
+                'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
+                'geo_level_id_2' => isset($geo_level_2) ? $geo_level_2 : '',
+                'geo_level_id_3' => isset($geo_level_3) ? $geo_level_3 : '',
+                'geo_level_id_4' => isset($geo_level_4) ? $geo_level_4 : '',
+                'geo_level_id' => isset($geo_level) ? $geo_level : '',
+                'location' => isset($activity_address) ? $activity_address :''   ,
+                'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : 0,
+                'point_discussion' => isset($pod) ? $pod : '',
+                'alert' => isset($set_alert) ? $set_alert : '',
+                'size_of_plot' => isset($size_of_plot) ? $size_of_plot : 0,
+                'spray_volume' => isset($spray_volume) ? $spray_volume : 0,
+                'amount' => '0',
+                'employee_id' => $user_id,
+                'country_id' => $country_id,
+                'status' => '0',
+                'submit_status' => $submit_status,
+                'reference_type' => $reference_type,
+                'reference_id' => '0',
+                'created_by_user' => $user_id,
+                'created_on' => date('Y-m-d H:i:s'),
+                'modified_on' => date('Y-m-d H:i:s'),
+
+            );
+
+            if ($this->db->insert('ecp_activity_planning', $activity_planning)) {
+
+                $insert_id = $this->db->insert_id();
+
+                if(isset($crop) && !empty($crop)){
+
+                    foreach ($crop as $key => $crp) {
+                        $corp_detail = array(
+                            'activity_planning_id' => $insert_id,
+                            'crop_id' => isset($crp) ? $crp : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_crop_details', $corp_detail);
+                    }
+                }
+
+                if(isset($product_sku) && !empty($product_sku)){
+                    foreach ($product_sku as $key => $prd_sku) {
+                        $product_detail = array(
+                            'activity_planning_id' => $insert_id,
+                            'product_sku_id' => isset($prd_sku) ? $prd_sku : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_product_details', $product_detail);
+
+                    }
+                }
+
+
+                if(isset($diseases) && !empty($diseases)){
+
+                    foreach ($diseases as $key => $val) {
+                        $diseases_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'diseases_id' => isset($val) ? $val : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_diseases_details', $diseases_details);
+
+                    }
+                }
+
+                if(isset($farmers) && !empty($farmers)){
+
+                    foreach($farmers as $k => $val_frm)
+                    {
+                        $key_farmer_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'customer_id' => isset($val_frm) ? $val_frm : '',
+                            'mobile_no' => isset($farmer_num[$k]) ? $farmer_num[$k] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_key_customer_details', $key_farmer_details);
+                    }
+                }
+
+
+                if(isset($digital_id) && !empty($digital_id)){
+
+                    foreach($digital_id as $k => $val_digital)
+                    {
+
+                        $digital_library_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'digital_library_id' => isset($val_digital) ? $val_digital : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_digital_library_details', $digital_library_details);
+                    }
+                }
+
+
+                if(isset($joint_id) && !empty($joint_id)){
+
+                    foreach($joint_id as $k =>$val_joint)
+                    {
+                        $joint_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'employee_id' => isset($val_joint) ? $val_joint : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_joint_visit_details', $joint_details);
+                    }
+
+                }
+
+
+                if(isset($product_samples) && !empty($product_samples)){
+
+                    foreach($product_samples as $K=> $val_product)
+                    {
+                        $product_samples_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'product_sku_id' => isset($val_product) ? $val_product : '',
+                            'quantity' => isset($product_samples_qty[$K]) ? $product_samples_qty[$K] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_promo_sample_details', $product_samples_details);
+                    }
+
+                }
+
+
+                if(isset($product_materials) && !empty($product_materials)){
+
+                    foreach($product_materials as $K=> $vals)
+                    {
+                        $product_materials_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'product_sku_id' => isset($vals) ? $vals :'',
+                            'quantity' => isset($product_materials_qty[$K]) ? $product_materials_qty[$K] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_required_product_details', $product_materials_details);
+                    }
+
+                }
+
+
+                if(isset($materials) && !empty($materials)){
+
+                    foreach($materials as $K=> $val_materials)
+                    {
+                        $materials_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'material_id' => isset($val_materials) ? $val_materials : '',
+                            'quantity' => isset($materials_qty[$K]) ? $materials_qty[$K] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_required_material_details', $materials_details);
+                    }
+
+                }
+
+                return $insert_id;
+            }
+            else{
+                return 0;
+            }
         }
+
 
 
     }
