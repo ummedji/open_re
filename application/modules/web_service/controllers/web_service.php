@@ -2675,7 +2675,7 @@ class Web_service extends Front_Controller
                 $credit_limit_data = $this->ishop_model->add_user_credit_limit_datail($user_id, $country_id, $xl_arr, 'excel');
             } elseif ($dirname == "rol") {
 
-                $rol_data = $this->ishop_model->add_rol_detail($user_id, $country_id, $xl_arr, 'excel');
+                $rol_data = $this->ishop_model->add_rol_detail($user_id, $country_id, $xl_arr, 'excel','webservice');
             } elseif ($dirname == "primary_sales") {
 
                 $primary_sales = $this->ishop_model->add_primary_sales_details($user_id, $country_id, $web_service = null, $xl_arr, 'excel');

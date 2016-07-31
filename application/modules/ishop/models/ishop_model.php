@@ -682,8 +682,11 @@ class Ishop_model extends BF_Model
      * @ Function Return    : Array
      * */
 
-    public function add_rol_detail($user_id, $country_id, $xl_data = null, $xl_flag = null)
+    public function add_rol_detail($user_id, $country_id, $xl_data = null, $xl_flag = null,$webservice=null)
     {
+
+       // dumpme($xl_flag);
+       // testdata($xl_data);
 
         if ($xl_flag == null) {
             $prod_sku = $this->input->post("prod_sku");
@@ -813,8 +816,13 @@ class Ishop_model extends BF_Model
 
                 foreach ($xl_data as $key => $value) {
 
-                    $user = $this->auth->user();
-                    $login_customer_role = $user->role_id;
+                    if($webservice == null) {
+                        $user = $this->auth->user();
+                        $login_customer_role = $user->role_id;
+                    }
+                    else{
+                        $login_customer_role = $_POST["role_id"];
+                    }
 
                     if ($login_customer_role == 7) {
                         $cust_id = $value[0];
