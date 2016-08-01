@@ -56,6 +56,7 @@
                                             }
                                             ?>
                                         </select>
+                                        <input type="hidden" name="activity_type_id" id="activity_type_id" value="<?php echo $activity_planning["activity_type_id"] ?>">
                                     </div>
                                     <?php
                                 }
@@ -79,23 +80,32 @@
 
 
                             <!--GEO  Dropdown-->
-
                             <div class="row form-group" id="geo">
 
-                                <?php if (isset($activity_planning['geo_level_id_2']) && !empty($activity_planning['geo_level_id_2'])) {
+                               <?php
+                               if (isset($activity_planning['geo_level_id_2']) && !empty($activity_planning['geo_level_id_2'])) {
                                     ?>
-                                    <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span
-                                                style="color: red">*</span></label></div>
+                                    <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>
                                     <div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">
                                         <select class="selectpicker" data-live-search="true" name="geo_level_2"
                                                 id="geo_level_2">
                                             <option value="">Select Geo 2</option>
+                                            <?php
+                                            if (isset($geo_level_2) && !empty($geo_level_2)) {
+
+                                                foreach ($geo_level_2 as $k => $val_g2) {
+                                                    ?>
+                                                    <option <?php if ($val_g2['political_geo_id'] == $activity_planning["geo_level_id_2"]) { echo "selected"; } ?> value="<?php echo $val_g2['political_geo_id'] ?>"><?php echo $val_g2['political_geography_name'] ?></option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
 
                                         </select>
                                     </div>
                                     <?php
                                 }
-                                ?>
+                               ?>
                                 <?php if (isset($activity_planning['geo_level_id_3']) && !empty($activity_planning['geo_level_id_3'])) {
                                     ?>
                                     <div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label>
@@ -104,6 +114,16 @@
                                         <select class="selectpicker" data-live-search="true" name="geo_level_3"
                                                 id="geo_level_3">
                                             <option value="">Select Geo 3</option>
+                                            <?php
+                                            if (isset($geo_level_3) && !empty($geo_level_3)) {
+
+                                                foreach ($geo_level_3 as $k => $val_g3) {
+                                                    ?>
+                                                    <option <?php if ($val_g3['political_geo_id'] == $activity_planning["geo_level_id_3"]) { echo "selected"; } ?> value="<?php echo $val_g3['political_geo_id'] ?>"><?php echo $val_g3['political_geography_name'] ?></option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                     <?php
@@ -118,6 +138,19 @@
                                         <select class="selectpicker" data-live-search="true" name="geo_level_4"
                                                 id="geo_level_4">
                                             <option value="">Select Geo 4</option>
+                                            <?php
+                                            if (isset($geo_level_4) && !empty($geo_level_4)) {
+
+                                                foreach ($geo_level_4 as $k => $val_g4) {
+                                                    ?>
+                                                    <option <?php if ($val_g4['political_geo_id'] == $activity_planning["geo_level_id_4"]) { echo "selected"; } ?>
+                                                        value="<?php echo $val_g4['political_geo_id'] ?>">
+                                                        <?php echo $val_g4['political_geography_name'] ?>
+                                                    </option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                     <?php
@@ -125,7 +158,6 @@
                                 ?>
 
                             </div>
-
                             <!--GEO  Dropdown-->
                             <?php if (isset($activity_planning['location']) && !empty($activity_planning['location'])) {
                                 ?>
@@ -189,46 +221,28 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Corp<span style="color: red">*</span></label>
-                                        <select id="crop_id" name="crop_id" onchange="selectCrop(this);">
+                                        <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple>
                                             <option value="">Select Corp</option>
-
-                                            <!--    <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
-                                                    <option value="" selected="selected">Select Corp</option>-->
-
                                             <?php
                                             if (isset($crop_details) && !empty($crop_details)) {
-                                                foreach ($crop_details as $key => $val) {
+                                                $activity_crop_details = array();
+                                                foreach ($activity_planning['crop'] as $ak => $adl) {
+                                                    $activity_crop_details[] = $adl['crop_id'];
+                                                }
+
+                                                foreach ($crop_details as $k => $cd) {
                                                     ?>
-                                                    <option value="<?php echo $val['crop_country_id']; ?>"
-                                                            selected="selected"><?php echo $val['crop_name']; ?></option>
+                                                    <option <?php if (in_array($cd['crop_country_id'], $activity_crop_details)) {
+                                                        echo "selected";
+                                                    } ?> value="<?php echo $cd['crop_country_id'] ?>">
+                                                        <?php echo $cd['crop_name'] ?>
+                                                    </option>
                                                     <?php
                                                 }
                                             }
                                             ?>
                                         </select>
-                                        <!--    <div class="js-example-tags-container"></div>-->
-
-                                        <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                        </div>
-                                        <!--<div class="js-example-tags-container"></div>-->
-
                                     </div>
-                                </div>
-                                <div class="col-md-7 selected_data">
-                                    <ul>
-                                        <?php if (isset($activity_planning['crop']) && !empty($activity_planning['crop'])) {
-                                            foreach ($activity_planning['crop'] as $K => $vapc) {
-                                                ?>
-                                                <li onclick="this.parentNode.removeChild(this);">
-                                                    <input type="hidden" name="crop[]"
-                                                           value="<?php echo $vapc['crop_id'] ?>">
-                                                    <?php echo $vapc['crop_name'] ?>
-                                                </li>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -241,40 +255,28 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Products<span style="color: red">*</span></label>
-                                        <select id="product_sku_id" name="product_sku_id"
-                                                onchange="selectProducts(this);">
+                                        <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple>
                                             <option value="">Select Product</option>
                                             <?php
                                             if (isset($product_sku) && !empty($product_sku)) {
-                                                foreach ($product_sku as $key => $val) {
+                                                $activity_product_sku = array();
+                                                foreach ($activity_planning['products'] as $ak => $adl) {
+                                                    $activity_product_sku[] = $adl['product_sku_id'];
+                                                }
+
+                                                foreach ($product_sku as $k => $ps) {
                                                     ?>
-                                                    <option
-                                                        value="<?php echo $val['product_sku_country_id']; ?>"><?php echo $val['product_sku_name']; ?></option>
+                                                    <option <?php if (in_array($ps['product_sku_country_id'], $activity_product_sku)) {
+                                                        echo "selected";
+                                                    } ?> value="<?php echo $ps['product_sku_country_id'] ?>">
+                                                        <?php echo $ps['product_sku_name'] ?>
+                                                    </option>
                                                     <?php
                                                 }
                                             }
                                             ?>
                                         </select>
-
-                                        <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <ul>
-                                        <?php if (isset($activity_planning['products']) && !empty($activity_planning['products'])) {
-                                            foreach ($activity_planning['products'] as $K => $vappsi) {
-                                                ?>
-                                                <li onclick="this.parentNode.removeChild(this);">
-                                                    <input type="hidden" name="crop[]"
-                                                           value="<?php echo $vappsi['product_sku_id'] ?>">
-                                                    <?php echo $vappsi['product_sku_name'] ?>
-                                                </li>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -287,40 +289,29 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Diseases<span style="color: red">*</span></label>
-                                        <select id="diseases_id" name="diseases_id" onchange="selectDiseases(this);">
+                                        <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple>
                                             <option value="">Select Diseases</option>
 
                                             <?php
                                             if (isset($diseases_details) && !empty($diseases_details)) {
-                                                foreach ($diseases_details as $key => $val) {
+                                                $activity_diseases_details = array();
+                                                foreach ($activity_planning['diseases'] as $ak => $add) {
+                                                    $activity_diseases_details[] = $add['diseases_id'];
+                                                }
+
+                                                foreach ($diseases_details as $k => $dd) {
                                                     ?>
-                                                    <option
-                                                        value="<?php echo $val['disease_country_id']; ?>"><?php echo $val['disease_name']; ?></option>
+                                                    <option <?php if (in_array($dd['disease_country_id'], $activity_diseases_details)) {
+                                                        echo "selected";
+                                                    } ?> value="<?php echo $dd['disease_country_id'] ?>">
+                                                        <?php echo $dd['disease_name'] ?>
+                                                    </option>
                                                     <?php
                                                 }
                                             }
                                             ?>
                                         </select>
-
-                                        <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a>
-                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <ul>
-                                        <?php if (isset($activity_planning['diseases']) && !empty($activity_planning['diseases'])) {
-                                            foreach ($activity_planning['diseases'] as $K => $vappsi) {
-                                                ?>
-                                                <li onclick="this.parentNode.removeChild(this);">
-                                                    <input type="hidden" name="crop[]"
-                                                           value="<?php echo $vappsi['diseases_id'] ?>">
-                                                    <?php echo $vappsi['disease_name'] ?>
-                                                </li>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -432,8 +423,7 @@
 
 
                     <!--att_count  Detail-->
-                    <?php if (isset($activity_planning['digital_library']) && !empty($activity_planning['digital_library'])) {
-                        ?>
+
                         <div class="default_box_white">
                             <div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">
                                 <div class="row">
@@ -443,6 +433,24 @@
                                             <select class="selectpicker" name="digital_id[]" id="digital_id"
                                                     data-live-search="true" multiple>
                                                 <option value="">Select Digital Library</option>
+                                                <?php
+                                                if (isset($digitalLibrary) && !empty($digitalLibrary)) {
+                                                    $activity_digital_library = array();
+                                                    foreach ($activity_planning['digital_library'] as $ak => $adl) {
+                                                        $activity_digital_library[] = $adl['digital_library_id'];
+                                                    }
+
+                                                    foreach ($digitalLibrary as $k => $dL) {
+                                                        ?>
+                                                        <option <?php if (in_array($dL['digital_library_id'], $activity_digital_library)) {
+                                                            echo "selected";
+                                                        } ?> value="<?php echo $dL['digital_library_id'] ?>">
+                                                            <?php echo $dL['library_name'] ?>
+                                                        </option>
+                                                        <?php
+                                                    }
+                                                }
+                                                ?>
                                             </select>
                                         </div>
                                     </div>
@@ -450,9 +458,6 @@
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <?php
-                    }
-                    ?>
 
 
                     <div class="default_box_white">
@@ -698,8 +703,7 @@
                                                                            value='<?php echo $vpr['product_sku_name'] ?>'
                                                                            readonly/>
                                                                     <input type='hidden' name='product_materials[]'
-                                                                           value='<?php echo $vpr['product_sku_id'] ?>'/>"
-                                                                    +
+                                                                           value='<?php echo $vpr['product_sku_id'] ?>'/>
                                                                 </td>
                                                                 <td data-title='Qty.'>
                                                                     <input type='text'
@@ -751,7 +755,7 @@
                                                                 <td data-title='Materials'>
                                                                     <input class='input_remove_border' type='text'
                                                                            value='<?php echo $vmr['promotional_material_country_name']; ?>'
-                                                                           readonly/> +
+                                                                           readonly/>
                                                                     <input type='hidden' name='materials[]'
                                                                            value='<?php echo $vmr['material_id']; ?>'/>
                                                                 </td>
@@ -783,24 +787,6 @@
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <!-- <div class="default_box_grey">
-                         <div class="col-md-12 tp_form inline-parent">
-                             <div class="form-group" style="margin-bottom: 0px;">
-                                 <label>Visual Aid</label>
-                                 <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
-                             </div>
-                         </div>
-                         <div class="clearfix"></div>
-                     </div>
-                     <div class="default_box_grey">
-                         <div class="col-md-12 tp_form inline-parent">
-                             <div class="form-group" style="margin-bottom: 0px;">
-                                 <label>Joint Visit</label>
-                                 <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
-                             </div>
-                         </div>
-                         <div class="clearfix"></div>
-                     </div>-->
                 </div>
             </div>
         </div>
@@ -814,6 +800,8 @@
                value="<?php echo $current_user->country_id; ?>"/>
         <input class="current_local_date" type="hidden" name="current_local_date" id="current_local_date"
                value="<?php echo $current_user->local_date; ?>"/>
+        <input class="status" type="hidden" name="status" id="status" value="<?php echo $activity_planning['status'];?>" />
+        <input class="submit_status" type="hidden" name="submit_status" id="submit_status" value="<?php echo $activity_planning['submit_status'];?>" />
 
 
         <div class="col-md-12 table_bottom pln_table_bottom">

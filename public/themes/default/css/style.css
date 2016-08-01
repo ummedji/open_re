@@ -1097,6 +1097,7 @@ input[readonly] {
 
 { text-align: right; padding-right: 5px;}
 
+#no-more-tables tbody tr td[data-title="Enter PO No."] { width: 195px;}
 #no-more-tables tbody tr td[data-title="Product SKU Code"],
 #no-more-tables tbody tr td[data-title="Product SKU Code"] .amount_rt_a,
 { text-align: center !important;}

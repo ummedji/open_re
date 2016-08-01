@@ -51,7 +51,8 @@
                                                 <ul class="acc_list">
                                                     <li>&nbsp;</li>
                                                     <li>
-                                                        <a href="#"><?php echo $val['activity_type_country_name']; ?></a>
+                                                        <a  href="javascript: void(0);"
+                                                            onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name']; ?></a>
                                                     </li>
                                                     <li><?php echo date('h:i A', strtotime($val['activity_planning_time'])); ?></li>
                                                     <li><?php echo $val['political_geography_name']; ?></li>

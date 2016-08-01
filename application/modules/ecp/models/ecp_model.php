@@ -1547,7 +1547,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $this->db->where('metc.status', '1');
         $this->db->where('metc.deleted', '0');
         $farmer = $this->db->get()->result_array();
-        //testdata($disease);
+
         if (isset($farmer) && !empty($farmer)) {
             return $farmer;
         } else {
@@ -1738,7 +1738,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
 
                 $date_array = array_values($date_array);
-               // testdata($date_array);
+
                 return $date_array;
             }
             else{
@@ -1791,6 +1791,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function addActivityPlanning($user_id,$country_id,$web_service=null)
     {
+       // testdata($_POST);
         $activity_planning_id = $this->input->post("inserted_activity_planning_id");
         $activity_type_id = $this->input->post("activity_type_id");
         $geo_level_4 = $this->input->post("geo_level_4");
@@ -1810,6 +1811,10 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $size_of_plot = $this->input->post("size_of_plot");
         $spray_volume = $this->input->post("spray_volume");
         $referenc = $this->input->post("reference_type");
+        $status = $this->input->post("status");
+        $submit_status = $this->input->post("submit_status");
+
+
         if(isset($referenc) && !empty($referenc) )
         {
             if($referenc == 'follow_up')
@@ -1819,12 +1824,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             }
             else{
                 $reference_type = '0';
-                $submit_status = '0';
+                (isset($submit_status) && !empty($submit_status)) ? $submit_status : 0;
             }
         }
         else{
             $reference_type = '0';
-            $submit_status = '0';
+            (isset($submit_status) && !empty($submit_status)) ? $submit_status : 0;
         }
 
 
@@ -1869,10 +1874,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $product_materials_qty = $this->input->post("product_materials_qty");
             $materials = $this->input->post("materials");
             $materials_qty = $this->input->post("materials_qty");
+            $amount = $this->input->post("amount");
         }
 
         if(isset($activity_planning_id) && !empty($activity_planning_id))
         {
+
             $activity_planning = array(
                 'activity_planning_date' => isset($planning_date) ? $planning_date : '',
                 'activity_planning_time' => isset($planning_date_time) ? $planning_date_time : '',
@@ -1887,11 +1894,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 'alert' => isset($set_alert) ? $set_alert : '',
                 'size_of_plot' => (isset($size_of_plot) && !empty($size_of_plot)) ? $size_of_plot : '0',
                 'spray_volume' => (isset($spray_volume) && !empty($spray_volume)) ? $spray_volume : '0',
-                'amount' => '0',
-                'employee_id' => $user_id,
+                'amount' =>  (isset($amount) && !empty($amount)) ? $amount : '0',
+               /* 'employee_id' => $user_id,*/
                 'country_id' => $country_id,
-                'status' => '0',
-                'submit_status' => $submit_status,
+                'is_planned' => '1',
+                'status' => (isset($status) && !empty($status)) ? $status : 0,
+                'submit_status' =>  (isset($submit_status) && !empty($submit_status)) ? $submit_status : 0,
                 'reference_type' => $reference_type,
                 'reference_id' => '0',
                 'modified_by_user' => $user_id,
@@ -2111,10 +2119,11 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 'amount' => '0',
                 'employee_id' => $user_id,
                 'country_id' => $country_id,
-                'status' => '0',
-                'submit_status' => $submit_status,
+                'status' => (isset($status) && !empty($status)) ? $status : 0,
+                'submit_status' =>  (isset($submit_status) && !empty($submit_status)) ? $submit_status : 0,
                 'reference_type' => $reference_type,
                 'reference_id' => '0',
+                'is_planned' => '1',
                 'created_by_user' => $user_id,
                 'created_on' => date('Y-m-d H:i:s'),
                 'modified_on' => date('Y-m-d H:i:s'),
@@ -2401,7 +2410,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function editViewActivityPlanning($activity_planning_id)
     {
-        $this->db->select('eap.activity_planning_id,eap.activity_planning_date,eap.activity_planning_time,eap.execution_date,eap.execution_time,eap.meeting_duration,eap.activity_type_id,eap.geo_level_id_2,eap.geo_level_id_3,eap.geo_level_id_4,eap.location,eap.proposed_attandence_count,eap.point_discussion,eap.alert,eap.size_of_plot,eap.spray_volume,eap.amount,eap.rating,eap.activity_note,eap.employee_id,amc.activity_type_code,amc.activity_type_country_name,mpgd2.political_geography_name as geo_level_name_2,,mpgd3.political_geography_name as geo_level_name_3,mpgd4.political_geography_name as geo_level_name_4');
+        $this->db->select('eap.activity_planning_id,eap.activity_planning_date,eap.activity_planning_time,eap.execution_date,eap.execution_time,eap.meeting_duration,eap.activity_type_id,eap.geo_level_id_2,eap.geo_level_id_3,eap.geo_level_id_4,eap.location,eap.proposed_attandence_count,eap.point_discussion,eap.alert,eap.size_of_plot,eap.spray_volume,eap.amount,eap.rating,eap.activity_note,eap.employee_id,amc.activity_type_code,amc.activity_type_country_name,mpgd2.political_geography_name as geo_level_name_2,,mpgd3.political_geography_name as geo_level_name_3,mpgd4.political_geography_name as geo_level_name_4,eap.status,eap.submit_status');
         $this->db->from('ecp_activity_planning as eap');
         $this->db->join('ecp_activity_master_country as amc','amc.activity_type_country_id = eap.activity_type_id');
         $this->db->join('master_political_geography_details as mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2');
@@ -2592,8 +2601,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
-
-
     public function get_geo_data($geo_level_id)
     {
        $this->db->select('political_geo_id,political_geography_name');
@@ -2608,7 +2615,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             return 0;
         }
     }
-
 
     public function addActivityUnplanned($user_id,$country_id,$web_service = null,$local_date = null)
     {
@@ -2704,7 +2710,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             'employee_id' => $user_id,
             'country_id' => $country_id,
             'status' => '4',
-            'is_planned' => '1',
+            'is_planned' => '0',
             'submit_status' => '1',
             'submit_date' => date('Y-m-d'),
             'reference_type' => '0',
@@ -2871,7 +2877,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             return 0;
         }
     }
-
 
 
 }

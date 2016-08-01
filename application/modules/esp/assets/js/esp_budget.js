@@ -503,7 +503,7 @@ $(document).on('submit', '#upload_budget_data', function (e) {
 
     */
         $.ajax({
-            url: site_url+"esp/upload_budget_data/budget", // Url to which the request is send
+            url: site_url+"esp/upload_budget_data", // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
             data: file_data, // Data sent to server, a set of key/value pairs (i.e. form fields and values)
             contentType: false,       // The content type used when sending data to the server.
@@ -650,11 +650,67 @@ $(document).on('submit', '#upload_budget_data', function (e) {
                                             url: site_url+"esp/upload_xl_budget_data", // Url to which the request is send
                                             type: "POST",             // Type of request to be send, called as method
                                             data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
-                                            success: function(data)   // A function to be called if request succeeds
+                                            success: function(data1)   // A function to be called if request succeeds
                                             {
-                                               // return false;
 
-                                               location.reload();
+                                                var obj = jQuery.parseJSON(data1);
+
+                                                $.each( obj, function( key1, value1 ) {
+
+                                                    if (key1 == "error"){
+
+                                                        $('<div></div>').appendTo('body')
+                                                            .html('<div>' + value1 + '</div>')
+                                                            .dialog({
+                                                                appendTo: "#success_file_popup",
+                                                                modal: true,
+                                                                title: 'Save Data',
+                                                                zIndex: 10000,
+                                                                autoOpen: true,
+                                                                width: 'auto',
+                                                                resizable: true,
+                                                                buttons: {
+                                                                    close: function (event, ui) {
+                                                                        $(this).remove();
+                                                                    }
+                                                                },
+                                                                close: function (event, ui) {
+                                                                    $(this).remove();
+                                                                }
+
+                                                            });
+
+                                                        return false;
+                                                    }
+                                                    else {
+
+                                                        $('<div></div>').appendTo('body')
+                                                            .html('<div>' + value1 + '</div>')
+                                                            .dialog({
+                                                                appendTo: "#success_file_popup",
+                                                                modal: true,
+                                                                title: '',
+                                                                zIndex: 10000,
+                                                                autoOpen: true,
+                                                                width: 'auto',
+                                                                resizable: true,
+                                                                buttons: {
+                                                                    close: function (event, ui) {
+                                                                        $(this).remove();
+                                                                        location.reload();
+                                                                    }
+                                                                },
+                                                                close: function (event, ui) {
+                                                                    $(this).remove();
+                                                                    location.reload();
+                                                                }
+
+                                                            });
+
+                                                      //  location.reload();
+                                                        return false;
+                                                    }
+                                                });
 
                                             }
                                         });

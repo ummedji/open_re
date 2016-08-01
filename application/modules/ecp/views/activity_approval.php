@@ -1,10 +1,8 @@
 <?php $segment2 = $this->uri->segment(2); ?>
-<?php if (!$this->input->is_ajax_request()) {
-    ?>
-    <?php
-    $attributes = array('class' => '', 'id' => '','name'=>'');
-    echo form_open('ecp/',$attributes);
-    ?>
+<?php if (!$this->input->is_ajax_request()) { ?>
+    <?php $attributes = array('class' => 'activity_approval', 'id' => 'activity_approval','name'=>'activity_approval');
+    echo form_open('',$attributes); ?>
+
     <div class="col-md-12 full-height">
         <div class="row">
             <div class="col-md-12">
@@ -37,7 +35,6 @@
                                 <div class="clearfix"></div>
                             </div>
                         </div>
-
                         <div class="col-md-4 col-md-offset-4 tp_form text-center_form" >
                             <div class="form-group">
                                 <label>Month<span style="color: red">*</span></label>
@@ -55,6 +52,7 @@
         </div>
     </div>
 
+
     <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $current_user->role_id; ?>" />
     <input class="login_customer_id" type="hidden" name="login_customer_id" id="login_customer_id" value="<?php echo $current_user->id; ?>" />
     <input class="login_customer_countryid" type="hidden" name="login_customer_countryid" id="login_customer_countryid" value="<?php echo  $current_user->country_id; ?>" />
@@ -63,17 +61,14 @@
     <?php echo form_close();
     ?>
     <div class="clearfix"></div>
+
 <?php }?>
 
 
-<?php
-if ($this->input->is_ajax_request()) {
+<?php  if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
-}
-?>
-<?php
-$attributes = array('class' => '', 'id' => '','name'=>'');
-echo form_open('',$attributes); ?>
+}  ?>
+
 <?php if (!$this->input->is_ajax_request()) {
     ?>
     <div id="middle_container" class="approval_view_cont">
@@ -81,20 +76,19 @@ echo form_open('',$attributes); ?>
         echo theme_view('common/middle');
         ?>
     </div>
-    <div id="middle_container_product" >
+    <?php $attributes = array('class' => 'update_approval', 'id' => 'update_approval','name'=>'update_approval');
+    echo form_open('',$attributes); ?>
 
-    </div>
+        <div id="middle_container_product" ></div>
+
+    <?php echo form_close(); ?>
 <?php  } ?>
-<?php echo form_close(); ?>
-<?php
-if (!$this->input->is_ajax_request()) {
-    ?>
+
+<?php if (!$this->input->is_ajax_request()) { ?>
     <div class="check_save_btn" id="check_save_btn" style="display:none;">
         <div class="col-md-2 save_btn">
             <label>&nbsp;</label>
             <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
         </div>
     </div>
-    <?php
-}
-?>
+<?php } ?>

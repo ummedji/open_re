@@ -828,7 +828,43 @@ class Ecp extends Front_Controller
 		$id = (isset($_POST["id"]) ? $_POST["id"] : null);
 
 		$activity  = $this->ecp_model->editViewActivityPlanning($id);
+		//testdata($activity);
+		$geo_level_2 = array();
+		$geo_level_3 = array();
+		$geo_level_4 = array();
+		$digitalLibrary = array();
 
+		if(!empty($activity))
+		{
+			if($activity['activity_type_code'] == 'RMP003' || $activity['activity_type_code'] == 'RVP004' )
+			{
+				$role_id = 10;
+				$perent_id = $activity['geo_level_id_2'];
+				$second_perent = 'second_perent';
+
+				$geo_level_2 = $this->ecp_model->get_customer_type_geo_data($role_id,$user->country_id,$activity['employee_id'],null,null);
+
+				$geo_level_3 = $this->ecp_model->get_customer_type_geo_data($role_id,$user->country_id,$activity['employee_id'],$perent_id,$second_perent);
+
+			}
+			else{
+				$role_id = 11;
+				$perent_id = $activity['geo_level_id_2'];
+				$perent_id2 = $activity['geo_level_id_3'];
+				$second_perent = 'second_perent';
+
+				$geo_level_2 = $this->ecp_model->get_customer_type_geo_data($role_id,$user->country_id,$activity['employee_id'],null,null);
+
+				$geo_level_3 = $this->ecp_model->get_customer_type_geo_data($role_id,$user->country_id,$activity['employee_id'],$perent_id,$second_perent);
+				$geo_level_4 = $this->ecp_model->get_customer_type_geo_data($role_id,$user->country_id,$activity['employee_id'],$perent_id2,null);
+
+			}
+			//testdata($activity['activity_planning_id']);
+			$digitalLibrary = $this->ecp_model->getDigitalLibraryDataByCountry($activity['activity_type_id'],$user->country_id);
+			//testdata($digitalLibrary);
+
+
+		}
 
 		Assets::add_module_js('ecp', 'activity_planning.js');
 		$user = $this->auth->user();
@@ -855,6 +891,10 @@ class Ecp extends Front_Controller
 		Template::set('activity_planning', $activity);
 		Template::set('child_user_data', $child_user_data);
 		Template::set('current_user', $user);
+		Template::set('geo_level_2', $geo_level_2);
+		Template::set('geo_level_3', $geo_level_3);
+		Template::set('geo_level_4', $geo_level_4);
+		Template::set('digitalLibrary', $digitalLibrary);
 		Template::set('activity_type', $activity_type);
 		Template::set('crop_details', $crop_details);
 		Template::set('product_sku', $product_sku);
@@ -938,20 +978,24 @@ class Ecp extends Front_Controller
 		$act_status = array('i','p','a','r','e','c');
 
 		$activity_by_date = array();
-		foreach($activity_details as $act)
-		{
-			$act_date = $act['activity_planning_date'];
-			if(!isset($activity_by_date[$act_date]))
+		if(count($activity_details)  > 0){
+			foreach($activity_details as $act)
 			{
-				$activity_by_date[$act_date] = array();
-			}
+				$act_date = $act['activity_planning_date'];
+				if(!isset($activity_by_date[$act_date]))
+				{
+					$activity_by_date[$act_date] = array();
+				}
 
 
-			if(!in_array($act_status[$act['status']],$activity_by_date[$act_date]))
-			{
-				$activity_by_date[$act_date][]= "act_".$act_status[$act['status']];
+				if(!in_array($act_status[$act['status']],$activity_by_date[$act_date]))
+				{
+					$activity_by_date[$act_date][]= "act_".$act_status[$act['status']];
+				}
 			}
 		}
+
+
 
 		$user = $this->auth->user();
 
@@ -1208,10 +1252,10 @@ class Ecp extends Front_Controller
 		Assets::add_module_js('ecp', 'activity_approval.js');
 		$user = $this->auth->user();
 		$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
-		//testdata($child_user_data);
 		$cur_month=date('Y-m');
 
 		$cal_data = $this->getApprovalActivityByMonth($cur_month);
+		/*testdata($cal_data);*/
 		Template::set('td', $cal_data['count']);
 		Template::set('pagination', (isset($cal_data['pagination']) && !empty($cal_data['pagination'])) ? $cal_data['pagination'] : '' );
 		Template::set('table', $cal_data);
@@ -1225,7 +1269,7 @@ class Ecp extends Front_Controller
 		{
 			$user = $this->auth->user();
 			$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
-
+			/*testdata($child_user_data);*/
 			$page = isset($_POST['page']) ?  $_POST['page'] : '';
 			$cal_data = $this->ecp_model->getApprovalActivityDetailByMonth($cur_month,$child_user_data['level_users'],$user->id,$user->country_id,$user->local_date,$page);
 
@@ -1286,7 +1330,10 @@ class Ecp extends Front_Controller
 		$crop_details = $this->ecp_model->crop_details_by_country_id($user->country_id);
 		$product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
 		$diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
-		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user->id,$user->country_id);
+		$key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($activity['employee_id'],$user->country_id);
+		$key_retailer = $this->ecp_model->get_KeyRetailer_by_user_id($activity['employee_id'],$user->country_id);
+
+
 		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
 		$global_head_user = array();
 
@@ -1301,6 +1348,7 @@ class Ecp extends Front_Controller
 		Template::set('product_sku', $product_sku);
 		Template::set('diseases_details', $diseases_details);
 		Template::set('key_farmer', $key_farmer);
+		Template::set('key_retailer', $key_retailer);
 		Template::set('materials', $materials);
 		Template::set('employee_visit', $employee_visit);
 		Template::set_view('ecp/activity_approval');

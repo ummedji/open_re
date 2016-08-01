@@ -211,18 +211,49 @@ function add_row()
 }
 
 $(document).on('click', 'div.primary_sls', function () { // <-- changes
-    if (confirm("Are you sure?")) {
-        $(this).closest('tr').remove();
-    }
-    var i = 1;
-    $("tbody#primary_sls tr").each(function(  k, v  ) {
 
-        $(this).attr("id",i);
-        $(this).find("td").first().find("input").val(i);
+    var this_data = $(this);
 
-        i++;
-    });
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+
+                    var i = 1;
+                    $("tbody#primary_sls tr").each(function(  k, v  ) {
+                        this_data.closest('tr').remove();
+                        this_data.attr("id",i);
+                        this_data.find("td").first().find("input").val(i);
+
+                        i++;
+                    });
+
+                    $(this).dialog("close");
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
+
     return false;
+
+
+
+   
 });
 
 $("#primary_sales").on("submit",function(){

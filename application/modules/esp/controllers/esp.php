@@ -4746,8 +4746,6 @@ class Esp extends Front_Controller
 
                         $arr_data = array();
 
-                        // testdata($cell_collection);
-
                         foreach ($cell_collection as $cell) {
 
                             $inner_array = array();
@@ -4756,8 +4754,6 @@ class Esp extends Front_Controller
                             $column = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getColumn();
                             $row = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getRow();
                             $data_value = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getValue();
-
-                            //  echo $row."===".$column."===".$data_value."</br>";
 
 
                             if ($row == 1) {
@@ -4780,11 +4776,8 @@ class Esp extends Front_Controller
                                     $arr_data[$row]["probablity"][$column] = $data_value;
                                 }
 
-                                // else {
-                                //     $arr_data[$row]["monthdata"][$column] = $data_value;
-                                // }
                             }
-//die;
+
 
 
                             /*
@@ -4798,7 +4791,7 @@ class Esp extends Front_Controller
 
 
                             if ($row == 10) {
-                                break;
+                              //  break;
                                 // die;
                             }
                             $i++;
@@ -4812,26 +4805,34 @@ class Esp extends Front_Controller
 
                         $final_array[$sheetName] = $data;
 
-                        break;
+                      //  break;
                         //  testdata($final_array);
                     }
 
+                   // testdata($final_array);
 
-                    $original_final_array = array();
+               $original_final_array = array();
 
+              if(!empty($final_array))
+              {
 
-                    foreach ($final_array as $f_key => $f_forecast_data) {
-                    foreach ($data['values'] as $key => $forecast_data) {
+                 foreach ($final_array as $f_key => $f_forecast_data)
+                 {
+                    $month_data = $f_key;
 
-                        $inner_array = array();
+                    foreach ($f_forecast_data["values"] as $key => $forecast_data)
+                    {
 
-                        $sku_code = isset($budget_data["A"]) ? $budget_data["A"] : "";
-                        $pbg = isset($budget_data["B"]) ? $budget_data["B"] : "";
-                        $product_sku_name = isset($budget_data["C"]) ? $budget_data["C"] : "";
+                        $pbg = isset($forecast_data["A"]) ? $forecast_data["A"] : "";
+                        $sku_code = isset($forecast_data["C"]) ? $forecast_data["C"] : "";
+                        $product_sku_name = isset($forecast_data["B"]) ? $forecast_data["B"] : "";
 
-                        if ($sku_code != "") {
+                        if($sku_code != "")
+                        {
                             $sku_id = $this->esp_model->get_sku_data($sku_code);
-                        } else {
+                        }
+                        else
+                        {
                             $sku_id = "";
                         }
 
@@ -4842,40 +4843,55 @@ class Esp extends Front_Controller
                             $pbg_id = "";
                         }
 
-                        if (($sku_id != "" || $sku_id != 0) && ($pbg_id != "" || $pbg_id != 0)) {
+                        if (($pbg != "" || $pbg != 0) && ($pbg_id != "" || $pbg_id != 0)) {
 
-                            $inner_array["user_id"] = $user_id;
-                            $inner_array["pbg_id"] = $pbg_id;
-                            $inner_array["sku_id"] = $sku_id;
-                            $inner_array["user_country_id"] = $user_country_id;
-                            $inner_array["bussiness_code"] = $bussiness_code;
-                            $inner_array["monthdata"] = $budget_data["monthdata"];
+                            $original_final_array[$month_data][$pbg]["user_id"] = $user_id;
+                            $original_final_array[$month_data][$pbg]["user_country_id"] = $user_country_id;
+                            $original_final_array[$month_data][$pbg]["bussiness_code"] = $bussiness_code;
 
-                            $final_array["budget_data"][] = $inner_array;
+                            $original_final_array[$month_data][$pbg]["pbg_id"] = $pbg_id;
 
+                            if (isset($forecast_data["forecast"])) {
+                                if ($sku_code != "") {
+                                    $original_final_array[$month_data][$pbg]["forecast"][$sku_id] = $forecast_data["forecast"]["E"];
+                                }
+                            }
 
-                            //    $upload_data = $this->upload_xl_budget_data($user_id, $pbg_id, $sku_id, $user_country_id, $bussiness_code, $budget_data["monthdata"]);
+                            if (isset($forecast_data["assumption"])){
+                                if ($sku_code == "" && $product_sku_name == "") {
+                                    $original_final_array[$month_data][$pbg]["assumption"] = array_values($forecast_data["assumption"]);
+                                }
+                            }
 
+                            if (isset($forecast_data["probablity"])){
+                                if ($sku_code == "" && $product_sku_name == "") {
+                                    $original_final_array[$month_data][$pbg]["probablity"] = array_values($forecast_data["probablity"]);
+                                }
+                            }
                         }
-
                     }
+                 }
 
+                 // $result_array["status"] = "true";
+                //  $result_array["data"] = $original_final_array;
+                  echo json_encode($original_final_array);
+                  die;
+              }
+              else
+              {
+
+                  $error_array["fileerror"][] = "No Data found.";
+                  echo json_encode($error_array);
+                  die;
+
+              }
+                } else {
+                    //SHEEET COUNT ERROR
+
+                    $error_array["fileerror"][] = "File must contain twelve sheets only.";
+                    echo json_encode($error_array);
+                    die;
                 }
-
-
-
-
-
-
-                        } else {
-                            //SHEEET COUNT ERROR
-
-                            $error_array["fileerror"][] = "File must contain twelve sheets only.";
-                            echo json_encode($error_array);
-                            die;
-                        }
-
-
 
             } else {
                 //EXTENSION ERROR
@@ -4892,6 +4908,42 @@ class Esp extends Front_Controller
         }
 
     }
+
+
+    public function upload_xl_forecast_data($webservice_data = null)
+    {
+
+        if ($webservice_data != null) {
+            $_POST["val"] = json_decode($_POST['val'], true);
+
+        }
+
+        //$user_id,$pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data
+
+        $updated_pbg_data_array = array();
+
+        foreach ($_POST["val"] as $key_data => $budgetdata)
+        {
+
+
+
+        }
+
+        if(!empty($updated_pbg_data_array)) {
+            //  $final_array["success"] = true;
+            $final_array["success"][] = @implode(",", $updated_pbg_data_array) . " Data uploaded successfully.";
+            echo json_encode($final_array);
+            die;
+        }
+        else
+        {
+            $error_array["error"][] = "Data is freezed by user please unfreezed for current year and than process further.";
+            echo json_encode($error_array);
+            die;
+        }
+
+    }
+
 
 
     public function generate_budget_xl_data($webservice_data = null)
@@ -5162,7 +5214,7 @@ class Esp extends Front_Controller
 
                 if ($sheetCount == 1) {
 
-                    if ($sheetNames[0] == "budget") {
+                 //   if ($sheetNames[0] == "budget") {
 
                         //get only the Cell Collection
                         $cell_collection = $objPHPExcel->getActiveSheet()->getCellCollection();
@@ -5253,6 +5305,7 @@ class Esp extends Front_Controller
 
                                 $inner_array["user_id"] = $user_id;
                                 $inner_array["pbg_id"] = $pbg_id;
+                                $inner_array["sku_name"] = $product_sku_name;
                                 $inner_array["sku_id"] = $sku_id;
                                 $inner_array["user_country_id"] = $user_country_id;
                                 $inner_array["bussiness_code"] = $bussiness_code;
@@ -5276,7 +5329,7 @@ class Esp extends Front_Controller
                             die;
                         }
 
-                    } else {
+                  /*  } else {
                         //SHEET NAME ERROR
 
                         $error_array["fileerror"][] = "Please upload desired file.";
@@ -5284,6 +5337,8 @@ class Esp extends Front_Controller
                         die;
 
                     }
+                    */
+
                 } else {
                     //SHEEET COUNT ERROR
 
@@ -5315,14 +5370,15 @@ class Esp extends Front_Controller
 
         }
 
-        //testdata($_POST);
-
         //$user_id,$pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data
+
+        $updated_pbg_data_array = array();
 
         foreach ($_POST["val"] as $key_data => $budgetdata) {
 
             $user_id = $budgetdata["user_id"];
             $pbg_id = $budgetdata["pbg_id"];
+            $sku_name = $budgetdata["sku_name"];
             $sku_id = $budgetdata["sku_id"];
             $user_country_id = $budgetdata["user_country_id"];
             $bussiness_code = $budgetdata["bussiness_code"];
@@ -5344,53 +5400,102 @@ class Esp extends Front_Controller
             $budget_insert_id = "";
             $old_budget_id = "";
 
-            foreach ($month_data as $month_key => $monthvalue) {
 
-                $check_record_exist = $this->esp_model->check_budget_data($pbg_id, $bussiness_code);
+            $freeze_data_array = array();
 
-                //dumpme($check_record_exist);
+         //   foreach ($month_data as $month_key => $monthvalue) {
+                $check_record_exist1 = $this->esp_model->check_budget_data($pbg_id, $bussiness_code);
+                if ($check_record_exist1 != 0) {
+                    $check_budget_id = $check_record_exist1[0]['budget_id'];
 
-                if ($check_record_exist != 0) {
-                    $budget_insert_id = $check_record_exist[0]['budget_id'];
-                    //UPDATE MAIN TABLE RECORD
-                    $update_status = $this->esp_model->update_budget_data($old_budget_id, $user_id);
-                } else {
-                    //INSERT
-                    // if($budget_insert_id == ""){
-                    $budget_insert_id = $this->esp_model->insert_budget_data($pbg_id, $user_id, $bussiness_code, $user_id);
-                    // }
+                    $budget_freeze_data = $this->esp_model->get_budget_freeze_status($check_budget_id, $user_id);
+
+                    if($budget_freeze_data != 0) {
+                        if ($budget_freeze_data["freeze_status"] == 1) {
+                            $freeze_data_array[] = 1;
+                        }
+                    }
                 }
+        //    }
 
-                // echo $budget_insert_id."===".$old_budget_id."</br>";
+            if(!in_array(1,$freeze_data_array)){
 
-                if ($budget_data[$i] == "" || empty($budget_data[$i])) {
-                    $budget_qty = 0;
-                } else {
-                    $budget_qty = $budget_data[$i];
+                    foreach ($month_data as $month_key => $monthvalue) {
+
+                        $check_record_exist = $this->esp_model->check_budget_data($pbg_id, $bussiness_code);
+
+                        //dumpme($check_record_exist);
+
+                        if ($check_record_exist != 0) {
+                            $budget_insert_id = $check_record_exist[0]['budget_id'];
+                            //UPDATE MAIN TABLE RECORD
+                            $update_status = $this->esp_model->update_budget_data($old_budget_id, $user_id);
+                        } else {
+                            //INSERT
+                            // if($budget_insert_id == ""){
+                            $budget_insert_id = $this->esp_model->insert_budget_data($pbg_id, $user_id, $bussiness_code, $user_id);
+                            // }
+                        }
+
+                        // echo $budget_insert_id."===".$old_budget_id."</br>";
+
+                        if ($budget_data[$i] == "" || empty($budget_data[$i])) {
+                            $budget_qty = 0;
+                        } else {
+                            $budget_qty = $budget_data[$i];
+                        }
+                        $budget_value = $this->esp_model->get_budget_data($sku_id, $monthvalue);
+
+                        //    $budget_value = $budget_value*$budget_qty;
+
+                        $get_product_old_data = $this->esp_model->get_budget_product_details($bussiness_code, $sku_id, $monthvalue);
+
+                        if ($get_product_old_data != 0) {
+                            //UPDATE MAIN TABLE RECORD
+
+                            $budget_product_id = $get_product_old_data[0]['budget_product_id'];
+                            $old_budget_id = $get_product_old_data[0]['budget_id'];
+
+                            $update_status = $this->esp_model->update_budget_product_details($budget_product_id, $budget_qty, $budget_value);
+
+                        } else {
+                            $this->esp_model->insert_budget_product_details($budget_insert_id, $bussiness_code, $sku_id, $monthvalue, $budget_qty, $budget_value);
+                        }
+
+
+                        $i++;
+                    }
+
+                   // $final_array["success"] = true;
+                   // $final_array["message"] = "Data uploaded successfully.";
+                   // echo json_encode($final_array);
+                   // die;
+
+                $updated_pbg_data_array[] = $sku_name;
+
+
                 }
-                $budget_value = $this->esp_model->get_budget_data($sku_id, $monthvalue);
-
-                //    $budget_value = $budget_value*$budget_qty;
-
-                $get_product_old_data = $this->esp_model->get_budget_product_details($bussiness_code, $sku_id, $monthvalue);
-
-                if ($get_product_old_data != 0) {
-                    //UPDATE MAIN TABLE RECORD
-
-                    $budget_product_id = $get_product_old_data[0]['budget_product_id'];
-                    $old_budget_id = $get_product_old_data[0]['budget_id'];
-
-                    $update_status = $this->esp_model->update_budget_product_details($budget_product_id, $budget_qty, $budget_value);
-
-                } else {
-                    $this->esp_model->insert_budget_product_details($budget_insert_id, $bussiness_code, $sku_id, $monthvalue, $budget_qty, $budget_value);
-                }
-
-
-                $i++;
-            }
+                //else
+                //{
+                //    $error_array["error"][] = "Data is freezed by user please unfreezed for current year and than process further.";
+                //    echo json_encode($error_array);
+                //    die;
+                //}
 
         }
+
+        if(!empty($updated_pbg_data_array)) {
+          //  $final_array["success"] = true;
+            $final_array["success"][] = @implode(",", $updated_pbg_data_array) . " Data uploaded successfully.";
+            echo json_encode($final_array);
+            die;
+        }
+        else{
+                $error_array["error"][] = "Data is freezed by user please unfreezed for current year and than process further.";
+                echo json_encode($error_array);
+                die;
+        }
+
     }
 
 

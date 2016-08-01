@@ -2592,7 +2592,6 @@ class Ishop_model extends BF_Model
 
     public function update_ishop_sales_detail($user_id, $country_id,$web_service = null)
     {
-        //testdata($_POST);
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             $checked_type = $this->input->post("radio1");
@@ -3003,12 +3002,8 @@ class Ishop_model extends BF_Model
             $batch = explode(',', $this->input->get_post("batch"));
 
             $b_exp_date = explode(',', $this->input->get_post("batch_exp_date"));
-            $b_e_date = str_replace('/', '-', $b_exp_date);
-            $batch_exp_date = date('Y-m-d', strtotime($b_e_date));
-
+            
             $b_mfg_date = explode(',', $this->input->get_post("batch_mfg_date"));
-            $b_m_date = str_replace('/', '-', $b_mfg_date);
-            $batch_mfg_date = date('Y-m-d', strtotime($b_m_date));
 
 
         } else {

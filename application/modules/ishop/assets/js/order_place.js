@@ -1047,6 +1047,8 @@ $("body").on("keyup","input.quantity_data",function(){
 
 $(document).on('click','tbody#order_place_data div.delete_i',function(){
 
+   var this_data = $(this);
+
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
         .dialog({
@@ -1059,16 +1061,17 @@ $(document).on('click','tbody#order_place_data div.delete_i',function(){
             resizable: true,
             buttons: {
                 OK: function () {
-                    $(this).dialog("close");
 
                     var i = 1;
                     $("tbody#order_place_data tr").each(function(  k, v  ) {
-
-                        $(this).attr("id",i);
-                        $(this).find("td").first().find("input").val(i);
+                        this_data.closest('tr').remove();
+                        this_data.attr("id",i);
+                        this_data.find("td").first().find("input").val(i);
 
                         i++;
                     });
+
+                    $(this).dialog("close");
 
                 },
                 Cancel: function () {
@@ -1082,6 +1085,26 @@ $(document).on('click','tbody#order_place_data div.delete_i',function(){
         });
 
     return false;
+
+
+
+/*
+
+    if (confirm("Are you sure?")) {
+        $(this).closest('tr').remove();
+    }
+
+    var i = 1;
+    $("tbody#order_place_data tr").each(function(  k, v  ) {
+
+        $(this).attr("id",i);
+        $(this).find("td").first().find("input").val(i);
+
+        i++;
+    });
+
+    return false;
+    */
 
 });
    

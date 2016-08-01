@@ -145,37 +145,19 @@
                                             <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                                 <div class="form-group" style="margin-bottom: 0px;">
                                                     <label>Crop<span style="color: red">*</span></label>
-                                                    <select id="crop_id" name="crop_id" onchange="selectCrop(this);">
+                                                    <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple>
                                                         <option value="">Select Crop</option>
-
-                                                        <!--    <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
-                                                                <option value="" selected="selected">Select Corp</option>-->
-
                                                         <?php
                                                         if (isset($crop_details) && !empty($crop_details)) {
                                                             foreach ($crop_details as $key => $val) {
                                                                 ?>
-                                                                <option value="<?php echo $val['crop_country_id']; ?>"
-                                                                        selected="selected"><?php echo $val['crop_name']; ?></option>
+                                                                <option value="<?php echo $val['crop_country_id']; ?>" ><?php echo $val['crop_name']; ?></option>
                                                                 <?php
                                                             }
                                                         }
                                                         ?>
                                                     </select>
-                                                    <!--    <div class="js-example-tags-container"></div>-->
-
-                                                    <div class="plus_btn"><a href="#"><i class="fa fa-plus"
-                                                                                         aria-hidden="true"></i></a>
-                                                    </div>
-                                                    <!--<div class="js-example-tags-container"></div>-->
-
                                                 </div>
-                                            </div>
-                                            <div class="col-md-7 selected_data">
-
-                                                <ul>
-
-                                                </ul>
                                             </div>
                                         </div>
                                     </div>
@@ -188,8 +170,7 @@
                                             <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                                 <div class="form-group" style="margin-bottom: 0px;">
                                                     <label>Products<span style="color: red">*</span></label>
-                                                    <select id="product_sku_id" name="product_sku_id"
-                                                            onchange="selectProducts(this);">
+                                                    <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple>
                                                         <option value="">Select Product</option>
                                                         <?php
                                                         if (isset($product_sku) && !empty($product_sku)) {
@@ -202,14 +183,7 @@
                                                         }
                                                         ?>
                                                     </select>
-
-                                                    <div class="plus_btn"><a href="#"><i class="fa fa-plus"
-                                                                                         aria-hidden="true"></i></a>
-                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-7">
-                                                <ul></ul>
                                             </div>
                                         </div>
                                     </div>
@@ -222,8 +196,7 @@
                                             <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                                 <div class="form-group" style="margin-bottom: 0px;">
                                                     <label>Diseases<span style="color: red">*</span></label>
-                                                    <select id="diseases_id" name="diseases_id"
-                                                            onchange="selectDiseases(this);">
+                                                    <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple>
                                                         <option value="">Select Diseases</option>
                                                         <?php
                                                         if (isset($diseases_details) && !empty($diseases_details)) {
@@ -236,14 +209,7 @@
                                                         }
                                                         ?>
                                                     </select>
-
-                                                    <div class="plus_btn"><a href="#"><i class="fa fa-plus"
-                                                                                         aria-hidden="true"></i></a>
-                                                    </div>
                                                 </div>
-                                            </div>
-                                            <div class="col-md-7">
-                                                <ul></ul>
                                             </div>
                                         </div>
                                     </div>
@@ -268,13 +234,6 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <!--<div class="col-md-6 corp_text mrg_top_30">
-                                                <div class="form-group frm_details text-center">
-                                                    <label>Qty.</label>
-                                                    <input type="text" class="form-control" name="qty" id="qty" placeholder="">
-                                                    <div class="plus_btn"><a href="javascript: void(0);" id="add_product"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
-                                                </div>
-                                            </div>-->
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>

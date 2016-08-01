@@ -40,13 +40,13 @@ $(document).ready(function() {
             activity_address:{
                 required: true
             },
-            crop_id:{
+            crop:{
                 required: true
             },
-            product_sku_id:{
+            product_sku:{
                 required: true
             },
-            diseases_id:{
+            diseases:{
                 required: true
             },
             farmer_id:
@@ -106,15 +106,15 @@ $(document).ready(function() {
 
 
 
-    $("#add_product").click(function() {
+    $(document).on("click","#add_product",function() {
         add_product();
     });
 
-    $("#add_product_material").click(function() {
+    $(document).on("click","#add_product_material",function() {
         add_product_material();
     });
 
-    $("#add_material").click(function() {
+    $(document).on("click","#add_material",function() {
         add_material();
     });
 
@@ -460,6 +460,15 @@ $(document).on('click', 'div.farmer_detail', function () {
     return false;
 });
 
+$(document).on('click', 'div.retailer_detail', function () {
+    if (confirm("Are you sure?")) {
+        $(this).closest('tr').remove();
+    }
+    else{
+        return false;
+    }
+    return false;
+});
 
 function add_product()
 {
@@ -1211,86 +1220,6 @@ function getDigitalLibrary(activity_type_id)
     });
 }
 
-function selectCrop(select)
-{
-    var option = select.options[select.selectedIndex];
-    var ul = select.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('ul')[0];
-
-   // var ul = $("div.selected_data").find('ul');
-
-    var choices = ul.getElementsByTagName('input');
-    for (var i = 0; i < choices.length; i++)
-        if (choices[i].value == option.value)
-            return;
-
-    var li = document.createElement('li');
-    var input = document.createElement('input');
-    var text = document.createTextNode(option.firstChild.data);
-
-    input.type = 'hidden';
-    input.name = 'crop[]';
-    input.value = option.value;
-
-    li.appendChild(input);
-    li.appendChild(text);
-    li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
-
-    ul.appendChild(li);
-}
-
-
-function selectProducts(select)
-{
-    var option = select.options[select.selectedIndex];
-    var ul = select.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('ul')[0];
-
-
-    var choices = ul.getElementsByTagName('input');
-    for (var i = 0; i < choices.length; i++)
-        if (choices[i].value == option.value)
-            return;
-
-    var li = document.createElement('li');
-    var input = document.createElement('input');
-    var text = document.createTextNode(option.firstChild.data);
-
-    input.type = 'hidden';
-    input.name = 'product_sku[]';
-    input.value = option.value;
-
-    li.appendChild(input);
-    li.appendChild(text);
-    li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
-
-    ul.appendChild(li);
-}
-
-
-function selectDiseases(select)
-{
-    var option = select.options[select.selectedIndex];
-    var ul = select.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('ul')[0];
-
-
-    var choices = ul.getElementsByTagName('input');
-    for (var i = 0; i < choices.length; i++)
-        if (choices[i].value == option.value)
-            return;
-
-    var li = document.createElement('li');
-    var input = document.createElement('input');
-    var text = document.createTextNode(option.firstChild.data);
-
-    input.type = 'hidden';
-    input.name = 'diseases[]';
-    input.value = option.value;
-
-    li.appendChild(input);
-    li.appendChild(text);
-    li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
-
-    ul.appendChild(li);
-}
 
 /*as js*/
 $(document).ready(function() {
@@ -1302,7 +1231,7 @@ $(document).ready(function() {
 
         var $list = $('<ul>');
         $selected.each(function(k, v) {
-            var $li = $('<li class="tag-selected"><a class="destroy-tag-selected">×</a>' + $(v).text() + '</li>');
+            var $li = $('<li class="tag-selected"><a class="destroy-tag-selected">ï¿½</a>' + $(v).text() + '</li>');
             $li.children('a.destroy-tag-selected')
                 .off('click.select2-copy')
                 .on('click.select2-copy', function(e) {
@@ -1331,8 +1260,6 @@ function getActivityCalenderData(iMonth)
 }
 function getActivityPlanData(iMonth)
 {
-    return false;
-
     $.ajax({
         type: 'POST',
         url: site_url + "ecp/getActivityDetailPlanByMonth",
