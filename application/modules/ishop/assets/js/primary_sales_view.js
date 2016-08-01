@@ -226,7 +226,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function (e) {
 
 
 $(document).on('click', 'div.primary_cont .delete_i', function () {
-
+    var id = $(this).attr('prdid');
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
         .dialog({
@@ -241,7 +241,7 @@ $(document).on('click', 'div.primary_cont .delete_i', function () {
                 OK: function () {
                     $(this).dialog("close");
 
-                    var id = $(this).attr('prdid');
+
                     $.ajax({
                         type: 'POST',
                         url: site_url+'ishop/delete_sales_details',
@@ -267,7 +267,7 @@ $(document).on('click', 'div.primary_cont .delete_i', function () {
 });
 
 $(document).on('click', 'div.primary_products .delete_i', function () {
-
+    var id = $(this).attr('prdid');
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
         .dialog({
@@ -282,7 +282,7 @@ $(document).on('click', 'div.primary_products .delete_i', function () {
                 OK: function () {
                     $(this).dialog("close");
 
-                    var id = $(this).attr('prdid');
+
                     $.ajax({
                         type: 'POST',
                         url: site_url+'ishop/delete_sales_product_details',

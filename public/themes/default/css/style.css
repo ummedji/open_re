@@ -832,7 +832,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     margin-bottom: 10px;
     padding-bottom: 10px;
     position: relative;
-    overflow-x: scroll;
+    overflow-x: auto;
     box-shadow: 0px -1px 2px 0px rgba(0, 0, 0, 0.3);
 }
 .zoom_space {
@@ -1146,6 +1146,15 @@ a.set_pono, .eye_i a {
 .chech_data button:first-child {
     margin-left: 0px;
 }
+.new-upld-par .plng_title {
+    display: inline-block;
+    vertical-align: middle;
+}
+.new-upld-par .plng_title h5 { margin: 0;}
+.new-upld-par .upload_file_space {
+    display: inline-block;
+    vertical-align: middle;
+}
 @media screen and (max-width:991px) {
     .save_btn {
         margin-bottom: 15px;
@@ -1154,11 +1163,18 @@ a.set_pono, .eye_i a {
     .upload_file_space {
         margin-bottom: 15px;
     }
+    .new-upld-par .upload_file_space {
+        margin-bottom: 0px;
+    }
     .chech_data { text-align: center;}
     .chech_data button {
         /*margin-bottom: 10px;*/
         margin-left: 0;
     }
+}
+@media screen and (max-width:500px) {
+    .new-upld-par { text-align: center;}
+    .new-upld-par .plng_title { display: block; margin-bottom: 10px;}
 }
 @media screen and (max-width:450px) {
     .chech_data a { margin-top: 10px; display: block; margin-left: 0;}
@@ -2426,8 +2442,8 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     padding: 30px 0;
 }
 .cont_size_select .bootstrap-select {
-    max-width: 126px;
-    min-width: 126px;
+   /* max-width: 126px;*/
+    /*min-width: 126px;*/
 }
 .first_lb {text-align: right;}
 .mr_bot_group .form-group{margin-bottom: 30px;}
@@ -2548,6 +2564,7 @@ table.request_table {
 .request_table.tp_form .form-group input {
     display: inline-block;
 }
+
 @media screen and (max-width: 1199px){
     .material_request_inn { overflow-x: scroll;}
     table.request_table {
@@ -2638,6 +2655,9 @@ ul.acc_list { margin: 0; padding: 0; text-align: center;}
 
 /*time picker*/
 .bootstrap-timepicker-as { display: inline-block;}
+@media screen and (max-width: 991px){
+    .rsp-datepiker .bootstrap-timepicker-as { display: block;}
+}
 .bootstrap-timepicker-as table tr td input { width: 60px !important;}
 @media screen and (max-width: 767px){
     .bootstrap-timepicker-as { display: block;}

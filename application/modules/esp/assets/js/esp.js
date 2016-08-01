@@ -550,6 +550,7 @@ function get_pbg_product_sku_data(pbg_id){
 
 
 
+/*
 var budget_upload_validators = $("#upload_budget_data").validate({
     rules: {
         upload_file_data: {
@@ -569,6 +570,8 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
 
     var header_array = [];
 
+    */
+
     /* var $valid = $("#upload_target_data").valid();
      if(!$valid) {
      budget_upload_validators.focusInvalid();
@@ -577,6 +580,8 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
      else {
 
      */
+
+    /*
     $.ajax({
         url: site_url+"esp/upload_forecast_data", // Url to which the request is send
         type: "POST",             // Type of request to be send, called as method
@@ -753,3 +758,6 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
     // }
     return false;
 });
+
+
+*/

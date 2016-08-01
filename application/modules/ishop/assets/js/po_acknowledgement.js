@@ -21,18 +21,45 @@ $(document).ready(function(){
 
 
 $(document).on('click','div#middle_container_product div.delete_i',function(){
-        
     var id = $(this).attr('prdid');
 
-    $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/delete_order_detail_data",
-            data: {data_id:id},
-            success: function(resp){
-                console.log(resp);
-                location.reload();
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+"ishop/delete_order_detail_data",
+                        data: {data_id:id},
+                        success: function(resp){
+                            console.log(resp);
+                            location.reload();
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
             }
         });
+
     return false;
 });
 

@@ -4715,24 +4715,24 @@ class Esp extends Front_Controller
 
                 if ($sheetCount == 12) {
 
-               /*     if ($sheetNames[0] == "budget") {
+                    /*     if ($sheetNames[0] == "budget") {
 
-                    */
+                         */
 
 
-                        /*    } else {
-                                //SHEET NAME ERROR
+                    /*    } else {
+                            //SHEET NAME ERROR
 
-                                $error_array["fileerror"][] = "Please upload desired file.";
-                                echo json_encode($error_array);
-                                die;
+                            $error_array["fileerror"][] = "Please upload desired file.";
+                            echo json_encode($error_array);
+                            die;
 
-                            }
- */
+                        }
+*/
 
                     $final_array = array();
 
-                    for($j = 0; $j<$sheetCount;$j++){
+                    for ($j = 0; $j < $sheetCount; $j++) {
 
                         $sheetName = $sheetNames[$j];
 
@@ -4746,7 +4746,7 @@ class Esp extends Front_Controller
 
                         $arr_data = array();
 
-                       // testdata($cell_collection);
+                        // testdata($cell_collection);
 
                         foreach ($cell_collection as $cell) {
 
@@ -4757,7 +4757,7 @@ class Esp extends Front_Controller
                             $row = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getRow();
                             $data_value = $objPHPExcel->getActiveSheet($j)->getCell($cell)->getValue();
 
-                          //  echo $row."===".$column."===".$data_value."</br>";
+                            //  echo $row."===".$column."===".$data_value."</br>";
 
 
                             if ($row == 1) {
@@ -4769,9 +4769,20 @@ class Esp extends Front_Controller
                             if ($row != 1) {
                                 if ($column == "A" || $column == "B" || $column == "C") {
                                     $arr_data[$row][$column] = $data_value;
-                                } else {
-                                    $arr_data[$row]["monthdata"][$column] = $data_value;
+                                } elseif ($column == "E") {
+                                    $arr_data[$row]["forecast"][$column] = $data_value;
+                                    // $inner_array["forecast"] = $data_value;
+                                } elseif ($column == "F" || $column == "H" || $column == "J") {
+                                    //$inner_array["assumption"][] = $data_value;
+                                    $arr_data[$row]["assumption"][$column] = $data_value;
+                                } elseif ($column == "G" || $column == "I" || $column == "K") {
+                                    //  $inner_array["probablity"][] = $data_value;
+                                    $arr_data[$row]["probablity"][$column] = $data_value;
                                 }
+
+                                // else {
+                                //     $arr_data[$row]["monthdata"][$column] = $data_value;
+                                // }
                             }
 //die;
 
@@ -4785,38 +4796,14 @@ class Esp extends Front_Controller
 
                             */
 
-                         /*   if ($row != 1) {
-                                if ($column == "A") {
-                                    $inner_array["prod_data"] = $data_value;
-                                }
-                                elseif($column == "B") {
-                                    $inner_array["sku_code"] = $data_value;
-                                }
-                               elseif($column == "D"){
-                                   // $arr_data[$row]["forecast"][$column] = $data_value;
-                                   $inner_array["forecast"] = $data_value;
-                                }
-                                elseif($column == "E" || $column == "G" || $column == "I"){
-                                    $inner_array["assumption"][] = $data_value;
-                                    //$arr_data[$row]["assumption"][$column] = $data_value;
-                                }
-                                elseif($column == "F" || $column == "H" || $column == "J"){
-                                    $inner_array["probablity"][] = $data_value;
-                                   // $arr_data[$row]["probablity"][$column] = $data_value;
-                                }
-
-                            }
-
-                            */
-
 
                             if ($row == 10) {
                                 break;
-                               // die;
+                                // die;
                             }
                             $i++;
 
-                           // $arr_data[] = $inner_array;
+                            // $arr_data[] = $inner_array;
 
                         }
 
@@ -4825,10 +4812,58 @@ class Esp extends Front_Controller
 
                         $final_array[$sheetName] = $data;
 
+                        break;
+                        //  testdata($final_array);
+                    }
+
+
+                    $original_final_array = array();
+
+
+                    foreach ($final_array as $f_key => $f_forecast_data) {
+                    foreach ($data['values'] as $key => $forecast_data) {
+
+                        $inner_array = array();
+
+                        $sku_code = isset($budget_data["A"]) ? $budget_data["A"] : "";
+                        $pbg = isset($budget_data["B"]) ? $budget_data["B"] : "";
+                        $product_sku_name = isset($budget_data["C"]) ? $budget_data["C"] : "";
+
+                        if ($sku_code != "") {
+                            $sku_id = $this->esp_model->get_sku_data($sku_code);
+                        } else {
+                            $sku_id = "";
+                        }
+
+
+                        if ($pbg != "") {
+                            $pbg_id = $this->esp_model->get_pbg_detail_data($pbg, $user_country_id);
+                        } else {
+                            $pbg_id = "";
+                        }
+
+                        if (($sku_id != "" || $sku_id != 0) && ($pbg_id != "" || $pbg_id != 0)) {
+
+                            $inner_array["user_id"] = $user_id;
+                            $inner_array["pbg_id"] = $pbg_id;
+                            $inner_array["sku_id"] = $sku_id;
+                            $inner_array["user_country_id"] = $user_country_id;
+                            $inner_array["bussiness_code"] = $bussiness_code;
+                            $inner_array["monthdata"] = $budget_data["monthdata"];
+
+                            $final_array["budget_data"][] = $inner_array;
+
+
+                            //    $upload_data = $this->upload_xl_budget_data($user_id, $pbg_id, $sku_id, $user_country_id, $bussiness_code, $budget_data["monthdata"]);
+
+                        }
 
                     }
 
-                    testdata($final_array);
+                }
+
+
+
 
 
 

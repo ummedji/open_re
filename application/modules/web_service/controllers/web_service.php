@@ -3015,7 +3015,9 @@ class Web_service extends Front_Controller
         $sales_view = 'sales_view';
 
         if (isset($user_id) && isset($check_redio)) {
+
             if ($check_redio == 'distributor') {
+
                 $secondary_sales_details = $this->ishop_model->secondary_sales_details_data_view('', '', '', $by_invoice_no, $user_id, $country_id, $sales_view, $from_month, $to_month, null, $distributor_id, null, 'web_service');
                 if (!empty($secondary_sales_details)) {
 
@@ -3042,7 +3044,8 @@ class Web_service extends Front_Controller
                     $result['status'] = false;
                     $result['message'] = 'No Records Found.';
                 }
-            } elseif ($check_redio == 'retailer') {
+            }
+            elseif ($check_redio == 'retailer') {
 
 
                 $tertiary_sales_details = $this->ishop_model->view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, null, null, $retailer_id, $page = null, 'web_service');

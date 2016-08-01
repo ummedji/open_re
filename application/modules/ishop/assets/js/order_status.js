@@ -308,7 +308,7 @@ $(document).on('submit','#order_status_data_details',function(){
 });
 
 $(document).on('click','div#middle_container_product div.delete_i',function(){
-
+    var id = $(this).attr('prdid');
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
         .dialog({
@@ -323,7 +323,7 @@ $(document).on('click','div#middle_container_product div.delete_i',function(){
                 OK: function () {
                     $(this).dialog("close");
 
-                    var id = $(this).attr('prdid');
+
 
                     $.ajax({
                         type: 'POST',
@@ -354,6 +354,7 @@ $(document).on('click','div#middle_container_product div.delete_i',function(){
 
 $(document).on('click','div#middle_container div.delete_i',function(){
 
+    var id = $(this).attr('prdid');
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
         .dialog({
@@ -368,7 +369,7 @@ $(document).on('click','div#middle_container div.delete_i',function(){
                 OK: function () {
                     $(this).dialog("close");
 
-                    var id = $(this).attr('prdid');
+
 
                     $.ajax({
                         type: 'POST',

@@ -249,7 +249,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
 });
 
 $(document).on('click', 'div.current_stock_container .delete_i', function () {
-
+    var id = $(this).attr('prdid');
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
         .dialog({
@@ -264,7 +264,7 @@ $(document).on('click', 'div.current_stock_container .delete_i', function () {
                 OK: function () {
                     $(this).dialog("close");
 
-                    var id = $(this).attr('prdid');
+
                     $.ajax({
                         type: 'POST',
                         url: site_url+'ishop/delete_current_stock_details',

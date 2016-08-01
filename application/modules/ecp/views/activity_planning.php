@@ -471,7 +471,7 @@
                                             <tbody>
                                             <tr>
                                                 <td>
-                                                    <div class="col-md-10 col-md-offset-1">
+                                                    <div class="col-md-12">
                                                         <div id="no-more-tables">
                                                             <table
                                                                 class="col-md-12 table-bordered table-striped table-condensed cf">
@@ -496,7 +496,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="col-md-10 col-md-offset-1">
+                                                    <div class="col-md-12">
                                                         <div id="no-more-tables">
                                                             <table
                                                                 class="col-md-12 table-bordered table-striped table-condensed cf">

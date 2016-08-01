@@ -579,40 +579,86 @@ $("body").on("keyup","input.quantity_data",function(){
 
 
 $(document).on('click', 'div.sales_cont .delete_i', function () {
-    if (confirm("Are you sure?")) {
-        var id = $(this).attr('prdid');
-        var checked_type = $('input[name=radio1]:checked').val();
-        $.ajax({
-            type: 'POST',
-            url: site_url+'ishop/delete_ishop_sales_details',
-            data: {secondary_sales_id:id,checked_type:checked_type},
-            success: function(resp){
-                location.reload()
+    var id = $(this).attr('prdid');
+    var checked_type = $('input[name=radio1]:checked').val();
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+'ishop/delete_ishop_sales_details',
+                        data: {secondary_sales_id:id,checked_type:checked_type},
+                        success: function(resp){
+                            location.reload()
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
             }
         });
-    }
-    else{
-        return false;
-    }
+
+    return false;
 
 });
 
 $(document).on('click', 'div.sales_product .delete_i', function () {
-    if (confirm("Are you sure?")) {
-        var id = $(this).attr('prdid');
-        var checked_type = $('input[name=radio1]:checked').val();
-        $.ajax({
-            type: 'POST',
-            url: site_url+'ishop/delete_ishop_sales_product_details',
-            data: {secondary_product_sales_id:id,checked_type:checked_type},
-            success: function(resp){
-                location.reload()
+    var id = $(this).attr('prdid');
+    var checked_type = $('input[name=radio1]:checked').val();
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+'ishop/delete_ishop_sales_product_details',
+                        data: {secondary_product_sales_id:id,checked_type:checked_type},
+                        success: function(resp){
+                            location.reload()
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
             }
         });
-    }
-    else{
-        return false;
-    }
+
+    return false;
 });
 
 

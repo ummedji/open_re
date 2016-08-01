@@ -2592,6 +2592,7 @@ class Ishop_model extends BF_Model
 
     public function update_ishop_sales_detail($user_id, $country_id,$web_service = null)
     {
+        //testdata($_POST);
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             $checked_type = $this->input->post("radio1");
@@ -2622,8 +2623,8 @@ class Ishop_model extends BF_Model
             if(!empty($amount)){
                 $total_amt = array_sum($amount);
             }
-           // $total_amt = array_sum($amount);
 
+            $update_array = array();
             if (isset($secondary_sales_product_id) && !empty($secondary_sales_product_id)) {
                 foreach ($secondary_sales_product_id as $k => $pspi) {
                     $secondary_sales_product_update = array(
@@ -2635,6 +2636,10 @@ class Ishop_model extends BF_Model
 
                     $this->db->where('secondary_sales_product_id', $secondary_sales_product_id[$k]);
                     $this->db->update('ishop_secondary_sales_product', $secondary_sales_product_update);
+
+                }
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
                 }
                 $secondary_sales = $this->get_sales_id_by_secondary_sales_product_id($secondary_sales_product_id);
 
@@ -2646,6 +2651,9 @@ class Ishop_model extends BF_Model
 
                 $this->db->where('secondary_sales_id', $secondary_sales[0]['secondary_sales_id']);
                 $this->db->update('ishop_secondary_sales', $secondary_sales_update_by_product);
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+                }
             }
 
             if (isset($secondary_sales_id) && !empty($secondary_sales_id)) {
@@ -2660,6 +2668,9 @@ class Ishop_model extends BF_Model
 
                     $this->db->where('secondary_sales_id', $secondary_sales_id[$key]);
                     $this->db->update('ishop_secondary_sales', $secondary_sales_update);
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[]=1;
+                    }
                 }
             }
 
@@ -2675,6 +2686,10 @@ class Ishop_model extends BF_Model
 
                     $this->db->where('tertiary_sales_product_id', $secondary_sales_product_id[$k]);
                     $this->db->update('ishop_tertiary_sales_products', $tertiary_sales_product_update);
+
+                }
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
                 }
                 $tertiary_sales = $this->get_sales_id_by_tertiary_sales_product_id($secondary_sales_product_id);
 
@@ -2685,14 +2700,12 @@ class Ishop_model extends BF_Model
 
                 $this->db->where('tertiary_sales_id', $tertiary_sales[0]['tertiary_sales_id']);
                 $this->db->update('ishop_tertiary_sales', $secondary_sales_update_by_product);
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+                }
             }
         }
-        if($this->db->affected_rows() > 0){
-            return 1;
-        }
-        else{
-            return 0;
-        }
+        return $update_array;
     }
 
     public function get_sales_id_by_tertiary_sales_product_id($tertiary_sales_product_id)

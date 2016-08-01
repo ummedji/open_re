@@ -1047,18 +1047,39 @@ $("body").on("keyup","input.quantity_data",function(){
 
 $(document).on('click','tbody#order_place_data div.delete_i',function(){
 
-    if (confirm("Are you sure?")) {
-        $(this).closest('tr').remove();
-    }
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
 
-    var i = 1;
-    $("tbody#order_place_data tr").each(function(  k, v  ) {
+                    var i = 1;
+                    $("tbody#order_place_data tr").each(function(  k, v  ) {
 
-        $(this).attr("id",i);
-        $(this).find("td").first().find("input").val(i);
+                        $(this).attr("id",i);
+                        $(this).find("td").first().find("input").val(i);
 
-        i++;
-    });
+                        i++;
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
 
     return false;
 

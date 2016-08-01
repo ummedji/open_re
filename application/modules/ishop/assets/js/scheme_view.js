@@ -132,21 +132,45 @@ $(document).on('click','#delete_schemes',function(e){
     e.preventDefault();
     var checked_schemes = [];
     var param = $("#view_schemes").serializeArray();
+    $. each($("input[name='del_scheme']:checked"), function(){
+        checked_schemes. push($(this).attr('attr-check'));
+    });
 
-    if (confirm("Are you sure?")) {
-        $. each($("input[name='del_scheme']:checked"), function(){
-            checked_schemes. push($(this).attr('attr-check'));
-        });
-            $.ajax({
-                type: 'POST',
-                url: site_url+"ishop/delete_schemes",
-                data: {checked_schemes:checked_schemes,param:param},
-                dataType : 'html',
-                success: function(resp){
-                    $("#middle_container").html(resp);
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+"ishop/delete_schemes",
+                        data: {checked_schemes:checked_schemes,param:param},
+                        dataType : 'html',
+                        success: function(resp){
+                            $("#middle_container").html(resp);
+                        }
+                    });
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
                 }
-            });
-    }
+            },
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
+
     return false;
 
 });
@@ -157,17 +181,41 @@ $(document).on('click','.delete_i',function(e){
     var id = $(this).attr('prdid');
     var param = $("#view_schemes").serializeArray();
 
-    if (confirm("Are you sure?")) {
-        $.ajax({
-            type: 'POST',
-            url: site_url+"ishop/delete_schemes",
-            data: {checked_schemes:id,param:param},
-            dataType : 'html',
-            success: function(resp){
-                $("#middle_container").html(resp);
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+"ishop/delete_schemes",
+                        data: {checked_schemes:id,param:param},
+                        dataType : 'html',
+                        success: function(resp){
+                            $("#middle_container").html(resp);
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
             }
         });
-    }
+
     return false;
 
 });

@@ -173,7 +173,7 @@
                                 else{
                                     ?>
                                     <li role="presentation"></li>
-                                <?
+                                <?php
                                 }
                                 ?>
                             </ul>
@@ -200,4 +200,4 @@
         </ul>
     </nav>
     <!--sidenave-->
-<?php }?>
+<?php } ?>

@@ -112,7 +112,7 @@ echo form_open('esp/add_forecast',$attributes); ?>
         <div class="col-md-3 save_btn"></div>
         <?php
         $attributes = array('class' => '', 'id' => 'upload_esp_forecast_data','name'=>'upload_esp_forecast_data');
-        echo form_open_multipart('',$attributes);
+        echo form_open_multipart('esp/upload_forecast_data',$attributes);
         ?>
         <div class="col-md-9">
             <div class="row">
