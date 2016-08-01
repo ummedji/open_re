@@ -4444,19 +4444,20 @@ class Esp extends Front_Controller
 
                 //Write cells
 
-                $objWorkSheet->setCellValue('A1', 'Product SKU Name');
-                $objWorkSheet->setCellValue('B1', 'Product SKU Code');
-                $objWorkSheet->setCellValue('C1', 'Budget');
-                $objWorkSheet->setCellValue('D1', 'Forecast');
-                $objWorkSheet->setCellValue('E1', 'Assumption1');
-                $objWorkSheet->setCellValue('F1', 'Probability1 (%)');
-                $objWorkSheet->setCellValue('G1', 'Assumption2');
-                $objWorkSheet->setCellValue('H1', 'Probability2 (%)');
-                $objWorkSheet->setCellValue('I1', 'Assumption3');
-                $objWorkSheet->setCellValue('J1', 'Probability3 (%)');
+                $objWorkSheet->setCellValue('A1', 'PBG Name');
+                $objWorkSheet->setCellValue('B1', 'Product SKU Name');
+                $objWorkSheet->setCellValue('C1', 'Product SKU Code');
+                $objWorkSheet->setCellValue('D1', 'Budget');
+                $objWorkSheet->setCellValue('E1', 'Forecast');
+                $objWorkSheet->setCellValue('F1', 'Assumption1');
+                $objWorkSheet->setCellValue('G1', 'Probability1 (%)');
+                $objWorkSheet->setCellValue('H1', 'Assumption2');
+                $objWorkSheet->setCellValue('I1', 'Probability2 (%)');
+                $objWorkSheet->setCellValue('J1', 'Assumption3');
+                $objWorkSheet->setCellValue('K1', 'Probability3 (%)');
 
 
-                $objWorkSheet->getStyle('A1:J1')->applyFromArray(
+                $objWorkSheet->getStyle('A1:K1')->applyFromArray(
                     array(
                         'fill' => array(
                             'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -4491,8 +4492,8 @@ class Esp extends Front_Controller
 
                         $objWorkSheet->setCellValue("A$i", $pbg_name);
 
-                        $objWorkSheet->setCellValue("C$i", "0.00");
                         $objWorkSheet->setCellValue("D$i", "0.00");
+                        $objWorkSheet->setCellValue("E$i", "0.00");
                     /*
                         $assumption1 = $pbgdata["assumption1"];
                         $assumption2 = $pbgdata["assumption2"];
@@ -4504,9 +4505,9 @@ class Esp extends Front_Controller
 
                         */
                        // $objWorkSheet->setCellValue("E$i", $assumption1_name);
-                        $objWorkSheet->setCellValue("E$i", "Curah hujan");
+                        $objWorkSheet->setCellValue("F$i", "Curah hujan");
 
-                        $objValidation = $objWorkSheet->getCell("E$i")->getDataValidation();
+                        $objValidation = $objWorkSheet->getCell("F$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
                         $objValidation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
                         $objValidation->setAllowBlank(false);
@@ -4520,9 +4521,9 @@ class Esp extends Front_Controller
                         $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
 
                        // $objWorkSheet->setCellValue("G$i",$assumption2_name);
-                        $objWorkSheet->setCellValue("G$i","Harga Naik");
+                        $objWorkSheet->setCellValue("H$i","Harga Naik");
 
-                        $objValidation = $objWorkSheet->getCell("G$i")->getDataValidation();
+                        $objValidation = $objWorkSheet->getCell("H$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
                         $objValidation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
                         $objValidation->setAllowBlank(false);
@@ -4536,9 +4537,9 @@ class Esp extends Front_Controller
                         $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
 
                         //$objWorkSheet->setCellValue("I$i", $assumption3_name);
-                        $objWorkSheet->setCellValue("I$i", "Kelembaban");
+                        $objWorkSheet->setCellValue("J$i", "Kelembaban");
 
-                        $objValidation = $objWorkSheet->getCell("I$i")->getDataValidation();
+                        $objValidation = $objWorkSheet->getCell("J$i")->getDataValidation();
                         $objValidation->setType(PHPExcel_Cell_DataValidation::TYPE_LIST);
                         $objValidation->setErrorStyle(PHPExcel_Cell_DataValidation::STYLE_INFORMATION);
                         $objValidation->setAllowBlank(false);
@@ -4552,23 +4553,23 @@ class Esp extends Front_Controller
                         $objValidation->setFormula1('"'.@implode(",",$assumption_arr).'"');
 
 
-                        $objWorkSheet->getStyle("E$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("G$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("I$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("F$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("H$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("J$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
 
                         $probablity1 = $pbgdata["probablity1"];
                         $probablity2 = $pbgdata["probablity2"];
                         $probablity3 = $pbgdata["probablity3"];
 
-                        $objWorkSheet->setCellValue("F$i", $probablity1);
-                        $objWorkSheet->setCellValue("H$i", $probablity2);
-                        $objWorkSheet->setCellValue("J$i", $probablity3);
+                        $objWorkSheet->setCellValue("G$i", $probablity1);
+                        $objWorkSheet->setCellValue("I$i", $probablity2);
+                        $objWorkSheet->setCellValue("K$i", $probablity3);
 
-                        $objWorkSheet->getStyle("F$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("H$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
-                        $objWorkSheet->getStyle("J$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("G$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("I$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                        $objWorkSheet->getStyle("K$i")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
 
-                        $objWorkSheet->getStyle("B$i:D$i")->applyFromArray(
+                        $objWorkSheet->getStyle("B$i:E$i")->applyFromArray(
                             array(
                                 'fill' => array(
                                     'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -4578,26 +4579,27 @@ class Esp extends Front_Controller
                             )
                         );
 
-
                         if (!empty($pbgdata['sku_data'])) {
                             foreach ($pbgdata['sku_data'] as $sku_key => $sku_data) {
 
                                 foreach ($sku_data as $skukey1 => $skudata1) {
 
-                                    $objWorkSheet->setCellValue("A$k", $skudata1["product_sku_name"]);
+                                    $objWorkSheet->setCellValue("A$k", $pbg_name);
 
-                                    $objWorkSheet->setCellValue("B$k", $skudata1["product_sku_code"]);
+                                    $objWorkSheet->setCellValue("B$k", $skudata1["product_sku_name"]);
 
-                                    $objWorkSheet->setCellValue("C$k", $skudata1["budget_quantity"]);
-                                    $objWorkSheet->setCellValue("D$k", $skudata1["forecast_quantity"]);
+                                    $objWorkSheet->setCellValue("C$k", $skudata1["product_sku_code"]);
 
-                                    $objWorkSheet->getStyle("D$k")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
+                                    $objWorkSheet->setCellValue("D$k", $skudata1["budget_quantity"]);
+                                    $objWorkSheet->setCellValue("E$k", $skudata1["forecast_quantity"]);
 
-                                    $objWorkSheet->setCellValue("F$i", 0);
-                                    $objWorkSheet->setCellValue("H$i", 0);
-                                    $objWorkSheet->setCellValue("J$i", 0);
+                                    $objWorkSheet->getStyle("E$k")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
 
-                                    $objWorkSheet->getStyle("A$k:C$k")->applyFromArray(
+                                    $objWorkSheet->setCellValue("G$i", 0);
+                                    $objWorkSheet->setCellValue("I$i", 0);
+                                    $objWorkSheet->setCellValue("K$i", 0);
+
+                                    $objWorkSheet->getStyle("A$k:D$k")->applyFromArray(
                                         array(
                                             'fill' => array(
                                                 'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -4607,7 +4609,7 @@ class Esp extends Front_Controller
                                         )
                                     );
 
-                                    $objWorkSheet->getStyle("E$k:J$k")->applyFromArray(
+                                    $objWorkSheet->getStyle("F$k:K$k")->applyFromArray(
                                         array(
                                             'fill' => array(
                                                 'type' => PHPExcel_Style_Fill::FILL_SOLID,
@@ -4757,14 +4759,19 @@ class Esp extends Front_Controller
 
                           //  echo $row."===".$column."===".$data_value."</br>";
 
+
                             if ($row == 1) {
+
                                 $header[$row][$column] = $data_value;
+
                             }
-                            elseif($row == 3){
 
-                                //echo $row."===".$column."===".$data_value."</br>";
-
-                                $arr_data[$row][$column] = $data_value;
+                            if ($row != 1) {
+                                if ($column == "A" || $column == "B" || $column == "C") {
+                                    $arr_data[$row][$column] = $data_value;
+                                } else {
+                                    $arr_data[$row]["monthdata"][$column] = $data_value;
+                                }
                             }
 //die;
 

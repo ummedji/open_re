@@ -1682,7 +1682,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         if (isset($web_service) && !empty($web_service) && $web_service == 'web_service') {
             $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
         } else {
-            $this->db->select('eap.activity_planning_date,eap.activity_planning_id');
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_id,eap.status');
         }
         $this->db->from('ecp_activity_planning as eap');
         $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');

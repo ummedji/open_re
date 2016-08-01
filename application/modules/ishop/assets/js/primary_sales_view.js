@@ -226,37 +226,83 @@ $(document).on('click', 'div.check_save_btn #check_save', function (e) {
 
 
 $(document).on('click', 'div.primary_cont .delete_i', function () {
-    if (confirm("Are you sure?")) {
-        var id = $(this).attr('prdid');
-        $.ajax({
-            type: 'POST',
-            url: site_url+'ishop/delete_sales_details',
-            data: {sales_id:id},
-            success: function(resp){
-                location.reload();
+
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+                    var id = $(this).attr('prdid');
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+'ishop/delete_sales_details',
+                        data: {sales_id:id},
+                        success: function(resp){
+                            location.reload();
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
             }
         });
-    }
-    else{
-        return false;
-    }
+
+    return false;
 
 });
 
 $(document).on('click', 'div.primary_products .delete_i', function () {
-    if (confirm("Are you sure?")) {
-        var id = $(this).attr('prdid');
-        $.ajax({
-            type: 'POST',
-            url: site_url+'ishop/delete_sales_product_details',
-            data: {product_sales_id:id},
-            success: function(resp){
-                location.reload();
+
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+                    var id = $(this).attr('prdid');
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+'ishop/delete_sales_product_details',
+                        data: {product_sales_id:id},
+                        success: function(resp){
+                            location.reload();
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
             }
         });
-    }
-   else{
-        return false;
-    }
+
+    return false;
 });
 

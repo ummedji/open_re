@@ -3,10 +3,11 @@
         <div class="panel act_panel with-nav-tabs panel-default">
             <div class="panel-heading">
                 <ul class="activity_list">
-                    <li class="active"><a href="#tab1default" data-toggle="tab">Incomplete Entry</a></li>
-                    <li><a href="#tab2default" data-toggle="tab">Approved</a></li>
-                    <li><a href="#tab3default" data-toggle="tab">Rejected</a></li>
-                    <li><a href="#tab4default" data-toggle="tab">Pending</a>
+                    <li class="active"><a href="#tab0default" data-toggle="tab" data-attr="all">All</a></li>
+                    <li><a href="#tab1default" data-toggle="tab" data-attr="i">Incomplete Entry</a></li>
+                    <li><a href="#tab2default" data-toggle="tab" data-attr="a">Approved</a></li>
+                    <li><a href="#tab3default" data-toggle="tab" data-attr="r">Rejected</a></li>
+                    <li><a href="#tab4default" data-toggle="tab" data-attr="p">Pending</a>
                     </li>
                 </ul>
             </div>
@@ -67,9 +68,6 @@
                         <div id="accordion" class="as_accordion" role="tablist" aria-multiselectable="true"></div>
                         <div class="clearfix"></div>
                     </div>
-                    <div class="tab-pane fade" id="tab2default">Default 2</div>
-                    <div class="tab-pane fade" id="tab3default">Default 3</div>
-                    <div class="tab-pane fade" id="tab4default">Default 4</div>
                 </div>
             </div>
         </div>

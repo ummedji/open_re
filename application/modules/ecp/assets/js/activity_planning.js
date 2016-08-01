@@ -1420,6 +1420,25 @@ function geolevel_3_Change()
     get_child_by_parent_parent_id(activity_type_selected,perent_id);
 }
 
+
+$(document).on('click','ul.activity_list li',function(e){
+    var elem = $(e.target);
+    var d_attr = elem.attr('data-attr');
+
+    if(d_attr=='all'){
+        $('.act_date').removeClass('act_dsb');
+    } else {
+        $('.act_date').addClass('act_dsb');
+
+        $('.act_date').each(function(i,j){
+            if($(j).hasClass('act_'+d_attr)==true){
+                $(j).removeClass('act_dsb');
+            }
+        });
+    }
+});
+
+
 function getActivityById(activity_planning_id)
 {
     $.ajax({

@@ -2694,6 +2694,7 @@ class Web_service extends Front_Controller
     public function add_xl_data()
     {
         $user_id = $_POST['user_id'];
+        $user_id = $_POST['user_id'];
         $country_id = $_POST['country_id'];
         $role_id = $_POST['role_id'];
         $dirname = $_POST["dirname"];
@@ -3374,6 +3375,30 @@ class Web_service extends Front_Controller
             $result['message'] = "All Fields are Required.";
         }
         $this->do_json($result);
+    }
+
+    public function downloadData()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $role_id = $this->input->get_post('role_id');
+        $from_date = $this->input->get_post('from_date');
+        $to_date = $this->input->get_post('to_date');
+
+        if((isset($user_id) && !empty($user_id)) && ((isset($country_id) && !empty($country_id)) ) &&(isset($role_id) && !empty($role_id)) && (isset($from_date) && !empty($from_date))  && (isset($to_date) && !empty($to_date)))
+        {
+            $result['status'] = false;
+            $result['message'] = 'Success';
+            $result['data'] = base_url('assets/uploads/Uploads/rol/rol_retailer_HO.xlsx');
+
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
     }
 
 

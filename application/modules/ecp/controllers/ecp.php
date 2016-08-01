@@ -934,6 +934,25 @@ class Ecp extends Front_Controller
 
 	public function activity_planning_sidebar_calender($activity_details=array(),$action=''){
 
+		// make it dynamically
+		$act_status = array('i','p','a','r','e','c');
+
+		$activity_by_date = array();
+		foreach($activity_details as $act)
+		{
+			$act_date = $act['activity_planning_date'];
+			if(!isset($activity_by_date[$act_date]))
+			{
+				$activity_by_date[$act_date] = array();
+			}
+
+
+			if(!in_array($act_status[$act['status']],$activity_by_date[$act_date]))
+			{
+				$activity_by_date[$act_date][]= "act_".$act_status[$act['status']];
+			}
+		}
+
 		$user = $this->auth->user();
 
 // Get current year, month and day
@@ -1021,65 +1040,39 @@ class Ecp extends Front_Controller
 					}
 				}
 
-				if(!empty($user->local_date)){
-					$dates = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
-					$activity_date = date($user->local_date,$dates);
 
-					if($dates < strtotime(date('Y-m-d')))
-					{
-						$style = "pointer-events: none;opacity: 0.7;";
-					}
-					else
-					{
-						$style = "";
-					}
+				$activity_date = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
 
-					$style1 = "";
-
-					if(!empty($activity_details) && !empty($action))
-					{
-
-						if($action == 'activity_planning'){
-							foreach($activity_details as $k => $ld)
-							{
-								if($dates == strtotime($ld['activity_planning_date']))
-								{
-									$style1 = "background-color: yellow;";
-								}
-							}
-						}
-					}
-
+				if($activity_date < strtotime(date('Y-m-d')))
+				{
+					$style = "pointer-events: none;opacity: 0.7;";
 				}
-				else{
-					$activity_date = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
-
-					if($activity_date < strtotime(date('Y-m-d')))
+				else
+				{
+					$style = "";
+				}
+				$act_class = "";
+				if(!empty($activity_details) && !empty($action))
+				{
+					if($action == 'activity_planning')
 					{
-						$style = "pointer-events: none;opacity: 0.7;";
-					}
-					else
-					{
-						$style = "";
-					}
-					$style1 = "";
-					if(!empty($activity_details) && !empty($action))
-					{
-						if($action == 'activity_planning_date'){
-							foreach($activity_details as $k => $ld)
+						if(count($activity_by_date)>0)
+						{
+							foreach($activity_by_date as $k => $ld)
 							{
-								if($activity_date == strtotime($ld['activity_planning_date']))
+								if($activity_date == strtotime($k))
 								{
-									$style1 = "background-color: yellow;";
+									$act_class = " act_date ".@implode(" ",$ld);
 								}
 							}
 						}
+
 					}
 				}
 
 				$actClass = array_rand($clr,1);
 
-				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date act_'.$clr[$actClass].'" style="'.$style1.'" rel="'.$activity_date.'" href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date act_'.$clr[$actClass].$act_class.'"  href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
 
 				// Next day
 				$iCurrentDay++;
