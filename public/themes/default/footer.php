@@ -131,8 +131,8 @@ echo Assets::js();
 
         $(document).on('click',".zoom_in_btn",function(e){
             e.preventDefault();
-            $(".zoom_out_btn").toggleClass("zoom_out_btn_show");
-            $(".ad_mr_top").toggleClass("ad_mr_top_30");
+            $(".zoom_out_btn").addClass("zoom_out_btn_show");
+            $(".ad_mr_top").addClass("ad_mr_top_30");
             $(".top_form").hide();
             $(".zoom_in_btn").hide();
             $(".middle_form").hide();

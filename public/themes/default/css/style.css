@@ -2748,3 +2748,6 @@ ul.acc_list { margin: 0; padding: 0; text-align: center;}
 #calendar table td a.act_dsb{
     background-color: #EEEEEE;
 }
+#middle_container_product .zoom_space{
+    display: none;
+}

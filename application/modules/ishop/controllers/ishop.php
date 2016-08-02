@@ -2442,7 +2442,9 @@ class Ishop extends Front_Controller
 			$target_data = $this->ishop_model->get_target_monthly_data($_POST);
 			$target_month_data = $this->ishop_model->get_monthly_data($_POST);
 			//dumpme($target_month_data);
+
 			//testdata($target_data);
+
 			Template::set('td', 6);
 			Template::set('pagination', (isset($target_data['pagination']) && !empty($target_data['pagination'])) ? $target_data['pagination'] : '' );
 
@@ -2651,6 +2653,14 @@ class Ishop extends Front_Controller
                                 $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
                                 $data_value = date("Y-m", $data_value);
 
+							//	$data_month_value = date("m", $data_value);
+
+							//	if($data_month_value > 12 || $data_month_value < 1){
+
+
+
+							//	}
+
                                 $data_value = $data_value . "-01";
 
                             }
@@ -2754,7 +2764,8 @@ class Ishop extends Front_Controller
                                 if ($filename[0] == "target"  ) {
 
                                     if ($logined_user_type == 7){
-                                        if ($sub_action_data == "distributor") {
+                                        if ($sub_action_data == "distributor")
+										{
 
                                             if (count($headerdata) != 6 && trim($headerdata["A"]) != "Month" || (trim($headerdata["B"]) != "Distributor Code") || (trim($headerdata["C"]) != "Distributor Name") || trim($headerdata["D"]) != "Product SKU Code" || trim($headerdata["E"]) != "Product SKU Name" || trim($headerdata["F"]) != "Quantity(Kg/Ltr)") {
 
@@ -4666,7 +4677,7 @@ class Ishop extends Front_Controller
                 $target_data = $this->ishop_model->add_target_data($_POST["val"],$user_id,null,$country_id,null,'excel');
             }
             elseif($_POST["dirname"] == "budget"){
-                $budget_data = $this->ishop_model->add_budget_data($_POST["val"]);
+                $budget_data = $this->ishop_model->add_budget_data($_POST["val"],$user_id,null,$country_id,null,'excel');
             }
             elseif($_POST["dirname"] == "company_current_stock"){
                 

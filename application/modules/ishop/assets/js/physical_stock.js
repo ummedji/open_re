@@ -809,9 +809,13 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                                             data: {val: value, dirname: dir_name}, // Data sent to server, a set of key/value pairs
                                             success: function (data)   // A function to be called if request succeeds
                                             {
-                                                location.reload();
+
                                             }
-                                        });
+                                        }).done(function( data ) {
+                                            location.reload();
+                                            });
+
+
                                         $(this).dialog("close");
                                     },
                                     Decline: function () {

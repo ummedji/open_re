@@ -393,6 +393,7 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
     }
     else
     {
+        $('.check_data button').attr('disabled','disabled');
         $.ajax({
             url: site_url+"ishop/upload_data/primarysales/"+select_customer_type, // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
@@ -550,10 +551,10 @@ $(document).on('submit', '#upload_primarysales_data', function (e) {
                                             data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
                                             success: function(data)   // A function to be called if request succeeds
                                             {
-                                                location.reload();
-                                                console.log(data)
-                                                //file_name = data;
+
                                             }
+                                        }).done(function( data ) {
+                                            location.reload();
                                         });
 
                                         // window.open(site_url+"assets/uploads/Uploads/target/"+file_name,'_blank' );

@@ -2704,7 +2704,13 @@ class Ishop_model extends BF_Model
                 }
             }
         }
-        return $update_array;
+
+        if(in_array(1,$update_array)){
+            return 1;
+        } else {
+            return 0;
+        }
+        //return $update_array;
     }
 
     public function get_sales_id_by_tertiary_sales_product_id($tertiary_sales_product_id)
@@ -3171,9 +3177,9 @@ class Ishop_model extends BF_Model
                         $mfg_date = $sd['batch_mfg_date'];
                     }
 
-                    
+
                     $intrumquantity = isset($sd['intrum_quantity']) ?  $sd['intrum_quantity']:"";
-                    
+
                     $date = '<div class="date_' . $sd["stock_id"] . '"><span class="date" style="display:none">' . $c_date . '</span></div>';
 
                     $intrum_quantity = $product_sku_id . '<div class="int_qty_' . $sd["stock_id"] . '"><span class="int_qty">' . $intrumquantity. '</span></div>';
@@ -3629,7 +3635,7 @@ class Ishop_model extends BF_Model
 
     }
 
-    public function update_schemes_detail($user_id, $country_id)
+    public function update_schemes_detail($user_id, $country_id,$allocation = null)
     {
         $cur_year = $this->input->post("cur_year");
         $customer_id = $this->input->post("fo_retailer_id");
@@ -3637,7 +3643,13 @@ class Ishop_model extends BF_Model
         $scheme_slab = $this->input->post("radio_scheme_slab");
         $region = $this->input->post("region");
         $territory = $this->input->post("territory");
-        $allocation_id = $this->input->post("allocation_id");
+        if(isset($allocation) && !empty($allocation))
+        {
+            $allocation_id = $allocation;
+        }
+        else{
+            $allocation_id = $this->input->post("allocation_id");
+        }
 
         $schemes_list = array(
             'year' => $cur_year . '-01-01',
@@ -3666,6 +3678,10 @@ class Ishop_model extends BF_Model
 
     public function view_schemes_detail($user_id, $country_id, $year, $region = null, $territory = null, $login_user, $retailer = null, $page = null, $web_service = null)
     {
+
+       /* $sql = 'SELECT isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
+        if ($login_user == 8) {*/
+
         $sql ='SELECT SQL_CALC_FOUND_ROWS isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
         if($login_user== 8)
         {
@@ -4170,7 +4186,6 @@ class Ishop_model extends BF_Model
                     $o_dt = $this->input->post("order_date");
                     $f_date = str_replace('/', '-', $o_dt);
                     $order_date = date('Y-m-d', strtotime($f_date));
-                    $order_status = 0;
 
                 } elseif ($this->input->post("radio1") == "retailer") {
 
@@ -4178,7 +4193,6 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $this->input->post("retailer_id");
                     $order_taken_by_id = $user_id;
                     $order_date = date("Y-m-d");
-                    $order_status = 4;
 
                 } elseif ($this->input->post("radio1") == "distributor") {
 
@@ -4186,7 +4200,6 @@ class Ishop_model extends BF_Model
                     $customer_id_to = 0;
                     $order_taken_by_id = $user_id;
                     $order_date = date("Y-m-d");
-                    $order_status = 4;
 
                 }
             }
@@ -4199,7 +4212,7 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $farmer_id;
                     $customer_id_to = $retailer_id;
                     $order_taken_by_id = $user_id;
-                    $order_status = 0;
+
                     $order_date = date("Y-m-d", strtotime($this->input->post("order_date")));
 
                 } elseif ($this->input->post("radio1") == "retailer") {
@@ -4210,7 +4223,7 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $retailer_id;
                     $customer_id_to = $distributor_id;
                     $order_taken_by_id = $user_id;
-                    $order_status = 4;
+
                     $order_date = date("Y-m-d");
 
                 } elseif ($this->input->post("radio1") == "distributor") {
@@ -4221,10 +4234,10 @@ class Ishop_model extends BF_Model
                     $order_taken_by_id = $user_id;
 
                     $order_date = date("Y-m-d");
-                    $order_status = 4;
+
                 }
             }
-
+            $order_status = 4;
             $po_no = NULL;
 
         } else {
@@ -4238,15 +4251,15 @@ class Ishop_model extends BF_Model
                 $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }else{
-                
+
                 if ($this->input->post("radio1") != "distributor") {
                     $distributor_id = (isset($_POST["retailer_distributor_id"])) ? $_POST["retailer_distributor_id"] : 0;
                 }
                 else{
                     $distributor_id = (isset($_POST["distributor_id"])) ? $_POST["distributor_id"] : 0;
                 }
-                
-                
+
+
                 $retailer_id = (isset($_POST["retailer_id"])) ? $_POST["retailer_id"] : 0;
             }
 
@@ -4509,16 +4522,16 @@ class Ishop_model extends BF_Model
 
         }
 
-        $query1 = $subquery1 . " JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id` 
+        $query1 = $subquery1 . " JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id`
 JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id1`
 
 WHERE " . $where1 . " " . $where2 . " " . $where3 . "
 
-`bu`.`role_id` = " . $radio_checked . " 
-AND `bu`.`type` = 'Customer' 
-AND `bu`.`deleted` = '0' 
-AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query . " 
-    
+`bu`.`role_id` = " . $radio_checked . "
+AND `bu`.`type` = 'Customer'
+AND `bu`.`deleted` = '0'
+AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query . "
+
 GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
 
 
@@ -4536,9 +4549,9 @@ GROUP BY `bmpgd`.`political_geography_name` " . $main_query_end;
     public function get_employee_geo_data_for_copy_popup($user_country, $login_customer_type, $default_type, $url_data)
     {
 
-        $query1 = "SELECT bmpgd.political_geo_id, bmpgd.political_geography_name FROM `bf_users` as bu 
+        $query1 = "SELECT bmpgd.political_geo_id, bmpgd.political_geography_name FROM `bf_users` as bu
 
-JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id` 
+JOIN `bf_master_user_contact_details` as bmucd ON `bmucd`.`user_id` = `bu`.`id`
 JOIN `bf_master_political_geography_details` as bmpgd ON `bmpgd`.`political_geo_id` = `bmucd`.`geo_level_id1`
 
 WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `bu`.`deleted` = '0' AND `bu`.`country_id` = '" . $user_country . "' GROUP BY `bmpgd`.`political_geography_name`";
@@ -4808,7 +4821,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $read_array = array('read_status' => 1);
         // $this->db->where('order_id', $orderid);
-        //  $this->db->update('bf_ishop_orders', $read_array); 
+        //  $this->db->update('bf_ishop_orders', $read_array);
 
         $this->db->update('bf_ishop_orders', $read_array, array('order_id' => $orderid));
 
@@ -4827,7 +4840,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $unread_array = array('read_status' => 0);
         //$this->db->where('order_id', $orderid);
-        // $this->db->update('bf_ishop_orders', $unread_array); 
+        // $this->db->update('bf_ishop_orders', $unread_array);
 
         $this->db->update('bf_ishop_orders', $unread_array, array('order_id' => $orderid));
 
@@ -4847,6 +4860,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function get_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null,$local_date=null)
     {
+
+        //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
+
         $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn,bio.created_on ';
 
         $sql .= ' FROM bf_ishop_orders as bio ';
@@ -4923,9 +4939,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         }
 
         $sql .= ' AND bio.country_id = "' . $user_country_id . '" '.$subsql.' ORDER BY bio.created_on DESC ';
-        
+
        // echo $action_data."</br>";
-        
+
       //  echo $sql;
       //  die;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
@@ -4970,7 +4986,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "Un Acknowledge";
+                                $order_status = "OP_Ackno";
                             }
 
                             $order_data = '<input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input id="check_data_' . $od['order_id'] . '" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
@@ -5048,7 +5064,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 } elseif ($od['order_status'] == 3) {
                                     $order_status = "Rejected";
                                 } elseif ($od['order_status'] == 4) {
-                                    $order_status = "Un Acknowledge";
+                                    $order_status = "OP_Ackno";
                                 }
 
                                 $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -5134,7 +5150,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($od['order_status'] == 3) {
                             $order_status = "Rejected";
                         } elseif ($od['order_status'] == 4) {
-                            $order_status = "Un Acknowledge";
+                            $order_status = "OP_Ackno";
                         }
 
 
@@ -5236,7 +5252,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "Un Acknowledge";
+                                $order_status = "OP_Ackno";
                             }
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' ."'".trim($od['PO_no'])."'". ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -5812,7 +5828,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
     /**
-     * @ Function Name        : update_order_detail_data
+     * @ Function Name        : update_order_data
      * @ Function Params    : detail_data
      * @ Function Purpose    : For updating order detailed data
      * @ Function Return    : array
@@ -6146,7 +6162,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $target_array["created_on"] = date("Y-m-d h:i:s");
                     $target_array["created_by_user"] = $user_id;
 
-                    $check_already_data = $this->check_target_data($target_array["product_sku_id"], $target_array["month_data"]."-01", $target_array["customer_id"]);
+
+                    $check_already_data = $this->check_target_data($target_array["product_sku_id"], $target_array["month_data"], $target_array["customer_id"]);
+
+                    //testdata($check_already_data);
 
                     if ($check_already_data == 0) {
                         $id = $this->db->insert('bf_ishop_target', $target_array);
@@ -6256,17 +6275,17 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
        // if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service" || ($excel_data != "" || !empty($excel_data))) {
 
       /*      if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service" || ($excel_data != "" || !empty($excel_data))){
-            
 
-            
+
+
         }
         else{
-            
+
         }
           */
-        
-        
-        
+
+
+
         if(in_array(1,$response_arrray)){
             return 1;
         }
@@ -6413,7 +6432,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql .= 'WHERE 1 ';
         $sql .= ' AND month_data BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
         $sql .= ' AND customer_id =' . $login_user_id . ' ';
-        $target_data = $this->grid->get_result_res($sql);
+
+        //$target_data = $this->grid->get_result_res($sql);
+        $target_data = $this->db->query($sql)->result_array();
+
+        //dumpme($target_data);
 
         $from_date = $data['from_month_data'] . "-01";
         $to_date = $data['to_month_data'] . "-01";
@@ -6437,12 +6460,13 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $final_array = array();
 
-        //  dumpme($target_data);
+        //dumpme($target_data);
 
-        if (isset($target_data['result']) && !empty($target_data['result'])) {
+        if (isset($target_data) && !empty($target_data)) {
             $final_array = array();
-            foreach ($target_data['result'] as $key => $data) {
-                foreach ($month_output as $k => $val) {
+            foreach ($target_data as $key => $data) {
+                foreach ($month_output as $k => $val)
+                {
                     if (!isset($final_array[$data['product_sku_id'] . "-" . $data['product_sku_code'] . "-" . $data['product_sku_name']][$k])) {
                         $final_array[$data['product_sku_id'] . "-" . $data['product_sku_code'] . "-" . $data['product_sku_name']][$k] = "";
                     }
@@ -6458,7 +6482,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         }
         //testdata($final_array);
         if (isset($final_array) && !empty($final_array)) {
-
             return $final_array;
         } else {
             return 0;
@@ -6571,7 +6594,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         }
     }
 
-    public function add_budget_data($budget_data, $user_id, $web_service = null, $country_id = null)
+    public function add_budget_data($budget_data, $user_id, $web_service = null, $country_id = null,$excel)
     {
         // testdata($budget_data);
         if (isset($budget_data) && !empty($budget_data)) {
@@ -6626,7 +6649,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
             //INSERT USING FILE UPLOAD
 
-            foreach ($budget_data as $key => $value) {
+            foreach ($budget_data as $key => $value)
+            {
 
                 $budget_array = array();
 
@@ -7864,7 +7888,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_status = "Rejected";
                         }
                         elseif ($od['order_status'] == 4) {
-                            $order_status = "Un Acknowledge";
+                            $order_status = "OP_Ackno";
                         }
 
                         $order_view['row'][] = array($i, $od['f_u_code'],$od['f_dn'] , $od['PO_no'], $od['order_tracking_no'],$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'],$od['qty_kgl'],$od['amount'],$od['current_stock'],$od['dispatched_quantity'], $od['credit_limit'], $order_status);
@@ -7963,7 +7987,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $order_status = "Rejected";
                             }
                             elseif ($od['order_status'] == 4) {
-                                $order_status = "Un Acknowledge";
+                                $order_status = "OP_Ackno";
                             }
 
                             if($local_date != null){
@@ -8072,7 +8096,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_status = "Rejected";
                     }
                     elseif ($od['order_status'] == 4) {
-                        $order_status = "Un Acknowledge";
+                        $order_status = "OP_Ackno";
                     }
 
                     if ($radio_checked == "farmer")
@@ -8200,7 +8224,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($od['order_status'] == 3) {
                             $order_status = "Rejected";
                         } elseif ($od['order_status'] == 4) {
-                            $order_status = "Un Acknowledge";
+                            $order_status = "OP_Ackno";
                         }
 
 

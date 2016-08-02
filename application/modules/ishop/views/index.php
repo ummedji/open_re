@@ -195,7 +195,7 @@ echo form_open('',$attributes); ?>
                             <label id="upload_file_data-error" class="error" for="upload_file_data"></label>
                             <div class="clearfix"></div>
                         </div>
-                        <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/primary_sales/primarysales_data.xlsx'); ?>","_blank" );' class="btn btn-default">Download Templates</a> </div>
+                        <div class="col-md-8 chech_data"><button type="submit" class="btn btn-default check_data">Check Data</button> <a id="distributor_xl" href="javascript:void(0);" onclick='window.open("<?php echo base_url('assets/uploads/Uploads/primary_sales/primarysales_data.xlsx'); ?>","_blank" );' class="btn btn-default">Download Templates</a> </div>
                     </div>
                 </div>
                 <?php echo form_close(); ?>

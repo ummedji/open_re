@@ -728,12 +728,66 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
                                         url: site_url+"esp/upload_xl_forecast_data", // Url to which the request is send
                                         type: "POST",             // Type of request to be send, called as method
                                         data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
-                                        success: function(data)   // A function to be called if request succeeds
+                                        success: function(data1)   // A function to be called if request succeeds
                                         {
-                                            console.log(data);
-                                             return false;
+                                            var obj = jQuery.parseJSON(data1);
 
-                                            location.reload();
+                                            $.each( obj, function( key1, value1 ) {
+
+                                                if (key1 == "error"){
+
+                                                    $('<div></div>').appendTo('body')
+                                                        .html('<div>' + value1 + '</div>')
+                                                        .dialog({
+                                                            appendTo: "#success_file_popup",
+                                                            modal: true,
+                                                            title: 'Save Data',
+                                                            zIndex: 10000,
+                                                            autoOpen: true,
+                                                            width: 'auto',
+                                                            resizable: true,
+                                                            buttons: {
+                                                                close: function (event, ui) {
+                                                                    $(this).remove();
+                                                                }
+                                                            },
+                                                            close: function (event, ui) {
+                                                                $(this).remove();
+                                                            }
+
+                                                        });
+
+                                                    return false;
+                                                }
+                                                else {
+
+                                                    $('<div></div>').appendTo('body')
+                                                        .html('<div>' + value1 + '</div>')
+                                                        .dialog({
+                                                            appendTo: "#success_file_popup",
+                                                            modal: true,
+                                                            title: '',
+                                                            zIndex: 10000,
+                                                            autoOpen: true,
+                                                            width: 'auto',
+                                                            resizable: true,
+                                                            buttons: {
+                                                                close: function (event, ui) {
+                                                                    $(this).remove();
+                                                                    location.reload();
+                                                                }
+                                                            },
+                                                            close: function (event, ui) {
+                                                                $(this).remove();
+                                                                location.reload();
+                                                            }
+
+                                                        });
+
+                                                    //  location.reload();
+                                                    return false;
+                                                }
+                                            });
 
                                         }
                                     });

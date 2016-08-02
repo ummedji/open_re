@@ -4963,9 +4963,7 @@ class Esp extends Front_Controller
                                     //  $inner_array["probablity"][] = $data_value;
                                     $arr_data[$row]["probablity"][$column] = $data_value;
                                 }
-
                             }
-
 
 
                             /*
@@ -4997,7 +4995,7 @@ class Esp extends Front_Controller
                         //  testdata($final_array);
                     }
 
-                   // testdata($final_array);
+                 //   testdata($final_array);
 
                $original_final_array = array();
 
@@ -5040,6 +5038,7 @@ class Esp extends Front_Controller
                             $original_final_array[$month_data][$pbg]["bussiness_code"] = $bussiness_code;
 
                             $original_final_array[$month_data][$pbg]["pbg_id"] = $pbg_id;
+                            $original_final_array[$month_data][$pbg]["pbg_name"] = $pbg;
 
                             if (isset($forecast_data["forecast"])) {
                                 if ($sku_code != "") {
@@ -5110,7 +5109,7 @@ class Esp extends Front_Controller
     {
 
         if ($webservice_data != null) {
-            $_POST["val"] = json_decode($_POST['val'], true);
+            $_POST["val"][0] = json_decode($_POST['val'][0], true);
 
         }
 
@@ -5120,62 +5119,163 @@ class Esp extends Front_Controller
 
         testdata($_POST["val"][0]);
 
-        foreach ($_POST["val"][0] as $key_data => $forecastdata)
-        {
+        foreach ($_POST["val"][0] as $key_data => $forecast_data) {
             $monthdata = $key_data;
+            foreach($forecast_data as $k => $forecastdata) {
 
-            $user_id = $forecastdata["user_id"];
-            $country_id = $forecastdata["user_country_id"];
-            $bussiness_code = $forecastdata["bussiness_code"];
-            $pbg_id = $forecastdata["pbg_id"];
+               // dumpme($forecastdata);
 
-            $assumption = $forecastdata["assumption"];
-            $probablity = $forecastdata["probablity"];
 
-            $forecast = $forecastdata["forecast"];
+                $user_id = $forecastdata["user_id"];
+                $country_id = $forecastdata["user_country_id"];
+                $bussiness_code = $forecastdata["bussiness_code"];
+                $pbg_id = $forecastdata["pbg_id"];
 
-            //GET CURRENT USER FREEZE STATUS
+                $pbg_name = $forecastdata["pbg_name"];
 
-            $employee_month_product_forecast_data2 = $this->esp_model->get_employee_product_forecast_data($bussiness_code, $pbg_id, $user_id);
 
-            if(!empty($employee_month_product_forecast_data2) || $employee_month_product_forecast_data2 != 0)
-            {
-                $forecast_id = $employee_month_product_forecast_data2[0]['forecast_id'];
+                $assumption = isset($forecastdata["assumption"]) ? $forecastdata["assumption"] : "";
 
-                $forecast_freeze_data2 = $this->esp_model->forecast_freeze_status_history($forecast_id, $monthdata, $user_id);
+                if ($assumption != "") {
 
-                if(($forecast_freeze_data2 != 0 && $forecast_freeze_data2["freeze_status"] == 0) || $forecast_freeze_data2 == 0)
-                {
-                    // UPDATE FORECAST DATA
+                    //GET ASSUMPTION ID FROM NAME
 
-                    //FOR FORECAST DATA UPDATE
+                    $asump_data = array();
 
-                    $update_status = $this->esp_model->update_forecast_data($forecast_id, $user_id);
+                    foreach ($assumption as $ass_key => $assumption_data) {
 
-                    foreach($forecast as $product_id => $f_data) {
-                        $get_product_old_data = $this->esp_model->get_forecast_product_details($bussiness_code, $product_id, $monthdata);
+                        if ($assumption_data != "" || $assumption_data != 0) {
 
-                        if ($get_product_old_data != 0) {
+                            $assumptiondata = $this->esp_model->get_assumption_single_data($assumption_data);
+                            $asump_data[] = $assumptiondata;
+                        }
 
-                            //UPDATE OLD FORECAST DATA
+                    }
 
-                            $forecast_product_id = $get_product_old_data[0]['forecast_product_id'];
-                            $old_forecast_id = $get_product_old_data[0]['forecast_id'];
+                    $assumption = $asump_data;
+                }
 
-                            $forecast_value = $this->esp_model->get_forecast_data($product_id, $monthdata);
-                            $final_forecast_value = $f_data * $forecast_value;
+                $probablity = isset($forecastdata["probablity"]) ? $forecastdata["probablity"] : "";
 
-                            $update_data = $this->esp_model->update_forecast_product_details($forecast_product_id, $f_data, $final_forecast_value);
+                $forecast = isset($forecastdata["forecast"]) ? $forecastdata["forecast"] : "";
 
-                            $history_status_data = 1;
+                //GET CURRENT USER FREEZE STATUS
+                if($bussiness_code != "" || !empty($bussiness_code) || $bussiness_code != NULL){
 
-                            $this->esp_model->insert_forecast_product_details_history($forecast_id, $bussiness_code, $pbg_id, $product_id, $monthdata, $f_data, $final_forecast_value, $history_status_data);
+                $employee_month_product_forecast_data2 = $this->esp_model->get_employee_product_forecast_data($bussiness_code, $pbg_id, $user_id);
+
+                if (!empty($employee_month_product_forecast_data2) || $employee_month_product_forecast_data2 != 0) {
+                    $forecast_id = $employee_month_product_forecast_data2[0]['forecast_id'];
+
+                    $forecast_freeze_data2 = $this->esp_model->forecast_freeze_status_history($forecast_id, $monthdata, $user_id);
+
+                    if (($forecast_freeze_data2 != 0 && $forecast_freeze_data2["freeze_status"] == 0) || $forecast_freeze_data2 == 0) {
+                        // UPDATE FORECAST DATA
+
+                        //FOR FORECAST DATA UPDATE
+
+                        $update_status = $this->esp_model->update_forecast_data($forecast_id, $user_id);
+
+                        if ($forecast != "") {
+                            foreach ($forecast as $product_id => $f_data) {
+                                $get_product_old_data = $this->esp_model->get_forecast_product_details($bussiness_code, $product_id, $monthdata);
+
+                                if ($get_product_old_data != 0) {
+
+                                    //UPDATE OLD FORECAST DATA
+
+                                    $forecast_product_id = $get_product_old_data[0]['forecast_product_id'];
+                                    $old_forecast_id = $get_product_old_data[0]['forecast_id'];
+
+                                    $forecast_value = $this->esp_model->get_forecast_data($product_id, $monthdata);
+                                    $final_forecast_value = $f_data * $forecast_value;
+
+                                    $update_data = $this->esp_model->update_forecast_product_details($forecast_product_id, $f_data, $final_forecast_value);
+
+                                    $history_status_data = 1;
+
+                                    $this->esp_model->insert_forecast_product_details_history($forecast_id, $bussiness_code, $pbg_id, $product_id, $monthdata, $f_data, $final_forecast_value, $history_status_data);
+
+                                } else {
+
+                                    //IF DATA NOT ALREADY ADDED THAN INSERT FORECAST
+
+                                    $forecast_value = $this->esp_model->get_forecast_data($product_id, $monthdata);
+                                    $final_forecast_value = $f_data * $forecast_value;
+
+                                    $this->esp_model->insert_forecast_product_details($forecast_id, $bussiness_code, $product_id, $monthdata, $f_data, $final_forecast_value);
+
+                                    //ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
+
+                                    $history_status_data = 1;
+
+                                    $this->esp_model->insert_forecast_product_details_history($forecast_id, $bussiness_code, $pbg_id, $product_id, $monthdata, $f_data, $final_forecast_value, $history_status_data);
+
+                                }
+                            }
+                        }
+
+
+                        //UPDATE ASSUMPTION AND PROBABLITY DATA
+
+                        $get_assumption_old_data = $this->esp_model->get_forecast_assumption_details($forecast_id, $monthdata);
+
+                        if ($get_assumption_old_data != 0) {
+
+                            //UPDATE ASSUMPTION DATA
+                            if ($forecast != "") {
+                                if ($assumption != "" && $probablity != "") {
+
+                                    $forecast_assumption_id = $get_assumption_old_data[0]["forecast_assumption_id"];
+
+                                    $assumption_data = implode("~", $assumption);
+                                    $probablity_data = implode("~", $probablity);
+
+                                    $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id, $assumption_data, $probablity_data);
+
+                                    $history_update_status = 1;
+
+                                    $this->esp_model->insert_forecast_assumption_data_history($forecast_id, $assumption_data, $probablity_data, $monthdata, $history_update_status);
+
+                                }
+                            }
+
+                        } else {
+                            //INSERT ASSUMPTION DATA
+
+                            if ($forecast != "") {
+                                if ($assumption != "" && $probablity != "") {
+
+                                    $assumption_data = implode("~", $assumption);
+                                    $probablity_data = implode("~", $probablity);
+
+                                    //    $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id, $assumption_data, $probablity_data);
+
+                                    $this->esp_model->insert_forecast_assumption_probablity_data($forecast_id, $assumption_data, $probablity_data, $monthdata);
+
+                                    $history_update_status = 1;
+
+                                    $this->esp_model->insert_forecast_assumption_data_history($forecast_id, $assumption_data, $probablity_data, $monthdata, $history_update_status);
+
+                                }
+                            }
 
                         }
-                        else{
 
-                            //IF DATA NOT ALREADY ADDED THAN INSERT FORECAST
+                    }
 
+                    $updated_pbg_data_array[] = $pbg_name;
+
+                } else {
+
+                    //INSERT FORECAST DATA
+
+                    if ($forecast != "") {
+
+                        $forecast_id = $this->esp_model->insert_forecast_data($pbg_id, $user_id, $bussiness_code, $user_id);
+                    }
+                    if ($forecast != "") {
+                        foreach ($forecast as $product_id => $f_data) {
                             $forecast_value = $this->esp_model->get_forecast_data($product_id, $monthdata);
                             $final_forecast_value = $f_data * $forecast_value;
 
@@ -5184,87 +5284,37 @@ class Esp extends Front_Controller
                             //ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
 
                             $history_status_data = 1;
-
                             $this->esp_model->insert_forecast_product_details_history($forecast_id, $bussiness_code, $pbg_id, $product_id, $monthdata, $f_data, $final_forecast_value, $history_status_data);
 
                         }
                     }
 
+                    //INSERT ASSUMPTION DATA
 
-                    //UPDATE ASSUMPTION AND PROBABLITY DATA
+                    if ($forecast != "") {
+                        if ($assumption != "" && $probablity != "") {
 
-                    $get_assumption_old_data = $this->esp_model->get_forecast_assumption_details($forecast_id, $monthdata);
+                            $assumption_data = implode("~", $assumption);
+                            $probablity_data = implode("~", $probablity);
 
-                    if($get_assumption_old_data != 0){
+                            //    $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id, $assumption_data, $probablity_data);
 
-                        //UPDATE ASSUMPTION DATA
+                            $this->esp_model->insert_forecast_assumption_probablity_data($forecast_id, $assumption_data, $probablity_data, $monthdata);
 
-                        $forecast_assumption_id = $get_assumption_old_data[0]["forecast_assumption_id"];
+                            $history_update_status = 1;
 
-                        $assumption_data = implode("~",$assumption);
-                        $probablity_data = implode("~",$probablity);
+                            $this->esp_model->insert_forecast_assumption_data_history($forecast_id, $assumption_data, $probablity_data, $monthdata, $history_update_status);
 
-                        $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id, $assumption_data, $probablity_data);
+                            $updated_pbg_data_array[] = $pbg_name;
 
-                        $history_update_status = 1;
-
-                        $this->esp_model->insert_forecast_assumption_data_history($forecast_id, $assumption_data, $probablity_data, $monthdata, $history_update_status);
-
-                    }
-                    else
-                    {
-                        //INSERT ASSUMPTION DATA
-
-                        $assumption_data = implode("~",$assumption);
-                        $probablity_data = implode("~",$probablity);
-
-                    //    $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id, $assumption_data, $probablity_data);
-
-                        $this->esp_model->insert_forecast_assumption_probablity_data($forecast_id, $assumption_data, $probablity_data, $monthdata);
-
-                        $history_update_status = 1;
-
-                        $this->esp_model->insert_forecast_assumption_data_history($forecast_id, $assumption_data, $probablity_data, $monthdata, $history_update_status);
-
+                        }
                     }
 
                 }
 
-                $updated_pbg_data_array[] = 1;
-
             }
-            else{
 
-                //INSERT FORECAST DATA
-
-                $forecast_id = $this->esp_model->insert_forecast_data($pbg_id, $user_id, $bussiness_code, $user_id);
-
-                $forecast_value = $this->esp_model->get_forecast_data($product_id, $monthdata);
-                $final_forecast_value = $f_data * $forecast_value;
-
-                $this->esp_model->insert_forecast_product_details($forecast_id, $bussiness_code, $product_id, $monthdata, $f_data, $final_forecast_value);
-
-                //ADD FORECAST PRODUCT DATA DETAIL TO FORECAST PRODUCT HISTORY TABLE
-
-                $history_status_data = 1;
-                $this->esp_model->insert_forecast_product_details_history($forecast_id, $bussiness_code, $pbg_id, $product_id, $monthdata, $f_data, $final_forecast_value, $history_status_data);
-
-                //INSERT ASSUMPTION DATA
-
-                $assumption_data = implode("~",$assumption);
-                $probablity_data = implode("~",$probablity);
-
-                //    $update_status = $this->esp_model->update_forecast_assumption_details($forecast_assumption_id, $assumption_data, $probablity_data);
-
-                $this->esp_model->insert_forecast_assumption_probablity_data($forecast_id, $assumption_data, $probablity_data, $monthdata);
-
-                $history_update_status = 1;
-
-                $this->esp_model->insert_forecast_assumption_data_history($forecast_id, $assumption_data, $probablity_data, $monthdata, $history_update_status);
-
-                $updated_pbg_data_array[] = 1;
-
-            }
+          }
         }
 
         if(!empty($updated_pbg_data_array))

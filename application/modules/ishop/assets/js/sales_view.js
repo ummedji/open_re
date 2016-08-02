@@ -413,7 +413,7 @@ $(document).on('click', 'div.sales_cont .eye_i', function () {
 
  var invoice_no = $("div.invoice_no_"+id+" span.invoice_no").text();
  $("div.invoice_no_"+id).empty();
- $("div.invoice_no_"+id).append('<input type="hidden" name="checked_type" value="'+checked_type+'" /><input type="hidden" name="secondary_sales_detail[]" value="'+id+'" /><input id="invoice_no_'+id+'" type="text" name="invoice_no[]" value="'+invoice_no+'"/>');
+ $("div.invoice_no_"+id).append('<input type="hidden" name="checked_type" value="'+checked_type+'" /><input type="hidden" name="secondary_sales_detail[]" value="'+id+'" /><span class="invoice_no">'+invoice_no+'</span>');
 
 
  //Invoice Date

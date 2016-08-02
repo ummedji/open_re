@@ -677,7 +677,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
 
                     $("select#distributor_distributor_id").empty();
 
-                    $("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
+                    //$("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
                       //  $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -692,7 +692,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
 
                     $("select#distributor_distributor_id").empty();
 
-                    $("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
+                    //$("select#distributor_distributor_id").append('<option value="">Select Distributor Name</option>');
 
                     $.each(resp, function(key, value) {
                        // $('select#distributor_distributor_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -709,7 +709,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "from_data"){
                             $("select#from_customer_data").empty();
 
-                            $("select#from_customer_data").append('<option value="">Select Distributor Name</option>');
+                            //$("select#from_customer_data").append('<option value="">Select Distributor Name</option>');
 
                             $.each(resp, function(key, value) {
                                // $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -722,7 +722,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "to_data"){
                             $("select#to_customer_data").empty();
 
-                            $("select#to_customer_data").append('<option value="">Select Distributor Name</option>');
+                            //$("select#to_customer_data").append('<option value="">Select Distributor Name</option>');
 
                             $.each(resp, function(key, value) {
                              //   $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -740,7 +740,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
 
                     $("select#retailer_id").empty();
 
-                    $("select#retailer_id").append('<option value="">Select Retailer Name</option>');
+                   // $("select#retailer_id").append('<option value="">Select Retailer Name</option>');
 
                     $.each(resp, function(key, value) {
                       //  $('select#retailer_id').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -758,7 +758,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "from_data"){
                             $("select#from_customer_data").empty();
 
-                            $("select#from_customer_data").append('<option value="">Select Retailer Name</option>');
+                            //$("select#from_customer_data").append('<option value="">Select Retailer Name</option>');
 
                             $.each(resp, function(key, value) {
                               //  $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -771,7 +771,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "to_data"){
                             $("select#to_customer_data").empty();
 
-                            $("select#to_customer_data").append('<option value="">Select Retailer Name</option>');
+                            //$("select#to_customer_data").append('<option value="">Select Retailer Name</option>');
 
                             $.each(resp, function(key, value) {
                              //   $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -987,9 +987,12 @@ $(document).on('submit', '#upload_target_data', function (e) {
                                             data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
                                             success: function(data)   // A function to be called if request succeeds
                                             {
-                                                location.reload();
-
+                                                return false;
                                             }
+                                        }).done(function( data ) {
+
+                                            return false;
+                                            location.reload();
                                         });
                                         $(this).dialog("close");
                                     },

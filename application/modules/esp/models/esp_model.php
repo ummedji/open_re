@@ -1254,6 +1254,20 @@ class Esp_model extends BF_Model
         }
         
     }
+
+    public function get_assumption_single_data($assumption_data)
+    {
+        $sql = "SELECT assumption_id from bf_master_assumptions WHERE assumption_name = '".$assumption_data."'";
+
+        $master_assumption_data = $this->db->query($sql)->result_array();
+
+        if(isset($master_assumption_data) && !empty($master_assumption_data)) {
+            return $master_assumption_data[0]["assumption_id"];
+        } else{
+            return 0;
+        }
+
+    }
     
 	public function get_budget_data($product_sku_id,$month_data){
         

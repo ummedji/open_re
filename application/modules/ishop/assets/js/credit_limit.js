@@ -287,8 +287,10 @@ $(document).on('submit', '#upload_credit_limit_data', function (e) {
                                             data: {val: value, dirname: dir_name}, // Data sent to server, a set of key/value pairs
                                             success: function (data)   // A function to be called if request succeeds
                                             {
-                                                location.reload();
+
                                             }
+                                        }).done(function( data ) {
+                                            location.reload();
                                         });
 
                                         // window.open(site_url+"assets/uploads/Uploads/target/"+file_name,'_blank' );

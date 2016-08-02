@@ -65,8 +65,7 @@ echo form_open('',$attributes);
                         <div class="col-md-4 col-sm-4 tp_form">
                             <div class="form-group">
                                 <label>Geo L3<span style="color: red">*</span></label>
-                                <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="distributor_geo_level_1_data" data-live-search="true">
-                                    <option value="">Select Geo Level</option>
+                                <select class="selectpicker" class="distributor_geo_level_1_data" id="distributor_geo_level_1_data" name="distributor_geo_level_1_data" data-live-search="true" title="Select Geo Level">
                                     <?php
                                     if(isset($geo_level_data) && !empty($geo_level_data))
                                     {
@@ -161,8 +160,7 @@ echo form_open('',$attributes);
                         <div class="form-group">
                             <label>Product Sku Name<span style="color: red">*</span></label>
                             <div class="inln_fld">
-                                <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true">
-                                    <option value="">Product Name</option>
+                                <select class="selectpicker" id="prod_sku" name="prod_sku" data-live-search="true" title="Product Name">
                                     <?php
                                     if(isset($product_sku) && !empty($product_sku))
                                     {
@@ -291,8 +289,7 @@ if (!$this->input->is_ajax_request()) {
                         <div class="col-md-6 col-sm-6 tp_form radio_pr">
                             <div class="form-group" id="geo_data">
                                 <label>Geo Level</label>
-                                <select class="selectpicker" name="from_popup_geo_data" id="from_popup_geo_data">
-                                    <option value="">Select Geo Level</option>
+                                <select class="selectpicker" name="from_popup_geo_data" id="from_popup_geo_data" title="Select Geo Level">
                                     <?php
                                     if(isset($geo_level_data) && !empty($geo_level_data))
                                     {
@@ -308,8 +305,7 @@ if (!$this->input->is_ajax_request()) {
                             </div>
                             <div class="form-group" id="from_customer_data">
                                 <label>Customer Data</label>
-                                <select class="selectpicker" name="from_customer_data" id="from_customer_data">
-                                    <option value="">Select Customer</option>
+                                <select class="selectpicker" name="from_customer_data" id="from_customer_data" title="Select Customer">
                                 </select>
                             </div>
                             <div class="form-group" id="year_data">
@@ -345,8 +341,7 @@ if (!$this->input->is_ajax_request()) {
                         <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group" id="geo_data">
                                 <label>Geo Level</label>
-                                <select class="selectpicker" name="to_popup_geo_data" id="to_popup_geo_data">
-                                    <option value="">Select Geo Level</option>
+                                <select class="selectpicker" name="to_popup_geo_data" id="to_popup_geo_data" title="Select Geo Level">
                                     <?php
                                     if(isset($geo_level_data) && !empty($geo_level_data))
                                     {
@@ -362,12 +357,12 @@ if (!$this->input->is_ajax_request()) {
                             </div>
                             <div class="form-group" id="to_customer_data">
                                 <label>Customer Data</label>
-                                <select multiple class="selectpicker" name="to_customer_data[]" id="to_customer_data">
-                                    <option value="">Select Distributor</option>
+                                <select multiple class="selectpicker" name="to_customer_data[]" id="to_customer_data" title="Select Distributor">
+
                                 </select>
                             </div>
                             <div class="form-group" id="year_data">
-                                <label>Selecte Year</label>
+                                <label>Select Year</label>
                                 <input type="text" name="to_year_data"  class="form-control" id="to_copy_popup_datepicker"  />
                             </div>
                             <div class="clearfix"></div>

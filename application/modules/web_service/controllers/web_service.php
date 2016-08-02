@@ -1678,9 +1678,12 @@ class Web_service extends Front_Controller
                 $id = $this->ishop_model->delete_budget_detail($id);
             } elseif ($mode == "target") {
                 $id = $this->ishop_model->delete_target_detail($id);
-            } elseif ($mode == "ishop_sales") {
-                $id = $this->ishop_model->delete_ishop_sales_detail($id, $checked_type);
-            } elseif ($mode == "ishop_sales_product") {
+            } elseif ($mode == "ishop_sales")
+            {
+
+                    $id = $this->ishop_model->delete_ishop_sales_detail($id, $checked_type);
+            } elseif ($mode == "ishop_sales_product")
+            {
                 $id = $this->ishop_model->delete_ishop_sales_product_detail($id, $checked_type);
             } elseif ($mode == "current_stock") {
 
@@ -1853,14 +1856,22 @@ class Web_service extends Front_Controller
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
 
-        if (isset($user_id)) {
-            $id = $this->ishop_model->add_schemes_detail($user_id, $country_id);
+        if (isset($user_id) && isset($country_id)) {
+            $allocation_id = $this->ishop_model->check_schemes_detail($user_id,$country_id);
+            if(isset($allocation_id) && !empty($allocation_id))
+            {
+                $id = $this->ishop_model->update_schemes_detail($user_id, $country_id,$allocation_id['allocation_id']);
+            }
+            else{
+                $id = $this->ishop_model->add_schemes_detail($user_id, $country_id);
+            }
+
             if ($id) {
                 $result['status'] = true;
                 $result['message'] = 'Saved Successfully.';
             } else {
                 $result['status'] = false;
-                $result['message'] = 'Fail';
+                $result['message'] = 'Data Not Inserted';
             }
         } else {
             $result['status'] = false;
@@ -1991,7 +2002,7 @@ class Web_service extends Front_Controller
                 $result['message'] = 'Updated Successfully.';
             } else {
                 $result['status'] = false;
-                $result['message'] = 'Fail';
+                $result['message'] = 'Data Not Updated';
             }
         } else {
             $result['status'] = false;
@@ -2795,6 +2806,64 @@ class Web_service extends Front_Controller
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";
         }
+        $this->do_json($result);
+    }
+
+    public function upload_esp_forecast_xl_data(){
+
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $bussiness_code = $this->input->get_post('bussiness_code');
+
+        if($user_id != "" && $country_id != "" && $bussiness_code != ""){
+
+            $data = array("user_id" => $user_id,
+                "country_id" => $country_id,
+                "bussiness_code" => $bussiness_code
+            );
+
+            $upload_forecast_xl_data = modules::run('esp/esp/upload_forecast_data', $_POST, $_FILES);
+
+            if(!empty($upload_forecast_xl_data)){
+
+                $result['status'] = true;
+                $result['message'] = "successfull";
+                $result['data'] = $upload_forecast_xl_data;
+
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = "No data found.";
+            }
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+    public function add_esp_forecast_xl_data(){
+
+        $file_data = $this->input->get_post('val');
+
+        if($file_data != "") {
+            $data = array("val" => $file_data);
+
+            $add_budget_xl_data = modules::run('esp/esp/upload_xl_forecast_data', $data);
+
+            //testdata($add_budget_xl_data);
+
+            $result['status'] = true;
+            $result['message'] = "Upload Successfull.";
+
+        }
+        else{
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
         $this->do_json($result);
     }
 
