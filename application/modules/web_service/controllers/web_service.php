@@ -4971,6 +4971,8 @@ class Web_service extends Front_Controller
 
                 if ($check_month_data_locked != 1) {
 
+                    testdata($data);
+
                     $self_lock_data = modules::run('esp/esp/get_self_budget_lock_status', $data);
 
                     testdata($self_lock_data);
