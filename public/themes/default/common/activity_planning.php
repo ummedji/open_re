@@ -319,8 +319,7 @@
                     </div>
 
 
-                    <?php if (isset($activity_planning['key_farmer']) && !empty($activity_planning['key_farmer'])) {
-                        ?>
+                    <?php if (isset($activity_planning['key_farmer']) && !empty($activity_planning['key_farmer'])) { ?>
                         <div class="default_box_white">
                             <div class="col-md-12 plng_title"><h5>Key Farmer Details</h5></div>
                             <div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">
@@ -397,9 +396,86 @@
                             </div>
                             <div class="clearfix"></div>
                         </div>
-                        <?php
-                    }
-                    ?>
+                    <?php } ?>
+
+                    <?php if (isset($activity_planning['key_retailer']) && !empty($activity_planning['key_retailer'])) { ?>
+                        <div class="default_box_white">
+                            <div class="col-md-12 plng_title"><h5>Key Retailer Details</h5></div>
+                            <div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
+                                            <label>Key Retailer<span style="color: red">*</span></label>
+                                            <select class="selectpicker" name="farmer_id" id="farmer_id"
+                                                    data-live-search="true">
+                                                <option value="">Select Farmer</option>
+                                                <?php
+                                                foreach ($key_retailer as $K => $vkr) {
+                                                    ?>
+                                                    <option value="<?php echo $vkr['id']; ?>"
+                                                            attr-name="<?php echo $vkr['display_name']; ?>"><?php echo $vkf['display_name']; ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 corp_text mrg_top_30">
+                                        <div class="form-group frm_details text-center">
+                                            <label>Mobile No.<span style="color: red">*</span></label>
+                                            <input type="text" class="form-control" name="farmer_no" id="farmer_no"
+                                                   placeholder="">
+
+                                            <div class="plus_btn"><a href="javascript: void(0);" id="add_retailer"><i
+                                                        class="fa fa-plus" aria-hidden="true"></i></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-md-offset-2">
+                                <div id="no-more-tables">
+                                    <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                                        <thead class="cf">
+                                        <tr>
+                                            <th style="padding: 4px 0;">Key Retailer<span class="rts_bordet"></span></th>
+                                            <th style="padding: 4px 0;">Mobile No.<span class="rts_bordet"></th>
+                                            <th style="padding: 4px 0;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="farmer_detail" class="tbl_body_row">
+                                        <?php if (isset($activity_planning['key_retailer']) && !empty($activity_planning['key_farmer'])) {
+                                            foreach ($activity_planning['key_retailer'] as $kf => $vf) {
+                                                ?>
+                                                <tr>
+                                                    <td data-title='Key Retailer'>
+                                                        <input class='input_remove_border' type='text'
+                                                               value='<?php echo $vf['display_name'] ?> ' readonly/>
+                                                        <input type='hidden' name='farmers[]'
+                                                               value='<?php echo $vf['customer_id'] ?>'/>
+                                                    </td>
+                                                    <td data-title='Mobile No.'>
+                                                        <input type='text' class='input_remove_border'
+                                                               name='farmer_num[]'
+                                                               value='<?php echo $vf['mobile_no'] ?>' readonly/>
+                                                    </td>
+                                                    <td data-title='Action' class='numeric'>
+                                                        <div class='delete_i farmer_detail' attr-dele=''><a href='#'><i
+                                                                    class='fa fa-trash-o' aria-hidden='true'></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    <?php } ?>
 
 
                     <!--att_count  Detail-->
@@ -545,7 +621,7 @@
                                 <div class="col-md-6 corp_text mrg_top_30">
                                     <div class="form-group frm_details text-center">
                                         <label>Qty.</label>
-                                        <input type="text" class="form-control" name="qty" id="qty" placeholder="">
+                                        <input type="text" class="form-control allownumericwithdecimal" name="qty" id="qty" placeholder="">
 
                                         <div class="plus_btn"><a href="javascript: void(0);" id="add_product"><i
                                                     class="fa fa-plus" aria-hidden="true"></i></a></div>
@@ -633,7 +709,7 @@
                                         </div>
                                         <div class="form-group corp_text text-center">
                                             <label>Qty.</label>
-                                            <input type="text" class="form-control" name="qty_material"
+                                            <input type="text" class="form-control allownumericwithdecimal" name="qty_material"
                                                    id="qty_material" placeholder="" style="width: 80px;">
 
                                             <div class="plus_btn" style="margin-top: -3px;"><a
@@ -663,7 +739,7 @@
                                         </div>
                                         <div class="form-group corp_text text-center">
                                             <label>Qty.</label>
-                                            <input type="text" class="form-control" name="m_qty" id="m_qty"
+                                            <input type="text" class="form-control allownumericwithdecimal" name="m_qty" id="m_qty"
                                                    placeholder="" style="width: 80px;">
 
                                             <div class="plus_btn" style="margin-top: -3px;"><a

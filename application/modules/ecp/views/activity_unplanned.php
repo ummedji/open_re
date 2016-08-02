@@ -129,34 +129,19 @@ echo form_open('',$attributes);
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Corp<span style="color: red">*</span></label>
-                                            <select id="crop_id" name="crop_id" onchange="selectCrop(this);">
-                                                <option value="">Select Corp</option>
-
-                                                <!--    <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
-                                                        <option value="" selected="selected">Select Corp</option>-->
-
+                                            <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple>
+                                                <option value="">Select Crop</option>
                                                 <?php
-                                                if(isset($crop_details) && !empty($crop_details)) {
+                                                if (isset($crop_details) && !empty($crop_details)) {
                                                     foreach ($crop_details as $key => $val) {
                                                         ?>
-                                                        <option value="<?php echo $val['crop_country_id']; ?>" selected="selected"><?php echo $val['crop_name']; ?></option>
+                                                        <option value="<?php echo $val['crop_country_id']; ?>" ><?php echo $val['crop_name']; ?></option>
                                                         <?php
                                                     }
                                                 }
                                                 ?>
                                             </select>
-                                            <!--    <div class="js-example-tags-container"></div>-->
-
-                                            <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
-                                            <!--<div class="js-example-tags-container"></div>-->
-
                                         </div>
-                                    </div>
-                                    <div class="col-md-7 selected_data" >
-
-                                        <ul>
-
-                                        </ul>
                                     </div>
                                 </div>
                             </div>
@@ -169,23 +154,20 @@ echo form_open('',$attributes);
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Products<span style="color: red">*</span></label>
-                                            <select id="product_sku_id" name="product_sku_id" onchange="selectProducts(this);">
+                                            <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple>
                                                 <option value="">Select Product</option>
                                                 <?php
-                                                if(isset($product_sku) && !empty($product_sku)) {
+                                                if (isset($product_sku) && !empty($product_sku)) {
                                                     foreach ($product_sku as $key => $val) {
                                                         ?>
-                                                        <option value="<?php echo $val['product_sku_country_id']; ?>"><?php echo $val['product_sku_name']; ?></option>
+                                                        <option
+                                                            value="<?php echo $val['product_sku_country_id']; ?>"><?php echo $val['product_sku_name']; ?></option>
                                                         <?php
                                                     }
                                                 }
                                                 ?>
                                             </select>
-                                            <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <ul></ul>
                                     </div>
                                 </div>
                             </div>
@@ -198,43 +180,14 @@ echo form_open('',$attributes);
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Diseases<span style="color: red">*</span></label>
-                                            <select id="diseases_id" name="diseases_id" onchange="selectDiseases(this);">
+                                            <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple>
                                                 <option value="">Select Diseases</option>
                                                 <?php
-                                                if(isset($diseases_details) && !empty($diseases_details)) {
+                                                if (isset($diseases_details) && !empty($diseases_details)) {
                                                     foreach ($diseases_details as $key => $val) {
                                                         ?>
-                                                        <option value="<?php echo $val['disease_country_id']; ?>"><?php echo $val['disease_name']; ?></option>
-                                                        <?php
-                                                    }
-                                                }
-                                                ?>
-                                            </select>
-                                            <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-7">
-                                        <ul></ul>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="clearfix"></div>
-                        </div>
-
-                        <div class="default_box_white">
-                            <div class="col-md-12 plng_title"><h5>Key Farmer Details</h5></div>
-                            <div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
-                                            <label>Key Farmer<span style="color: red">*</span></label>
-                                            <select class="selectpicker" name="farmer_id" id="farmer_id" data-live-search="true">
-                                                <option value="">Select Farmer</option>
-                                                <?php
-                                                if(isset($key_farmer) && !empty($key_farmer)) {
-                                                    foreach ($key_farmer as $key => $val) {
-                                                        ?>
-                                                        <option value="<?php echo $val['id']; ?>" attr-name="<?php echo $val['display_name']; ?>"><?php echo $val['display_name']; ?></option>
+                                                        <option
+                                                            value="<?php echo $val['disease_country_id']; ?>"><?php echo $val['disease_name']; ?></option>
                                                         <?php
                                                     }
                                                 }
@@ -242,38 +195,12 @@ echo form_open('',$attributes);
                                             </select>
                                         </div>
                                     </div>
-                                    <div class="col-md-6 corp_text mrg_top_30">
-                                        <div class="form-group frm_details text-center">
-                                            <label>Mobile No.<span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" name="farmer_no" id="farmer_no" placeholder="">
-                                            <div class="plus_btn" ><a  href="javascript: void(0);" id="add_farmer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 col-md-offset-2">
-                                <div id="no-more-tables">
-                                    <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                                        <thead class="cf">
-                                        <tr>
-                                            <th style="padding: 4px 0;">
-                                                Key Farmer
-                                                <span class="rts_bordet"></span>
-                                            </th>
-                                            <th style="padding: 4px 0;">Mobile No.<span class="rts_bordet"></th>
-                                            <th style="padding: 4px 0;">Action</th>
-                                        </tr>
-                                        </thead>
-                                        <tbody id="farmer_detail" class="tbl_body_row">
-                                        </tbody>
-                                    </table>
-                                    <div class="clearfix"></div>
                                 </div>
                             </div>
                             <div class="clearfix"></div>
-
                         </div>
 
+                        <div class="customer_details"></div>
 
                         <div class="default_box_white">
                             <div class="col-md-12 plng_title"><h5>Customer</h5></div>

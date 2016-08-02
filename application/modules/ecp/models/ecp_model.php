@@ -1820,7 +1820,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             if($referenc == 'follow_up')
             {
                 $reference_type = '1';
-                $submit_status = '1';
+                $submit_status = '0';
+                $status = '0';
             }
             else{
                 $reference_type = '0';

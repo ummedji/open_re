@@ -1265,20 +1265,30 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
-	public function getApprovalActivityByMonth($cur_month = '')
+	public function getApprovalActivityByMonth($curr_month = '')
 		{
 			$user = $this->auth->user();
 			$child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
-			/*testdata($child_user_data);*/
+			if(!empty($_POST['months'] )){
+				$cur_month = $_POST['months'];
+			}
+			else{
+				$cur_month = $curr_month;
+			}
+
 			$page = isset($_POST['page']) ?  $_POST['page'] : '';
 			$cal_data = $this->ecp_model->getApprovalActivityDetailByMonth($cur_month,$child_user_data['level_users'],$user->id,$user->country_id,$user->local_date,$page);
-
-			if($cur_month =='')
+			//testdata($cal_data);
+			if(!empty($_POST['months']))
 			{
+
 				Template::set('td', $cal_data['count']);
 				Template::set('pagination', (isset($cal_data['pagination']) && !empty($cal_data['pagination'])) ? $cal_data['pagination'] : '' );
 				Template::set('table', $cal_data);
+				Template::set('child_user_data', $child_user_data);
+				Template::set('current_user', $user);
 				Template::set_view('ecp/activity_approval');
+				Template::render();
 
 			}
 			else{
@@ -1336,8 +1346,20 @@ class Ecp extends Front_Controller
 
 		$materials = $this->ecp_model->get_materials_by_country_id($user->country_id);
 		$global_head_user = array();
+		$global_jr_user = array();
 
-		$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+		/*$employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);*/
+
+		$sr_employee_visit = array();
+		$jr_employee_visit = array();
+
+		$sr_employee_visit = $this->ecp_model->get_employee_for_loginuser($user->id,$global_head_user);
+		$jr_employee_visit = $this->ecp_model->get_jr_employee_for_loginuser($user->id,$global_jr_user);
+
+		//dumpme($jr_employee_visit);
+
+		$employee_visit = array_merge($sr_employee_visit,$jr_employee_visit) ;
+
 		Template::set('geo_level_2', $geo_level_2);
 		Template::set('geo_level_3', $geo_level_3);
 		Template::set('geo_level_4', $geo_level_4);
@@ -1355,7 +1377,6 @@ class Ecp extends Front_Controller
 		Template::render();
 
 	}
-
 
 	public function activity_unplanned()
 	{
@@ -1384,7 +1405,6 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
-
 	public function add_activity_unplanned_details()
 	{
 		$user = $this->auth->user();
@@ -1393,5 +1413,11 @@ class Ecp extends Front_Controller
 		die;
 	}
 
+	public function activity_execution()
+	{
+
+		Template::set_view('ecp/activity_execution');
+		Template::render();
+	}
 
 }

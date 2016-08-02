@@ -3002,7 +3002,7 @@ class Ishop_model extends BF_Model
             $batch = explode(',', $this->input->get_post("batch"));
 
             $b_exp_date = explode(',', $this->input->get_post("batch_exp_date"));
-            
+
             $b_mfg_date = explode(',', $this->input->get_post("batch_mfg_date"));
 
 

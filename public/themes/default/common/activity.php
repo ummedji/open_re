@@ -159,45 +159,28 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Corp<span style="color: red">*</span></label>
-                                        <select id="crop_id" name="crop_id" onchange="selectCrop(this);">
+                                        <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple>
                                             <option value="">Select Corp</option>
-
-                                            <!--    <select id="crop_id" onchange="selectCrop(this);" class="form-control js-example-tags" multiple="multiple">
-                                                    <option value="" selected="selected">Select Corp</option>-->
-
                                             <?php
-                                            if(isset($crop_details) && !empty($crop_details)) {
-                                                foreach ($crop_details as $key => $val) {
+                                            if (isset($crop_details) && !empty($crop_details)) {
+                                                $activity_crop_details = array();
+                                                foreach ($activity['crop'] as $ak => $adl) {
+                                                    $activity_crop_details[] = $adl['crop_id'];
+                                                }
+
+                                                foreach ($crop_details as $k => $cd) {
                                                     ?>
-                                                    <option value="<?php echo $val['crop_country_id']; ?>" selected="selected"><?php echo $val['crop_name']; ?></option>
+                                                    <option <?php if (in_array($cd['crop_country_id'], $activity_crop_details)) {
+                                                        echo "selected";
+                                                    } ?> value="<?php echo $cd['crop_country_id'] ?>">
+                                                        <?php echo $cd['crop_name'] ?>
+                                                    </option>
                                                     <?php
                                                 }
                                             }
                                             ?>
                                         </select>
-                                        <!--    <div class="js-example-tags-container"></div>-->
-
-                                        <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
-                                        <!--<div class="js-example-tags-container"></div>-->
-
                                     </div>
-                                </div>
-                                <div class="col-md-7 selected_data" >
-                                    <ul>
-                                        <?php if( isset($activity['crop']) && !empty($activity['crop']))
-                                        {
-                                            foreach($activity['crop'] as $K => $vapc)
-                                            {
-                                                ?>
-                                                <li onclick="this.parentNode.removeChild(this);">
-                                                    <input type="hidden" name="crop[]" value="<?php echo $vapc['crop_id']?>">
-                                                    <?php echo $vapc['crop_name']?>
-                                                </li>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -210,37 +193,28 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Products<span style="color: red">*</span></label>
-                                        <select id="product_sku_id" name="product_sku_id" onchange="selectProducts(this);">
+                                        <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple>
                                             <option value="">Select Product</option>
                                             <?php
-                                            if(isset($product_sku) && !empty($product_sku)) {
-                                                foreach ($product_sku as $key => $val) {
+                                            if (isset($product_sku) && !empty($product_sku)) {
+                                                $activity_product_sku = array();
+                                                foreach ($activity['products'] as $ak => $adl) {
+                                                    $activity_product_sku[] = $adl['product_sku_id'];
+                                                }
+
+                                                foreach ($product_sku as $k => $ps) {
                                                     ?>
-                                                    <option value="<?php echo $val['product_sku_country_id']; ?>"><?php echo $val['product_sku_name']; ?></option>
+                                                    <option <?php if (in_array($ps['product_sku_country_id'], $activity_product_sku)) {
+                                                        echo "selected";
+                                                    } ?> value="<?php echo $ps['product_sku_country_id'] ?>">
+                                                        <?php echo $ps['product_sku_name'] ?>
+                                                    </option>
                                                     <?php
                                                 }
                                             }
                                             ?>
                                         </select>
-                                        <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                     </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <ul>
-                                        <?php if( isset($activity['products']) && !empty($activity['products']))
-                                        {
-                                            foreach($activity['products'] as $K => $vappsi)
-                                            {
-                                                ?>
-                                                <li onclick="this.parentNode.removeChild(this);">
-                                                    <input type="hidden" name="crop[]" value="<?php echo $vappsi['product_sku_id']?>">
-                                                    <?php echo $vappsi['product_sku_name']?>
-                                                </li>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
@@ -253,43 +227,36 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Diseases<span style="color: red">*</span></label>
-                                        <select id="diseases_id" name="diseases_id" onchange="selectDiseases(this);">
+                                        <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple>
                                             <option value="">Select Diseases</option>
+
                                             <?php
-                                            if(isset($diseases_details) && !empty($diseases_details)) {
-                                                foreach ($diseases_details as $key => $val) {
+                                            if (isset($diseases_details) && !empty($diseases_details)) {
+                                                $activity_diseases_details = array();
+                                                foreach ($activity['diseases'] as $ak => $add) {
+                                                    $activity_diseases_details[] = $add['diseases_id'];
+                                                }
+
+                                                foreach ($diseases_details as $k => $dd) {
                                                     ?>
-                                                    <option value="<?php echo $val['disease_country_id']; ?>"><?php echo $val['disease_name']; ?></option>
+                                                    <option <?php if (in_array($dd['disease_country_id'], $activity_diseases_details)) {
+                                                        echo "selected";
+                                                    } ?> value="<?php echo $dd['disease_country_id'] ?>">
+                                                        <?php echo $dd['disease_name'] ?>
+                                                    </option>
                                                     <?php
                                                 }
                                             }
                                             ?>
                                         </select>
-                                        <div class="plus_btn"><a href="#"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                     </div>
-                                </div>
-                                <div class="col-md-7">
-                                    <ul>
-                                        <?php if( isset($activity['diseases']) && !empty($activity['diseases']))
-                                        {
-                                            foreach($activity['diseases'] as $K => $vappsi)
-                                            {
-                                                ?>
-                                                <li onclick="this.parentNode.removeChild(this);">
-                                                    <input type="hidden" name="crop[]" value="<?php echo $vappsi['diseases_id']?>">
-                                                    <?php echo $vappsi['disease_name']?>
-                                                </li>
-                                                <?php
-                                            }
-                                        }
-                                        ?>
-                                    </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="clearfix"></div>
                     </div>
 
+             <?php if(isset($activity['key_farmer']) && !empty($activity['key_farmer'])) { ?>
                     <div class="default_box_white">
                         <div class="col-md-12 plng_title"><h5>Key Farmer Details</h5></div>
                         <div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">
@@ -314,7 +281,7 @@
                                 <div class="col-md-6 corp_text mrg_top_30">
                                     <div class="form-group frm_details text-center">
                                         <label>Mobile No.</label>
-                                        <input type="text" class="form-control" name="farmer_no" id="farmer_no" placeholder="">
+                                        <input type="text" class="form-control" name="farmer_no" id="farmer_no" placeholder="" maxlength="15">
                                         <div class="plus_btn" ><a  href="javascript: void(0);" id="add_farmer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                     </div>
                                 </div>
@@ -360,6 +327,86 @@
                         </div>
                         <div class="clearfix"></div>
                     </div>
+            <?php  } ?>
+
+                    <?php if (isset($activity['key_retailer']) && !empty($activity['key_retailer'])) { ?>
+                        <div class="default_box_white">
+                            <div class="col-md-12 plng_title"><h5>Key Retailer Details</h5></div>
+                            <div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
+                                            <label>Key Retailer<span style="color: red">*</span></label>
+                                            <select class="selectpicker" name="farmer_id" id="farmer_id"
+                                                    data-live-search="true">
+                                                <option value="">Select Farmer</option>
+                                                <?php
+                                                foreach ($key_retailer as $K => $vkr) {
+                                                    ?>
+                                                    <option value="<?php echo $vkr['id']; ?>"
+                                                            attr-name="<?php echo $vkr['display_name']; ?>"><?php echo $vkf['display_name']; ?></option>
+                                                    <?php
+                                                }
+                                                ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 corp_text mrg_top_30">
+                                        <div class="form-group frm_details text-center">
+                                            <label>Mobile No.<span style="color: red">*</span></label>
+                                            <input type="text" class="form-control" name="farmer_no" id="farmer_no"
+                                                   placeholder="">
+
+                                            <div class="plus_btn"><a href="javascript: void(0);" id="add_retailer"><i
+                                                        class="fa fa-plus" aria-hidden="true"></i></a></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 col-md-offset-2">
+                                <div id="no-more-tables">
+                                    <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                                        <thead class="cf">
+                                        <tr>
+                                            <th style="padding: 4px 0;">Key Retailer<span class="rts_bordet"></span></th>
+                                            <th style="padding: 4px 0;">Mobile No.<span class="rts_bordet"></th>
+                                            <th style="padding: 4px 0;">Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="farmer_detail" class="tbl_body_row">
+                                        <?php if (isset($activity['key_retailer']) && !empty($activity['key_farmer'])) {
+                                            foreach ($activity['key_retailer'] as $kf => $vf) {
+                                                ?>
+                                                <tr>
+                                                    <td data-title='Key Retailer'>
+                                                        <input class='input_remove_border' type='text'
+                                                               value='<?php echo $vf['display_name'] ?> ' readonly/>
+                                                        <input type='hidden' name='farmers[]'
+                                                               value='<?php echo $vf['customer_id'] ?>'/>
+                                                    </td>
+                                                    <td data-title='Mobile No.'>
+                                                        <input type='text' class='input_remove_border'
+                                                               name='farmer_num[]'
+                                                               value='<?php echo $vf['mobile_no'] ?>' readonly/>
+                                                    </td>
+                                                    <td data-title='Action' class='numeric'>
+                                                        <div class='delete_i farmer_detail' attr-dele=''><a href='#'><i
+                                                                    class='fa fa-trash-o' aria-hidden='true'></i></a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                                <?php
+                                            }
+                                        }
+                                        ?>
+                                        </tbody>
+                                    </table>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                    <?php } ?>
 
                     <!--att_count  Detail-->
                     <?php if(isset($activity['proposed_attandence_count']) && !empty($activity['proposed_attandence_count']))
@@ -386,8 +433,27 @@
                                 <div class="col-md-6">
                                     <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                         <label>Digital Library</label>
-                                        <select class="selectpicker" name="digital_id[]" id="digital_id" data-live-search="true" multiple>
+                                        <select class="selectpicker" name="digital_id[]" id="digital_id"
+                                                data-live-search="true" multiple>
                                             <option value="">Select Digital Library</option>
+                                            <?php
+                                            if (isset($digitalLibrary) && !empty($digitalLibrary)) {
+                                                $activity_digital_library = array();
+                                                foreach ($activity['digital_library'] as $ak => $adl) {
+                                                    $activity_digital_library[] = $adl['digital_library_id'];
+                                                }
+
+                                                foreach ($digitalLibrary as $k => $dL) {
+                                                    ?>
+                                                    <option <?php if (in_array($dL['digital_library_id'], $activity_digital_library)) {
+                                                        echo "selected";
+                                                    } ?> value="<?php echo $dL['digital_library_id'] ?>">
+                                                        <?php echo $dL['library_name'] ?>
+                                                    </option>
+                                                    <?php
+                                                }
+                                            }
+                                            ?>
                                         </select>
                                     </div>
                                 </div>
@@ -474,7 +540,7 @@
                                 <div class="col-md-6 corp_text mrg_top_30">
                                     <div class="form-group frm_details text-center">
                                         <label>Qty.</label>
-                                        <input type="text" class="form-control" name="qty" id="qty" placeholder="">
+                                        <input type="text" class="form-control allownumericwithdecimal" name="qty" id="qty" placeholder="">
                                         <div class="plus_btn"><a href="javascript: void(0);" id="add_product"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                     </div>
                                 </div>
@@ -550,7 +616,7 @@
                                         </div>
                                         <div class="form-group corp_text text-center">
                                             <label>Qty.</label>
-                                            <input type="text" class="form-control" name="qty_material" id="qty_material" placeholder="" style="width: 80px;">
+                                            <input type="text" class="form-control allownumericwithdecimal" name="qty_material" id="qty_material" placeholder="" style="width: 80px;">
                                             <div class="plus_btn"  style="margin-top: -3px;"><a href="javascript: void(0);" id="add_product_material"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
                                     </th>
@@ -573,7 +639,7 @@
                                         </div>
                                         <div class="form-group corp_text text-center">
                                             <label>Qty.</label>
-                                            <input type="text" class="form-control" name="m_qty" id="m_qty" placeholder="" style="width: 80px;">
+                                            <input type="text" class="form-control allownumericwithdecimal" name="m_qty" id="m_qty" placeholder="" style="width: 80px;">
                                             <div class="plus_btn"  style="margin-top: -3px;"><a href="javascript: void(0);" id="add_material"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
                                     </th>

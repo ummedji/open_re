@@ -14,7 +14,7 @@
                             <li class="active"><a href="<?php echo base_url('ecp/activity_planning') ?>">Planning</a>
                             </li>
                             <li><a href="<?php echo base_url('ecp/activity_approval') ?>">Approval</a></li>
-                            <li><a href="<?php echo base_url('ecp/') ?>">Execution</a></li>
+                            <li><a href="<?php echo base_url('ecp/activity_execution') ?>">Execution</a></li>
                             <li><a href="<?php echo base_url('ecp/activity_unplanned') ?>">Unplanned</a></li>
                             <li><a href="<?php echo base_url('ecp/') ?>">View</a></li>
                             <?php
@@ -320,7 +320,7 @@
                                             <div class="col-md-6 corp_text mrg_top_30">
                                                 <div class="form-group frm_details text-center">
                                                     <label>Qty.</label>
-                                                    <input type="text" class="form-control" name="qty" id="qty"
+                                                    <input type="text" class="form-control allownumericwithdecimal" name="qty" id="qty"
                                                            placeholder="">
 
                                                     <div class="plus_btn"><a href="javascript: void(0);"
@@ -386,7 +386,7 @@
                                                     </div>
                                                     <div class="form-group corp_text text-center">
                                                         <label>Qty.</label>
-                                                        <input type="text" class="form-control" name="qty_material"
+                                                        <input type="text" class="form-control allownumericwithdecimal" name="qty_material"
                                                                id="qty_material" placeholder="" style="width: 80px;">
 
                                                         <div class="plus_btn" style="margin-top: -3px;"><a
@@ -417,7 +417,7 @@
                                                     </div>
                                                     <div class="form-group corp_text text-center">
                                                         <label>Qty.</label>
-                                                        <input type="text" class="form-control" name="m_qty" id="m_qty"
+                                                        <input type="text" class="form-control allownumericwithdecimal" name="m_qty" id="m_qty"
                                                                placeholder="" style="width: 80px;">
 
                                                         <div class="plus_btn" style="margin-top: -3px;"><a

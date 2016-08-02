@@ -1,7 +1,7 @@
 <?php $segment2 = $this->uri->segment(2); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>
     <?php $attributes = array('class' => 'activity_approval', 'id' => 'activity_approval','name'=>'activity_approval');
-    echo form_open('',$attributes); ?>
+    echo form_open('ecp/activity_approval',$attributes); ?>
 
     <div class="col-md-12 full-height">
         <div class="row">
@@ -17,7 +17,7 @@
                                         ?>
                                         <li class="active"><a href="<?php echo base_url('ecp/activity_planning')?>">Planning</a></li>
                                         <li><a href="<?php echo base_url('ecp/activity_approval')?>">Approval</a></li>
-                                        <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
+                                        <li><a href="<?php echo base_url('ecp/activity_execution')?>">Execution</a></li>
                                         <li><a href="<?php echo base_url('ecp/activity_unplanned')?>">Unplanned</a></li>
                                         <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
                                         <?php
@@ -39,9 +39,8 @@
                             <div class="form-group">
                                 <label>Month<span style="color: red">*</span></label>
                                 <div class="inln_fld_top text-left">
-                                    <input type="text" class="form-control" name="month" id="month" placeholder="" >
+                                    <input type="text" class="form-control" name="month" id="month" value="<?php echo date('Y-m'); ?>" placeholder="" >
                                     <div class="clearfix"></div>
-                                    <label id="stock_month-error" class="error" for="stock_month"></label>
                                 </div>
                             </div>
                         </div>

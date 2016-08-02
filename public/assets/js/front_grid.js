@@ -96,6 +96,7 @@ function submitForm() {
         case'material_request': val = $("#material_request");break;
         case'retailer_compititor_view': val = $("#retailer_compititor_view");break;
         case'distributor_compititor_view': val = $("#distributor_compititor_view");break;
+        case'activity_approval': val = $("#activity_approval");break;
        /* default  : val = $("#form_ntfdetails");break;*/
     }
 
@@ -104,7 +105,7 @@ function submitForm() {
 
     var data = val.serializeArray();
 
-   // console.log(data);
+    //console.log(val);
    // return false;
     data.push({name: "page", value:pages});
 

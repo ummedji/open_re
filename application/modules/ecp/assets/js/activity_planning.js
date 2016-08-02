@@ -709,6 +709,7 @@ function set_activity_type(activity_type_selected){
         $("#geo").html(geo_1);
 
         farmerDetails();
+
         var att_count ='';
 
         att_count +='<div class="default_box_grey">'+
@@ -728,6 +729,7 @@ function set_activity_type(activity_type_selected){
     else if(activity_type_selected == 'FVP002')
     {
         get_geo_fo_userdata(activity_type_selected);
+
         farmerDetails();
         var geo_2 = '';
         geo_2 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
@@ -886,7 +888,7 @@ function set_activity_type(activity_type_selected){
     else if(activity_type_selected == 'FDP006')
     {
         get_geo_fo_userdata(activity_type_selected);
-        farmerDetails()
+        farmerDetails();
 
         var geo_6 = '';
         geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
@@ -1171,6 +1173,7 @@ $(document).on("change","select#farmer_id",function() {
     get_mobile_number_by_farmer_id(farmer_id);
 
 });
+
 $(document).on("change","select#retailer_id",function() {
 
     var  retailer_id = $('select#retailer_id option:selected').val();
@@ -1258,6 +1261,7 @@ function getActivityCalenderData(iMonth)
     });
 
 }
+
 function getActivityPlanData(iMonth)
 {
     $.ajax({

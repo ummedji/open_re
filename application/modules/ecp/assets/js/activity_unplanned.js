@@ -66,13 +66,13 @@ $(document).ready(function() {
             activity_address:{
                 required: true
             },
-            crop_id:{
+            crop:{
                 required: true
             },
-            product_sku_id:{
+            product_sku:{
                 required: true
             },
-            diseases_id:{
+            diseases:{
                 required: true
             },
             farmer_id:
@@ -92,18 +92,28 @@ $(document).ready(function() {
              required: true
              }*/
         }
+
+
     });
 
     /*Validation Rule*/
 
-    $("#add_farmer").click(function() {
+    $(document).on("click","#add_farmer",function() {
         $('#farmer_id').removeClass('ignore');
         $('#farmer_no').removeClass('ignore');
+
         add_farmer();
 
     });
 
+    $(document).on("click","#add_retailer",function() {
 
+        $('#retailer_id').removeClass('ignore');
+        $('#retailer_no').removeClass('ignore');
+
+        add_retailer();
+
+    });
 
     $("#add_product").click(function() {
         add_product();
@@ -119,6 +129,172 @@ $(document).ready(function() {
 
     $("#add_customer").click(function() {
         add_customer();
+    });
+
+    $(document).on('click', '#check_save', function () {
+        $('#farmer_id').addClass('ignore');
+        $('#farmer_no').addClass('ignore');
+        $('#customer_name').addClass('ignore');
+        $('#customer_no').addClass('ignore');
+
+        var param = $("#activity_unplanned").serializeArray();
+
+        //console.log(param);die;
+        var $valid = $("#activity_unplanned").valid();
+        if(!$valid) {
+            activity_unplanned_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            if($("#farmer_detail").children().length <= 0)
+            {
+                var message = "";
+                message += 'No Data in Key Farmer Details.';
+
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+                return false;
+            }
+            else  if($("#customer_detail").children().length <= 0)
+            {
+                var message = "";
+                message += 'No Data in Customer Details.';
+
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload();
+                        }
+                    });
+                return false;
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: site_url + "ecp/add_activity_unplanned_details",
+                    data: param,
+                    success: function (resp) {
+                        var message = "";
+                        if(resp != 0){
+                            console.log(resp);
+                            $('#activity_planning_id').val(resp);
+                            message += 'Data Inserted successfully.';
+                        }
+                        else{
+
+                            message += 'Data not Inserted.';
+                        }
+                        $('<div></div>').appendTo('body')
+                            .html('<div><b>'+message+'</b></div>')
+                            .dialog({
+                                appendTo: "#success_file_popup",
+                                modal: true,
+                                zIndex: 10000,
+                                autoOpen: true,
+                                width: 'auto',
+                                resizable: true,
+                                close: function (event, ui) {
+                                    $(this).remove();
+
+                                }
+                            });
+                    }
+                });
+            }
+        }
+        return false;
+    });
+
+    $(document).on('click', '#planning_save', function () {
+
+        $('#farmer_id').addClass('ignore');
+        $('#farmer_no').addClass('ignore');
+        $('#customer_name').addClass('ignore');
+        $('#customer_no').addClass('ignore');
+
+        var param = $("#activity_unplanned").serializeArray();
+
+        var $valid = $("#activity_unplanned").valid();
+        if(!$valid) {
+            activity_unplanned_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            if($("#farmer_detail").children().length <= 0)
+            {
+                var message = "";
+                message += 'No Data in Key Farmer Details.';
+
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                        }
+                    });
+                return false;
+            }
+            else {
+                $.ajax({
+                    type: 'POST',
+                    url: site_url + "ecp/add_activity_planning_details",
+                    data: param,
+                    success: function (resp) {
+                        var message = "";
+                        if(resp != 0){
+                            $('#activity_planning_id').val(resp);
+                            message += 'Data Inserted successfully.';
+                        }
+                        else{
+
+                            message += 'Data not Inserted.';
+                        }
+                        $('<div></div>').appendTo('body')
+                            .html('<div><b>'+message+'</b></div>')
+                            .dialog({
+                                appendTo: "#success_file_popup",
+                                modal: true,
+                                zIndex: 10000,
+                                autoOpen: true,
+                                width: 'auto',
+                                resizable: true,
+                                close: function (event, ui) {
+                                    $(this).remove();
+
+                                }
+                            });
+                    }
+                });
+            }
+        }
+        return false;
     });
 
 });
@@ -153,7 +329,7 @@ function add_farmer()
         "<input type='hidden' name='farmers[]' value='"+farmer_id+"'/>" +
         "</td>"+
         "<td data-title='Mobile No.'>" +
-        "<input type='text' class='input_remove_border' name='farmer_num[]' value='"+farmer_no+"' readonly/>" +
+        "<input type='text' class='input_remove_border' name='farmer_num[]' value='"+farmer_no+"' maxlength='15' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i farmer_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -164,6 +340,7 @@ function add_farmer()
     $('#farmer_id').selectpicker('val', '');
     $('#farmer_no').val('');
 }
+
 $(document).on('click', 'div.farmer_detail', function () {
     if (confirm("Are you sure?")) {
         $(this).closest('tr').remove();
@@ -174,6 +351,39 @@ $(document).on('click', 'div.farmer_detail', function () {
     return false;
 });
 
+function add_retailer()
+{
+    var retailer_id = $('#retailer_id option:selected').val();
+    var retailer_name = $('#retailer_id option:selected').attr('attr-name');
+    var retailer_no = $('#retailer_no').val();
+
+    var d =  "<tr>"+
+        "<td data-title='Key Retailer'>" +
+        "<input class='input_remove_border' type='text' value='"+retailer_name+"' readonly/>" +
+        "<input type='hidden' name='farmers[]' value='"+retailer_id+"'/>" +
+        "</td>"+
+        "<td data-title='Mobile No.'>" +
+        "<input type='text' class='input_remove_border ' name='farmer_num[]' value='"+retailer_no+"' maxlength='15' readonly/>" +
+        "</td>"+
+        "<td  data-title='Action' class='numeric'>" +
+        "<div class='delete_i farmer_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
+        "</td>"+
+        "</tr>";
+
+    $("#retailer_detail").append(d);
+    $('#retailer_id').selectpicker('val', '');
+    $('#retailer_no').val('');
+}
+
+$(document).on('click', 'div.retailer_detail', function () {
+    if (confirm("Are you sure?")) {
+        $(this).closest('tr').remove();
+    }
+    else{
+        return false;
+    }
+    return false;
+});
 
 function add_customer()
 {
@@ -197,6 +407,7 @@ function add_customer()
     $('#customer_name').val('');
     $('#customer_no').val('');
 }
+
 $(document).on('click', 'div.customer_detail', function () {
     if (confirm("Are you sure?")) {
         $(this).closest('tr').remove();
@@ -206,7 +417,6 @@ $(document).on('click', 'div.customer_detail', function () {
     }
     return false;
 });
-
 
 function add_product()
 {
@@ -290,7 +500,7 @@ function add_material()
         "<input type='hidden' name='materials[]' value='"+material_id+"'/>" +
         "</td>"+
         "<td data-title='Qty.'>" +
-        "<input type='text' class='input_remove_border' name='materials_qty[]' value='"+qty+"' readonly/>" +
+        "<input type='text' class='input_remove_border allownumericwithdecimal' name='materials_qty[]' value='"+qty+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i material_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -310,9 +520,6 @@ $(document).on('click', 'div.material_detail', function () {
     }
     return false;
 });
-
-
-
 
 $(document).on("change","select#geo_level_2",function() {
 
@@ -360,6 +567,8 @@ function set_activity_type(activity_type_selected){
 
         $("#geo").html(geo_1);
 
+        farmerDetails();
+
         var att_count ='';
 
         att_count +='<div class="default_box_grey">'+
@@ -378,6 +587,8 @@ function set_activity_type(activity_type_selected){
     else if(activity_type_selected == 'FVP002')
     {
         get_geo_fo_userdata(activity_type_selected);
+
+        farmerDetails();
 
         var geo_2 = '';
         geo_2 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
@@ -406,6 +617,8 @@ function set_activity_type(activity_type_selected){
     else if(activity_type_selected == 'RMP003')
     {
         get_geo_fo_userdata(activity_type_selected);
+
+        retailerDetails();
 
         var geo_3 = '';
         geo_3 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
@@ -442,6 +655,7 @@ function set_activity_type(activity_type_selected){
     else if(activity_type_selected == 'RVP004')
     {
         get_geo_fo_userdata(activity_type_selected);
+        retailerDetails();
 
         var geo_4 = '';
         geo_4 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
@@ -466,7 +680,7 @@ function set_activity_type(activity_type_selected){
     else if(activity_type_selected == 'DP005')
     {
         get_geo_fo_userdata(activity_type_selected);
-
+        farmerDetails();
         var geo_5 = '';
         geo_5 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
@@ -533,6 +747,7 @@ function set_activity_type(activity_type_selected){
     {
         get_geo_fo_userdata(activity_type_selected);
         //get_demonstration_data();
+        farmerDetails();
 
         var geo_6 = '';
         geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
@@ -606,6 +821,128 @@ function set_activity_type(activity_type_selected){
         $("#demo_details").html(demo_detail1);
     }
 }
+
+function retailerDetails()
+{
+    get_retailerData();
+    var retailer_detail = '';
+    retailer_detail +='<div class="default_box_white">'+
+        '<div class="col-md-12 plng_title"><h5>Key Retailer Details</h5></div>'+
+        '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+        '<div class="row">'+
+        '<div class="col-md-6">'+
+        '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
+        '<label>Key Retailer<span style="color: red">*</span></label>'+
+        '<select class="selectpicker" name="retailer_id" id="retailer_id" data-live-search="true">'+
+        '<option value="">Select Retailer</option>'+
+        '</select>'+
+        '</div>'+
+        '</div>'+
+        '<div class="col-md-6 corp_text mrg_top_30">'+
+        '<div class="form-group frm_details text-center">'+
+        '<label>Mobile No.<span style="color: red">*</span></label>'+
+        '<input type="text" class="form-control" name="retailer_no" id="retailer_no" placeholder="">'+
+        ' <div class="plus_btn" ><a  href="javascript: void(0);" id="add_retailer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>'+
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '<div class="col-md-8 col-md-offset-2">'+
+        '<div id="no-more-tables">'+
+        '<table class="col-md-12 table-bordered table-striped table-condensed cf">'+
+        '<thead class="cf">'+
+        '<tr>'+
+        '<th style="padding: 4px 0;">'+
+        'Key Retailer'+
+        '<span class="rts_bordet"></span>'+
+        '</th>'+
+        '<th style="padding: 4px 0;">Mobile No.<span class="rts_bordet"></th>'+
+        '<th style="padding: 4px 0;">Action</th>'+
+        '</tr>'+
+        '</thead>'+
+        '<tbody id="farmer_detail" class="tbl_body_row">'+
+        '</tbody>'+
+        '</table>'+
+        '<div class="clearfix"></div>'+
+        '</div>'+
+        '</div>'+
+        '<div class="clearfix"></div>'+
+        '</div>';
+    $(".customer_details").html(retailer_detail);
+}
+
+function farmerDetails()
+{
+    get_farmerData();
+    var farmer_detail = '';
+    farmer_detail +='<div class="default_box_white">'+
+        '<div class="col-md-12 plng_title"><h5>Key Farmer Details</h5></div>'+
+        '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+        '<div class="row">'+
+        '<div class="col-md-6">'+
+        '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
+        '<label>Key Farmer<span style="color: red">*</span></label>'+
+        '<select class="selectpicker" name="farmer_id" id="farmer_id" data-live-search="true">'+
+        '<option value="">Select Farmer</option>'+
+        '</select>'+
+        '</div>'+
+        '</div>'+
+        '<div class="col-md-6 corp_text mrg_top_30">'+
+        '<div class="form-group frm_details text-center">'+
+        '<label>Mobile No.<span style="color: red">*</span></label>'+
+        '<input type="text" class="form-control" name="farmer_no" id="farmer_no" placeholder="">'+
+        ' <div class="plus_btn" ><a  href="javascript: void(0);" id="add_farmer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>'+
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '</div>'+
+        '<div class="col-md-8 col-md-offset-2">'+
+        '<div id="no-more-tables">'+
+        '<table class="col-md-12 table-bordered table-striped table-condensed cf">'+
+        '<thead class="cf">'+
+        '<tr>'+
+        '<th style="padding: 4px 0;">'+
+        'Key Farmer'+
+        '<span class="rts_bordet"></span>'+
+        '</th>'+
+        '<th style="padding: 4px 0;">Mobile No.<span class="rts_bordet"></th>'+
+        '<th style="padding: 4px 0;">Action</th>'+
+        '</tr>'+
+        '</thead>'+
+        '<tbody id="farmer_detail" class="tbl_body_row">'+
+        '</tbody>'+
+        '</table>'+
+        '<div class="clearfix"></div>'+
+        '</div>'+
+        '</div>'+
+        '<div class="clearfix"></div>'+
+        '</div>';
+    $(".customer_details").html(farmer_detail);
+}
+
+function get_farmerData()
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ecp/KeyFarmer_by_user_id",
+        data: {},
+        dataType : 'json',
+        success: function(resp){
+
+            $("select#farmer_id").empty();
+            $("select#farmer_id").selectpicker('refresh');
+
+            if(resp.length > 0){
+                $("select#farmer_id").append('<option value="">Select Farmer</option>');
+                $.each(resp, function(key, value) {
+                    $('select#farmer_id').append('<option value ="' + value.id + '" attr-name = "'+value.display_name+'">' +value.display_name+ '</option>');
+                });
+                $("select#farmer_id").selectpicker('refresh');
+            }
+        }
+    });
+}
+
 
 function get_geo_fo_userdata(activity_type_selected){
     $.ajax({
@@ -812,87 +1149,6 @@ function getDigitalLibrary(activity_type_id)
     });
 }
 
-function selectCrop(select)
-{
-    var option = select.options[select.selectedIndex];
-    var ul = select.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('ul')[0];
-
-    // var ul = $("div.selected_data").find('ul');
-
-    var choices = ul.getElementsByTagName('input');
-    for (var i = 0; i < choices.length; i++)
-        if (choices[i].value == option.value)
-            return;
-
-    var li = document.createElement('li');
-    var input = document.createElement('input');
-    var text = document.createTextNode(option.firstChild.data);
-
-    input.type = 'hidden';
-    input.name = 'crop[]';
-    input.value = option.value;
-
-    li.appendChild(input);
-    li.appendChild(text);
-    li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
-
-    ul.appendChild(li);
-}
-
-
-function selectProducts(select)
-{
-    var option = select.options[select.selectedIndex];
-    var ul = select.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('ul')[0];
-
-
-    var choices = ul.getElementsByTagName('input');
-    for (var i = 0; i < choices.length; i++)
-        if (choices[i].value == option.value)
-            return;
-
-    var li = document.createElement('li');
-    var input = document.createElement('input');
-    var text = document.createTextNode(option.firstChild.data);
-
-    input.type = 'hidden';
-    input.name = 'product_sku[]';
-    input.value = option.value;
-
-    li.appendChild(input);
-    li.appendChild(text);
-    li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
-
-    ul.appendChild(li);
-}
-
-
-function selectDiseases(select)
-{
-    var option = select.options[select.selectedIndex];
-    var ul = select.parentNode.parentNode.parentNode.parentNode.getElementsByTagName('ul')[0];
-
-
-    var choices = ul.getElementsByTagName('input');
-    for (var i = 0; i < choices.length; i++)
-        if (choices[i].value == option.value)
-            return;
-
-    var li = document.createElement('li');
-    var input = document.createElement('input');
-    var text = document.createTextNode(option.firstChild.data);
-
-    input.type = 'hidden';
-    input.name = 'diseases[]';
-    input.value = option.value;
-
-    li.appendChild(input);
-    li.appendChild(text);
-    li.setAttribute('onclick', 'this.parentNode.removeChild(this);');
-
-    ul.appendChild(li);
-}
-
 /*as js*/
 $(document).ready(function() {
     $(".js-example-tags").select2({
@@ -917,100 +1173,6 @@ $(document).ready(function() {
     }).trigger('change');
 });
 
-$(document).on('click', '#check_save', function () {
-    $('#farmer_id').addClass('ignore');
-    $('#farmer_no').addClass('ignore');
-    $('#customer_name').addClass('ignore');
-    $('#customer_no').addClass('ignore');
-
-    var param = $("#activity_unplanned").serializeArray();
-
-    //console.log(param);die;
-    var $valid = $("#activity_unplanned").valid();
-    if(!$valid) {
-        activity_unplanned_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        if($("#farmer_detail").children().length <= 0)
-        {
-            var message = "";
-            message += 'No Data in Key Farmer Details.';
-
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                    }
-                });
-            return false;
-        }
-        else  if($("#customer_detail").children().length <= 0)
-        {
-            var message = "";
-            message += 'No Data in Customer Details.';
-
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                        location.reload();
-                    }
-                });
-            return false;
-        }
-        else {
-            $.ajax({
-                type: 'POST',
-                url: site_url + "ecp/add_activity_unplanned_details",
-                data: param,
-                success: function (resp) {
-                    var message = "";
-                    if(resp != 0){
-                        console.log(resp);
-                        $('#activity_planning_id').val(resp);
-                        message += 'Data Inserted successfully.';
-                    }
-                    else{
-
-                        message += 'Data not Inserted.';
-                    }
-                    $('<div></div>').appendTo('body')
-                        .html('<div><b>'+message+'</b></div>')
-                        .dialog({
-                            appendTo: "#success_file_popup",
-                            modal: true,
-                            zIndex: 10000,
-                            autoOpen: true,
-                            width: 'auto',
-                            resizable: true,
-                            close: function (event, ui) {
-                                $(this).remove();
-
-                            }
-                        });
-                }
-            });
-        }
-    }
-    return false;
-});
-
 $(document).on('click', '#followup', function () {
     $("#follow_up").css('display','block');
 });
@@ -1019,77 +1181,3 @@ $(document).on('click', '#planning_close', function () {
     $("#follow_up").css('display','none');
 });
 
-
-
-
-$(document).on('click', '#planning_save', function () {
-
-    $('#farmer_id').addClass('ignore');
-    $('#farmer_no').addClass('ignore');
-    $('#customer_name').addClass('ignore');
-    $('#customer_no').addClass('ignore');
-
-    var param = $("#activity_unplanned").serializeArray();
-
-    var $valid = $("#activity_unplanned").valid();
-    if(!$valid) {
-        activity_unplanned_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        if($("#farmer_detail").children().length <= 0)
-        {
-            var message = "";
-            message += 'No Data in Key Farmer Details.';
-
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                    }
-                });
-            return false;
-        }
-        else {
-            $.ajax({
-                type: 'POST',
-                url: site_url + "ecp/add_activity_planning_details",
-                data: param,
-                success: function (resp) {
-                    var message = "";
-                    if(resp != 0){
-                        $('#activity_planning_id').val(resp);
-                        message += 'Data Inserted successfully.';
-                    }
-                    else{
-
-                        message += 'Data not Inserted.';
-                    }
-                    $('<div></div>').appendTo('body')
-                        .html('<div><b>'+message+'</b></div>')
-                        .dialog({
-                            appendTo: "#success_file_popup",
-                            modal: true,
-                            zIndex: 10000,
-                            autoOpen: true,
-                            width: 'auto',
-                            resizable: true,
-                            close: function (event, ui) {
-                                $(this).remove();
-
-                            }
-                        });
-                }
-            });
-        }
-    }
-    return false;
-});

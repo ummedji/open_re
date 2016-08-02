@@ -550,7 +550,7 @@ function get_pbg_product_sku_data(pbg_id){
 
 
 
-/*
+
 var budget_upload_validators = $("#upload_budget_data").validate({
     rules: {
         upload_file_data: {
@@ -570,7 +570,7 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
 
     var header_array = [];
 
-    */
+
 
     /* var $valid = $("#upload_target_data").valid();
      if(!$valid) {
@@ -581,7 +581,7 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
 
      */
 
-    /*
+
     $.ajax({
         url: site_url+"esp/upload_forecast_data", // Url to which the request is send
         type: "POST",             // Type of request to be send, called as method
@@ -592,9 +592,6 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
         success: function(data)   // A function to be called if request succeeds
         {
 
-             console.log(data);
-
-            return false;
             $.each( data, function( key, value ) {
 
                 if(key =="fileerror"){
@@ -728,12 +725,13 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
 
 
                                     $.ajax({
-                                        url: site_url+"esp/upload_xl_budget_data", // Url to which the request is send
+                                        url: site_url+"esp/upload_xl_forecast_data", // Url to which the request is send
                                         type: "POST",             // Type of request to be send, called as method
                                         data: {val:value,dirname:dir_name}, // Data sent to server, a set of key/value pairs
                                         success: function(data)   // A function to be called if request succeeds
                                         {
-                                            // return false;
+                                            console.log(data);
+                                             return false;
 
                                             location.reload();
 
@@ -758,6 +756,3 @@ $(document).on('submit', '#upload_esp_forecast_data', function (e) {
     // }
     return false;
 });
-
-
-*/

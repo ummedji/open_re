@@ -29,7 +29,18 @@
                                 $j = 0;
                                 foreach ($activity_data as $k => $activity_val) { ?>
                                     <div class="panel panel-default" id="data_<?php echo date("j", strtotime($k)); ?>">
-                                        <?php foreach ($activity_val as $key => $val) { ?>
+                                        <?php foreach ($activity_val as $key => $val) {
+                                            if(strtotime($val['activity_planning_date']) < strtotime(date('Y-m-d')))
+                                            {
+                                                $style = "pointer-events: none;";
+                                                //$style = "pointer-events: none;opacity: 0.7;";
+                                            }
+                                            else
+                                            {
+                                                $style = "";
+                                            }
+
+                                            ?>
                                             <?php if ($key == 0) { ?>
                                                 <div class="panel-heading" role="tab">
                                                     <ul class="acc_list">
@@ -39,7 +50,7 @@
                                                                 <img
                                                                     src="<?php echo Template::theme_url('images/list_arrow.png') ?>"
                                                                     alt="" style="vertical-align: middle;"></a></li>
-                                                        <li><a href="javascript: void(0);"
+                                                        <li style="<?php echo $style; ?>" ><a href="javascript: void(0);"
                                                                onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name'] ?></a>
                                                         </li>
                                                         <li><?php echo date('h:i A', strtotime($val['activity_planning_time'])) ?></li>

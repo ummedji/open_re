@@ -4,24 +4,52 @@ $(document).ready(function(){
         autoclose: true
     })
 });
+/*$(document).on("change",'#stock_month',function(){
+    var stock_month = $('#stock_month').val();
+    var role_id = $("input#login_customer_role").val();
+    if( role_id == 8)
+    {
+        var checked_type = $('input.select_customer_type').val();
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/physical_stock',
+            data: {stock_month:stock_month,checked_type:checked_type},
+            success: function(resp){
+                $('#middle_container').html(resp);
+            }
+        });
+        return false;
+    }
+    if(role_id == 9 || role_id == 10)
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url+'ishop/physical_stock',
+            data: {stock_month:stock_month},
+            success: function(resp){
+                $('#middle_container').html(resp);
+            }
+        });
+        return false;
+    }
+});*/
 
-/*
+
 $('#month').on('change',function(){
-    alert('in');
-    var months = $(this).val();
 
+    var months = $(this).val();
     $.ajax({
         type: 'POST',
-        url: site_url+'ecp/activity_planning_edit_view',
-        data: {id:id},
+        url: site_url+'ecp/getApprovalActivityByMonth',
+        data: {months:months},
         success: function(resp){
-            $('#middle_container_product').html(resp);
-            $('.selectpicker').selectpicker('refresh');
+            $('#middle_container_product').empty();
+            $('#middle_container').html(resp);
         }
     });
     return false;
 });
-*/
+
 
 
 $(document).on('change', 'select#approval_status', function () {
