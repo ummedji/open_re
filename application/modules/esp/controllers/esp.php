@@ -3234,7 +3234,7 @@ class Esp extends Front_Controller
                                         //    echo "ccc".$monthvalue."</br>";
                                         $editable = "";
                                     }
-                                    elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0)
+                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0)
                                     {
                                         //    echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
@@ -3327,7 +3327,7 @@ class Esp extends Front_Controller
                                     if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1) {
                                         //    echo "ccc".$monthvalue."</br>";
                                         $editable = "";
-                                    } elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0) {
+                                    } elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0) {
                                         //    echo "ddd".$monthvalue."</br>";
 
 
