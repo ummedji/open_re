@@ -3203,8 +3203,8 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id, $monthvalue, $budget_id);
 
-                                dumpme($self_lock_data);
-                                die;
+                            //    dumpme($self_lock_data);
+                            //    die;
                             if ($login_user_highest_level_data == $login_user_id) {
 
                                // testdata($highest_user_lock_data);
@@ -3243,6 +3243,9 @@ class Esp extends Front_Controller
                                     {
                                        echo "fff".$monthvalue."</br>";
                                            $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"])){
+                                        $editable = "";
                                     }
                                     else
                                     {
