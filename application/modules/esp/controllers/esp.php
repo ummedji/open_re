@@ -300,6 +300,8 @@ class Esp extends Front_Controller
                 }
 
 
+                $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
                 //GET ANY SENIOR USER LOCKED OR NOT DATA
 
                 $senior_lock_data = array();
@@ -346,13 +348,28 @@ class Esp extends Front_Controller
 
                             if ($self_lock_data[0]["lock_status"] != 0) {
 
-                                $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
+                                if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                {
+                                    $style = " pointer-events: none;opacity: 0.7; ";
+
+                                   // $final_lock_array["clickable"] = 0;
+                                    $header_final_array[$monthvalue]["clickable"] = 0;
+
+                                }
+                                else{
+                                    $style = "";
+                                    //$final_lock_array["clickable"] = 1;
+                                    $header_final_array[$monthvalue]["clickable"] = 1;
+                                }
+
+
+                                $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$style."' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-lock' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Unlock' /></a></div>";
 
                                 //  $header_final_array[$monthvalue]['lockdata'] = 1;
 
 
                                 $header_final_array[$monthvalue]["lockdata"] = 1;
-                                $header_final_array[$monthvalue]["clickable"] = 1;
+
 
                             } else {
 
@@ -360,12 +377,27 @@ class Esp extends Front_Controller
                                 if ($child_flag == 1) {
 
 
-                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+                                    if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                    {
+                                        $style = " pointer-events: none;opacity: 0.7; ";
+
+                                        // $final_lock_array["clickable"] = 0;
+                                        $header_final_array[$monthvalue]["clickable"] = 0;
+
+                                    }
+                                    else{
+                                        $style = "";
+                                        //$final_lock_array["clickable"] = 1;
+                                        $header_final_array[$monthvalue]["clickable"] = 1;
+                                    }
+
+
+                                    $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$style."' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true''></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
 
                                     //$header_final_array[$monthvalue]['lockdata'] = 0;
 
                                     $header_final_array[$monthvalue]["lockdata"] = 0;
-                                    $header_final_array[$monthvalue]["clickable"] = 1;
+                                   // $header_final_array[$monthvalue]["clickable"] = 1;
 
                                 } else {
 
@@ -390,12 +422,26 @@ class Esp extends Front_Controller
 
                             if ($child_flag == 1) {
 
-                                $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
+                                if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                {
+                                    $style = " pointer-events: none;opacity: 0.7; ";
+
+                                    // $final_lock_array["clickable"] = 0;
+                                    $header_final_array[$monthvalue]["clickable"] = 0;
+
+                                }
+                                else{
+                                    $style = "";
+                                    //$final_lock_array["clickable"] = 1;
+                                    $header_final_array[$monthvalue]["clickable"] = 1;
+                                }
+
+                                $lock_data = "<div class='lock_unlock_data' ><a style='cursor:pointer;".$style."' rel='" . $monthvalue . "' href='javascript:void(0);' class='lock_data' ><i class='fa fa-unlock-alt' aria-hidden='true'></i><input type='hidden' name='lock_status' id='lock_status_data' class='lock_status_data' value='Lock' /></a></div>";
 
                                 //$header_final_array[$monthvalue]['lockdata'] = 0;
 
                                 $header_final_array[$monthvalue]["lockdata"] = 0;
-                                $header_final_array[$monthvalue]["clickable"] = 1;
+                               // $header_final_array[$monthvalue]["clickable"] = 1;
                             } else {
 
                                 $lock_data = "";
@@ -1786,8 +1832,8 @@ class Esp extends Front_Controller
 
             $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id, $monthvalue, $budget_id);
 
-            if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] != 0) {
-                $lock_array[] = $self_lock_data[0]["lock_status"];
+            if ($self_lock_data != 0 && $self_lock_data["lock_status"] != 0) {
+                $lock_array[] = $self_lock_data["lock_status"];
             }
         }
 
@@ -1798,7 +1844,9 @@ class Esp extends Front_Controller
 
             $res = 1;
 
-        } else {
+        }
+        else
+        {
             $res = 0;
         }
 
