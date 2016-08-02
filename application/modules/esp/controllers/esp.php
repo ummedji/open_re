@@ -589,10 +589,19 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
 
-                            // dumpme($self_lock_data);
+                         //   testdata($highest_user_lock_data);
 
                             if ($login_user_highest_level_data == $login_user_id) {
-                                $editable = "";
+
+
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                {
+                                    $editable = "";
+                                }
+                                else
+                                {
+                                    $editable = "readonly";
+                                }
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
@@ -675,7 +684,17 @@ class Esp extends Front_Controller
 
 
                             if ($login_user_highest_level_data == $login_user_id) {
-                                $editable = "";
+
+
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                {
+                                    $editable = "";
+                                }
+                                else
+                                {
+                                    $editable = "readonly";
+                                }
+                               // $editable = "";
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
@@ -1252,8 +1271,18 @@ class Esp extends Front_Controller
 
 
                             if ($login_user_highest_level_data == $login_user_id) {
-                                $assumption_editable = "";
-                                $probablity_editable = "";
+
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                {
+                                    $assumption_editable = "";
+                                    $probablity_editable = "";
+                                }
+                                else
+                                {
+                                    $assumption_editable = "disabled";
+                                    $probablity_editable = "readonly";
+
+                                }
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
@@ -1354,8 +1383,21 @@ class Esp extends Front_Controller
 
 
                             if ($login_user_highest_level_data == $login_user_id) {
-                                $assumption_editable = "";
-                                $probablity_editable = "";
+
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                {
+                                    $assumption_editable = "";
+                                    $probablity_editable = "";
+                                }
+                                else
+                                {
+                                    $assumption_editable = "disabled";
+                                    $probablity_editable = "readonly";
+
+                                }
+
+                                //$assumption_editable = "";
+                                //$probablity_editable = "";
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
@@ -1443,7 +1485,7 @@ class Esp extends Front_Controller
                             $html .= '</select>';
 
                             $html .= '</div>
-        </div></td><td><input class="probablity_data" type="text" name="probablity' . $j . '[]" value="UMMED 111" />';
+        </div></td><td><input class="probablity_data" type="text" name="probablity' . $j . '[]" value="" />';
 
                         }
 
@@ -3112,7 +3154,7 @@ class Esp extends Front_Controller
 
                        */
 
-                    //   dumpme($budget_freeze_data);
+                     //  testdata($employee_month_product_budget_data[0]["created_by_user"]);
                     //CHECK DATA FREEZED OR NOT
 
 
@@ -3125,10 +3167,11 @@ class Esp extends Front_Controller
                         //  if($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["created_by_user"] == $login_user_id){
 
 
-                        if ($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["freeze_status"] == 0) {
+                        if ($budget_freeze_data["freeze_status"] == 1 || $budget_freeze_data["freeze_status"] == 0)
+                        {
                             //SHOW DATA
 
-                            //  echo "1";
+                              echo "1";
 
                             $editable = "";
 
@@ -3163,7 +3206,17 @@ class Esp extends Front_Controller
                             //    dumpme($senior_lock_data);
 
                             if ($login_user_highest_level_data == $login_user_id) {
-                                $editable = "";
+
+                               // testdata($highest_user_lock_data);
+
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                {
+                                    $editable = "";
+                                }
+                                else
+                                {
+                                    $editable = "readonly";
+                                }
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
@@ -3172,22 +3225,27 @@ class Esp extends Front_Controller
                                     $editable = "readonly";
                                     //   echo "bbb".$monthvalue."</br>";
 
-                                } elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0) {
+                                }
+                                elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
+                                {
 
-                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1) {
+                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
+                                    {
                                         //    echo "ccc".$monthvalue."</br>";
                                         $editable = "";
-                                    } elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0) {
+                                    }
+                                    elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0)
+                                    {
                                         //    echo "ddd".$monthvalue."</br>";
-
-
                                         $editable = "readonly";
                                     }
-                                    //   elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0){
-                                    //    echo "fff".$monthvalue."</br>";
-                                    //       $editable = "";
-                                    //   }
-                                    else {
+                                    elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"]))
+                                    {
+                                       //echo "fff".$monthvalue."</br>";
+                                           $editable = "";
+                                    }
+                                    else
+                                    {
                                         //   echo "eee".$monthvalue."</br>";
                                         $editable = "readonly";
                                     }
@@ -3209,7 +3267,7 @@ class Esp extends Front_Controller
 
                         } elseif ($child_flag == 1) {
 
-                            /// echo "2";
+                             echo "2";
 
 
                             $editable = "";
@@ -3245,7 +3303,17 @@ class Esp extends Front_Controller
                             // dumpme($self_lock_data);
 
                             if ($login_user_highest_level_data == $login_user_id) {
-                                $editable = "";
+
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                {
+                                    $editable = "";
+                                }
+                                else
+                                {
+                                    $editable = "readonly";
+                                }
+
+                               // $editable = "";
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
@@ -3290,7 +3358,7 @@ class Esp extends Front_Controller
 
                         } else {
 
-                            //    echo "3";
+                                echo "3";
 
                             /*  $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
 
@@ -3341,6 +3409,8 @@ class Esp extends Front_Controller
 
                            */
 
+                            echo "4";
+
                             $editable = "";
 
 
@@ -3372,6 +3442,7 @@ class Esp extends Front_Controller
 
                                */
 
+                            echo "5";
 
                             $html .= '<td><input rel="' . $l . '_' . $skuvalue['product_sku_country_id'] . '_' . $monthvalue . '" class="budget_qty" id="budget_qty_' . $l . '_' . $skuvalue['product_sku_country_id'] . '" type="text" name="budget_qty[' . $skuvalue['product_sku_country_id'] . '][]" value=""  /></td>';
 
