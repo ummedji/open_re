@@ -2932,8 +2932,8 @@ class Esp extends Front_Controller
                                 //$header_final_array[$monthvalue]['lockdata'] = 0;
 
 
-                               // $final_lock_array["lockdata"] = 0;
-                                $final_lock_array["clickable"] = 1;
+                                $final_lock_array["lockdata"] = 0;
+                               // $final_lock_array["clickable"] = 1;
 
                                 // $header_final_array[$monthvalue]["lockdata"] = 0;
                                 // $header_final_array[$monthvalue]["clickable"] = 1;
