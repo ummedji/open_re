@@ -4978,7 +4978,7 @@ class Web_service extends Front_Controller
                     $month_data = $yeardata."-01-01";
 
                     $lockdata = $this->esp_model->get_budget_senior_lock_status_data($user_id,$budget_id,$month_data);
-                    testdata($self_lock_data);
+                    testdata($lockdata);
 
                     if($self_lock_data !=0 && $lockdata[0]["lock_status"] == 1)
                     {
