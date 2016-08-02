@@ -703,9 +703,9 @@ class Esp_model extends BF_Model
 //die;
 
         if(isset($user_lock_data) && !empty($user_lock_data)) {
-       //      dumpme($user_lock_data);
+             dumpme($user_lock_data);
 
-//die;
+die;
 
             return $user_lock_data;
         } else{
