@@ -4975,7 +4975,8 @@ class Web_service extends Front_Controller
 
                     testdata($self_lock_data);
 
-                    if($self_lock_data !=0 && $self_lock_data[0]["lock_status"] == 1) {
+                    if($self_lock_data !=0 && $self_lock_data[0]["lock_status"] == 1)
+                    {
                         $budget_freeze_data = modules::run('esp/esp/update_budget_freeze_status', $data);
 
                         if (!empty($budget_freeze_data)) {
