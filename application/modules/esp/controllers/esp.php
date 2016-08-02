@@ -3223,7 +3223,7 @@ class Esp extends Front_Controller
                                 if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
 
                                     $editable = "readonly";
-                                       echo "bbb".$monthvalue."</br>";
+                                     //  echo "bbb".$monthvalue."</br>";
 
                                 }
                                 elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
@@ -3231,17 +3231,17 @@ class Esp extends Front_Controller
 
                                     if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
                                     {
-                                            echo "ccc".$monthvalue."</br>";
+                                       //     echo "ccc".$monthvalue."</br>";
                                         $editable = "";
                                     }
                                     elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_budget_data[0]["created_by_user"]))
                                     {
-                                            echo "ddd".$monthvalue."</br>";
+                                          //  echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
                                     }
                                     elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"]))
                                     {
-                                       echo "fff".$monthvalue."</br>";
+                                       //echo "fff".$monthvalue."</br>";
                                            $editable = "";
                                     }
                                     elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"])){
@@ -3249,7 +3249,7 @@ class Esp extends Front_Controller
                                     }
                                     else
                                     {
-                                           echo "eee".$monthvalue."</br>";
+                                          // echo "eee".$monthvalue."</br>";
                                         $editable = "readonly";
                                     }
                                 }
@@ -3330,12 +3330,27 @@ class Esp extends Front_Controller
                                     if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1) {
                                         //    echo "ccc".$monthvalue."</br>";
                                         $editable = "";
-                                    } elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0) {
+                                    }
+
+                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_budget_data[0]["created_by_user"]))
+                                    {
+                                        //  echo "ddd".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                    elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"]))
+                                    {
+                                        //echo "fff".$monthvalue."</br>";
+                                        $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"])){
+                                        $editable = "";
+                                    }
+                                  //  elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0) {
                                         //    echo "ddd".$monthvalue."</br>";
 
 
-                                        $editable = "readonly";
-                                    }
+                                    //    $editable = "readonly";
+                                   // }
                                     //  elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0){
                                     //    echo "fff".$monthvalue."</br>";
                                     //      $editable = "";
