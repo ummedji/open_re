@@ -3220,7 +3220,7 @@ class Esp extends Front_Controller
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
-                                if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
+                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
 
                                     $editable = "readonly";
                                     //   echo "bbb".$monthvalue."</br>";
@@ -3229,7 +3229,7 @@ class Esp extends Front_Controller
                                 elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
                                 {
 
-                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
+                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
                                     {
                                         //    echo "ccc".$monthvalue."</br>";
                                         $editable = "";
@@ -3317,14 +3317,14 @@ class Esp extends Front_Controller
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
-                                if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
+                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
 
                                     $editable = "readonly";
                                     //   echo "bbb".$monthvalue."</br>";
 
                                 } elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0) {
 
-                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1) {
+                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1) {
                                         //    echo "ccc".$monthvalue."</br>";
                                         $editable = "";
                                     } elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0) {
