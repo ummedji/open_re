@@ -4971,11 +4971,11 @@ class Web_service extends Front_Controller
 
                 if ($check_month_data_locked != 1) {
 
-                    testdata($data);
+                   // testdata($data);
 
                     $self_lock_data = modules::run('esp/esp/get_self_budget_lock_status', $data);
 
-                    testdata($self_lock_data);
+                  //  testdata($self_lock_data);
 
                     if($self_lock_data !=0 && $self_lock_data[0]["lock_status"] == 1)
                     {
