@@ -2475,7 +2475,7 @@ class Ishop_model extends BF_Model
     public function view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, $geo_level_0, $geo_level_1, $retailer_id, $page = null,$web_service = null,$local_date=null)
     {
 
-        $sql = 'SELECT itsp.tertiary_sales_id,itsp.sales_month,bu.user_code,bu.display_name ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS itsp.tertiary_sales_id,itsp.sales_month,bu.user_code,bu.display_name ';
         $sql .= 'FROM bf_ishop_tertiary_sales AS itsp ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = itsp.customer_id) ';
         $sql .= 'WHERE 1 ';
@@ -2490,7 +2490,7 @@ class Ishop_model extends BF_Model
         $sql .= 'AND itsp.created_by_user =' . $user_id . ' ';
         $sql .= 'AND itsp.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_id DESC ';
-        testdata($sql);
+
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             // For Pagination
             $limit = 10;
