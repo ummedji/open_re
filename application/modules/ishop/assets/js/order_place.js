@@ -385,7 +385,41 @@ $(document).ready(function(){
         }
 
         if(form_state==true){
-            order_place_add_row();
+
+            var sku_ids = $('#order_place_data input[name^=product_sku_id]').map(function(idx, elem) {
+                return $(elem).val();
+            }).get();
+
+            var cur_sku_id = $('#prod_sku option:selected').val();
+            if(sku_ids.length !== 0)
+            {
+                if(jQuery.inArray(cur_sku_id, sku_ids) !== -1)
+                {
+                    $('<div></div>').appendTo('body')
+                        .html('<div>Product already Inserted.</div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            title: 'Are You Sure?',
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+                            }
+                        });
+                }
+                else
+                {
+                    order_place_add_row();
+                }
+            }
+            else
+            {
+                order_place_add_row();
+            }
+
         }
 
   });
@@ -426,6 +460,7 @@ $("#order_place").on("submit",function(){
         }
         else
         {
+            $('.save_btn button').attr('disabled','disabled');
             var param = $("#order_place").serializeArray();
             $.ajax({
                 type: 'POST',

@@ -190,7 +190,7 @@ $(document).on('click', '.edit_i', function () {
 $(document).on('click', 'div.check_save_btn #check_save', function (e) {
     e.preventDefault();
     var primary_sales_data = $("#primary_sales_view_data").serializeArray();
-
+    $('.save_btn button').attr('disabled','disabled');
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/update_sales_details',

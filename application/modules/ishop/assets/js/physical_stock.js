@@ -397,6 +397,7 @@ $("#add_physical_stock").on("submit",function(e){
     }
     else
     {
+        $('.svn_btn button').attr('disabled','disabled');
         $.ajax({
             type: 'POST',
             url: site_url+"ishop/add_physical_stock_details",
@@ -532,6 +533,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
     var physical_data = $("#update_physical_stock").serializeArray();
      console.log(physical_data);
     //return false;
+    $('.save_btn button').attr('disabled','disabled');
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/update_physical_stock_details',

@@ -41,6 +41,7 @@ $(document).ready(function(){
         }
         else
         {
+            $('.svn_btn button').attr('disabled','disabled');
             $.ajax({
                 type: 'POST',
                 url: site_url + "ishop/add_user_credit_limit_datails",

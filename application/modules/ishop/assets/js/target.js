@@ -245,7 +245,7 @@ $(document).ready(function(){
         }
         else
         {
-
+            $('.svn_btn button').attr('disabled','disabled');
             $.ajax({
                 type: 'POST',
                 url: site_url+"ishop/add_target_data",
@@ -500,6 +500,7 @@ $(document).on('click', 'div.target_container .edit_i', function () {
 
 $(document).on('click', 'div.check_save_btn #check_save', function () {
     var target_data = $("#update_target").serializeArray();
+    $('.save_btn button').attr('disabled','disabled');
    // console.log(target_data);return false;
     $.ajax({
         type: 'POST',

@@ -121,10 +121,13 @@ $(document).on('click', 'div#middle_container .eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
-    
-    $("body, html").animate({ 
-        scrollTop: $( $(this).attr('href') ).offset().top 
-    }, "slow");
+
+    /*$("body, html").animate({
+        scrollTop: $( $(this).attr('href') ).offset().top
+    }, "slow");*/
+    $('#main').animate({
+        scrollTop: $(document).height()
+    }, 1000);
     
     return false;
 });

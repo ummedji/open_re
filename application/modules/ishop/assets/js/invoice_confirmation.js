@@ -99,6 +99,10 @@ $(document).on('click', 'div.middle_container_received .eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
+
+    $('#main').animate({
+        scrollTop: $(document).height()
+    }, 1000);
     return false;
 });
 /*Get Product Data*/

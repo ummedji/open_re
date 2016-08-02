@@ -395,6 +395,10 @@ $(document).on('click', 'div.sales_cont .eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
+
+    $('#main').animate({
+        scrollTop: $(document).height()
+    }, 1000);
     return false;
 });
 /*Get Sales Data*/
@@ -494,6 +498,7 @@ $(document).on('click', '.edit_i', function () {
 $(document).on('click', 'div.check_save_btn #check_save', function () {
     var sales_data = $("#update_sales").serializeArray();
 
+    $('.save_btn button').attr('disabled','disabled');
     //return false;
     $.ajax({
         type: 'POST',

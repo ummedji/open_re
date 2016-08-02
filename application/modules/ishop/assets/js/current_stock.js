@@ -63,6 +63,7 @@ $(document).ready(function(){
         }
         else
         {
+            $('.svn_btn button').attr('disabled','disabled');
             $.ajax({
                 type: 'POST',
                 url: site_url + "ishop/add_company_current_stock_details",
@@ -190,6 +191,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
 
     if($.inArray(1,check_blank_data) == -1){
 
+        $('.save_btn button').attr('disabled','disabled');
         $.ajax({
             type: 'POST',
             url: site_url+'ishop/update_current_stock_details',

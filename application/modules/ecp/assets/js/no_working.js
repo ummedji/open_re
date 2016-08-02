@@ -97,6 +97,7 @@ $(document).ready(function() {
         else
         {
 
+            $('.save_btn button').attr('disabled','disabled');
             $.ajax({
                 type: 'POST',
                 url: site_url + "ecp/no_working_details",

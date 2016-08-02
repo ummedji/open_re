@@ -144,6 +144,7 @@ $(document).ready(function(){
     $("#add_schemes").on("submit",function(){
 
         //alert('in');
+        $('.save_btn button').attr('disabled','disabled');
         var param = $("#add_schemes").serializeArray();
 
         var $valid = $("#add_schemes").valid();

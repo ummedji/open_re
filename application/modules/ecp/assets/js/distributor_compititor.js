@@ -46,7 +46,39 @@ $(function () {
         }
         else
         {
-            add_row();
+            var sku_ids = $('#distributor_comp input[name^=comp_id]').map(function(idx, elem) {
+                return $(elem).val();
+            }).get();
+
+            var cur_sku_id = $('#compititor_id option:selected').val();
+            if(sku_ids.length !== 0)
+            {
+                if(jQuery.inArray(cur_sku_id, sku_ids) !== -1)
+                {
+                    $('<div></div>').appendTo('body')
+                        .html('<div>Compititors already Inserted.</div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            title: 'Are You Sure?',
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+                            }
+                        });
+                }
+                else
+                {
+                    add_row();
+                }
+            }
+            else
+            {
+                add_row();
+            }
         }
     });
 
@@ -70,6 +102,7 @@ $(function () {
                 return false;
             }
             else {
+                $('.save_btn button').attr('disabled','disabled');
                 $.ajax({
                     type: 'POST',
                     url: site_url + "ecp/distributor_compititor_details",

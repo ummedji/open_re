@@ -145,6 +145,9 @@ $(document).on('click', '.eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
+    $('#main').animate({
+        scrollTop: $(document).height()
+    }, 1000);
     
    /*  $("body, html").animate({
         scrollTop: $( $(this).attr('href') ).offset().top 
@@ -158,6 +161,7 @@ $(document).on("click",'form#po_acknowledgement button#update_po_order_details',
     e.preventDefault();
     var param = $("form#po_acknowledgement").serializeArray();
 
+    $('.save_btn button').attr('disabled','disabled');
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/po_acknowledgement",
@@ -199,7 +203,7 @@ $(document).on("click",'form#po_acknowledgement button#update_po_order_details',
 $(document).on("click",'form#update_order_status_detail_data button#update_po_order_details',function(e){
     e.preventDefault();
     var param = $("form#update_order_status_detail_data").serializeArray();
-
+    $('.save_btn button').attr('disabled','disabled');
     $.ajax({
         type: 'POST',
         url: site_url+"ishop/update_po_acknowledgement_data",

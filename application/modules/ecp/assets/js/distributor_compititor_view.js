@@ -103,6 +103,7 @@ $(document).ready(function() {
 $(document).on('click', 'div.check_save_btn #check_save', function () {
     var distributor_compititor = $("#distributor_compititor_view_data").serializeArray();
 
+    $('.save_btn button').attr('disabled','disabled');
     $.ajax({
         type: 'POST',
         url: site_url+'ecp/update_compititor_details',

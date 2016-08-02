@@ -257,6 +257,9 @@ $(document).ready(function(){
         });
 
 
+        $('#main').animate({
+            scrollTop: $(document).height()
+        }, 1000);
 /*
         $("body, html").animate({ 
             scrollTop: $( $(this).attr('href') ).offset().top 
@@ -274,6 +277,8 @@ $(document).on('submit','#order_status_data_details',function(){
         
     var param = $("form#order_status_data_details").serializeArray();
 
+
+    $('.save_btn button').attr('disabled','disabled');
     $.ajax({
             type: 'POST',
             url: site_url+"ishop/update_order_status_detail_data",
@@ -573,6 +578,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
     $(document).on('click', '#update_order_details', function (e) {
         e.preventDefault();
 
+        $('.save_btn button').attr('disabled','disabled');
         var order_data = $("#order_status_view_data").serializeArray();
       /*  console.log(order_data);
         return false;*/

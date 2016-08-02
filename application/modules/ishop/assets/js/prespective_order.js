@@ -95,8 +95,12 @@ $(document).on('click', 'div.order_cont .eye_i', function () {
             $("#middle_container_product").html(resp);
         }
     });
+
+    $('#main').animate({
+        scrollTop: $(document).height()
+    }, 1000);
     
-    $("body, html").animate({ 
+    $("body, html").animate({
         scrollTop: $( $(this).attr('href') ).offset().top 
      }, "slow");
         

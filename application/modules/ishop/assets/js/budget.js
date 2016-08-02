@@ -336,6 +336,7 @@ $(document).on("submit","#budget",function(){
     }
     else
     {
+        $('.svn_btn button').attr('disabled','disabled');
         $.ajax({
             type: 'POST',
             url: site_url+"ishop/add_budget_data",
@@ -564,6 +565,7 @@ $(document).on('click', 'div.budget_container .edit_i', function () {
 $(document).on('click', 'div.check_save_btn #check_save', function () {
     var budget_data = $("#update_budget").serializeArray();
     // console.log(target_data);return false;
+    $('.save_btn button').attr('disabled','disabled');
     $.ajax({
         type: 'POST',
         url: site_url+'ishop/update_budget_details',
