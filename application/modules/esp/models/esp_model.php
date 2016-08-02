@@ -696,16 +696,16 @@ class Esp_model extends BF_Model
         $this->db->where("bblsh.month_data",$monthvalue);
         $this->db->where("bblsh.lock_by_id",$login_user_parent_data);
 
-        $user_lock_data = $this->db->get()->result_array();
+        $user_lock_data = $this->db->get()->row_array();
 
      //   echo $this->db->last_query();
 
 //die;
 
         if(isset($user_lock_data) && !empty($user_lock_data)) {
-             dumpme($user_lock_data);
+        //     dumpme($user_lock_data);
 
-die;
+//die;
 
             return $user_lock_data;
         } else{
