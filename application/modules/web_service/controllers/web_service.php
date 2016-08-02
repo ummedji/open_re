@@ -4967,23 +4967,27 @@ class Web_service extends Front_Controller
             }
             else
             {
+
                 $check_month_data_locked = modules::run('esp/esp/get_budget_lock_status', $data);
 
                 if ($check_month_data_locked != 1) {
 
                    // testdata($data);
 
+
+
                     $self_lock_data = modules::run('esp/esp/get_self_budget_lock_status', $data);
 
-                    $month_data = $yeardata."-01-01";
+                 //   $month_data = $yeardata."-01-01";
 
-                    $lockdata11 = $this->esp_model->get_budget_senior_lock_status_data($user_id,$budget_id,$month_data);
+               //     $lockdata11 = $this->esp_model->test();
 
-                    dumpme($self_lock_data);
+                 //   dumpme($self_lock_data);
+//die;
+          //          testdata($lockdata11);
 
-                    testdata($lockdata11);
-
-                    if($self_lock_data !=0 && $lockdata11[0]["lock_status"] == 1)
+                   // && $lockdata11[0]["lock_status"] == 1
+                    if($self_lock_data !=0 )
                     {
                         $budget_freeze_data = modules::run('esp/esp/update_budget_freeze_status', $data);
 

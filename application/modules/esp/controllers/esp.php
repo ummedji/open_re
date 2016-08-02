@@ -3888,6 +3888,8 @@ class Esp extends Front_Controller
             $login_user_id = $user->id;
         } else {
 
+
+         //   testdata($webservice_data);
             $budget_id = $webservice_data["budgetid"];
             $year_data = $webservice_data["yeardata"];
 
@@ -3916,7 +3918,10 @@ class Esp extends Front_Controller
 
         //   $get_user_lock_status = $this->esp_model->senior_budget_lock_status($login_user_parent_data,$budget_id,$from_month);
         $login_user_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id, $from_month, $budget_id);
-        if (($login_user_lock_data != 0 || !empty($login_user_lock_data)) && ($login_user_lock_data[0]["lock_status"] == 1)) {
+
+//testdata($login_user_lock_data);
+
+        if (($login_user_lock_data != 0 || !empty($login_user_lock_data)) && ($login_user_lock_data["lock_status"] == 1)) {
             $lock_status = 1;
         }
         //   }

@@ -698,12 +698,12 @@ class Esp_model extends BF_Model
 
         $user_lock_data = $this->db->get()->row_array();
 
-     //   echo $this->db->last_query();
+   //     echo $this->db->last_query();
 
 //die;
 
         if(isset($user_lock_data) && !empty($user_lock_data)) {
-        //     dumpme($user_lock_data);
+           //  dumpme($user_lock_data);
 
 //die;
 
@@ -714,6 +714,10 @@ class Esp_model extends BF_Model
         }
 
 
+    }
+
+    public function test(){
+        return "test";
     }
 
 
