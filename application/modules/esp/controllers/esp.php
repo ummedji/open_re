@@ -3234,7 +3234,7 @@ class Esp extends Front_Controller
                                             echo "ccc".$monthvalue."</br>";
                                         $editable = "";
                                     }
-                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0)
+                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_budget_data[0]["created_by_user"]))
                                     {
                                             echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
