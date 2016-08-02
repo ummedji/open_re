@@ -3203,8 +3203,8 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id, $monthvalue, $budget_id);
 
-                            //    dumpme($senior_lock_data);
-
+                                dumpme($self_lock_data);
+                                die;
                             if ($login_user_highest_level_data == $login_user_id) {
 
                                // testdata($highest_user_lock_data);
