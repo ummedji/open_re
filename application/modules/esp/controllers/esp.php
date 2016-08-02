@@ -3226,7 +3226,7 @@ class Esp extends Front_Controller
                                     //   echo "bbb".$monthvalue."</br>";
 
                                 }
-                                elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
+                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
                                 {
 
                                     if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
