@@ -4173,6 +4173,7 @@ class Ishop_model extends BF_Model
                     $o_dt = $this->input->post("order_date");
                     $f_date = str_replace('/', '-', $o_dt);
                     $order_date = date('Y-m-d', strtotime($f_date));
+                    $order_status = 0;
 
                 } elseif ($this->input->post("radio1") == "retailer") {
 
@@ -4180,6 +4181,7 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $this->input->post("retailer_id");
                     $order_taken_by_id = $user_id;
                     $order_date = date("Y-m-d");
+                    $order_status = 4;
 
                 } elseif ($this->input->post("radio1") == "distributor") {
 
@@ -4187,6 +4189,7 @@ class Ishop_model extends BF_Model
                     $customer_id_to = 0;
                     $order_taken_by_id = $user_id;
                     $order_date = date("Y-m-d");
+                    $order_status = 4;
 
                 }
             }
@@ -4199,7 +4202,7 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $farmer_id;
                     $customer_id_to = $retailer_id;
                     $order_taken_by_id = $user_id;
-
+                    $order_status = 0;
                     $order_date = date("Y-m-d", strtotime($this->input->post("order_date")));
 
                 } elseif ($this->input->post("radio1") == "retailer") {
@@ -4210,7 +4213,7 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $retailer_id;
                     $customer_id_to = $distributor_id;
                     $order_taken_by_id = $user_id;
-
+                    $order_status = 4;
                     $order_date = date("Y-m-d");
 
                 } elseif ($this->input->post("radio1") == "distributor") {
@@ -4221,10 +4224,10 @@ class Ishop_model extends BF_Model
                     $order_taken_by_id = $user_id;
 
                     $order_date = date("Y-m-d");
-
+                    $order_status = 4;
                 }
             }
-            $order_status = 4;
+
             $po_no = NULL;
 
         } else {

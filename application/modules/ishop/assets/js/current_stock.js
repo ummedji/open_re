@@ -115,7 +115,7 @@ $(document).on('focus',".mfg_date", function(){
         $('.expiry_date').val('');
         startDate = new Date(selected.date.valueOf());
         startDate.setDate(startDate.getDate(new Date(selected.date.valueOf())));
-        $('.expiry_date').datepicker('setStartDate', startDate);
+        $('.expiry_date').datepicker({format:date_format,startDate:startDate});
     });
 });
 

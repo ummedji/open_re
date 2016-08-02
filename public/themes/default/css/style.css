@@ -1197,6 +1197,12 @@ a.set_pono, .eye_i a {
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
 }
+@media screen and (max-width: 414px){
+    .copy_btn {
+        top: -5px;
+        right: 0px;
+    }
+}
 .sub_nave {
     margin-top: -34px;
     margin-bottom: 10px;

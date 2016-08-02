@@ -169,8 +169,19 @@
 
                                     <li role="presentation" class="<?php echo ($segment=='ecp' && ($segment2=='retailer_compititor_analysis'|| $segment2=='retailer_compititor_product' || $segment2=='retailer_compititor_view' || $segment2=='distributor_compititor_analysis' ||  $segment2=='distributor_compititor_product' || $segment2=='distributor_compititor_view' )) ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/retailer_compititor_analysis'); ?>">COMPITITORS ANALYSIS</a></li>
                                     <?php
-                                }
-                                else{
+                                } elseif($segment=='cco'){ ?>
+                                    <li role="presentation" class="">
+                                        <a href="<?php echo base_url('cco/dialpad'); ?>">DIALPAD</a>
+                                    </li>
+                                    <li role="presentation" class="">
+                                        <a href="<?php echo base_url('cco/allocation'); ?>">ALLOCATION</a>
+                                    </li>
+                                    <li role="presentation" class="">
+                                        <a href="<?php echo base_url('cco/activity'); ?>">ACTIVITY</a>
+                                    </li>
+
+                                <?php }
+                                    else{
                                     ?>
                                     <li role="presentation"></li>
                                 <?php

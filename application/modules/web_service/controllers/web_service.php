@@ -3050,6 +3050,7 @@ class Web_service extends Front_Controller
 
                 $tertiary_sales_details = $this->ishop_model->view_ishop_sales_detail_by_retailer($user_id, $country_id, $from_month, $to_month, null, null, $retailer_id, $page = null, 'web_service');
                 if (!empty($tertiary_sales_details)) {
+
                     // For Pagination
                     $count = $this->db->query('SELECT FOUND_ROWS() as total_rows');
                     $total_rows = $count->result()[0]->total_rows;

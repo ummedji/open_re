@@ -47,6 +47,12 @@
                     </span>
                     <div class="clearfix"></div>
                 </li>
+                <li title="CCO">
+                    <span>
+                        <a href="<?php echo base_url('/cco') ?>"><span class="e_learning_icon"></span><div class="li_title pr_title">CCO</div></a>
+                    </span>
+                    <div class="clearfix"></div>
+                </li>
             </ul>
         </div>
     </div>

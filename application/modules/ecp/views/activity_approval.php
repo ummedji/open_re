@@ -49,7 +49,7 @@
                 <div class="clearfix"></div>
             </div>
         </div>
-    </div>
+    <!--</div>-->
 
 
     <input class="login_customer_type" type="hidden" name="login_customer_type" id="login_customer_type" value="<?php echo $current_user->role_id; ?>" />
