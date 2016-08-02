@@ -286,7 +286,7 @@ $(document).ready(function() {
                         zIndex: 10000,
                         autoOpen: true,
                         width: 'auto',
-                        resizable: true,
+                        resizable: false,
                         close: function (event, ui) {
                             $(this).remove();
 
@@ -310,7 +310,7 @@ $(document).ready(function() {
                 zIndex: 10000,
                 autoOpen: true,
                 width: 'auto',
-                resizable: true,
+                resizable: false,
                 buttons: {
                     OK: function () {
                         $(this).dialog("close");

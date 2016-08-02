@@ -41,17 +41,25 @@
                                     <div class="col-md-12 text-center tp_form inline-parent">
                                         <div class="form-group">
                                             <label>Select Date<span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" name="planning_date"
-                                                   id="planning_date" placeholder="">
+                                            <div class="inln_fld">
+                                                <input type="text" class="form-control" name="planning_date"
+                                                       id="planning_date" placeholder="">
+                                                <div class="clearfix"></div>
+                                                <label id="planning_date-error" class="error" for="planning_date"></label>
+                                            </div>
                                         </div>
 
-                                        <div class="form-group">
+                                        <div class="form-group actvt-parent">
                                             <label>Time<span style="color: red">*</span></label>
                                             <!--<input  type="text" class="form-control input-append" data-format="hh:mm" id="timepicker1"  />-->
-                                            <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                                <input id="planning_time" name="planning_time" type="text"
-                                                       class="input-group-time form-control input-append">
+                                            <div class="inln_fld">
+                                                <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                                    <input id="planning_time" name="planning_time" type="text"
+                                                           class="input-group-time form-control input-append">
+                                                </div>
+                                                <div class="clearfix"></div>
                                             </div>
+
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>

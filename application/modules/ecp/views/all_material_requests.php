@@ -11,20 +11,33 @@ if (!$this->input->is_ajax_request()) {
                 <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                     <div class="form-group">
                         <label>Status<span style="color: red">*</span></label>
-                        <select class="selectpicker" id="status_id" name="status_id" data-live-search="true">
-                            <option value="">Select Status</option>
-                            <option value="0">Pending</option>
-                            <option value="1">Approved</option>
-                            <option value="2">Rejected</option>
-                        </select>
+                        <div class="inln_fld">
+                            <select class="selectpicker" id="status_id" name="status_id" data-live-search="true">
+                                <option value="">Select Status</option>
+                                <option value="0">Pending</option>
+                                <option value="1">Approved</option>
+                                <option value="2">Rejected</option>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="status_id-error" class="error" for="status_id"></label>
+                        </div>
+
                     </div>
                     <div class="form-group">
                         <label for="from_date">From Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="from_date" id="from_date" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control" name="from_date" id="from_date" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="from_date-error" class="error" for="from_date"></label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label for="to_date">To Date<span style="color: red">*</span></label>
-                        <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                        <div class="inln_fld">
+                            <input type="text" class="form-control" name="to_date" id="to_date" placeholder="">
+                            <div class="clearfix"></div>
+                            <label id="to_date-error" class="error" for="to_date"></label>
+                        </div>
                     </div>
                 </div>
 

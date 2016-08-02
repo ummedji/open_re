@@ -860,6 +860,9 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     box-shadow: 0px -1px 2px 0px rgba(0, 0, 0, 0.3);
     z-index: 10;
 }
+@media screen and (max-width: 736px){
+    #no-more-tables table {padding-top: 6px;}
+}
 #no-more-tables table thead {
     background-color: #fbfdff;
     border-bottom: solid 2px #d5d5d5;
@@ -897,6 +900,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     /*border-bottom: solid 1px #dcdeeb !important;
     border-top: solid 1px #dcdeeb !important;
     border-left: solid 1px #dcdeeb !important;*/
+    min-height: 35px;
 
 }
 [for="stock_month"] {
@@ -978,7 +982,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
         border: none;
         border-bottom: 1px solid #eee;
         position: relative;
-        padding-left: 50% !important;
+        padding-left: 45% !important;
         white-space: normal;
         text-align: left;
     }
@@ -994,6 +998,9 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
         font-weight: bold;
     }
     #no-more-tables td:before { content: attr(data-title); }
+}
+@media screen and (max-width: 414px){
+    #no-more-tables tbody td input[type="text"] {max-width: 100px;}
 }
 .table_bottom {
     margin: 20px 0;
@@ -1044,7 +1051,6 @@ input[readonly] {
 	/*border: 0px;*/
     text-align: center;
 }
-.quantity_data, .qty_1, .amount_rt_a { text-align: right !important;}
 
 /*#no-more-tables tbody tr td[data-title="Credit Limit"],*/
 /*#no-more-tables tbody tr td[data-title="Product SKU Code"] input,*/
@@ -1096,6 +1102,37 @@ input[readonly] {
 #no-more-tables tbody tr td[data-title="Enter PO No."] input
 
 { text-align: right; padding-right: 5px;}
+.quantity_data, .qty_1, .amount_rt_a { text-align: right !important;}
+
+@media screen and (max-width: 736px){
+    #no-more-tables tbody tr td[data-title="Amount"],
+    #no-more-tables tbody tr td[data-title="Amount"] input,
+    #no-more-tables tbody tr td[data-title="Dispatch Amount"],
+    #no-more-tables tbody tr td[data-title="Quantity"] input,
+    #no-more-tables tbody tr td[data-title="Quantity"],
+    #no-more-tables tbody tr td[data-title="Qty. Kg/Ltr"],
+    #no-more-tables tbody tr td[data-title="Dispatched Quantity"] input,
+    #no-more-tables tbody tr td[data-title="ROL Quantity"],
+    #no-more-tables tbody tr td[data-title="ROL Qty Kg/Ltr"],
+    #no-more-tables tbody tr td[data-title="1 point:?kg/ltr"],
+    #no-more-tables tbody tr td[data-title="Value Per Kg. per Ltr"],
+    #no-more-tables tbody tr td[data-title="Value Per Point"],
+    #no-more-tables tbody tr td[data-title="Target Kg/Ltr"],
+    #no-more-tables tbody tr td[data-title="Value Per Kg/Ltr"],
+    #no-more-tables tbody tr td[data-title="Intransist Qty."],
+    #no-more-tables tbody tr td[data-title="Unrusticted Qty."],
+    #no-more-tables tbody tr td[data-title="Requested Quantity"],
+    #no-more-tables tbody tr td[data-title="Approved Quantity"],
+    #no-more-tables tbody tr td[data-title="Qty Kg/Ltr"],
+    #no-more-tables tbody tr td[data-title="PO No"],
+    #no-more-tables tbody tr td[data-title="OTN"],
+    #no-more-tables tbody tr td[data-title="Mr.Id"],
+    #no-more-tables tbody tr td[data-title="1 pt = ? Kg per Ltr"],
+    #no-more-tables tbody tr td[data-title="Enter PO No."],
+    #no-more-tables tbody tr td[data-title="Enter PO No."] input
+
+    { text-align: center; padding-right: 5px;}
+}
 
 #no-more-tables tbody tr td[data-title="Enter PO No."] { width: 195px;}
 #no-more-tables tbody tr td[data-title="Product SKU Code"],
@@ -1123,7 +1160,7 @@ a.set_pono, .eye_i a {
     font-size: 0;
     white-space: nowrap;
     right: 0;
-    z-index: 100;
+    z-index: 99;
     width: inherit;
     padding: 4px;
 }
@@ -1446,6 +1483,10 @@ a.set_pono, .eye_i a {
     -ms-transition: 0.5s all;
     -o-transition: 0.5s all;
     width: 100%;
+}
+@media screen and (max-width: 1199px) and (min-width: 992px){
+    .middle_form .gren_btn {padding: 0px 30px !important;}
+    .gren_btn {padding: 0px 2px !important;}
 }
 .svn_btn {
     float: left;
@@ -2504,7 +2545,7 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     margin-left: 8px;
     height: 30px;
     width: 30px;
-    padding: 4px;
+    padding: 5px;
     font-size: 16px;
     margin-top: 0px;
     vertical-align: middle;
@@ -2596,7 +2637,7 @@ table.request_table {
 .pln_table_bottom .save_btn button{
     margin-right: 5px;
 }
-@media screen and (max-width: 436px){
+@media screen and (max-width: 600px){
     .pln_table_bottom .save_btn button{ margin-bottom: 10px;}
 }
 .right_planning { padding-left: 0px !important;}
@@ -2664,6 +2705,7 @@ ul.acc_list { margin: 0; padding: 0; text-align: center;}
 .bootstrap-timepicker-as { display: inline-block;}
 @media screen and (max-width: 991px){
     .rsp-datepiker .bootstrap-timepicker-as { display: block;}
+    .actvt-parent .bootstrap-timepicker-as { display: block;}
 }
 .bootstrap-timepicker-as table tr td input { width: 60px !important;}
 @media screen and (max-width: 767px){

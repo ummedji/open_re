@@ -20,8 +20,13 @@ echo form_open('',$attributes); ?>
 
                             <div class="form-group">
                                 <label for="cur_date">Date</label>
-                                <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder="" >
+                                <div class="inln_fld">
+                                    <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder="" >
+                                    <div class="clearfix"></div>
+                                    <label id="cur_date-error" class="error" for="cur_date"></label>
+                                </div>
                             </div>
+                            <div class="clearfix"></div>
 
                             <div class="col-md-6 col-md-offset-3 check_leave">
                             <?php
@@ -41,8 +46,10 @@ echo form_open('',$attributes); ?>
                         <div class="col-md-6 text-center calendar_space">
 
                             <?php if (!$this->input->is_ajax_request()) { ?>
-                            <div id="calendar">
-                                <?php  echo $cal_data; ?>
+                            <div class="row">
+                                <div id="calendar">
+                                    <?php  echo $cal_data; ?>
+                                </div>
                             </div>
                             <?php  } ?>
                             <div class="clearfix"></div>

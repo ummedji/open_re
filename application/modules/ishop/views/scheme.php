@@ -54,7 +54,7 @@
     <div class="row">
         <div class="middle_form">
             <div class="row">
-                <div class="col-md-4_ tp_form">
+                <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label>Retailer Name<span style="color: red">*</span></label>
                         <select class="selectpicker" name="fo_retailer_id" id="retailer_scheme" data-live-search="true">
@@ -62,7 +62,7 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-4_ tp_form">
+                <div class="col-md-2_ tp_form">
                     <div class="form-group">
                         <label>Schemes<span style="color: red">*</span></label>
                         <select class="selectpicker" name="schemes" id="schemes" data-live-search="true">

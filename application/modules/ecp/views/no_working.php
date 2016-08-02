@@ -20,8 +20,13 @@ echo form_open('',$attributes); ?>
                         <div class="col-md-6 text-center radio_space tp_form inline-parent">
                             <div class="form-group">
                                 <label for="cur_date">Date</label>
-                                <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder=""  >
+                                <div class="inln_fld">
+                                    <input type="text" class="form-control" name="cur_date" id="cur_date" placeholder=""  >
+                                    <div class="clearfix"></div>
+                                    <label id="cur_date-error" class="error" for="cur_date"></label>
+                                </div>
                             </div>
+                            <div class="clearfix"></div>
                             <div class="col-md-6 col-md-offset-3 check_no_worh">
                             <?php
                             foreach($reason as $k=>$val_res){
@@ -48,8 +53,10 @@ echo form_open('',$attributes); ?>
                             <div class="clearfix"></div>
                         </div>
                         <div class="col-md-6 text-center calendar_space">
-                            <div id="calendar">
-                                <? echo $cal_data; ?>
+                            <div class="row">
+                                <div id="calendar">
+                                    <? echo $cal_data; ?>
+                                </div>
                             </div>
                             <div class="clearfix"></div>
                         </div>

@@ -10,6 +10,12 @@
     padding: 0.4em;
     width: 90%;
 }
+@media screen and (max-width: 414px){
+    #calendar {
+        padding: 0;
+        width: 100%;
+    }
+}
 #calendar .navigation {
     background-color: #00793a;
     border: 1px solid #65ac1e;

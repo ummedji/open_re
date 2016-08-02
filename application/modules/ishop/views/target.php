@@ -157,7 +157,7 @@ echo form_open('',$attributes);
         <div class="row">
             <div class="middle_form">
                 <div class="row">
-                    <div class="col-md-4_ tp_form">
+                    <div class="col-md-2_ tp_form">
                         <div class="form-group">
                             <label>Product Sku Name<span style="color: red">*</span></label>
                             <div class="inln_fld">

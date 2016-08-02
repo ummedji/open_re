@@ -39,15 +39,21 @@ echo form_open('',$attributes);
                             <div class="col-md-12 text-center tp_form inline-parent">
                                 <div class="form-group">
                                     <label>Execution Date<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="execution_date" id="execution_date" placeholder="">
+                                    <div class="inln_fld">
+                                        <input type="text" class="form-control" name="execution_date" id="execution_date" placeholder="">
+                                        <div class="clearfix"></div>
+                                        <label id="execution_date-error" class="error" for="execution_date"></label>
+                                    </div>
                                 </div>
 
-                                <div class="form-group">
+                                <div class="form-group actvt-parent">
                                     <label>Time<span style="color: red">*</span></label>
-
-                                    <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                        <input id="execution_time" name="execution_time" type="text" class="input-group-time form-control input-append">
+                                    <div class="inln_fld">
+                                        <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                            <input id="execution_time" name="execution_time" type="text" class="input-group-time form-control input-append">
+                                        </div>
                                     </div>
+
                                 </div>
                             </div>
                             <div class="clearfix"></div>
