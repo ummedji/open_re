@@ -3666,10 +3666,6 @@ class Ishop_model extends BF_Model
 
     public function view_schemes_detail($user_id, $country_id, $year, $region = null, $territory = null, $login_user, $retailer = null, $page = null, $web_service = null)
     {
-
-       /* $sql = 'SELECT isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
-        if ($login_user == 8) {*/
-
         $sql ='SELECT SQL_CALC_FOUND_ROWS isa.allocation_id as id,isa.allocation_id,bmbgd.business_georaphy_name as business_georaphy_name_parent,bmbgd1.business_georaphy_code,bmbgd1.business_georaphy_name,bu.display_name,bu.user_code,ms.scheme_code,ms.scheme_name,mpsc.product_sku_name,mss.slab_no,mss.1point,mss.value_per_kg ';
         if($login_user== 8)
         {
@@ -3905,10 +3901,10 @@ class Ishop_model extends BF_Model
         if (isset($invoice_month) && !empty($invoice_month) && $invoice_month != '') {
             $sql .= 'AND DATE_FORMAT(ips.invoice_date,"%Y-%m") =' . "'" . $invoice_month . "'" . ' ';
         }
-        if (isset($po_no) && !empty($po_no) && $po_no != ''  && $po_no == '0') {
+        if (isset($po_no) && $po_no != '') { // && !empty($po_no) && $po_no == '0'
             $sql .= 'AND ips.PO_no =' ."'" . $po_no ."'". ' ';
         }
-        if (isset($invoice_no) && !empty($invoice_no) && $invoice_no != '' && $invoice_no == '0') {
+        if (isset($invoice_no) && $invoice_no != '') { // && !empty($invoice_no) && $invoice_no == '0'
             $sql .= 'AND ips.invoice_no =' ."'" . $invoice_no ."'". ' ';
         }
         $sql .= " AND ips.country_id= " . $country_id . " ";
@@ -3931,6 +3927,7 @@ class Ishop_model extends BF_Model
             $invoice_confirmation = $info->result_array();
             return $invoice_confirmation;
         } else {
+            //echo $sql;
             $invoice_confirmation = $this->grid->get_result_res($sql);
             // testdata($invoice_confirmation);
 
@@ -4850,9 +4847,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function get_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null,$local_date=null)
     {
-
-        //$sql = 'SELECT bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, bmupd.first_name as ot_fname,bmupd.middle_name as ot_mname,bmupd.last_name as ot_lname,t_bmupd.first_name as to_fname,t_bmupd.middle_name as to_mname,t_bmupd.last_name as to_lname,f_bmupd.first_name as fr_fname,f_bmupd.middle_name as fr_mname,f_bmupd.last_name as fr_lname,f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit ';
-
         $sql =' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn,bio.created_on ';
 
         $sql .= ' FROM bf_ishop_orders as bio ';
@@ -4976,7 +4970,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "OP_Ackno";
+                                $order_status = "Un Acknowledge";
                             }
 
                             $order_data = '<input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input id="check_data_' . $od['order_id'] . '" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
@@ -5054,7 +5048,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 } elseif ($od['order_status'] == 3) {
                                     $order_status = "Rejected";
                                 } elseif ($od['order_status'] == 4) {
-                                    $order_status = "OP_Ackno";
+                                    $order_status = "Un Acknowledge";
                                 }
 
                                 $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -5140,7 +5134,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($od['order_status'] == 3) {
                             $order_status = "Rejected";
                         } elseif ($od['order_status'] == 4) {
-                            $order_status = "OP_Ackno";
+                            $order_status = "Un Acknowledge";
                         }
 
 
@@ -5242,7 +5236,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "OP_Ackno";
+                                $order_status = "Un Acknowledge";
                             }
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' ."'".trim($od['PO_no'])."'". ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -7870,7 +7864,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_status = "Rejected";
                         }
                         elseif ($od['order_status'] == 4) {
-                            $order_status = "OP_Ackno";
+                            $order_status = "Un Acknowledge";
                         }
 
                         $order_view['row'][] = array($i, $od['f_u_code'],$od['f_dn'] , $od['PO_no'], $od['order_tracking_no'],$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'],$od['qty_kgl'],$od['amount'],$od['current_stock'],$od['dispatched_quantity'], $od['credit_limit'], $order_status);
@@ -7969,7 +7963,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $order_status = "Rejected";
                             }
                             elseif ($od['order_status'] == 4) {
-                                $order_status = "OP_Ackno";
+                                $order_status = "Un Acknowledge";
                             }
 
                             if($local_date != null){
@@ -8078,7 +8072,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_status = "Rejected";
                     }
                     elseif ($od['order_status'] == 4) {
-                        $order_status = "OP_Ackno";
+                        $order_status = "Un Acknowledge";
                     }
 
                     if ($radio_checked == "farmer")
@@ -8206,7 +8200,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($od['order_status'] == 3) {
                             $order_status = "Rejected";
                         } elseif ($od['order_status'] == 4) {
-                            $order_status = "OP_Ackno";
+                            $order_status = "Un Acknowledge";
                         }
 
 

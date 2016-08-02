@@ -5229,6 +5229,9 @@ class Esp extends Front_Controller
                     }
 
                 }
+
+                $updated_pbg_data_array[] = 1;
+
             }
             else{
 
@@ -5259,10 +5262,13 @@ class Esp extends Front_Controller
 
                 $this->esp_model->insert_forecast_assumption_data_history($forecast_id, $assumption_data, $probablity_data, $monthdata, $history_update_status);
 
+                $updated_pbg_data_array[] = 1;
+
             }
         }
 
-        if(!empty($updated_pbg_data_array)) {
+        if(!empty($updated_pbg_data_array))
+        {
             //  $final_array["success"] = true;
             $final_array["success"][] = @implode(",", $updated_pbg_data_array) . " Data uploaded successfully.";
             echo json_encode($final_array);

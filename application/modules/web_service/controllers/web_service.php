@@ -923,7 +923,7 @@ class Web_service extends Front_Controller
                     } elseif ($order['order_status'] == 3) {
                         $order_status = "Rejected";
                     } elseif ($order['order_status'] == 4) {
-                        $order_status = "op_ackno";
+                        $order_status = "Un Acknowledge";
                     }
 
                     if ($order['read_status'] == 0) {
