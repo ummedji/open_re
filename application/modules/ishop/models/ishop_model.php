@@ -2490,7 +2490,7 @@ class Ishop_model extends BF_Model
         $sql .= 'AND itsp.created_by_user =' . $user_id . ' ';
         $sql .= 'AND itsp.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY itsp.tertiary_sales_id DESC ';
-
+        testdata($sql);
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
             // For Pagination
             $limit = 10;
