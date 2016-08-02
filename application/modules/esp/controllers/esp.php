@@ -5323,18 +5323,31 @@ class Esp extends Front_Controller
 
                 $final_data["budget_quantity"] = array_values($final_data["budget_quantity"]);
 
-                $objWorkSheet->setCellValue("D$u", $final_data["budget_quantity"][0]);
-                $objWorkSheet->setCellValue("E$u", $final_data["budget_quantity"][1]);
-                $objWorkSheet->setCellValue("F$u", $final_data["budget_quantity"][2]);
-                $objWorkSheet->setCellValue("G$u", $final_data["budget_quantity"][3]);
-                $objWorkSheet->setCellValue("H$u", $final_data["budget_quantity"][4]);
-                $objWorkSheet->setCellValue("I$u", $final_data["budget_quantity"][5]);
-                $objWorkSheet->setCellValue("J$u", $final_data["budget_quantity"][6]);
-                $objWorkSheet->setCellValue("K$u", $final_data["budget_quantity"][7]);
-                $objWorkSheet->setCellValue("L$u", $final_data["budget_quantity"][8]);
-                $objWorkSheet->setCellValue("M$u", $final_data["budget_quantity"][9]);
-                $objWorkSheet->setCellValue("N$u", $final_data["budget_quantity"][10]);
-                $objWorkSheet->setCellValue("O$u", $final_data["budget_quantity"][11]);
+                $budget_quantity_0 = isset($final_data["budget_quantity"][0]) ? $final_data["budget_quantity"][0]:0;
+                $budget_quantity_1 = isset($final_data["budget_quantity"][1]) ? $final_data["budget_quantity"][1]:0;
+                $budget_quantity_2 = isset($final_data["budget_quantity"][2]) ? $final_data["budget_quantity"][2]:0;
+                $budget_quantity_3 = isset($final_data["budget_quantity"][3]) ? $final_data["budget_quantity"][3]:0;
+                $budget_quantity_4 = isset($final_data["budget_quantity"][4]) ? $final_data["budget_quantity"][4]:0;
+                $budget_quantity_5 = isset($final_data["budget_quantity"][5]) ? $final_data["budget_quantity"][5]:0;
+                $budget_quantity_6 = isset($final_data["budget_quantity"][6]) ? $final_data["budget_quantity"][6]:0;
+                $budget_quantity_7 = isset($final_data["budget_quantity"][7]) ? $final_data["budget_quantity"][7]:0;
+                $budget_quantity_8 = isset($final_data["budget_quantity"][8]) ? $final_data["budget_quantity"][8]:0;
+                $budget_quantity_9 = isset($final_data["budget_quantity"][9]) ? $final_data["budget_quantity"][9]:0;
+                $budget_quantity_10 = isset($final_data["budget_quantity"][10])? $final_data["budget_quantity"][10]:0;
+                $budget_quantity_11 = isset($final_data["budget_quantity"][11])? $final_data["budget_quantity"][11]:0;
+
+                $objWorkSheet->setCellValue("D$u", $budget_quantity_0);
+                $objWorkSheet->setCellValue("E$u", $budget_quantity_1);
+                $objWorkSheet->setCellValue("F$u", $budget_quantity_2);
+                $objWorkSheet->setCellValue("G$u", $budget_quantity_3);
+                $objWorkSheet->setCellValue("H$u", $budget_quantity_4);
+                $objWorkSheet->setCellValue("I$u", $budget_quantity_5);
+                $objWorkSheet->setCellValue("J$u", $budget_quantity_6);
+                $objWorkSheet->setCellValue("K$u", $budget_quantity_7);
+                $objWorkSheet->setCellValue("L$u", $budget_quantity_8);
+                $objWorkSheet->setCellValue("M$u", $budget_quantity_9);
+                $objWorkSheet->setCellValue("N$u", $budget_quantity_10);
+                $objWorkSheet->setCellValue("O$u", $budget_quantity_11);
 
                 $objWorkSheet->getStyle("D$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
                 $objWorkSheet->getStyle("E$u")->getProtection()->setLocked(PHPExcel_Style_Protection::PROTECTION_UNPROTECTED);
