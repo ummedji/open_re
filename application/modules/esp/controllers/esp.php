@@ -5595,18 +5595,21 @@ class Esp extends Front_Controller
             $bussiness_code = $_POST["bussiness_code"];
         }
 
-        //  testdata($_POST);
+       //   testdata($_POST);
 
         if (!empty($files)) {
 
-            $file = $_POST["upload_file_data"]["tmp_name"];
+          //  $file = $_POST["upload_file_data"]["tmp_name"];
 
-            $filename = explode("_", $_POST["upload_file_data"]["name"]);
+            $file = $_FILES["upload_file_data"]["tmp_name"];
+
+           // $filename = explode("_", $_POST["upload_file_data"]["name"]);
+            $filename = explode("_", $_FILES["upload_file_data"]["name"]);
 
             //$filename[] = $_POST["upload_file_data"]["name"];
 
-
-            $ext = explode(".", $_POST["upload_file_data"]["name"]);
+            //$ext = explode(".", $_POST["upload_file_data"]["name"]);
+            $ext = explode(".", $_FILES["upload_file_data"]["name"]);
 
 
             if ($ext[1] == "xls" || $ext[1] == "xlsx") {
@@ -5680,7 +5683,9 @@ class Esp extends Front_Controller
 
                                 $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
                                 echo json_encode($error_array);
-                                die;
+
+                                    die;
+
 
                             }
 
@@ -5728,13 +5733,48 @@ class Esp extends Front_Controller
 
                         }
 
-                        if (!empty($final_array)) {
-                            echo json_encode($final_array);
-                            die;
-                        } else {
+                        if(!empty($final_array))
+                        {
+                            if ($webservice_data == null)
+                            {
+                                echo json_encode($final_array);
+                                die;
+                            }
+                            else{
+
+                                $filename = explode(".",$_FILES["upload_file_data"]["name"]);
+
+                                $filename1 = $user_id."_".$filename[0].".txt";
+
+                                if(file_exists(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename1))
+                                {
+                                    unlink(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename1);
+                                }
+
+                                $myfile = fopen(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename1, "w");
+
+                                $f_data = json_encode($final_array);
+                                fwrite($myfile, $f_data);
+
+                                //$file = FCPATH . "assets/uploads/Uploads/esp_budget/esp_budget.txt";
+
+                                //$file_content = file_get_contents($file);
+
+                                $final_array1["status"][] = true;
+                                $final_array1["data"][] = FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename1;
+                                return json_encode($final_array1);
+                            }
+
+
+                        }
+                        else
+                        {
                             $error_array["fileerror"][] = "No data found.";
                             echo json_encode($error_array);
-                            die;
+
+
+                                die;
+
                         }
 
                   /*  } else {
@@ -5752,20 +5792,32 @@ class Esp extends Front_Controller
 
                     $error_array["fileerror"][] = "File must contain single sheet only.";
                     echo json_encode($error_array);
-                    die;
+
+
+                        die;
+
+
                 }
             } else {
                 //EXTENSION ERROR
 
                 $error_array["fileerror"][] = "Incorrect format. Please upload xlsx or xls format file.";
                 echo json_encode($error_array);
-                die;
+
+
+                    die;
+
+
             }
 
         } else {
             $error_array["fileerror"][] = "No file uploaded.";
             echo json_encode($error_array);
-            die;
+
+
+                die;
+
+
         }
 
     }
@@ -5774,9 +5826,10 @@ class Esp extends Front_Controller
     {
 
         if ($webservice_data != null) {
-            $_POST["val"] = json_decode($_POST['val'], true);
-
+            $_POST["val"] = json_decode($webservice_data["val"], true);
         }
+
+        //testdata($_POST["val"]);
 
         //$user_id,$pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data
 

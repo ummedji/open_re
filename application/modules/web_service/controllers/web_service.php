@@ -2947,8 +2947,20 @@ class Web_service extends Front_Controller
 
         $file_data = $this->input->get_post('val');
 
+        $file_data = file_get_contents($file_data);
+
+        $file_data = json_decode($file_data,true);
+        $file_data = $file_data["budget_data"];
+
+        $file_data = json_encode($file_data);
+
+       // testdata($file_data);
+
+
         if($file_data != "") {
             $data = array("val" => $file_data);
+
+           // testdata($data);
 
             $add_budget_xl_data = modules::run('esp/esp/upload_xl_budget_data', $data);
 
@@ -2966,6 +2978,8 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+
     public function new_esp_budget_upload(){
 
         $user_id = $this->input->get_post('user_id');
@@ -2975,11 +2989,18 @@ class Web_service extends Front_Controller
 
         $file_data =  $_FILES;
 
-        dumpme($file_data);
+        //dumpme($file_data);
 
-        if(isset($file_data) && !empty($file_data)){
 
-            $filename = $_FILES["file_upload_data"]["name"];
+        if(isset($file_data) && !empty($file_data) && $user_id != "" && $country_id != "" && $bussiness_code != ""){
+
+            $data = array(
+                "user_id" => $user_id,
+                "country_id" => $country_id,
+                "bussiness_code" => $bussiness_code
+            );
+
+            $filename = $_FILES["upload_file_data"]["name"];
 
             //CHECK FILE FORMATE
 
@@ -2987,32 +3008,78 @@ class Web_service extends Front_Controller
 
             if($file_data[1] == "xlsx" || $file_data[1] == "xls"){
 
-                $file_temp_data = $_FILES["file_upload_data"]["tmp_name"];
+                $file_temp_data = $_FILES["upload_file_data"]["tmp_name"];
 
-                if (file_exists(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename)) {
-                    unlink(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename);
-                }
+                $upload_budget_xl_data = modules::run('esp/esp/upload_budget_data', $_POST, $_FILES);
 
-                if(move_uploaded_file($file_temp_data, FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename)){
+               // testdata($upload_budget_xl_data);
 
+                $upload_budget_xl_data1 = json_decode($upload_budget_xl_data,true);
+
+                if(array_key_exists("fileerror",$upload_budget_xl_data1))
+                {
+                    return $upload_budget_xl_data;
                 }
                 else
                 {
-                    $result['status'] = false;
-                    $result['message'] = "File not uploaded.";
+
+                    if (file_exists(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename)) {
+                        unlink(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename);
+                    }
+
+                    if(move_uploaded_file($file_temp_data, FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename)){
+
+                        echo json_encode($upload_budget_xl_data1);
+                        die;
+                        //$result['status'] = true;
+                        //$result['data'] = FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename;
+                       // $upload_budget_xl_data = modules::run('esp/esp/upload_budget_data', $_POST, $_FILES);
+                    }
+                    else
+                    {
+                        $result['status'] = false;
+                        $result['message'] = "File not uploaded.";
+                    }
                 }
             }
-            else{
+            else
+            {
                 $result['status'] = false;
                 $result['message'] = "Please upload xlsx or xls file.";
             }
-
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
         }
 
-        die;
-        if($user_id != "" && $country_id != "" && $bussiness_code != "") {
+        $this->do_json($result);
 
-            $data = array("user_id" => $user_id,
+    }
+
+    /*
+    public function new_upload_budget_data()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        $bussiness_code = $this->input->get_post('bussiness_code');
+
+        $file_data = $this->input->get_post('file_data');
+
+        //dumpme($file_data);
+
+
+
+
+        if(isset($file_data) && !empty($file_data) && $user_id != "" && $country_id != "" && $bussiness_code != "") {
+
+            $get_file_data = file_get_contents($file_data);
+            echo $homepage;
+
+            $data = array(
+                "user_id" => $user_id,
                 "country_id" => $country_id,
                 "bussiness_code" => $bussiness_code
             );
@@ -3020,6 +3087,16 @@ class Web_service extends Front_Controller
 
 
     }
+
+    */
+    public function read_data()
+    {
+
+        $file_content = json_decode($file_content,true);
+        testdata($file_content);
+
+    }
+
 
     /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */
     /**
