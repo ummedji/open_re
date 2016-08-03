@@ -5061,9 +5061,9 @@ class Esp extends Front_Controller
                     }
 
                      //NEED TO REMOVE BEFORE UPLOAD
-                     if($l == 1){
-                         break;
-                     }
+                    // if($l == 1){
+                    //     break;
+                    // }
                      $l++;
                  }
 
@@ -5108,8 +5108,9 @@ class Esp extends Front_Controller
     public function upload_xl_forecast_data($webservice_data = null)
     {
 
+      //  testdata(json_decode($_POST["val"][0],true));
         if ($webservice_data != null) {
-            $_POST["val"][0] = json_decode($_POST['val'][0], true);
+            $_POST["val"] = json_decode($_POST["val"], true);
 
         }
 
@@ -5117,7 +5118,7 @@ class Esp extends Front_Controller
 
         $updated_pbg_data_array = array();
 
-        testdata($_POST["val"][0]);
+       // testdata($_POST["val"][0]);
 
         foreach ($_POST["val"][0] as $key_data => $forecast_data) {
             $monthdata = $key_data;
@@ -5133,6 +5134,7 @@ class Esp extends Front_Controller
 
                 $pbg_name = $forecastdata["pbg_name"];
 
+                //$pbg = preg_replace('/\s+/', '_', $pbg);
 
                 $assumption = isset($forecastdata["assumption"]) ? $forecastdata["assumption"] : "";
 
