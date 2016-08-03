@@ -3857,6 +3857,7 @@ class Esp extends Front_Controller
 
                         $old_budget_id = $check_record_exist[0]['budget_id'];
 
+                        $budget_insert_id = $old_budget_id;
                         //UPDATE MAIN TABLE RECORD
 
                         $update_status = $this->esp_model->update_budget_data($old_budget_id, $created_user_id);
