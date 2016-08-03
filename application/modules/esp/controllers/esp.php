@@ -3294,6 +3294,8 @@ class Esp extends Front_Controller
                                 }
                             }
 
+                            $self_freeze_status = $this->esp_model->get_budget_freeze_status($budget_id, $login_user_id);
+
 
                             $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id, $monthvalue, $budget_id);
 
@@ -3305,7 +3307,16 @@ class Esp extends Front_Controller
 
                                 if($highest_user_lock_data != 0 && $highest_user_lock_data["lock_status"] == 1)
                                 {
-                                    $editable = "";
+
+                                    if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                    {
+                                        $editable = "readonly";
+                                    }
+                                    else
+                                    {
+                                        $editable = "";
+                                    }
+
                                 }
                                 else
                                 {
@@ -3326,7 +3337,18 @@ class Esp extends Front_Controller
                                     if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
                                     {
                                        //     echo "ccc".$monthvalue."</br>";
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+
+                                       // $editable = "";
                                     }
                                     elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_budget_data[0]["created_by_user"]))
                                     {
@@ -3336,10 +3358,31 @@ class Esp extends Front_Controller
                                     elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"]))
                                     {
                                        //echo "fff".$monthvalue."</br>";
-                                           $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+
+                                        //   $editable = "";
                                     }
                                     elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"])){
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                       // $editable = "";
                                     }
                                     else
                                     {
@@ -3395,6 +3438,7 @@ class Esp extends Front_Controller
                             }
 
 
+                            $self_freeze_status = $this->esp_model->get_budget_freeze_status($budget_id, $login_user_id);
                             $self_lock_data = $this->esp_model->get_budget_senior_lock_status_data($login_user_id, $monthvalue, $budget_id);
 
                             // dumpme($self_lock_data);
@@ -3403,7 +3447,17 @@ class Esp extends Front_Controller
 
                                 if($highest_user_lock_data != 0 && $highest_user_lock_data["lock_status"] == 1)
                                 {
-                                    $editable = "";
+
+                                    if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                    {
+                                        $editable = "readonly";
+                                    }
+                                    else
+                                    {
+                                        $editable = "";
+                                    }
+
+                                    //$editable = "";
                                 }
                                 else
                                 {
@@ -3423,7 +3477,17 @@ class Esp extends Front_Controller
 
                                     if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1) {
                                         //    echo "ccc".$monthvalue."</br>";
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                        //$editable = "";
                                     }
 
                                     elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_budget_data[0]["created_by_user"]))
@@ -3434,10 +3498,30 @@ class Esp extends Front_Controller
                                     elseif($self_lock_data == 0 && $budget_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"]))
                                     {
                                         //echo "fff".$monthvalue."</br>";
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                        //$editable = "";
                                     }
                                     elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_budget_data[0]["created_by_user"])){
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                        //$editable = "";
                                     }
                                   //  elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0) {
                                         //    echo "ddd".$monthvalue."</br>";
@@ -3524,6 +3608,17 @@ class Esp extends Front_Controller
                             echo "4";
 
                             $editable = "";
+
+                            $self_freeze_status = $this->esp_model->get_budget_freeze_status($budget_id, $login_user_id);
+
+                            if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                            {
+                                $editable = "readonly";
+                            }
+                            else
+                            {
+                                $editable = "";
+                            }
 
 
                             $html .= '<td><input rel="' . $l . '_' . $skuvalue['product_sku_country_id'] . '_' . $monthvalue . '" class="budget_qty" id="budget_qty_' . $l . '_' . $skuvalue['product_sku_country_id'] . '" type="text" name="budget_qty[' . $skuvalue['product_sku_country_id'] . '][]" value="' . $budget_qty . '" ' . $editable . '  /></td>';
