@@ -44,12 +44,6 @@ $(document).ready(function() {
             execution_time:{
                 required: true
             },
-            planning_date:{
-                required: true
-            },
-            planning_time:{
-                required: true
-            },
             activity_type_id:{
                 required: true
             },
@@ -73,23 +67,7 @@ $(document).ready(function() {
             },
             diseases:{
                 required: true
-            },
-            farmer_id:
-            {
-                required: true
-            },
-            farmer_no:
-            {
-                required: true
-            },
-            /*   farmer_id:
-             {
-             required: true
-             },
-             farmer_id:
-             {
-             required: true
-             }*/
+            }
         }
 
 
@@ -131,106 +109,55 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#check_save', function () {
-        $('#farmer_id').addClass('ignore');
-        $('#farmer_no').addClass('ignore');
-        $('#customer_name').addClass('ignore');
-        $('#customer_no').addClass('ignore');
-
+        alert('in');
         var param = $("#activity_unplanned").serializeArray();
 
-        //console.log(param);die;
         var $valid = $("#activity_unplanned").valid();
         if(!$valid) {
+            alert('in');
             activity_unplanned_validators.focusInvalid();
             return false;
         }
         else
         {
-            if($("#farmer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Key Farmer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
-                return false;
-            }
-            else  if($("#customer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Customer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                            location.reload();
-                        }
-                    });
-                return false;
-            }
-            else {
-                $.ajax({
-                    type: 'POST',
-                    url: site_url + "ecp/add_activity_unplanned_details",
-                    data: param,
-                    success: function (resp) {
-                        var message = "";
-                        if(resp != 0){
-                            console.log(resp);
-                            $('#activity_planning_id').val(resp);
-                            message += 'Data Inserted successfully.';
-                        }
-                        else{
-
-                            message += 'Data not Inserted.';
-                        }
-                        $('<div></div>').appendTo('body')
-                            .html('<div><b>'+message+'</b></div>')
-                            .dialog({
-                                appendTo: "#success_file_popup",
-                                modal: true,
-                                zIndex: 10000,
-                                autoOpen: true,
-                                width: 'auto',
-                                resizable: true,
-                                close: function (event, ui) {
-                                    $(this).remove();
-
-                                }
-                            });
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_activity_unplanned_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        console.log(resp);
+                        $('#activity_planning_id').val(resp);
+                        message += 'Data Inserted successfully.';
                     }
-                });
-            }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
+
         }
         return false;
     });
 
     $(document).on('click', '#planning_save', function () {
 
-        $('#farmer_id').addClass('ignore');
-        $('#farmer_no').addClass('ignore');
-        $('#customer_name').addClass('ignore');
-        $('#customer_no').addClass('ignore');
-
         var param = $("#activity_unplanned").serializeArray();
 
         var $valid = $("#activity_unplanned").valid();
@@ -240,27 +167,6 @@ $(document).ready(function() {
         }
         else
         {
-            if($("#farmer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Key Farmer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
-                return false;
-            }
-            else {
                 $.ajax({
                     type: 'POST',
                     url: site_url + "ecp/add_activity_planning_details",
@@ -291,7 +197,7 @@ $(document).ready(function() {
                             });
                     }
                 });
-            }
+
         }
         return false;
     });
@@ -831,7 +737,7 @@ function retailerDetails()
         '<div class="row">'+
         '<div class="col-md-6">'+
         '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
-        '<label>Key Retailer<span style="color: red">*</span></label>'+
+        '<label>Key Retailer</label>'+
         '<select class="selectpicker" name="retailer_id" id="retailer_id" data-live-search="true">'+
         '<option value="">Select Retailer</option>'+
         '</select>'+
@@ -839,7 +745,7 @@ function retailerDetails()
         '</div>'+
         '<div class="col-md-6 corp_text mrg_top_30">'+
         '<div class="form-group frm_details text-center">'+
-        '<label>Mobile No.<span style="color: red">*</span></label>'+
+        '<label>Mobile No.</label>'+
         '<input type="text" class="form-control" name="retailer_no" id="retailer_no" placeholder="">'+
         ' <div class="plus_btn" ><a  href="javascript: void(0);" id="add_retailer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>'+
         '</div>'+
@@ -880,7 +786,7 @@ function farmerDetails()
         '<div class="row">'+
         '<div class="col-md-6">'+
         '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
-        '<label>Key Farmer<span style="color: red">*</span></label>'+
+        '<label>Key Farmer</label>'+
         '<select class="selectpicker" name="farmer_id" id="farmer_id" data-live-search="true">'+
         '<option value="">Select Farmer</option>'+
         '</select>'+
@@ -888,7 +794,7 @@ function farmerDetails()
         '</div>'+
         '<div class="col-md-6 corp_text mrg_top_30">'+
         '<div class="form-group frm_details text-center">'+
-        '<label>Mobile No.<span style="color: red">*</span></label>'+
+        '<label>Mobile No.</label>'+
         '<input type="text" class="form-control" name="farmer_no" id="farmer_no" placeholder="">'+
         ' <div class="plus_btn" ><a  href="javascript: void(0);" id="add_farmer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>'+
         '</div>'+

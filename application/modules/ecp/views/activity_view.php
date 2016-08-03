@@ -31,7 +31,7 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
-            <div id="activity_execution_main">
+            <div id="activity_view_main">
                 <div class="col-md-9">
                     <div class="top_form planning_parent">
                         <div class="row">

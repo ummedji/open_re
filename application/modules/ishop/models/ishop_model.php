@@ -2206,6 +2206,41 @@ class Ishop_model extends BF_Model
         }
     }
 
+    public function get_tertiary_data($customer_id,$stock_month)
+    {
+        $this->db->select('*');
+        $this->db->from('bf_ishop_tertiary_sales');
+        $this->db->where('sales_month', $stock_month);
+        $this->db->where('customer_id', $customer_id);
+
+        $data = $this->db->get()->result_array();
+
+        if (isset($data) && !empty($data)) {
+            return $data;
+        } else {
+            return 0;
+        }
+    }
+
+    public function get_tertiary_detail_data($tertiary_sales_id,$prd_sku,$units)
+    {
+
+        $this->db->select('*');
+        $this->db->from('bf_ishop_tertiary_sales_products');
+        $this->db->where('tertiary_sales_id', $tertiary_sales_id);
+        $this->db->where('product_sku_id', $prd_sku);
+        $this->db->where('unit', $units);
+
+        $data = $this->db->get()->row_array();
+
+        if (isset($data) && !empty($data)) {
+            return $data;
+        } else {
+            return 0;
+        }
+
+    }
+
 
     /**
      * @ Function Name        : add_ishop_sales_detail
@@ -2216,7 +2251,8 @@ class Ishop_model extends BF_Model
 
     public function add_ishop_sales_detail($user_id, $country_id, $xl_data = null, $xl_flag = null,$web_service = null)
     {
-        if ($xl_flag == null) {
+        if($xl_flag == null)
+        {
 
             $radio_data = $this->input->post("radio1");
             $stock_month = $this->input->post("stock_month");
@@ -2243,10 +2279,7 @@ class Ishop_model extends BF_Model
             $distributor_sales = $this->input->post("distributor_sales");
             $retailer_id = $this->input->post("retailer_id");
 
-
             $total_amount = array_sum($amount);
-
-
 
 
             if ($radio_data == 'retailer') {
@@ -2261,23 +2294,66 @@ class Ishop_model extends BF_Model
                     'created_on' => date('Y-m-d H:i:s'),
                 );
                 //  testdata($tertiary_sales);
-                if ($this->db->insert('ishop_tertiary_sales', $tertiary_sales)) {
-                    $insert_id = $this->db->insert_id();
+
+
+                $check_tertiary_data = $this->get_tertiary_data($customer_id,$stock_month.'-01');
+
+               // testdata($check_tertiary_data);
+                if($check_tertiary_data != 0)
+                {
+                    $tertiary_sales_id = $check_tertiary_data[0]["tertiary_sales_id"];
+
+                    foreach ($product_sku_id as $key => $prd_sku) {
+
+                        $check_tertiary_detail_data = $this->get_tertiary_detail_data($tertiary_sales_id,$prd_sku,$units[$key]);
+
+                        $tertiary_sales_product_data = array(
+                            'tertiary_sales_id' => $tertiary_sales_id,
+                            'product_sku_id' => $prd_sku,
+                            'quantity' => $quantity[$key],
+                            'amount' => $amount[$key],
+                            'unit' => $units[$key],
+                            'qty_kgl' => $qty_kgl[$key],
+                        );
+
+                        if($check_tertiary_detail_data != 0)
+                        {
+                            $this->db->where("tertiary_sales_product_id",$check_tertiary_detail_data["tertiary_sales_product_id"]);
+                            $this->db->update('ishop_tertiary_sales_products', $tertiary_sales_product_data);
+
+                        }
+                        else
+                        {
+                            $this->db->insert('ishop_tertiary_sales_products', $tertiary_sales_product_data);
+                        }
+                    }
+
+                }
+                else
+                {
+
+                    if ($this->db->insert('ishop_tertiary_sales', $tertiary_sales)) {
+                        $insert_id = $this->db->insert_id();
+                    }
+
+                    $tertiary_sales_id = $insert_id;
+                    foreach ($product_sku_id as $key => $prd_sku) {
+                        $tertiary_sales_product_data = array(
+
+
+
+                            'tertiary_sales_id' => $tertiary_sales_id,
+                            'product_sku_id' => $prd_sku,
+                            'quantity' => $quantity[$key],
+                            'amount' => $amount[$key],
+                            'unit' => $units[$key],
+                            'qty_kgl' => $qty_kgl[$key],
+                        );
+                        $this->db->insert('ishop_tertiary_sales_products', $tertiary_sales_product_data);
+                    }
+
                 }
 
-                $tertiary_sales_id = $insert_id;
-                foreach ($product_sku_id as $key => $prd_sku) {
-                    $tertiary_sales_product_data = array(
-
-                        'tertiary_sales_id' => $tertiary_sales_id,
-                        'product_sku_id' => $prd_sku,
-                        'quantity' => $quantity[$key],
-                        'amount' => $amount[$key],
-                        'unit' => $units[$key],
-                        'qty_kgl' => $qty_kgl[$key],
-                    );
-                    $this->db->insert('ishop_tertiary_sales_products', $tertiary_sales_product_data);
-                }
                 return 1;
 
             } elseif ($radio_data == 'distributor') {
@@ -7863,7 +7939,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         $orderdata = $this->grid->get_result_res($sql,true,$page);
 
-       // testdata($orderdata);
         if (isset($orderdata['result']) && !empty($orderdata['result'])) {
 
             $order_view=array();

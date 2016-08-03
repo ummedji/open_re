@@ -9,6 +9,9 @@ if (isset($activity_planning)) {
 if (isset($activity_execution)) {
     echo theme_view('common/activity_execution');
 }
+if (isset($activity_view)) {
+    echo theme_view('common/activity_view');
+}
 if (isset($table)) {
     echo theme_view('common/table');
 }

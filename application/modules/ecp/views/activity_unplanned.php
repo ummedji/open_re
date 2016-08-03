@@ -63,8 +63,7 @@ echo form_open('',$attributes);
                                 <div class="row form-group">
                                     <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Select Activity Type<span style="color: red">*</span></label></div>
                                     <div class="col-md-4 col-sm-8 cont_size_select mrg_bottom_30" >
-                                        <select class="selectpicker" id="activity_type_id" name="activity_type_id" data-live-search="true">
-                                            <option value="">Select Activity Type</option>
+                                        <select class="selectpicker" id="activity_type_id" name="activity_type_id" data-live-search="true" title="Select Activity Type">
                                             <?php
                                             if(isset($activity_type) && !empty($activity_type)) {
                                                 foreach ($activity_type as $key => $val) {
@@ -88,20 +87,18 @@ echo form_open('',$attributes);
                                 <div class="row form-group" id="geo">
                                     <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>
                                     <div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">
-                                        <select class="selectpicker" data-live-search="true" name="geo_level_2" id="geo_level_2">
-                                            <option value="">Select Geo 2</option>
+                                        <select class="selectpicker" data-live-search="true" name="geo_level_2" id="geo_level_2" title="Select Geo 2">
+
                                         </select>
                                     </div>
                                     <div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>
                                     <div class="col-md-2 col-sm-8 cont_size_select">
-                                        <select class="selectpicker" data-live-search="true" name="geo_level_3" id="geo_level_3">
-                                            <option value="">Select Geo 3</option>
+                                        <select class="selectpicker" data-live-search="true" name="geo_level_3" id="geo_level_3" title="Select Geo 3">
                                         </select>
                                     </div>
                                     <div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>
                                     <div class="col-md-2 col-sm-8 cont_size_select">
-                                        <select class="selectpicker" data-live-search="true" name="geo_level_4" id="geo_level_4">
-                                            <option value="">Select Geo 4</option>
+                                        <select class="selectpicker" data-live-search="true" name="geo_level_4" id="geo_level_4" title="Select Geo 4">
                                         </select>
                                     </div>
                                 </div>
@@ -134,8 +131,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Corp<span style="color: red">*</span></label>
-                                            <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple>
-                                                <option value="">Select Crop</option>
+                                            <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple title="Select Crop">
                                                 <?php
                                                 if (isset($crop_details) && !empty($crop_details)) {
                                                     foreach ($crop_details as $key => $val) {
@@ -159,8 +155,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Products<span style="color: red">*</span></label>
-                                            <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple>
-                                                <option value="">Select Product</option>
+                                            <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple title="Select Product">
                                                 <?php
                                                 if (isset($product_sku) && !empty($product_sku)) {
                                                     foreach ($product_sku as $key => $val) {
@@ -185,7 +180,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Diseases<span style="color: red">*</span></label>
-                                            <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple>
+                                            <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple title="Select Diseases">
                                                 <option value="">Select Diseases</option>
                                                 <?php
                                                 if (isset($diseases_details) && !empty($diseases_details)) {
@@ -213,13 +208,13 @@ echo form_open('',$attributes);
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
-                                            <label>Other Person<span style="color: red">*</span></label>
+                                            <label>Other Person</label>
                                             <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="">
                                         </div>
                                     </div>
                                     <div class="col-md-6 corp_text mrg_top_30">
                                         <div class="form-group frm_details text-center">
-                                            <label>Mobile No.<span style="color: red">*</span></label>
+                                            <label>Mobile No.</label>
                                             <input type="text" class="form-control" name="customer_no" id="customer_no" placeholder="">
                                             <div class="plus_btn" ><a  href="javascript: void(0);" id="add_customer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
@@ -259,8 +254,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                             <label>Digital Library</label>
-                                            <select class="selectpicker" name="digital_id[]" id="digital_id" data-live-search="true" multiple>
-                                                <option value="">Select Digital Library</option>
+                                            <select class="selectpicker" name="digital_id[]" id="digital_id" data-live-search="true" multiple title="Select Digital Library">
                                             </select>
                                         </div>
                                     </div>
@@ -275,8 +269,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                             <label>Joint Visit</label>
-                                            <select class="selectpicker" name="joint_id[]" id="joint_id" data-live-search="true" multiple>
-                                                <option value="">Select Joint Visit</option>
+                                            <select class="selectpicker" name="joint_id[]" id="joint_id" data-live-search="true" multiple title="Select Joint Visit">
                                                 <?php
                                                 if(isset($employee_visit) && !empty($employee_visit)) {
                                                     foreach ($employee_visit as $key => $val) {
@@ -548,14 +541,14 @@ echo form_open('',$attributes);
                                 <div class="col-md-9 tp_form  inline-parent" id="follow_up" style="display: none">
                                     <div class="form-group">
                                         <label>Planning Date<span style="color: red">*</span></label>
-                                        <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="">
+                                        <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="" >
                                     </div>
 
                                     <div class="form-group rsp-datepiker">
                                         <label>Planning Time<span style="color: red">*</span></label>
 
                                         <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                            <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append">
+                                            <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append" >
                                         </div>
                                     </div>
                                     <div class="col-md-12 save_btn">

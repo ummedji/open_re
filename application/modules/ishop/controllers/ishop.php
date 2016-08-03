@@ -2667,7 +2667,7 @@ class Ishop extends Front_Controller
 
                         } elseif ($filename[0] == "companycurrentstock") {
 
-                            if (($column == 'H' && $row != 1 && $data_value != "") || ($column == 'F' && $row != 1 && $data_value != "") || ($column == 'G' && $row != 1 && $data_value != "")) {
+                            if (($column == 'A' && $row != 1 && $data_value != "") || ($column == 'H' && $row != 1 && $data_value != "") || ($column == 'G' && $row != 1 && $data_value != "")) {
 
                                 $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
                                 $data_value = strtotime("+$phpexcepDate days", mktime(0, 0, 0, 1, 1, 1970));
@@ -2843,7 +2843,7 @@ class Ishop extends Front_Controller
 
 
 
-                                    if(count($headerdata) != 8 || $headerdata["A"] != "Product SKU Code"  || $headerdata["B"] != "Product SKU Name"  || $headerdata["C"] != "Batch No"  || $headerdata["D"] != "Unrestricted Qty"  || $headerdata["E"] != "In Transit Qty"  || $headerdata["F"] != "Expiry Date" || $headerdata["G"] != "Mfg. Date" || $headerdata["H"] != "Date Data"){
+                                    if(count($headerdata) != 8 || $headerdata["B"] != "Product SKU Code"  || $headerdata["C"] != "Product SKU Name"  || $headerdata["F"] != "Batch No"  || $headerdata["E"] != "Unrestricted Qty"  || $headerdata["D"] != "In Transit Qty"  || $headerdata["H"] != "Expiry Date" || $headerdata["G"] != "Mfg. Date" || $headerdata["A"] != "Date Data"){
 
                                         $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
                                         echo json_encode($error_array);
@@ -3102,40 +3102,40 @@ class Ishop extends Front_Controller
 
                             } elseif ($filename[0] == "companycurrentstock") {
 
-                                if (!isset($data["A"])) {
+                                if (!isset($data["B"])) {
                                     $product_code = "";
                                 } else {
-                                    $product_code = $data["A"];
-                                }
-
-                                if (!isset($data["B"])) {
-                                    $product_name = "";
-                                } else {
-                                    $product_name = $data["B"];
+                                    $product_code = $data["B"];
                                 }
 
                                 if (!isset($data["C"])) {
-                                    $batch_no = "";
+                                    $product_name = "";
                                 } else {
-                                    $batch_no = $data["C"];
-                                }
-
-                                if (!isset($data["D"])) {
-                                    $Unrestricted_Qty = "";
-                                } else {
-                                    $Unrestricted_Qty = $data["D"];
-                                }
-
-                                if (!isset($data["E"])) {
-                                    $In_Transit_Qty = "";
-                                } else {
-                                    $In_Transit_Qty = $data["E"];
+                                    $product_name = $data["C"];
                                 }
 
                                 if (!isset($data["F"])) {
+                                    $batch_no = "";
+                                } else {
+                                    $batch_no = $data["F"];
+                                }
+
+                                if (!isset($data["E"])) {
+                                    $Unrestricted_Qty = "";
+                                } else {
+                                    $Unrestricted_Qty = $data["E"];
+                                }
+
+                                if (!isset($data["D"])) {
+                                    $In_Transit_Qty = "";
+                                } else {
+                                    $In_Transit_Qty = $data["D"];
+                                }
+
+                                if (!isset($data["H"])) {
                                     $Expiry_Date = "";
                                 } else {
-                                    $Expiry_Date = $data["F"];
+                                    $Expiry_Date = $data["H"];
                                 }
 
                                 if (!isset($data["G"])) {
@@ -3144,10 +3144,10 @@ class Ishop extends Front_Controller
                                     $Mfg_Date = $data["G"];
                                 }
 
-                                if (!isset($data["H"])) {
+                                if (!isset($data["A"])) {
                                     $Date_data = "";
                                 } else {
-                                    $Date_data = $data["H"];
+                                    $Date_data = $data["A"];
                                 }
 
 
@@ -4735,11 +4735,11 @@ class Ishop extends Front_Controller
 		/*$form_date = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$to_date = (isset($_GET['to_date']) ? $_GET['to_date'] : '');*/
 
-		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$f_date = str_replace('/', '-', $form_dt);
 		$form_date = date('Y-m-d', strtotime($f_date));
 
-		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 		$t_date = str_replace('/', '-', $to_dt);
 		$to_date = date('Y-m-d', strtotime($t_date));
 
@@ -5004,11 +5004,11 @@ class Ishop extends Front_Controller
 		$this->load->library('excel');
 		$user = $this->auth->user();
 
-		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$f_date = str_replace('/', '-', $form_dt);
 		$form_date = date('Y-m-d', strtotime($f_date));
 
-		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 		$t_date = str_replace('/', '-', $to_dt);
 		$to_date = date('Y-m-d', strtotime($t_date));
 
@@ -5645,11 +5645,11 @@ class Ishop extends Front_Controller
 
 		$user = $this->auth->user();
 
-		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$f_date = str_replace('/', '-', $form_dt);
 		$from_date = date('Y-m-d', strtotime($f_date));
 
-		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 		$t_date = str_replace('/', '-', $to_dt);
 		$todate = date('Y-m-d', strtotime($t_date));
 
@@ -5743,11 +5743,11 @@ class Ishop extends Front_Controller
 				$customer_id = (isset($_GET['retailer_id']) ? $_GET['retailer_id'] : '');
 			}
 
-			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 			$f_date = str_replace('/', '-', $form_dt);
 			$from_date = date('Y-m-d', strtotime($f_date));
 
-			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 			$t_date = str_replace('/', '-', $to_dt);
 			$todate = date('Y-m-d', strtotime($t_date));
 
@@ -5878,11 +5878,11 @@ class Ishop extends Front_Controller
 
 			$order_tracking_no = (isset($_GET['order_tracking_no']) ? $_GET['order_tracking_no'] : null);
 
-			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 			$f_date = str_replace('/', '-', $form_dt);
 			$from_date = date('Y-m-d', strtotime($f_date));
 
-			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 			$t_date = str_replace('/', '-', $to_dt);
 			$todate = date('Y-m-d', strtotime($t_date));
 
@@ -5894,6 +5894,7 @@ class Ishop extends Front_Controller
 
 			if($radio_checked == 'farmer')
 			{
+				//testdata($order_data);
 				if(!empty($order_data) && isset($order_data))
 				{
 					$this->excel->getActiveSheet()->setCellValue('A1',$order_data['head'][0]);
@@ -6053,11 +6054,11 @@ class Ishop extends Front_Controller
 		}
 		if($user->role_id == 9)
 		{
-			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 			$f_date = str_replace('/', '-', $form_dt);
 			$from_date = date('Y-m-d', strtotime($f_date));
 
-			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 			$t_date = str_replace('/', '-', $to_dt);
 			$todate = date('Y-m-d', strtotime($t_date));
 
@@ -6119,11 +6120,11 @@ class Ishop extends Front_Controller
 		}
 		if($user->role_id == 10)
 		{
-			$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+			$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 			$f_date = str_replace('/', '-', $form_dt);
 			$from_date = date('Y-m-d', strtotime($f_date));
 
-			$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+			$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 			$t_date = str_replace('/', '-', $to_dt);
 			$todate = date('Y-m-d', strtotime($t_date));
 
@@ -6321,11 +6322,11 @@ class Ishop extends Front_Controller
 		$user = $this->auth->user();
 
 
-		$form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+		$form_dt = (isset($_GET['form_date']) ? $_GET['form_date'] : '');
 		$f_date = str_replace('/', '-', $form_dt);
 		$from_date = date('Y-m-d', strtotime($f_date));
 
-		$to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$to_dt = (isset($_GET['to_date']) ? $_GET['to_date'] : '');
 		$t_date = str_replace('/', '-', $to_dt);
 		$todate = date('Y-m-d', strtotime($t_date));
 
