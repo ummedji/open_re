@@ -2858,7 +2858,7 @@ class Web_service extends Front_Controller
 
         $file_data = $this->input->get_post('val');
 
-        testdata($file_data);
+        testdata(stripslashes($file_data));
 
         $file_data = file_get_contents(stripslashes($file_data));
 
