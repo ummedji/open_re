@@ -5134,7 +5134,7 @@ class Esp extends Front_Controller
 
                 $pbg_name = $forecastdata["pbg_name"];
 
-                //$pbg = preg_replace('/\s+/', '_', $pbg);
+                $pbg_name = preg_replace('/\_+/', ' ', $pbg_name);
 
                 $assumption = isset($forecastdata["assumption"]) ? $forecastdata["assumption"] : "";
 
@@ -5655,7 +5655,7 @@ class Esp extends Front_Controller
                             }
 
                             if ($row == 10) {
-                                break;
+                               // break;
                                 //die;
                             }
                             $i++;
