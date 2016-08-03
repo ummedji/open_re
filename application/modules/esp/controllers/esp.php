@@ -5153,8 +5153,7 @@ class Esp extends Front_Controller
 
       //  testdata(json_decode($_POST["val"][0],true));
         if ($webservice_data != null) {
-            $_POST["val"] = json_decode($_POST["val"], true);
-
+            $_POST["val"] = json_decode($webservice_data["val"], true);
         }
 
         //$user_id,$pbg_id,$sku_id,$user_country_id,$bussiness_code,$budget_data
