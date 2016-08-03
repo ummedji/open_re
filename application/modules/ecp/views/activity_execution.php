@@ -1,6 +1,5 @@
 <?php if (!$this->input->is_ajax_request()) {
-
-    $attributes = array('class' => '', 'id' => 'activity_planning', 'name' => 'activity_planning');
+    $attributes = array('class' => '', 'id' => 'activity_execution', 'name' => 'activity_execution');
     echo form_open('', $attributes);
     ?>
     <div class="col-md-12 full-height">
@@ -32,7 +31,7 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
-            <div id="activity_main">
+            <div id="activity_execution_main">
                 <div class="col-md-9">
                     <div class="top_form planning_parent">
                         <div class="row">
@@ -41,25 +40,17 @@
                                     <div class="col-md-12 text-center tp_form inline-parent">
                                         <div class="form-group">
                                             <label>Select Date<span style="color: red">*</span></label>
-                                            <div class="inln_fld">
-                                                <input type="text" class="form-control" name="planning_date"
-                                                       id="planning_date" placeholder="">
-                                                <div class="clearfix"></div>
-                                                <label id="planning_date-error" class="error" for="planning_date"></label>
-                                            </div>
+                                            <input type="text" class="form-control" name="planning_date"
+                                                   id="planning_date" placeholder="">
                                         </div>
 
-                                        <div class="form-group actvt-parent">
+                                        <div class="form-group">
                                             <label>Time<span style="color: red">*</span></label>
                                             <!--<input  type="text" class="form-control input-append" data-format="hh:mm" id="timepicker1"  />-->
-                                            <div class="inln_fld">
-                                                <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                                    <input id="planning_time" name="planning_time" type="text"
-                                                           class="input-group-time form-control input-append">
-                                                </div>
-                                                <div class="clearfix"></div>
+                                            <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                                <input id="planning_time" name="planning_time" type="text"
+                                                       class="input-group-time form-control input-append">
                                             </div>
-
                                         </div>
                                     </div>
                                     <div class="clearfix"></div>
@@ -505,17 +496,6 @@
                     <input class="current_local_date" type="hidden" name="current_local_date" id="current_local_date"
                            value="<?php echo $current_user->local_date; ?>"/>
 
-                    <div class="col-md-12 table_bottom pln_table_bottom">
-                        <div class="row">
-                            <div class="save_btn">
-                                <button type="button" class="btn btn-primary" id="check_save">Save</button>
-                                <button type="button" class="btn btn-primary" id="check_cancel">Cancel</button>
-                                <button type="button" class="btn btn-primary" id="check_submit">Submit</button>
-                                <button type="button" class="btn btn-primary" id="check_save_as_new">Save As New
-                                </button>
-                            </div>
-                        </div>
-                    </div>
                     <div class="clearfix"></div>
                 </div>
             </div>
@@ -525,6 +505,7 @@
             <?php echo form_close(); ?>
         </div>
     </div>
-<?php } else {
+<?php
+ } else {
     echo theme_view('common/middle');
 } ?>

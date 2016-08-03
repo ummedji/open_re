@@ -1759,6 +1759,197 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     }
 
 
+    public function all_activity_execution_details($user_id, $country_id, $web_service = null,$cur_month=null,$cur_year=null)
+    {
+        if (isset($web_service) && !empty($web_service) && $web_service == 'web_service') {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        } else {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_id,eap.status');
+        }
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd','mpgd.political_geo_id = eap.geo_level_id');
+
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.employee_id', $user_id);
+        $this->db->where('eap.status','2');
+
+        $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%c")', $cur_month);
+        $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%Y")', $cur_year);
+
+        $this->db->order_by('activity_planning_time','ASC');
+        $activity_details = $this->db->get()->result_array();
+        //  testdata($activity_details);
+        if (isset($activity_details) && !empty($activity_details)) {
+            return $activity_details;
+        } else {
+            return false;
+        }
+    }
+
+    public function all_activity_execution($user_id, $country_id, $web_service = null,$cur_month=null,$cur_year=null)
+    {
+        if (isset($web_service) && !empty($web_service) && $web_service == 'web_service') {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        } else {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        }
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd','mpgd.political_geo_id = eap.geo_level_id');
+
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.employee_id', $user_id);
+        $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%c")', $cur_month);
+        $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%Y")', $cur_year);
+        $this->db->where('eap.status','2');
+
+        $this->db->order_by('eap.activity_planning_time', 'ASC');
+
+        $activity_details = $this->db->get()->result_array();
+
+        // testdata($activity_details);
+
+        if (isset($activity_details) && !empty($activity_details)) {
+
+            if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+            {
+                $date_array = array();
+
+                foreach ($activity_details as $k => $val)
+                {
+                    $date_array[$val["activity_planning_date"]][] = $val;
+                }
+
+                $date_array = array_values($date_array);
+
+                return $date_array;
+            }
+            else{
+                $date_array = array();
+
+                foreach ($activity_details as $k => $val)
+                {
+                    $date_array[$val["activity_planning_date"]][] = $val;
+                }
+
+                //  testdata($date_array);
+                return $date_array;
+            }
+
+        } else {
+            return false;
+        }
+    }
+
+    public function all_missed_activity($user_id, $country_id, $web_service = null,$cur_month=null,$cur_year=null)
+    {
+        if (isset($web_service) && !empty($web_service) && $web_service == 'web_service') {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        } else {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        }
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd','mpgd.political_geo_id = eap.geo_level_id');
+
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.employee_id', $user_id);
+        $this->db->where('eap.activity_planning_date <', date('Y-m-d'));
+       /* $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%Y") <',  '"'.$cur_year.'"');*/
+        $this->db->where('eap.status','2');
+
+        $this->db->order_by('eap.activity_planning_time', 'ASC');
+
+        $activity_details = $this->db->get()->result_array();
+        //echo $this->db->last_query();
+         //testdata($activity_details);
+
+        if (isset($activity_details) && !empty($activity_details)) {
+
+            if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+            {
+                $date_array = array();
+
+                foreach ($activity_details as $k => $val)
+                {
+                    $date_array[$val["activity_planning_date"]][] = $val;
+                }
+
+                $date_array = array_values($date_array);
+
+                return $date_array;
+            }
+            else{
+                $date_array = array();
+
+                foreach ($activity_details as $k => $val)
+                {
+                    $date_array[$val["activity_planning_date"]][] = $val;
+                }
+
+                //  testdata($date_array);
+                return $date_array;
+            }
+
+        } else {
+            return false;
+        }
+    }
+
+
+    public function all_current_activity($user_id, $country_id, $web_service = null,$cur_month=null,$cur_year=null)
+    {
+        if (isset($web_service) && !empty($web_service) && $web_service == 'web_service') {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        } else {
+            $this->db->select('eap.activity_planning_date,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id');
+        }
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd','mpgd.political_geo_id = eap.geo_level_id');
+
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.employee_id', $user_id);
+        $this->db->where('eap.activity_planning_date', date('Y-m-d'));
+        $this->db->where('eap.status','2');
+
+        $this->db->order_by('eap.activity_planning_time', 'ASC');
+
+        $activity_details = $this->db->get()->result_array();
+
+        if (isset($activity_details) && !empty($activity_details)) {
+
+            if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+            {
+                $date_array = array();
+
+                foreach ($activity_details as $k => $val)
+                {
+                    $date_array[$val["activity_planning_date"]][] = $val;
+                }
+
+                $date_array = array_values($date_array);
+
+                return $date_array;
+            }
+            else{
+                $date_array = array();
+
+                foreach ($activity_details as $k => $val)
+                {
+                    $date_array[$val["activity_planning_date"]][] = $val;
+                }
+
+                //  testdata($date_array);
+                return $date_array;
+            }
+
+        } else {
+            return false;
+        }
+    }
+
     public function check_planning_date_in_leaves($user_id, $country_id,$planning_date)
     {
         $this->db->select("*");
@@ -2877,6 +3068,95 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         else{
             return 0;
         }
+    }
+
+    public function addActivityExecution($user_id,$country_id,$local_date = null,$web_service = null){
+        testdata($_POST);
+        $activity_planning_id = $this->input->post("inserted_activity_planning_id");
+
+        if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
+        {
+            $plan_date = $this->input->post("execution_date");
+            $pl_date = str_replace('/', '-', $plan_date);
+            $execution_date = date('Y-m-d', strtotime($pl_date));
+
+            $pl_time = $this->input->post("execution_time");
+            $date_time= $execution_date.' '.$pl_time;
+            $execution_date_time = date('Y-m-d H:i:s', strtotime($date_time));
+            $meeting_duration = $this->input->post("meeting_duration");
+            $customer_no = explode(',',$this->input->post("customer_no"));
+            $customer_name =explode(',', $this->input->post("customer_name"));
+            $activity_note = $this->input->post("activity_note");
+            $rating = $this->input->post("rating");
+            $amount = $this->input->post("amount");
+        }
+        else{
+            $plan_date = $this->input->post("execution_date");
+            $pl_date = str_replace('/', '-', $plan_date);
+            $execution_date = date('Y-m-d', strtotime($pl_date));
+
+            $pl_time = $this->input->post("execution_time");
+            $date_time= $execution_date.' '.$pl_time;
+            $execution_date_time = date('Y-m-d H:i:s', strtotime($date_time));
+            $meeting_duration = $this->input->post("meeting_duration");
+            $customer_no = explode(',',$this->input->post("customer_no"));
+            $customer_name =explode(',', $this->input->post("customer_name"));
+            $activity_note = $this->input->post("activity_note");
+            $rating = $this->input->post("rating");
+            $amount = $this->input->post("amount");
+        }
+
+        $activity_planning = array(
+            'execution_date' => (isset($execution_date) && !empty($execution_date)) ? $execution_date : '',
+            'execution_time' => (isset($execution_date_time) && !empty($execution_date_time)) ? $execution_date_time : '',
+            'meeting_duration' => (isset($meeting_duration) && !empty($meeting_duration)) ? $meeting_duration : '',
+            'amount' => (isset($amount) && !empty($amount)) ? $amount : 0,
+            'rating' => (isset($rating) && !empty($rating))  ? $rating : 0,
+            'activity_note' => (isset($activity_note) && !empty($activity_note)) ? $activity_note : '',
+            'status' => '4',
+            'submit_date' => date('Y-m-d'),
+            'modified_by_user' => $user_id,
+            'modified_on' => date('Y-m-d H:i:s'),
+
+        );
+
+        $update_array=array();
+
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $this->db->update('ecp_activity_planning', $activity_planning);
+
+        if ($this->db->affected_rows() > 0) {
+            $update_array[]=1;
+        }
+
+            if(isset($customer_name) && !empty($customer_name)){
+
+                foreach($customer_name as $K=> $val_customer_name)
+                {
+                    $customer_details = array(
+                        'activity_planning_id' => $activity_planning_id,
+                        'customer_name' => (isset($val_customer_name) && !empty($val_customer_name)) ? $val_customer_name : '',
+                        'mobile_no' => (isset($customer_no[$K]) && !empty($customer_no[$K])) ? $customer_no[$K] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_attendees_details', $customer_details);
+                }
+
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+                }
+
+            }
+
+        if(isset($update_array) && !empty($update_array))
+        {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+
+
     }
 
 

@@ -2,40 +2,21 @@ $(document).ready(function() {
     $('#execution_date').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true
+    }).on('changeDate',function(e){
+        dateChangeEvent(e);
     });
 
     $('#execution_time').timepicker({
 
     });
 
-
-    $('#planning_date').datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: true
-    }).on('changeDate',function(e){
-        dateChangeEvent(e);
-    });
-
-    $('#planning_time').timepicker({
-
-    });
-
     $("select#activity_type_id").on("change",function() {
-        var activity_type_selected = $('option:selected', this).attr('code');
-        set_activity_type(activity_type_selected);
-
-    });
-
-    $("select#activity_type_id").on("change",function() {
-        var activity_type_id = $('option:selected', this).val();
-
-        getDigitalLibrary(activity_type_id);
-
+        activityTypeChange();
     });
 
     /*Validation Rule*/
 
-    var activity_unplanned_validators = $("#activity_unplanned").validate({
+    var activity_execution_validators = $("#activity_execution").validate({
         ignore: ".ignore",
         rules: {
             execution_date:{
@@ -49,60 +30,28 @@ $(document).ready(function() {
             },
             planning_time:{
                 required: true
-            },
-            activity_type_id:{
-                required: true
-            },
-            geo_level_2:{
-                required: true
-            },
-            geo_level_3:{
-                required: true
-            },
-            geo_level_4:{
-                required: true
-            },
-            activity_address:{
-                required: true
-            },
-            crop:{
-                required: true
-            },
-            product_sku:{
-                required: true
-            },
-            diseases:{
-                required: true
-            },
-            farmer_id:
-            {
-                required: true
-            },
-            farmer_no:
-            {
-                required: true
-            },
-            /*   farmer_id:
-             {
-             required: true
-             },
-             farmer_id:
-             {
-             required: true
-             }*/
+            }
         }
-
-
     });
 
     /*Validation Rule*/
 
+
+
     $(document).on("click","#add_farmer",function() {
+
         $('#farmer_id').removeClass('ignore');
         $('#farmer_no').removeClass('ignore');
 
-        add_farmer();
-
+        var $valid = $("#activity_execution").valid();
+        if(!$valid) {
+            activity_execution_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            add_farmer();
+        }
     });
 
     $(document).on("click","#add_retailer",function() {
@@ -110,141 +59,114 @@ $(document).ready(function() {
         $('#retailer_id').removeClass('ignore');
         $('#retailer_no').removeClass('ignore');
 
-        add_retailer();
-
+        var $valid = $("#activity_execution").valid();
+        if(!$valid) {
+            activity_execution_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            add_retailer();
+        }
     });
 
-    $("#add_product").click(function() {
-        add_product();
-    });
-
-    $("#add_product_material").click(function() {
-        add_product_material();
-    });
-
-    $("#add_material").click(function() {
-        add_material();
-    });
-
-    $("#add_customer").click(function() {
-        add_customer();
-    });
 
     $(document).on('click', '#check_save', function () {
-        $('#farmer_id').addClass('ignore');
-        $('#farmer_no').addClass('ignore');
-        $('#customer_name').addClass('ignore');
-        $('#customer_no').addClass('ignore');
 
-        var param = $("#activity_unplanned").serializeArray();
+        var param = $("#activity_execution").serializeArray();
 
-        //console.log(param);die;
-        var $valid = $("#activity_unplanned").valid();
+        var $valid = $("#activity_execution").valid();
         if(!$valid) {
-            activity_unplanned_validators.focusInvalid();
+            activity_execution_validators.focusInvalid();
             return false;
         }
         else
         {
-            if($("#farmer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Key Farmer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
-                return false;
-            }
-            else  if($("#customer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Customer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                            location.reload();
-                        }
-                    });
-                return false;
-            }
-            else {
-                $.ajax({
-                    type: 'POST',
-                    url: site_url + "ecp/add_activity_unplanned_details",
-                    data: param,
-                    success: function (resp) {
-                        var message = "";
-                        if(resp != 0){
-                            console.log(resp);
-                            $('#activity_planning_id').val(resp);
-                            message += 'Data Inserted successfully.';
-                        }
-                        else{
-
-                            message += 'Data not Inserted.';
-                        }
-                        $('<div></div>').appendTo('body')
-                            .html('<div><b>'+message+'</b></div>')
-                            .dialog({
-                                appendTo: "#success_file_popup",
-                                modal: true,
-                                zIndex: 10000,
-                                autoOpen: true,
-                                width: 'auto',
-                                resizable: true,
-                                close: function (event, ui) {
-                                    $(this).remove();
-
-                                }
-                            });
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_activity_execution_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        message += 'Data Inserted successfully.';
                     }
-                });
-            }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
         }
         return false;
     });
 
-    $(document).on('click', '#planning_save', function () {
+    $(document).on("click","#add_customer",function() {
+        add_customer();
+    });
+    function add_customer()
+    {
 
-        $('#farmer_id').addClass('ignore');
-        $('#farmer_no').addClass('ignore');
-        $('#customer_name').addClass('ignore');
-        $('#customer_no').addClass('ignore');
+        var customer_name = $('#customer_name').val();
+        var customer_no = $('#customer_no').val();
 
-        var param = $("#activity_unplanned").serializeArray();
+        var d =  "<tr>"+
+            "<td data-title='Key Farmer'>" +
+            "<input class='input_remove_border' type='text'name='customer_name[]' value='"+customer_name+"' readonly/>" +
+            "</td>"+
+            "<td data-title='Mobile No.'>" +
+            "<input type='text' class='input_remove_border' name='customer_no[]' value='"+customer_no+"' readonly/>" +
+            "</td>"+
+            "<td  data-title='Action' class='numeric'>" +
+            "<div class='delete_i customer_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
+            "</td>"+
+            "</tr>";
 
-        var $valid = $("#activity_unplanned").valid();
-        if(!$valid) {
-            activity_unplanned_validators.focusInvalid();
+        $("#customer_detail").append(d);
+        $('#customer_name').val('');
+        $('#customer_no').val('');
+    }
+
+    $(document).on('click', 'div.customer_detail', function () {
+        if (confirm("Are you sure?")) {
+            $(this).closest('tr').remove();
+        }
+        else{
             return false;
         }
-        else
-        {
-            if($("#farmer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Key Farmer Details.';
+        return false;
+    });
 
+    $(document).on('click','#check_save',function(){
+        var param = $("#activity_execution").serializeArray();
+
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ecp/add_activity_execution_details",
+            data: param,
+            success: function (resp) {
+                var message = "";
+                if(resp != 0){
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
                 $('<div></div>').appendTo('body')
                     .html('<div><b>'+message+'</b></div>')
                     .dialog({
@@ -258,63 +180,12 @@ $(document).ready(function() {
                             $(this).remove();
                         }
                     });
-                return false;
             }
-            else {
-                $.ajax({
-                    type: 'POST',
-                    url: site_url + "ecp/add_activity_planning_details",
-                    data: param,
-                    success: function (resp) {
-                        var message = "";
-                        if(resp != 0){
-                            $('#activity_planning_id').val(resp);
-                            message += 'Data Inserted successfully.';
-                        }
-                        else{
-
-                            message += 'Data not Inserted.';
-                        }
-                        $('<div></div>').appendTo('body')
-                            .html('<div><b>'+message+'</b></div>')
-                            .dialog({
-                                appendTo: "#success_file_popup",
-                                modal: true,
-                                zIndex: 10000,
-                                autoOpen: true,
-                                width: 'auto',
-                                resizable: true,
-                                close: function (event, ui) {
-                                    $(this).remove();
-
-                                }
-                            });
-                    }
-                });
-            }
-        }
-        return false;
+        });
     });
 
 });
 
-$(function () {
-
-    $("#activity_rate").rateYo({
-        starWidth: "30px",
-        normalFill: "#cccccc",
-        ratedFill: "#65ac1e"
-    });
-
-    var $rateYo = $("#activity_rate").rateYo();
-
-    $("#activity_rate").click(function () {
-        /* get rating */
-        var rating = $rateYo.rateYo("rating");
-        $("#rating").val(rating);
-    });
-
-});
 
 function add_farmer()
 {
@@ -328,7 +199,7 @@ function add_farmer()
         "<input type='hidden' name='farmers[]' value='"+farmer_id+"'/>" +
         "</td>"+
         "<td data-title='Mobile No.'>" +
-        "<input type='text' class='input_remove_border' name='farmer_num[]' value='"+farmer_no+"' maxlength='15' readonly/>" +
+        "<input type='text' class='input_remove_border' name='farmer_num[]' value='"+farmer_no+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i farmer_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -339,16 +210,6 @@ function add_farmer()
     $('#farmer_id').selectpicker('val', '');
     $('#farmer_no').val('');
 }
-
-$(document).on('click', 'div.farmer_detail', function () {
-    if (confirm("Are you sure?")) {
-        $(this).closest('tr').remove();
-    }
-    else{
-        return false;
-    }
-    return false;
-});
 
 function add_retailer()
 {
@@ -362,7 +223,7 @@ function add_retailer()
         "<input type='hidden' name='farmers[]' value='"+retailer_id+"'/>" +
         "</td>"+
         "<td data-title='Mobile No.'>" +
-        "<input type='text' class='input_remove_border ' name='farmer_num[]' value='"+retailer_no+"' maxlength='15' readonly/>" +
+        "<input type='text' class='input_remove_border' name='farmer_num[]' value='"+retailer_no+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i farmer_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -374,7 +235,7 @@ function add_retailer()
     $('#retailer_no').val('');
 }
 
-$(document).on('click', 'div.retailer_detail', function () {
+$(document).on('click', 'div.farmer_detail', function () {
     if (confirm("Are you sure?")) {
         $(this).closest('tr').remove();
     }
@@ -384,30 +245,7 @@ $(document).on('click', 'div.retailer_detail', function () {
     return false;
 });
 
-function add_customer()
-{
-
-    var customer_name = $('#customer_name').val();
-    var customer_no = $('#customer_no').val();
-
-    var d =  "<tr>"+
-        "<td data-title='Key Farmer'>" +
-        "<input class='input_remove_border' type='text'name='customer_name[]' value='"+customer_name+"' readonly/>" +
-        "</td>"+
-        "<td data-title='Mobile No.'>" +
-        "<input type='text' class='input_remove_border' name='customer_no[]' value='"+customer_no+"' readonly/>" +
-        "</td>"+
-        "<td  data-title='Action' class='numeric'>" +
-        "<div class='delete_i customer_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
-        "</td>"+
-        "</tr>";
-
-    $("#customer_detail").append(d);
-    $('#customer_name').val('');
-    $('#customer_no').val('');
-}
-
-$(document).on('click', 'div.customer_detail', function () {
+$(document).on('click', 'div.retailer_detail', function () {
     if (confirm("Are you sure?")) {
         $(this).closest('tr').remove();
     }
@@ -499,7 +337,7 @@ function add_material()
         "<input type='hidden' name='materials[]' value='"+material_id+"'/>" +
         "</td>"+
         "<td data-title='Qty.'>" +
-        "<input type='text' class='input_remove_border allownumericwithdecimal' name='materials_qty[]' value='"+qty+"' readonly/>" +
+        "<input type='text' class='input_remove_border' name='materials_qty[]' value='"+qty+"' readonly/>" +
         "</td>"+
         "<td  data-title='Action' class='numeric'>" +
         "<div class='delete_i material_detail' attr-dele=''><a href='#'><i class='fa fa-trash-o' aria-hidden='true'></i></a></div>" +
@@ -520,306 +358,14 @@ $(document).on('click', 'div.material_detail', function () {
     return false;
 });
 
+
 $(document).on("change","select#geo_level_2",function() {
-
-    var  activity_type_selected= $('select#activity_type_id option:selected').val();
-    var  perent_id= $('option:selected', this).val();
-    var  second_perent= 'second_perent';
-
-    get_child_by_perent_id(activity_type_selected,perent_id,second_perent);
-
+    geolevel_2_Change();
 });
 
 $(document).on("change","select#geo_level_3",function() {
-
-    var  activity_type_selected= $('select#activity_type_id option:selected').val();
-    var  perent_id= $('option:selected', this).val();
-    get_child_by_parent_parent_id(activity_type_selected,perent_id);
-
+    geolevel_3_Change();
 });
-
-
-
-function set_activity_type(activity_type_selected){
-
-    if(activity_type_selected == 'FMP001')
-    {
-        get_geo_fo_userdata(activity_type_selected);
-
-        var geo_1 = '';
-        geo_1 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
-            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
-            '<option value="">Select Geo 2</option>'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
-            '</select>'+
-            '</div>';
-
-        $("#geo").html(geo_1);
-
-        farmerDetails();
-
-        var att_count ='';
-
-        att_count +='<div class="default_box_grey">'+
-            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
-            '<div class="form-group" style="margin-bottom: 0;">'+
-            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
-            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
-            '</div>'+
-            '</div>'+
-            '<div class="clearfix"></div>'+
-            '</div>';
-        $("#att_count").html(att_count);
-        $("#demo_data").empty();
-        $("#demo_details").empty();
-    }
-    else if(activity_type_selected == 'FVP002')
-    {
-        get_geo_fo_userdata(activity_type_selected);
-
-        farmerDetails();
-
-        var geo_2 = '';
-        geo_2 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
-            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
-            '<option value="">Select Geo 2</option>'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
-            '</select>'+
-            '</div>';
-
-        $("#geo").html(geo_2);
-        $("#att_count").empty();
-        $("#demo_data").empty();
-        $("#demo_details").empty();
-
-    }
-    else if(activity_type_selected == 'RMP003')
-    {
-        get_geo_fo_userdata(activity_type_selected);
-
-        retailerDetails();
-
-        var geo_3 = '';
-        geo_3 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
-            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
-            '<option value="">Select Geo 2</option>'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
-            '</select>'+
-            '</div>';
-
-        $("#geo").html(geo_3);
-        $("select#geo_level_3").selectpicker('refresh');
-
-        var att_count2 ='';
-
-        att_count2 +='<div class="default_box_grey">'+
-            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
-            '<div class="form-group" style="margin-bottom: 0;">'+
-            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
-            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
-            '</div>'+
-            '</div>'+
-            '<div class="clearfix"></div>'+
-            '</div>';
-        $("#att_count").html(att_count2);
-        $("#demo_data").empty();
-        $("#demo_details").empty();
-
-    }
-    else if(activity_type_selected == 'RVP004')
-    {
-        get_geo_fo_userdata(activity_type_selected);
-        retailerDetails();
-
-        var geo_4 = '';
-        geo_4 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
-            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
-            '<option value="">Select Geo 2<span style="color: red">*</span></option>'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
-            '</select>'+
-            '</div>';
-
-        $("#geo").html(geo_4);
-        $("select#geo_level_3").selectpicker('refresh');
-
-        $("#att_count").empty();
-        $("#demo_data").empty();
-        $("#demo_details").empty();
-    }
-    else if(activity_type_selected == 'DP005')
-    {
-        get_geo_fo_userdata(activity_type_selected);
-        farmerDetails();
-        var geo_5 = '';
-        geo_5 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
-            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
-            '<option value="">Select Geo 2</option>'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
-            '</select>'+
-            '</div>';
-
-        $("#geo").html(geo_5);
-
-        var att_count3 ='';
-
-        att_count3 +='<div class="default_box_grey">'+
-            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
-            '<div class="form-group" style="margin-bottom: 0;">'+
-            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
-            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
-            '</div>'+
-            '</div>'+
-            '<div class="clearfix"></div>'+
-            '</div>';
-        $("#att_count").html(att_count3);
-
-        $("#demo_data").empty();
-
-
-        var demo_detail='';
-
-        demo_detail +='<div class="default_box_white">'+
-            '<div class="col-md-12 plng_title"><h5>Demonstration</h5></div>'+
-            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
-            '<div class="row">'+
-            '<div class="col-md-6">'+
-            '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
-            '<label>Size Of Plot</label>'+
-            '<input type="text" class="form-control" name="size_of_plot" id="size_of_plot" placeholder="">'+
-            '</div>'+
-            '</div>'+
-            '<div class="col-md-6 corp_text mrg_top_30">'+
-            '<div class="form-group frm_details text-center">'+
-            '<label>Spray Volume</label>'+
-            '<input type="text" class="form-control" name="spray_volume" id="spray_volume" placeholder="">'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '<div class="clearfix"></div>'+
-            '</div>';
-
-        $("#demo_details").html(demo_detail);
-
-    }
-    else if(activity_type_selected == 'FDP006')
-    {
-        get_geo_fo_userdata(activity_type_selected);
-        //get_demonstration_data();
-        farmerDetails();
-
-        var geo_6 = '';
-        geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
-            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
-            '<option value="">Select Geo 2</option>'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
-            '</select>'+
-            '</div>'+
-            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
-            '</select>'+
-            '</div>';
-
-        $("#geo").html(geo_6);
-
-        var att_count4 ='';
-
-        att_count4 +='<div class="default_box_grey">'+
-            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
-            '<div class="form-group" style="margin-bottom: 0;">'+
-            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
-            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
-            '</div>'+
-            '</div>'+
-            '<div class="clearfix"></div>'+
-            '</div>';
-        $("#att_count").html(att_count4);
-
-        var demo_data ='';
-
-        demo_data += '<div class="col-md-2 col-sm-3 first_lb"><label>Demonstration</label></div>'+
-            '<div class="col-md-2 col-sm-8 cont_size_select">'+
-            '<select class="selectpicker" name="demo_id" id="demo_id" data-live-search="true">'+
-            '<option value="">Select Demonstration</option>'+
-            '</select>'+
-            '</div>';
-
-        $("#demo_data").html(demo_data);
-        $("select#demo_id").selectpicker('refresh');
-
-
-        var demo_detail1='';
-
-        demo_detail1 +='<div class="default_box_white">'+
-            '<div class="col-md-12 plng_title"><h5>Demonstration</h5></div>'+
-            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
-            '<div class="row">'+
-            '<div class="col-md-6">'+
-            '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
-            '<label>Size Of Plot</label>'+
-            '<input type="text" class="form-control" name="size_of_plot" id="size_of_plot" placeholder="">'+
-            '</div>'+
-            '</div>'+
-            '<div class="col-md-6 corp_text mrg_top_30">'+
-            '<div class="form-group frm_details text-center">'+
-            '<label>Spray Volume</label>'+
-            '<input type="text" class="form-control" name="spray_volume" id="spray_volume" placeholder="">'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '</div>'+
-            '<div class="clearfix"></div>'+
-            '</div>';
-
-        $("#demo_details").html(demo_detail1);
-    }
-}
 
 function retailerDetails()
 {
@@ -919,6 +465,311 @@ function farmerDetails()
     $(".customer_details").html(farmer_detail);
 }
 
+function set_activity_type(activity_type_selected){
+
+    if(activity_type_selected == 'FMP001')
+    {
+        get_geo_fo_userdata(activity_type_selected);
+
+        var geo_1 = '';
+        geo_1 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
+            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
+            '<option value="">Select Geo 2</option>'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
+            '</select>'+
+            '</div>';
+
+        $("#geo").html(geo_1);
+
+        farmerDetails();
+
+        var att_count ='';
+
+        att_count +='<div class="default_box_grey">'+
+            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+            '<div class="form-group" style="margin-bottom: 0;">'+
+            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
+            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
+            '</div>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '</div>';
+        $("#att_count").html(att_count);
+        $("#demo_data").empty();
+        $("#demo_details").empty();
+    }
+
+    else if(activity_type_selected == 'FVP002')
+    {
+        get_geo_fo_userdata(activity_type_selected);
+
+        farmerDetails();
+        var geo_2 = '';
+        geo_2 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
+            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
+            '<option value="">Select Geo 2</option>'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
+            '</select>'+
+            '</div>';
+
+        $("#geo").html(geo_2);
+        $("#att_count").empty();
+        $("#demo_data").empty();
+        $("#demo_details").empty();
+
+    }
+
+    else if(activity_type_selected == 'RMP003')
+    {
+        get_geo_fo_userdata(activity_type_selected);
+        retailerDetails();
+        var geo_3 = '';
+        geo_3 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
+            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
+            '<option value="">Select Geo 2</option>'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
+            '</select>'+
+            '</div>';
+
+        $("#geo").html(geo_3);
+        $("select#geo_level_3").selectpicker('refresh');
+
+        var att_count2 ='';
+
+        att_count2 +='<div class="default_box_grey">'+
+            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+            '<div class="form-group" style="margin-bottom: 0;">'+
+            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
+            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
+            '</div>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '</div>';
+        $("#att_count").html(att_count2);
+        $("#demo_data").empty();
+        $("#demo_details").empty();
+
+    }
+
+    else if(activity_type_selected == 'RVP004')
+    {
+        get_geo_fo_userdata(activity_type_selected);
+        retailerDetails();
+        var geo_4 = '';
+        geo_4 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2</label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
+            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
+            '<option value="">Select Geo 2<span style="color: red">*</span></option>'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
+            '</select>'+
+            '</div>';
+
+        $("#geo").html(geo_4);
+        $("select#geo_level_3").selectpicker('refresh');
+
+        $("#att_count").empty();
+        $("#demo_data").empty();
+        $("#demo_details").empty();
+    }
+
+    else if(activity_type_selected == 'DP005')
+    {
+        get_geo_fo_userdata(activity_type_selected);
+        farmerDetails();
+        var geo_5 = '';
+        geo_5 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
+            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
+            '<option value="">Select Geo 2</option>'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
+            '</select>'+
+            '</div>';
+
+        $("#geo").html(geo_5);
+
+        var att_count3 ='';
+
+        att_count3 +='<div class="default_box_grey">'+
+            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+            '<div class="form-group" style="margin-bottom: 0;">'+
+            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
+            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
+            '</div>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '</div>';
+        $("#att_count").html(att_count3);
+
+        $("#demo_data").empty();
+
+
+        var demo_detail='';
+
+        demo_detail +='<div class="default_box_white">'+
+            '<div class="col-md-12 plng_title"><h5>Demonstration</h5></div>'+
+            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+            '<div class="row">'+
+            '<div class="col-md-6">'+
+            '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
+            '<label>Size Of Plot</label>'+
+            '<input type="text" class="form-control" name="size_of_plot" id="size_of_plot" placeholder="">'+
+            '</div>'+
+            '</div>'+
+            '<div class="col-md-6 corp_text mrg_top_30">'+
+            '<div class="form-group frm_details text-center">'+
+            '<label>Spray Volume</label>'+
+            '<input type="text" class="form-control" name="spray_volume" id="spray_volume" placeholder="">'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '</div>';
+
+        $("#demo_details").html(demo_detail);
+
+    }
+
+    else if(activity_type_selected == 'FDP006')
+    {
+        get_geo_fo_userdata(activity_type_selected);
+        farmerDetails();
+
+        var geo_6 = '';
+        geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
+            '<select class="selectpicker" id="geo_level_2" name="geo_level_2" data-live-search="true">'+
+            '<option value="">Select Geo 2</option>'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo3<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_3" name="geo_level_3" data-live-search="true">'+
+            '</select>'+
+            '</div>'+
+            '<div class="col-md-1 col-sm-3 first_lb"><label>Geo4<span style="color: red">*</span></label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" id="geo_level_4" name="geo_level_4" data-live-search="true">'+
+            '</select>'+
+            '</div>';
+
+        $("#geo").html(geo_6);
+
+        var att_count4 ='';
+
+        att_count4 +='<div class="default_box_grey">'+
+            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+            '<div class="form-group" style="margin-bottom: 0;">'+
+            '<label>Enter Praposed Attandances Count</label>&nbsp;'+
+            '<input type="text" class="form-control" name="attandence_count" id ="attandence_count" placeholder="" style="width: 80px;">'+
+            '</div>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '</div>';
+        $("#att_count").html(att_count4);
+
+        var demo_data ='';
+
+        demo_data += '<div class="col-md-2 col-sm-3 first_lb"><label>Demonstration</label></div>'+
+            '<div class="col-md-2 col-sm-8 cont_size_select">'+
+            '<select class="selectpicker" name="demo_id" id="demo_id" data-live-search="true">'+
+            '<option value="">Select Demonstration</option>'+
+            '</select>'+
+            '</div>';
+
+        $("#demo_data").html(demo_data);
+        $("select#demo_id").selectpicker('refresh');
+
+
+        var demo_detail1='';
+
+        demo_detail1 +='<div class="default_box_white">'+
+            '<div class="col-md-12 plng_title"><h5>Demonstration</h5></div>'+
+            '<div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">'+
+            '<div class="row">'+
+            '<div class="col-md-6">'+
+            '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
+            '<label>Size Of Plot</label>'+
+            '<input type="text" class="form-control" name="size_of_plot" id="size_of_plot" placeholder="">'+
+            '</div>'+
+            '</div>'+
+            '<div class="col-md-6 corp_text mrg_top_30">'+
+            '<div class="form-group frm_details text-center">'+
+            '<label>Spray Volume</label>'+
+            '<input type="text" class="form-control" name="spray_volume" id="spray_volume" placeholder="">'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '</div>'+
+            '<div class="clearfix"></div>'+
+            '</div>';
+
+        $("#demo_details").html(demo_detail1);
+    }
+
+}
+
+function get_retailerData()
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ecp/KeyRetailer_by_user_id",
+        data: {},
+        dataType : 'json',
+        success: function(resp){
+
+            $("select#retailer_id").empty();
+            $("select#retailer_id").selectpicker('refresh');
+
+            if(resp.length > 0){
+                $("select#retailer_id").append('<option value="">Select Retailer</option>');
+                $.each(resp, function(key, value) {
+                    $('select#retailer_id').append('<option value ="' + value.id + '" attr-name = "'+value.display_name+'">' +value.display_name+ '</option>');
+                });
+                $("select#retailer_id").selectpicker('refresh');
+            }
+        }
+    });
+}
+
 function get_farmerData()
 {
     $.ajax({
@@ -941,7 +792,6 @@ function get_farmerData()
         }
     });
 }
-
 
 function get_geo_fo_userdata(activity_type_selected){
     $.ajax({
@@ -1107,6 +957,13 @@ $(document).on("change","select#farmer_id",function() {
 
 });
 
+$(document).on("change","select#retailer_id",function() {
+
+    var  retailer_id = $('select#retailer_id option:selected').val();
+
+    get_mobile_number_by_farmer_id(retailer_id);
+
+});
 
 function get_mobile_number_by_farmer_id(farmer_id)
 {
@@ -1116,6 +973,7 @@ function get_mobile_number_by_farmer_id(farmer_id)
         data: {farmer_id:farmer_id},
         dataType : 'json',
         success: function(resp){
+            alert('in');
             $("input#farmer_no").val(resp.primary_mobile_no);
         }
     });
@@ -1148,6 +1006,7 @@ function getDigitalLibrary(activity_type_id)
     });
 }
 
+
 /*as js*/
 $(document).ready(function() {
     $(".js-example-tags").select2({
@@ -1158,7 +1017,7 @@ $(document).ready(function() {
 
         var $list = $('<ul>');
         $selected.each(function(k, v) {
-            var $li = $('<li class="tag-selected"><a class="destroy-tag-selected">�</a>' + $(v).text() + '</li>');
+            var $li = $('<li class="tag-selected"><a class="destroy-tag-selected">?</a>' + $(v).text() + '</li>');
             $li.children('a.destroy-tag-selected')
                 .off('click.select2-copy')
                 .on('click.select2-copy', function(e) {
@@ -1172,11 +1031,168 @@ $(document).ready(function() {
     }).trigger('change');
 });
 
+function getActivityCalenderData(iMonth)
+{
+    $.ajax({
+        type: 'POST',
+
+        url: site_url + "ecp/getActivityExecutionSidebar",
+        data: {cur_month:iMonth},
+        success: function (resp) {
+            $('#activity_sidebar').html(resp);
+        }
+    });
+
+}
+
+function getActivityPlanData(iMonth)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/getActivityDetailPlanByMonth",
+        data: {cur_month:iMonth},
+        success: function (resp) {
+            $('#').html(resp);
+        }
+    });
+
+}
+
+function dateChangeEvent(eDate)
+{
+    var eventDate = new Date(eDate.date);
+    //var planning_date = $('#planning_date').val();
+    var planning_date = eventDate.getFullYear()+'-'+("0"+(eventDate.getMonth()+1)).slice(-2)+'-'+("0"+eventDate.getDate()).slice(-2);
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/check_planning_date_in_leave",
+        data: {planning_date:planning_date},
+        //dataType : 'json',
+        success: function (resp) {
+
+            if(resp == 1){
+                var message='';
+
+                message += 'You are Leave On this Date.';
+
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            $('#planning_date').val('');
+                        }
+                    });
+                return false;
+            }
+        }
+    });
+
+}
+
+$(document).on('click','.activity_date',function(e)
+{
+    var elem = $(e.target).text();
+    if($("#data_"+elem).length != 0)
+    {
+        var slide_to = ($("#data_"+elem).offset().top - $("#main").offset().top)-10;
+        $('#main').animate({
+            scrollTop: slide_to
+        }, 1000);
+    }
+});
+
+function activityTypeChange()
+{
+    var selElem = $('select#activity_type_id option:selected');
+    var activity_type_selected = selElem.attr('code');
+    set_activity_type(activity_type_selected);
+    var activity_type_id = selElem.val();
+    getDigitalLibrary(activity_type_id);
+}
+
+function geolevel_2_Change()
+{
+    var  activity_type_selected= $('select#activity_type_id option:selected').val();
+    var  perent_id= $('select#geo_level_2 option:selected').val();
+    var  second_perent= 'second_perent';
+
+    get_child_by_perent_id(activity_type_selected,perent_id,second_perent);
+}
+
+function geolevel_3_Change()
+{
+    var  activity_type_selected= $('select#activity_type_id option:selected').val();
+    var  perent_id= $('select#geo_level_3 option:selected').val();
+    get_child_by_parent_parent_id(activity_type_selected,perent_id);
+}
+
+
+$(document).on('click','ul.activity_list li',function(e){
+    var elem = $(e.target);
+    var d_attr = elem.attr('data-attr');
+
+    if(d_attr=='all'){
+        $('.act_date').removeClass('act_dsb');
+    } else {
+        $('.act_date').addClass('act_dsb');
+
+        $('.act_date').each(function(i,j){
+            if($(j).hasClass('act_'+d_attr)==true){
+                $(j).removeClass('act_dsb');
+            }
+        });
+    }
+});
+
+
+function getActivityById(activity_planning_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/activity_execution_view_edit",
+        data: {id:activity_planning_id},
+        //dataType : 'json',
+        success: function (resp) {
+            $("#activity_execution_main").html(resp);
+            $("select.selectpicker").selectpicker('refresh');
+        },
+        complete:function(){
+
+        }
+    });
+}
+
 $(document).on('click', '#followup', function () {
     $("#follow_up").css('display','block');
 });
 
 $(document).on('click', '#planning_close', function () {
     $("#follow_up").css('display','none');
+});
+
+$(function () {
+
+
+        $("#activity_rate").rateYo({
+        starWidth: "30px",
+        normalFill: "#cccccc",
+        ratedFill: "#65ac1e"
+    });
+
+    var $rateYo = $("#activity_rate").rateYo();
+
+    $("#activity_rate").click(function () {
+        /* get rating */
+        var rating = $rateYo.rateYo("rating");
+        $("#rating").val(rating);
+    });
 });
 

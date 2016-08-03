@@ -15,15 +15,15 @@ echo form_open('',$attributes);
                         <li><a href="<?php echo base_url('ecp/activity_approval')?>">Approval</a></li>
                         <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
                         <li><a href="<?php echo base_url('ecp/activity_unplanned')?>">Unplanned</a></li>
-                        <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
+                        <li><a href="<?php echo base_url('ecp/activity_view')?>">View</a></li>
                         <?php
                     }
                     else{
                         ?>
                         <li class="active"><a href="<?php echo base_url('ecp/activity_planning')?>">Planning</a></li>
-                        <li><a href="<?php echo base_url('ecp/')?>">Execution</a></li>
+                        <li><a href="<?php echo base_url('ecp/activity_execution')?>">Execution</a></li>
                         <li><a href="<?php echo base_url('ecp/activity_unplanned')?>">Unplanned</a></li>
-                        <li><a href="<?php echo base_url('ecp/')?>">View</a></li>
+                        <li><a href="<?php echo base_url('ecp/activity_view')?>">View</a></li>
                         <?php
                     }
                     ?>
@@ -53,7 +53,6 @@ echo form_open('',$attributes);
                                             <input id="execution_time" name="execution_time" type="text" class="input-group-time form-control input-append">
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                             <div class="clearfix"></div>
