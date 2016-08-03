@@ -635,6 +635,10 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
 
+
+
+                            $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
                          //   testdata($highest_user_lock_data);
 
                             if ($login_user_highest_level_data == $login_user_id) {
@@ -651,28 +655,122 @@ class Esp extends Front_Controller
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
+
+                                /*
                                 if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $editable = "readonly";
                                     //   echo "bbb".$monthvalue."</br>";
 
-                                } elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0) {
+                                }
+                                elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
+                                {
 
                                     if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1) {
                                         //    echo "ccc".$monthvalue."</br>";
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                       //$editable = "";
                                     } elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0) {
                                         //    echo "ddd".$monthvalue."</br>";
 
 
                                         $editable = "readonly";
                                     } elseif ($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0) {                                    //echo "fff".$monthvalue."</br>";
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                       // $editable = "";
                                     } else {
                                         //   echo "eee".$monthvalue."</br>";
                                         $editable = "readonly";
                                     }
                                 }
+
+                                */
+
+
+                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+
+                                    $editable = "readonly";
+                                    //  echo "bbb".$monthvalue."</br>";
+
+                                }
+                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                {
+
+                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    {
+                                        //     echo "ccc".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+
+                                        // $editable = "";
+                                    }
+                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //  echo "ddd".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //echo "fff".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+
+                                        //   $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                        // $editable = "";
+                                    }
+                                    else
+                                    {
+                                        // echo "eee".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                }
+
                             }
 
 
@@ -716,6 +814,8 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
 
+                            $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
                             if (!empty($login_user_all_parent_data)) {
                                 foreach ($login_user_all_parent_data as $parent_key => $parentid) {
                                     $get_senioruser_lock_status = $this->esp_model->senior_forecast_lock_status($parentid, $forecast_id, $monthvalue);
@@ -744,6 +844,7 @@ class Esp extends Front_Controller
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
+                                /*
                                 if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $editable = "readonly";
@@ -753,7 +854,17 @@ class Esp extends Front_Controller
 
                                     if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1) {
                                         //     echo "ccc".$monthvalue."</br>";
-                                        $editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                       // $editable = "";
                                     } elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0) {
                                         //     echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
@@ -769,6 +880,77 @@ class Esp extends Front_Controller
 
 
                                 }
+
+                                */
+
+
+                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+
+                                    $editable = "readonly";
+                                    //  echo "bbb".$monthvalue."</br>";
+
+                                }
+                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                {
+
+                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    {
+                                        //     echo "ccc".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+
+                                        // $editable = "";
+                                    }
+                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //  echo "ddd".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //echo "fff".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+
+                                        //   $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $editable = "";
+                                        }
+
+                                        // $editable = "";
+                                    }
+                                    else
+                                    {
+                                        // echo "eee".$monthvalue."</br>";
+                                        $editable = "readonly";
+                                    }
+                                }
+
+
                             }
 
 
@@ -814,7 +996,20 @@ class Esp extends Front_Controller
 
                             //   echo "4";
 
-                            $html .= '<td><input rel="' . $l . '_' . $skuvalue['product_sku_country_id'] . '_' . $monthvalue . '" class="forecast_qty" id="forecast_qty_' . $l . '_' . $skuvalue['product_sku_country_id'] . '" type="text" name="forecast_qty[' . $skuvalue['product_sku_country_id'] . '][]" value="' . $forecast_qty . '"  /></td>';
+                            $editable = "";
+                            $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
+                            if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                            {
+                                $editable = "readonly";
+                            }
+                            else
+                            {
+                                $editable = "";
+                            }
+
+
+                            $html .= '<td><input rel="' . $l . '_' . $skuvalue['product_sku_country_id'] . '_' . $monthvalue . '" class="forecast_qty" id="forecast_qty_' . $l . '_' . $skuvalue['product_sku_country_id'] . '" type="text" name="forecast_qty[' . $skuvalue['product_sku_country_id'] . '][]" value="' . $forecast_qty . '"  '.$editable.'/></td>';
 
                             $html .= '<td><input id="forecast_value_' . $l . '_' . $skuvalue['product_sku_country_id'] . '_' . $monthvalue . '" type="text" name="forecast_value[' . $skuvalue['product_sku_country_id'] . '][]" value="' . $forecast_value . '" readonly /></td>';
 
@@ -1315,6 +1510,8 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
 
+                            $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
 
                             if ($login_user_highest_level_data == $login_user_id) {
 
@@ -1332,6 +1529,8 @@ class Esp extends Front_Controller
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
+
+                                /*
                                 if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $assumption_editable = "disabled";
@@ -1344,8 +1543,26 @@ class Esp extends Front_Controller
                                         //     echo "ccc".$monthvalue."</br>";
                                         // $editable = "";
 
-                                        $assumption_editable = "";
-                                        $probablity_editable = "";
+
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                           // $editable = "readonly";
+
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+
+                                        }
+                                        else
+                                        {
+                                            //$editable = "";
+
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+                                      //  $assumption_editable = "";
+                                       // $probablity_editable = "";
 
                                     } elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0) {
                                         //     echo "ddd".$monthvalue."</br>";
@@ -1356,8 +1573,26 @@ class Esp extends Front_Controller
 
                                     } elseif ($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0) {
                                         //    echo "fff".$monthvalue."</br>";
-                                        $assumption_editable = "";
-                                        $probablity_editable = "";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            // $editable = "readonly";
+
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+
+                                        }
+                                        else
+                                        {
+                                            //$editable = "";
+
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+
+                                      //  $assumption_editable = "";
+                                      //  $probablity_editable = "";
                                     } else {
                                         //    echo "eee".$monthvalue."</br>";
                                         //  $editable = "readonly";
@@ -1366,9 +1601,88 @@ class Esp extends Front_Controller
                                         $probablity_editable = "readonly";
 
                                     }
+                                }
 
+                                */
+
+
+                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+
+                                    $assumption_editable = "disabled";
+                                    $probablity_editable = "readonly";
+                                    //  echo "bbb".$monthvalue."</br>";
 
                                 }
+                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                {
+
+                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    {
+                                        //     echo "ccc".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+
+                                        // $editable = "";
+                                    }
+                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //  echo "ddd".$monthvalue."</br>";
+                                        $assumption_editable = "disabled";
+                                        $probablity_editable = "readonly";
+                                    }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //echo "fff".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+
+                                        //   $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+                                        // $editable = "";
+                                    }
+                                    else
+                                    {
+                                        // echo "eee".$monthvalue."</br>";
+                                        $assumption_editable = "disabled";
+                                        $probablity_editable = "readonly";
+                                    }
+                                }
+
+
+
                             }
 
 
@@ -1428,6 +1742,9 @@ class Esp extends Front_Controller
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
 
 
+                            $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
+
                             if ($login_user_highest_level_data == $login_user_id) {
 
                                 if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
@@ -1447,6 +1764,9 @@ class Esp extends Front_Controller
 
                                 //   echo "aaa".$monthvalue."</br>";
                             } else {
+
+                                /*
+
                                 if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $assumption_editable = "disabled";
@@ -1459,8 +1779,23 @@ class Esp extends Front_Controller
                                         //     echo "ccc".$monthvalue."</br>";
                                         // $editable = "";
 
-                                        $assumption_editable = "";
-                                        $probablity_editable = "";
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                           // $editable = "readonly";
+
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            //$editable = "";
+
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+                                       // $assumption_editable = "";
+                                       // $probablity_editable = "";
 
                                     } elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0) {
                                         //     echo "ddd".$monthvalue."</br>";
@@ -1486,6 +1821,85 @@ class Esp extends Front_Controller
 
 
                                 }
+
+
+                                */
+
+                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+
+                                    $assumption_editable = "disabled";
+                                    $probablity_editable = "readonly";
+                                    //  echo "bbb".$monthvalue."</br>";
+
+                                }
+                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                {
+
+                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    {
+                                        //     echo "ccc".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+
+                                        // $editable = "";
+                                    }
+                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //  echo "ddd".$monthvalue."</br>";
+                                        $assumption_editable = "disabled";
+                                        $probablity_editable = "readonly";
+                                    }
+                                    elseif($self_lock_data == 0 && $forecast_freeze_data["freeze_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    {
+                                        //echo "fff".$monthvalue."</br>";
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+
+                                        //   $editable = "";
+                                    }
+                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+
+                                        if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                                        {
+                                            $assumption_editable = "disabled";
+                                            $probablity_editable = "readonly";
+                                        }
+                                        else
+                                        {
+                                            $assumption_editable = "";
+                                            $probablity_editable = "";
+                                        }
+
+                                        // $editable = "";
+                                    }
+                                    else
+                                    {
+                                        // echo "eee".$monthvalue."</br>";
+                                        $assumption_editable = "disabled";
+                                        $probablity_editable = "readonly";
+                                    }
+                                }
+
                             }
 
 
@@ -1514,8 +1928,26 @@ class Esp extends Front_Controller
 
                             //echo "3";
 
+                            $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
+                            if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                            {
+                                // $editable = "readonly";
+
+                                $assumption_editable = "disabled";
+                                $probablity_editable = "readonly";
+                            }
+                            else
+                            {
+                                //$editable = "";
+
+                                $assumption_editable = "";
+                                $probablity_editable = "";
+                            }
+
+
                             $html .= '<div class="tp_form">
-            <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption' . $j . '[]" >
+            <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption' . $j . '[]" '.$assumption_editable.' >
 
                                 <option value= "">Select Assumption</option>';
                             foreach ($assumption_data as $assumption_key => $assumption) {
@@ -1531,7 +1963,7 @@ class Esp extends Front_Controller
                             $html .= '</select>';
 
                             $html .= '</div>
-        </div></td><td><input class="probablity_data" type="text" name="probablity' . $j . '[]" value="" />';
+        </div></td><td><input class="probablity_data" type="text" name="probablity' . $j . '[]" value="" '.$probablity_editable.' />';
 
                         }
 
@@ -1544,8 +1976,26 @@ class Esp extends Front_Controller
 
                             //echo "4";
 
+                            $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
+                            if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
+                            {
+                                // $editable = "readonly";
+
+                                $assumption_editable = "disabled";
+                                $probablity_editable = "readonly";
+                            }
+                            else
+                            {
+                                //$editable = "";
+
+                                $assumption_editable = "";
+                                $probablity_editable = "";
+                            }
+
+
                             $html .= '<div class="tp_form">
-            <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption' . $j . '[]" >
+            <div class="form-group"><select class="selectpicker assumption_data" style="display:block !important;" data-live-search="true" tabindex="-98" name="assumption' . $j . '[]" '.$assumption_editable.' >
 
                                 <option value= "">Select Assumption</option>';
                             foreach ($assumption_data as $assumption_key => $assumption) {
@@ -1561,7 +2011,7 @@ class Esp extends Front_Controller
                             $html .= '</select>';
 
                             $html .= '</div>
-        </div></td><td><input class="probablity_data" type="text" name="probablity' . $j . '[]" value="' . $probablitydata . '"  />';
+        </div></td><td><input class="probablity_data" type="text" name="probablity' . $j . '[]" value="' . $probablitydata . '"  '.$probablity_editable.'/>';
 
 
                         } else {
@@ -1979,6 +2429,8 @@ class Esp extends Front_Controller
 
             $i = 1;
 
+            $fid = "";
+
             $forecast_insert_id = '';
 
             $old_forecast_id = "";
@@ -2004,6 +2456,7 @@ class Esp extends Front_Controller
 
                         //  $old_forecast_id = $_POST["forecast_id"];
 
+                        $fid = $old_forecast_id;
                         //UPDATE MAIN TABLE RECORD
 
                         $update_status = $this->esp_model->update_forecast_data($old_forecast_id, $created_user_id);
@@ -2051,7 +2504,7 @@ class Esp extends Front_Controller
 
             //  dumpme($final_array);
 
-            $fid = "";
+
 
             if (!empty($final_array)) {
                 foreach ($final_array as $key_data => $data) {

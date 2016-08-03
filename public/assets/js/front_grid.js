@@ -54,7 +54,13 @@ function settblResponse(response) {
 
     removeOverlay();
     $("#action").val('');
-    $("#middle_container").hide().html(response).fadeIn("slow");
+    try{
+        //response = "test";
+        $("#middle_container").hide().html(response).fadeIn("slow");
+    } catch(err){
+        alert(err);
+    }
+
     $("#middle_container_product").empty();
     $('.search-field-dropdown').trigger('change');
     attachTooltip();
@@ -102,6 +108,9 @@ function submitForm() {
 
 
     var pages = $("input#page").val();
+    if(pages>$(".last-page-number").text()){
+        pages = $(".last-page-number").text();
+    }
 
     var data = val.serializeArray();
 

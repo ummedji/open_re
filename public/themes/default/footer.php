@@ -126,6 +126,10 @@ echo Assets::js();
             $('body').removeClass('nav-expanded');
         });
 
+        if($('ul.listslider').find('li.active').length==0)
+        {
+            $('ul.listslider li:first-child').addClass('active');
+        }
 
     });
 
@@ -146,6 +150,8 @@ echo Assets::js();
             /*$(".zoom_out_btn").hide();*/
             $(".ad_mr_top").removeClass("ad_mr_top_30");
         });
+
+
 
 
 </script>

@@ -18,6 +18,7 @@
  * NOTE: If you change these, also change the error_reporting() code below
  *
  */
+date_default_timezone_set('Asia/Kolkata');
 define('ENVIRONMENT', isset($_SERVER['CI_ENV']) ? $_SERVER['CI_ENV'] : 'development');
 
 /*
@@ -76,15 +77,6 @@ if (ini_get('date.timezone') == ''
         date_default_timezone_set('GMT');
     }
 }
-/*if (ini_get('date.timezone') == ''
-    && function_exists('date_default_timezone_set')
-) {
-    if (function_exists('date_default_timezone_get')) {
-        date_default_timezone_set(@date_default_timezone_get());
-    } else {
-        date_default_timezone_set('GMT');
-    }
-}*/
 
 /*
  *---------------------------------------------------------------
