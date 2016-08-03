@@ -2879,6 +2879,85 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+    public function new_esp_forecast_upload(){
+
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        //$bussiness_code = $this->input->get_post('bussiness_code');
+        $bussiness_code = $this->input->get_post('bussiness_code');
+
+        $file_data =  $_FILES;
+
+        //dumpme($file_data);
+
+        if(isset($file_data) && !empty($file_data) && $user_id != "" && $country_id != "" && $bussiness_code != "")
+        {
+
+            $data = array(
+                "user_id" => $user_id,
+                "country_id" => $country_id,
+                "bussiness_code" => $bussiness_code
+            );
+
+            $filename = $_FILES["upload_file_data"]["name"];
+
+            //CHECK FILE FORMATE
+
+            $file_data = explode(".",$filename);
+
+            if($file_data[1] == "xlsx" || $file_data[1] == "xls"){
+
+                $file_temp_data = $_FILES["upload_file_data"]["tmp_name"];
+
+                $upload_forecast_xl_data = modules::run('esp/esp/upload_forecast_data', $_POST, $_FILES);
+
+                // testdata($upload_budget_xl_data);
+
+                $upload_forecast_xl_data1 = json_decode($upload_forecast_xl_data,true);
+
+                if(array_key_exists("fileerror",$upload_forecast_xl_data1))
+                {
+                    return $upload_forecast_xl_data;
+                }
+                else
+                {
+
+                    if (file_exists(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename)) {
+                        unlink(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename);
+                    }
+
+                    if(move_uploaded_file($file_temp_data, FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename)){
+
+                        echo json_encode($upload_forecast_xl_data);
+                        die;
+                        //$result['status'] = true;
+                        //$result['data'] = FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename;
+                        // $upload_budget_xl_data = modules::run('esp/esp/upload_budget_data', $_POST, $_FILES);
+                    }
+                    else
+                    {
+                        $result['status'] = false;
+                        $result['message'] = "File not uploaded.";
+                    }
+                }
+            }
+            else
+            {
+                $result['status'] = false;
+                $result['message'] = "Please upload xlsx or xls file.";
+            }
+        }
+        else
+        {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+
+    }
+
     public function create_esp_budget_xl_data(){
 
         $user_id = $this->input->get_post('user_id');
@@ -2952,7 +3031,7 @@ class Web_service extends Front_Controller
 
         $file_data = $this->input->get_post('val');
 
-        $file_data = file_get_contents($file_data);
+        $file_data = file_get_contents(stripslashes($file_data));
 
         $file_data = json_decode($file_data,true);
         $file_data = $file_data["budget_data"];
@@ -3094,13 +3173,7 @@ class Web_service extends Front_Controller
     }
 
     */
-    public function read_data()
-    {
 
-        $file_content = json_decode($file_content,true);
-        testdata($file_content);
-
-    }
 
 
     /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */
