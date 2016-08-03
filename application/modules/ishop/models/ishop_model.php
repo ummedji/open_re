@@ -6602,61 +6602,63 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         }
     }
 
-    public function add_budget_data($budget_data, $user_id, $web_service = null, $country_id = null,$excel)
+    public function add_budget_data($budget_data, $user_id, $web_service = null, $country_id = null,$excel = null)
     {
-        // testdata($budget_data);
-        if (isset($budget_data) && !empty($budget_data)) {
-            //testdata($target_data);
-            if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
-                $month_data = $budget_data["month"] . "-01";
-                $customers_id = $budget_data['customer_id'];
-            } else {
-                if ($budget_data['radio1'] == 'distributor') {
-                    $month_data = $budget_data["month_data"] . "-01";
-                    $customers_id = isset($budget_data['distributor_distributor_id']) ? $budget_data['distributor_distributor_id'] : '';
-                } elseif ($budget_data['radio1'] == 'retailer') {
-                    $month_data = $budget_data["ret_month_data"] . "-01";
-                    $customers_id = $budget_data['retailer_id'];
+        if(empty($excel) && $excel == null){
+            if (isset($budget_data) && !empty($budget_data)) {
+                //testdata($target_data);
+                if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+                    $month_data = $budget_data["month"] . "-01";
+                    $customers_id = $budget_data['customer_id'];
+                } else {
+                    if ($budget_data['radio1'] == 'distributor') {
+                        $month_data = $budget_data["month_data"] . "-01";
+                        $customers_id = isset($budget_data['distributor_distributor_id']) ? $budget_data['distributor_distributor_id'] : '';
+                    } elseif ($budget_data['radio1'] == 'retailer') {
+                        $month_data = $budget_data["ret_month_data"] . "-01";
+                        $customers_id = $budget_data['retailer_id'];
+                    }
                 }
-            }
-            $prod_sku = $budget_data['prod_sku'];
-            $quantity = $budget_data['quantity'];
-
-            $budget = array(
-                'month_data' => $month_data,
-                'customer_id' => (isset($customers_id) && !empty($customers_id)) ? $customers_id : '',
-                'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
-                'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
-                'created_by_user' => $user_id,
-                'country_id' => $country_id,
-                'status' => '1',
-                'created_on' => date('Y-m-d H:i:s')
-            );
-
-            $check_already_data = $this->check_budget_data($prod_sku, $month_data, $customers_id);
-            // testdata($check_already_data);
-            if ($check_already_data == 0) {
-                $id = $this->db->insert('ishop_budget', $budget);
-            } else {
-                $budget_update_data = array(
+                $prod_sku = $budget_data['prod_sku'];
+                $quantity = $budget_data['quantity'];
+                $update_arr = array();
+                $budget = array(
                     'month_data' => $month_data,
-                    'customer_id' => $customers_id,
+                    'customer_id' => (isset($customers_id) && !empty($customers_id)) ? $customers_id : '',
                     'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
                     'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
-                    'modified_by_user' => $user_id,
+                    'created_by_user' => $user_id,
                     'country_id' => $country_id,
                     'status' => '1',
-                    'modified_on' => date('Y-m-d H:i:s')
+                    'created_on' => date('Y-m-d H:i:s')
                 );
 
-                $this->db->where('ishop_budget_id', $check_already_data);
-                $id = $this->db->update('ishop_budget', $budget_update_data);
+                $check_already_data = $this->check_budget_data($prod_sku, $month_data, $customers_id);
+                // testdata($check_already_data);
+                if ($check_already_data == 0) {
+                    $this->db->insert('ishop_budget', $budget);
+                    $update_arr[] =1;
+                } else {
+                    $budget_update_data = array(
+                        'month_data' => $month_data,
+                        'customer_id' => $customers_id,
+                        'product_sku_id' => (isset($prod_sku) && !empty($prod_sku)) ? $prod_sku : '',
+                        'quantity' => (isset($quantity) && !empty($quantity)) ? $quantity : '',
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
+
+                    $this->db->where('ishop_budget_id', $check_already_data);
+                    $this->db->update('ishop_budget', $budget_update_data);
+                    $update_arr[] =1;
+                }
+
             }
-            return $id;
-        } else {
-
+        }
+        else{
             //INSERT USING FILE UPLOAD
-
             foreach ($budget_data as $key => $value)
             {
 
@@ -6670,10 +6672,42 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 $budget_array["created_on"] = date("Y-m-d h:i:s");
                 $budget_array["created_by_user"] = $user_id;
 
-                $this->db->insert('bf_ishop_budget', $budget_array);
+
+
+                $check_already_data = $this->check_budget_data($budget_array["product_sku_id"] , $budget_array["month_data"], $budget_array["customer_id"]);
+                // testdata($check_already_data);
+                if ($check_already_data == 0) {
+                    $this->db->insert('ishop_budget', $budget_array);
+                    $update_arr[] =1;
+                } else {
+                    $budget_update_data = array(
+                        'month_data' => $budget_array["month_data"],
+                        'customer_id' => $budget_array["customer_id"],
+                        'product_sku_id' => (isset($budget_array["product_sku_id"]) && !empty($budget_array["product_sku_id"])) ? $budget_array["product_sku_id"] : 0,
+                        'quantity' => (isset($budget_array["quantity"]) && !empty($budget_array["quantity"])) ? $budget_array["quantity"] : 0,
+                        'modified_by_user' => $user_id,
+                        'country_id' => $country_id,
+                        'status' => '1',
+                        'modified_on' => date('Y-m-d H:i:s')
+                    );
+
+                    $this->db->where('ishop_budget_id', $check_already_data);
+                    $this->db->update('ishop_budget', $budget_update_data);
+                    $update_arr[] =1;
+                }
+
+
+
+                //  $this->db->insert('bf_ishop_budget', $budget_array);
+                //  $update_arr[] =1;
             }
         }
-        if($this->db->affected_rows() > 0){
+
+
+
+
+
+        if(in_array(1,$update_arr)){
             return 1;
         }
         else{

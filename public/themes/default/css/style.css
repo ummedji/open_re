@@ -1014,6 +1014,15 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     padding: 4px 30px;
     box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
 }
+.freeze_data {
+    font-family: 'Exo2-Medium';
+    font-size: 14px;
+    color: #fff;
+    border: none;
+    border-radius: 0;
+    padding: 4px 30px;
+    box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.5);
+}
 .upload_text {
     line-height: 34px;
     text-align: right;

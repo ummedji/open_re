@@ -98,6 +98,9 @@ ul.listslider li{
 .upload_file_space .input-group-btn .btn-primary { background-color: #65ac1e;}
 .save_btn button { background-color: #00793a;}
 .save_btn button:hover, .save_btn button:focus { background-color: #65ac1e !important;}
+
+.freeze_data { background-color: #00793a;}
+.freeze_data:hover, .freeze_data:focus { background-color: #65ac1e !important;}
 /*end scrollbar*/
 
 /*Budget Distributor*/

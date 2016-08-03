@@ -3068,7 +3068,7 @@ class Web_service extends Front_Controller
 
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
-        $bussiness_code = $this->input->get_post('bussiness_code');
+       // $bussiness_code = $this->input->get_post('bussiness_code');
         $bussiness_code = $this->input->get_post('bussiness_code');
 
         $file_data =  $_FILES;
