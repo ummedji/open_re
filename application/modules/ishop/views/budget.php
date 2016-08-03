@@ -1,5 +1,5 @@
 <?php
-$attributes = array('class' => '', 'id' => 'budget','name'=>'budget');
+$attributes = array('class' => '', 'id' => 'budget','name'=>'budget', 'autocomplete'=>'off');
 echo form_open('',$attributes);
 ?>
 <!--------------------------------------Filter1-------------------------------------------------->

@@ -22,7 +22,7 @@
                 </div>
             </div>
             <?php 
-           $attributes = array('class' => '', 'id' => 'po_acknowledgement','name'=>'po_acknowledgement');
+           $attributes = array('class' => '', 'id' => 'po_acknowledgement','name'=>'po_acknowledgement', 'autocomplete'=>'off');
             echo form_open('ishop/po_acknowledgement',$attributes);
             ?>
            <?php

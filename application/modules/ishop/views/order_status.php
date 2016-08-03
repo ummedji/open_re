@@ -27,7 +27,7 @@
         <div class="row">
           
            <?php 
-           $attributes = array('class' => '', 'id' => 'order_status','name'=>'order_status');
+           $attributes = array('class' => '', 'id' => 'order_status','name'=>'order_status', 'autocomplete'=>'off');
             echo form_open('ishop/get_order_status_data',$attributes);
             ?>
             

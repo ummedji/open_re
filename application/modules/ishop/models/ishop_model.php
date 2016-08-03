@@ -4213,7 +4213,10 @@ class Ishop_model extends BF_Model
                     $customer_id_to = $retailer_id;
                     $order_taken_by_id = $user_id;
 
-                    $order_date = date("Y-m-d", strtotime($this->input->post("order_date")));
+                    $odr_date = str_replace('/', '-', $this->input->post("order_date"));
+                    $order_date = date('Y-m-d', strtotime($odr_date));
+                    $order_status = 0;
+
 
                 } elseif ($this->input->post("radio1") == "retailer") {
 
@@ -4225,6 +4228,7 @@ class Ishop_model extends BF_Model
                     $order_taken_by_id = $user_id;
 
                     $order_date = date("Y-m-d");
+                    $order_status = 4;
 
                 } elseif ($this->input->post("radio1") == "distributor") {
                     $distributor_id = $this->input->post("fo_distributor_data");
@@ -4234,10 +4238,10 @@ class Ishop_model extends BF_Model
                     $order_taken_by_id = $user_id;
 
                     $order_date = date("Y-m-d");
-
+                    $order_status = 4;
                 }
             }
-            $order_status = 4;
+
             $po_no = NULL;
 
         } else {
@@ -4986,7 +4990,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "OP_Ackno";
+                                $order_status = "Un Acknowledge";
                             }
 
                             $order_data = '<input type="hidden" name="order_data[]" value="' . $od['order_id'] . '" /><input id="check_data_' . $od['order_id'] . '" type="hidden" name="change_order_status[]" class="change_order_status" value="0"/>';
@@ -5064,7 +5068,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 } elseif ($od['order_status'] == 3) {
                                     $order_status = "Rejected";
                                 } elseif ($od['order_status'] == 4) {
-                                    $order_status = "OP_Ackno";
+                                    $order_status = "Un Acknowledge";
                                 }
 
                                 $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -5150,7 +5154,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($od['order_status'] == 3) {
                             $order_status = "Rejected";
                         } elseif ($od['order_status'] == 4) {
-                            $order_status = "OP_Ackno";
+                            $order_status = "Un Acknowledge";
                         }
 
 
@@ -5168,10 +5172,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_view['row'][] = array($i, "", $od['f_dn'] , $od['t_dn'], $otn, $od['display_name'], $read_status);
 
                         } elseif ($radio_checked == "retailer") {
-                            if ($od['read_status'] == 0) {
-                                $read_status = "Unread";
+
+                            if ($od['order_status'] == 4) {
+                                $read_status = "Un Acknowledge";
                             } else {
-                                $read_status = "Read";
+                                $read_status = "Acknowledge";
                             }
                             if($local_date != null){
                                 $date = strtotime($od['order_date']);
@@ -5252,7 +5257,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             } elseif ($od['order_status'] == 3) {
                                 $order_status = "Rejected";
                             } elseif ($od['order_status'] == 4) {
-                                $order_status = "OP_Ackno";
+                                $order_status = "Un Acknowledge";
                             }
 
                             $otn = '<div prdid ="' . $od['order_id'] . '"><a data-toggle="modal" onclick="show_po_popup(' . trim($od['order_id']) . ',' ."'".trim($od['PO_no'])."'". ');"  class="set_pono" href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
@@ -6331,7 +6336,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $target_details = $info->result_array();
             return $target_details;
         } else {
-            $target_details = $this->grid->get_result_res($sql);
+            //$target_data = $this->grid->get_result_res($sql);
+            $target_data = $this->db->query($sql)->result_array();
+
+            //dumpme($target_data);
             //testdata($target_details);
 
             if (isset($target_details['result']) && !empty($target_details['result'])) {
@@ -7888,7 +7896,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             $order_status = "Rejected";
                         }
                         elseif ($od['order_status'] == 4) {
-                            $order_status = "OP_Ackno";
+                            $order_status = "Un Acknowledge";
                         }
 
                         $order_view['row'][] = array($i, $od['f_u_code'],$od['f_dn'] , $od['PO_no'], $od['order_tracking_no'],$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'],$od['qty_kgl'],$od['amount'],$od['current_stock'],$od['dispatched_quantity'], $od['credit_limit'], $order_status);
@@ -7987,7 +7995,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $order_status = "Rejected";
                             }
                             elseif ($od['order_status'] == 4) {
-                                $order_status = "OP_Ackno";
+                                $order_status = "Un Acknowledge";
                             }
 
                             if($local_date != null){
@@ -8096,7 +8104,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_status = "Rejected";
                     }
                     elseif ($od['order_status'] == 4) {
-                        $order_status = "OP_Ackno";
+                        $order_status = "Un Acknowledge";
                     }
 
                     if ($radio_checked == "farmer")
@@ -8224,7 +8232,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($od['order_status'] == 3) {
                             $order_status = "Rejected";
                         } elseif ($od['order_status'] == 4) {
-                            $order_status = "OP_Ackno";
+                            $order_status = "Un Acknowledge";
                         }
 
 

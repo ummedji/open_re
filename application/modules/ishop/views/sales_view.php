@@ -1,6 +1,6 @@
 <?php if (!$this->input->is_ajax_request()) { ?>
 <?php
-$attributes = array('class' => '', 'id' => 'view_ishop_sales','name'=>'view_ishop_sales');
+$attributes = array('class' => '', 'id' => 'view_ishop_sales','name'=>'view_ishop_sales', 'autocomplete'=>'off');
 echo form_open('ishop/view_ishop_sales_details',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->
     <!--od_approval-->

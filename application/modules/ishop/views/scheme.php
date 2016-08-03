@@ -1,6 +1,6 @@
 <?php if (!$this->input->is_ajax_request()) { ?>
     <?php
-    $attributes = array('class' => '', 'id' => 'add_schemes','name'=>'add_schemes');
+    $attributes = array('class' => '', 'id' => 'add_schemes','name'=>'add_schemes', 'autocomplete'=>'off');
     echo form_open('',$attributes); ?>
 <div class="col-md-12">
     <div class="top_form">

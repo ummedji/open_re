@@ -21,6 +21,10 @@ $(function () {
         format: date_format,
         autoclose: true
     });
+
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 });
 /*Date Picker*/
 
@@ -36,9 +40,7 @@ var secondary_sales_view_validators = $("#secondary_sales_view").validate({
         }
     }
 });
-$( ":input" ).change(function() {
-    $(this).valid();
-});
+
 // END ::: Added By Vishal Malaviya For Validation
 
 

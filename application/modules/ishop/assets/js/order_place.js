@@ -3,14 +3,8 @@
  */
 $(document).ready(function(){
 
-
-    
     $( "#order_date" ).datepicker({
-        dateFormat: date_format,
-        showOn: "button",
-        buttonImage: site_url + "/public/themes/default/images/calendar.gif",
-        buttonImageOnly: true,
-        buttonText: "Select date",
+        format: date_format,
         autoclose: true
     });
     
@@ -973,13 +967,14 @@ function order_place_add_row()
                 "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
             "</td>"+
             "<td data-title='Units'>" +
-            
-            "<select name='units[]' class='select_unitdata' id='units' >"+
+                "<input class='input_remove_border' type='text' value='"+units+"' readonly/>" +
+                "<input type='hidden' name='units[]' value='"+units+"'/>" /*+
+            "<select name='units[]' class='hidden select_unitdata' id='units' >"+
                        " <option  "+box_selected+" value='box'>Box</option>"+
                       "  <option  "+package_selected+" value='packages'>Packages</option>"+
                      "   <option  "+kg_ltr_selected+" value='kg/ltr'>Kg/Ltr</option>"+
                   "  </select>"
-            
+            */
                 +
             "</td>"+
             "<td data-title='Quantity'>" +

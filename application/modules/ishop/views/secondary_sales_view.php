@@ -2,7 +2,7 @@
     <div class="col-md-12">
         <div class="top_form">
             <?php
-            $attributes = array('class' => '', 'id' => 'secondary_sales_view','name'=>'secondary_sales_view','' );
+            $attributes = array('class' => '', 'id' => 'secondary_sales_view','name'=>'secondary_sales_view','' , 'autocomplete'=>'off');
             echo form_open('ishop/secondary_sales_view_details',$attributes); ?>
 
             <div class="row">

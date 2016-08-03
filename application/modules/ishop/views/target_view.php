@@ -1,5 +1,5 @@
 <?php
-$attributes = array('class' => '', 'id' => 'target_view','name'=>'target_view');
+$attributes = array('class' => '', 'id' => 'target_view','name'=>'target_view', 'autocomplete'=>'off');
 echo form_open('',$attributes);
 ?>
 <?php if (!$this->input->is_ajax_request()) { ?>

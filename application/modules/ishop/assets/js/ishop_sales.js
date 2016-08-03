@@ -557,11 +557,13 @@ function add_sales_stock_row()
         "<input type='hidden' name='product_sku_id[]' value='"+sku_id+"'/>" +
         "</td>"+
         "<td data-title='Units'>" +
-        "<select name='units[]' class='select_unitdata' id='unit_id' >"+
+        "<input class='input_remove_border' type='text' value='"+unit+"' readonly/>" +
+        "<input type='hidden' name='units[]' value='"+unit+"'/>" +
+        /*"<select name='units[]' class='select_unitdata' id='unit_id' >"+
         " <option  "+box_selected+" value='box'>Box</option>"+
         "  <option  "+package_selected+" value='packages'>Packages</option>"+
         "   <option  "+kg_ltr_selected+" value='kg/ltr'>Kg/Ltr</option>"+
-        "  </select>" +
+        "  </select>" +*/
         "</td>"+
         "<td data-title='PO Qty'>" +
         "<input class='quantity_data numeric allownumericwithdecimal' type='text' name='quantity[]' value='"+po_qty+"'/>" +

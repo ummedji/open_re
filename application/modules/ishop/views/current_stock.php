@@ -1,5 +1,5 @@
 <?php
-$attributes = array('class' => '', 'id' => 'add_company_current_stock','name'=>'add_company_current_stock');
+$attributes = array('class' => '', 'id' => 'add_company_current_stock','name'=>'add_company_current_stock', 'autocomplete'=>'off');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('ishop/company_current_stock',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>

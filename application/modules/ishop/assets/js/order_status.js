@@ -2,9 +2,7 @@
  * Created by webclues on 5/26/2016.
  */
 $(document).ready(function(){
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
 
     $("#form_date").datepicker({
       format: date_format,
@@ -20,6 +18,10 @@ $(document).ready(function(){
     $("#to_date").datepicker({
       format: date_format,
       autoclose: true
+    });
+
+    $( ":input" ).change(function() {
+        $(this).valid();
     });
 
     var login_customer_type = $("input#login_customer_type").val();

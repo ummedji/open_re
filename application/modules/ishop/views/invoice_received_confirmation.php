@@ -1,5 +1,5 @@
 <?php
-$attributes = array('class' => '', 'id' => 'invoice_confirmation','name'=>'invoice_confirmation');
+$attributes = array('class' => '', 'id' => 'invoice_confirmation','name'=>'invoice_confirmation', 'autocomplete'=>'off');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('ishop/invoice_confirmation_received',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>

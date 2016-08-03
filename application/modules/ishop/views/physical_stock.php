@@ -1,6 +1,6 @@
 <?php if (!$this->input->is_ajax_request()) { ?>
     <?php
-    $attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock');
+    $attributes = array('class' => '', 'id' => 'add_physical_stock','name'=>'add_physical_stock', 'autocomplete'=>'off');
     echo form_open('ishop/physical_stock',$attributes); ?>
 <div class="col-md-12 od_approval">
     <div class="top_form">

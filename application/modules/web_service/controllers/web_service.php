@@ -932,6 +932,11 @@ class Web_service extends Front_Controller
                         $read_status = 'Read';
                     }
 
+                    if ($order['order_status'] == 4) {
+                        $red_status = 'Un Acknowledge';
+                    } else {
+                        $red_status = 'Acknowledge';
+                    }
 
                     $order_details = $this->ishop_model->order_status_product_details_view_by_id($order['order_id'], null, $role_id, $page_function, 'web_service');
                     $time= strtotime($order['created_on']);
@@ -993,7 +998,7 @@ class Web_service extends Front_Controller
                                 "order_date" => $order['order_date'].','.$t,
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
-                                "order_status" => $read_status,
+                                "order_status" => $red_status,
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }

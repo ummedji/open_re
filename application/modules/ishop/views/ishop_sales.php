@@ -1,6 +1,6 @@
 <?php
 
-$attributes = array('class' => '', 'id' => 'add_ishop_sales','name'=>'add_ishop_sales');
+$attributes = array('class' => '', 'id' => 'add_ishop_sales','name'=>'add_ishop_sales', 'autocomplete'=>'off');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->

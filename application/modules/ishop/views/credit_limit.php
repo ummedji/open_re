@@ -1,5 +1,5 @@
 <?php
-$attributes = array('class' => '', 'id' => 'add_user_credit_limit','name'=>'add_user_credit_limit');
+$attributes = array('class' => '', 'id' => 'add_user_credit_limit','name'=>'add_user_credit_limit', 'autocomplete'=>'off');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>

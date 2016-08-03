@@ -1,5 +1,5 @@
 <?php
-$attributes = array('class' => '', 'id' => 'view_schemes','name'=>'view_schemes');
+$attributes = array('class' => '', 'id' => 'view_schemes','name'=>'view_schemes', 'autocomplete'=>'off');
 echo form_open('ishop/view_schemes_details',$attributes); ?>
 <?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">

@@ -320,11 +320,13 @@ function add_sec_sales_row()
         "<input type='text' class='quantity_data numeric allownumericwithdecimal' name='quantity[]' value='"+qty+"'/>" +
         "</td>"+
         "<td data-title='Units'>" +
-        "<select name='units[]' class='select_unitdata' id='unit_id' >"+
+        "<input class='input_remove_border' type='text' value='"+sec_sel_unit+"' readonly/>" +
+        "<input type='hidden' name='units[]' value='"+sec_sel_unit+"'/>" +
+        /*"<select name='units[]' class='select_unitdata' id='unit_id' >"+
         " <option  "+box_selected+" value='box'>Box</option>"+
         "  <option  "+package_selected+" value='packages'>Packages</option>"+
         "   <option  "+kg_ltr_selected+" value='kg/ltr'>Kg/Ltr</option>"+
-        "  </select>" +
+        "  </select>" +*/
         "</td>"+
         "<td data-title='Amount'>" +
         "<input type='text' name='amount[]' class='amount_rt_a allownumericwithdecimal' value='"+amt+"'/>" +

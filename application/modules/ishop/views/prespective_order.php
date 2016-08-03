@@ -2,7 +2,7 @@
 <div class="col-md-12">
     <div class="top_form">
         <?php
-        $attributes = array('class' => '', 'id' => 'prespective_order','name'=>'prespective_order');
+        $attributes = array('class' => '', 'id' => 'prespective_order','name'=>'prespective_order', 'autocomplete'=>'off');
         echo form_open('ishop/get_prespective_order',$attributes); ?>
 
         <?php

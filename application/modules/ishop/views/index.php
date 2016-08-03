@@ -1,6 +1,6 @@
 <?php
 //testdata(base_url());
-$attributes = array('class' => '', 'id' => 'primary_sales','name'=>'primary_sales');
+$attributes = array('class' => '', 'id' => 'primary_sales','name'=>'primary_sales', 'autocomplete'=>'off');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->

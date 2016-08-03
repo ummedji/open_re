@@ -1,5 +1,5 @@
 <?php
-$attributes = array('class' => '', 'id' => 'add_secondary_sales','name'=>'add_secondary_sales');
+$attributes = array('class' => '', 'id' => 'add_secondary_sales','name'=>'add_secondary_sales', 'autocomplete'=>'off');
 //echo form_open($this->uri->uri_string(),$attributes);
 echo form_open('',$attributes); ?>
 <!--------------------------------------Filter1-------------------------------------------------->

@@ -1,6 +1,6 @@
 <?php if (!$this->input->is_ajax_request()) { ?>
 <?php
-$attributes = array('class' => '', 'id' => 'primary_sales_view','name'=>'primary_sales_view');
+$attributes = array('class' => '', 'id' => 'primary_sales_view','name'=>'primary_sales_view', 'autocomplete'=>'off');
 echo form_open('ishop/primary_sales_details_view',$attributes); ?>
 <div class="col-md-12">
     <div class="top_form">

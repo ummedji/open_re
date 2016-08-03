@@ -15,7 +15,7 @@
             </div>
             
              <?php
-                $attributes = array('class' => '', 'id' => 'order_approval','name'=>'order_approval');
+                $attributes = array('class' => '', 'id' => 'order_approval','name'=>'order_approval', 'autocomplete'=>'off');
                 echo form_open('ishop/order_approval',$attributes);
              ?>
             
