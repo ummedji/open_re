@@ -4884,14 +4884,14 @@ class Esp extends Front_Controller
 
         if (!empty($files)) {
 
-            $file = $_POST["upload_file_data"]["tmp_name"];
+            $file = $_FILES["upload_file_data"]["tmp_name"];
 
-            $filename = explode("_", $_POST["upload_file_data"]["name"]);
+            $filename = explode("_", $_FILES["upload_file_data"]["name"]);
 
             //$filename[] = $_POST["upload_file_data"]["name"];
 
 
-            $ext = explode(".", $_POST["upload_file_data"]["name"]);
+            $ext = explode(".", $_FILES["upload_file_data"]["name"]);
 
 
             if ($ext[1] == "xls" || $ext[1] == "xlsx") {
@@ -5072,9 +5072,48 @@ class Esp extends Front_Controller
                  }
 
                  // $result_array["status"] = "true";
-                  $result_array["data"][] = $original_final_array;
-                  echo json_encode($result_array);
-                  die;
+
+
+
+
+
+
+                  if ($webservice_data == null)
+                  {
+                      $result_array["data"][] = $original_final_array;
+                      echo json_encode($result_array);
+                      die;
+                  }
+                  else
+                  {
+
+                      $filename = explode(".",$_FILES["upload_file_data"]["name"]);
+
+                      $filename1 = $user_id."_".$filename[0].".txt";
+
+                      if(file_exists(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename1))
+                      {
+                          unlink(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename1);
+                      }
+
+                      $myfile = fopen(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename1, "w");
+
+                      $result_array["data"][] = $original_final_array;
+                     // echo json_encode($result_array);
+
+                      $f_data = json_encode($result_array);
+                      fwrite($myfile, $f_data);
+
+                      //$file = FCPATH . "assets/uploads/Uploads/esp_budget/esp_budget.txt";
+
+                      //$file_content = file_get_contents($file);
+
+                      $final_array1["status"][] = true;
+                      $final_array1["data"][] = FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename1;
+                      return json_encode($final_array1);
+                  }
+
+
               }
               else
               {

@@ -2554,12 +2554,12 @@ class Web_service extends Front_Controller
 
         if (isset($user_id) && !empty($user_id) && isset($country_id) && !empty($country_id)) {
             $id = $this->ishop_model->add_budget_data($this->input->post(), $user_id, 'web_service', $country_id);
-            if ($id) {
+            if ($id == 1) {
                 $result['status'] = true;
-                $result['message'] = 'Saved Successfully.';
+                $result['message'] = 'Data Inserted Successfully.';
             } else {
                 $result['status'] = false;
-                $result['message'] = 'Fail';
+                $result['message'] = 'Data Not Inserted';
             }
         } else {
             $result['status'] = false;
