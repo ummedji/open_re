@@ -6281,6 +6281,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
             $return = array();
           //  $orderdata=array();
+
+
             foreach ($orderdata["order_data"] as $key => $value) {
 
 
@@ -6289,6 +6291,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 if (isset($orderdata["confirm_ack"][$key]) && $orderdata["confirm_ack"][$key] == 1) {
                     $status = 0;
                     $update_array["order_status"] = $status;
+
                 }
 
                 if (isset($orderdata["po_no"][$key]) && $orderdata["po_no"][$key] != "") {
@@ -6306,10 +6309,44 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     }
 
                     $update_array["order_status"] = $orer_status;
+
+
+                    $this->db->select("*");
+                    $this->db->from('bf_ishop_product_order');
+                    $this->db->where('order_id',$value);
+
+                    $order_detail_data1 = $this->db->get()->result_array();
+
+                    if (isset($order_detail_data1) && !empty($order_detail_data1)) {
+
+
+                      //  dumpme($order_detail_data1);
+
+                        foreach($order_detail_data1 as $k => $o_data){
+
+                            //GET ORDER DATA PRODUCT DATA
+                            if($o_data["dispatched_quantity"] == "" || empty($o_data["dispatched_quantity"])){
+
+                                $quantity_data = $o_data["quantity"];
+                                $detail_data_id = $o_data["product_order_id"];
+
+                                $update_array1 = array("dispatched_quantity"=>$quantity_data);
+
+                                $this->db->where('product_order_id', $detail_data_id);
+                                $this->db->update('bf_ishop_product_order', $update_array1);
+
+                            }
+
+                        }
+
+                    }
+
+
+
                 }
 
-                //   echo "<pre>";
-                //  print_r($update_array);
+
+
 
                 if (!empty($update_array)) {
                     $this->db->where('order_id', $value);
