@@ -66,6 +66,9 @@ $(document).ready(function(){
             }*/
         }
     });
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 
     $("#view_schemes").on("submit",function(e){
 

@@ -342,6 +342,10 @@ $(document).ready(function(){
         }
     });
 
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
+
 
     $("#rol_limit").on("submit",function(e){
 
@@ -606,6 +610,7 @@ $(document).on('submit', '#upload_rol_data', function (e) {
         return false;
     }
     else {
+        $('.chech_data button').attr('disabled','disabled');
         $.ajax({
             url: site_url + "ishop/upload_data/rol/"+select_customer_type, // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
@@ -634,10 +639,12 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                                 buttons:{
                                     close: function (event, ui) {
                                         $(this).remove();
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     }
                                 },
                                 close: function (event, ui) {
                                     $(this).remove();
+                                    $('.chech_data button').removeAttr('disabled','disabled');
                                 }
 
                             });
@@ -731,13 +738,16 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                                         // return false;
                                         //console.log(file_data);
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     },
                                     Decline: function () {
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     }
                                 },
                                 close: function (event, ui) {
                                     $(this).remove();
+                                    $('.chech_data button').removeAttr('disabled','disabled');
                                 }
                             });
                     }
@@ -772,13 +782,16 @@ $(document).on('submit', '#upload_rol_data', function (e) {
                                         // return false;
                                         //console.log(file_data);
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     },
                                     Decline: function () {
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     }
                                 },
                                 close: function (event, ui) {
                                     $(this).remove();
+                                    $('.chech_data button').removeAttr('disabled','disabled');
                                 }
                             });
 

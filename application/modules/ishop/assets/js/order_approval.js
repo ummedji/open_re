@@ -37,6 +37,9 @@ $(document).ready(function(){
             }
         }
     });
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 
 
     $("#order_approval").on("submit",function(e){

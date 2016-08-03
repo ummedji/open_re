@@ -2,6 +2,9 @@
  * Created by webclues on 5/26/2016.
  */
 $(document).ready(function(){
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 
     $("#form_date").datepicker({
       format: date_format,

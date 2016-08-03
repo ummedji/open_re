@@ -44,7 +44,9 @@ $(function () {
         }
         else
         {
-            var sku_ids = $('#retailer_comp input[name^=comp_id]').map(function(idx, elem) {
+            add_row();
+
+            /*var sku_ids = $('#retailer_comp input[name^=comp_id]').map(function(idx, elem) {
                 return $(elem).val();
             }).get();
 
@@ -76,7 +78,7 @@ $(function () {
             else
             {
                 add_row();
-            }
+            }*/
         }
     });
 

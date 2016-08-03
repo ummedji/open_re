@@ -2966,6 +2966,61 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+    public function new_esp_budget_upload(){
+
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $bussiness_code = $this->input->get_post('bussiness_code');
+        $bussiness_code = $this->input->get_post('bussiness_code');
+
+        $file_data =  $_FILES;
+
+        dumpme($file_data);
+
+        if(isset($file_data) && !empty($file_data)){
+
+            $filename = $_FILES["file_upload_data"]["name"];
+
+            //CHECK FILE FORMATE
+
+            $file_data = explode(".",$filename);
+
+            if($file_data[1] == "xlsx" || $file_data[1] == "xls"){
+
+                $file_temp_data = $_FILES["file_upload_data"]["tmp_name"];
+
+                if (file_exists(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename)) {
+                    unlink(FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename);
+                }
+
+                if(move_uploaded_file($file_temp_data, FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename)){
+
+                }
+                else
+                {
+                    $result['status'] = false;
+                    $result['message'] = "File not uploaded.";
+                }
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = "Please upload xlsx or xls file.";
+            }
+
+        }
+
+        die;
+        if($user_id != "" && $country_id != "" && $bussiness_code != "") {
+
+            $data = array("user_id" => $user_id,
+                "country_id" => $country_id,
+                "bussiness_code" => $bussiness_code
+            );
+        }
+
+
+    }
+
     /* ---------------------------------------------- DISTRIBUTOR --------------------------------------------------- */
     /**
      * @ Function Name        : saveSecondarySales

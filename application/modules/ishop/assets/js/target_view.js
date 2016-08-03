@@ -30,6 +30,9 @@ $(document).ready(function() {
             }
         }
     });
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 
     $("#target_view").on("submit",function(){
        // alert('in');

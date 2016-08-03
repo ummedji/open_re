@@ -45,6 +45,10 @@ var primary_sales_view_validators = $("#primary_sales_view").validate({
         }
     }
 });
+
+$( ":input" ).change(function() {
+    $(this).valid();
+});
 // END ::: Added By Vishal Malaviya For Validation
 
 

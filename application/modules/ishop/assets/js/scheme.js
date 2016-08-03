@@ -138,6 +138,9 @@ $(document).ready(function(){
             }
         }
     });
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 
 
 

@@ -383,6 +383,9 @@ var physical_stock_validators = $("#add_physical_stock").validate({
         }
     }
 });
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 
 $("#add_physical_stock").on("submit",function(e){
 
@@ -652,6 +655,7 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
         return false;
     }
     else {
+        $('.chech_data button').attr('disabled','disabled');
         $.ajax({
             url: site_url + "ishop/upload_data/physicalstock/"+select_customer_type, // Url to which the request is send
             type: "POST",             // Type of request to be send, called as method
@@ -680,10 +684,12 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                                 buttons:{
                                     close: function (event, ui) {
                                         $(this).remove();
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     }
                                 },
                                 close: function (event, ui) {
                                     $(this).remove();
+                                    $('.chech_data button').removeAttr('disabled','disabled');
                                 }
 
                             });
@@ -780,13 +786,16 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
                                             window.open(site_url + "assets/uploads/Uploads/" + dir_name + "/" + file_name, '_blank');
                                         }
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     },
                                     Decline: function () {
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     }
                                 },
                                 close: function (event, ui) {
                                     $(this).remove();
+                                    $('.chech_data button').removeAttr('disabled','disabled');
                                 }
                             });
                     }
@@ -817,13 +826,16 @@ $(document).on('submit', '#upload_physicalstock_data', function (e) {
 
 
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     },
                                     Decline: function () {
                                         $(this).dialog("close");
+                                        $('.chech_data button').removeAttr('disabled','disabled');
                                     }
                                 },
                                 close: function (event, ui) {
                                     $(this).remove();
+                                    $('.chech_data button').removeAttr('disabled','disabled');
                                 }
                             });
                     }

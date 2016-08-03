@@ -30,6 +30,9 @@ $(document).ready(function(){
             }
         }
     });
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
 
     
     $("#prespective_order").on("submit",function(e){

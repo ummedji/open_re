@@ -3,6 +3,7 @@
  */
 $(document).ready(function(){
 
+
     
     $( "#order_date" ).datepicker({
         dateFormat: date_format,
@@ -222,6 +223,10 @@ $(document).ready(function(){
       // console.log(selected_user_id +"===="+selected_user_geo_location);
        
    });
+
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
    
    //ON ENTERING MOBILE NO GETTING GEO LOCATION DATA AND ASSOCIATED FARMER DATA AND THERE RETAILERS
    
@@ -386,14 +391,16 @@ $(document).ready(function(){
 
         if(form_state==true){
 
-            var sku_ids = $('#order_place_data input[name^=product_sku_id]').map(function(idx, elem) {
+            var sku_units = $('#order_place_data input[name^=sku_units]').map(function(idx, elem) {
                 return $(elem).val();
             }).get();
-
+            console.log(sku_units);
             var cur_sku_id = $('#prod_sku option:selected').val();
-            if(sku_ids.length !== 0)
+            var cur_unit_id = $('#units option:selected').val();
+            var sku_unit = cur_sku_id+"_"+cur_unit_id;
+            if(sku_units.length !== 0)
             {
-                if(jQuery.inArray(cur_sku_id, sku_ids) !== -1)
+                if(jQuery.inArray(sku_unit, sku_units) !== -1)
                 {
                     $('<div></div>').appendTo('body')
                         .html('<div>Product already Inserted.</div>')
@@ -948,6 +955,7 @@ function order_place_add_row()
 
     $("#order_place_data").append(
         "<tr id='"+sr_no+"'>"+
+        "<input type='hidden' name='sku_units[]' value='"+sku_id+"_"+units+"'>"+
             "<td data-title='Sr. No.' class='numeric'>" +
                 "<input class='input_remove_border' type='text' value='"+sr_no+"' readonly/>" +
             "</td>"+

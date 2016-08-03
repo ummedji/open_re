@@ -21,6 +21,8 @@ if(login_customer_type == 8){
 }
 
 
+
+
 $("input.select_customer_type").on("click",function(){
 
 
@@ -301,9 +303,15 @@ function get_retailer_by_distributor(selected_id)
 // START ::: Added By Vishal Malaviya For Validation
 $(document).ready(function(){
 
+    $( ":input" ).change(function() {
+        $(this).valid();
+    });
+
 
     var ishop_sales = $("#add_ishop_sales");
     ishop_sales.validate();
+
+
 
     $("#add_sales_stock_row").click(function()
     {
@@ -318,15 +326,16 @@ $(document).ready(function(){
         }
 
         if(form_state==true){
-
-            var sku_ids = $('#sales_stock input[name^=product_sku_id]').map(function(idx, elem) {
+            var sku_units = $('#sales_stock input[name^=sku_units]').map(function(idx, elem) {
                 return $(elem).val();
             }).get();
-
+            console.log(sku_units);
             var cur_sku_id = $('#sales_prod_sku option:selected').val();
-            if(sku_ids.length !== 0)
+            var cur_unit_id = $('#sec_sel_unit option:selected').val();
+            var sku_unit = cur_sku_id+"_"+cur_unit_id;
+            if(sku_units.length !== 0)
             {
-                if(jQuery.inArray(cur_sku_id, sku_ids) !== -1)
+                if(jQuery.inArray(sku_unit, sku_units) !== -1)
                 {
                     $('<div></div>').appendTo('body')
                         .html('<div>Product already Inserted.</div>')
@@ -529,6 +538,7 @@ function add_sales_stock_row()
 
     $("#sales_stock").append(
         "<tr id='"+sr_no+"'>"+
+        "<input type='hidden' name='sku_units[]' value='"+sku_id+"_"+unit+"'>"+
         "<td data-title='Sr. No.' class='numeric'>" +
         "<input class='input_remove_border' type='text' value='"+sr_no+"' readonly/>" +
         "</td>"+
