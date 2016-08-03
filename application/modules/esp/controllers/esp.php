@@ -3723,14 +3723,18 @@ class Esp extends Front_Controller
                 }
 
             } else {
-                if (isset($webservice_data["emp_id"]) && ($webservice_data["emp_id"] != $webservice_data["login_user_id"])) {
+                if (isset($webservice_data["emp_id"]) && $webservice_data["emp_id"] != "") {
                     $budget_user_id = $webservice_data["emp_id"];
                 } else {
                     $budget_user_id = $webservice_data['login_user_id'];
                 }
             }
 
+
+
             $businss_data = $this->esp_model->get_business_code($budget_user_id);
+
+            //testdata($businss_data);
 
             $user_business_code = $businss_data;
 
@@ -3787,7 +3791,7 @@ class Esp extends Front_Controller
                 }
             }
 
-            // testdata($final_array);
+           //  testdata($budget_insert_id);
 
             if (!empty($final_array)) {
                 foreach ($final_array as $key_data => $data) {
