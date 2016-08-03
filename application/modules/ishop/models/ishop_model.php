@@ -1605,13 +1605,26 @@ class Ishop_model extends BF_Model
                 $secondary_id_data = '<input type="hidden" name="secondary_sales_id" value="' . $secondary_sales_id . '">';
 
                 foreach ($product_detail['result'] as $pd) {
+
+                    if($pd['unit'] == 'box')
+                    {
+                        $unit = 'Box';
+                    }
+                    elseif($pd['unit'] == 'packages')
+                    {
+                        $unit = 'Packages';
+                    }
+                    elseif($pd['unit'] == 'kg/ltr')
+                    {
+                        $unit = 'Kg/Ltr';
+                    }
                     if($csv == 'csv')
                     {
-                        $product_view['row'][] = array($i, $pd['secondary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $pd['quantity'], $pd['unit'], $pd['qty_kgl'], $pd['amount']);
+                        $product_view['row'][] = array($i, $pd['secondary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $pd['quantity'], $unit, $pd['qty_kgl'], $pd['amount']);
                     }
                     else{
                         $product_sku_id = $secondary_id_data . '<div class="prd_' . $pd["secondary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $pd['product_sku_id'] . '</span></div>';
-                        $units = $product_sku_id . '<div class="units_' . $pd["secondary_sales_product_id"] . '"><span class="units">' . $pd['unit'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $pd["secondary_sales_product_id"] . '"><span class="units">' . $unit . '</span></div>';
                         $quantity = '<div class="quantity_' . $pd["secondary_sales_product_id"] . '"><span class="quantity">' . $pd['quantity'] . '</span></div>';
 
                         $amount = '<div class="amount_' . $pd["secondary_sales_product_id"] . '"><input  type="hidden"  name="amount[]" value="' . $pd['amount'] . '"/><span class="amount">' . $pd['amount'] . '</span></div>';
@@ -1840,8 +1853,20 @@ class Ishop_model extends BF_Model
 
                     foreach ($pyh_stock_details['result'] as $rd) {
 
+                        if($rd['unit'] == "box")
+                        {
+                            $unit = 'Box';
+                        }
+                        elseif($rd['unit'] == "packages")
+                        {
+                            $unit = 'Packages';
+                        }
+                        else{
+                            $unit = 'Kg/Ltr';
+                        }
+
                         $product_sku_id = '<div class="prd_' . $rd["stock_id"] . '"><span class="prd_sku" style="display:none;" >' . $rd['product_sku_id'] . '</span></div>';
-                        $units = $product_sku_id . '<div class="units_' . $rd["stock_id"] . '"><span class="units">' . $rd['unit'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $rd["stock_id"] . '"><span class="units">' . $unit . '</span></div>';
                         $quantity = '<div class="rol_quantity_' . $rd["stock_id"] . '"><span class="rol_quantity">' . $rd['quantity'] . '</span></div>';
                         $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $rd["stock_id"] . '"><span class="rol_quantity_kg_ltr">' . $rd['qty_kgl'] . '</span></div>';
 
@@ -1864,8 +1889,21 @@ class Ishop_model extends BF_Model
                     }
 
                     foreach ($pyh_stock_details['result'] as $rd) {
+
+                        if($rd['unit'] == "box")
+                        {
+                            $unit = 'Box';
+                        }
+                        elseif($rd['unit'] == "packages")
+                        {
+                            $unit = 'packages';
+                        }
+                        else{
+                            $unit = 'Kg/Ltr';
+                        }
+
                         $product_sku_id = '<div class="prd_' . $rd["stock_id"] . '"><span class="prd_sku" style="display:none;" >' . $rd['product_sku_id'] . '</span></div>';
-                        $units = $product_sku_id . '<div class="units_' . $rd["stock_id"] . '"><span class="units">' . $rd['unit'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $rd["stock_id"] . '"><span class="units">' . $unit . '</span></div>';
                         $quantity = '<div class="rol_quantity_' . $rd["stock_id"] . '"><span class="rol_quantity">' . $rd['quantity'] . '</span></div>';
                         $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $rd["stock_id"] . '"><span class="rol_quantity_kg_ltr">' . $rd['qty_kgl'] . '</span></div>';
 
@@ -2638,13 +2676,27 @@ class Ishop_model extends BF_Model
                 $i = 1;
 
                 foreach ($sales_detail['result'] as $sd) {
+
+                    if($sd['unit'] == 'box')
+                    {
+                        $unit = 'Box';
+                    }
+                    if($sd['unit'] == 'packages')
+                    {
+                        $unit = 'Packages';
+                    }
+                    if($sd['unit'] == 'kg/ltr')
+                    {
+                        $unit = 'Kg/Ltr';
+                    }
+
                     if($csv=='csv')
                     {
-                        $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'], $sd['unit'], $sd['quantity'] , $sd['qty_kgl'] );
+                        $sales_view['row'][] = array($i, $sd['tertiary_sales_product_id'], $sd['product_sku_code'], $sd['product_sku_name'], $unit, $sd['quantity'] , $sd['qty_kgl'] );
                     }
                     else{
                         $product_sku_id = '<div class="prd_' . $sd["tertiary_sales_product_id"] . '"><span class="prd_sku" style="display:none;" >' . $sd['product_sku_id'] . '</span></div>';
-                        $units = $product_sku_id . '<div class="units_' . $sd["tertiary_sales_product_id"] . '"><span class="units">' . $sd['unit'] . '</span></div>';
+                        $units = $product_sku_id . '<div class="units_' . $sd["tertiary_sales_product_id"] . '"><span class="units">' . $unit . '</span></div>';
                         $quantity = '<div class="quantity_' . $sd["tertiary_sales_product_id"] . '"><span class="quantity">' . $sd['quantity'] . '</span></div>';
                         $quantity_kg_ltr = '<div class="rol_quantity_kg_ltr_' . $sd["tertiary_sales_product_id"] . '"><span class="rol_quantity_kg_ltr">' . $sd['qty_kgl'] . '</span></div>';
 
@@ -4877,7 +4929,20 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 // $product_view['count'] = count($product_view['head']);
                 $i = 1;
                 foreach ($order_detail['result'] as $od) {
-                    $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['quantity_kg_ltr']);
+
+                   if($od['unit'] == 'box')
+                   {
+                       $unit = 'Box';
+                   }
+                   elseif($od['unit'] == 'packages')
+                    {
+                        $unit = 'Packages';
+                    }
+                   elseif($od['unit'] == 'kg/ltr')
+                    {
+                        $unit = 'Kg/Ltr';
+                    }
+                    $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr']);
                     $i++;
                 }
                 $product_view['eye'] = '';
@@ -5537,13 +5602,14 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
     public function order_status_product_details_view_by_id($order_id, $radiochecked, $logincustomertype, $action_data = null, $web_service = null,$csv=null)
     {
 
-        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id ';
+        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id,bio.order_status ';
 
 
        if($action_data == 'order_approval'){
            $sql .= ' , biccs.intrum_quantity  ';
        }
         $sql .= ' FROM bf_ishop_product_order as bipo ';
+        $sql .= ' JOIN bf_ishop_orders as bio ON (bio.order_id = bipo.order_id) ';
         $sql .= '  JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
         $sql .= '  JOIN bf_master_product_sku_regional as psr ON (psr.product_sku_id = psc.product_sku_id) ';
 
@@ -5588,24 +5654,37 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $k = 0;
                     foreach ($order_detail['result'] as $od) {
 
+                        if($od['unit'] == 'kg/ltr')
+                        {
+                            $unit = 'Kg/Ltr';
+                        }
+                        elseif($od['unit'] == 'box')
+                        {
+                            $unit = 'Box';
+                        }
+                        elseif($od['unit'] == 'packages')
+                        {
+                            $unit = 'Packages';
+                        }
+
                         if($csv == 'csv')
                         {
                             //testdata('in');
                             if ($radiochecked == "distributor") {
 
-                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'],  $od['quantity_kg_ltr'],  $od['amount'], $od['dispatched_quantity'] );
+                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],$unit, $od['quantity'],  $od['quantity_kg_ltr'],  $od['amount'], $od['dispatched_quantity'] );
 
                             }
                             elseif ($action_data == "order_approval") {
 
                                 $intrum_qty = isset($od['intrum_quantity']) ? $od['intrum_quantity']:"";
 
-                                $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['quantity_kg_ltr'],  $od['amount'], $intrum_qty, $od['dispatched_quantity'] );
+                                $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr'],  $od['amount'], $intrum_qty, $od['dispatched_quantity'] );
 
                             }
                             else {
 
-                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'],  $od['quantity_kg_ltr'],  $od['amount']);
+                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'],  $od['quantity_kg_ltr'],  $od['amount']);
 
                             }
                         }
@@ -5617,7 +5696,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
                             $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
-                            $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $od['unit'] . '</span></div>';
+                            $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $unit . '</span></div>';
                             $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
                             $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
                             $amount = '<div class="amount_' . $od["product_order_id"] . '"><input type="hidden" class="amount_data" name="amount['.$k.']" value="' . $od['amount'] . '" /><span class="amount">' . $od['amount'] . '</span></div>';
@@ -5651,6 +5730,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             }
                         }
+
+                        if ($od['order_status'] == 4)
+                        {
+                            $product_view['delete'][] = '';
+                        }
+                        else
+                        {
+                            $product_view['delete'][] = 'is_idelete';
+                        }
+
                         $i++;
                         $k++;
                     }
@@ -5679,16 +5768,29 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $k = 0;
                     foreach ($order_detail['result'] as $od) {
 
+                        if($od['unit'] == 'kg/ltr')
+                        {
+                            $unit = 'Kg/Ltr';
+                        }
+                        elseif($od['unit'] == 'box')
+                        {
+                            $unit = 'Box';
+                        }
+                        elseif($od['unit'] == 'packages')
+                        {
+                            $unit = 'Packages';
+                        }
+
                         if ($radiochecked == "farmer") {
 
-                            $product_view['row'][] = array($i, "", $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['quantity_kg_ltr']);
+                            $product_view['row'][] = array($i, "", $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr']);
 
                         } elseif ($radiochecked == "retailer") {
 
                             if($csv == 'csv')
                             {
 
-                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],  $od['unit'], $od['quantity'] , $od['quantity_kg_ltr'] , $od['amount'], $od['dispatched_quantity'] );
+                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],  $unit, $od['quantity'] , $od['quantity_kg_ltr'] , $od['amount'], $od['dispatched_quantity'] );
                             }
                             else
                             {
@@ -5699,7 +5801,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
-                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $od['unit'] . '</span></div>';
+                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $unit . '</span></div>';
                                 $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
                                 $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
                                 $amount = '<div class="amount_' . $od["product_order_id"] . '"><span class="amount">' . $od['amount'] . '</span></div>';
@@ -5714,7 +5816,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         } elseif ($radiochecked == "distributor") {
                             if($csv == 'csv')
                             {
-                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'] , $od['quantity_kg_ltr'], $od['amount'], $od['dispatched_quantity']);
+                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'] , $od['quantity_kg_ltr'], $od['amount'], $od['dispatched_quantity']);
                             }
                             else
                             {
@@ -5724,7 +5826,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
-                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $od['unit'] . '</span></div>';
+                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $unit . '</span></div>';
                                 $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
                                 $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
                                 $amount = '<div class="amount_' . $od["product_order_id"] . '"><span class="amount">' . $od['amount'] . '</span></div>';
@@ -5754,9 +5856,22 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $k = 0;
                         foreach ($order_detail['result'] as $od) {
 
+                            if($od['unit'] == 'kg/ltr')
+                            {
+                                $unit = 'Kg/Ltr';
+                            }
+                            elseif($od['unit'] == 'box')
+                            {
+                                $unit = 'Box';
+                            }
+                            elseif($od['unit'] == 'packages')
+                            {
+                                $unit = 'Packages';
+                            }
+
                             if($csv == 'csv')
                             {
-                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'] , $od['quantity_kg_ltr']);
+                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'] , $od['quantity_kg_ltr']);
                             }
                             else
                             {
@@ -5766,7 +5881,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
-                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $od['unit'] . '</span></div>';
+                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $unit . '</span></div>';
                                 $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
                                 $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
 
@@ -5788,7 +5903,20 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $i = 1;
                         foreach ($order_detail['result'] as $od) {
 
-                            $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['quantity_kg_ltr'], $od['amount'], $od['dispatched_quantity']);
+                            if($od['unit'] == 'kg/ltr')
+                            {
+                                $unit = 'Kg/Ltr';
+                            }
+                            elseif($od['unit'] == 'box')
+                            {
+                                $unit = 'Box';
+                            }
+                            elseif($od['unit'] == 'packages')
+                            {
+                                $unit = 'Packages';
+                            }
+
+                            $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr'], $od['amount'], $od['dispatched_quantity']);
 
                             $i++;
                         }
@@ -5811,9 +5939,22 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $k = 0;
                         foreach ($order_detail['result'] as $od) {
 
+                            if($od['unit'] == 'kg/ltr')
+                            {
+                                $unit = 'Kg/Ltr';
+                            }
+                            elseif($od['unit'] == 'box')
+                            {
+                                $unit = 'Box';
+                            }
+                            elseif($od['unit'] == 'packages')
+                            {
+                                $unit = 'Packages';
+                            }
+
                             if($csv == 'csv')
                             {
-                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'] , $od['quantity_kg_ltr']);
+                                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'] , $od['quantity_kg_ltr']);
                             }
                             else{
                                 $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
@@ -5822,7 +5963,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
                                 $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
-                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $od['unit'] . '</span></div>';
+                                $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $unit . '</span></div>';
                                 $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
                                 $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
 
@@ -5843,7 +5984,20 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $i = 1;
                         foreach ($order_detail['result'] as $od) {
 
-                            $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['quantity_kg_ltr'], $od['amount']);
+                            if($od['unit'] == 'kg/ltr')
+                            {
+                                $unit = 'Kg/Ltr';
+                            }
+                            elseif($od['unit'] == 'box')
+                            {
+                                $unit = 'Box';
+                            }
+                            elseif($od['unit'] == 'packages')
+                            {
+                                $unit = 'Packages';
+                            }
+
+                            $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr'], $od['amount']);
 
                             $i++;
                         }

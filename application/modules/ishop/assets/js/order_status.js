@@ -415,32 +415,31 @@ $(document).on('click', 'div.order_status .edit_i', function () {
     row_data = row_data.split("_");
    //UNIT
    var unit_value = $("div.unit_"+id+" span.unit").text();
-   
-  
+
    
    var selected_data1 = "";
    var selected_data2 = "";
    var selected_data3 = "";
    
-   if(unit_value === "box"){
+   if(unit_value === "Box"){
      
        selected_data1 = 'selected = "selected"';
    }
    
-   if(unit_value === "packages"){
+   if(unit_value === "Packages"){
       
        selected_data2 = 'selected = "selected"';
    }
    
-   if(unit_value === "kg/ltr"){
-      
+   if(unit_value === "Kg/Ltr"){
+
        selected_data3 = 'selected = "selected"';
    }
    
   
    
    $("div.unit_"+id).empty();
-   $("div.unit_"+id).append('<select name="units['+row_data[1]+']" class="select_unitdata" id="units_'+id+'"> <option '+selected_data1+' value="box">Box</option> <option '+selected_data3+' value="packages">Packages</option><option '+selected_data2+' value="kg/ltr">Kg/Ltr</option> </select>');
+   $("div.unit_"+id).append('<select name="units['+row_data[1]+']" class="select_unitdata" id="units_'+id+'"> <option '+selected_data1+' value="box">Box</option> <option '+selected_data2+' value="packages">Packages</option><option '+selected_data3+' value="kg/ltr">Kg/Ltr</option> </select>');
    
    //QUANTITY
    

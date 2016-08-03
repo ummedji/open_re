@@ -1816,7 +1816,8 @@ class Ishop extends Front_Controller
             
             //DEFAULT SELECTED RADIO BUTTON FOR DIFFERENT USER ROLES
             
-            if($logined_user_type == 7){
+            if($logined_user_type == 7)
+            {
                 
                 //FOR HO
                 $default_type_selected = 9;
@@ -1825,7 +1826,8 @@ class Ishop extends Front_Controller
             
                 
             }
-            elseif($logined_user_type == 8){
+            elseif($logined_user_type == 8)
+            {
             
                 //FOR FO
                 $default_type_selected = 11; 

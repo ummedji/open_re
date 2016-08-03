@@ -80,17 +80,17 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
    var selected_data2 = "";
    var selected_data3 = "";
    
-   if(unit_value === "box"){
+   if(unit_value === "Box"){
      
        selected_data1 = 'selected = "selected"';
    }
    
-   if(unit_value === "packages"){
+   if(unit_value === "Packages"){
       
        selected_data2 = 'selected = "selected"';
    }
    
-   if(unit_value === "kg/ltr"){
+   if(unit_value === "Kg/Ltr"){
       
        selected_data3 = 'selected = "selected"';
    }
@@ -103,7 +103,7 @@ $(document).on('click', 'div#middle_container_product .edit_i', function () {
 
    
    $("div.unit_"+id).empty();
-   $("div.unit_"+id).append('<input type="hidden" name="order_data['+row_data[1]+']" value="'+id+'" /><select name="units['+row_data[1]+']" class="select_unitdata" id="units_'+id+'"> <option '+selected_data1+' value="box">Box</option> <option '+selected_data3+' value="packages">Packages</option><option '+selected_data2+' value="kg/ltr">Kg/Ltr</option> </select>');
+   $("div.unit_"+id).append('<input type="hidden" name="order_data['+row_data[1]+']" value="'+id+'" /><select name="units['+row_data[1]+']" class="select_unitdata" id="units_'+id+'"> <option '+selected_data1+' value="box">Box</option> <option '+selected_data2+' value="packages">Packages</option><option '+selected_data3+' value="kg/ltr">Kg/Ltr</option> </select>');
    
    //QUANTITY
    

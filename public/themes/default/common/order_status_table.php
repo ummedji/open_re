@@ -85,8 +85,15 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                                                 <?php
                                             }
                                            if($action_data !="get_order_status_data"){
+
+                                               if(isset($order_table['delete'][$rkey]) && !empty($order_table['delete'][$rkey]) ){
+                                                   $style = "style='pointer-events: none;opacity: 0.4;'";
+
+                                               }
+                                               else {  $style = "";}
+
                                             ?>
-                                            <div class="edit_i" prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
+                                            <div class="edit_i" <?php echo $style; ?> prdid ="<?php echo $row;?>"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
                                            <?php } 
                                            
                                          

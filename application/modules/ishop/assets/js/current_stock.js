@@ -185,7 +185,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
 
     $("#update_current_stock input").each(function( index ) {
 
-        if($( this ).val() == ""){
+        if($.trim($( this ).val()) == ""){
             check_blank_data.push(1);
         }
 
@@ -230,7 +230,7 @@ $(document).on('click', 'div.check_save_btn #check_save', function () {
     }
     else
     {
-        var message = "Please add data to to all fields.";
+        var message = "Please add data to all fields.";
 
         $('<div></div>').appendTo('body')
             .html('<div><b>'+message+'</b></div>')

@@ -172,13 +172,13 @@ $(document).on('click', 'div.secondary_product .edit_i', function () {
     var kg_ltr_selected = "";
 
     // alert(prd_sku);
-    if(units == 'box'){
+    if(units == 'Box'){
         box_selected = "selected = 'selected'"
     }
-    if(units == 'packages'){
+    if(units == 'Packages'){
         package_selected = "selected = 'selected'"
     }
-    if(units == 'kg/ltr'){
+    if(units == 'Kg/Ltr'){
         kg_ltr_selected = "selected = 'selected'"
     }
 
