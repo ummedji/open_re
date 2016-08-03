@@ -3286,7 +3286,7 @@ class Esp extends Front_Controller
                                 foreach ($login_user_all_parent_data as $parent_key => $parentid) {
                                     $get_senioruser_lock_status = $this->esp_model->get_budget_senior_lock_status_data($parentid, $budget_id, $monthvalue);
                                     if (!empty($get_senioruser_lock_status) || $get_senioruser_lock_status != 0) {
-                                        if ($get_senioruser_lock_status[0]["lock_status"] == 1) {
+                                        if ($get_senioruser_lock_status["lock_status"] == 1) {
                                             $senior_lock_data[] = 1;
                                         }
                                     }
@@ -3303,7 +3303,7 @@ class Esp extends Front_Controller
 
                                // testdata($highest_user_lock_data);
 
-                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data["lock_status"] == 1)
                                 {
                                     $editable = "";
                                 }
@@ -3386,7 +3386,7 @@ class Esp extends Front_Controller
                                 foreach ($login_user_all_parent_data as $parent_key => $parentid) {
                                     $get_senioruser_lock_status = $this->esp_model->get_budget_senior_lock_status_data($parentid, $budget_id, $monthvalue);
                                     if (!empty($get_senioruser_lock_status) || $get_senioruser_lock_status != 0) {
-                                        if ($get_senioruser_lock_status[0]["lock_status"] == 1) {
+                                        if ($get_senioruser_lock_status["lock_status"] == 1) {
                                             $senior_lock_data[] = 1;
                                         }
                                     }
@@ -3401,7 +3401,7 @@ class Esp extends Front_Controller
 
                             if ($login_user_highest_level_data == $login_user_id) {
 
-                                if($highest_user_lock_data != 0 && $highest_user_lock_data[0]["lock_status"] == 1)
+                                if($highest_user_lock_data != 0 && $highest_user_lock_data["lock_status"] == 1)
                                 {
                                     $editable = "";
                                 }
@@ -3419,7 +3419,7 @@ class Esp extends Front_Controller
                                     $editable = "readonly";
                                     //   echo "bbb".$monthvalue."</br>";
 
-                                } elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0) {
+                                } elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0) {
 
                                     if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1) {
                                         //    echo "ccc".$monthvalue."</br>";
