@@ -305,7 +305,7 @@ if (!$this->input->is_ajax_request()) {
                             </div>
                             <div class="form-group" id="from_customer_data">
                                 <label>Customer Data</label>
-                                <select class="selectpicker" name="from_customer_data" id="from_customer_data" title="Select Customer">
+                                <select class="selectpicker" name="from_customer_data" id="from_customer_data" title="Select Distributor">
                                 </select>
                             </div>
                             <div class="form-group" id="year_data">

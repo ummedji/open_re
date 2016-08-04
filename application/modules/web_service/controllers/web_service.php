@@ -279,7 +279,9 @@ class Web_service extends Front_Controller
             $key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user_id, $country_id);
             $global_head_user = array();
             $employee_visit = $this->ecp_model->get_employee_for_loginuser($user_id, $global_head_user);
-            //testdata($employee_visit);
+            //testdata($employee_visit)
+            //
+            $lower_user_check = $this->esp_model->get_user_selected_level_data($user_id, null);
 
             $dist_array = array();
             if (!empty($distributors)) {
@@ -431,8 +433,13 @@ class Web_service extends Front_Controller
                 }
             }
 
+            $lowest_level = 0;
+            if(!empty($lower_user_check) && $lower_user_check["tot"] == 0){
+                $lowest_level = 1;
+            }
 
-            $data = array("distributors" => $dist_array, "retailers" => $ret_array, "products_skus" => $sku_array, "units" => $units, "materials" => $mtl_array, "compititor" => $comp_array, "reasons" => $reason_array, "leave_type" => $leave_type_array, "status" => $status, "diseases" => $diseases_array, "crops" => $crop_array, "activity" => $activity_array, "key_farmers" => $farmers_array, "joint_visit" => $employee_array);
+
+            $data = array("distributors" => $dist_array, "retailers" => $ret_array, "products_skus" => $sku_array, "units" => $units, "materials" => $mtl_array, "compititor" => $comp_array, "reasons" => $reason_array, "leave_type" => $leave_type_array, "status" => $status, "diseases" => $diseases_array, "crops" => $crop_array, "activity" => $activity_array, "key_farmers" => $farmers_array, "joint_visit" => $employee_array,'lowest_level'=>$lowest_level);
             //  testdata($data);
             $result['status'] = true;
             $result['message'] = 'Success';
