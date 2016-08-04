@@ -6855,7 +6855,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         if ($checked_type == "distributor") {
             $sql .= ' AND bu.role_id =9 ';
         }
-        $sql .= 'AND ib.country_id =' . $country_id . ' ';
+        $sql .= 'AND bu.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY ib.ishop_budget_id     DESC ';
 
 
