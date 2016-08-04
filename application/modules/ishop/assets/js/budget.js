@@ -61,6 +61,9 @@ $(document).ready(function(){
                     $("h4.modal-title").empty();
                     $("h4.modal-title").append("Copy Retailer Data");
 
+                    $("select#from_customer_data").attr("title","Select Retailer");
+                    $("select#to_customer_data").attr("title","Select Retailer");
+
                     $("select#from_customer_data").empty();
                     $("select#to_customer_data").empty();
 
@@ -129,6 +132,9 @@ $(document).ready(function(){
 
                     $("h4.modal-title").empty();
                     $("h4.modal-title").append("Copy Distributor Data");
+
+                    $("select#from_customer_data").attr("title","Select Distributor");
+                    $("select#to_customer_data").attr("title","Select Distributor");
 
                     $("select#from_customer_data").empty();
                     $("select#to_customer_data").empty();
@@ -771,7 +777,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "from_data"){
                             $("select#from_customer_data").empty();
 
-                            $("select#from_customer_data").append('<option value="">Select Distributor Name</option>');
+                           // $("select#from_customer_data").append('<option value="">Select Distributor Name</option>');
 
                             $.each(resp, function(key, value) {
                                 
@@ -785,7 +791,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "to_data"){
                             $("select#to_customer_data").empty();
 
-                            $("select#to_customer_data").append('<option value="">Select Distributor Name</option>');
+                           // $("select#to_customer_data").append('<option value="">Select Distributor Name</option>');
 
                             $.each(resp, function(key, value) {
                                
@@ -820,7 +826,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "from_data"){
                             $("select#from_customer_data").empty();
 
-                            $("select#from_customer_data").append('<option value="">Select Retailer Name</option>');
+                         //   $("select#from_customer_data").append('<option value="">Select Retailer Name</option>');
 
                             $.each(resp, function(key, value) {
                               //  $('select#from_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
@@ -833,7 +839,7 @@ function get_user_by_geo_data(selected_geo_data,copy_check_param){
                         if(copy_check_param == "to_data"){
                             $("select#to_customer_data").empty();
 
-                            $("select#to_customer_data").append('<option value="">Select Retailer Name</option>');
+                        //    $("select#to_customer_data").append('<option value="">Select Retailer Name</option>');
 
                             $.each(resp, function(key, value) {
                              //   $('select#to_customer_data').append('<option value="' + value.id + '" >' +value.first_name+' '+value.middle_name+' '+value.last_name+ '</option>');
