@@ -65,7 +65,8 @@ $(function () {
         var customer_id=$('#reta_id').val();
         var invoice_no=$('#invoice_no').val();
         var login_customer_id = $("input#login_customer_id").val();
-        if(customer_id != '' && invoice_no !=''){
+        if(customer_id != '' && $.trim(invoice_no)!=''){
+           
             $.ajax({
                 type: 'POST',
                     url: site_url + "ishop/check_duplicate_data_secondary_sales",
@@ -88,7 +89,7 @@ $(function () {
                 }
             });
         }
-        else if(invoice_no !=''){
+        else if($.trim(invoice_no) !=''){
             get_scondary_sales_data(invoice_no,login_customer_id,customer_id);
         }
     });

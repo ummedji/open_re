@@ -454,7 +454,6 @@ $(document).on('click', 'div.sales_product .edit_i', function () {
     var package_selected = "";
     var kg_ltr_selected = "";
 
-    // alert(prd_sku);
     if(units == 'Box'){
         box_selected = "selected = 'selected'"
     }

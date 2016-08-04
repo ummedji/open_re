@@ -1413,13 +1413,20 @@ class Ishop_model extends BF_Model
     {
         $this->db->select('*');
         $this->db->from('ishop_secondary_sales');
-        $this->db->where('invoice_no', $invoice_no);
-        $this->db->where_not_in('customer_id_to', $customer_id);
+        $this->db->where('invoice_no', trim($invoice_no));
+        $this->db->where_not_in('customer_id_to', trim($customer_id));
         $this->db->where('customer_id_from', $login_id);
         $check = $this->db->get()->row_array();
-        if (isset($check) && !empty($check)) {
+
+        if(!isset($check) && empty($check))
+        {
+            return 0;
+        }
+        elseif (isset($check) && !empty($check)) {
             return 1;
-        } else {
+        }
+        else
+        {
             $this->db->select('*');
             $this->db->from('ishop_secondary_sales');
             $this->db->where('customer_id_to', $customer_id);
@@ -1438,8 +1445,11 @@ class Ishop_model extends BF_Model
     {
         $this->db->select('secondary_sales_id,etn_no,customer_id_from,customer_id_to,PO_no,order_tracking_no,invoice_no,invoice_date,total_amount,invoice_recived_status');
         $this->db->from('ishop_secondary_sales');
-        $this->db->where('invoice_no', $invoice_no);
-        $this->db->where('customer_id_from', $login_id);
+        if(isset($invoice_no) && !empty($invoice_no))
+        {
+            $this->db->where('invoice_no', trim($invoice_no));
+        }
+        $this->db->where('customer_id_from', trim($login_id));
         if(isset($customer_id) && !empty($customer_id))
         {
             $this->db->where('customer_id_to', $customer_id);
@@ -6616,8 +6626,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql .= 'AND it.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY it.ishop_target_id DESC ';
 
-        //echo $sql;
-        //die;
+        echo $sql;
+       // die;
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
