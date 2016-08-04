@@ -6616,6 +6616,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $sql .= 'AND it.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY it.ishop_target_id DESC ';
 
+        //echo $sql;
+        //die;
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
@@ -6631,11 +6633,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $target_details = $info->result_array();
             return $target_details;
         } else {
-            //$target_data = $this->grid->get_result_res($sql);
-            $target_data = $this->db->query($sql)->result_array();
+            $target_details = $this->grid->get_result_res($sql);
+            //$target_details = $this->db->query($sql)->result_array();
 
             //dumpme($target_data);
-            //testdata($target_details);
+           // testdata($target_details);
 
             if (isset($target_details['result']) && !empty($target_details['result'])) {
                 if ($checked_type == 'retailer') {

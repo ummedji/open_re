@@ -2356,6 +2356,9 @@ class Ishop extends Front_Controller
 				$page = 1;
 			}
 			$target_data= $this->ishop_model->get_target_details($user->id,$user->country_id,$checked_type,$page);
+
+           // testdata($target_data);
+
 			Template::set('td', $target_data['count']);
 			Template::set('pagination', (isset($target_data['pagination']) && !empty($target_data['pagination'])) ? $target_data['pagination'] : '' );
 

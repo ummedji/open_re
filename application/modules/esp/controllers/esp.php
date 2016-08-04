@@ -5648,7 +5648,7 @@ class Esp extends Front_Controller
                       $myfile = fopen(FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename1, "w");
 
                       $result_array["data"][] = $original_final_array;
-                     // echo json_encode($result_array);
+                      // echo json_encode($result_array);
 
                       $f_data = json_encode($result_array);
                       fwrite($myfile, $f_data);
