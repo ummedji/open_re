@@ -2689,6 +2689,9 @@ class Ishop_model extends BF_Model
                     {
                         $unit = 'Kg/Ltr';
                     }
+                    else{
+                        $unit = '';
+                    }
 
                     if($csv=='csv')
                     {
@@ -4302,6 +4305,8 @@ class Ishop_model extends BF_Model
 
         } else if ($this->input->post("login_customer_type") == 8) {
 
+
+
             /*
              * IF LOGIN USER IS FEILD OFFICER
              */
@@ -4314,6 +4319,7 @@ class Ishop_model extends BF_Model
                     $o_dt = $this->input->post("order_date");
                     $f_date = str_replace('/', '-', $o_dt);
                     $order_date = date('Y-m-d', strtotime($f_date));
+                    $order_status = 0;
 
                 } elseif ($this->input->post("radio1") == "retailer") {
 
@@ -4321,6 +4327,7 @@ class Ishop_model extends BF_Model
                     $customer_id_from = $this->input->post("retailer_id");
                     $order_taken_by_id = $user_id;
                     $order_date = date("Y-m-d");
+                    $order_status = 4;
 
                 } elseif ($this->input->post("radio1") == "distributor") {
 
@@ -4328,6 +4335,7 @@ class Ishop_model extends BF_Model
                     $customer_id_to = 0;
                     $order_taken_by_id = $user_id;
                     $order_date = date("Y-m-d");
+                    $order_status = 4;
 
                 }
             }
@@ -4942,6 +4950,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     {
                         $unit = 'Kg/Ltr';
                     }
+                    else{
+                        $unit = '';
+                    }
                     $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr']);
                     $i++;
                 }
@@ -5158,12 +5169,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             foreach ($orderdata['result'] as $od) {
 
-                                if ($od['read_status'] == 0) {
-                                    $order_status = "Unread";
-                                } elseif ($od['read_status'] == 1) {
-                                    $order_status = "Read";
+                                if ($od['order_status'] == 4) {
+                                    $read_status = "Un Acknowledge";
+                                } else {
+                                    $read_status = "Acknowledge";
                                 }
-
 
                                 $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
                                 if($local_date != null){
@@ -5178,7 +5188,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 else{
                                     $order_datetime = $od['order_date'];
                                 }
-                                $order_view['row'][] = array($i, $od['order_id'],$od['t_dn'],$order_datetime, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $order_status);
+                                $order_view['row'][] = array($i, $od['order_id'],$od['t_dn'],$order_datetime, $od['PO_no'], $otn, $od['estimated_delivery_date'], $od['total_amount'], $od['display_name'], $read_status);
                                 $i++;
 
 
@@ -5666,6 +5676,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         {
                             $unit = 'Packages';
                         }
+                        else{
+                            $unit = '';
+                        }
 
                         if($csv == 'csv')
                         {
@@ -5780,6 +5793,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         {
                             $unit = 'Packages';
                         }
+                        else{
+                            $unit = '';
+                        }
 
                         if ($radiochecked == "farmer") {
 
@@ -5868,6 +5884,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             {
                                 $unit = 'Packages';
                             }
+                            else{
+                                $unit = '';
+                            }
 
                             if($csv == 'csv')
                             {
@@ -5915,6 +5934,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             {
                                 $unit = 'Packages';
                             }
+                            else{
+                                $unit = '';
+                            }
 
                             $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr'], $od['amount'], $od['dispatched_quantity']);
 
@@ -5950,6 +5972,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             elseif($od['unit'] == 'packages')
                             {
                                 $unit = 'Packages';
+                            }
+                            else{
+                                $unit = '';
                             }
 
                             if($csv == 'csv')
@@ -5995,6 +6020,9 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                             elseif($od['unit'] == 'packages')
                             {
                                 $unit = 'Packages';
+                            }
+                            else{
+                                $unit = '';
                             }
 
                             $product_view['row'][] = array($i, '', $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr'], $od['amount']);
@@ -7442,7 +7470,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     foreach ($rol_details['result'] as $rd) {
 
-                        $rol['row'][] = array($i, $rd['user_code'], $rd['display_name'], $rd['product_country_name'], $rd['product_sku_name'], $rd['units'], $rd['rol_quantity_Kg_Ltr'], $rd['rol_quantity']);
+                        $rol['row'][] = array($i, $rd['user_code'], $rd['display_name'], $rd['product_country_name'], $rd['product_sku_name'], $rd['units'], $rd['rol_quantity'], $rd['rol_quantity_Kg_Ltr']);
                         $i++;
                     }
                 }

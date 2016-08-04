@@ -199,9 +199,9 @@ echo form_open('',$attributes); ?>
 if (!$this->input->is_ajax_request()) {
     ?>
     <div class="check_save_btn" id="check_save_btn" style="display:none;">
-        <div class="col-md-2 save_btn">
+        <div class="save_btn">
             <label>&nbsp;</label>
-            <button type="submit" name="save" id="check_save" class="btn btn-primary gren_btn" style="margin-bottom: 50px">Save</button>
+            <button type="submit" name="save" id="check_save" class="btn btn-primary" style="margin-bottom: 50px">Save</button>
         </div>
     </div>
     <?php

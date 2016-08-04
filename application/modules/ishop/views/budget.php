@@ -369,7 +369,7 @@ if (!$this->input->is_ajax_request()) {
                           </select>
                       </div>
                       <div class="form-group" id="year_data">
-                          <label>Selecte Year</label>
+                          <label>Select Year</label>
                           <input type="text" name="to_year_data"  class="form-control" id="to_copy_popup_datepicker" />
                       </div>
                       <div id="month_data">
