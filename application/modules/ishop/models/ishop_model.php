@@ -2681,11 +2681,11 @@ class Ishop_model extends BF_Model
                     {
                         $unit = 'Box';
                     }
-                    if($sd['unit'] == 'packages')
+                    elseif($sd['unit'] == 'packages')
                     {
                         $unit = 'Packages';
                     }
-                    if($sd['unit'] == 'kg/ltr')
+                    elseif($sd['unit'] == 'kg/ltr')
                     {
                         $unit = 'Kg/Ltr';
                     }
@@ -7794,6 +7794,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 if(!empty($detail_data["row"])) {
                     foreach ($detail_data["row"] as $d_key => $product_data) {
+
                         $inner_array = array();
 
                         $inner_array = $val;
