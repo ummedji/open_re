@@ -328,9 +328,11 @@ $(document).ready(function(){
             }
         }
     });
-    $( ":input" ).change(function() {
+
+    $(document).on(":input",'change',function() {
         $(this).valid();
     });
+
 
     $("#view_ishop_sales").on("submit",function(e){
 

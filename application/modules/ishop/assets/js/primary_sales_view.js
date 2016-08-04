@@ -22,9 +22,10 @@ $(function () {
          autoclose: true
     });
 
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+});
+
+$(document).on(":input",'change',function() {
+    $(this).valid();
 });
 /*Date Picker*/
 

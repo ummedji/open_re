@@ -37,9 +37,7 @@ $(document).ready(function(){
             }
         }
     });
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
 
 
     $("#order_approval").on("submit",function(e){
@@ -65,6 +63,10 @@ $(document).ready(function(){
                 }
             });
        }
+    });
+
+    $(document).on(":input",'change',function() {
+        $(this).valid();
     });
 
     $('#download_csv').on('click',function(){

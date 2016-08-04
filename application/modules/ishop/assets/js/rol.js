@@ -342,9 +342,7 @@ $(document).ready(function(){
         }
     });
 
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
 
 
     $("#rol_limit").on("submit",function(e){
@@ -403,7 +401,9 @@ $(document).ready(function(){
     });
 });
 
-
+$(document).on(":input",'change',function() {
+    $(this).valid();
+});
 
 
 function get_data_conversion(sku_id,quantity,units){

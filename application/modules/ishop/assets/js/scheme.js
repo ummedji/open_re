@@ -138,9 +138,7 @@ $(document).ready(function(){
             }
         }
     });
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
 
 
 
@@ -244,7 +242,9 @@ $(document).ready(function(){
     });
 });
 
-
+$(document).on(":input",'change',function() {
+    $(this).valid();
+});
 
 $("#cur_year").on("change",function(){
 

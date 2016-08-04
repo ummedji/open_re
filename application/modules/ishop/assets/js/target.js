@@ -60,6 +60,9 @@ $(document).ready(function(){
                     $("h4.modal-title").empty();
                     $("h4.modal-title").html("Copy Retailer Data");
 
+                    $("select#from_customer_data").attr("title","Select Retailer");
+                    $("select#to_customer_data").attr("title","Select Retailer");
+
                     $("select#from_customer_data").empty();
                     $("select#to_customer_data").empty();
 
@@ -132,6 +135,9 @@ $(document).ready(function(){
 
                     $("h4.modal-title").empty();
                     $("h4.modal-title").html("Copy Distributor Data");
+
+                    $("select#from_customer_data").attr("title","Select Distributor");
+                    $("select#to_customer_data").attr("title","Select Distributor");
 
                     $("select#from_customer_data").empty();
                     $("select#to_customer_data").empty();
@@ -232,9 +238,7 @@ $(document).ready(function(){
             }
         }
     });
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
 
     $("#target").on("submit",function(){
 
@@ -286,6 +290,9 @@ $(document).ready(function(){
     });
 });
 
+$(document).on(":input",'change',function() {
+    $(this).valid();
+});
 
 //CODE FOR COPY POPUP DATA
 

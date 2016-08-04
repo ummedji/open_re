@@ -299,14 +299,12 @@ function get_retailer_by_distributor(selected_id)
     });
 }
 
+$(document).on(":input",'change',function() {
+    $(this).valid();
+});
 
 // START ::: Added By Vishal Malaviya For Validation
 $(document).ready(function(){
-
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
-
 
     var ishop_sales = $("#add_ishop_sales");
     ishop_sales.validate();

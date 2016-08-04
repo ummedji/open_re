@@ -27,9 +27,11 @@ $(document).ready(function(){
             }
         }
     });
-    $( ":input" ).change(function() {
+
+    $(document).on(":input",'change',function() {
         $(this).valid();
     });
+
 
 
     $("#add_user_credit_limit").on("submit",function(e){

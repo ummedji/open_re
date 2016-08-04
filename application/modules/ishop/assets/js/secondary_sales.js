@@ -54,9 +54,7 @@ $(function () {
             }
         }
     });
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
 
     var already_assign_error = 0;
 
@@ -66,7 +64,7 @@ $(function () {
         var invoice_no=$('#invoice_no').val();
         var login_customer_id = $("input#login_customer_id").val();
         if(customer_id != '' && $.trim(invoice_no)!=''){
-           
+
             $.ajax({
                 type: 'POST',
                     url: site_url + "ishop/check_duplicate_data_secondary_sales",
@@ -264,6 +262,10 @@ $(function () {
             }
         }
     });
+});
+
+$(document).on(":input",'change',function() {
+    $(this).valid();
 });
 
 function add_sec_sales_row()

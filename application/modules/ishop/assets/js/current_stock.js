@@ -48,9 +48,10 @@ $(document).ready(function(){
             }
         }
     });
-    $( ":input" ).change(function() {
+    $(document).on(":input",'change',function() {
         $(this).valid();
     });
+
 
     $("#add_company_current_stock").on("submit",function(e){
 

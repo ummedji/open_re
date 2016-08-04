@@ -12,6 +12,10 @@ $(function () {
     });
 });
 
+$(document).on(":input",'change',function() {
+    $(this).valid();
+});
+
 
 $("#invoice_confirmation").on("submit",function(e){
 

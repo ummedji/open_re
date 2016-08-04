@@ -383,7 +383,8 @@ var physical_stock_validators = $("#add_physical_stock").validate({
         }
     }
 });
-    $( ":input" ).change(function() {
+
+    $(document).on(":input",'change',function() {
         $(this).valid();
     });
 

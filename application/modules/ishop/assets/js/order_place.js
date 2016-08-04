@@ -218,9 +218,7 @@ $(document).ready(function(){
        
    });
 
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
    
    //ON ENTERING MOBILE NO GETTING GEO LOCATION DATA AND ASSOCIATED FARMER DATA AND THERE RETAILERS
    
@@ -424,6 +422,10 @@ $(document).ready(function(){
         }
 
   });
+
+    $(document).on(":input",'change',function() {
+        $(this).valid();
+    });
 
 
 $("#order_place").on("submit",function(){

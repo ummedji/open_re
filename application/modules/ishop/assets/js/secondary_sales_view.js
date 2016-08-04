@@ -21,11 +21,12 @@ $(function () {
         format: date_format,
         autoclose: true
     });
-
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
 });
+
+$(document).on(":input",'change',function() {
+    $(this).valid();
+});
+
 /*Date Picker*/
 
 // START ::: Added By Vishal Malaviya For Validation

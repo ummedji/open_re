@@ -20,9 +20,7 @@ $(document).ready(function(){
       autoclose: true
     });
 
-    $( ":input" ).change(function() {
-        $(this).valid();
-    });
+
 
     var login_customer_type = $("input#login_customer_type").val();
 
@@ -671,6 +669,10 @@ $(document).on('click', 'div.order_status .edit_i', function () {
 
     });
     
+});
+
+$(document).on(":input",'change',function() {
+    $(this).valid();
 });
 
 function mark_as_read(order_id){
