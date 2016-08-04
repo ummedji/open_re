@@ -2858,7 +2858,7 @@ class Web_service extends Front_Controller
 
         $file_data = $this->input->get_post('val');
 
-        $file_data = stripslashes($file_data);
+       // $file_data = stripslashes($file_data);
       //  $file_data = stripslashes($file_data);
       //  testdata(stripslashes($file_data));
 
@@ -2942,7 +2942,7 @@ class Web_service extends Front_Controller
 
                     if(move_uploaded_file($file_temp_data, FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename)){
 
-                        echo json_encode($upload_forecast_xl_data);
+                        echo $upload_forecast_xl_data;
                         die;
                         //$result['status'] = true;
                         //$result['data'] = FCPATH . "assets/uploads/Uploads/esp_budget/" . $filename;

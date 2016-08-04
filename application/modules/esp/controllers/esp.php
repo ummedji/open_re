@@ -5657,8 +5657,8 @@ class Esp extends Front_Controller
 
                       //$file_content = file_get_contents($file);
 
-                      $final_array1["status"][] = true;
-                      $final_array1["data"][] = FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename1;
+                      $final_array1["status"] = true;
+                      $final_array1["data"] = FCPATH . "assets/uploads/Uploads/esp_forecast/" . $filename1;
                       return json_encode($final_array1);
                   }
 
