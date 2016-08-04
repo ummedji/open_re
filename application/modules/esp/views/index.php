@@ -10,11 +10,17 @@ echo form_open('esp/add_forecast',$attributes); ?>
         	<div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
+
                         <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp') ?>">Plan</a></li>
+
+                        <?php if($child_user_data["tot"] != 0){ ?>
                         <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='forecast_status') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp/forecast_status') ?>">Status</a></li>
-                        
+                        <?php } ?>
+
+                        <?php if($child_user_data["tot"] == 0){ ?>
                         <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='impact_entry') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp/impact_entry') ?>">Impact Entry</a></li>
-                        
+                        <?php } ?>
+
                     </ul>
                     <div class="clearfix"></div>
                 </div>
@@ -106,6 +112,8 @@ echo form_open('esp/add_forecast',$attributes); ?>
 <?php echo form_close(); ?>
 <div class="clearfix"></div>
 
+<?php if($child_user_data["tot"] == 0){ ?>
+
 <div class="col-md-12 table_bottom">
 
     <div class="row">
@@ -138,3 +146,5 @@ echo form_open('esp/add_forecast',$attributes); ?>
         </div>
     </div>
 </div>
+
+<?php } ?>

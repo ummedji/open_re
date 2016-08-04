@@ -3091,7 +3091,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     }
 
     public function addActivityExecution($user_id,$country_id,$local_date = null,$web_service = null){
-        testdata($_POST);
+
         $activity_planning_id = $this->input->post("inserted_activity_planning_id");
 
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service')

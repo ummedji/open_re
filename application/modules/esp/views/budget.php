@@ -89,7 +89,7 @@ echo form_open('esp/add_budget',$attributes); ?>
 <?php echo form_close(); ?>
 <div class="clearfix"></div>
 
-
+<?php if($child_user_data["tot"] == 0){ ?>
 <div class="col-md-12 table_bottom">
 
     <div class="row">
@@ -122,3 +122,4 @@ echo form_open('esp/add_budget',$attributes); ?>
         </div>
     </div>
 </div>
+<?php } ?>

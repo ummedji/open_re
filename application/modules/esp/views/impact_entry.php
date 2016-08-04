@@ -11,11 +11,17 @@ echo form_open('esp/add_impact_entry',$attributes); ?>
         	<div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
+
                         <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp') ?>">Plan</a></li>
-                        <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='forecast_status') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp/forecast_status') ?>">Status</a></li>
-                        
-                        <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='impact_entry') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp/impact_entry') ?>">Impact Entry</a></li>
-                        
+
+                        <?php if($child_user_data["tot"] != 0){ ?>
+                            <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='forecast_status') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp/forecast_status') ?>">Status</a></li>
+                        <?php } ?>
+
+                        <?php if($child_user_data["tot"] == 0){ ?>
+                            <li class="<?php echo ($this->uri->segment(1)=='esp' && $this->uri->segment(2)=='impact_entry') ? 'active' :'' ;?>"><a href="<?php echo base_url('/esp/impact_entry') ?>">Impact Entry</a></li>
+                        <?php } ?>
+
                     </ul>
                     <div class="clearfix"></div>
                 </div>

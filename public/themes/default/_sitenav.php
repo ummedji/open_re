@@ -149,9 +149,7 @@
                                 }
                                 elseif($segment=='ecp'){
                                     ?>
-                                    <li role="presentation" class="">
-                                        <a href="<?php echo base_url('ecp/activity_planning'); ?>">ACTIVITY</a>
-                                    </li>
+                                    <li role="presentation" class="<?php echo ($segment=='ecp' && ($segment2=='activity_planning' || $segment2=='activity_execution'  || $segment2=='activity_unplanned'|| $segment2=='activity_view')) ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/activity_planning'); ?>">ACTIVITY</a></li>
                                     <li role="presentation" class="<?php echo ($segment=='ecp' && ($segment2=='no_working' || $segment2=='set_leave')) ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/no_working'); ?>">NO WORKING</a></li>
 
                                     <?php if($current_user->role_id == 7) {
@@ -169,7 +167,9 @@
 
                                     <li role="presentation" class="<?php echo ($segment=='ecp' && ($segment2=='retailer_compititor_analysis'|| $segment2=='retailer_compititor_product' || $segment2=='retailer_compititor_view' || $segment2=='distributor_compititor_analysis' ||  $segment2=='distributor_compititor_product' || $segment2=='distributor_compititor_view' )) ? 'active' :'' ;?>"><a href="<?php echo base_url('ecp/retailer_compititor_analysis'); ?>">COMPITITORS ANALYSIS</a></li>
                                     <?php
-                                } elseif($segment=='cco'){ ?>
+                                }
+
+                                elseif($segment=='cco'){ ?>
                                     <li role="presentation" class="">
                                         <a href="<?php echo base_url('cco/dialpad'); ?>">DIALPAD</a>
                                     </li>

@@ -10,20 +10,11 @@
                         <?php
                         if ($child_user_data['tot'] != 0) {
                             ?>
-                            <li class="active"><a href="<?php echo base_url('ecp/activity_planning') ?>">Planning</a>
-                            </li>
-                            <li><a href="<?php echo base_url('ecp/activity_approval') ?>">Approval</a></li>
-                            <li><a href="<?php echo base_url('ecp/activity_execution') ?>">Execution</a></li>
-                            <li><a href="<?php echo base_url('ecp/activity_unplanned') ?>">Unplanned</a></li>
-                            <li><a href="<?php echo base_url('ecp/activity_view') ?>">View</a></li>
+                            <?php $this->load->view('top_header_ho'); ?>
                             <?php
                         } else {
                             ?>
-                            <li class="active"><a href="<?php echo base_url('ecp/activity_planning') ?>">Planning</a>
-                            </li>
-                            <li><a href="<?php echo base_url('ecp/activity_execution') ?>">Execution</a></li>
-                            <li><a href="<?php echo base_url('ecp/activity_unplanned') ?>">Unplanned</a></li>
-                            <li><a href="<?php echo base_url('ecp/activity_view') ?>">View</a></li>
+                            <?php $this->load->view('top_header_fo'); ?>
                             <?php
                         }
                         ?>

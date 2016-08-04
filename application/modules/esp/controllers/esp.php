@@ -45,7 +45,12 @@ class Esp extends Front_Controller
         Assets::add_module_js('esp', 'esp.js');
 
         $user = $this->auth->user();
+
+        $child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
+
         Template::set('current_user', $user);
+        Template::set('child_user_data', $child_user_data);
+
         Template::render();
     }
 
@@ -2827,6 +2832,11 @@ class Esp extends Front_Controller
         Assets::add_module_js('esp', 'impact_entry.js');
 
         $user = $this->auth->user();
+
+        $child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
+
+        Template::set('child_user_data', $child_user_data);
+
         Template::set('current_user', $user);
         Template::render();
 
@@ -2973,7 +2983,9 @@ class Esp extends Front_Controller
 	
 	*/
 
+        $child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
 
+        Template::set('child_user_data', $child_user_data);
         Template::set('current_user', $user);
         Template::render();
 
@@ -4820,6 +4832,10 @@ class Esp extends Front_Controller
 
         $html .= "</table>";
 
+        $child_user_data = $this->esp_model->get_user_selected_level_data($user->id,null);
+
+        Template::set('child_user_data', $child_user_data);
+
         Template::set('current_user', $user);
         Template::set('calender_data', $html);
 
@@ -4827,6 +4843,163 @@ class Esp extends Front_Controller
 
     }
 
+    public function show_month_user_level_data($webservice_data = NULL)
+    {
+
+        //testdata($_POST["userlevel_formdata"]);
+
+        $final_array = array();
+
+        if ($webservice_data != NULL) {
+
+            $month_data = $webservice_data["monthval"];
+
+            $webservice_data["userlevel_formdata"] = json_decode($webservice_data["userlevel_formdata"], TRUE);
+
+            $no_of_level = count($webservice_data["userlevel_formdata"]);
+
+            $user_level_formdata = $webservice_data["userlevel_formdata"];
+
+
+            //dumpme($webservice_data["userlevel_formdata"]);
+            //die;
+
+            if (!empty($user_level_formdata)) {
+
+                $l = count($user_level_formdata);
+
+                foreach ($user_level_formdata as $level_key => $leveldata) {
+
+                    //$level_array  = explode("_",$level_key);
+                    //$level_data = $level_array["3"];
+                    $final_array["level"][] = "Level " . $l;
+
+                    $l--;
+                }
+            }
+
+
+        } else {
+            $month_data = $_POST["monthval"];
+            $no_of_level = count($_POST["userlevel_formdata"]);
+
+            $user_level_formdata = $_POST["userlevel_formdata"];
+
+        }
+        $html = "";
+
+
+        if (!empty($user_level_formdata)) {
+
+            $html .= "<table id='table_user_data' style='width:50%;float:left;'><thead><tr>";
+
+            $level_data_array = array();
+
+            foreach ($user_level_formdata as $user_data_key => $user_level_data) {
+
+                $level_data = $user_level_data["name"];
+                $level_array = explode("_", $level_data);
+                $level_data = $level_array["3"];
+                $level_data_array[] = $level_data;
+
+            }
+
+            $level_data_array = array_reverse($level_data_array);
+
+            foreach ($level_data_array as $l_key => $l_data) {
+                $html .= "<th>Level " . $l_data . "</th>";
+            }
+
+            $html .= "</tr></thead><tbody>";
+
+            $data_array = array();
+
+            $max_count = 0;
+
+            if ($webservice_data != NULL) {
+                $m = count($user_level_formdata);
+            }
+
+
+            foreach ($user_level_formdata as $user_data_key1 => $user_level_data1) {
+
+
+                if ($webservice_data == NULL) {
+                    $level_data = $user_level_data1["name"];
+
+                    $level_array = explode("_", $level_data);
+
+                    $level_data = $level_array["3"];
+
+                    $level_user_data = $user_level_data1["value"];
+                } else {
+                    $level_user_data = $user_level_data1["employee_level_data"];
+                }
+
+                if (!empty($level_user_data)) {
+                    $users_forecast_update_status_data = $this->esp_model->get_update_user_detail_data($level_user_data, $month_data);
+                } else {
+                    $users_forecast_update_status_data = 0;
+                }
+
+                if ($users_forecast_update_status_data > $max_count) {
+                    $max_count = count($users_forecast_update_status_data);
+                }
+
+                if ($webservice_data == NULL) {
+                    $data_array[$level_data] = $users_forecast_update_status_data;
+                }
+                if ($webservice_data != NULL) {
+
+                    $data_array["Level " . $m] = $users_forecast_update_status_data;
+
+                    $final_array["level_data"] = $data_array;
+                    $m--;
+                }
+
+            }
+
+            //   testdata($data_array);
+
+            //	dumpme($data_array);
+
+            for ($i = 0; $i < $max_count; $i++) {
+                $html .= '<tr>';
+                for ($j = 0; $j < count($data_array); $j++) {
+
+
+                    if (isset($data_array[$j + 1][$i])) {
+                        $row_data = explode("|||", $data_array[$j + 1][$i]);
+                        if ($row_data[1] != "") {
+                            $row_data = $row_data[0] . "  " . "<b>&#8226;</b>";
+                        } else {
+                            $row_data = $row_data[0];
+                        }
+                    } else {
+                        $row_data = "";
+                    }
+
+                    $html .= '<td>' . $row_data . '</td>';
+
+                }
+                $html .= '</tr>';
+            }
+
+
+            $html .= "</tbody></tbody>";
+
+        }
+
+        if ($webservice_data != NULL) {
+            return $final_array;
+        }
+
+        echo $html;
+        die;
+
+    }
+
+    /*
     public function show_month_user_level_data($webservice_data = NULL)
     {
 
@@ -4950,12 +5123,14 @@ class Esp extends Front_Controller
                 return $final_array;
             }
 
-            echo $html;
-            die;
-
         }
+
+        echo $html;
+        die;
     }
 
+
+    */
     public function generate_forecast_xl_data($webservice_data = null)
     {
 

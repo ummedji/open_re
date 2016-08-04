@@ -6,13 +6,19 @@ $(document).ready(function() {
         dateChangeEvent(e);
     });
 
-    $('#execution_time').timepicker({
-
-    });
 
     $("select#activity_type_id").on("change",function() {
         activityTypeChange();
     });
+
+    $('#planning_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    }).on('changeDate',function(e){
+        dateChangeEvent(e);
+    });
+
+
 
     /*Validation Rule*/
 
@@ -184,7 +190,25 @@ $(document).ready(function() {
         });
     });
 
+    getRating();
+    getExecutionTime();
+    getPlanningTime();
+
 });
+
+function getExecutionTime()
+{
+    $('#execution_time').timepicker({
+
+    });
+}
+
+function getPlanningTime()
+{
+    $('#planning_time').timepicker({
+
+    });
+}
 
 
 function add_farmer()
@@ -1162,6 +1186,9 @@ function getActivityById(activity_planning_id)
         //dataType : 'json',
         success: function (resp) {
             $("#activity_execution_main").html(resp);
+            getRating();
+            getExecutionTime();
+            getPlanningTime();
             $("select.selectpicker").selectpicker('refresh');
         },
         complete:function(){
@@ -1178,10 +1205,9 @@ $(document).on('click', '#planning_close', function () {
     $("#follow_up").css('display','none');
 });
 
-$(function () {
-
-
-        $("#activity_rate").rateYo({
+function getRating()
+{
+    $("#activity_rate").rateYo({
         starWidth: "30px",
         normalFill: "#cccccc",
         ratedFill: "#65ac1e"
@@ -1194,5 +1220,4 @@ $(function () {
         var rating = $rateYo.rateYo("rating");
         $("#rating").val(rating);
     });
-});
-
+}
