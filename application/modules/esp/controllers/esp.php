@@ -616,6 +616,8 @@ class Esp extends Front_Controller
 
                             $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data, $monthvalue, $forecast_id);
 
+                            testdata($senior_lock_data);
+
                             $highest_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_highest_level_data, $monthvalue, $forecast_id);
 
                             $logib_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
