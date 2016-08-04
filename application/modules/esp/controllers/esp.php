@@ -616,7 +616,7 @@ class Esp extends Front_Controller
 
                             $senior_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_parent_data, $monthvalue, $forecast_id);
 
-                            testdata($senior_lock_data);
+                           // testdata($senior_lock_data);
 
                             $highest_user_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_highest_level_data, $monthvalue, $forecast_id);
 
@@ -707,13 +707,13 @@ class Esp extends Front_Controller
                                 */
 
 
-                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+                                if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $editable = "readonly";
                                     //  echo "bbb".$monthvalue."</br>";
 
                                 }
-                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
                                 {
 
                                     if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
@@ -890,13 +890,13 @@ class Esp extends Front_Controller
                                 */
 
 
-                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+                                if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $editable = "readonly";
                                     //  echo "bbb".$monthvalue."</br>";
 
                                 }
-                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
                                 {
 
                                     if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
@@ -1612,14 +1612,14 @@ class Esp extends Front_Controller
                                 */
 
 
-                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+                                if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $assumption_editable = "disabled";
                                     $probablity_editable = "readonly";
                                     //  echo "bbb".$monthvalue."</br>";
 
                                 }
-                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
                                 {
 
                                     if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
@@ -1831,14 +1831,14 @@ class Esp extends Front_Controller
 
                                 */
 
-                                if ($senior_lock_data != 0 && $senior_lock_data["lock_status"] == 1) {
+                                if ($senior_lock_data != 0 && $senior_lock_data[0]["lock_status"] == 1) {
 
                                     $assumption_editable = "disabled";
                                     $probablity_editable = "readonly";
                                     //  echo "bbb".$monthvalue."</br>";
 
                                 }
-                                elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
+                                elseif ($senior_lock_data == 0 || $senior_lock_data[0]["lock_status"] == 0)
                                 {
 
                                     if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
