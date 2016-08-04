@@ -1053,7 +1053,13 @@ $("body").on("keyup","input.quantity_data",function(){
 
             var sku_id = $("input.sku_"+$.trim(selected_row_id)).val();
 
-            var units = $(this).parent().parent().find("select.select_unitdata").val()
+           if($("select.select_unitdata").length > 0) {
+               var units = $(this).parent().parent().find("select.select_unitdata").val();
+           }
+           else
+           {
+               var units = $(this).parent().parent().find("[data-title=Units]").find("input.input_remove_border").val();
+           }
 
             var quantity = $(this).val();
 

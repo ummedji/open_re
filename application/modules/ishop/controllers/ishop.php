@@ -2670,7 +2670,9 @@ class Ishop extends Front_Controller
 
                             }
 
-                        } elseif ($filename[0] == "companycurrentstock") {
+                        }
+                        elseif ($filename[0] == "companycurrentstock")
+                        {
 
                             if (($column == 'A' && $row != 1 && $data_value != "") || ($column == 'H' && $row != 1 && $data_value != "") || ($column == 'G' && $row != 1 && $data_value != "")) {
 
@@ -2679,7 +2681,8 @@ class Ishop extends Front_Controller
                                 $data_value = date("Y-m-d", $data_value);
 
                             }
-                        } elseif ($filename[0] == "creditlimit") {
+                        }
+                        elseif ($filename[0] == "creditlimit") {
 
                             if ($column == 'E' && $row != 1 && $data_value != "") {
 
@@ -2689,8 +2692,9 @@ class Ishop extends Front_Controller
 
                             }
 
-                        } elseif ($filename[0] == "secondarysales") {
-                            if ($user->role_id == 8) {
+                        }
+                        elseif ($filename[0] == "secondarysales") {
+                            if ($logined_user_type == 8) {
                                 if ($column == 'F' && $row != 1 && $data_value != "") {
 
                                     $phpexcepDate = $data_value - 25569; //to offset to Unix epoch
@@ -2708,7 +2712,8 @@ class Ishop extends Front_Controller
                                 }
                             }
 
-                        } elseif ($filename[0] == "primarysales") {
+                        }
+                        elseif ($filename[0] == "primarysales") {
 
                             if ($column == 'D' && $row != 1 && $data_value != "") {
 
@@ -2718,7 +2723,8 @@ class Ishop extends Front_Controller
 
                             }
 
-                        } elseif ($filename[0] == "physicalstock") {
+                        }
+                        elseif ($filename[0] == "physicalstock") {
 
                             if ($column == 'A' && $row != 1 && $data_value != "") {
 
@@ -2848,7 +2854,7 @@ class Ishop extends Front_Controller
 
 
 
-                                    if(count($headerdata) != 8 || $headerdata["B"] != "Product SKU Code"  || $headerdata["C"] != "Product SKU Name"  || $headerdata["F"] != "Batch No"  || $headerdata["E"] != "Unrestricted Qty"  || $headerdata["D"] != "In Transit Qty"  || $headerdata["H"] != "Expiry Date" || $headerdata["G"] != "Mfg. Date" || $headerdata["A"] != "Date Data"){
+                                    if(count($headerdata) != 8 || $headerdata["B"] != "Product SKU Code"  || $headerdata["C"] != "Product SKU Name"  || $headerdata["F"] != "Batch"  || $headerdata["E"] != "Unrestricted Qty"  || $headerdata["D"] != "In Transit Qty"  || $headerdata["H"] != "Batch Expiry Date" || $headerdata["G"] != "Batch Mfg. Date" || $headerdata["A"] != "Date Data"){
 
                                         $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
                                         echo json_encode($error_array);
@@ -2857,7 +2863,8 @@ class Ishop extends Front_Controller
                                     }
 
 
-                                } elseif ($filename[0] == "creditlimit") {
+                                }
+                                elseif ($filename[0] == "creditlimit") {
 
                                     if(count($headerdata) != 5 || $headerdata["A"] != "Distributor Code"  || $headerdata["B"] != "Distributor Name"  || $headerdata["C"] != "Credit Limit"  || $headerdata["D"] != "Current Outstanding"  || $headerdata["E"] != "Date Data"){
 
@@ -2868,7 +2875,8 @@ class Ishop extends Front_Controller
                                     }
 
 
-                                } elseif ($filename[0] == "secondarysales") {
+                                }
+                                elseif ($filename[0] == "secondarysales") {
                                     if ($logined_user_type == 8) {
 
 
@@ -2883,7 +2891,7 @@ class Ishop extends Front_Controller
 
                                     } else {
 
-                                        if(count($headerdata) != 11 || $headerdata["A"] != "Retailer Code"  || $headerdata["B"] != "Retailer Name"  || $headerdata["C"] != "Invoice No"  || $headerdata["D"] != "Invoice Date"  && $headerdata["E"] != "PO No"   || $headerdata["F"] != "Order Tracking No"   || $headerdata["G"] != "Product SKU Code"   || $headerdata["H"] != "Product SKU Name"   || $headerdata["I"] != "Unit" || $headerdata["J"] != "Quantity" || $headerdata["K"] != "Amount"){
+                                        if(count($headerdata) != 11 || $headerdata["A"] != "Retailer Code"  || $headerdata["B"] != "Retailer Name"  || $headerdata["C"] != "Invoice No"  || $headerdata["D"] != "Invoice Date"  || $headerdata["F"] != "PO No"   || $headerdata["E"] != "Order Tracking No"   || $headerdata["G"] != "Product SKU Code"   || $headerdata["H"] != "Product SKU Name"   || $headerdata["I"] != "Unit" || $headerdata["J"] != "Quantity" || $headerdata["K"] != "Amount"){
 
                                             $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
                                             echo json_encode($error_array);
@@ -2893,7 +2901,8 @@ class Ishop extends Front_Controller
 
                                     }
 
-                                } elseif ($filename[0] == "primarysales") {
+                                }
+                                elseif ($filename[0] == "primarysales") {
 
                                     if(count($headerdata) != 11 || $headerdata["A"] != "Distributor Code"  || $headerdata["B"] != "Distributor Name"  || $headerdata["C"] != "Invoice No"  || $headerdata["D"] != "Invoice Date"  || $headerdata["E"] != "Order Tracking No"   || $headerdata["F"] != "PO No" || $headerdata["G"] != "Product SKU Code"   || $headerdata["H"] != "Product SKU Name"   || $headerdata["I"] != "PO Qty" || $headerdata["J"] != "Dispatch Qty" || $headerdata["K"] != "Amount"){
 
@@ -2904,10 +2913,11 @@ class Ishop extends Front_Controller
                                     }
 
 
-                                } elseif ($filename[0] == "physicalstock") {
+                                }
+                                elseif ($filename[0] == "physicalstock") {
 
 
-                                    if(count($headerdata) != 5 || $headerdata["A"] != "Month"  || $headerdata["B"] != "Product SKU Code"  || $headerdata["C"] != "Product SKU Name"  || $headerdata["D"] != "Quantity"  || $headerdata["E"] != "Unit" ){
+                                    if(count($headerdata) != 5 || $headerdata["A"] != "Month Year"  || $headerdata["B"] != "Product SKU Code"  || $headerdata["C"] != "Product SKU Name"  || $headerdata["D"] != "Quantity"  || $headerdata["E"] != "Unit" ){
 
                                         $error_array["fileerror"][] = "Upload file is not proper. Please download proper format file.";
                                         echo json_encode($error_array);
@@ -2931,7 +2941,8 @@ class Ishop extends Front_Controller
 
                                             }
 
-                                        }else{
+                                        }
+                                        else{
 
                                             if (count($headerdata) != 6 || ($headerdata["A"] != "Retailer Code") || ($headerdata["B"] != "Retailer Name") || $headerdata["C"] != "Product SKU Code" || $headerdata["D"] != "Product SKU Name" || $headerdata["E"] != "Unit"  || $headerdata["F"] != "Rol Quantity") {
 
@@ -3105,7 +3116,8 @@ class Ishop extends Front_Controller
 
                                 }
 
-                            } elseif ($filename[0] == "companycurrentstock") {
+                            }
+                            elseif ($filename[0] == "companycurrentstock") {
 
                                 if (!isset($data["B"])) {
                                     $product_code = "";
@@ -3237,7 +3249,8 @@ class Ishop extends Front_Controller
                                     }
 
                                 }
-                            } elseif ($filename[0] == "creditlimit") {
+                            }
+                            elseif ($filename[0] == "creditlimit") {
 
                                 if (!isset($data["A"])) {
                                     $distributor_code = "";
@@ -3340,7 +3353,8 @@ class Ishop extends Front_Controller
                                     }
 
                                 }
-                            } elseif ($filename[0] == "rol") {
+                            }
+                            elseif ($filename[0] == "rol") {
 
 
                                 if ($logined_user_type == 7) {
@@ -3563,7 +3577,8 @@ class Ishop extends Front_Controller
 
                                 }
 
-                            } elseif ($filename[0] == "primarysales") {
+                            }
+                            elseif ($filename[0] == "primarysales") {
 
                                 if (!isset($data["A"])) {
                                     $distributor_code = "";
@@ -3772,7 +3787,8 @@ class Ishop extends Front_Controller
                                     }
 
                                 }
-                            } elseif ($filename[0] == "secondarysales") {
+                            }
+                            elseif ($filename[0] == "secondarysales") {
                                 if ($logined_user_type == 8) {
                                     if (!isset($data["A"])) {
                                         $distributor_code = "";
@@ -4082,16 +4098,16 @@ class Ishop extends Front_Controller
                                         $invoice_date = $data["D"];
                                     }
 
-                                    if (!isset($data["E"])) {
+                                    if (!isset($data["F"])) {
                                         $po_no = "";
                                     } else {
-                                        $po_no = $data["E"];
+                                        $po_no = $data["F"];
                                     }
 
-                                    if (!isset($data["F"])) {
+                                    if (!isset($data["E"])) {
                                         $otn = "";
                                     } else {
-                                        $otn = $data["F"];
+                                        $otn = $data["E"];
                                     }
 
                                     if (!isset($data["G"])) {
@@ -4341,7 +4357,8 @@ class Ishop extends Front_Controller
 
                                     }
                                 }
-                            } elseif ($filename[0] == "physicalstock") {
+                            }
+                            elseif ($filename[0] == "physicalstock") {
 
                                 if (!isset($data["A"])) {
                                     $month = "";

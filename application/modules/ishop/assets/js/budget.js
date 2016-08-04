@@ -1073,11 +1073,11 @@ $(document).on('submit', '#upload_budget_data', function (e) {
                                             data: {val: value, dirname: dir_name}, // Data sent to server, a set of key/value pairs
                                             success: function (data)   // A function to be called if request succeeds
                                             {
-                                                return false;
+                                                //return false;
                                             }
                                         }).done(function( data ) {
-                                            return false;
-                                            //location.reload();
+                                            //return false;
+                                            location.reload();
                                         });
 
                                         $(this).dialog("close");

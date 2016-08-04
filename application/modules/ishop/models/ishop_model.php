@@ -6909,7 +6909,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         }
     }
 
-    public function add_budget_data($budget_data, $user_id, $web_service = null, $country_id = null,$excel = null)
+    public function add_budget_data($budget_data, $user_id, $web_service = null, $country_id = null,$role_id = null,$excel = null)
     {
         if(empty($excel) && $excel == null){
             if (isset($budget_data) && !empty($budget_data)) {
