@@ -1097,6 +1097,9 @@ $(document).on("submit","#copy_popup",function() {
 
                 setTimeout(function () {
                     $(".modal-header .close").trigger("click");
+
+                    location.reload();
+
                 }, 2500);
 
 

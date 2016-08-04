@@ -6623,10 +6623,10 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         if ($checked_type == "distributor") {
             $sql .= ' AND bu.role_id =9 ';
         }
-        $sql .= 'AND it.country_id =' . $country_id . ' ';
+        $sql .= 'AND bu.country_id =' . $country_id . ' ';
         $sql .= 'ORDER BY it.ishop_target_id DESC ';
 
-        echo $sql;
+       // echo $sql;
        // die;
 
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
