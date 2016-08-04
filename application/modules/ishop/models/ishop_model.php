@@ -3287,7 +3287,7 @@ class Ishop_model extends BF_Model
             $stock_detail = $this->grid->get_result_res($sql);
 
             if (isset($stock_detail['result']) && !empty($stock_detail['result'])) {
-                $stock_view['head'] = array('Sr. No.', 'Action', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrusticted Qty.', 'Batch', 'Batch Mfg. Date', 'Batch Expiry Date');
+                $stock_view['head'] = array('Sr. No.', 'Action', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrestricted Qty.', 'Batch', 'Batch Mfg. Date', 'Batch Expiry Date');
                 $stock_view['count'] = count($stock_view['head']);
 
                 if ($page != null || $page != "") {
@@ -7508,7 +7508,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         $stock_detail = $this->grid->get_result_res($sql,true,$page);
 
         if (isset($stock_detail['result']) && !empty($stock_detail['result'])) {
-                $stock_view['head'] = array('Sr. No.', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrusticted Qty.', 'Batch', 'Batch Expiry Date', 'Batch Mfg. Date');
+                $stock_view['head'] = array('Sr. No.', 'Date', 'Product SKU Name', 'Intransist Qty.', 'Unrestricted Qty.', 'Batch', 'Batch Expiry Date', 'Batch Mfg. Date');
 
             $i = 1;
 
