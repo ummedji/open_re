@@ -635,7 +635,7 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
 
-
+                      //  testdata($self_lock_data);
 
                             $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
 
@@ -714,7 +714,7 @@ class Esp extends Front_Controller
                                 elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
                                 {
 
-                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
                                     {
                                         //     echo "ccc".$monthvalue."</br>";
 
@@ -730,7 +730,7 @@ class Esp extends Front_Controller
 
                                         // $editable = "";
                                     }
-                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
                                     {
                                         //  echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
@@ -751,7 +751,7 @@ class Esp extends Front_Controller
 
                                         //   $editable = "";
                                     }
-                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
 
                                         if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
                                         {
@@ -814,7 +814,11 @@ class Esp extends Front_Controller
 
                             $self_lock_data = $this->esp_model->get_senior_lock_status_data($login_user_id, $monthvalue, $forecast_id);
 
+                           // testdata($self_lock_data);
+
                             $self_freeze_status = $this->esp_model->get_forecast_freeze_status($forecast_id, $login_user_id, $monthvalue);
+
+                         //   testdata($self_freeze_status);
 
                             if (!empty($login_user_all_parent_data)) {
                                 foreach ($login_user_all_parent_data as $parent_key => $parentid) {
@@ -893,7 +897,7 @@ class Esp extends Front_Controller
                                 elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
                                 {
 
-                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
                                     {
                                         //     echo "ccc".$monthvalue."</br>";
 
@@ -909,7 +913,7 @@ class Esp extends Front_Controller
 
                                         // $editable = "";
                                     }
-                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
                                     {
                                         //  echo "ddd".$monthvalue."</br>";
                                         $editable = "readonly";
@@ -930,7 +934,7 @@ class Esp extends Front_Controller
 
                                         //   $editable = "";
                                     }
-                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
 
                                         if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
                                         {
@@ -1616,7 +1620,7 @@ class Esp extends Front_Controller
                                 elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
                                 {
 
-                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
                                     {
                                         //     echo "ccc".$monthvalue."</br>";
 
@@ -1634,7 +1638,7 @@ class Esp extends Front_Controller
 
                                         // $editable = "";
                                     }
-                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
                                     {
                                         //  echo "ddd".$monthvalue."</br>";
                                         $assumption_editable = "disabled";
@@ -1658,7 +1662,7 @@ class Esp extends Front_Controller
 
                                         //   $editable = "";
                                     }
-                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
 
                                         if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
                                         {
@@ -1835,7 +1839,7 @@ class Esp extends Front_Controller
                                 elseif ($senior_lock_data == 0 || $senior_lock_data["lock_status"] == 0)
                                 {
 
-                                    if ($self_lock_data != 0 && $self_lock_data["lock_status"] == 1)
+                                    if ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 1)
                                     {
                                         //     echo "ccc".$monthvalue."</br>";
 
@@ -1853,7 +1857,7 @@ class Esp extends Front_Controller
 
                                         // $editable = "";
                                     }
-                                    elseif ($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
+                                    elseif ($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id != $employee_month_product_forecast_data[0]["created_by_user"]))
                                     {
                                         //  echo "ddd".$monthvalue."</br>";
                                         $assumption_editable = "disabled";
@@ -1877,7 +1881,7 @@ class Esp extends Front_Controller
 
                                         //   $editable = "";
                                     }
-                                    elseif($self_lock_data != 0 && $self_lock_data["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
+                                    elseif($self_lock_data != 0 && $self_lock_data[0]["lock_status"] == 0 && ($login_user_id == $employee_month_product_forecast_data[0]["created_by_user"])){
 
                                         if($self_freeze_status != 0 && $self_freeze_status["freeze_status"] == 1)
                                         {
