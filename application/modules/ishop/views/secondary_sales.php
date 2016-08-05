@@ -46,7 +46,7 @@ echo form_open('',$attributes); ?>
             </div>
             <div class="col-md-3 col-sm-6 tp_form">
                 <div class="form-group">
-                    <label for="po_no">PO No.</label>
+                    <label for="po_no">PO No</label>
                     <input type="text" class="form-control" name="PO_no" id="po_no" placeholder="">
                 </div>
             </div>

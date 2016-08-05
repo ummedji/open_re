@@ -127,7 +127,7 @@ echo form_open('',$attributes); ?>
             <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 15px;">
                 <!--<div class="col-md-6 col-sm-6 tp_form">-->
                     <div class="form-group">
-                        <label for="invoice_date">PO NO.</label>
+                        <label for="invoice_date">PO NO</label>
                         <input type="text" name="po_no" class="form-control" id="po_no" placeholder="">
                     </div>
                 <!--</div>-->

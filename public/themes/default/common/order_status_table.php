@@ -166,9 +166,17 @@ if(isset($order_table) && count($order_table)>0 && $order_table != false) {
                     <?php
                     if(isset($_POST["radiochecked"]) && $_POST["radiochecked"] !="farmer") {
 
-                        if ($action_data == "get_order_status_data_details") { ?>
-                            <button type="submit" id="update_order_details" class="btn btn-primary">Save</button>
-                        <?php }
+                        if ($action_data == "get_order_status_data_details") {
+                            $style = "";
+                            if(isset($order_table['delete'][$rkey]) && !empty($order_table['delete'][$rkey]) )
+                            {
+                                $style = "style='pointer-events: none;opacity: 0.4;'";
+                            }
+                                ?>
+                                <button <?php echo $style; ?> type="submit" id="update_order_details" class="btn btn-primary">Save</button>
+                            <?php
+
+                        }
                     }
                   /*  else{ ?>
                         <button type="submit" id="orderstatus" class="btn btn-primary">Save</button>

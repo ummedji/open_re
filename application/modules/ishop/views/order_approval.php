@@ -53,7 +53,7 @@
                     <div class="row">
                         <div class="col-md-5 col-sm-6 tp_form">
                             <div class="form-group">
-                                <label for="invoice_date">Search By PO No.</label>
+                                <label for="invoice_date">Search By PO No</label>
                                 <input type="text" class="form-control" name="by_po_no" id="by_po_no" placeholder="">
                             </div>
                         </div>

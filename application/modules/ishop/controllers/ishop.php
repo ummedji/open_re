@@ -3685,7 +3685,7 @@ class Ishop extends Front_Controller
                                     }
 
                                     if($po_no == ""){
-                                        $error_message .= " PO No. data is blank. ";
+                                        $error_message .= " PO No data is blank. ";
                                     }
                                     if($po_qty == ""){
                                         $error_message .= " Quantity data is blank. ";
@@ -3920,7 +3920,7 @@ class Ishop extends Front_Controller
                                         }
 
                                         if($po_no == ""){
-                                            $error_message .= " PO No. data is blank. ";
+                                            $error_message .= " PO No data is blank. ";
                                         }
                                         if($unit == ""){
                                             $error_message .= " Unit data is blank. ";
@@ -4186,7 +4186,7 @@ class Ishop extends Front_Controller
                                         }
 
                                         if($po_no == ""){
-                                            $error_message .= " PO No. data is blank. ";
+                                            $error_message .= " PO No data is blank. ";
                                         }
                                         if($unit == ""){
                                             $error_message .= " Unit data is blank. ";

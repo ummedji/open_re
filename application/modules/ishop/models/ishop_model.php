@@ -393,7 +393,7 @@ class Ishop_model extends BF_Model
             $primary_sales = $this->grid->get_result_res($sql);
 
             if (isset($primary_sales['result']) && !empty($primary_sales['result'])) {
-                $primary['head'] = array('Sr. No.', 'Action', 'Invoice No', 'Invoice Date', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.', 'Dispatch Amount');
+                $primary['head'] = array('Sr. No.', 'Action', 'Invoice No', 'Invoice Date', 'Distributor Code', 'Distributor Name', 'PO No', 'Order Tracking No.', 'Dispatch Amount');
                 $primary['count'] = count($primary['head']);
 
 
@@ -1534,7 +1534,7 @@ class Ishop_model extends BF_Model
             $secondary_sales = $this->grid->get_result_res($sql);
 
             if (isset($secondary_sales['result']) && !empty($secondary_sales['result'])) {
-                $secondary['head'] = array('Sr. No.', 'Action', 'Entry By', 'Entry Date', 'ETN', 'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No.', 'Order Tracking No.', 'Dispatch Amount');
+                $secondary['head'] = array('Sr. No.', 'Action', 'Entry By', 'Entry Date', 'ETN', 'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No', 'Order Tracking No.', 'Dispatch Amount');
                 $secondary['count'] = count($secondary['head']);
                 if ($page != null || $page != "") {
 
@@ -4095,7 +4095,7 @@ class Ishop_model extends BF_Model
                     $i = 1;
                 }
 
-                $invoice_confirmation_view['head'] = array('Sr. No.', 'View', 'PO No.', 'OTN', 'Invoice No.', 'Invoice Value', 'Received');
+                $invoice_confirmation_view['head'] = array('Sr. No.', 'View', 'PO No', 'OTN', 'Invoice No.', 'Invoice Value', 'Received');
                 $invoice_confirmation_view['count'] = count($invoice_confirmation_view['head']);
                 foreach ($invoice_confirmation['result'] as $ic) {
                     if ($ic['invoice_recived_status'] == '0') {
@@ -5142,7 +5142,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     //FOR HO
                     if ($action_data == "order_approval") {
 
-                        $order_view['head'] = array('', 'Sr. No.', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.', 'Credit Limit', 'Amount', 'Status');
+                        $order_view['head'] = array('', 'Sr. No.', 'Distributor Code', 'Distributor Name', 'PO No', 'Order Tracking No.', 'Credit Limit', 'Amount', 'Status');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
                             $i = (($page * 10) - 9);
@@ -5176,7 +5176,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     } else
                     {
                         if($radio_checked == "retailer"){
-                            $order_view['head'] = array('Sr. No.', 'Remove','Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                            $order_view['head'] = array('Sr. No.', 'Remove','Distributor Name', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                             $order_view['count'] = count($order_view['head']);
                             if ($page != null || $page != "") {
                                 $i = (($page * 10) - 9);
@@ -5219,7 +5219,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         }
                         else{
 
-                            $order_view['head'] = array('Sr. No.', 'Remove', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                            $order_view['head'] = array('Sr. No.', 'Remove', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                             $order_view['count'] = count($order_view['head']);
                             if ($page != null || $page != "") {
                                 $i = (($page * 10) - 9);
@@ -5290,11 +5290,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         $order_view['count'] = count($order_view['head']);
                     } elseif ($radio_checked == "retailer") {
 
-                        $order_view['head'] = array('Sr. No.', 'Action', 'Retailer Code', 'Retailer Name', 'Distributor Name', 'Order Date', 'PO NO.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                        $order_view['head'] = array('Sr. No.', 'Action', 'Retailer Code', 'Retailer Name', 'Distributor Name', 'Order Date', 'PO NO', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                         $order_view['count'] = count($order_view['head']);
                     } elseif ($radio_checked == "distributor") {
 
-                        $order_view['head'] = array('Sr. No.', 'Action', 'Distributor Code', 'Distributor Name', 'Order Date', 'PO NO.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                        $order_view['head'] = array('Sr. No.', 'Action', 'Distributor Code', 'Distributor Name', 'Order Date', 'PO NO', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                         $order_view['count'] = count($order_view['head']);
                     }
 
@@ -5359,7 +5359,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $order_datetime = $od['order_date'];
                             }
 
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $od['t_dn'], $order_datetime, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $read_status);
+                            $order_view['row'][] = array($i, $od['order_id'], $od['f_u_code'], $od['f_dn'], $od['t_dn'], $order_datetime, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $read_status);
 
                         } elseif ($radio_checked == "distributor") {
                             if($local_date != null){
@@ -5387,7 +5387,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                                 $order_datetime = $od['order_date'];
                                 $estimated_date = $od["estimated_delivery_date"] ;
                             }
-                            $order_view['row'][] = array($i, $od['order_id'], '', $od['f_dn'], $order_datetime, $od["PO_no"], $otn, $estimated_date, $od["total_amount"], $od['display_name'], $order_status);
+                            $order_view['row'][] = array($i, $od['order_id'], $od['f_u_code'], $od['f_dn'], $order_datetime, $od["PO_no"], $otn, $estimated_date, $od["total_amount"], $od['display_name'], $order_status);
                         }
                         $i++;
                     }
@@ -5403,7 +5403,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     if ($action_data != "po_acknowledgement") {
 
-                        $order_view['head'] = array('Sr. No.', '', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                        $order_view['head'] = array('Sr. No.', '', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                         $order_view['count'] = count($order_view['head']);
 
                         //testdata($page);
@@ -5462,7 +5462,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
 
-                        $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.', 'Entered By', 'Enter PO No.');
+                        $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.', 'Entered By', 'Enter PO No');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
                             $i = (($page * 10) - 9);
@@ -5501,7 +5501,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $action_data = $this->uri->segment(2);
                     if ($action_data != "po_acknowledgement") {
 
-                        $order_view['head'] = array('Sr. No.', '', 'Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                        $order_view['head'] = array('Sr. No.', '', 'Distributor Name', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
                             $i = (($page * 10) - 9);
@@ -5558,7 +5558,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                         //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
 
-                        $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.', 'Distributor', 'Entered By', 'Enter PO No.');
+                        $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.', 'Distributor', 'Entered By', 'Enter PO No');
                         $order_view['count'] = count($order_view['head']);
                         if ($page != null || $page != "") {
                             $i = (($page * 10) - 9);
@@ -7411,7 +7411,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
 
-                $primary['head'] = array('Sr. No.', 'Invoice No', 'Invoice Date', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.','Product SKU Code','Product SKU Name','Quantity','Amount');
+                $primary['head'] = array('Sr. No.', 'Invoice No', 'Invoice Date', 'Distributor Code', 'Distributor Name', 'PO No', 'Order Tracking No.','Product SKU Code','Product SKU Name','Quantity','Amount');
 
                 $i = 1;
 
@@ -7630,7 +7630,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 }
             }
 
-           $secondary['head'] = array('Sr. No.','Entry By','Entry Date','ETN' ,'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No.', 'Order Tracking No.','Product SKU Code','Product SKU Name','Quantity','Unit','Quantity KG/Ltr','Amount');
+           $secondary['head'] = array('Sr. No.','Entry By','Entry Date','ETN' ,'Invoice No', 'Invoice Date', 'Retailer Code', 'Retailer Name', 'PO No', 'Order Tracking No.','Product SKU Code','Product SKU Name','Quantity','Unit','Quantity KG/Ltr','Amount');
 
             $i = 1;
 
@@ -7762,7 +7762,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
             $i = 1;
 
-            $invoice_confirmation_view['head'] = array('Sr. No.', 'PO No.', 'OTN', 'Invoice No.', 'Invoice Value', 'Received');
+            $invoice_confirmation_view['head'] = array('Sr. No.', 'PO No', 'OTN', 'Invoice No.', 'Invoice Value', 'Received');
 
             foreach ($invoice_confirmation['result'] as $ic) {
 
@@ -8227,7 +8227,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
 
 
-                    $order_view['head'] = array('Sr. No.', 'Distributor Code', 'Distributor Name', 'PO No.', 'Order Tracking No.','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr', 'Amount','Current Stock','Dispatched Quantity', 'Credit Limit', 'Status');
+                    $order_view['head'] = array('Sr. No.', 'Distributor Code', 'Distributor Name', 'PO No', 'Order Tracking No.','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr', 'Amount','Current Stock','Dispatched Quantity', 'Credit Limit', 'Status');
 
                     $i = 1;
 
@@ -8295,7 +8295,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     if($radio_checked == "retailer"){
 
-                        $order_view['head'] = array('Sr. No.','Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr', 'Amount', 'Entered By', 'Status');
+                        $order_view['head'] = array('Sr. No.','Distributor Name', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr', 'Amount', 'Entered By', 'Status');
 
                         $i = 1;
 
@@ -8326,7 +8326,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     }
                     else{
 
-                        $order_view['head'] = array('Sr. No.', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD','Product SKU Code ','Product SKU Name','Unit','Quantity','Qty.kg/ltr','Amount', 'Approved Quantity','Entered By', 'Status');
+                        $order_view['head'] = array('Sr. No.', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD','Product SKU Code ','Product SKU Name','Unit','Quantity','Qty.kg/ltr','Amount', 'Approved Quantity','Entered By', 'Status');
 
                         $i = 1;
 
@@ -8426,11 +8426,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $order_view['head'] = array('Sr. No.', 'Farmer Name', 'Retailer Name', 'Order Tracking No.','Product SKU Code','Product SKU Name','Unit','Quantity','Qty.kg/ltr', 'Entered By', 'Read');
                 } elseif ($radio_checked == "retailer") {
 
-                    $order_view['head'] = array('Sr. No.', 'Retailer Code', 'Retailer Name', 'Distributor Name', 'Order Date', 'PO NO.', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty.kg/ltr', 'Amount','Approved Quantity', 'Entered By', 'Status');
+                    $order_view['head'] = array('Sr. No.', 'Retailer Code', 'Retailer Name', 'Distributor Name', 'Order Date', 'PO NO', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty.kg/ltr', 'Amount','Approved Quantity', 'Entered By', 'Status');
 
                 } elseif ($radio_checked == "distributor") {
 
-                    $order_view['head'] = array('Sr. No.', 'Distributor Code', 'Distributor Name', 'Order Date', 'PO NO.', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty.kg/ltr', 'Amount','Approved Quantity', 'Entered By', 'Status');
+                    $order_view['head'] = array('Sr. No.', 'Distributor Code', 'Distributor Name', 'Order Date', 'PO NO', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty.kg/ltr', 'Amount','Approved Quantity', 'Entered By', 'Status');
 
                 }
 
@@ -8565,7 +8565,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                //testdata($final_array );
                 if ($action_data != "po_acknowledgement") {
 
-                    $order_view['head'] = array('Sr. No.', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD','Product SKU Code ','Product SKU Name','Unit','Quantity','Qty.kg/ltr','Amount', 'Approved Quantity', 'Entered By', 'Status');
+                    $order_view['head'] = array('Sr. No.', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD','Product SKU Code ','Product SKU Name','Unit','Quantity','Qty.kg/ltr','Amount', 'Approved Quantity', 'Entered By', 'Status');
                     $i = 1;
 
                     foreach ($final_array as $od) {
@@ -8614,7 +8614,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     //FOR PO ACKNOWLEDGEMENT PAGE LAYOUT CREATED HERE
 
-                    $order_view['head'] = array('Sr. No.', 'Order Date', 'Order Tracking No.','Product SKU Code ','Product SKU Name','Unit','Quantity','Qty.kg/ltr', 'Entered By', 'Enter PO No.');
+                    $order_view['head'] = array('Sr. No.', 'Order Date', 'Order Tracking No.','Product SKU Code ','Product SKU Name','Unit','Quantity','Qty.kg/ltr', 'Entered By', 'Enter PO No');
 
                     $i = 1;
 
@@ -8679,7 +8679,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 if ($action_data != "po_acknowledgement") {
 
-                    $order_view['head'] = array('Sr. No.', 'Distributor Name', 'Order Date', 'PO No.', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr','Amount', 'Entered By', 'Status');
+                    $order_view['head'] = array('Sr. No.', 'Distributor Name', 'Order Date', 'PO No', 'Order Tracking No.', 'EDD','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr','Amount', 'Entered By', 'Status');
 
                     $i = 1;
 
@@ -8715,7 +8715,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 }
                 else {
 
-                    $order_view['head'] = array('Sr. No.', 'Order Date', 'Order Tracking No.', 'Distributor','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr', 'Entered By', 'Enter PO No.');
+                    $order_view['head'] = array('Sr. No.', 'Order Date', 'Order Tracking No.', 'Distributor','Product SKU Code','Product SKU Name','Unit','Quantity','Qty. kg/ltr', 'Entered By', 'Enter PO No');
                     $i = 1;
 
                     foreach ($final_array as $od) {

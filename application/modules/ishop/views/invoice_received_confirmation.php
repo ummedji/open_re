@@ -17,7 +17,7 @@ echo form_open('ishop/invoice_confirmation_received',$attributes); ?>
                         </div>
                         <div class="col-md-3">
                             <div class="form-group">
-                                <label>PO No.</label>
+                                <label>PO No</label>
                                 <input type="text" class="form-control" name="po_no" id="po_no" placeholder="">
                             </div>
                         </div>
