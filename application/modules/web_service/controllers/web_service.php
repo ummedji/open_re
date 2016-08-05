@@ -848,22 +848,44 @@ class Web_service extends Front_Controller
 
         $order_id = $this->input->get_post('order_id');
         $po_numdata = $this->input->get_post('po_data');
+        $user_id = $this->input->get_post('user_id');
+
+
 
         if (isset($order_id) && isset($po_numdata) && !empty($order_id) && !empty($po_numdata)) {
 
-            $po_data_status = $this->ishop_model->update_po_data($order_id, $po_numdata, 'web_service');
 
-            if ($po_data_status == '1') {
-                $result['status'] = true;
-                $result['message'] = 'Success';
-                $result['data'] = '';
-                $this->do_json($result);
+            $po_data =  $this->ishop_model->check_po_data($po_numdata,$user_id);
+
+            if ($po_data == 0) {
+                $result["status"] = false;
+                $result["message"] = "Data not updated. Entered PO NO already exist.";
             }
+            else{
+
+                $po_data_status = $this->ishop_model->update_po_data($order_id, $po_numdata, 'web_service');
+
+                if ($po_data_status == '1') {
+                    $result['status'] = true;
+                    $result['message'] = 'Success';
+                    $result['data'] = '';
+                }
+                else{
+                    $result['status'] = false;
+                    $result['message'] = 'Data not updated';
+                    $result['data'] = '';
+                }
+
+            }
+
+
         } else {
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";
-            $this->do_json($result);
+
         }
+
+        $this->do_json($result);
 
 
     }
@@ -2101,6 +2123,7 @@ class Web_service extends Front_Controller
     }
 
 
+    /*
     public function check_podata()
     {
         $user_id = $this->input->get_post('user_id');
@@ -2125,6 +2148,9 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
+
+
+    */
 
     /**
      * @ Function Name        : getConversion
