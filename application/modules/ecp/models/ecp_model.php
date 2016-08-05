@@ -1022,7 +1022,7 @@ class Ecp_model extends BF_Model
         }
         foreach ($id as $k => $val_id) {
             $retailer_compititor_update = array(
-                'amount' => $amount[$k],
+                'amount' => (isset($amount[$k]) && !empty($amount[$k])) ? $amount[$k] : '0',
             );
             $this->db->where('compititor_total_details_id', $val_id);
             $this->db->update('ecp_compititor_total_details', $retailer_compititor_update);
@@ -1050,7 +1050,7 @@ class Ecp_model extends BF_Model
 
         foreach ($id as $k => $val_id) {
             $retailer_compititor_product_update = array(
-                'quantity' => $quantity[$k],
+                'quantity' => (isset($quantity[$k]) && !empty($quantity[$k])) ? $quantity[$k] : '0',
             );
 
             $this->db->where('compititor_product_details_id', $val_id);
@@ -2833,7 +2833,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function addActivityUnplanned($user_id,$country_id,$web_service = null,$local_date = null)
     {
-         //testdata($_POST);
+        // testdata($_POST);
+
         $activity_type_id = $this->input->post("activity_type_id");
         $geo_level_4 = $this->input->post("geo_level_4");
         $geo_level_3 = $this->input->post("geo_level_3");
@@ -2964,7 +2965,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
             }
 
-
             if(isset($diseases) && !empty($diseases)){
 
                 foreach ($diseases as $key => $val) {
@@ -2992,7 +2992,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
             }
 
-
             if(isset($digital_id) && !empty($digital_id)){
 
                 foreach($digital_id as $k => $val_digital)
@@ -3007,7 +3006,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
             }
 
-
             if(isset($joint_id) && !empty($joint_id)){
 
                 foreach($joint_id as $k =>$val_joint)
@@ -3021,7 +3019,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
 
             }
-
 
             if(isset($product_samples) && !empty($product_samples)){
 
@@ -3038,7 +3035,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
             }
 
-
             if(isset($product_materials) && !empty($product_materials)){
 
                 foreach($product_materials as $K=> $vals)
@@ -3053,7 +3049,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
 
             }
-
 
             if(isset($materials) && !empty($materials)){
 
@@ -3070,6 +3065,20 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
             }
 
+            if(isset($customer_name) && !empty($customer_name)){
+
+                foreach($customer_name as $K=> $val_customer_name)
+                {
+                    $customer_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'customer_name' => isset($val_customer_name) ? $val_customer_name : '',
+                        'mobile_no' => isset($customer_no[$K]) ? $customer_no[$K] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_attendees_details', $customer_details);
+                }
+
+            }
 
             if(isset($customer_name) && !empty($customer_name)){
 
@@ -3262,7 +3271,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             return false;
         }
     }
-
 
 
 }
