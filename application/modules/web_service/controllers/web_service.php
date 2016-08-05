@@ -1868,6 +1868,7 @@ class Web_service extends Front_Controller
      * @ Function Params    : user_id,country_id,dist_limit,credit_limit,curr_outstanding,curr_date (POST)
      * @ Function Purpose    : Save Credit Limit Data
      * */
+
     public function saveSchemes()
     {
         $user_id = $this->input->get_post('user_id');
@@ -1896,7 +1897,6 @@ class Web_service extends Front_Controller
         }
         $this->do_json($result);
     }
-
     /**
      * @ Function Name        : getSchemes
      * @ Function Params    : user_id,country_id (POST)
@@ -2092,6 +2092,32 @@ class Web_service extends Front_Controller
                 $result['status'] = false;
                 $result['message'] = 'Fail';
             }
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+    }
+
+
+    public function check_podata()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $po_numdata = $this->input->get_post('po_numdata');
+
+        if ($user_id != "" && $po_numdata != "") {
+
+            $po_data =  $this->ishop_model->check_po_data($po_numdata,$user_id);
+
+            if ($po_data == 0) {
+                $result["status"] = false;
+                $result["message"] = "Data not updated. Entered PO NO already exist.";
+            }
+           else{
+               $result["status"] = true;
+               $result["message"] = "";
+           }
+
         } else {
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";

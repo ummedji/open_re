@@ -6089,12 +6089,12 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     }
 
-    public function check_po_data($po_numdata)
+    public function check_po_data($po_numdata,$logined_user_id)
     {
-
         $this->db->select('*');
         $this->db->from('bf_ishop_orders');
         $this->db->where('PO_no', $po_numdata);
+        $this->db->where('customer_id_from', $logined_user_id);
 
         $po_check_data = $this->db->get()->result_array();
 
@@ -6103,7 +6103,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         } else {
             return 1;
         }
-
     }
 
 

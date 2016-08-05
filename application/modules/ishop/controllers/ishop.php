@@ -2106,22 +2106,29 @@ class Ishop extends Front_Controller
         }
         
         
-       public function update_po_data() {
-            
-            $orderid = $_POST['orderid'];
-            $po_numdata = $_POST['po_numdata'];
-            
-            $check_po_data = $this->ishop_model->check_po_data($po_numdata);
-            if($check_po_data != 0){
-                $po_data_status = $this->ishop_model->update_po_data($orderid,$po_numdata);
-            }
-            else{
-                $po_data_status = $check_po_data;
-            }
-                    
-            echo $po_data_status;
-            die;
-        }
+       public function update_po_data()
+       {
+
+
+               $user = $this->auth->user();
+
+               $logined_user_id = $user->id;
+               $orderid = $_POST['orderid'];
+               $po_numdata = $_POST['po_numdata'];
+
+
+           $check_po_data = $this->ishop_model->check_po_data($po_numdata, $logined_user_id);
+           if ($check_po_data != 0) {
+               $po_data_status = $this->ishop_model->update_po_data($orderid, $po_numdata);
+           } else {
+               $po_data_status = $check_po_data;
+           }
+
+
+               echo $po_data_status;
+               die;
+
+       }
         
         
         /**
