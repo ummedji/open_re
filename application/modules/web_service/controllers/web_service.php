@@ -961,7 +961,8 @@ class Web_service extends Front_Controller
                                 "order_date" => $order['order_date'].','.$t,
                                 "edd" => $order['estimated_delivery_date'],
                                 "amount" => $order['total_amount'],
-                                "order_status" => $read_status,
+                                "order_status" => $red_status,
+                                "order_status_id" => $order['order_status'],
                                 "details" => !empty($order_details) ? $order_details : array()
                             );
                         }
