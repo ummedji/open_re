@@ -334,7 +334,7 @@ $(document).on("click","button.freeze_data",function(e){
                     if(text_data == "Freeze"){
                       //  $("div#freeze_area").html('<button rel ="'+freezedate+'" type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
 
-                        parent_data.html('<button rel ="'+freeze_date+'" type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button>');
+                        parent_data.html('<button rel ="'+freeze_date+'" type="submit" class="btn btn-primary freeze_data" id="freeze_data">Unfreeze</button>');
 
                          message += 'Data freezed successfully.';
 
@@ -344,7 +344,7 @@ $(document).on("click","button.freeze_data",function(e){
                     else{
                      //   $("div#freeze_area").html('<button rel ="'+freezedate+'" type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
 
-                        parent_data.html('<button rel ="'+freeze_date+'" type="submit" class="btn btn-primary" id="freeze_data">Freeze</button>');
+                        parent_data.html('<button rel ="'+freeze_date+'" type="submit" class="btn btn-primary freeze_data" id="freeze_data">Freeze</button>');
 
                          message += 'Data Unfreezed successfully.';
 

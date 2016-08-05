@@ -2086,15 +2086,15 @@ class Esp extends Front_Controller
                     if ($freeze_history_user_status_data[0]['freeze_status'] == 0) {
 
                         $freeze_status = 0;
-                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data">Freeze</button></div>';
                     } else {
                         $freeze_status = 1;
-                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Unfreeze</button></div>';
+                        $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data">Unfreeze</button></div>';
                     }
 
                 } else {
                     $freeze_status = 0;
-                    $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary" id="freeze_data">Freeze</button></div>';
+                    $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data">Freeze</button></div>';
 
                 }
             } else {
@@ -3411,7 +3411,7 @@ class Esp extends Front_Controller
 
                             } else {
 
-                                $lock_data = "rrrr";
+                                $lock_data = "";
 
                                 $final_lock_array["lockdata"] = "";
                                 $final_lock_array["clickable"] = "";
@@ -3460,7 +3460,7 @@ class Esp extends Front_Controller
                             //	$header_final_array[$monthvalue]["clickable"] = 1;
                         } else {
 
-                            $lock_data = "tttt";
+                            $lock_data = "";
                             //	$header_final_array[$monthvalue]["lockdata"] = "";
                             //	$header_final_array[$monthvalue]["clickable"] = "";
 
@@ -3736,7 +3736,7 @@ class Esp extends Front_Controller
                         {
                             //SHOW DATA
 
-                              echo "1";
+                            //  echo "1";
 
                             $editable = "";
 
@@ -3878,7 +3878,7 @@ class Esp extends Front_Controller
 
                         } elseif ($child_flag == 1) {
 
-                             echo "2";
+                          //   echo "2";
 
 
                             $editable = "";
@@ -4025,7 +4025,7 @@ class Esp extends Front_Controller
 
                         } else {
 
-                                echo "3";
+                             //   echo "3";
 
                             /*  $html .= '<td><input rel="'.$l.'_'.$skuvalue['product_sku_country_id'].'_'.$monthvalue.'" class="forecast_qty" id="forecast_qty_'.$l.'_'.$skuvalue['product_sku_country_id'].'" type="text" name="forecast_qty['.$skuvalue['product_sku_country_id'].'][]" value=""   /></td>';
 
@@ -4076,7 +4076,7 @@ class Esp extends Front_Controller
 
                            */
 
-                            echo "4";
+                           // echo "4";
 
                             $editable = "";
 
@@ -4120,7 +4120,7 @@ class Esp extends Front_Controller
 
                                */
 
-                            echo "5";
+                          //  echo "5";
 
                             $html .= '<td><input rel="' . $l . '_' . $skuvalue['product_sku_country_id'] . '_' . $monthvalue . '" class="budget_qty" id="budget_qty_' . $l . '_' . $skuvalue['product_sku_country_id'] . '" type="text" name="budget_qty[' . $skuvalue['product_sku_country_id'] . '][]" value=""  /></td>';
 
@@ -4172,7 +4172,7 @@ class Esp extends Front_Controller
             $freeze_button = "";
 
 
-            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary freeze_data" id="freeze_data" rel="' . $selected_year . '">Freeze</button></div>';
+            $freeze_button = '<div id="freeze_area" class="freeze_area_btn"><button type="submit" class="btn btn-primary  freeze_data" id="freeze_data" rel="' . $selected_year . '">Freeze</button></div>';
 
             $freeze_button_data = "1";
 

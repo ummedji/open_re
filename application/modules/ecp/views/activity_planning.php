@@ -145,8 +145,7 @@ if (!$this->input->is_ajax_request()) {
                                             <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                                 <div class="form-group" style="margin-bottom: 0px;">
                                                     <label>Crop<span style="color: red">*</span></label>
-                                                    <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple>
-                                                        <option value="">Select Crop</option>
+                                                    <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple title="Select Crop">
                                                         <?php
                                                         if (isset($crop_details) && !empty($crop_details)) {
                                                             foreach ($crop_details as $key => $val) {
@@ -170,8 +169,7 @@ if (!$this->input->is_ajax_request()) {
                                             <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                                 <div class="form-group" style="margin-bottom: 0px;">
                                                     <label>Products<span style="color: red">*</span></label>
-                                                    <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple>
-                                                        <option value="">Select Product</option>
+                                                    <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple title="Select Product">
                                                         <?php
                                                         if (isset($product_sku) && !empty($product_sku)) {
                                                             foreach ($product_sku as $key => $val) {
@@ -196,8 +194,7 @@ if (!$this->input->is_ajax_request()) {
                                             <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                                 <div class="form-group" style="margin-bottom: 0px;">
                                                     <label>Diseases<span style="color: red">*</span></label>
-                                                    <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple>
-                                                        <option value="">Select Diseases</option>
+                                                    <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple title="Select Diseases">
                                                         <?php
                                                         if (isset($diseases_details) && !empty($diseases_details)) {
                                                             foreach ($diseases_details as $key => $val) {
@@ -229,8 +226,7 @@ if (!$this->input->is_ajax_request()) {
                                                      style="margin-bottom: 0px;">
                                                     <label>Digital Library</label>
                                                     <select class="selectpicker" name="digital_id[]" id="digital_id"
-                                                            data-live-search="true" multiple>
-                                                        <option value="">Select Digital Library</option>
+                                                            data-live-search="true" multiple title="Select Digital Library">
                                                     </select>
                                                 </div>
                                             </div>
@@ -247,8 +243,7 @@ if (!$this->input->is_ajax_request()) {
                                                      style="margin-bottom: 0px;">
                                                     <label>Joint Visit</label>
                                                     <select class="selectpicker" name="joint_id[]" id="joint_id"
-                                                            data-live-search="true" multiple>
-                                                        <option value="">Select Joint Visit</option>
+                                                            data-live-search="true" multiple title="Select Joint Visit">
                                                         <?php
                                                         if (isset($employee_visit) && !empty($employee_visit)) {
                                                             foreach ($employee_visit as $key => $val) {

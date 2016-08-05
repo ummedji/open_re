@@ -214,8 +214,7 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Corp<span style="color: red">*</span></label>
-                                        <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple disabled >
-                                            <option value="">Select Corp</option>
+                                        <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple disabled title="Select Crop" >
                                             <?php
                                             if (isset($crop_details) && !empty($crop_details)) {
                                                 $activity_crop_details = array();

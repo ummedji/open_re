@@ -48,22 +48,6 @@ $(document).ready(function() {
             },
             diseases:{
                 required: true
-            },
-            farmer_id:
-            {
-                required: true
-            },
-            farmer_no:
-            {
-                required: true
-            },
-            retailer_id:
-            {
-                required: true
-            },
-            retailer_no:
-            {
-                required: true
             }
         }
     });
@@ -73,35 +57,11 @@ $(document).ready(function() {
 
 
     $(document).on("click","#add_farmer",function() {
-
-        $('#farmer_id').removeClass('ignore');
-        $('#farmer_no').removeClass('ignore');
-
-        var $valid = $("#activity_planning").valid();
-        if(!$valid) {
-            activity_planning_validators.focusInvalid();
-            return false;
-        }
-        else
-        {
-            add_farmer();
-        }
+        add_farmer();
     });
 
     $(document).on("click","#add_retailer",function() {
-
-        $('#retailer_id').removeClass('ignore');
-        $('#retailer_no').removeClass('ignore');
-
-        var $valid = $("#activity_planning").valid();
-        if(!$valid) {
-            activity_planning_validators.focusInvalid();
-            return false;
-        }
-        else
-        {
-            add_retailer();
-        }
+        add_retailer();
     });
 
 
@@ -120,9 +80,6 @@ $(document).ready(function() {
 
 
     $(document).on('click', '#check_save', function () {
-        $('#farmer_id').addClass('ignore');
-        $('#farmer_no').addClass('ignore');
-
         var param = $("#activity_planning").serializeArray();
         // console.log(param);
         var $valid = $("#activity_planning").valid();
@@ -132,66 +89,42 @@ $(document).ready(function() {
         }
         else
         {
-            if($("#farmer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Key Farmer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
-                return false;
-            }
-            else {
-                $.ajax({
-                    type: 'POST',
-                    url: site_url + "ecp/add_activity_planning_details",
-                    data: param,
-                    success: function (resp) {
-                        var message = "";
-                        if(resp != 0){
-                            console.log(resp);
-                            $('#activity_planning_id').val(resp);
-                            message += 'Data Inserted successfully.';
-                        }
-                        else{
-
-                            message += 'Data not Inserted.';
-                        }
-                        $('<div></div>').appendTo('body')
-                            .html('<div><b>'+message+'</b></div>')
-                            .dialog({
-                                appendTo: "#success_file_popup",
-                                modal: true,
-                                zIndex: 10000,
-                                autoOpen: true,
-                                width: 'auto',
-                                resizable: true,
-                                close: function (event, ui) {
-                                    $(this).remove();
-
-                                }
-                            });
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_activity_planning_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        console.log(resp);
+                        $('#activity_planning_id').val(resp);
+                        message += 'Data Inserted successfully.';
                     }
-                });
-            }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
         }
         return false;
     });
 
     $(document).on('click', '#check_save_as_new', function () {
-        $('#farmer_id').addClass('ignore');
-        $('#farmer_no').addClass('ignore');
 
         var param = $("#activity_planning").serializeArray();
         // console.log(param);
@@ -202,61 +135,43 @@ $(document).ready(function() {
         }
         else
         {
-            if($("#farmer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Key Farmer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
-                return false;
-            }
-            else {
-                $.ajax({
-                    type: 'POST',
-                    url: site_url + "ecp/add_activity_planning_details",
-                    data: param,
-                    success: function (resp) {
-                        var message = "";
-                        if(resp != 0){
-                            console.log(resp);
-                            $('#activity_planning_id').val(resp);
-                            message += 'Data Save As New successfully.';
-                        }
-                        else{
-
-                            message += 'Data not Save As New .';
-                        }
-                        $('<div></div>').appendTo('body')
-                            .html('<div><b>'+message+'</b></div>')
-                            .dialog({
-                                appendTo: "#success_file_popup",
-                                modal: true,
-                                zIndex: 10000,
-                                autoOpen: true,
-                                width: 'auto',
-                                resizable: true,
-                                close: function (event, ui) {
-                                    $(this).remove();
-
-                                }
-                            });
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_activity_planning_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        console.log(resp);
+                        $('#activity_planning_id').val(resp);
+                        message += 'Data Save As New successfully.';
                     }
-                });
-            }
+                    else{
+
+                        message += 'Data not Save As New .';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
         }
         return false;
+    });
+    $(document).on('click','#add_new',function(e)
+    {
+        location.reload();
     });
 
     $(document).on('click', '#check_submit', function (e) {
@@ -289,7 +204,7 @@ $(document).ready(function() {
                         resizable: false,
                         close: function (event, ui) {
                             $(this).remove();
-
+                            location.reload();
                         }
                     });
             }
@@ -329,12 +244,7 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '#check_update', function () {
-        $('#farmer_id').addClass('ignore');
-        $('#farmer_no').addClass('ignore');
-
         var param = $("#activity_planning").serializeArray();
-        // console.log(param);
-        //var $valid = $("#activity_planning").valid();
         var $valid = true;
         if(!$valid) {
             activity_planning_validators.focusInvalid();
@@ -342,63 +252,40 @@ $(document).ready(function() {
         }
         else
         {
-            if($("#farmer_detail").children().length <= 0)
-            {
-                var message = "";
-                message += 'No Data in Key Farmer Details.';
-
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
-                return false;
-            }
-            else {
-                $.ajax({
-                    type: 'POST',
-                    url: site_url + "ecp/add_activity_planning_details",
-                    data: param,
-                    success: function (resp) {
-                        var message = "";
-                        if(resp != 0){
-                            console.log(resp);
-                            $('#activity_planning_id').val(resp);
-                            message += 'Data Updated successfully.';
-                        }
-                        else{
-
-                            message += 'Data not Updated.';
-                        }
-                        $('<div></div>').appendTo('body')
-                            .html('<div><b>'+message+'</b></div>')
-                            .dialog({
-                                appendTo: "#success_file_popup",
-                                modal: true,
-                                zIndex: 10000,
-                                autoOpen: true,
-                                width: 'auto',
-                                resizable: true,
-                                close: function (event, ui) {
-                                    $(this).remove();
-
-                                }
-                            });
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_activity_planning_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        console.log(resp);
+                        $('#activity_planning_id').val(resp);
+                        message += 'Data Updated successfully.';
                     }
-                });
-            }
+                    else{
+
+                        message += 'Data not Updated.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
         }
         return false;
     });
-
 });
 
 
@@ -428,6 +315,7 @@ function add_farmer()
 
 function add_retailer()
 {
+    alert('in');
     var retailer_id = $('#retailer_id option:selected').val();
     var retailer_name = $('#retailer_id option:selected').attr('attr-name');
     var retailer_no = $('#retailer_no').val();
@@ -594,7 +482,7 @@ function retailerDetails()
         '<div class="row">'+
         '<div class="col-md-6">'+
         '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
-        '<label>Key Retailer<span style="color: red">*</span></label>'+
+        '<label>Key Retailer</label>'+
         '<select class="selectpicker" name="retailer_id" id="retailer_id" data-live-search="true">'+
         '<option value="">Select Retailer</option>'+
         '</select>'+
@@ -602,7 +490,7 @@ function retailerDetails()
         '</div>'+
         '<div class="col-md-6 corp_text mrg_top_30">'+
         '<div class="form-group frm_details text-center">'+
-        '<label>Mobile No.<span style="color: red">*</span></label>'+
+        '<label>Mobile No.</label>'+
         '<input type="text" class="form-control" name="retailer_no" id="retailer_no" placeholder="">'+
         ' <div class="plus_btn" ><a  href="javascript: void(0);" id="add_retailer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>'+
         '</div>'+
@@ -622,7 +510,7 @@ function retailerDetails()
         '<th style="padding: 4px 0;">Action</th>'+
         '</tr>'+
         '</thead>'+
-        '<tbody id="farmer_detail" class="tbl_body_row">'+
+        '<tbody id="retailer_detail" class="tbl_body_row">'+
         '</tbody>'+
         '</table>'+
         '<div class="clearfix"></div>'+
@@ -643,7 +531,7 @@ function farmerDetails()
             '<div class="row">'+
             '<div class="col-md-6">'+
             '<div class="form-group frm_details text-center" style="margin-bottom: 0px;">'+
-            '<label>Key Farmer<span style="color: red">*</span></label>'+
+            '<label>Key Farmer</label>'+
             '<select class="selectpicker" name="farmer_id" id="farmer_id" data-live-search="true">'+
             '<option value="">Select Farmer</option>'+
             '</select>'+
@@ -651,7 +539,7 @@ function farmerDetails()
             '</div>'+
             '<div class="col-md-6 corp_text mrg_top_30">'+
             '<div class="form-group frm_details text-center">'+
-            '<label>Mobile No.<span style="color: red">*</span></label>'+
+            '<label>Mobile No.</label>'+
             '<input type="text" class="form-control" name="farmer_no" id="farmer_no" placeholder="">'+
             ' <div class="plus_btn" ><a  href="javascript: void(0);" id="add_farmer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>'+
             '</div>'+
@@ -1210,7 +1098,7 @@ function getDigitalLibrary(activity_type_id)
 
             if(resp.length > 0){
 
-                $("select#digital_id").append('<option value="">Select Digital Library</option>');
+              //  $("select#digital_id").append('<option value="">Select Digital Library</option>');
 
                 $.each(resp, function(key, value) {
                     $('select#digital_id').append('<option value="' + value.digital_library_id + '" attr-link="'+ value.link +'">' +value.library_name+ '</option>');

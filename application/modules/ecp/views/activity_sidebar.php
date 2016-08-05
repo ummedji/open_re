@@ -45,8 +45,8 @@
                         <div class="panel panel-default" id="data">
                             <div class="panel-heading" role="tab">
                                 <ul class="acc_list">
-                                    <li>No Planned Activity<ul>
-                                        </ul>
+                                    No Missed Activity
+                                </ul>
                             </div>
                         </div>
                     <?php }  ?>
@@ -102,7 +102,7 @@
                             <div class="panel panel-default" id="data">
                                 <div class="panel-heading" role="tab">
                                     <ul class="acc_list">
-                                        <li>No Planned Activity<ul>
+                                        No Planned Activity
                                     </ul>
                                 </div>
                             </div>
@@ -136,7 +136,7 @@
                         </div>
                         <?php if($action =='activity_planning') { ?>
                         <div class="add_new_space text-right save_btn">
-                            <button type="button" class="btn btn-primary">Add New</button>
+                            <button type="button" id="add_new" class="btn btn-primary">Add New</button>
                         </div>
                         <?php }
 

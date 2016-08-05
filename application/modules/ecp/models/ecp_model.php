@@ -2295,7 +2295,13 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                     }
                 }
 
-           return $update_array;
+            if(in_array(1,$update_array))
+            {
+                return 1;
+            }
+            else{
+                return 0;
+            }
         }
         else{
             $activity_planning = array(
@@ -2464,9 +2470,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 return 0;
             }
         }
-
-
-
     }
 
     public function submitActivityPlanning($activity_planning_id,$user_id,$country_id)

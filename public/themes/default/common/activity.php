@@ -159,8 +159,7 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Corp<span style="color: red">*</span></label>
-                                        <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple>
-                                            <option value="">Select Corp</option>
+                                        <select class="selectpicker" name="crop[]" id="crop" data-live-search="true" multiple title="Select Crop">
                                             <?php
                                             if (isset($crop_details) && !empty($crop_details)) {
                                                 $activity_crop_details = array();
@@ -193,8 +192,7 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Products<span style="color: red">*</span></label>
-                                        <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple>
-                                            <option value="">Select Product</option>
+                                        <select class="selectpicker" name="product_sku[]" id="product_sku" data-live-search="true" multiple title="Select Product">
                                             <?php
                                             if (isset($product_sku) && !empty($product_sku)) {
                                                 $activity_product_sku = array();
@@ -227,9 +225,7 @@
                                 <div class="col-md-5 tp_form inline-parent corp_text corp_text_align">
                                     <div class="form-group" style="margin-bottom: 0px;">
                                         <label>Diseases<span style="color: red">*</span></label>
-                                        <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple>
-                                            <option value="">Select Diseases</option>
-
+                                        <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple title="Select Diseases">
                                             <?php
                                             if (isset($diseases_details) && !empty($diseases_details)) {
                                                 $activity_diseases_details = array();
@@ -336,8 +332,8 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
-                                            <label>Key Retailer<span style="color: red">*</span></label>
-                                            <select class="selectpicker" name="farmer_id" id="farmer_id"
+                                            <label>Key Retailer</label>
+                                            <select class="selectpicker" name="retailer_id" id="retailer_id"
                                                     data-live-search="true">
                                                 <option value="">Select Farmer</option>
                                                 <?php
@@ -353,10 +349,9 @@
                                     </div>
                                     <div class="col-md-6 corp_text mrg_top_30">
                                         <div class="form-group frm_details text-center">
-                                            <label>Mobile No.<span style="color: red">*</span></label>
-                                            <input type="text" class="form-control" name="farmer_no" id="farmer_no"
+                                            <label>Mobile No.</label>
+                                            <input type="text" class="form-control" name="retailer_no" id="retailer_no"
                                                    placeholder="">
-
                                             <div class="plus_btn"><a href="javascript: void(0);" id="add_retailer"><i
                                                         class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
@@ -373,7 +368,7 @@
                                             <th style="padding: 4px 0;">Action</th>
                                         </tr>
                                         </thead>
-                                        <tbody id="farmer_detail" class="tbl_body_row">
+                                        <tbody id="retailer_detail" class="tbl_body_row">
                                         <?php if (isset($activity['key_retailer']) && !empty($activity['key_farmer'])) {
                                             foreach ($activity['key_retailer'] as $kf => $vf) {
                                                 ?>
@@ -434,8 +429,7 @@
                                     <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                         <label>Digital Library</label>
                                         <select class="selectpicker" name="digital_id[]" id="digital_id"
-                                                data-live-search="true" multiple>
-                                            <option value="">Select Digital Library</option>
+                                                data-live-search="true" multiple title="Select Digital Library">
                                             <?php
                                             if (isset($digitalLibrary) && !empty($digitalLibrary)) {
                                                 $activity_digital_library = array();
@@ -469,8 +463,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                         <label>Joint Visit</label>
-                                        <select class="selectpicker" name="joint_id[]" id="joint_id" data-live-search="true" multiple>
-                                            <option value="">Select Joint Visit</option>
+                                        <select class="selectpicker" name="joint_id[]" id="joint_id" data-live-search="true" multiple title="Select Joint Visit">
                                             <?php
                                             if(isset($employee_visit) && !empty($employee_visit)) {
                                                 $activity_visit_data = array();

@@ -1883,4 +1883,53 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
+	public function userimageUpload()
+	{
+
+		$config['upload_path'] = FCPATH . 'assets/uploads/user_images/original';//file upload path
+		$config['allowed_types'] = 'gif|jpg|png|jpeg';//file type allowed
+		$config['file_name'] = $_POST['user_image']['name'];
+		//not overwrite image for below code
+		$config['overwrite'] = FALSE;
+		$config['max_size'] = '1024';//max file size for upload
+
+		$this->load->library('upload', $config);
+
+		if (!is_dir($config['upload_path'])) {
+			mkdir($config['upload_path'], 0755, TRUE);
+		}
+
+		if (!empty($_POST['user_image']['name']) && $_POST['user_image']['error'] != 4) {
+
+			if (!$this->upload->do_upload('user_image')) {
+
+				$error = array('error' => $this->upload->display_errors());
+
+				return $error;
+			} else {
+				$upload_data = $this->upload->data();
+
+				$config["image_library"] = "gd2";
+				$config["source_image"] = $upload_data["full_path"];
+				$config['create_thumb'] = FALSE;
+				$config['maintain_ratio'] = TRUE;
+				//image resize and upload in below path
+				$config['new_image'] = FCPATH . 'assets/uploads/user_images/' . $upload_data['file_name'];
+				$config['quality'] = "100%";
+				//Here Set Width and height for image resize
+				$config['width'] = 200;
+				$config['height'] = 150;
+				$this->load->library('image_lib');
+				$this->image_lib->initialize($config);
+
+				//Resize image
+				if (!$this->image_lib->resize()) {
+					//If error, redirect to an error page
+					redirect("errorhandler");
+				}
+				return $upload_data;
+			}
+		}
+	}
+
 }
