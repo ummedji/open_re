@@ -419,7 +419,7 @@ $(document).on('submit', '#upload_current_stock_data', function (e) {
 
                                 $.each(des_data, function (key3, desc_data) {
 
-                                    if (key3 == 5 || key3 == 6 || key3 == 7) {
+                                    if (key3 == 0 || key3 == 6 || key3 == 7) {
                                         if (desc_data != "") {
                                             var year_data = desc_data.split("-");
 

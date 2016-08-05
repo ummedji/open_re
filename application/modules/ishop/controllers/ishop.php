@@ -2555,7 +2555,7 @@ class Ishop extends Front_Controller
         
         //TARGET DATA UPLOAD
         
-        public function upload_data() {
+    public function upload_data() {
 
             $web_service = @$_POST['flag'];
             if (empty($web_service) && !isset($web_service) && $web_service == null && $web_service != "web_service") {
@@ -3205,7 +3205,10 @@ class Ishop extends Front_Controller
 
 
 
-                                    $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . $error_message;
+                                  //  $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . $error_message;
+
+                                    $error_array["error"][] = $Date_data. "~" .$product_code. "~" .$product_name. "~" .$In_Transit_Qty. "~" .$Unrestricted_Qty. "~" .$batch_no. "~" .$Mfg_Date. "~" .$Expiry_Date. "~" .$error_message;
+
                                 } else {
 
                                     //CHECK PROPER DATA
@@ -3245,7 +3248,10 @@ class Ishop extends Front_Controller
                                             $error_message = "Product data not matched with DB data";
                                         }
 
-                                        $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . $error_message;
+                                      //  $error_array["error"][] = $product_code . "~" . $product_name . "~" . $batch_no . "~" . $Unrestricted_Qty . "~" . $In_Transit_Qty . "~" . $Expiry_Date . "~" . $Mfg_Date . "~" . $Date_data . "~" . $error_message;
+
+                                        $error_array["error"][] = $Date_data. "~" .$product_code. "~" .$product_name. "~" .$In_Transit_Qty. "~" .$Unrestricted_Qty. "~" .$batch_no. "~" .$Mfg_Date. "~" .$Expiry_Date. "~" .$error_message;
+
                                     }
 
                                 }
@@ -4542,7 +4548,7 @@ class Ishop extends Front_Controller
                     $this->excel->getActiveSheet()->setCellValue($key.$l,$col_data);
                     $last_data = $key.$l;
                     $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setSize(12);
-                    $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setBold(true);
+                //    $this->excel->getActiveSheet()->getStyle($key.$l)->getFont()->setBold(true);
                     $k++; 
                 }
 
@@ -4574,7 +4580,7 @@ class Ishop extends Front_Controller
                                   }
                                 }
                                 elseif($_POST["dirname"] == "company_current_stock"){
-                                    if(($j == 5 || $j == 6 || $j == 7) && ($row_data[$j] != "")){
+                                    if(($j == 0 || $j == 6 || $j == 7) && ($row_data[$j] != "")){
                                         $date_data = explode("-",$row_data[$j]);
                                         
                                         $monthName = date("M", mktime(0, 0, 0, $date_data[1], 10));
