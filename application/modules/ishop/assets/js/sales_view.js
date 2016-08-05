@@ -329,11 +329,6 @@ $(document).ready(function(){
         }
     });
 
-    $(document).on(":input",'change',function() {
-        $(this).valid();
-    });
-
-
     $("#view_ishop_sales").on("submit",function(e){
 
         e.preventDefault();
@@ -362,6 +357,10 @@ $(document).ready(function(){
 
     });
 
+    $( ":input" ).on('change',function() {
+        console.log(this);
+        $(this).valid();
+    });
 
     $('#download_csv').on('click',function(){
 
@@ -455,6 +454,7 @@ $(document).on('click', 'div.sales_product .edit_i', function () {
     var box_selected = "";
     var package_selected = "";
     var kg_ltr_selected = "";
+
 
     if(units == 'Box'){
         box_selected = "selected = 'selected'"

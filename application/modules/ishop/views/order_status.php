@@ -185,7 +185,9 @@
             </div>
 
             
-        <?php }else if($login_customer_type == 10){ ?>
+        <?php }
+        elseif($login_customer_type == 10)
+        { ?>
             
             
             <div class="col-md-6 col-md-offset-3 distributore_form distributor_data">
@@ -221,20 +223,19 @@
                 <div class="col-md-12 text-center radio_space">
                     
                      <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="farmer" checked="checked"/>
-                        <label for="radio1">Farmer</label>
+                        <input class="select_customer_type" type="radio" name="radio1" id="farmer" value="farmer" checked="checked"/>
+                        <label for="farmer">Farmer</label>
                     </div>
                     
                      <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="retailer" />
-                        <label for="radio1">Retailer</label>
+                        <input class="select_customer_type" type="radio" name="radio1" id="retailer" value="retailer" />
+                        <label for="retailer">Retailer</label>
                     </div>
                     
                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio2" value="distributor" />
-                        <label for="radio2">Distributor</label>
+                        <input class="select_customer_type" type="radio" name="radio1" id="distributor" value="distributor" />
+                        <label for="distributor">Distributor</label>
                     </div>
-                   
                     <div class="clearfix"></div>
                 </div>
             

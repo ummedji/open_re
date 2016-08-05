@@ -1683,15 +1683,14 @@ class Ishop_model extends BF_Model
             $qty_kgl = $this->input->post("qty_kgl");
             $amount = $this->input->post("amount");
         }
-      //  $total_amt = array_sum($amount);
 
         if (isset($secondary_sales_product_id) && !empty($secondary_sales_product_id)) {
             foreach ($secondary_sales_product_id as $k => $pspi) {
                 $secondary_sales_product_update = array(
-                    'quantity' => $quantity[$k],
-                    'unit' => $units[$k],
-                    'qty_kgl' => $qty_kgl[$k],
-                    'amount' => $amount[$k],
+                    'quantity' => isset($quantity[$k]) && !empty($quantity[$k]) ? $quantity[$k] : '0',
+                    'unit' => isset($units[$k]) && !empty($units[$k]) ? $units[$k]: '',
+                    'qty_kgl' => isset($qty_kgl[$k]) && !empty($qty_kgl[$k]) ? $qty_kgl[$k]: '0',
+                    'amount' => isset($amount[$k]) && !empty($amount[$k]) ? $amount[$k]: '0',
                 );
 
                 $this->db->where('secondary_sales_product_id', $secondary_sales_product_id[$k]);
@@ -1732,7 +1731,6 @@ class Ishop_model extends BF_Model
                 $this->db->update('ishop_secondary_sales', $secondary__sales_update);
             }
         }
-      //  testdata($this->db->affected_rows());
         if($this->db->affected_rows() > 0){
             return 1;
         }
@@ -5088,12 +5086,21 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         if($loginusertype == '9')
         {
+
             $subsql = ' AND  f_bu.role_id ="'.$loginusertype.'" ';
+            if ($action_data != "po_acknowledgement") {
+                $sql .='  AND bio.order_status != 4  ';
+            }
+
 
         }
         elseif($loginusertype == '10')
         {
             $subsql = ' AND  f_bu.role_id = "'.$loginusertype.'" ';
+            if ($action_data != "po_acknowledgement") {
+                $sql .='  AND bio.order_status != 4  ';
+            }
+          //  $sql .='  AND bio.order_status != 4  ';
         }
         elseif($action_data == "get_order_status_data" || $action_data == "order_status")
         {

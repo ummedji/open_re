@@ -446,7 +446,7 @@ $(document).on('click', 'div.order_status .edit_i', function () {
 
 
     var login_customer_type = $("input#login_customer_type").val();
-    
+
     if (login_customer_type != 8)
     {
         //AMOUNT
