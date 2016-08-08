@@ -6305,14 +6305,16 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
     public function update_order_data($orderdata, $web_service = null)
     {
-        if (!empty($orderdata)) {
+        //testdata($orderdata);
+
+        if (!empty($orderdata))
+        {
 
             if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
                 $orderdata["order_data"] = explode(',', $orderdata["order_data"]);
                 if(isset($orderdata["change_order_status"])){
                     $orderdata["change_order_status"] = explode(',', $orderdata["change_order_status"]);
                 }
-
 
                 if(isset($orderdata["confirm_ack"])){
                     $orderdata["confirm_ack"]= explode(',',$orderdata["confirm_ack"]);
@@ -6326,7 +6328,6 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
             $return = array();
           //  $orderdata=array();
 
-
             foreach ($orderdata["order_data"] as $key => $value) {
 
 
@@ -6338,7 +6339,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                 }
 
-                if (isset($orderdata["po_no"][$key]) && $orderdata["po_no"][$key] != "") {
+                if (isset($orderdata["po_no"][$key]) && $orderdata["po_no"][$key] != "")
+                {
                     $update_array["PO_no"] = $orderdata["po_no"][$key];
                 }
 
@@ -6390,7 +6392,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 }
 
 
-
+              //  dumpme($update_array);
 
                 if (!empty($update_array)) {
                     $this->db->where('order_id', $value);
@@ -6404,6 +6406,8 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                 }
             }
         }
+
+      //  testdata($return);
 
         if(in_array(1,$return)){
             return 1;

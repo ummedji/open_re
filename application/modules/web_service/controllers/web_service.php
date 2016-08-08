@@ -1169,7 +1169,7 @@ class Web_service extends Front_Controller
                 $result['message'] = 'Updated Successfully.';
             } else {
                 $result['status'] = false;
-                $result['message'] = 'Fail';
+                $result['message'] = 'Data not updated.';
             }
         } else {
             $result['status'] = false;
