@@ -1269,8 +1269,8 @@ class Ishop extends Front_Controller
             Template::set('retailer',$retailer);
             Template::set('product_sku',$product_sku);
 
+
             Template::set('geo_level_data',$get_geo_level_data);
-            
             Template::set_view('ishop/order_place');
             Template::render();
             

@@ -29,9 +29,9 @@ class Cco extends Front_Controller
         $this->load->helper('form');
 
 
-        $this->load->model('ecp/ecp_model');
-        $this->load->model('ishop/ishop_model');
-        $this->load->model('esp/esp_model');
+        $this->load->model('cco/cco_model');
+       // $this->load->model('ishop/ishop_model');
+      //  $this->load->model('esp/esp_model');
 
         $this->set_current_user();
 
@@ -57,6 +57,15 @@ class Cco extends Front_Controller
 
     public function allocation()
     {
+
+        $campagain_data = $this->cco_model->campagain_data();
+       // testdata($get_level_data);
+
+        $campagain_id = 1;
+        $get_level_data = $this->cco_model->level_data($campagain_id);
+
+        Template::set('campagaine_data',$campagain_data);
+        Template::set('highest_geo_level_data',$get_level_data);
         Template::render();
     }
 
@@ -64,5 +73,7 @@ class Cco extends Front_Controller
     {
         Template::render();
     }
+
+
 
 }

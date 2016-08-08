@@ -128,7 +128,7 @@ class Ecp_model extends BF_Model
 
     public function get_all_materials_by_country_id($country_id, $page = null, $local_date = null, $web_service = null)
     {
-        $sql = 'SELECT emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,emr.material_request_status,emr.recived_status,emr.disptched_date,buu.display_name as updated_user,emr.modified_on ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,emr.material_request_status,emr.recived_status,emr.disptched_date,buu.display_name as updated_user,emr.modified_on ';
         $sql .= 'FROM bf_ecp_material_request AS emr ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = emr.employee_id) ';
         $sql .= 'JOIN bf_users AS buu ON (buu.id = emr.modified_by_user) ';
@@ -145,6 +145,7 @@ class Ecp_model extends BF_Model
             $offset = $page * $limit - $limit;
             $sql .= ' LIMIT ' . $offset . "," . $limit;
             $info = $this->db->query($sql);
+            //echo $this->db->last_query();
             // For Pagination
             $material = $info->result_array();
             return $material;
