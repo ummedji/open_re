@@ -728,7 +728,7 @@ class Ecp_model extends BF_Model
 
     public function get_retailer_compititor_details_view($from_month, $to_month, $page = null, $local_date = null, $country_id, $web_service = null)
     {
-        $sql = ' SELECT ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
+        $sql = ' SELECT SQL_CALC_FOUND_ROWS ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
         $sql .= ' FROM bf_ecp_compititor_analysis_total AS ecat ';
         $sql .= ' JOIN bf_users AS bu ON (bu.id = ecat.coustomer_id) ';
         $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
@@ -797,7 +797,7 @@ class Ecp_model extends BF_Model
 
     public function get_retailer_compititor_product_details_view($from_month, $to_month, $page = null, $local_date = null, $country_id, $web_service = null)
     {
-        $sql = ' SELECT ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
+        $sql = ' SELECT SQL_CALC_FOUND_ROWS ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
         $sql .= ' FROM bf_ecp_compititor_analysis_product AS ecap ';
         $sql .= ' JOIN bf_users AS bu ON (bu.id = ecap.coustomer_id) ';
         $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
@@ -869,7 +869,7 @@ class Ecp_model extends BF_Model
 
     public function get_distributor_compititor_details_view($from_month, $to_month, $page = null, $local_date = null, $country_id, $web_service = null)
     {
-        $sql = ' SELECT ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
+        $sql = ' SELECT SQL_CALC_FOUND_ROWS ecat.compititor_analysis_total_id,ectd.compititor_total_details_id,ecat.created_on,ecat.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ectd.amount ';
         $sql .= ' FROM bf_ecp_compititor_analysis_total AS ecat ';
         $sql .= ' JOIN bf_users AS bu ON (bu.id = ecat.coustomer_id) ';
         $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
@@ -941,7 +941,7 @@ class Ecp_model extends BF_Model
 
     public function get_distributor_compititor_product_details_view($from_month, $to_month, $page = null, $local_date = null, $country_id, $web_service = null)
     {
-        $sql = ' SELECT ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
+        $sql = ' SELECT SQL_CALC_FOUND_ROWS ecap.compititor_analysis_product_id,ecpd.compititor_product_details_id,ecap.created_on,ecap.compititor_analysis_month,mpgd.political_geography_name,bu.user_code,bu.display_name,ecm.compititor_name,ecpd.compititor_product_name,ecpd.quantity,mpsc.product_sku_name ';
         $sql .= ' FROM bf_ecp_compititor_analysis_product AS ecap ';
         $sql .= ' JOIN bf_users AS bu ON (bu.id = ecap.coustomer_id) ';
         $sql .= ' JOIN bf_master_user_contact_details AS mucd ON (mucd.user_id = bu.id) ';
@@ -2834,7 +2834,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function addActivityUnplanned($user_id,$country_id,$web_service = null,$local_date = null)
     {
-        // testdata($_POST);
+
 
         $activity_type_id = $this->input->post("activity_type_id");
         $geo_level_4 = $this->input->post("geo_level_4");
@@ -3081,20 +3081,71 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
             }
 
-            if(isset($customer_name) && !empty($customer_name)){
+           /* if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
 
-                foreach($customer_name as $K=> $val_customer_name)
+                $error_array=array();
+                $files = $_FILES;
+                // $data['user_id']=$this->session->userdata('user_id');
+                //testdata($data);
+                $cpt = count($_FILES['upload_file_data']['name']);
+
+
+                $data_array = array();
+                for($i=0; $i<$cpt; $i++)
                 {
-                    $customer_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'customer_name' => isset($val_customer_name) ? $val_customer_name : '',
-                        'mobile_no' => isset($customer_no[$K]) ? $customer_no[$K] : '',
-                    );
+                    //testdata( $_FILES['op_image']['name']);
+                    $_FILES['upload_file_data']['name']= $files['upload_file_data']['name'][$i];
+                    $_FILES['upload_file_data']['type']= $files['upload_file_data']['type'][$i];
+                    $_FILES['upload_file_data']['tmp_name']= $files['upload_file_data']['tmp_name'][$i];
+                    $_FILES['upload_file_data']['error']= $files['upload_file_data']['error'][$i];
+                    $_FILES['upload_file_data']['size']= $files['upload_file_data']['size'][$i];
 
-                    $this->db->insert('ecp_activity_planning_attendees_details', $customer_details);
+
+                    $config['upload_path'] = FCPATH . 'assets/uploads/activity_gallery/';//file upload path
+                    $config['allowed_types'] = 'gif|jpg|png|jpeg';//file type allowed
+                    $config['file_name'] =  $_FILES['upload_file_data']['name'];
+                    //not overwrite image for below code
+                    $config['overwrite'] = FALSE;
+                    $config['max_size'] = '1024';//max file size for upload
+
+                    $this->load->library('upload', $config);
+                    $this->upload->initialize($config);
+
+                    //$this->upload->initialize($this->set_upload_options());
+                    if($this->upload->do_upload('upload_file_data[]'))
+                    {
+                        $data_array[]= $_FILES['upload_file_data']['name'];
+                        // testdata($data);
+                      //  $this->db->insert('order_prescription',$data);
+                    }
+                    else{
+                        $data_array[]= 1;
+                    }
                 }
 
-            }
+                /*
+                if(in_array(1,$error_array))
+                {
+                    return false;
+                }
+                else{
+
+                    foreach($error_array as $K=> $file_uploads)
+                    {
+                        $file_uploads_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'files_name' => isset($val_customer_name) ? $val_customer_name : '',
+                            'upload_type' => isset($customer_no[$K]) ? $customer_no[$K] : '',
+                        );
+
+                        $this->db->insert('ecp_activity_planning_upload_details', $file_uploads_details);
+                    }
+                }
+
+                */
+
+
+           /* }*/
 
             return $insert_id;
         }
@@ -3272,6 +3323,62 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             return false;
         }
     }
+/*
+
+    public function userimageUpload($file_data)
+    {
+
+        $config['upload_path'] = FCPATH . 'assets/uploads/activity_gallery/';//file upload path
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';//file type allowed
+        $config['file_name'] = $file_data['name'];
+        //not overwrite image for below code
+        $config['overwrite'] = FALSE;
+        $config['max_size'] = '1024';//max file size for upload
+
+        $this->load->library('upload', $config);
+
+        if (!is_dir($config['upload_path'])) {
+            mkdir($config['upload_path'], 0755, TRUE);
+        }
 
 
+        if (!empty($file_data['name']) && $file_data['error'] != 4) {
+
+            if (!$this->upload->do_upload($file_data['name'])) {
+
+                $error = array('error' => $this->upload->display_errors());
+                // $error_array[] = 1;
+
+                testdata($error);
+
+                return 1;
+            } else {
+                testdata('in');
+                $upload_data = $this->upload->data();
+
+                $config["image_library"] = "gd2";
+                $config["source_image"] = $upload_data["full_path"];
+                $config['create_thumb'] = FALSE;
+                $config['maintain_ratio'] = TRUE;
+                //image resize and upload in below path
+                $config['new_image'] = FCPATH . 'assets/uploads/activity_gallery/' . $upload_data['file_name'];
+                $config['quality'] = "100%";
+                //Here Set Width and height for image resize
+                $config['width'] = 200;
+                $config['height'] = 150;
+                $this->load->library('image_lib');
+                $this->image_lib->initialize($config);
+
+                //Resize image
+                if (!$this->image_lib->resize()) {
+                    //If error, redirect to an error page
+                    redirect("errorhandler");
+                }
+               // $error_array[] = 0;
+                return $upload_data;
+            }
+        }
+    }
+
+*/
 }
