@@ -4,36 +4,6 @@ $(document).ready(function(){
         autoclose: true
     })
 });
-/*$(document).on("change",'#stock_month',function(){
-    var stock_month = $('#stock_month').val();
-    var role_id = $("input#login_customer_role").val();
-    if( role_id == 8)
-    {
-        var checked_type = $('input.select_customer_type').val();
-        $.ajax({
-            type: 'POST',
-            url: site_url+'ishop/physical_stock',
-            data: {stock_month:stock_month,checked_type:checked_type},
-            success: function(resp){
-                $('#middle_container').html(resp);
-            }
-        });
-        return false;
-    }
-    if(role_id == 9 || role_id == 10)
-    {
-        $.ajax({
-            type: 'POST',
-            url: site_url+'ishop/physical_stock',
-            data: {stock_month:stock_month},
-            success: function(resp){
-                $('#middle_container').html(resp);
-            }
-        });
-        return false;
-    }
-});*/
-
 
 $('#month').on('change',function(){
 
@@ -125,23 +95,6 @@ $(document).ready(function(){
             diseases_id:{
                 required: true
             }
-            /*,
-            farmer_id:
-            {
-                required: true
-            },
-            farmer_no:
-            {
-                required: true
-            },
-            retailer_id:
-            {
-                required: true
-            },
-            retailer_no:
-            {
-                required: true
-            }*/
         }
     });
 

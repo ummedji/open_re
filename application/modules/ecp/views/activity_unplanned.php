@@ -1,7 +1,3 @@
-<?php
-$attributes = array('class' => '', 'id' => 'activity_unplanned','name'=>'activity_unplanned');
-echo form_open('',$attributes);
-?>
 <div class="col-md-12 full-height">
     <div class="row">
         <div class="col-md-12 text-center plng_sub_nave">
@@ -22,6 +18,12 @@ echo form_open('',$attributes);
                 <div class="clearfix"></div>
             </div>
         </div>
+
+        <?php
+        $attributes = array('class' => '', 'id' => 'activity_unplanned','name'=>'activity_unplanned');
+        echo form_open_multipart('',$attributes);
+        ?>
+
         <div class="col-md-12">
             <div class="top_form planning_parent">
                 <div class="row">
@@ -31,7 +33,7 @@ echo form_open('',$attributes);
                                 <div class="form-group">
                                     <label>Execution Date<span style="color: red">*</span></label>
                                     <div class="inln_fld">
-                                        <input type="text" class="form-control" name="execution_date" id="execution_date" placeholder="">
+                                        <input type="text" class="form-control" name="execution_date" id="execution_date" placeholder="" />
                                         <div class="clearfix"></div>
                                         <label id="execution_date-error" class="error" for="execution_date"></label>
                                     </div>
@@ -41,7 +43,7 @@ echo form_open('',$attributes);
                                     <label>Time<span style="color: red">*</span></label>
                                     <div class="inln_fld">
                                         <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                            <input id="execution_time" name="execution_time" type="text" class="input-group-time form-control input-append">
+                                            <input id="execution_time" name="execution_time" type="text" class="input-group-time form-control input-append" />
                                         </div>
                                     </div>
                                 </div>
@@ -172,7 +174,6 @@ echo form_open('',$attributes);
                                         <div class="form-group" style="margin-bottom: 0px;">
                                             <label>Diseases<span style="color: red">*</span></label>
                                             <select class="selectpicker" name="diseases[]" id="diseases" data-live-search="true" multiple title="Select Diseases">
-                                                <option value="">Select Diseases</option>
                                                 <?php
                                                 if (isset($diseases_details) && !empty($diseases_details)) {
                                                     foreach ($diseases_details as $key => $val) {
@@ -200,13 +201,13 @@ echo form_open('',$attributes);
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                             <label>Other Person</label>
-                                            <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="">
+                                            <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="" />
                                         </div>
                                     </div>
                                     <div class="col-md-6 corp_text mrg_top_30">
                                         <div class="form-group frm_details text-center">
                                             <label>Mobile No.</label>
-                                            <input type="text" class="form-control" name="customer_no" id="customer_no" placeholder="">
+                                            <input type="text" class="form-control" name="customer_no" id="customer_no" placeholder=""/>
                                             <div class="plus_btn" ><a  href="javascript: void(0);" id="add_customer"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
                                     </div>
@@ -286,7 +287,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-6">
                                         <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                             <label>Point Of Discussion</label>
-                                            <input type="text" class="form-control" name="pod" id="pod" placeholder="">
+                                            <input type="text" class="form-control" name="pod" id="pod" placeholder=""/>
                                         </div>
                                     </div>
                                     <div class="col-md-6 corp_text mrg_top_30">
@@ -325,7 +326,7 @@ echo form_open('',$attributes);
                                     <div class="col-md-6 corp_text mrg_top_30">
                                         <div class="form-group frm_details text-center">
                                             <label>Qty.</label>
-                                            <input type="text" class="form-control" name="qty" id="qty" placeholder="">
+                                            <input type="text" class="form-control allownumericwithdecimal" name="qty" id="qty" placeholder=""/>
                                             <div class="plus_btn"><a href="javascript: void(0);" id="add_product"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                         </div>
                                     </div>
@@ -380,7 +381,7 @@ echo form_open('',$attributes);
                                             </div>
                                             <div class="form-group corp_text text-center">
                                                 <label>Qty.</label>
-                                                <input type="text" class="form-control" name="qty_material" id="qty_material" placeholder="" style="width: 80px;">
+                                                <input type="text" class="form-control allownumericwithdecimal" name="qty_material" id="qty_material" placeholder="" style="width: 80px;" />
                                                 <div class="plus_btn"  style="margin-top: -3px;"><a href="javascript: void(0);" id="add_product_material"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                             </div>
                                         </th>
@@ -403,7 +404,7 @@ echo form_open('',$attributes);
                                             </div>
                                             <div class="form-group corp_text text-center">
                                                 <label>Qty.</label>
-                                                <input type="text" class="form-control" name="m_qty" id="m_qty" placeholder="" style="width: 80px;">
+                                                <input type="text" class="form-control allownumericwithdecimal" name="m_qty" id="m_qty" placeholder="" style="width: 80px;" />
                                                 <div class="plus_btn"  style="margin-top: -3px;"><a href="javascript: void(0);" id="add_material"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                             </div>
                                         </th>
@@ -471,10 +472,10 @@ echo form_open('',$attributes);
                                             <div class="input-group">
                                                         <span class="input-group-btn">
                                                             <span class="btn btn-primary btn-file fileUpload">
-                                                               Browse <input class="upload" type="file" name="upload_file_data" id="upload_file_data" multiple="multiple">
+                                                               Browse <input class="upload" type="file" name="upload_file_data[]" id="upload_file_data" multiple="multiple"/>
                                                             </span>
                                                        </span>
-                                                <input type="text" id="filename" class="form-control">
+                                                <input type="text" id="filename" class="form-control" readonly />
                                             </div>
                                             <div class="clearfix"></div>
                                         </div>
@@ -532,18 +533,18 @@ echo form_open('',$attributes);
                                 <div class="col-md-9 tp_form  inline-parent" id="follow_up" style="display: none">
                                     <div class="form-group">
                                         <label>Planning Date<span style="color: red">*</span></label>
-                                        <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="" >
+                                        <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="" />
                                     </div>
 
                                     <div class="form-group rsp-datepiker">
                                         <label>Planning Time<span style="color: red">*</span></label>
 
                                         <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                            <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append" >
+                                            <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append" />
                                         </div>
                                     </div>
                                     <div class="col-md-12 save_btn">
-                                        <input type="hidden" class="form-control" name="reference_type" id="" value="follow_up" placeholder="">
+                                        <input type="hidden" class="form-control" name="reference_type" id="" value="follow_up" placeholder=""/>
                                         <button type="button" class="btn btn-primary" id="planning_save">Save</button>
                                         <button type="button" class="btn btn-primary" id="planning_close">close</button>
                                     </div>
@@ -557,7 +558,7 @@ echo form_open('',$attributes);
                     </div>
               </div>
 
-            <input class="activity_planning_id" type="hidden" name="inserted_activity_planning_id" id="activity_planning_id" value="" />
+            <input class="activity_planning_id" type="hidden" name="inserted_activity_planning_id" id="activity_planning_id"  />
             <input class="current_user_id" type="hidden" name="current_user_id" id="current_user_id" value="<?php echo $current_user->id ;?>" />
             <input class="current_role_id" type="hidden" name="current_role_id" id="current_role_id" value="<?php echo $current_user->role_id ;?>" />
             <input class="current_country_id" type="hidden" name="current_country_id" id="current_country_id" value="<?php echo $current_user->country_id;?>" />
@@ -565,7 +566,7 @@ echo form_open('',$attributes);
 
             <div class="col-md-12 table_bottom pln_table_bottom">
                 <div class="save_btn">
-                    <button type="button" class="btn btn-primary" id="check_save">Save</button>
+                    <button type="submit" class="btn btn-primary" id="check_save">Save</button>
                 </div>
             </div>
             <div class="clearfix"></div>

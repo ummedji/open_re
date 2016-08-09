@@ -108,54 +108,6 @@ $(document).ready(function() {
         add_customer();
     });
 
-    $(document).on('click', '#check_save', function () {
-        alert('in');
-        var param = $("#activity_unplanned").serializeArray();
-
-        var $valid = $("#activity_unplanned").valid();
-        if(!$valid) {
-            alert('in');
-            activity_unplanned_validators.focusInvalid();
-            return false;
-        }
-        else
-        {
-            $.ajax({
-                type: 'POST',
-                url: site_url + "ecp/add_activity_unplanned_details",
-                data: param,
-                success: function (resp) {
-                    var message = "";
-                    if(resp != 0){
-                        console.log(resp);
-                        $('#activity_planning_id').val(resp);
-                        message += 'Data Inserted successfully.';
-                    }
-                    else{
-
-                        message += 'Data not Inserted.';
-                    }
-                    $('<div></div>').appendTo('body')
-                        .html('<div><b>'+message+'</b></div>')
-                        .dialog({
-                            appendTo: "#success_file_popup",
-                            modal: true,
-                            zIndex: 10000,
-                            autoOpen: true,
-                            width: 'auto',
-                            resizable: true,
-                            close: function (event, ui) {
-                                $(this).remove();
-
-                            }
-                        });
-                }
-            });
-
-        }
-        return false;
-    });
-
     $(document).on('click', '#planning_save', function () {
 
         var param = $("#activity_unplanned").serializeArray();
@@ -848,6 +800,29 @@ function get_farmerData()
     });
 }
 
+function get_retailerData()
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ecp/KeyRetailer_by_user_id",
+        data: {},
+        dataType : 'json',
+        success: function(resp){
+
+            $("select#retailer_id").empty();
+            $("select#retailer_id").selectpicker('refresh');
+
+            if(resp.length > 0){
+                $("select#retailer_id").append('<option value="">Select Retailer</option>');
+                $.each(resp, function(key, value) {
+                    $('select#retailer_id').append('<option value ="' + value.id + '" attr-name = "'+value.display_name+'">' +value.display_name+ '</option>');
+                });
+                $("select#retailer_id").selectpicker('refresh');
+            }
+        }
+    });
+}
+
 
 function get_geo_fo_userdata(activity_type_selected){
     $.ajax({
@@ -1041,7 +1016,7 @@ function getDigitalLibrary(activity_type_id)
 
             if(resp.length > 0){
 
-                $("select#digital_id").append('<option value="">Select Digital Library</option>');
+              //  $("select#digital_id").append('<option value="">Select Digital Library</option>');
 
                 $.each(resp, function(key, value) {
                     $('select#digital_id').append('<option value="' + value.digital_library_id + '" attr-link="'+ value.link +'">' +value.library_name+ '</option>');
@@ -1085,4 +1060,64 @@ $(document).on('click', '#followup', function () {
 $(document).on('click', '#planning_close', function () {
     $("#follow_up").css('display','none');
 });
+
+
+
+//$(document).on('click', '#check_save', function () {
+$(document).on('submit', 'form#activity_unplanned', function (e) {
+
+    e.preventDefault();
+
+    var param = new FormData(this);
+    console.log(param);
+
+   /* var $valid = $("#activity_unplanned").valid();
+    if(!$valid) {
+        activity_unplanned_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+
+        */
+
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ecp/add_activity_unplanned_details",
+            data: param,
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: function (resp) {
+                var message = "";
+                if(resp != 0){
+                    console.log(resp);
+                    $('#activity_planning_id').val(resp);
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+
+                        }
+                    });
+            }
+        });
+
+  //  }
+    return false;
+});
+
 

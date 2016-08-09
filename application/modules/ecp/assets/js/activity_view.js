@@ -1163,6 +1163,7 @@ function getActivityById(activity_planning_id)
         success: function (resp) {
             $("#activity_view_main").html(resp);
             $("select.selectpicker").selectpicker('refresh');
+            getRating();
         },
         complete:function(){
 
@@ -1178,22 +1179,19 @@ $(document).on('click', '#planning_close', function () {
     $("#follow_up").css('display','none');
 });
 
-$(function () {
 
-
+function getRating()
+{
+    var d = $('#act_rat').val();
     $("#activity_rate").rateYo({
+
+        rating: d,
+        readOnly: true,
         starWidth: "30px",
         normalFill: "#cccccc",
         ratedFill: "#65ac1e"
+
     });
 
-    var $rateYo = $("#activity_rate").rateYo();
-
-    $("#activity_rate").click(function () {
-        /* get rating */
-        var rating = $rateYo.rateYo("rating");
-        $("#rating").val(rating);
-    });
-});
-
+}
 

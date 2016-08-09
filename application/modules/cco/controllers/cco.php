@@ -92,6 +92,15 @@ class Cco extends Front_Controller
         die;
     }
 
+    public function get_level_farmer_count()
+    {
+        $geoid = $_POST["geo_id"];
+        $level = 3;
+        $farmer_data_count = $this->cco_model->get_farmer_count($geoid,$level);
+        echo $farmer_data_count;
+        die;
+
+    }
 
     public function activity()
     {

@@ -217,5 +217,35 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+
+    public function get_farmer_count($geoid,$level)
+    {
+        if($level == 3)
+        {
+            $where = " AND bmucd.geo_level_id3 = ".$geoid;
+        }
+        elseif($level == 2)
+        {
+            $where = " AND bmucd.geo_level_id2 = ".$geoid;
+        }
+        elseif($level == 1)
+        {
+            $where = " AND bmucd.geo_level_id1 = ".$geoid;
+        }
+
+        $sql = 'SELECT count(*) as row_count FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE bu.`role_id` = 11 AND bu.deleted= 0 '.$where;
+
+        $info = $this->db->query($sql);
+        // For Pagination
+        $farmer_data = $info->result_array();
+
+        if(!empty($farmer_data)) {
+            return $farmer_data[0]["row_count"];
+        }
+        else
+        {
+            return 0;
+        }
+    }
 	
 }

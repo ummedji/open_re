@@ -12,17 +12,14 @@
                                     <?php if ($key == 0) { ?>
                                         <div class="panel-heading" role="tab">
                                             <ul class="acc_list">
-                                                <li><a data-toggle="collapse" data-parent="#accordion"
-                                                       href="#collapse<?php echo $j; ?>" aria-expanded="true"
-                                                       aria-controls="collapse<?php echo $j; ?>"><?php echo date('d', strtotime($val['activity_planning_date'])) ?>
-                                                        <img
-                                                            src="<?php echo Template::theme_url('images/list_arrow.png') ?>"
+                                                <li><a data-toggle="collapse" data-parent="#accordion" href="#collapse<?php echo $j; ?>" aria-expanded="true" aria-controls="collapse<?php echo $j; ?>"><?php echo date('d', strtotime($val['activity_planning_date'])) ?>
+                                                        <img src="<?php echo Template::theme_url('images/list_arrow.png') ?>"
                                                             alt="" style="vertical-align: middle;"></a></li>
-                                                <li><a href="javascript: void(0);"
-                                                                                      onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name'] ?></a>
+                                                <li><a href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name'] ?></a>
                                                 </li>
-                                                <li><?php echo date('h:i A', strtotime($val['activity_planning_time'])) ?></li>
-                                                <li><?php echo $val['political_geography_name'] ?></li>
+                                                <li><a href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);">Execute</li>
+                                                <li><a href="javascript: void(0);" onclick="getActivityCancelById(<?php echo $val['activity_planning_id']; ?>);">Cancel</li>
+                                                <li><a href="javascript: void(0);" onclick="">Rescheduling</li>
                                             </ul>
                                         </div>
                                     <?php } else { ?>
@@ -31,8 +28,9 @@
                                             <li>&nbsp;</li>
                                             <li><a  href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name']; ?></a>
                                             </li>
-                                            <li><?php echo date('h:i A', strtotime($val['activity_planning_time'])); ?></li>
-                                            <li><?php echo $val['political_geography_name']; ?></li>
+                                            <li><a href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);">Execute</li>
+                                            <li><a href="javascript: void(0);" onclick="getActivityCancelById(<?php echo $val['activity_planning_id']; ?>);">Cancel</li>
+                                            <li><a href="javascript: void(0);" onclick="">Rescheduling</li>
                                         </ul>
                                         <?php if ($key == count($activity_val)) { ?></div><?php } ?>
                                     <?php } ?>
@@ -180,12 +178,9 @@
                                                         <ul class="acc_list">
                                                             <li><a data-toggle="collapse" data-parent="#accordion"
                                                                    href="#collapse<?php echo $j; ?>" aria-expanded="true"
-                                                                   aria-controls="collapse<?php echo $j; ?>"><?php echo date('d', (!empty($val['execution_date']) ? strtotime($val['execution_date']) : strtotime($val['activity_planning_date']))) ?>
-                                                                    <img
-                                                                        src="<?php echo Template::theme_url('images/list_arrow.png') ?>"
-                                                                        alt="" style="vertical-align: middle;"></a></li>
-                                                            <li style="<?php echo $style; ?>" ><a href="javascript: void(0);"
-                                                                                                  onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name'] ?></a>
+                                                                   aria-controls="collapse<?php echo $j; ?>"><?php echo date('d', (!empty($val['execution_date']) ? strtotime($val['execution_date']) : strtotime($val['activity_planning_date']))) ?><img src="<?php echo Template::theme_url('images/list_arrow.png') ?>" alt="" style="vertical-align: middle;"></a>
+                                                            </li>
+                                                            <li style="<?php echo $style; ?>" ><a href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name'] ?></a>
                                                             </li>
                                                             <li><?php echo date('h:i A', (!empty($val['execution_time']) ? strtotime($val['execution_time']) : strtotime($val['activity_planning_time']))) ?></li>
                                                             <li><?php echo $val['political_geography_name'] ?></li>

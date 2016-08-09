@@ -22,10 +22,23 @@ function get_geo_data(campagain_id,level_data)
             var html = "";
             $.each( obj, function( key, value ) {
                  html += "<tr>";
-                    $.each( value, function( key1, value1 ) {
+                    $.each( value, function( key1, value1 )
+                    {
                       //  alert(key1 + ": " + value1);
+                        var farmer_count = 0;
+                        var pending_data_count = 0;
 
-                         html += "<td><div class='row_data'><input rel='"+value1.political_geo_id+"' type='checkbox' name='level_3' class='level_3' value='"+value1.political_geography_name+"' />"+value1.political_geography_name+"</div></td><td></td><td></td>";
+                        $.ajax({
+                            type: 'POST',
+                            url: site_url + "cco/get_level_farmer_count",
+                            data: {geo_id: value1.political_geo_id},
+                            success: function (resp) {
+                                farmer_count = resp;
+                            },
+                            async:false
+                        });
+
+                         html += "<td><div class='row_data'><input rel='"+value1.political_geo_id+"' type='checkbox' name='level_3' class='level_3' value='"+value1.political_geography_name+"' />"+value1.political_geography_name+"&nbsp;&nbsp;&nbsp;"+pending_data_count+"/"+farmer_count+"</div></td><td></td><td></td>";
 
 
                     });

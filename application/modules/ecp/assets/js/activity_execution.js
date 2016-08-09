@@ -1221,3 +1221,4 @@ function getRating()
         $("#rating").val(rating);
     });
 }
+

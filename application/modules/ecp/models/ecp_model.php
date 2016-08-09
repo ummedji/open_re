@@ -260,7 +260,7 @@ class Ecp_model extends BF_Model
 
     public function get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id, $page, $local_date, $country_id, $web_service = null)
     {
-        $sql = 'SELECT emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,bu.user_code,emr.material_request_status,emr.recived_status,emr.disptched_date,emr.disptched_qty,emr.remark,emr.executor_remark,mdc.desigination_country_name ';
+        $sql = 'SELECT SQL_CALC_FOUND_ROWS emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,bu.user_code,emr.material_request_status,emr.recived_status,emr.disptched_date,emr.disptched_qty,emr.remark,emr.executor_remark,mdc.desigination_country_name ';
         $sql .= 'FROM bf_ecp_material_request AS emr ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = emr.employee_id) ';
         $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.role_id = bu.role_id) ';
@@ -2930,22 +2930,22 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
 
         $activity_planning = array(
-            'execution_date' => isset($execution_date) ? $execution_date : '',
-            'execution_time' => isset($execution_date_time) ? $execution_date_time : '',
-            'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
-            'geo_level_id_2' => isset($geo_level_2) ? $geo_level_2 : '',
-            'geo_level_id_3' => isset($geo_level_3) ? $geo_level_3 : '',
-            'geo_level_id_4' => isset($geo_level_4) ? $geo_level_4 : '',
-            'geo_level_id' => isset($geo_level) ? $geo_level : '',
-            'location' => isset($activity_address) ? $activity_address :''   ,
-            'proposed_attandence_count' => isset($attandence_count) ? $attandence_count : 0,
-            'point_discussion' => isset($pod) ? $pod : '',
-            'alert' => isset($set_alert) ? $set_alert : '',
-            'size_of_plot' => isset($size_of_plot) ? $size_of_plot : 0,
-            'spray_volume' => isset($spray_volume) ? $spray_volume : 0,
-            'amount' => isset($amount) ? $amount : 0,
-            'rating' => isset($rating) ? $rating : 0,
-            'activity_note' => isset($activity_note) ? $activity_note : '',
+            'execution_date' => (isset($execution_date) && !empty($execution_date)) ? $execution_date : '',
+            'execution_time' => (isset($execution_date_time) && !empty($execution_date_time)) ? $execution_date_time : '',
+            'activity_type_id' => (isset($activity_type_id) && !empty($activity_type_id)) ? $activity_type_id : '',
+            'geo_level_id_2' => (isset($geo_level_2) && !empty($geo_level_2)) ? $geo_level_2 : 0,
+            'geo_level_id_3' => (isset($geo_level_3) && !empty($geo_level_3)) ? $geo_level_3 : 0,
+            'geo_level_id_4' => (isset($geo_level_4) && !empty($geo_level_4))? $geo_level_4 : 0,
+            'geo_level_id' => (isset($geo_level) && !empty($geo_level))? $geo_level : 0,
+            'location' => (isset($activity_address) && !empty($activity_address)) ? $activity_address :''   ,
+            'proposed_attandence_count' => (isset($attandence_count) && !empty($attandence_count))? $attandence_count : 0,
+            'point_discussion' => (isset($pod) && !empty($pod))  ? $pod : '',
+            'alert' => (isset($set_alert) && !empty($set_alert)) ? $set_alert : '',
+            'size_of_plot' => (isset($size_of_plot) && !empty($size_of_plot)) ? $size_of_plot : 0,
+            'spray_volume' => (isset($spray_volume) && !empty($spray_volume)) ? $spray_volume : 0,
+            'amount' => (isset($amount) && !empty($amount)) ? $amount : 0,
+            'rating' => (isset($rating) && !empty($rating)) ? $rating : 0,
+            'activity_note' => (isset($activity_note) && !empty($activity_note)) ? $activity_note : '',
             'employee_id' => $user_id,
             'country_id' => $country_id,
             'status' => '4',
@@ -3105,7 +3105,18 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
             if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
                 $data = $this->do_upload();
-              //  testdata($data);
+
+                foreach($data as $K=> $upload_data)
+                {
+                    $upload_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'files_name' => isset($upload_data['name']) ?  $upload_data['name']  : '',
+                        'upload_type' => isset($upload_data['type']) ? $upload_data['type'] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_upload_details', $upload_details);
+                }
+
 
             }
             return $insert_id;
@@ -3134,41 +3145,35 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
            $this->upload->initialize($this->set_upload_options());
 
+            $file_name = array();
+
             if($uploads_data = $this->upload->do_upload('upload_file_data'))
             {
-                dumpme($uploads_data);
-                $file_name 	=   $uploads_data['file_name'];
+                $upload_data 	= $this->upload->data();
+                $file_name['name'] 	=   $upload_data['file_name'];
+
+                $img = array('image/gif','image/jpg','image/png','image/jpeg');
+                $video = array('video/mp4','video/avi');
+
+                if(in_array($upload_data['file_type'],$img))
+                {
+                    $file_name['type'] 	= 'image';
+                }
+                elseif(in_array($upload_data['file_type'],$video))
+                {
+                    $file_name['type'] 	= 'video';
+                }
+
             }
             else{
-                $file_name = array('error' => $this->upload->display_errors());
+                $file_name = 1;
             }
 
-            testdata($file_name);
-
-
-          //  $upload_data 	= $this->upload->data();
-        //    testdata($upload_data);
-        //    $file_name 	=   $upload_data['file_name'];
-         //   $file_type 	=   $upload_data['file_type'];
-         //   $file_size 	=   $upload_data['file_size'];
-
-            // Output control
-         //   $data['getfiledata_file_name'] = $file_name;
-       //     $data['getfiledata_file_type'] = $file_type;
-       //     $data['getfiledata_file_size'] = $file_size;
-
-            // Insert Data for current file
-          //  testdata($data);
-           // return $data;
-          /*  $this->insertNotices($form_input_Data);
-
-            //Create a view containing just the text "Uploaded successfully"
-            $this->load->view('upload_success', $data);*/
+            $final_array[] = $file_name;
 
         }
 
-        return$final_array[] = $file_name;
-
+        return $final_array;
 
     }
     public function set_upload_options(){

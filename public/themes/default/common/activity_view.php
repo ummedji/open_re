@@ -12,7 +12,7 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                             <div class="form-group">
                                 <label>Planning Date<span style="color: red">*</span></label>
                                 <input type="text" class="form-control" name="planning_date" id="planning_date" value="<?php echo
-                                (!empty($activity_view['activity_planning_date']) ? $activity_view['activity_planning_date'] : ''); ?>" placeholder="">
+                                (!empty($activity_view['activity_planning_date']) ? $activity_view['activity_planning_date'] : ''); ?>" placeholder="" readonly />
                             </div>
                             <?php
                             if(isset($activity_view['activity_planning_time']) && !empty($activity_view['activity_planning_time'])){
@@ -25,7 +25,7 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                                 <div class="inln_fld">
                                     <div class="bootstrap-timepicker bootstrap-timepicker-as">
                                         <input id="planning_time" name="planning_time" type="text" value="<?php echo
-                                        (!empty($plan_time) ? $plan_time : ''); ?>" class="input-group-time form-control input-append">
+                                        (!empty($plan_time) ? $plan_time : ''); ?>" class="input-group-time form-control input-append" readonly />
                                     </div>
                                 </div>
                             </div>
@@ -40,7 +40,7 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                             <div class="form-group">
                                 <label>Execution Date<span style="color: red">*</span></label>
                                 <input type="text" class="form-control" name="planning_date" id="planning_date" value="<?php echo
-                                (!empty($activity_view['execution_date']) ? $activity_view['execution_date'] : ''); ?>" placeholder="">
+                                (!empty($activity_view['execution_date']) ? $activity_view['execution_date'] : ''); ?>" placeholder="" readonly />
                             </div>
                             <?php
                             if(isset($activity_view['execution_time']) && !empty($activity_view['execution_time'])){
@@ -52,14 +52,13 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                                 <label>Execution Time<span style="color: red">*</span></label>
                                 <div class="inln_fld">
                                     <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                        <input id="planning_time" name="planning_time" type="text" value="<?php echo
-                                        (!empty($plan_time) ? $plan_time : ''); ?>" class="input-group-time form-control input-append">
+                                        <input id="planning_time" name="planning_time" type="text" value="<?php echo(!empty($plan_time) ? $plan_time : ''); ?>" class="input-group-time form-control input-append" readonly />
                                     </div>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <label>Duration of Meeting<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="meeting_duration"  value="<?php echo (!empty($activity_view['meeting_duration']) ? $activity_view['meeting_duration'] : '');?>" id="meeting_duration" placeholder="">
+                                <input type="text" class="form-control" name="meeting_duration"  value="<?php echo (!empty($activity_view['meeting_duration']) ? $activity_view['meeting_duration'] : '');?>" id="meeting_duration" placeholder="" readonly />
                             </div>
                         </div>
                         <div class="clearfix"></div>
@@ -784,14 +783,14 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                                             <div class="col-md-6">
                                                 <div class="form-group frm_details text-center" style="margin-bottom: 0px;">
                                                     <label>Amount</label>
-                                                    <input type="text" class="form-control" name="amount" id="amount" value="<?php echo (!empty($activity_view['amount']) ? $activity_view['amount'] : '0')?>" placeholder="">
+                                                    <input type="text" class="form-control" name="amount" id="amount" value="<?php echo (!empty($activity_view['amount']) ? $activity_view['amount'] : '0')?>" placeholder="" readonly />
                                                 </div>
                                             </div>
                                             <div class="col-md-6 corp_text mrg_top_30">
                                                 <div class="form-group frm_details text-center">
                                                     <label>Rate Activity</label>
                                                     <div id="activity_rate"></div>
-                                                    <input type="hidden" class="form-control" name="rating" id="rating" value="<?php echo (!empty($activity_view['rating']) ? $activity_view['rating'] : '0')?>" placeholder="">
+                                                    <input type="hidden" id="act_rat" class="form-control" name="rating" id="rating" value="<?php echo (!empty($activity_view['rating']) ? $activity_view['rating'] : '0')?>" placeholder="" />
                                                 </div>
                                             </div>
                                         </div>
@@ -833,14 +832,18 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                 <input class="status" type="hidden" name="status" id="status" value="<?php echo $activity_view['status'];?>" />
                 <input class="submit_status" type="hidden" name="submit_status" id="submit_status" value="<?php echo $activity_view['submit_status'];?>" />
 
+                <?php  if($activity_view['status'] == '0' || $activity_view['status'] == '1'){  ?>
 
-                <div class="col-md-12 table_bottom pln_table_bottom">
-                    <div class="row">
-                        <div class="save_btn">
-                            <button type="button" class="btn btn-primary" id="check_save">Save</button>
+                    <div class="col-md-12 table_bottom pln_table_bottom">
+                        <div class="row">
+                            <div class="save_btn">
+                                <button type="button" class="btn btn-primary" id="delete_activity">Cancel Activity</button>
+                            </div>
                         </div>
                     </div>
-                </div>
+
+                <?php } ?>
+
                 <div class="clearfix"></div>
             </div>
             <?php }?>
