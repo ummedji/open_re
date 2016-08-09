@@ -31,7 +31,7 @@ function get_geo_data(campagain_id,level_data)
                         $.ajax({
                             type: 'POST',
                             url: site_url + "cco/get_level_farmer_count",
-                            data: {geo_id: value1.political_geo_id},
+                            data: {geo_id: value1.political_geo_id,leveldata:level_data},
                             success: function (resp) {
                                 farmer_count = resp;
                             },
@@ -98,7 +98,20 @@ function get_row_geo_data(parent_html,parent_geo_id,level_data)
 
             $.each( obj, function( key, value ) {
 
-                html += "<div class='row_data parent_id_"+parent_geo_id+"'><input rel='"+value.political_geo_id+"' type='checkbox' name='level_"+level_data+"' class='level_"+level_data+"' value='"+value.political_geography_name+"' />"+value.political_geography_name+"</div>";
+                var farmer_count = 0;
+                var pending_data_count = 0;
+
+                $.ajax({
+                    type: 'POST',
+                    url: site_url + "cco/get_level_farmer_count",
+                    data: {geo_id: value.political_geo_id,leveldata:level_data},
+                    success: function (resp) {
+                        farmer_count = resp;
+                    },
+                    async:false
+                });
+
+                html += "<div class='row_data parent_id_"+parent_geo_id+"'><input rel='"+value.political_geo_id+"' type='checkbox' name='level_"+level_data+"' class='level_"+level_data+"' value='"+value.political_geography_name+"' />"+value.political_geography_name+"&nbsp;&nbsp;&nbsp;"+pending_data_count+"/"+farmer_count+"</div>";
 
             });
             parent_html.parent().parent().parent().find("td:nth-child("+level_data+")").append(html);

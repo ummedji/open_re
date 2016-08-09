@@ -517,8 +517,9 @@ class Ishop_model extends BF_Model
         if(!empty($amount)){
             $total_amt = array_sum($amount);
         }
-
+        $update_array= array();
         if (isset($primary_sales_product_id) && !empty($primary_sales_product_id)) {
+
             foreach ($primary_sales_product_id as $k => $pspi) {
                 $primary_sales_product_update = array(
                     'quantity' => (isset($quantity[$k]) && !empty($quantity[$k])) ? $quantity[$k] : 0,
@@ -528,6 +529,10 @@ class Ishop_model extends BF_Model
 
                 $this->db->where('primary_sales_product_id', $primary_sales_product_id[$k]);
                 $this->db->update('ishop_primary_sales_product', $primary_sales_product_update);
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+
+                }
             }
             $primary_sales = $this->get_sales_id_by_sales_product_id($primary_sales_product_id);
 
@@ -539,6 +544,10 @@ class Ishop_model extends BF_Model
 
             $this->db->where('primary_sales_id', $primary_sales[0]['primary_sales_id']);
             $this->db->update('ishop_primary_sales', $primary_sales_update_by_product);
+            if ($this->db->affected_rows() > 0) {
+                $update_array[]=1;
+
+            }
 
         }
 
@@ -554,9 +563,14 @@ class Ishop_model extends BF_Model
 
                 $this->db->where('primary_sales_id', $primary_sales_id[$key]);
                 $this->db->update('ishop_primary_sales', $primary_sales_update);
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+
+                }
             }
         }
-        if($this->db->affected_rows() > 0){
+        if(in_array(1,$update_array))
+        {
             return 1;
         }
         else{
