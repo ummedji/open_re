@@ -61,11 +61,11 @@ class Cco extends Front_Controller
         $campagain_data = $this->cco_model->campagain_data();
        // testdata($get_level_data);
 
-        $campagain_id = 1;
-        $get_level_data = $this->cco_model->level_data($campagain_id);
+      //  $campagain_id = 1;
+      //  $get_level_data = $this->cco_model->level_data($campagain_id);
 
         Template::set('campagaine_data',$campagain_data);
-        Template::set('highest_geo_level_data',$get_level_data);
+      //  Template::set('highest_geo_level_data',$get_level_data);
         Template::render();
     }
 

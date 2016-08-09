@@ -49,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-10 col-md-offset-1">
+                <div class="col-md-8 col-md-offset-2">
                     <div class="row">
                         <div class="col-md-5 col-sm-6 tp_form">
                             <div class="form-group">
@@ -77,8 +77,8 @@
                                value="<?php echo $this->uri->segment(3); ?>"/>
 
                         <div class="col-md-2 save_btn">
-                            <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary gren_btn" style="margin-top: 3px;">Execute
+                            <label style="display: block;">&nbsp;</label>
+                            <button style="display: inline-block; width: auto;" type="submit" class="btn btn-primary gren_btn" style="margin-top: 3px;">Execute
                             </button>
                         </div>
                     </div>

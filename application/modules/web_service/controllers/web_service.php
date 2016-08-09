@@ -4083,9 +4083,16 @@ class Web_service extends Front_Controller
             } elseif ($radio == 'product') {
                 $update = $this->ecp_model->update_compititor_product_details('web_service');
             }
+            testdata($update);
             if ($update == 1) {
+
                 $result['status'] = true;
                 $result['message'] = 'Updated Successfully.';
+                $result['data'] = array();
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'Data Not Updated.';
                 $result['data'] = array();
             }
 

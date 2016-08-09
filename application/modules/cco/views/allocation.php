@@ -69,19 +69,6 @@
                 </thead>
                 <tbody id="geo_location_data">
 
-                <?php
-                if(!empty($highest_geo_level_data))
-                {
-                    foreach ($highest_geo_level_data as $key => $level_data)
-                    {
-                ?>
-                      <tr><td><input rel="<?php echo $level_data["political_geo_id"]; ?>" type="checkbox" name="level_3" class="level_3" value="<?php echo $level_data["political_geography_name"]; ?>"/><?php echo $level_data["political_geography_name"]; ?><input type="hidden" name="geo_name" value="<?php echo $level_data["political_geo_id"]; ?>" /></td><td></td><td></td></tr>
-                <?php
-                    }
-                }
-
-                ?>
-
                 </tbody>
             </table>
             <div class="clearfix"></div>

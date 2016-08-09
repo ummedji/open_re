@@ -1307,7 +1307,8 @@ a.set_pono, .eye_i a {
     line-height: 22px;
 }
 .radio_space {
-    margin-bottom: 20px;
+    /*margin-bottom: 20px;*/
+    margin-bottom: 5px;
 }
 .radio_space .radio {
     padding-left: 20px;

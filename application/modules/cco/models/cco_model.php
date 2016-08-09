@@ -13,15 +13,20 @@ class Cco_model extends BF_Model
 
     public function level_data($campagain_id,$leveldata)
     {
-        $campagain_data = $this->get_campagain_data($campagain_id);
+        $campagain_data = $this->get_campagain_loc_data($campagain_id);
 
-        $final_data = "";
+        $final_array = array();
 
         if(!empty($campagain_data) && $campagain_data != 0)
         {
-            $campaign_location_id = $campagain_data[0]["campaign_location_id"];
-            $global_head_user = array();
-            $final_data = $this->recursive_location_data($campaign_location_id,$global_head_user,$flag = 1,$leveldata);
+
+
+            foreach($campagain_data as $key => $camp_data) {
+
+                $campaign_location_id = $campagain_data[0]["campaign_location_id"];
+                $global_head_user = array();
+                $final_data = $this->recursive_location_data($campaign_location_id, $global_head_user, $flag = 1, $leveldata);
+            }
         }
 /*
         $final_array = array();
@@ -154,10 +159,10 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function get_campagain_data($campagain_id)
+    public function get_campagain_loc_data($campagain_id)
     {
         $this->db->select("*");
-        $this->db->from("bf_cco_campaign");
+        $this->db->from("bf_cco_campaign_location");
         $this->db->where("campaign_id",$campagain_id);
 
         $campagain_data = $this->db->get()->result_array();

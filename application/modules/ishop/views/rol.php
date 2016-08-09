@@ -26,7 +26,7 @@
 
 
                     <!--------------------------------------Distributor------------------------------------------>
-                    <div class="col-md-12 distributore_form od_approval">
+                    <div class="col-md-8 col-md-offset-2 distributore_form od_approval">
                         <div class="row">
                             <div class="retailer_check_rol" id="retailer_check_rol" >
                                 <div class="col-md-4 col-sm-6 tp_form">

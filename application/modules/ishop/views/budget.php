@@ -52,7 +52,7 @@ echo form_open('',$attributes);
                 <?php
                 if($login_customer_type == 7 || $login_customer_type == 8){
                     ?>
-                    <div class="col-md-10 col-md-offset-1 distributore_form distributor_data">
+                    <div class="col-md-8 col-md-offset-2 distributore_form distributor_data">
                         <div class="row">
                             <div class="col-md-4 col-sm-4 tp_form">
                                 <div class="form-group">
