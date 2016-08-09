@@ -4086,7 +4086,7 @@ class Web_service extends Front_Controller
             if ($update == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Updated Successfully.';
-                $result['data'] = '';
+                $result['data'] = array();
             }
 
         } else {
