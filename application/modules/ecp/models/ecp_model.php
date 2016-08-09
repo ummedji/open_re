@@ -389,6 +389,8 @@ class Ecp_model extends BF_Model
         }
         $disptched_date = date('Y-m-d');
 
+        $update_array= array();
+
         foreach ($mr_id as $K => $m_id) {
             $disptched_qty = isset($disptched_quantity[$K]) ? $disptched_quantity[$K] : '0';
             $executor_remark = isset($executor_remarks[$K]) ? $executor_remarks[$K] : '';
@@ -403,12 +405,19 @@ class Ecp_model extends BF_Model
 
             $this->db->where('material_request_id', $m_id);
             $this->db->update('ecp_material_request', $update_material_details);
+            if ($this->db->affected_rows() > 0) {
+                $update_array[]=1;
+
+            }
         }
-        if ($this->db->affected_rows() > 0) {
+        if(in_array(1,$update_array))
+        {
             return 1;
-        } else {
+        }
+        else{
             return 0;
         }
+
     }
 
     public function delete_material_detail($mr_id)
@@ -3094,78 +3103,141 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
             }
 
-           /* if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
+            if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
+                $data = $this->do_upload();
+              //  testdata($data);
 
-                $error_array=array();
-                $files = $_FILES;
-                // $data['user_id']=$this->session->userdata('user_id');
-                //testdata($data);
-                $cpt = count($_FILES['upload_file_data']['name']);
-
-
-                $data_array = array();
-                for($i=0; $i<$cpt; $i++)
-                {
-                    //testdata( $_FILES['op_image']['name']);
-                    $_FILES['upload_file_data']['name']= $files['upload_file_data']['name'][$i];
-                    $_FILES['upload_file_data']['type']= $files['upload_file_data']['type'][$i];
-                    $_FILES['upload_file_data']['tmp_name']= $files['upload_file_data']['tmp_name'][$i];
-                    $_FILES['upload_file_data']['error']= $files['upload_file_data']['error'][$i];
-                    $_FILES['upload_file_data']['size']= $files['upload_file_data']['size'][$i];
-
-
-                    $config['upload_path'] = FCPATH . 'assets/uploads/activity_gallery/';//file upload path
-                    $config['allowed_types'] = 'gif|jpg|png|jpeg';//file type allowed
-                    $config['file_name'] =  $_FILES['upload_file_data']['name'];
-                    //not overwrite image for below code
-                    $config['overwrite'] = FALSE;
-                    $config['max_size'] = '1024';//max file size for upload
-
-                    $this->load->library('upload', $config);
-                    $this->upload->initialize($config);
-
-                    //$this->upload->initialize($this->set_upload_options());
-                    if($this->upload->do_upload('upload_file_data[]'))
-                    {
-                        $data_array[]= $_FILES['upload_file_data']['name'];
-                        // testdata($data);
-                      //  $this->db->insert('order_prescription',$data);
-                    }
-                    else{
-                        $data_array[]= 1;
-                    }
-                }
-
-                /*
-                if(in_array(1,$error_array))
-                {
-                    return false;
-                }
-                else{
-
-                    foreach($error_array as $K=> $file_uploads)
-                    {
-                        $file_uploads_details = array(
-                            'activity_planning_id' => $insert_id,
-                            'files_name' => isset($val_customer_name) ? $val_customer_name : '',
-                            'upload_type' => isset($customer_no[$K]) ? $customer_no[$K] : '',
-                        );
-
-                        $this->db->insert('ecp_activity_planning_upload_details', $file_uploads_details);
-                    }
-                }
-
-                */
-
-
-           /* }*/
-
+            }
             return $insert_id;
         }
         else{
             return 0;
         }
     }
+
+    function do_upload(){
+
+        $this->load->library('upload');
+
+        $files = $_FILES;
+        $final_array= array();
+
+        $cpt = count($_FILES['upload_file_data']['name']);
+        for($i=0; $i<$cpt; $i++)
+        {
+
+            $_FILES['upload_file_data']['name']		= $files['upload_file_data']['name'][$i];
+            $_FILES['upload_file_data']['type']		= $files['upload_file_data']['type'][$i];
+            $_FILES['upload_file_data']['tmp_name']	= $files['upload_file_data']['tmp_name'][$i];
+            $_FILES['upload_file_data']['error']	= $files['upload_file_data']['error'][$i];
+            $_FILES['upload_file_data']['size']		= $files['upload_file_data']['size'][$i];
+
+           $this->upload->initialize($this->set_upload_options());
+
+            if($uploads_data = $this->upload->do_upload('upload_file_data'))
+            {
+                dumpme($uploads_data);
+                $file_name 	=   $uploads_data['file_name'];
+            }
+            else{
+                $file_name = array('error' => $this->upload->display_errors());
+            }
+
+            testdata($file_name);
+
+
+          //  $upload_data 	= $this->upload->data();
+        //    testdata($upload_data);
+        //    $file_name 	=   $upload_data['file_name'];
+         //   $file_type 	=   $upload_data['file_type'];
+         //   $file_size 	=   $upload_data['file_size'];
+
+            // Output control
+         //   $data['getfiledata_file_name'] = $file_name;
+       //     $data['getfiledata_file_type'] = $file_type;
+       //     $data['getfiledata_file_size'] = $file_size;
+
+            // Insert Data for current file
+          //  testdata($data);
+           // return $data;
+          /*  $this->insertNotices($form_input_Data);
+
+            //Create a view containing just the text "Uploaded successfully"
+            $this->load->view('upload_success', $data);*/
+
+        }
+
+        return$final_array[] = $file_name;
+
+
+    }
+    public function set_upload_options(){
+        //  upload an image options
+        $config = array();
+        $config['upload_path'] = FCPATH . 'assets/uploads/activity_gallery/';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg';
+        $config['max_size']      = '5000000000000';
+        $config['overwrite']     = FALSE;
+
+
+        return $config;
+    }
+
+   /* public function upload_file()
+    {
+        $data=$_POST;
+        $files_ary=$_FILES;
+
+        $path=FCPATH.'assets/uploads';
+        $pathurl = site_url('assets/uploads');
+        $this->dir_path = array();
+
+        $rev_dir=array_reverse($this->dir_path);
+        foreach($rev_dir as $val)
+        {
+            $path.='/'.$val;
+            $pathurl.='/'.$val;
+        }
+        //End Path of file upload in folder
+
+        if($files_ary['files']['name'])
+        {
+            $config['upload_path'] =$path;
+            $config['allowed_types'] = 'gif|jpg|png|jpeg|txt|xlsx|pdf|doc|docx|ppt|pptx';
+            $config['max_size']	= '50000000000';
+            $this->load->library('upload');
+            $this->upload->initialize($config);
+            $files_stat = array();
+
+            if (!$this->upload->do_multi_upload('files'))
+            {
+                // $this->form_validation->set_message('image', $this->upload->display_errors());
+                $error =  $this->upload->display_errors();
+                //echo $config['upload_path'];
+                echo $error;
+            }
+            else
+            {
+                $imagedata = $this->upload->data();
+                $img_stat = array(  "name"=>$imagedata['file_name'],
+                    "size"=>$imagedata['file_size'],
+                    "type"=>$imagedata['file_type'],
+                    "url"=>$pathurl."/".$imagedata['file_name'],
+                    "thumbnailUrl"=>$pathurl."/".$imagedata['file_name'],
+                    "deleteType"=>'DELETE',
+                    "deleteUrl"=>$pathurl."/".$imagedata['file_name']
+                );
+                array_push($files_stat,$img_stat);
+                //testdata($files_stat);
+            }
+            $data['file_name']=@$imagedata['file_name'];
+            $data['file_type']=@$imagedata['file_ext'];
+        }
+        $data['status']=1;
+        $this->file_upload_model->insert($data);
+        echo json_encode(array("files"=>$files_stat));
+        exit;
+    }*/
 
     public function addActivityExecution($user_id,$country_id,$local_date = null,$web_service = null){
 

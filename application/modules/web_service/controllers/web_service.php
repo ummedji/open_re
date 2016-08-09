@@ -4083,7 +4083,7 @@ class Web_service extends Front_Controller
             } elseif ($radio == 'product') {
                 $update = $this->ecp_model->update_compititor_product_details('web_service');
             }
-           
+
             if ($update == 1) {
 
                 $result['status'] = true;
@@ -4313,8 +4313,9 @@ class Web_service extends Front_Controller
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Success.';
-                $result['data'] = '';
+                $result['data'] = array();
             }
+
 
         } else {
             $result['status'] = false;
@@ -5893,7 +5894,7 @@ class Web_service extends Front_Controller
         array_walk_recursive($result, function (&$item, $key) {
             $item = null === $item ? '' : $item;
         });
-        echo json_encode($result);
+        echo trim(json_encode($result));
         exit;
     }
 }

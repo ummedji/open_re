@@ -82,6 +82,17 @@ class Cco extends Front_Controller
 
     }
 
+    public function get_next_level_data()
+    {
+        $parentgeoid = $_POST["parentgeoid"];
+
+        $get_level_data = $this->cco_model->get_child_data($parentgeoid);
+
+        echo json_encode($get_level_data);
+        die;
+    }
+
+
     public function activity()
     {
         Template::render();
