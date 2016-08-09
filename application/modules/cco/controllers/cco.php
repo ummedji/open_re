@@ -69,6 +69,19 @@ class Cco extends Front_Controller
         Template::render();
     }
 
+    public function get_level_data()
+    {
+        $campagainid = $_POST["campagainid"];
+        $leveldata = $_POST["leveldata"];
+       // $leveldata = 1;
+        $get_level_data = $this->cco_model->level_data($campagainid,$leveldata);
+
+        echo json_encode($get_level_data);
+        die;
+       // testdata($get_level_data);
+
+    }
+
     public function activity()
     {
         Template::render();

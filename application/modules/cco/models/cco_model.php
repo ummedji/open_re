@@ -11,7 +11,7 @@ class Cco_model extends BF_Model
         $this->load->library("CH_Grid_generator", $config, "grid");
     }
 
-    public function level_data($campagain_id)
+    public function level_data($campagain_id,$leveldata)
     {
         $campagain_data = $this->get_campagain_data($campagain_id);
 
@@ -21,7 +21,7 @@ class Cco_model extends BF_Model
         {
             $campaign_location_id = $campagain_data[0]["campaign_location_id"];
             $global_head_user = array();
-            $final_data = $this->recursive_location_data($campaign_location_id,$global_head_user,$flag = 1);
+            $final_data = $this->recursive_location_data($campaign_location_id,$global_head_user,$flag = 1,$leveldata);
         }
 /*
         $final_array = array();
@@ -88,6 +88,8 @@ class Cco_model extends BF_Model
         }
         */
 
+       // echo json_encode($final_data);
+      //  die;
        return $final_data;
 
        // testdata($global_head_user);
@@ -115,7 +117,7 @@ class Cco_model extends BF_Model
      * @param $campaign_location_id
      * @param $global_head_user
      */
-    public function recursive_location_data($campaign_location_id,&$global_head_user,$flag)
+    public function recursive_location_data($campaign_location_id,&$global_head_user,$flag,$leveldata)
     {
         //GET LOCATION PARENT AND LEVEL DATA
 
@@ -130,13 +132,13 @@ class Cco_model extends BF_Model
 
             $all_location_level_data = $this->get_all_location_data($geo_level_data,$parent_level_data);
 
-            if($flag <= 3)
+            if($flag <= $leveldata)
             {
                 if (!empty($all_location_level_data) && $all_location_level_data != 0)
                 {
                     $global_head_user = $all_location_level_data;
                     $flag = $flag + 1;
-                    return $this->recursive_location_data($parent_level_data, $global_head_user, $flag);
+                    return $this->recursive_location_data($parent_level_data, $global_head_user, $flag,$leveldata);
                     //testdata($d);
                 } else {
                     return $global_head_user;

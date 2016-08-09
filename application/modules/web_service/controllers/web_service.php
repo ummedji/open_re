@@ -4071,7 +4071,9 @@ class Web_service extends Front_Controller
         $quantity = $this->input->get_post('quantity');
         $radio = $this->input->get_post('radio_checked');
 
-        if ((isset($id) && !empty($id)) && ((isset($amount) && !empty($amount)) || (isset($quantity) && !empty($quantity))) && (isset($radio) && !empty($radio))) {
+
+        if ((isset($id) && !empty($id)) && ((isset($amount) && !empty($amount)) || (isset($quantity) && !empty($quantity))) && (isset($radio) && !empty($radio)) ) {
+
             $update = '';
             if ($radio == 'total') {
                 $update = $this->ecp_model->update_compititor_details('web_service');

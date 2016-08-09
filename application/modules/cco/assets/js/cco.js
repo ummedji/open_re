@@ -20,7 +20,20 @@ function get_geo_data(campagain_id,level_data)
         url: site_url+"cco/get_level_data",
         data: {campagainid:campagain_id,leveldata:level_data},
         success: function(resp){
-            
+            var obj = $.parseJSON(resp);
+            var html = "";
+            $.each( obj, function( key, value ) {
+                var html += "<tr>";
+                    $.each( value, function( key1, value1 ) {
+                        alert(key1 + ": " + value1);
+
+                        
+
+                    });
+                var html += "</tr>";
+            });
+
+
         }
 
     });
