@@ -3343,10 +3343,13 @@ class Web_service extends Front_Controller
 
         if (isset($user_id)) {
             $update_sales_details = $this->ishop_model->update_secondary_sales_detail($user_id, $country_id, 'web_service');
-            if (!empty($update_sales_details)) {
+            if (!empty($update_sales_details))
+            {
                 $result['status'] = true;
                 $result['message'] = 'Updated Successfully.';
-            } else {
+            }
+            else
+            {
                 $result['status'] = false;
                 $result['message'] = 'No Records Found.';
             }

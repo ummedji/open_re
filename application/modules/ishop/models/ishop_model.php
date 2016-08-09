@@ -1662,7 +1662,8 @@ class Ishop_model extends BF_Model
     public function update_secondary_sales_detail($user_id, $country_id, $web_service = null)
     {
 
-        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
+        if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service")
+        {
             $secondary_sales_id = explode(',', $this->input->post("secondary_sales_detail"));
            // $invoice_no = explode(',', $this->input->post("invoice_no"));
             $PO_no = explode(',', $this->input->post("PO_no"));
@@ -1672,7 +1673,9 @@ class Ishop_model extends BF_Model
             $units = explode(',', $this->input->post("units"));
             $qty_kgl = explode(',', $this->input->post("qty_kgl"));
             $amount = explode(',', $this->input->post("amount"));
-        } else {
+        }
+        else
+        {
             $secondary_sales_id = $this->input->post("secondary_sales_detail");
            // $invoice_no = $this->input->post("invoice_no");
             $PO_no = $this->input->post("PO_no");
@@ -1684,8 +1687,12 @@ class Ishop_model extends BF_Model
             $amount = $this->input->post("amount");
         }
 
-        if (isset($secondary_sales_product_id) && !empty($secondary_sales_product_id)) {
-            foreach ($secondary_sales_product_id as $k => $pspi) {
+        $update_array = array();
+
+        if (isset($secondary_sales_product_id) && !empty($secondary_sales_product_id))
+        {
+            foreach ($secondary_sales_product_id as $k => $pspi)
+            {
                 $secondary_sales_product_update = array(
                     'quantity' => isset($quantity[$k]) && !empty($quantity[$k]) ? $quantity[$k] : '0',
                     'unit' => isset($units[$k]) && !empty($units[$k]) ? $units[$k]: '',
@@ -1695,9 +1702,16 @@ class Ishop_model extends BF_Model
 
                 $this->db->where('secondary_sales_product_id', $secondary_sales_product_id[$k]);
                 $this->db->update('ishop_secondary_sales_product', $secondary_sales_product_update);
+
+                if($this->db->affected_rows() > 0)
+                {
+                    $update_array[] = 1;
+                }
+
             }
             $secondary_sales = $this->get_sales_id_by_secondary_sales_product_id($secondary_sales_product_id);
-            if(!empty($amount)){
+            if(!empty($amount))
+            {
                 $total_amt = array_sum($amount);
             }
           //  $total_amt = array_sum($amount);
@@ -1710,11 +1724,18 @@ class Ishop_model extends BF_Model
             $this->db->where('secondary_sales_id', $secondary_sales[0]['secondary_sales_id']);
             $this->db->update('ishop_secondary_sales', $secondary_sales_update_by_product);
 
+            if($this->db->affected_rows() > 0)
+            {
+                $update_array[] = 1;
+            }
+
         }
 
-        if (isset($secondary_sales_id) && !empty($secondary_sales_id)) {
+        if (isset($secondary_sales_id) && !empty($secondary_sales_id))
+        {
             //testdata($secondary_sales_id);
-            foreach ($secondary_sales_id as $key => $psi) {
+            foreach ($secondary_sales_id as $key => $psi)
+            {
                 $PO_n = isset($PO_no[$key]) ? $PO_no[$key] : '';
               //  $invoice_n = isset($invoice_no[$key]) ? $invoice_no[$key] : '';
                 $order_tracking_n = isset($order_tracking_no[$key]) ? $order_tracking_no[$key] : '';
@@ -1729,12 +1750,21 @@ class Ishop_model extends BF_Model
 
                 $this->db->where('secondary_sales_id', $secondary_sales_id[$key]);
                 $this->db->update('ishop_secondary_sales', $secondary__sales_update);
+
+                if($this->db->affected_rows() > 0)
+                {
+                    $update_array[] = 1;
+                }
+
             }
         }
-        if($this->db->affected_rows() > 0){
+
+        if(in_array(1,$update_array))
+        {
             return 1;
         }
-        else{
+        else
+        {
             return 0;
         }
     }

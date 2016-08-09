@@ -27,7 +27,7 @@ function get_geo_data(campagain_id,level_data)
                     $.each( value, function( key1, value1 ) {
                         alert(key1 + ": " + value1);
 
-                        
+
 
                     });
                 var html += "</tr>";
