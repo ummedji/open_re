@@ -24,13 +24,13 @@ function get_geo_data(campagain_id,level_data)
             var html = "";
             $.each( obj, function( key, value ) {
                  html += "<tr>";
-                   // $.each( value, function( key1, value1 ) {
+                    $.each( value, function( key1, value1 ) {
                       //  alert(key1 + ": " + value1);
 
-                         html += "<td><input rel='"+value.political_geo_id+"' type='checkbox' name='level_3' class='level_3' value='"+value.political_geography_name+"' />"+value.political_geography_name+"</td><td></td><td></td>";
+                         html += "<td><input rel='"+value1.political_geo_id+"' type='checkbox' name='level_3' class='level_3' value='"+value1.political_geography_name+"' />"+value1.political_geography_name+"</td><td></td><td></td>";
 
 
-                 //   });
+                    });
                  html += "</tr>";
             });
             $("tbody#geo_location_data").html(html);

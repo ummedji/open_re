@@ -16,16 +16,12 @@ class Cco_model extends BF_Model
         $campagain_data = $this->get_campagain_loc_data($campagain_id);
 
         $final_array = array();
-
+        $global_head_user = array();
         if(!empty($campagain_data) && $campagain_data != 0)
         {
-
-
             foreach($campagain_data as $key => $camp_data) {
-
-                $campaign_location_id = $campagain_data[0]["campaign_location_id"];
-                $global_head_user = array();
-                $final_data = $this->recursive_location_data($campaign_location_id, $global_head_user, $flag = 1, $leveldata);
+                $campaign_location_id = $camp_data["campaign_location_id"];
+                $final_array[] = $this->recursive_location_data($campaign_location_id, $global_head_user, $flag = 1, $leveldata);
             }
         }
 /*
@@ -93,9 +89,10 @@ class Cco_model extends BF_Model
         }
         */
 
+       // testdata($final_array);
        // echo json_encode($final_data);
       //  die;
-       return $final_data;
+       return $final_array;
 
        // testdata($global_head_user);
 

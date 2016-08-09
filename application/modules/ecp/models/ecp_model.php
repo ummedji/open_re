@@ -1021,17 +1021,24 @@ class Ecp_model extends BF_Model
             $id = $this->input->post("id");
             $amount = $this->input->post("amount");
         }
+
+        $update_array= array();
         foreach ($id as $k => $val_id) {
             $retailer_compititor_update = array(
                 'amount' => (isset($amount[$k]) && !empty($amount[$k])) ? $amount[$k] : '0',
             );
+           // testdata($retailer_compititor_update);
             $this->db->where('compititor_total_details_id', $val_id);
             $this->db->update('ecp_compititor_total_details', $retailer_compititor_update);
+            if ($this->db->affected_rows() > 0) {
+                $update_array[]=1;
+            }
         }
-
-        if ($this->db->affected_rows() > 0) {
+        if(in_array(1,$update_array))
+        {
             return 1;
-        } else {
+        }
+        else{
             return 0;
         }
     }
@@ -1048,7 +1055,7 @@ class Ecp_model extends BF_Model
             $id = $this->input->post("id");
             $quantity = $this->input->post("quantity");
         }
-
+        $update_array= array();
         foreach ($id as $k => $val_id) {
             $retailer_compititor_product_update = array(
                 'quantity' => (isset($quantity[$k]) && !empty($quantity[$k])) ? $quantity[$k] : '0',
@@ -1056,13 +1063,19 @@ class Ecp_model extends BF_Model
 
             $this->db->where('compititor_product_details_id', $val_id);
             $this->db->update('ecp_compititor_product_details', $retailer_compititor_product_update);
+            if ($this->db->affected_rows() > 0) {
+                $update_array[]=1;
+            }
         }
-
-        if ($this->db->affected_rows() > 0) {
+        if(in_array(1,$update_array))
+        {
             return 1;
-        } else {
+        }
+        else{
             return 0;
         }
+
+
     }
 
     public function delete_compititor_details($id)
