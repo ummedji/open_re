@@ -263,7 +263,7 @@ class Ecp_model extends BF_Model
         $sql = 'SELECT SQL_CALC_FOUND_ROWS emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,bu.user_code,emr.material_request_status,emr.recived_status,emr.disptched_date,emr.disptched_qty,emr.remark,emr.executor_remark,mdc.desigination_country_name ';
         $sql .= 'FROM bf_ecp_material_request AS emr ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = emr.employee_id) ';
-        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.role_id = bu.role_id) ';
+        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.user_id = bu.id) ';
         $sql .= 'JOIN bf_master_designation_country AS mdc ON (mdc.desigination_country_id = mdr.desigination_id) ';
         $sql .= 'JOIN bf_users AS buu ON (buu.id = emr.modified_by_user) ';
         $sql .= 'JOIN bf_master_promotional_material_country AS mpmc ON (mpmc.promotional_country_id = emr.promotional_country_id) ';
@@ -417,7 +417,6 @@ class Ecp_model extends BF_Model
         else{
             return 0;
         }
-
     }
 
     public function delete_material_detail($mr_id)
@@ -3273,8 +3272,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $date_time= $execution_date.' '.$pl_time;
             $execution_date_time = date('Y-m-d H:i:s', strtotime($date_time));
             $meeting_duration = $this->input->post("meeting_duration");
-            $customer_no = explode(',',$this->input->post("customer_no"));
-            $customer_name =explode(',', $this->input->post("customer_name"));
+            $customer_no =$this->input->post("customer_no");
+            $customer_name =$this->input->post("customer_name");
             $activity_note = $this->input->post("activity_note");
             $rating = $this->input->post("rating");
             $amount = $this->input->post("amount");
@@ -3303,24 +3302,44 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $update_array[]=1;
         }
 
-            if(isset($customer_name) && !empty($customer_name)){
+        if(isset($customer_name) && !empty($customer_name)){
 
-                foreach($customer_name as $K=> $val_customer_name)
-                {
-                    $customer_details = array(
-                        'activity_planning_id' => $activity_planning_id,
-                        'customer_name' => (isset($val_customer_name) && !empty($val_customer_name)) ? $val_customer_name : '',
-                        'mobile_no' => (isset($customer_no[$K]) && !empty($customer_no[$K])) ? $customer_no[$K] : '',
-                    );
+            foreach($customer_name as $K=> $val_customer_name)
+            {
+                $customer_details = array(
+                    'activity_planning_id' => $activity_planning_id,
+                    'customer_name' => (isset($val_customer_name) && !empty($val_customer_name)) ? $val_customer_name : '',
+                    'mobile_no' => (isset($customer_no[$K]) && !empty($customer_no[$K])) ? $customer_no[$K] : '',
+                );
 
-                    $this->db->insert('ecp_activity_planning_attendees_details', $customer_details);
-                }
-
-                if ($this->db->affected_rows() > 0) {
-                    $update_array[]=1;
-                }
-
+                $this->db->insert('ecp_activity_planning_attendees_details', $customer_details);
             }
+
+            if ($this->db->affected_rows() > 0) {
+                $update_array[]=1;
+            }
+
+        }
+
+        if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
+           testdata($_POST['upload_file_data']);
+            $data = $this->do_upload();
+
+            foreach($data as $K=> $upload_data)
+            {
+                $upload_details = array(
+                    'activity_planning_id' => $activity_planning_id,
+                    'files_name' => isset($upload_data['name']) ?  $upload_data['name']  : '',
+                    'upload_type' => isset($upload_data['type']) ? $upload_data['type'] : '',
+                );
+
+                $this->db->insert('ecp_activity_planning_upload_details', $upload_details);
+            }
+            if ($this->db->affected_rows() > 0) {
+                $update_array[]=1;
+            }
+        }
+
 
         if(isset($update_array) && !empty($update_array))
         {

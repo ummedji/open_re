@@ -1,6 +1,6 @@
 <?php if (!$this->input->is_ajax_request()) {
     $attributes = array('class' => '', 'id' => 'activity_execution', 'name' => 'activity_execution');
-    echo form_open('', $attributes);
+    echo form_open_multipart('', $attributes);
     ?>
     <div class="col-md-12 full-height">
         <div class="row">
@@ -486,17 +486,26 @@
                            value="<?php echo $current_user->country_id; ?>"/>
                     <input class="current_local_date" type="hidden" name="current_local_date" id="current_local_date"
                            value="<?php echo $current_user->local_date; ?>"/>
-
+                    <div class="col-md-12 table_bottom pln_table_bottom">
+                        <div class="row">
+                            <div class="save_btn">
+                                <!-- <button type="submit" class="btn btn-primary" id="check_save">Save</button>-->
+                                <input type="submit" class="btn btn-primary" id="check_save" name="Save">
+                            </div>
+                        </div>
+                    </div>
                     <div class="clearfix"></div>
                 </div>
             </div>
             <div id="activity_sidebar">
                 <?php $this->load->view('activity_sidebar'); ?>
             </div>
-            <?php echo form_close(); ?>
+
         </div>
     </div>
 <?php
  } else {
     echo theme_view('common/middle');
 } ?>
+
+<?php echo form_close(); ?>

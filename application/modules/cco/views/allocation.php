@@ -14,6 +14,11 @@
         </div>
     </div>
 </div>
+
+<?php
+$attributes = array('class' => '', 'id' => 'cco_allocation','name'=>'cco_allocation', 'autocomplete'=>'off');
+echo form_open('cco/add_allocation',$attributes); ?>
+
 <div class="col-md-12">
     <div class="row">
         <div class="middle_form">
@@ -50,14 +55,6 @@
 <div class="col-md-12 ad_mr_top">
     <div class="row">
 
-        <div class="zoom_space">
-            <ul>
-                <li><a href="javascript: void(0);"><img src="<?php echo Template::theme_url('images/list_icon.png'); ?>" alt=""></a></li>
-                <li><a href="javascript: void(0);" class="zoom_in_btn"><img src="<?php echo Template::theme_url('images/zooming_icon.png'); ?>" class="show_tb_arrow" alt=""></a></li>
-                <li class="zoom_out_btn"><a href="javascript: void(0);" ><img src="<?php echo Template::theme_url('images/zooming_icon_.png'); ?>" class="hide_tb_arrow_" alt=""></a></li>
-            </ul>
-        </div>
-
         <div id="no-more-tables">
             <table class="col-md-12 table-bordered table-striped table-condensed cf">
                 <thead class="cf">
@@ -75,3 +72,24 @@
         </div>
     </div>
 </div>
+
+<div class="col-md-12 ad_mr_top">
+    <div class="row">
+        <label>CCO Name</label>
+        <select id="cco_data" class="cco_data selectpicker" name="cco_data">
+            <option>Select CCO</option>
+
+            <?php
+            if(!empty($cco_data)) {
+                foreach ($cco_data as $c_key => $ccodata)
+                {
+            ?>
+                    <option value="<?php echo $ccodata["id"]; ?>"><?php echo $ccodata["display_name"]; ?></option><?php
+                }
+            }
+            ?>
+        </select>
+        <button title="Save" type="submit" class="btn btn-primary save_btn">Save</button>
+    </div>
+</div>
+<?php echo form_close(); ?>

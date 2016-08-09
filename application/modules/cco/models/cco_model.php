@@ -247,5 +247,29 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+
+    public function get_all_cco_data($country_id)
+    {
+        $this->db->select('id,display_name');
+        $this->db->from('users');
+        $this->db->where('country_id',$country_id);
+        $this->db->where('role_id','19');
+        $this->db->where('active','1');
+        $this->db->where('deleted','0');
+        $cco_data = $this->db->get()->result_array();
+
+        if(isset($cco_data ) && !empty($cco_data )){
+            return $cco_data;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function geo_farmer_data($geo_data)
+    {
+        
+    }
+
 	
 }

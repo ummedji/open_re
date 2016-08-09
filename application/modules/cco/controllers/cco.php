@@ -57,15 +57,19 @@ class Cco extends Front_Controller
 
     public function allocation()
     {
+        $user= $this->auth->user();
+        $logined_user_type = $user->role_id;
+        $logined_user_id = $user->id;
+        $logined_user_countryid = $user->country_id;
 
         $campagain_data = $this->cco_model->campagain_data();
        // testdata($get_level_data);
 
       //  $campagain_id = 1;
-      //  $get_level_data = $this->cco_model->level_data($campagain_id);
+        $get_cco_data = $this->cco_model->get_all_cco_data($logined_user_countryid);
 
         Template::set('campagaine_data',$campagain_data);
-      //  Template::set('highest_geo_level_data',$get_level_data);
+        Template::set('cco_data',$get_cco_data);
         Template::render();
     }
 
@@ -99,6 +103,27 @@ class Cco extends Front_Controller
         $farmer_data_count = $this->cco_model->get_farmer_count($geoid,$level);
         echo $farmer_data_count;
         die;
+
+    }
+
+    public function add_allocation()
+    {
+        $campagain_data = $_POST["campagain_data"];
+        $level_1 = $_POST["level_1"];
+        $cco_data = $_POST["cco_data"];
+
+        if(!empty($campagain_data) && !empty($level_1) && !empty($cco_data))
+        {
+
+            foreach($level_1 as $key => $geo_data)
+            {
+
+                $geo_farmer_data = $this->db->geo_farmer_data($geo_data);
+
+
+            }
+
+        }
 
     }
 

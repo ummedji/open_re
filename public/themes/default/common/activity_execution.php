@@ -728,10 +728,10 @@
                                         <div class="input-group">
                                                         <span class="input-group-btn">
                                                             <span class="btn btn-primary btn-file fileUpload">
-                                                               Browse <input class="upload" type="file" name="upload_file_data" id="upload_file_data" multiple="multiple">
+                                                               Browse <input class="upload" type="file" name="upload_file_data[]" id="upload_file_data" multiple="multiple"/>
                                                             </span>
                                                        </span>
-                                            <input type="text" id="filename" class="form-control">
+                                            <input type="text" id="filename" class="form-control" readonly />
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
@@ -829,7 +829,8 @@
         <div class="col-md-12 table_bottom pln_table_bottom">
             <div class="row">
                 <div class="save_btn">
-                    <button type="button" class="btn btn-primary" id="check_save">Save</button>
+                   <!-- <button type="submit" class="btn btn-primary" id="check_save">Save</button>-->
+                    <input type="submit" class="btn btn-primary" id="check_save" name="Save">
                 </div>
             </div>
         </div>

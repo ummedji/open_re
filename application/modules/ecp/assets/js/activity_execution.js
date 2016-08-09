@@ -1,4 +1,5 @@
 $(document).ready(function() {
+
     $('#execution_date').datepicker({
         format: "yyyy-mm-dd",
         autoclose: true
@@ -77,53 +78,11 @@ $(document).ready(function() {
     });
 
 
-    $(document).on('click', '#check_save', function () {
-
-        var param = $("#activity_execution").serializeArray();
-
-        var $valid = $("#activity_execution").valid();
-        if(!$valid) {
-            activity_execution_validators.focusInvalid();
-            return false;
-        }
-        else
-        {
-            $.ajax({
-                type: 'POST',
-                url: site_url + "ecp/add_activity_execution_details",
-                data: param,
-                success: function (resp) {
-                    var message = "";
-                    if(resp != 0){
-                        message += 'Data Inserted successfully.';
-                    }
-                    else{
-
-                        message += 'Data not Inserted.';
-                    }
-                    $('<div></div>').appendTo('body')
-                        .html('<div><b>'+message+'</b></div>')
-                        .dialog({
-                            appendTo: "#success_file_popup",
-                            modal: true,
-                            zIndex: 10000,
-                            autoOpen: true,
-                            width: 'auto',
-                            resizable: true,
-                            close: function (event, ui) {
-                                $(this).remove();
-
-                            }
-                        });
-                }
-            });
-        }
-        return false;
-    });
 
     $(document).on("click","#add_customer",function() {
         add_customer();
     });
+
     function add_customer()
     {
 
@@ -157,38 +116,6 @@ $(document).ready(function() {
         return false;
     });
 
-    $(document).on('click','#check_save',function(){
-        var param = $("#activity_execution").serializeArray();
-
-        $.ajax({
-            type: 'POST',
-            url: site_url + "ecp/add_activity_execution_details",
-            data: param,
-            success: function (resp) {
-                var message = "";
-                if(resp != 0){
-                    message += 'Data Inserted successfully.';
-                }
-                else{
-
-                    message += 'Data not Inserted.';
-                }
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-                        }
-                    });
-            }
-        });
-    });
 
     getRating();
     getExecutionTime();
@@ -1221,4 +1148,102 @@ function getRating()
         $("#rating").val(rating);
     });
 }
+
+$(document).on('click', '#planning_save', function () {
+
+    var param = $("#activity_execution").serializeArray();
+
+    var $valid = $("#activity_execution").valid();
+    if(!$valid) {
+        activity_unplanned_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ecp/add_activity_planning_details",
+            data: param,
+            success: function (resp) {
+                var message = "";
+                if(resp != 0){
+                    $('#activity_planning_id').val(resp);
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+
+                        }
+                    });
+            }
+        });
+
+    }
+    return false;
+});
+
+//$(document).on('click','#check_save',function(){
+
+$(document).on('submit', 'form#activity_execution', function (e) {
+    e.preventDefault(e);
+    alert("dsfgsgs");
+    //$(document).on('click','#check_save',function(){
+    //e.preventDefault();
+    return false;
+
+    var param = new FormData(this);
+
+    var $valid = $("#activity_execution").valid();
+    if(!$valid) {
+        activity_execution_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ecp/add_activity_execution_details",
+            data: param,
+            success: function (resp) {
+                var message = "";
+                if(resp != 0){
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+
+                        }
+                    });
+            }
+        });
+    }
+    return false;
+
+});
 

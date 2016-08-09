@@ -5,13 +5,13 @@ $(document).ready(function(){
         var campagain_id = $(this).val();
 
         $("tbody#geo_location_data").empty();
-
-        get_geo_data(campagain_id,3);
+        var num_count = 3;
+        get_geo_data(campagain_id,3,num_count);
     });
 
 });
 
-function get_geo_data(campagain_id,level_data)
+function get_geo_data(campagain_id,level_data,num_count)
 {
     $.ajax({
         type: 'POST',
@@ -31,14 +31,14 @@ function get_geo_data(campagain_id,level_data)
                         $.ajax({
                             type: 'POST',
                             url: site_url + "cco/get_level_farmer_count",
-                            data: {geo_id: value1.political_geo_id,leveldata:level_data},
+                            data: {geo_id: value1.political_geo_id,leveldata:num_count},
                             success: function (resp) {
                                 farmer_count = resp;
                             },
                             async:false
                         });
 
-                         html += "<td><div class='row_data'><input rel='"+value1.political_geo_id+"' type='checkbox' name='level_3' class='level_3' value='"+value1.political_geography_name+"' />"+value1.political_geography_name+"&nbsp;&nbsp;&nbsp;"+pending_data_count+"/"+farmer_count+"</div></td><td></td><td></td>";
+                         html += "<td><div class='row_data'><input rel='"+value1.political_geo_id+"' type='checkbox' name='level_"+num_count+"[]' class='level_"+num_count+"' value='"+value1.political_geo_id+"' />"+value1.political_geography_name+"&nbsp;&nbsp;&nbsp;"+pending_data_count+"/"+farmer_count+"</div></td><td></td><td></td>";
 
 
                     });
@@ -59,7 +59,8 @@ $('body').on('click', 'input.level_3', function() {
     if($(this).is(":checked"))
     {
         var level_data = 2
-        get_row_geo_data(parent_html,parent_geo_id,level_data);
+        var num_count = 2;
+        get_row_geo_data(parent_html,parent_geo_id,level_data,num_count);
     }
     else
     {
@@ -76,7 +77,8 @@ $('body').on('click', 'input.level_2', function() {
     if($(this).is(":checked"))
     {
         var level_data = 3;
-        get_row_geo_data(parent_html,parent_geo_id,level_data);
+        var num_count = 1;
+        get_row_geo_data(parent_html,parent_geo_id,level_data,num_count);
     }
     else
     {
@@ -86,7 +88,7 @@ $('body').on('click', 'input.level_2', function() {
 });
 
 
-function get_row_geo_data(parent_html,parent_geo_id,level_data)
+function get_row_geo_data(parent_html,parent_geo_id,level_data,num_count)
 {
     $.ajax({
         type: 'POST',
@@ -104,14 +106,14 @@ function get_row_geo_data(parent_html,parent_geo_id,level_data)
                 $.ajax({
                     type: 'POST',
                     url: site_url + "cco/get_level_farmer_count",
-                    data: {geo_id: value.political_geo_id,leveldata:level_data},
+                    data: {geo_id: value.political_geo_id,leveldata:num_count},
                     success: function (resp) {
                         farmer_count = resp;
                     },
                     async:false
                 });
 
-                html += "<div class='row_data parent_id_"+parent_geo_id+"'><input rel='"+value.political_geo_id+"' type='checkbox' name='level_"+level_data+"' class='level_"+level_data+"' value='"+value.political_geography_name+"' />"+value.political_geography_name+"&nbsp;&nbsp;&nbsp;"+pending_data_count+"/"+farmer_count+"</div>";
+                html += "<div class='row_data parent_id_"+parent_geo_id+"'><input rel='"+value.political_geo_id+"' type='checkbox' name='level_"+num_count+"[]' class='level_"+num_count+"' value='"+value.political_geo_id+"' />"+value.political_geography_name+"&nbsp;&nbsp;&nbsp;"+pending_data_count+"/"+farmer_count+"</div>";
 
             });
             parent_html.parent().parent().parent().find("td:nth-child("+level_data+")").append(html);
