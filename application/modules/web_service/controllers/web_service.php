@@ -3351,7 +3351,7 @@ class Web_service extends Front_Controller
             else
             {
                 $result['status'] = false;
-                $result['message'] = 'No Records Found.';
+                $result['message'] = 'Data not updated.';
             }
         } else {
             $result['status'] = false;
