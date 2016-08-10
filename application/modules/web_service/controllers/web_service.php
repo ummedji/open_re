@@ -4278,7 +4278,7 @@ class Web_service extends Front_Controller
         $f_date = str_replace('/', '-', $form_dt);
         $from_date = date('Y-m-d', strtotime($f_date));
 
-        $to_dt = ((isset($_POST['to_date']) && !empty(($_POST['to_date']))) ? $_POST['to_date'] : '');
+        $to_dt = ((isset($_POST['to_date']) && !empty($_POST['to_date'])) ? $_POST['to_date'] : '');
         $t_date = str_replace('/', '-', $to_dt);
         $to_date = date('Y-m-d', strtotime($t_date));
 
@@ -4328,7 +4328,8 @@ class Web_service extends Front_Controller
             }
 
 
-        } else {
+        }
+        else {
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";
         }

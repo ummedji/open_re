@@ -435,10 +435,14 @@ class Cco_model extends BF_Model
     public function get_all_farmer_allocation_data($role_id)
     {
         $this->db->select("*");
-        $this->db->from("bf_cco_campaign_allocation");
+        $this->db->from("bf_cco_campaign_allocation as bcca");
 
-        $this->db->join("bf_cco_campaign_allocation");
+        $this->db->join("bf_cco_campaign as bcc","bcc.campaign_id = bcca.campaign_id");
+        $this->db->join("bf_users as bu","bu.id = bcca.cco_id");
 
+        $this->db->join("bf_master_political_geography_details as bmpgd","bmpgd.political_geo_id = bcca.geo_level_1");
+        $this->db->where("bcca.deleted",0);
+        $this->db->where("bcca.status",1);
     }
 
 	
