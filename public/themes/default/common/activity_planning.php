@@ -178,9 +178,7 @@
                     </div>
 
                     <!--Demonstration  Detail-->
-                    <?php if ($activity_planning['activity_type_code'] == 'DP005' || $activity_planning['activity_type_code'] == 'FDP006') {
-                        if ((isset($activity_planning['size_of_plot']) && !empty($activity_planning['size_of_plot'])) || (isset($activity_planning['spray_volume']) && !empty($activity_planning['spray_volume']))) {
-                            ?>
+                    <?php if ($activity_planning['activity_type_code'] == 'DP005' || $activity_planning['activity_type_code'] == 'FDP006') { ?>
                             <div class="default_box_white">
                                 <div class="col-md-12 plng_title"><h5>Demonstration</h5></div>
                                 <div class="col-md-10 col-md-offset-1 text-center tp_form inline-parent">
@@ -191,26 +189,20 @@
                                                 <label>Size Of Plot</label>
                                                 <input type="text" class="form-control" name="size_of_plot"
                                                        id="size_of_plot"
-                                                       value="<?php echo(!isset($activity_planning['size_of_plot']) ? $activity_planning['size_of_plot'] : 0) ?>"
-                                                       placeholder="">
+                                                       value="<?php echo(isset($activity_planning['size_of_plot']) && !empty($activity_planning['size_of_plot'])) ? $activity_planning['size_of_plot'] : 0  ?>" placeholder="">
                                             </div>
                                         </div>
                                         <div class="col-md-6 corp_text mrg_top_30">
                                             <div class="form-group frm_details text-center">
                                                 <label>Spray Volume</label>
-                                                <input type="text" class="form-control" name="spray_volume"
-                                                       id="spray_volume"
-                                                       value="<?php echo(!isset($activity_planning['spray_volume']) ? $activity_planning['spray_volume'] : 0) ?>"
-                                                       placeholder="">
+                                                <input type="text" class="form-control" name="spray_volume" id="spray_volume" value="<?php echo(isset($activity_planning['spray_volume']) && !empty($activity_planning['spray_volume'])) ? $activity_planning['spray_volume'] : 0 ?>" placeholder="">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
-                            <?php
-                        }
-                    } ?>
+                        <?php } ?>
 
 
                     <!--Demonstration  Detail-->

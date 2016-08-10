@@ -777,6 +777,7 @@ function set_activity_type(activity_type_selected){
     {
         get_geo_fo_userdata(activity_type_selected);
         farmerDetails();
+        getDemonstrationById();
 
         var geo_6 = '';
         geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
@@ -1276,4 +1277,63 @@ function getActivityById(activity_planning_id)
         }
     });
 }
+
+function getDemonstrationById(){
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ecp/getDemonstrationById",
+        dataType : 'json',
+        success: function(resp){
+
+            console.log(resp);
+
+          //  var obj = $.parseJSON();
+          //  alert(obj);
+
+            $("select#demo_id").empty();
+            $("select#demo_id").selectpicker('refresh');
+
+            var html1 = "";
+
+            if(resp.length > 0){
+                alert('rere');
+
+
+                  html1 +='<option value="">Select Demonstration</option>';
+
+                $.each(resp, function(key, value) {
+                 //   var d =
+                    var d = formatAMPM(value.execution_time);
+                    alert(d);
+                    html1 += '<option value="' +value.activity_planning_id+ '">' + value.political_geography_name+ '::' + value.execution_date+' '+d+ '</option>';
+
+                });
+
+                $("select#demo_id").html(html1);
+                $("select#demo_id").selectpicker('refresh');
+
+            }
+        }
+    });
+}
+
+
+function formatAMPM(date_data) {
+
+    var date = new Date(date_data);
+
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+}
+
+$(document).on('change','select#demo_id',function(){
+
+});
 

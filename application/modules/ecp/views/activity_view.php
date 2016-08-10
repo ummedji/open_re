@@ -32,7 +32,7 @@
                                         <div class="form-group">
                                             <label>Select Date<span style="color: red">*</span></label>
                                             <input type="text" class="form-control" name="planning_date"
-                                                   id="planning_date" placeholder="">
+                                                   id="planning_date" placeholder="" readonly>
                                         </div>
 
                                         <div class="form-group">
@@ -40,7 +40,7 @@
                                             <!--<input  type="text" class="form-control input-append" data-format="hh:mm" id="timepicker1"  />-->
                                             <div class="bootstrap-timepicker bootstrap-timepicker-as">
                                                 <input id="planning_time" name="planning_time" type="text"
-                                                       class="input-group-time form-control input-append">
+                                                       class="input-group-time form-control input-append" readonly>
                                             </div>
                                         </div>
                                     </div>

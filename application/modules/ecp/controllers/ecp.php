@@ -1883,6 +1883,14 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
+	public function getDemonstrationById()
+	{
+		$user = $this->auth->user();
+		$demo_id = $this->ecp_model->get_demonstration_by_id($user->id,$user->country_id);
+		echo json_encode($demo_id);
+		die;
+	}
+
 
 
 }

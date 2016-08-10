@@ -9,10 +9,19 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                     <div class="default_box_white">
                         <div class="col-md-12 text-center tp_form inline-parent">
 
+                            <?php
+                            if(isset($current_user->local_date) && !empty($current_user->local_date))
+                            {
+                                $p_date = strtotime($activity_view['activity_planning_date']);
+                                $planning_date = date($current_user->local_date,$p_date);
+                            }
+                            else{
+                                  $planning_date = $activity_view['activity_planning_date'];
+                            }
+                            ?>
                             <div class="form-group">
                                 <label>Planning Date<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="planning_date" id="planning_date" value="<?php echo
-                                (!empty($activity_view['activity_planning_date']) ? $activity_view['activity_planning_date'] : ''); ?>" placeholder="" readonly />
+                                <input type="text" class="form-control" name="planning_date" id="" value="<?php echo $planning_date; ?>" placeholder="" disabled />
                             </div>
                             <?php
                             if(isset($activity_view['activity_planning_time']) && !empty($activity_view['activity_planning_time'])){

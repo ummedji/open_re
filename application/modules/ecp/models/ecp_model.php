@@ -2027,6 +2027,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $attandence_count = $this->input->post("attandence_count");
         $size_of_plot = $this->input->post("size_of_plot");
         $spray_volume = $this->input->post("spray_volume");
+
         $referenc = $this->input->post("reference_type");
         $status = $this->input->post("status");
         $submit_status = $this->input->post("submit_status");
@@ -2521,7 +2522,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $sql = 'SELECT eap.activity_planning_id,eap.activity_planning_date,bu.display_name,bu.user_code,mdc.desigination_country_name,eamc.activity_type_country_name,eap.status ';
         $sql .= 'FROM bf_ecp_activity_planning AS eap ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = eap.employee_id) ';
-        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.role_id = bu.role_id) ';
+        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.user_id = bu.id) ';
         $sql .= 'JOIN bf_master_designation_country AS mdc ON (mdc.desigination_country_id = mdr.desigination_role_id) ';
         $sql .= 'JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
         $sql .= 'WHERE 1 ';
@@ -3187,62 +3188,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         return $config;
     }
 
-   /* public function upload_file()
-    {
-        $data=$_POST;
-        $files_ary=$_FILES;
-
-        $path=FCPATH.'assets/uploads';
-        $pathurl = site_url('assets/uploads');
-        $this->dir_path = array();
-
-        $rev_dir=array_reverse($this->dir_path);
-        foreach($rev_dir as $val)
-        {
-            $path.='/'.$val;
-            $pathurl.='/'.$val;
-        }
-        //End Path of file upload in folder
-
-        if($files_ary['files']['name'])
-        {
-            $config['upload_path'] =$path;
-            $config['allowed_types'] = 'gif|jpg|png|jpeg|txt|xlsx|pdf|doc|docx|ppt|pptx';
-            $config['max_size']	= '50000000000';
-            $this->load->library('upload');
-            $this->upload->initialize($config);
-            $files_stat = array();
-
-            if (!$this->upload->do_multi_upload('files'))
-            {
-                // $this->form_validation->set_message('image', $this->upload->display_errors());
-                $error =  $this->upload->display_errors();
-                //echo $config['upload_path'];
-                echo $error;
-            }
-            else
-            {
-                $imagedata = $this->upload->data();
-                $img_stat = array(  "name"=>$imagedata['file_name'],
-                    "size"=>$imagedata['file_size'],
-                    "type"=>$imagedata['file_type'],
-                    "url"=>$pathurl."/".$imagedata['file_name'],
-                    "thumbnailUrl"=>$pathurl."/".$imagedata['file_name'],
-                    "deleteType"=>'DELETE',
-                    "deleteUrl"=>$pathurl."/".$imagedata['file_name']
-                );
-                array_push($files_stat,$img_stat);
-                //testdata($files_stat);
-            }
-            $data['file_name']=@$imagedata['file_name'];
-            $data['file_type']=@$imagedata['file_ext'];
-        }
-        $data['status']=1;
-        $this->file_upload_model->insert($data);
-        echo json_encode(array("files"=>$files_stat));
-        exit;
-    }*/
-
     public function addActivityExecution($user_id,$country_id,$local_date = null,$web_service = null){
 
         $activity_planning_id = $this->input->post("inserted_activity_planning_id");
@@ -3432,62 +3377,27 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             return false;
         }
     }
-/*
 
-    public function userimageUpload($file_data)
+    public function get_demonstration_by_id($user_id,$country_id)
     {
-
-        $config['upload_path'] = FCPATH . 'assets/uploads/activity_gallery/';//file upload path
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';//file type allowed
-        $config['file_name'] = $file_data['name'];
-        //not overwrite image for below code
-        $config['overwrite'] = FALSE;
-        $config['max_size'] = '1024';//max file size for upload
-
-        $this->load->library('upload', $config);
-
-        if (!is_dir($config['upload_path'])) {
-            mkdir($config['upload_path'], 0755, TRUE);
+        $sql ='SELECT eap.activity_planning_id,eap.execution_date,eap.execution_time,mpgd.political_geography_name
+                FROM bf_ecp_activity_planning as eap
+                 JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = eap.geo_level_id)
+                 JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_id = eap.activity_type_id)
+                 WHERE eap.employee_id ='.$user_id.'
+                 AND eap.country_id ='.$country_id.'
+                 AND eamc.activity_type_code = "DP005"
+                 AND eap.execution_date <= DATE_SUB(CURDATE(), INTERVAL -2 MONTH)';
+        $info = $this->db->query($sql);
+        $activity_details = $info->result_array();
+        if(isset($activity_details) && !empty($activity_details))
+        {
+            return $activity_details;
         }
-
-
-        if (!empty($file_data['name']) && $file_data['error'] != 4) {
-
-            if (!$this->upload->do_upload($file_data['name'])) {
-
-                $error = array('error' => $this->upload->display_errors());
-                // $error_array[] = 1;
-
-                testdata($error);
-
-                return 1;
-            } else {
-                testdata('in');
-                $upload_data = $this->upload->data();
-
-                $config["image_library"] = "gd2";
-                $config["source_image"] = $upload_data["full_path"];
-                $config['create_thumb'] = FALSE;
-                $config['maintain_ratio'] = TRUE;
-                //image resize and upload in below path
-                $config['new_image'] = FCPATH . 'assets/uploads/activity_gallery/' . $upload_data['file_name'];
-                $config['quality'] = "100%";
-                //Here Set Width and height for image resize
-                $config['width'] = 200;
-                $config['height'] = 150;
-                $this->load->library('image_lib');
-                $this->image_lib->initialize($config);
-
-                //Resize image
-                if (!$this->image_lib->resize()) {
-                    //If error, redirect to an error page
-                    redirect("errorhandler");
-                }
-               // $error_array[] = 0;
-                return $upload_data;
-            }
+        else{
+            return array();
         }
     }
 
-*/
+
 }
