@@ -5,20 +5,35 @@
             <div class="col-md-12 text-center sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
-                        <li class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_place') ? 'active' :'' ;?>"><a href="<?php echo base_url('/cco/allocation') ?>">Farmers</a></li>
-                        <li class="<?php echo ($this->uri->segment(1)=='ishop' && $this->uri->segment(2)=='order_place') ? 'active' :'' ;?>"><a href="<?php echo base_url('/cco/channel_partner_allocation') ?>">Channel Partners</a></li>
+                        <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('/cco/allocation') ?>">Farmers</a></li>
+                        <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='channel_partner_allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('/cco/channel_partner_allocation') ?>">Channel Partners</a></li>
                         <li><a href="#">Activity</a></li>
                     </ul>
                     <div class="clearfix"></div>
                 </div>
             </div>
+
+            <div class="col-md-12 text-center radio_space">
+                <div class="radio">
+                    <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="retailer" checked="checked" />
+                    <label for="radio1">Retailer</label>
+                </div>
+                <div class="radio">
+                    <input class="select_customer_type" type="radio" name="radio1" id="radio2" value="distributor" />
+                    <label for="radio2">Distributor</label>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
         </div>
     </div>
 </div>
 
+
 <?php
 $attributes = array('class' => '', 'id' => 'cco_allocation','name'=>'cco_allocation', 'autocomplete'=>'off');
-echo form_open('cco/add_allocation',$attributes); ?>
+echo form_open('cco/add_allocation',$attributes);
+?>
 
 <div class="col-md-12">
     <div class="row">
@@ -41,6 +56,9 @@ echo form_open('cco/add_allocation',$attributes); ?>
                                 }
                                 ?>
                             </select>
+
+                            <input type="hidden" id="selected_type_data" name="selected_type" value="retailer"/>
+
                             <label id="prod_sku-error" class="error" for="prod_sku"></label>
 
                             <div class="clearfix"></div>

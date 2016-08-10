@@ -18,8 +18,8 @@
                                                 <li><a href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);"><?php echo $val['activity_type_country_name'] ?></a>
                                                 </li>
                                                 <li><a href="javascript: void(0);" onclick="getActivityById(<?php echo $val['activity_planning_id']; ?>);">Execute</li>
-                                                <li><a href="javascript: void(0);" onclick="getActivityCancelById(<?php echo $val['activity_planning_id']; ?>);">Cancel</li>
-                                                <li><a href="javascript: void(0);" onclick="">Rescheduling</li>
+                                                <li> <a href="#" id="activity_cancel"  data-toggle="modal" data-target="#ActivityCancelModal" onclick="getActivityPlanningId(<?php echo $val['activity_planning_id']; ?>);">Cancel</a></li>
+                                                <li><a href="#" id="activity_re"  data-toggle="modal" data-target="#ActivityReModal" onclick="getActivityPlanningsId(<?php echo $val['activity_planning_id']; ?>);">Rescheduling</a></li>
                                             </ul>
                                         </div>
                                     <?php } else { ?>

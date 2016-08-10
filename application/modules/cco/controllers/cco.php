@@ -37,7 +37,7 @@ class Cco extends Front_Controller
 
 
         $this->lang->load('cco');
-        Assets::add_module_js('cco', 'cco.js');
+
     }
 
     /**
@@ -57,22 +57,51 @@ class Cco extends Front_Controller
 
     public function allocation()
     {
+        Assets::add_module_js('cco', 'cco.js');
+
         $user= $this->auth->user();
         $logined_user_type = $user->role_id;
         $logined_user_id = $user->id;
         $logined_user_countryid = $user->country_id;
 
-        $campagain_data = $this->cco_model->campagain_data();
+        $farmer_role = 11;
+
+        $campagain_data = $this->cco_model->campagain_data($farmer_role);
        // testdata($get_level_data);
 
       //  $campagain_id = 1;
         $get_cco_data = $this->cco_model->get_all_cco_data($logined_user_countryid);
 
-        $get_farmer_allocation_data = $this->cco_model->get_all_farmer_allocation_data(11);
 
         Template::set('campagaine_data',$campagain_data);
         Template::set('cco_data',$get_cco_data);
         Template::render();
+    }
+
+    public function get_campagain_grid_data()
+    {
+        $campagain_id = $_POST["campagainid"];
+
+        $pag = (isset($_POST['page']) ? $_POST['page'] : '');
+        if($pag > 0)
+        {
+            $page = $pag;
+        }
+        else{
+            $page = 1;
+        }
+
+        $get_farmer_allocation_data = $this->cco_model->get_all_farmer_allocation_data($campagain_id,11,$page);
+
+        // testdata($get_farmer_allocation_data);
+        Template::set('table', $get_farmer_allocation_data);
+
+        Template::set('td', $get_farmer_allocation_data['count']);
+        Template::set('pagination', (isset($get_farmer_allocation_data['pagination']) && !empty($get_farmer_allocation_data['pagination'])) ? $get_farmer_allocation_data['pagination'] : '' );
+
+        Template::set_view("cco/allocation");
+        Template::render();
+        //die;
     }
 
     public function get_level_data()
@@ -102,17 +131,30 @@ class Cco extends Front_Controller
     {
         $geoid = $_POST["geo_id"];
         $level = $_POST["leveldata"];
-        $farmer_data_count = $this->cco_model->get_farmer_count($geoid,$level);
-        echo $farmer_data_count;
+        $selectedtype = isset($_POST["selectedtype"])? $_POST["selectedtype"]: NULL ;
+
+        $farmer_data_count = $this->cco_model->get_farmer_count($geoid,$level,$selectedtype);
+
+        if($farmer_data_count != 0)
+        {
+            echo json_encode($farmer_data_count);
+        }
+        else
+        {
+            echo 0;
+        }
         die;
 
     }
 
     public function add_allocation()
     {
+
         $campagain_data = $_POST["campagain_data"];
         $level_1 = $_POST["level_1"];
         $cco_data = $_POST["cco_data"];
+
+        $selected_type = isset($_POST["selected_type"])? $_POST["selected_type"]: NULL;
 
         $final_array = array();
 
@@ -121,7 +163,7 @@ class Cco extends Front_Controller
 
             foreach($level_1 as $key => $geo_data)
             {
-                $geo_farmer_data = $this->cco_model->geo_farmer_data($geo_data);
+                $geo_farmer_data = $this->cco_model->geo_farmer_data($geo_data,$selected_type);
                 //testdata($geo_farmer_data);
                 if($geo_farmer_data != 0)
                 {
@@ -151,6 +193,54 @@ class Cco extends Front_Controller
             return 0;
         }
     }
+
+    public function delete_allocation_data()
+    {
+        $allocation_id = $_POST["allocation_id"];
+        $data = $this->cco_model->delete_allocation($allocation_id);
+        echo $data;
+        die;
+    }
+
+
+    public function channel_partner_allocation()
+    {
+        Assets::add_module_js('cco', 'cco_channel_partner.js');
+
+        $user= $this->auth->user();
+        $logined_user_type = $user->role_id;
+        $logined_user_id = $user->id;
+        $logined_user_countryid = $user->country_id;
+
+        $user_role = 10;
+        $campagain_data = $this->cco_model->campagain_data($user_role);
+        // testdata($get_level_data);
+
+        //  $campagain_id = 1;
+        $get_cco_data = $this->cco_model->get_all_cco_data($logined_user_countryid);
+
+
+        Template::set('campagaine_data',$campagain_data);
+        Template::set('cco_data',$get_cco_data);
+        Template::render();
+    }
+
+    public function get_channel_campagain_data()
+    {
+        $user_role = $_POST["roledata"];
+        $campagain_data = $this->cco_model->campagain_data($user_role);
+
+        if($campagain_data != 0)
+        {
+           echo json_encode($campagain_data);
+        }
+        else
+        {
+            echo 0;
+        }
+        die;
+    }
+
 
     public function activity()
     {

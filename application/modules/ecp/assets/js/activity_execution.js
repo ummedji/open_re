@@ -12,14 +12,6 @@ $(document).ready(function() {
         activityTypeChange();
     });
 
-    $('#planning_date').datepicker({
-        format: "yyyy-mm-dd",
-        autoclose: true
-    }).on('changeDate',function(e){
-        dateChangeEvent(e);
-    });
-
-
 
     /*Validation Rule*/
 
@@ -120,6 +112,7 @@ $(document).ready(function() {
     getRating();
     getExecutionTime();
     getPlanningTime();
+    getPlanningDate()
 
 });
 
@@ -134,6 +127,16 @@ function getPlanningTime()
 {
     $('#planning_time').timepicker({
 
+    });
+}
+
+function getPlanningDate()
+{
+    $('#planning_date').datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    }).on('changeDate',function(e){
+        dateChangeEvent(e);
     });
 }
 
@@ -1116,6 +1119,7 @@ function getActivityById(activity_planning_id)
             getRating();
             getExecutionTime();
             getPlanningTime();
+            getPlanningDate();
             $("select.selectpicker").selectpicker('refresh');
         },
         complete:function(){
@@ -1243,6 +1247,109 @@ $(document).on('submit', 'form#activity_execution', function (e) {
             }
         });
     }
+    return false;
+
+});
+
+
+function getActivityPlanningId(Id)
+{
+    $('#planning_id').val(Id);
+    getPlanningTime();
+    getPlanningDate();
+
+}
+
+function getActivityPlanningsId(Id)
+{
+    $('#plannings_id').val(Id);
+    getPlanningTime();
+    getPlanningDate();
+}
+
+$(document).on('click','.close',function(){
+    $("div#ActivityCancelModal textarea#cancle_reson").val('');
+});
+
+$(document).on('click', '#save_cancle_reson', function (e) {
+
+    var planning_id = $("div#ActivityCancelModal input#planning_id").val();
+    var cancle_reson  = $("div#ActivityCancelModal textarea#cancle_reson").val();
+
+    $('#ActivityCancelModal').modal('hide');
+    $("div#ActivityCancelModal #save_cancle_reson").attr("disabled","disabled");
+
+        $.ajax({
+            type: 'POST',
+            url: site_url + "ecp/update_activity_reson_details",
+            data: {planning_id:planning_id,cancle_reson:cancle_reson},
+            success: function (resp) {
+                var message = "";
+                if(resp != 0){
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload();
+                        }
+                    });
+            }
+        });
+    return false;
+
+});
+
+$(document).on('click', '#save_re_data', function (e) {
+
+    var planning_id = $("div#ActivityReModal input#plannings_id").val();
+    var planning_date  = $("div#ActivityReModal input#planning_date").val();
+    var planning_time  = $("div#ActivityReModal input#planning_time").val();
+
+    $('#ActivityReModal').modal('hide');
+    $("div#ActivityReModal #save_re_data").attr("disabled","disabled");
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "ecp/rescheduling_activity_details",
+        data: {planning_id:planning_id,planning_date:planning_date,planning_time:planning_time},
+        success: function (resp) {
+            var message = "";
+            if(resp != 0){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload();
+                    }
+                });
+        }
+    });
     return false;
 
 });

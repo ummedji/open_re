@@ -1,7 +1,60 @@
+<div class="modal fade po_modal_parent" id="ActivityCancelModal" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Close Popup">&times;</button>
+            </div>
+            <div class="modal-body text-center tp_form">
+                <div class="form-group" style="margin-bottom: 0;">
+                    <label for="usr">Reason For Cancel Activity:</label>
+                    <div class="clearfix"></div>
+                    <input type="hidden" name="planning_id" value=""  id="planning_id" class="form-control planning_id" />
+                    <textarea name="cancle_reson" id="cancle_reson" cols="25" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer text-center save_btn">
+                <button id="save_cancle_reson" type="button" class="btn btn-primary gren_btn" title="Save Change">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade po_modal_parent" id="ActivityReModal" role="dialog" >
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true" title="Close Popup">&times;</button>
+            </div>
+            <div class="modal-body text-center tp_form">
+                <div class="form-group">
+                    <label for="usr">Planning Date:</label>
+                    <input type="text" name="planning_date" value=""  id="planning_date" class="form-control planning_id" />
+                </div>
+                <div class="form-group">
+                    <label for="usr">Planning Time:</label>
+                    <input type="text" name="planning_time" value=""  id="planning_time" class="form-control planning_id" />
+                </div>
+                <input type="hidden" name="planning_id" value=""  id="plannings_id" class="form-control planning_id" />
+              <!--  <div class="form-group" style="margin-bottom: 0;">
+                    <label for="usr">Reason For Rescheduling Activity:</label>
+
+                    <textarea name="cancle_reson" id="cancle_reson" cols="25" rows="5"></textarea>
+                </div>-->
+            </div>
+            <div class="modal-footer text-center save_btn">
+                <button id="save_re_data" type="button" class="btn btn-primary gren_btn" title="Save Change">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <?php if (!$this->input->is_ajax_request()) {
     $attributes = array('class' => '', 'id' => 'activity_execution', 'name' => 'activity_execution');
     echo form_open_multipart('', $attributes);
     ?>
+
+
     <div class="col-md-12 full-height">
         <div class="row">
             <div class="col-md-12 text-center plng_sub_nave">

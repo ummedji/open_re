@@ -1233,7 +1233,6 @@ class Ecp_model extends BF_Model
         $oth_reason = $this->input->post("oth_reason");
 
         $date = str_replace('/', '-', $cur_date);
-
         $no_working_date = date('Y-m-d', strtotime($date));
 
         $no_work_date = $this->no_working_details($user_id, $country_id, $no_working_date);
@@ -3267,7 +3266,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
 
         if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
-           testdata($_POST['upload_file_data']);
             $data = $this->do_upload();
 
             foreach($data as $K=> $upload_data)
@@ -3396,6 +3394,320 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
         else{
             return array();
+        }
+    }
+
+    public function get_details_by_planning_id($id,$user_id,$country_id)
+    {
+        $this->db->select('geo_level_id_2,geo_level_id_3,geo_level_id_4,location,size_of_plot,spray_volume');
+        $this->db->from('ecp_activity_planning');
+        $this->db->where('activity_planning_id',$id);
+        $this->db->where('employee_id',$user_id);
+        $this->db->where('country_id',$country_id);
+        $activity_details = $this->db->get()->row_array();
+       if(isset($activity_details) && !empty($activity_details))
+       {
+           return $activity_details;
+       }
+       else {
+           return 0;
+        }
+    }
+
+
+    public function update_activity_reson_detail($user_id,$country_id)
+    {
+      /* if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
+        {
+            $planning_id = $this->input->post("planning_id");
+            $cancle_reson = $this->input->post("cancle_reson");
+        }
+        else{*/
+            $planning_id = $this->input->post("planning_id");
+            $cancle_reson = $this->input->post("cancle_reson");
+      /*  }*/
+
+        $activity_planning = array(
+
+            'cancle_reson' => (isset($cancle_reson) && !empty($cancle_reson))  ? $cancle_reson : '',
+            'status' => '5',
+            'modified_by_user' => $user_id,
+            'modified_on' => date('Y-m-d H:i:s'),
+
+        );
+
+        $this->db->where('activity_planning_id',$planning_id);
+        $this->db->update('ecp_activity_planning', $activity_planning);
+
+        if ($this->db->affected_rows() > 0) {
+           return 1;
+        }
+        else{
+            return 0;
+        }
+    }
+
+
+    public function rescheduling_activity_detail($user_id,$country_id)
+    {
+
+        $planning_id = $this->input->post("planning_id");
+
+        $plan_date = $this->input->post("planning_date");
+        $pl_date = str_replace('/', '-', $plan_date);
+        $planning_date = date('Y-m-d', strtotime($pl_date));
+
+        $pl_time = $this->input->post("planning_time");
+        $date_time= $planning_date.' '.$pl_time;
+        $planning_time = date('Y-m-d H:i:s', strtotime($date_time));
+
+       $activity_details =  $this->editViewActivityPlanning($planning_id);
+
+       // testdata($activity_details);
+        $activity_type_id = $activity_details['activity_type_id'];
+        $geo_level_2 = $activity_details['geo_level_id_2'];
+        $geo_level_3 = $activity_details['geo_level_id_3'];
+        $geo_level_4 = $activity_details['geo_level_id_4'];
+        $geo_level = $activity_details['geo_level_id_4'];
+        $activity_address = $activity_details['location'];
+        $attandence_count = $activity_details['proposed_attandence_count'];
+        $pod = $activity_details['point_discussion'];
+        $set_alert = $activity_details['alert'];
+        $size_of_plot = $activity_details['size_of_plot'];
+        $spray_volume = $activity_details['spray_volume'];
+        $status = '1';
+        $submit_status = '1';
+        $activity_planning_id = $activity_details['activity_planning_id'];
+
+
+
+        $activity_planning = array(
+            'activity_planning_date' => isset($planning_date) ? $planning_date : '',
+            'activity_planning_time' => isset($planning_time) ? $planning_time : '',
+            'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
+            'geo_level_id_2' => (isset($geo_level_2) && !empty($geo_level_2)) ? $geo_level_2 : 0,
+            'geo_level_id_3' => (isset($geo_level_3) && !empty($geo_level_3)) ? $geo_level_3 : 0,
+            'geo_level_id_4' => (isset($geo_level_4) && !empty($geo_level_4)) ? $geo_level_4 : 0,
+            'geo_level_id' => (isset($geo_level) && !empty($geo_level)) ? $geo_level : 0,
+            'location' => isset($activity_address) ? $activity_address :''   ,
+            'proposed_attandence_count' => (isset($attandence_count) && !empty($attandence_count)) ? $attandence_count : '0',
+            'point_discussion' => isset($pod) ? $pod : '',
+            'alert' => isset($set_alert) ? $set_alert : '',
+            'size_of_plot' => (isset($size_of_plot) && !empty($size_of_plot)) ? $size_of_plot : 0,
+            'spray_volume' => (isset($spray_volume) && !empty($spray_volume)) ? $spray_volume : 0,
+            'amount' => '0',
+            'employee_id' => $user_id,
+            'country_id' => $country_id,
+            'status' => (isset($status) && !empty($status)) ? $status : 0,
+            'submit_status' =>  (isset($submit_status) && !empty($submit_status)) ? $submit_status : 0,
+            'submit_date' =>  date('Y-m-d'),
+            'reference_type' => '2',
+            'reference_id' => $activity_planning_id,
+            'is_planned' => '1',
+            'created_by_user' => $user_id,
+            'created_on' => date('Y-m-d H:i:s'),
+            'modified_on' => date('Y-m-d H:i:s'),
+
+        );
+
+        $insert_array = array();
+        if ($this->db->insert('ecp_activity_planning', $activity_planning)) {
+
+            if ($this->db->affected_rows() > 0) {
+                $insert_array[]=1;
+
+            }
+            $insert_id = $this->db->insert_id();
+
+            if (isset($activity_details['crop']) && !empty($activity_details['crop'])) {
+
+                foreach ($activity_details['crop'] as $key => $crp) {
+                    $corp_detail = array(
+                        'activity_planning_id' => $insert_id,
+                        'crop_id' => (isset($crp['crop_id']) && !empty($crp['crop_id'])) ? $crp['crop_id'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_crop_details', $corp_detail);
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+                }
+
+
+            }
+
+            if (isset($activity_details['products']) && !empty($activity_details['products'])) {
+                foreach ($activity_details['products'] as $key => $prd_sku) {
+                    $product_detail = array(
+                        'activity_planning_id' => $insert_id,
+                        'product_sku_id' => (isset($prd_sku['product_sku_id']) && !empty($prd_sku['product_sku_id'])) ? $prd_sku['product_sku_id'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_product_details', $product_detail);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+                }
+            }
+
+
+            if (isset($activity_details['diseases']) && !empty($activity_details['diseases'])) {
+
+                foreach ($activity_details['diseases'] as $key => $val) {
+                    $diseases_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'diseases_id' => (isset($val['diseases_id']) && !empty($val['diseases_id'])) ? $val['diseases_id'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_diseases_details', $diseases_details);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+
+                }
+            }
+
+            if (isset($activity_details['key_farmer']) && !empty($activity_details['key_farmer'])) {
+
+                foreach ($activity_details['key_farmer'] as $k => $val_frm) {
+                    $key_farmer_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'customer_id' => (isset($val_frm['customer_id']) && !empty($val_frm['customer_id'])) ? $val_frm['customer_id'] : 0,
+                        'mobile_no' => (isset($val_frm['mobile_no']) && !empty($val_frm['mobile_no'])) ? $val_frm['mobile_no'] : '',
+                    );
+
+                    $this->db->insert('ecp_activity_planning_key_customer_details', $key_farmer_details);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+                }
+            }
+
+
+            if (isset($activity_details['digital_library']) && !empty($activity_details['digital_library'])) {
+
+                foreach ($activity_details['digital_library'] as $k => $val_digital) {
+
+                    $digital_library_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'digital_library_id' => (isset($val_digital['digital_library_details_id']) && !empty($val_digital['digital_library_details_id'])) ? $val_digital['digital_library_details_id'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_digital_library_details', $digital_library_details);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+                }
+            }
+
+
+            if (isset($activity_details['join_visit']) && !empty($activity_details['join_visit'])) {
+
+                foreach ($activity_details['join_visit'] as $k => $val_joint) {
+                    $joint_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'employee_id' => (isset($val_joint['employee_id']) && !empty($val_joint['employee_id'])) ? $val_joint['employee_id'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_joint_visit_details', $joint_details);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+                }
+
+            }
+
+
+            if (isset($activity_details['products_sample']) && !empty($activity_details['products_sample'])) {
+
+                foreach ($activity_details['products_sample'] as $K => $val_product) {
+                    $product_samples_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'product_sku_id' => (isset($val_product['product_sku_id']) && !empty($val_product['product_sku_id'])) ? $val_product['product_sku_id'] : 0,
+                        'quantity' => (isset($val_product['quantity']) && !empty($val_product['quantity'])) ? $val_product['quantity'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_promo_sample_details', $product_samples_details);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+                }
+
+            }
+
+
+            if (isset($activity_details['products_request']) && !empty($activity_details['products_request'])) {
+
+                foreach ($activity_details['products_request'] as $K => $vals) {
+                    $product_materials_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'product_sku_id' => (isset($vals['product_sku_id']) && !empty($vals['product_sku_id'])) ? $vals['product_sku_id'] : 0,
+                        'quantity' => (isset($vals['quantity']) && !empty($vals['quantity'])) ? $vals['quantity'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_required_product_details', $product_materials_details);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+
+                    }
+                }
+            }
+
+            if (isset($activity_details['material_request']) && !empty($activity_details['material_request'])) {
+
+                foreach ($activity_details['material_request'] as $K => $val_materials) {
+                    $materials_details = array(
+                        'activity_planning_id' => $insert_id,
+                        'material_id' => (isset($val_materials['material_id']) && !empty($val_materials['material_id'])) ? $val_materials['material_id'] : 0,
+                        'quantity' => (isset($val_materials['quantity']) && !empty($val_materials['quantity'])) ? $val_materials['quantity'] : 0,
+                    );
+
+                    $this->db->insert('ecp_activity_planning_required_material_details', $materials_details);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $insert_array[]=1;
+                    }
+                }
+            }
+        }
+
+        if(in_array(1,$insert_array))
+        {
+            $activity_planning = array(
+                //'cancle_reson' => (isset($cancle_reson) && !empty($cancle_reson))  ? $cancle_reson : '',
+                'status' => '5',
+                'modified_by_user' => $user_id,
+                'modified_on' => date('Y-m-d H:i:s'),
+
+            );
+
+            $this->db->where('activity_planning_id',$planning_id);
+            $this->db->update('ecp_activity_planning', $activity_planning);
+
+
+            if ($this->db->affected_rows() > 0) {
+                return 1;
+            }
+            else{
+                return 0;
+            }
+        }
+        else{
+            return 0;
         }
     }
 

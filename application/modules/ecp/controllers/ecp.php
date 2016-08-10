@@ -1891,6 +1891,29 @@ class Ecp extends Front_Controller
 		die;
 	}
 
+	public function getDetailsByPlanningId()
+	{
+		$id = (isset($_POST['id']) && !empty($_POST['id'])) ? $_POST['id'] : '';
+		$user = $this->auth->user();
+		$demo_id = $this->ecp_model->get_details_by_planning_id($id,$user->id,$user->country_id);
+		echo json_encode($demo_id);
+		die;
+	}
 
+	public function update_activity_reson_details()
+	{
+		$user = $this->auth->user();
+		$id = $this->ecp_model->update_activity_reson_detail($user->id,$user->country_id);
+		echo $id;
+		die;
+	}
 
+	public function rescheduling_activity_details()
+	{
+		//testdata($_POST);
+		$user = $this->auth->user();
+		$id = $this->ecp_model->rescheduling_activity_detail($user->id,$user->country_id);
+		echo $id;
+		die;
+	}
 }

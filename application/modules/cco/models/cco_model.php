@@ -19,7 +19,8 @@ class Cco_model extends BF_Model
         $global_head_user = array();
         if(!empty($campagain_data) && $campagain_data != 0)
         {
-            foreach($campagain_data as $key => $camp_data) {
+            foreach($campagain_data as $key => $camp_data)
+            {
                 $campaign_location_id = $camp_data["campaign_location_id"];
                 $final_array[] = $this->recursive_location_data($campaign_location_id, $global_head_user, $flag = 1, $leveldata);
             }
@@ -202,10 +203,11 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function campagain_data()
+    public function campagain_data($role)
     {
         $this->db->select("*");
         $this->db->from("bf_cco_campaign");
+        $this->db->where("customer_type",$role);
         $this->db->where("deleted","0");
         $this->db->where("status","1");
 
@@ -218,29 +220,66 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function get_farmer_count($geoid,$level)
+    public function get_farmer_count($geoid,$level,$selectedtype=NULL)
     {
         if($level == 3)
         {
             $where = " AND bmucd.geo_level_id3 = ".$geoid;
+            $where1 = "  bmucd.geo_level_id3 = ".$geoid;
         }
         elseif($level == 2)
         {
             $where = " AND bmucd.geo_level_id2 = ".$geoid;
+            $where1 = "  bmucd.geo_level_id2 = ".$geoid;
         }
         elseif($level == 1)
         {
             $where = " AND bmucd.geo_level_id1 = ".$geoid;
+            $where1 = "  bmucd.geo_level_id1 = ".$geoid;
         }
 
-        $sql = 'SELECT count(*) as row_count FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE bu.`role_id` = 11 AND bu.deleted= 0 '.$where;
+        if($selectedtype == NULL)
+        {
+            $user_role = 11;
+        }
+        elseif($selectedtype == "retailer")
+        {
+            $user_role = 10;
+        }
+        elseif($selectedtype == "distributor")
+        {
+            $user_role = 9;
+        }
+
+        $sql = 'SELECT count(*) as row_count FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE bu.`role_id` ='.$user_role.' AND bu.deleted= 0 '.$where;
+
+       // echo $sql;
 
         $info = $this->db->query($sql);
         // For Pagination
         $farmer_data = $info->result_array();
 
         if(!empty($farmer_data)) {
-            return $farmer_data[0]["row_count"];
+
+            $sql2 = 'SELECT count(*) as row_count FROM `bf_cco_campaign_allocation_customers` as bccac JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bccac.customer_id WHERE '.$where1;
+
+            $info2 = $this->db->query($sql2);
+            // For Pagination
+            $allocated_customer_data = $info2->result_array();
+
+            if(!empty($allocated_customer_data)){
+               $allocated_row_count = $allocated_customer_data[0]["row_count"];
+            }
+            else{
+                $allocated_row_count = 0;
+            }
+
+            $pending_count = $farmer_data[0]["row_count"] - $allocated_row_count;
+
+            $final_data["total_count"] =  $farmer_data[0]["row_count"];
+            $final_data["pending_count"] = $pending_count;
+
+            return $final_data;
         }
         else
         {
@@ -302,9 +341,20 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function geo_farmer_data($geo_data)
+    public function geo_farmer_data($geo_data,$selected_type=null)
     {
-        $sql = 'SELECT bu.id FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE bu.`role_id` = 11 AND bu.deleted= 0 AND bmucd.geo_level_id1 = '.$geo_data;
+
+        if($selected_type == null){
+            $user_role = 11;
+        }
+        elseif($selected_type == "retailer"){
+            $user_role = 10;
+        }
+        elseif($selected_type == "distributor"){
+            $user_role = 9;
+        }
+
+        $sql = 'SELECT bu.id FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE bu.`role_id` = '.$user_role.' AND bu.deleted= 0 AND bmucd.geo_level_id1 = '.$geo_data;
 
         $info = $this->db->query($sql);
         // For Pagination
@@ -432,18 +482,104 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function get_all_farmer_allocation_data($role_id)
+    public function get_all_farmer_allocation_data($campagain_id,$role_id,$page)
     {
-        $this->db->select("*");
+
+       /* $this->db->select("bcca.allocation_id,bcca.campaign_id,bcc.campaign_name,bu.display_name,bcca.geo_level_1,bmpgd.political_geography_name,bcca.customer_count");
         $this->db->from("bf_cco_campaign_allocation as bcca");
 
-        $this->db->join("bf_cco_campaign as bcc","bcc.campaign_id = bcca.campaign_id");
-        $this->db->join("bf_users as bu","bu.id = bcca.cco_id");
+        $this->db->join("bf_cco_campaign as bcc", "bcc.campaign_id = bcca.campaign_id");
+        $this->db->join("bf_users as bu", "bu.id = bcca.cco_id");
 
-        $this->db->join("bf_master_political_geography_details as bmpgd","bmpgd.political_geo_id = bcca.geo_level_1");
-        $this->db->where("bcca.deleted",0);
-        $this->db->where("bcca.status",1);
+        $this->db->join("bf_master_political_geography_details as bmpgd", "bmpgd.political_geo_id = bcca.geo_level_1");
+        $this->db->where("bcca.deleted", 0);
+        $this->db->where("bcca.status", 1);
+
+        $data = $this->db->get()->result_array();
+
+        if (isset($data) && !empty($data)) {
+            return $data;
+        } else {
+            return 0;
+        }
+        */
+
+
+        //$sql =' SELECT * ';
+
+        // $sql = ' SELECT mpgd.political_geography_name,it.ishop_target_id,bu.user_code,bu.display_name,mpsc.product_sku_name,it.quantity ';
+        $sql = ' SELECT SQL_CALC_FOUND_ROWS bcca.allocation_id as allocation_id,bcca.campaign_id,bcc.campaign_name,bu.display_name,bcca.geo_level_1,bmpgd.political_geography_name as level1,bcca.customer_count, bmpgd1.political_geography_name as level2,bmpgd2.political_geography_name as level3 ';
+        $sql .= ' FROM bf_cco_campaign_allocation as bcca ';
+        $sql .= ' JOIN bf_cco_campaign as bcc ON (bcc.campaign_id = bcca.campaign_id) ';
+        $sql .= ' JOIN bf_users as bu ON (bu.id = bcca.cco_id) ';
+        $sql .= ' JOIN bf_master_political_geography_details as bmpgd ON (bmpgd.political_geo_id = bcca.geo_level_1) ';
+
+        $sql .= ' JOIN bf_master_political_geography_details as bmpgd1 ON (bmpgd1.political_geo_id = bmpgd.parent_geo_id) ';
+
+        $sql .= ' JOIN bf_master_political_geography_details as bmpgd2 ON (bmpgd2.political_geo_id = bmpgd1.parent_geo_id) ';
+
+       // $sql .= ''
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND bcca.deleted =0 ';
+        $sql .= ' AND bcca.status =1 ';
+        $sql .= ' AND bcca.campaign_id ="'.$campagain_id.'" ';
+
+        $sql .= 'ORDER BY bcca.allocation_id DESC ';
+
+//echo $sql;die;
+        $allocation_data = $this->grid->get_result_res($sql);
+
+
+        if (isset($allocation_data['result']) && !empty($allocation_data['result'])) {
+
+            $allocation['head'] = array('Sr. No.', 'Action','Campagain Name', 'Geo Level 3', 'Geo Level 2', 'Geo Level 1', 'CCO Name','No. Of Farmers');
+
+            $allocation['count'] = count($allocation['head']);
+
+            if ($page != null || $page != "") {
+
+                $i = (($page * 10) - 9);
+
+            } else {
+                $i = 1;
+            }
+            foreach ($allocation_data['result'] as $rd) {
+
+                $allocation['row'][] = array($i, $rd['allocation_id'],$rd['campaign_name'],$rd['level3'], $rd['level2'], $rd['level1'], $rd['display_name'], $rd['customer_count']);
+                $i++;
+            }
+            $allocation['pagination'] = $allocation_data['pagination'];
+            $allocation['action'] = 'is_action';
+            $allocation['edit'] = '';
+            $allocation['delete'] = 'is_delete';
+               //testdata($allocation);
+            return $allocation;
+        } else {
+            return false;
+        }
+
     }
+
+    public function delete_allocation($allocation_id)
+    {
+        $this ->db->where('allocation_id', $allocation_id);
+        $this->db->delete("bf_cco_campaign_allocation_customers");
+
+        $this ->db->where('allocation_id', $allocation_id);
+        $this->db->delete("bf_cco_campaign_allocation");
+
+        if($this->db->affected_rows() > 0){
+            return 1;
+        }
+        else{
+            return 0;
+        }
+
+    }
+
+
+
 
 	
 }

@@ -31,7 +31,15 @@ $(document).ready(function() {
 
         getDigitalLibrary(activity_type_id);
 
+        $("#activity_address").val('');
+        // $("#activity_address").removeAttr("readonly","readonly");
+        $("#size_of_plot").val('');
+        $("#spray_volume").val('');
+
     });
+
+
+
 
     /*Validation Rule*/
 
@@ -538,6 +546,7 @@ function set_activity_type(activity_type_selected){
     {
         get_geo_fo_userdata(activity_type_selected);
         farmerDetails();
+        getDemonstrationById();
         var geo_5 = '';
         geo_5 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
             '<div class="col-md-2 col-sm-8 cont_size_select mrg_bottom_30">'+
@@ -605,6 +614,7 @@ function set_activity_type(activity_type_selected){
         get_geo_fo_userdata(activity_type_selected);
         //get_demonstration_data();
         farmerDetails();
+        getDemonstrationById();
 
         var geo_6 = '';
         geo_6 +='<div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Geo2<span style="color: red">*</span></label></div>'+
@@ -1119,5 +1129,140 @@ $(document).on('submit', 'form#activity_unplanned', function (e) {
   //  }
     return false;
 });
+
+function getDemonstrationById(){
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ecp/getDemonstrationById",
+        dataType : 'json',
+        success: function(resp){
+
+            $("select#demo_id").empty();
+            $("select#demo_id").selectpicker('refresh');
+
+            var html1 = "";
+
+            if(resp.length > 0){
+
+                html1 +='<option value="">Select Demonstration</option>';
+
+                $.each(resp, function(key, value) {
+                    var d = formatAMPM(value.execution_time);
+                    html1 += '<option value="' +value.activity_planning_id+ '">' + value.political_geography_name+ '::' + value.execution_date+' '+d+ '</option>';
+
+                });
+
+                $("select#demo_id").html(html1);
+                $("select#demo_id").selectpicker('refresh');
+
+            }
+        }
+    });
+}
+
+
+function formatAMPM(date_data) {
+
+    var date = new Date(date_data);
+
+    var hours = date.getHours();
+    var minutes = date.getMinutes();
+    var ampm = hours >= 12 ? 'pm' : 'am';
+    hours = hours % 12;
+    hours = hours ? hours : 12; // the hour '0' should be '12'
+    minutes = minutes < 10 ? '0'+minutes : minutes;
+    var strTime = hours + ':' + minutes + ' ' + ampm;
+    return strTime;
+}
+
+$(document).on('change','select#demo_id',function(){
+    var selected_id = $(this).val();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+"ecp/getDetailsByPlanningId",
+        data: {id:selected_id},
+        dataType : 'json',
+        success: function(resp){
+
+            if(resp == 0){
+                //  alert('innn');
+                //    $("select#geo_level_2").removeAttr("disabled","disabled");
+                $('select#geo_level_2').selectpicker('refresh');
+
+                geolevel_2_Change();
+
+                setTimeout(function(){
+
+                    $("select#geo_level_3").val(resp.geo_level_id_3);
+                    // $("select#geo_level_3").removeAttr("disabled","disabled");
+
+                    $('select#geo_level_3').selectpicker('refresh');
+
+                }, 500);
+
+                $("select#geo_level_4").empty();
+                //  $("select#geo_level_4").removeAttr("disabled","disabled");
+                $('select#geo_level_4').selectpicker('refresh');
+
+               // $("#activity_address").removeAttr("readonly","readonly");
+            }
+            else{
+
+                $("select#geo_level_2").val(resp.geo_level_id_2);
+                //  $("select#geo_level_2").attr("disabled","disabled");
+
+                $('select#geo_level_2').selectpicker('refresh');
+
+                geolevel_2_Change();
+
+                setTimeout(function(){
+
+                    $("select#geo_level_3").val(resp.geo_level_id_3);
+                    // $("select#geo_level_3").attr("disabled","disabled");
+
+                    $('select#geo_level_3').selectpicker('refresh');
+
+                    geolevel_3_Change();
+
+                }, 500);
+
+                setTimeout(function(){
+
+                    $("select#geo_level_4").val(resp.geo_level_id_4);
+                    //   $("select#geo_level_4").attr("disabled","disabled");
+
+                    $('select#geo_level_4').selectpicker('refresh');
+
+                }, 1000);
+
+                $("#activity_address").val(resp.location);
+                $("#size_of_plot").val(resp.size_of_plot);
+                $("#spray_volume").val(resp.spray_volume);
+                //  $("#activity_address").attr("readonly","readonly");
+            }
+        }
+    });
+
+});
+
+function geolevel_2_Change()
+{
+    var  activity_type_selected= $('select#activity_type_id option:selected').val();
+    var  perent_id= $('select#geo_level_2 option:selected').val();
+    var  second_perent= 'second_perent';
+
+    get_child_by_perent_id(activity_type_selected,perent_id,second_perent);
+}
+
+function geolevel_3_Change()
+{
+    var  activity_type_selected= $('select#activity_type_id option:selected').val();
+    var  perent_id= $('select#geo_level_3 option:selected').val();
+    get_child_by_parent_parent_id(activity_type_selected,perent_id);
+}
+
+
 
 
