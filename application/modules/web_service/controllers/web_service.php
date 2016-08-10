@@ -4270,8 +4270,19 @@ class Web_service extends Front_Controller
     {
         $user_id = $this->input->get_post('user_id');
         $country_id = $this->input->get_post('country_id');
-        $from_date = $this->input->get_post('from_date');
-        $to_date = $this->input->get_post('to_date');
+       // $from_date = $this->input->get_post('from_date');
+
+        //$to_date = $this->input->get_post('to_date');
+
+        $form_dt = ((isset($_POST['from_date']) && !empty($_POST['from_date'])) ? $_POST['from_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $from_date = date('Y-m-d', strtotime($f_date));
+
+        $to_dt = ((isset($_POST['to_date']) && !empty(($_POST['to_date']))) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+
         $status_id = $this->input->get_post('status_id');
         $employee_id = $this->input->get_post('employee_id');
 
