@@ -497,7 +497,9 @@
 /*# sourceMappingURL=bootstrap-datepicker.min.css.map */
 .datepicker.cal-parent thead {
     background-color: #009001;
+    display: table-caption;
 }
+.datepicker.cal-parent .datepicker-months thead, .datepicker.cal-parent .datepicker-years thead { display: inherit;}
 .datepicker.cal-parent th {
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
@@ -506,11 +508,11 @@
     color: #fff;
     font-family: 'Exo2-Light';
     font-weight: normal;
-    padding: 5px 9px !important;
+    padding: 5px 10px !important;
 }
 .datepicker.cal-parent td {
     font-family: 'Exo2-Light';
-    padding: 9px 9px !important;
+    padding: 9px 10px !important;
     border-radius: 50% !important;
 }
 .datepicker.cal-parent .datepicker-switch:hover,
@@ -524,6 +526,25 @@
 .datepicker.cal-parent table tr td.active.disabled,
 .datepicker.cal-parent table tr td.active.disabled:hover,
 .datepicker.cal-parent table tr td.active:hover {
+    background-color: #7bfe00;
+    background-image: -moz-linear-gradient(to bottom, #7bfe00, #7bfe00);
+    background-image: -ms-linear-gradient(to bottom, #7bfe00, #7bfe00);
+    background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#7bfe00), to(#7bfe00));
+    background-image: -webkit-linear-gradient(to bottom, #7bfe00, #7bfe00);
+    background-image: -o-linear-gradient(to bottom, #7bfe00, #7bfe00);
+    background-image: linear-gradient(to bottom, #7bfe00, #7bfe00);
+    background-repeat: repeat-x;
+    filter: progid: DXImageTransform.Microsoft.gradient(startColorstr='#0088cc', endColorstr='#0044cc', GradientType=0);
+    border-color: #04c #04c #002a80;
+    border-color: rgba(0, 0, 0, .1) rgba(0, 0, 0, .1) rgba(0, 0, 0, .25);
+    filter: progid: DXImageTransform.Microsoft.gradient(enabled=false);
+    color: #fff;
+    text-shadow: 0 -1px 0 rgba(0, 0, 0, .25)
+}
+.datepicker.cal-parent table tr td span.active,
+.datepicker.cal-parent table tr td span.active.disabled,
+.datepicker.cal-parent table tr td span.active.disabled:hover,
+.datepicker.cal-parent table tr td span.active:hover {
     background-color: #7bfe00;
     background-image: -moz-linear-gradient(to bottom, #7bfe00, #7bfe00);
     background-image: -ms-linear-gradient(to bottom, #7bfe00, #7bfe00);

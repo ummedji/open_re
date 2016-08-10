@@ -336,7 +336,7 @@ class Cco_model extends BF_Model
             'created_on' => date("Y-m-d h:i:s")
         );
 
-        $check_data = $this->check_cco_campagain_data($cco_data,$campagain_data);
+        $check_data = $this->check_cco_campagain_data($cco_data,$campagain_data,$geo_data);
 
         if($check_data == 0)
         {
@@ -388,10 +388,10 @@ class Cco_model extends BF_Model
 
     }
 
-    public function check_cco_campagain_data($cco_data,$campagain_data)
+    public function check_cco_campagain_data($cco_data,$campagain_data,$geo_data)
     {
         $sql = 'SELECT * FROM `bf_cco_campaign_allocation` as bcca
-                WHERE bcca.`cco_id` = '.$cco_data.' AND bcca.campaign_id= '.$campagain_data;
+                WHERE bcca.`cco_id` = '.$cco_data.' AND bcca.campaign_id= '.$campagain_data.' AND bcca.geo_level_1= '.$geo_data;
 
         $info = $this->db->query($sql);
         // For Pagination
@@ -434,6 +434,10 @@ class Cco_model extends BF_Model
 
     public function get_all_farmer_allocation_data($role_id)
     {
+        $this->db->select("*");
+        $this->db->from("bf_cco_campaign_allocation");
+
+        $this->db->join("bf_cco_campaign_allocation");
 
     }
 
