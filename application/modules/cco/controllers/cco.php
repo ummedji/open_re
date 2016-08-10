@@ -68,6 +68,8 @@ class Cco extends Front_Controller
       //  $campagain_id = 1;
         $get_cco_data = $this->cco_model->get_all_cco_data($logined_user_countryid);
 
+        $get_farmer_allocation_data = $this->cco_model->get_all_farmer_allocation_data(11);
+
         Template::set('campagaine_data',$campagain_data);
         Template::set('cco_data',$get_cco_data);
         Template::render();
@@ -112,19 +114,42 @@ class Cco extends Front_Controller
         $level_1 = $_POST["level_1"];
         $cco_data = $_POST["cco_data"];
 
+        $final_array = array();
+
         if(!empty($campagain_data) && !empty($level_1) && !empty($cco_data))
         {
 
             foreach($level_1 as $key => $geo_data)
             {
+                $geo_farmer_data = $this->cco_model->geo_farmer_data($geo_data);
+                //testdata($geo_farmer_data);
+                if($geo_farmer_data != 0)
+                {
+                    foreach($geo_farmer_data as $f_key => $farmerdata)
+                    {
+                        $farmer_id = $farmerdata["id"];
 
-                $geo_farmer_data = $this->db->geo_farmer_data($geo_data);
+                        //CHECK FARMER ALREADY ALLOCATED TO SOME CCO FOR SAME CAMPAGAIN
 
-
+                        $check_allocation_data = $this->cco_model->check_customer_allocation_data($farmer_id,$campagain_data);
+                        if($check_allocation_data == 0)
+                        {
+                            //ASSIGIN CCO, CAMPAGAIN TO FARMERS
+                            $data = $this->cco_model->add_customer_allocation_data($farmer_id,$campagain_data,$cco_data,$geo_data);
+                            $final_array[] = $data;
+                        }
+                    }
+                }
             }
-
         }
 
+        if(in_array(1,$final_array))
+        {
+            return 1;
+        }
+        else{
+            return 0;
+        }
     }
 
     public function activity()

@@ -9,6 +9,20 @@ $(document).ready(function(){
         get_geo_data(campagain_id,3,num_count);
     });
 
+    var cco_allocation_validators = $("#cco_allocation").validate({
+        //ignore:'.ignore',
+        rules: {
+            campagain_data:{
+                required: true
+            },
+            cco_data:{
+                required: true
+            },
+            "level_1[]":{
+                required: true
+            }
+        }
+    });
 });
 
 function get_geo_data(campagain_id,level_data,num_count)
@@ -79,13 +93,31 @@ $('body').on('click', 'input.level_2', function() {
         var level_data = 3;
         var num_count = 1;
         get_row_geo_data(parent_html,parent_geo_id,level_data,num_count);
+
+        $("button.save_btn").css("display","block");
+
     }
     else
     {
         parent_html.parent().parent().parent().find("td:nth-child(3) div.parent_id_"+parent_geo_id).remove();
+
+        if($("tbody#geo_location_data tr td:nth-child(3) input.level_1").length <= 0) {
+            $("button.save_btn").css("display", "none");
+        }
         //$("div.parent_id_"+parent_geo_id).remove();
     }
 });
+
+/*
+$("body").on("click","input.level_2",function(){
+
+    if($("tbody#geo_location_data tr td:nth-child(3) input.level_1").length > 0)
+    {
+        $("button.save_btn").css("display","block");
+    }
+});
+
+*/
 
 
 function get_row_geo_data(parent_html,parent_geo_id,level_data,num_count)
@@ -122,3 +154,57 @@ function get_row_geo_data(parent_html,parent_geo_id,level_data,num_count)
     });
 
 }
+
+
+$(document).on("submit","#cco_allocation",function(e){
+
+    e.preventDefault();
+
+    var param = $("#cco_allocation").serializeArray();
+
+    var $valid = $("#cco_allocation").valid();
+    if(!$valid) {
+        cco_allocation_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+
+        //if($("tbody.geo_location_data tr td:nth-child(3) div").length <= 0){
+
+        //}
+       // else
+
+        $.ajax({
+            type: 'POST',
+            url: site_url+"cco/add_allocation",
+            data: param,
+            //dataType : 'json',
+            success: function(resp){
+                var message = "";
+                //alert(resp);
+                if(resp != 0){
+                    message += 'Data added successfully.';
+                }
+                else{
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                             location.reload()
+                        }
+                    });
+            }
+        });
+        return false;
+    }
+});

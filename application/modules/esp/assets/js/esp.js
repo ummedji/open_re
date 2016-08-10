@@ -12,7 +12,7 @@ var forecast_validators = $("#add_forecast").validate({
         },
         pbg_data:{
             required: true
-        },
+        }
     }
 });
 

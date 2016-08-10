@@ -248,6 +248,42 @@ class Cco_model extends BF_Model
         }
     }
 
+    //GET UNALLOCATED FARMER COUNT
+
+    public function get_unallocated_farmer_count($geoid,$level)
+    {
+        if($level == 3)
+        {
+            $where = " AND bmucd.geo_level_id3 = ".$geoid;
+        }
+        elseif($level == 2)
+        {
+            $where = " AND bmucd.geo_level_id2 = ".$geoid;
+        }
+        elseif($level == 1)
+        {
+            $where = " AND bmucd.geo_level_id1 = ".$geoid;
+        }
+
+        $sql = 'SELECT count(*) as row_count FROM `bf_users` as bu
+                JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id
+                JOIN bf_cco_campaign_allocation_customers as bccac on bccac.customer_id = bu.id AND
+
+                WHERE bu.`role_id` = 11 AND bu.deleted= 0 '.$where;
+
+        $info = $this->db->query($sql);
+        // For Pagination
+        $farmer_data = $info->result_array();
+
+        if(!empty($farmer_data)) {
+            return $farmer_data[0]["row_count"];
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
     public function get_all_cco_data($country_id)
     {
         $this->db->select('id,display_name');
@@ -268,7 +304,137 @@ class Cco_model extends BF_Model
 
     public function geo_farmer_data($geo_data)
     {
-        
+        $sql = 'SELECT bu.id FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE bu.`role_id` = 11 AND bu.deleted= 0 AND bmucd.geo_level_id1 = '.$geo_data;
+
+        $info = $this->db->query($sql);
+        // For Pagination
+        $farmer_data = $info->result_array();
+
+        if(!empty($farmer_data)) {
+            return $farmer_data;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+
+
+    public function add_customer_allocation_data($farmer_id,$campagain_data,$cco_data,$geo_data)
+    {
+        $user= $this->auth->user();
+        $logined_user_type = $user->role_id;
+        $logined_user_id = $user->id;
+        $logined_user_countryid = $user->country_id;
+
+        $data_array = array(
+            'campaign_id' => $campagain_data,
+            'cco_id' => $cco_data,
+            'geo_level_1' => $geo_data,
+            'created_by_user' => $logined_user_id,
+            'created_on' => date("Y-m-d h:i:s")
+        );
+
+        $check_data = $this->check_cco_campagain_data($cco_data,$campagain_data);
+
+        if($check_data == 0)
+        {
+            $customer_count = 0;
+            $data_array["customer_count"] = $customer_count;
+
+            $this->db->insert("bf_cco_campaign_allocation", $data_array);
+            $allocation_id = $this->db->insert_id();
+
+        }
+        else
+        {
+
+            $allocation_id = $check_data[0]["allocation_id"];
+            if($check_data[0]["customer_count"] == NULL || $check_data[0]["customer_count"] == ""){
+                $customer_count = 0;
+            }
+            else
+            {
+                $customer_count = $check_data[0]["customer_count"];
+            }
+        }
+
+        $new_customer_count = $customer_count+1;
+
+        $sub_data_array = array(
+            'campaign_id' => $campagain_data,
+            'allocation_id' => $allocation_id,
+            'cco_id' => $cco_data,
+            'allocated_date' => date("Y-m-d"),
+            'customer_id' => $farmer_id,
+            'created_by_user' => $logined_user_id,
+            'created_on' => date("Y-m-d h:i:s")
+        );
+
+        $this->db->insert("bf_cco_campaign_allocation_customers",$sub_data_array);
+
+        if($this->db->affected_rows() > 0){
+
+            $update_array = array('customer_count' => $new_customer_count);
+            $this->db->where('allocation_id',$allocation_id);
+            $this->db->update("bf_cco_campaign_allocation",$update_array);
+
+            return 1;
+        }
+        else{
+            return 0;
+        }
+
+    }
+
+    public function check_cco_campagain_data($cco_data,$campagain_data)
+    {
+        $sql = 'SELECT * FROM `bf_cco_campaign_allocation` as bcca
+                WHERE bcca.`cco_id` = '.$cco_data.' AND bcca.campaign_id= '.$campagain_data;
+
+        $info = $this->db->query($sql);
+        // For Pagination
+        $camp_data = $info->result_array();
+
+        if(!empty($camp_data))
+        {
+            return $camp_data;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
+    /**
+     * @param $farmer_id
+     * @param $campagain_data
+     * @return int
+     */
+    public function check_customer_allocation_data($farmer_id,$campagain_data)
+    {
+        $sql = 'SELECT * FROM `bf_cco_campaign_allocation_customers` as bccac
+                WHERE bccac.`customer_id` = '.$farmer_id.' AND bccac.campaign_id= '.$campagain_data;
+
+        $info = $this->db->query($sql);
+        // For Pagination
+        $farmer_data = $info->result_array();
+
+        if(!empty($farmer_data))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public function get_all_farmer_allocation_data($role_id)
+    {
+
     }
 
 	

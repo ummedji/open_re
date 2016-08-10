@@ -77,7 +77,7 @@ echo form_open('cco/add_allocation',$attributes); ?>
     <div class="row">
         <label>CCO Name</label>
         <select id="cco_data" class="cco_data selectpicker" name="cco_data">
-            <option>Select CCO</option>
+            <option value="">Select CCO</option>
 
             <?php
             if(!empty($cco_data)) {
@@ -89,7 +89,19 @@ echo form_open('cco/add_allocation',$attributes); ?>
             }
             ?>
         </select>
-        <button title="Save" type="submit" class="btn btn-primary save_btn">Save</button>
+        <button style="display:none;" title="Save" type="submit" class="btn btn-primary save_btn">Save</button>
     </div>
 </div>
 <?php echo form_close(); ?>
+
+<div id="middle_container" class="allocation_container">
+    <?php
+    //if ($this->input->is_ajax_request())
+    {
+        $attributes = array('class' => '', 'id' => 'update_target','name'=>'update_target');
+        echo form_open('',$attributes);
+        echo theme_view('common/middle');
+        echo form_close();
+    }
+    ?>
+</div>
