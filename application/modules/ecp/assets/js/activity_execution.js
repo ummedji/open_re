@@ -1,7 +1,7 @@
 $(document).ready(function() {
 
     $('#execution_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     }).on('changeDate',function(e){
         dateChangeEvent(e);
@@ -112,7 +112,7 @@ $(document).ready(function() {
     getRating();
     getExecutionTime();
     getPlanningTime();
-    getPlanningDate()
+    getPlanningDate();
     getDurationtime();
 
 });
@@ -147,7 +147,7 @@ function getDurationtime()
 function getPlanningDate()
 {
     $('#planning_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     }).on('changeDate',function(e){
         dateChangeEvent(e);

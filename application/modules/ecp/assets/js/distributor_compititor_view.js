@@ -2,7 +2,10 @@ $(document).ready(function() {
 
     $('#from_month').datepicker({
         format: "yyyy-mm",
-        autoclose: true
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
     }).on('changeDate', function(selected){
         $('#to_month').val('');
         startDate = new Date(selected.date.valueOf());
@@ -12,7 +15,10 @@ $(document).ready(function() {
 
     $('#to_month').datepicker({
         format: "yyyy-mm",
-        autoclose: true
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
     });
 
 

@@ -2053,7 +2053,13 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
         {
-            $planning_date = $this->input->post("planning_date");
+
+
+            $plan_date = $this->input->post("planning_date");
+            $pl_date = str_replace('/', '-', $plan_date);
+            $planning_date = date('Y-m-d', strtotime($pl_date));
+
+           // $planning_date = $this->input->post("planning_date");
             $pl_time = $this->input->post("planning_time");
             $date_time= $planning_date.' '.$pl_time;
             $planning_date_time = date('Y-m-d H:i:s', strtotime($date_time));
@@ -2072,6 +2078,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $materials_qty =  explode(',',$this->input->post("materials_qty"));
         }
         else{
+
             $plan_date = $this->input->post("planning_date");
             $pl_date = str_replace('/', '-', $plan_date);
             $planning_date = date('Y-m-d', strtotime($pl_date));
@@ -2877,7 +2884,11 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
         {
-            $execution_date = $this->input->post("execution_date");
+            $plan_date = $this->input->post("execution_date");
+            $pl_date = str_replace('/', '-', $plan_date);
+            $execution_date = date('Y-m-d', strtotime($pl_date));
+
+           // $execution_date = $this->input->post("execution_date");
             $pl_time = $this->input->post("execution_time");
             $date_time= $execution_date.' '.$pl_time;
             $execution_date_time = date('Y-m-d H:i:s', strtotime($date_time));
@@ -2901,6 +2912,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $amount = $this->input->post("amount");
         }
         else{
+
             $plan_date = $this->input->post("execution_date");
             $pl_date = str_replace('/', '-', $plan_date);
             $execution_date = date('Y-m-d', strtotime($pl_date));
@@ -3193,6 +3205,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
         {
+
             $plan_date = $this->input->post("execution_date");
             $pl_date = str_replace('/', '-', $plan_date);
             $execution_date = date('Y-m-d', strtotime($pl_date));
@@ -3208,6 +3221,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $amount = $this->input->post("amount");
         }
         else{
+
             $plan_date = $this->input->post("execution_date");
             $pl_date = str_replace('/', '-', $plan_date);
             $execution_date = date('Y-m-d', strtotime($pl_date));
@@ -3747,7 +3761,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         {
             $this->db->where('status',$status);
         }
-        $this->db->where('DATE_FORMAT(activity_planning_date,"%Y-%m")',$month);
+        $this->db->where('DATE_FORMAT(activity_planning_date,"%Y-%c")',$month);
         $activity_details = $this->db->get()->result_array();
 
         if(isset($activity_details) && !empty($activity_details))

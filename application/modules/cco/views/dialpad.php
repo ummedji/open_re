@@ -9,7 +9,7 @@
                 <div class="clearfix"></div>
             </div>-->
             <div class="time_space">
-                <img src="images/watch_icon.png" alt="" style="vertical-align: middle;"> <span>2 : 30 : 05</span>
+                <img src="<?php echo Template::theme_url('images/watch_icon.png'); ?>" alt="" style="vertical-align: middle;"> <span>2 : 30 : 05</span>
             </div>
             <div class="clearfix"></div>
         </div>
@@ -21,10 +21,10 @@
                     <div class="col-md-12 text-center sub_nave">
                         <div class="inn_sub_nave">
                             <ul>
-                                <li class="active"><a href="#">Employee</a></li>
-                                <li class=""><a href="#">Farmers</a></li>
+                                <li class="active"><a href="#">Farmers</a></li>
                                 <li class=""><a href="#">Channel Partners</a></li>
                                 <li><a href="#">Activity</a></li>
+                                <li class=""><a href="#">Employee</a></li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
@@ -68,19 +68,19 @@
                 <div class="green-box">
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label><img src="images/call-icon.svg" alt=""></label>
+                            <label><img src="<?php echo Template::theme_url('images/call-icon.svg'); ?>" alt=""></label>
                             <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group">
-                            <label><img src="images/call-icon.svg" alt=""></label>
+                            <label><img src="<?php echo Template::theme_url('images/call-icon.svg'); ?>" alt=""></label>
                             <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
                         </div>
                     </div>
                     <div class="col-md-4">
                         <div class="form-group" style="margin-bottom: 0;">
-                            <label><img src="images/call-icon.svg" alt=""></label>
+                            <label><img src="<?php echo Template::theme_url('images/call-icon.svg'); ?>" alt=""></label>
                             <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
                         </div>
                     </div>
@@ -431,7 +431,7 @@
     <div class="chat-content"></div>
     <div class="clearfix"></div>
 </div>
-
+<!--
 <script src="js/jquery.min.js"></script>
 <script src="js/bootstrap.min.js"></script>
 <script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -439,6 +439,15 @@
 <script src="js/bootstrap-select.min.js"></script>
 <script src="js/bootstrap-table.js"></script>
 <script src="js/bootstrap-table-filter-control.js"></script>
+-->
+
+<script src="<?php echo Template::theme_url('js/jquery-listslider.js'); ?>"></script>
+<script src="<?php echo Template::theme_url('js/bootstrap.min.js'); ?>"></script>
+<script src="<?php echo Template::theme_url('js/jquery.mCustomScrollbar.concat.min.js'); ?>"></script>
+<script src="<?php echo Template::theme_url('js/bootstrap-select.min.js'); ?>"></script>
+<script src="<?php echo Template::theme_url('js/bootstrap-table.js'); ?>"></script>
+<script src="<?php echo Template::theme_url('js/bootstrap-table-filter-control.js'); ?>"></script>
+
 <script type="text/javascript">
     $('.nav.nav-tabs').listslider({
         left_label: '<span class="bre_lf_arrow"></span>',

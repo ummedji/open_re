@@ -206,3 +206,49 @@ a.set_pono, .eye_i a { border-bottom: solid 1px #65ac1e !important;}
 }
 .corp_text .plus_btn a { color: #519548;}
 /*final login css*/
+
+
+/****start cco style****/
+.cco_header {background-color: #65ac1e;}
+.time_space {background-color: #038614;}
+.right_slide {background-color: #65ac1e;}
+.right_slide ul li.active, .right_slide ul li:hover, .right_slide ul li:focus {background-color: #589d14;}
+.footer_menu {background-color: #65ac1e;}
+.in-up-details-list li i.employee_name_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 0;}
+.in-up-details-list li i.designation_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 -36px;}
+.in-up-details-list li i.gender_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 -75px;}
+.in-up-details-list li i.primary_mobile_no_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 -108px;}
+.in-up-details-list li i.fixed_line_no_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 -149px;}
+.in-up-details-list li i.country_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 -184px;}
+.in-up-details-list li i.email_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 -215px;}
+.in-up-details-list li i.user_ii { background: url(../images/left-slide-icon.svg) no-repeat 0 -258px;}
+.open_sld {background-color: #038614;}
+.back_details-button {background-color: #00793a;}
+.back_details-button:hover, .back_details-button:focus{background-color: #65ac1e;}
+.footer_info ul li.active a, .footer_info ul li a:hover {
+    background-color: #65ac1e;
+}
+/****end start cco style****/
+/****chate css****/
+.chat-header {background: #00793a url(../images/chat-icon.png) no-repeat 90% 8px;}
+/****end chate css****/
+/****dialapd v employee css****/
+.campaign-details-btn {background-color: #00793a;}
+.campaign-details-btn:hover, .campaign-details-btn:focus {background-color: #65ac1e;}
+.green-box {background-color: #00793a;}
+/****end dialapd v employee css****/
+
+/****new dialapd css****/
+ul.phase-list li a:hover, ul.phase-list li a:focus, ul.phase-list li.active a{background-color: #038614;}
+.script-btn {background-color: #038614;}
+.script-btn:hover, .script-btn:focus {background-color: #65ac1e;}
+/****end new dialapd css****/
+
+/****Dashboard css****/
+.frcs-btn li a .dark-gn-sq {color: #00793a;}
+.frcs-btn li a .light-gn-sq {color: #65ac1e;}
+.cal-controll {background-color: #65ac1e;}
+.ttl-sales {background-color: #65ac1e;}
+.in-activities-box a {background-color: #65ac1e;}
+.in-activities-box a:hover, .in-activities-box a:focus {background-color: #00793a;}
+/****end Dashboard css****/

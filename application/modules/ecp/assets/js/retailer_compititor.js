@@ -1,7 +1,10 @@
 $(function () {
     $('#month_da').datepicker({
         format: "yyyy-mm",
-        autoclose: true
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
     });
 
     $("select#geo_id").on("change",function(){

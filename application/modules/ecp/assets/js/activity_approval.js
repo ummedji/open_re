@@ -1,7 +1,10 @@
 $(document).ready(function(){
     $('#month').datepicker({
         format: "yyyy-mm",
-        autoclose: true
+        autoclose: true,
+
+        viewMode: "months",
+        minViewMode: "months"
     })
 });
 

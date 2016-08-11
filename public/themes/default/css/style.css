@@ -2902,7 +2902,7 @@ ul.acc_list { margin: 0; padding: 0; text-align: center;}
 
 .content_in {
     position: absolute;
-    margin-top: 38px;
+  /*  margin-top: 38px; */
     bottom: 0;
     top: 0;
     width: -moz-calc(100% - 50px);

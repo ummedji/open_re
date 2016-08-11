@@ -1,6 +1,6 @@
 $(document).ready(function() {
     $('#execution_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     });
 
@@ -10,7 +10,7 @@ $(document).ready(function() {
 
 
     $('#planning_date').datepicker({
-        format: "yyyy-mm-dd",
+        format: date_format,
         autoclose: true
     }).on('changeDate',function(e){
         dateChangeEvent(e);
