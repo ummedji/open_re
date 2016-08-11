@@ -277,6 +277,7 @@ class Web_service extends Front_Controller
             $activity_type = $this->ecp_model->activity_type_details($country_id);
             $crop_details = $this->ecp_model->crop_details_by_country_id($country_id);
             $key_farmer = $this->ecp_model->get_KeyFarmer_by_user_id($user_id, $country_id);
+            $key_retailer = $this->ecp_model->get_KeyRetailer_by_user_id($user_id,$country_id);
             $global_head_user = array();
             $employee_visit = $this->ecp_model->get_employee_for_loginuser($user_id, $global_head_user);
             //testdata($employee_visit)
@@ -422,6 +423,18 @@ class Web_service extends Front_Controller
                 }
             }
 
+            $retailers_array = array();
+            if (!empty($key_retailer)) {
+                foreach ($key_retailer as $retailer) {
+                    $retailers = array(
+                        "id" => $retailer['id'],
+                        "retailer_name" => $retailer['display_name'],
+                        "mobile" => $retailer['primary_mobile_no'],
+                    );
+                    array_push($retailers_array, $retailers);
+                }
+            }
+
             $employee_array = array();
             if (!empty($employee_visit)) {
                 foreach ($employee_visit as $employee) {
@@ -439,7 +452,7 @@ class Web_service extends Front_Controller
             }
 
 
-            $data = array("distributors" => $dist_array, "retailers" => $ret_array, "products_skus" => $sku_array, "units" => $units, "materials" => $mtl_array, "compititor" => $comp_array, "reasons" => $reason_array, "leave_type" => $leave_type_array, "status" => $status, "diseases" => $diseases_array, "crops" => $crop_array, "activity" => $activity_array, "key_farmers" => $farmers_array, "joint_visit" => $employee_array,'lowest_level'=>$lowest_level);
+            $data = array("distributors" => $dist_array, "retailers" => $ret_array, "products_skus" => $sku_array, "units" => $units, "materials" => $mtl_array, "compititor" => $comp_array, "reasons" => $reason_array, "leave_type" => $leave_type_array, "status" => $status, "diseases" => $diseases_array, "crops" => $crop_array, "activity" => $activity_array, "key_farmers" => $farmers_array, "joint_visit" => $employee_array,'lowest_level'=>$lowest_level,"key_retailers" => $retailers_array);
             //  testdata($data);
             $result['status'] = true;
             $result['message'] = 'Success';

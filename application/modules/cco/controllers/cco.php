@@ -52,6 +52,8 @@ class Cco extends Front_Controller
 
     public function farmer_dialpad()
     {
+        Assets::add_module_js('cco', 'cco_dialpad.js');
+
         $user= $this->auth->user();
         $logined_user_type = $user->role_id;
         $logined_user_id = $user->id;

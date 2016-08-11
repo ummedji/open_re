@@ -1,3 +1,6 @@
+<?php
+$segment_data = $this->uri->segment(2);
+?>
 <div id="cco_wrapper">
     <div class="cco_header">
         <div class="left_details pull-right">
@@ -35,7 +38,6 @@
                             <label>Campaign</label>
                             <div class="inln_fld_top">
                                 <select class="selectpicker" id="Campaign" name="Campaign">
-
                                     <option value="">Campaign Name</option>
                                     <?php
                                     if (isset($campagaine_data) && !empty($campagaine_data) && $campagaine_data != 0) {
