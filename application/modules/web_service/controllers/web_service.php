@@ -4836,6 +4836,94 @@ class Web_service extends Front_Controller
     }
 
 
+    public function cancelActivity()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $id = $this->input->get_post('planning_id');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($id) && !empty($id))) {
+
+            $activity_detail = $this->ecp_model->update_activity_reson_detail($user_id,$country_id);
+
+            if($activity_detail == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'Data Not Updated.';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+    public function ReschedulingActvity()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $id = $this->input->get_post('planning_id');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($id) && !empty($id))) {
+
+            $activity_detail = $this->ecp_model->rescheduling_activity_detail($user_id,$country_id);
+
+            if($activity_detail == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'Data Not Updated.';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
+    public function addActivityExecutionDetails()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $id = $this->input->get_post('planning_id');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($id) && !empty($id))) {
+
+            $activity_detail = $this->ecp_model->addActivityExecution($user_id,$country_id,null,'web_service');
+
+            if($activity_detail == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'Data Not Updated.';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
+
+
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
 

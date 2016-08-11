@@ -580,10 +580,24 @@ class Cco_model extends BF_Model
 
     public function get_campagain_allocated_customer_data($campagainid)
     {
-        $this->db->select("*");
+        $this->db->select("bccac.customer_id,bmupd.call_name,bmupd.first_name,bmupd.last_name,bmupd.land_size,
+                           bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,
+                           bmucd.pincode,
+                           bccac.remarks,bccac.comments,
+                           bmpgd1.political_geography_name as level1,
+                           bmpgd2.political_geography_name as level2,
+                           bmpgd3.political_geography_name as level3
+                         ");
+
         $this->db->from("bf_cco_campaign_allocation as bcca");
-        $this->db->join("bf_cco_campaign_allocation_customers as bccac","bccac.allocation_id = bcca.allocation_id");
-        $this->db->join("bf_users as bu","bu.id = bccac.customer_id");
+        $this->db->join("bf_cco_campaign_allocation_customers as bccac","bccac.allocation_id = bcca.allocation_id",'LEFT');
+
+        $this->db->join("bf_master_user_personal_details as bmupd","bmupd.user_id = bccac.customer_id",'LEFT');
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bccac.customer_id",'LEFT');
+
+        $this->db->join("bf_master_political_geography_details as bmpgd1","bmpgd1.political_geo_id = bmucd.geo_level_id1");
+        $this->db->join("bf_master_political_geography_details as bmpgd2","bmpgd2.political_geo_id = bmucd.geo_level_id2");
+        $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3");
 
         $this->db->where('bcca.campaign_id',$campagainid);
         $this->db->where('bcca.status','1');
@@ -591,7 +605,7 @@ class Cco_model extends BF_Model
 
         $allocated_campagain_data = $this->db->get()->result_array();
 
-        testdata($allocated_campagain_data);
+        //testdata($allocated_campagain_data);
 
         if(isset($allocated_campagain_data ) && !empty($allocated_campagain_data )){
             return $allocated_campagain_data;
@@ -599,8 +613,43 @@ class Cco_model extends BF_Model
         else{
             return array();
         }
+    }
 
+    public function get_dialed_customer_data($customer_id)
+    {
 
+        $this->db->select("bu.id,bu.email,bu.display_name,bu.user_code,bu.country_id,
+                           bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,
+                           bmupd.gender,
+                           bmpgd1.political_geography_name as level1,
+                           bmpgd2.political_geography_name as level2,
+                           bmpgd3.political_geography_name as level3,
+                           bmdc.desigination_country_name
+                           ");
+        $this->db->from("bf_users as bu");
+
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id","LEFT");
+        $this->db->join("bf_master_user_personal_details as bmupd","bmupd.user_id = bu.id","LEFT");
+
+        $this->db->join("bf_master_employee_current_profile as bmecp","bmecp.user_id = bu.id","LEFT");
+
+        $this->db->join("bf_master_designation_country as bmdc","bmdc.desigination_country_id = bmecp.desigination_id AND bmdc.country_id = bu.country_id","LEFT");
+
+        $this->db->join("bf_master_political_geography_details as bmpgd1","bmpgd1.political_geo_id = bmucd.geo_level_id1","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd2","bmpgd2.political_geo_id = bmucd.geo_level_id2","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3","LEFT");
+
+        $this->db->where('bu.id',$customer_id);
+
+        $user_data = $this->db->get()->result_array();
+        if(isset($user_data ) && !empty($user_data ))
+        {
+            return $user_data;
+        }
+        else
+        {
+            return array();
+        }
     }
 
 

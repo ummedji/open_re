@@ -3201,11 +3201,11 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function addActivityExecution($user_id,$country_id,$local_date = null,$web_service = null){
 
-        $activity_planning_id = $this->input->post("inserted_activity_planning_id");
+
 
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
         {
-
+            $activity_planning_id = $this->input->post("planning_id");
             $plan_date = $this->input->post("execution_date");
             $pl_date = str_replace('/', '-', $plan_date);
             $execution_date = date('Y-m-d', strtotime($pl_date));
@@ -3221,7 +3221,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $amount = $this->input->post("amount");
         }
         else{
-
+            $activity_planning_id = $this->input->post("inserted_activity_planning_id");
             $plan_date = $this->input->post("execution_date");
             $pl_date = str_replace('/', '-', $plan_date);
             $execution_date = date('Y-m-d', strtotime($pl_date));
@@ -3804,6 +3804,108 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         else {
             return 0;
         }
+    }
+
+
+
+
+
+    public function get_all_activity_details($radio_check,$from_date,$to_date,$activity_type,$country_id,$local_date=null,$page=null)
+    {
+        if($radio_check == 'planned_activity')
+        {
+            $status = 2;
+        }
+        else{
+            $status = 4;
+        }
+       // $sql = 'SELECT * ';
+        $sql = 'SELECT eap.activity_planning_id,eap.activity_planning_time,eap.execution_time,eap.proposed_attandence_count,bu.display_name,bu.user_code,mdc.desigination_country_name,eamc.activity_type_country_name,mpgd2.political_geography_name as geo_level_2,mpgd3.political_geography_name as geo_level_3,mpgd4.political_geography_name as geo_level_4 ';
+        $sql .= 'FROM bf_ecp_activity_planning AS eap ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = eap.employee_id) ';
+        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.user_id = bu.id) ';
+        $sql .= 'JOIN bf_master_designation_country AS mdc ON (mdc.desigination_country_id = mdr.desigination_role_id) ';
+        $sql .= 'JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
+        $sql .= 'JOIN bf_master_political_geography_details AS mpgd2 ON (mpgd2.political_geo_id = eap.geo_level_id_2) ';
+        $sql .= 'JOIN bf_master_political_geography_details as mpgd3 ON (mpgd3.political_geo_id = eap.geo_level_id_3) ';
+        $sql .= 'JOIN bf_master_political_geography_details as mpgd4 ON (mpgd4.political_geo_id = eap.geo_level_id_4) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND eap.country_id ="' . $country_id . '" ';
+        $sql .= ' AND eap.status = ' . $status . ' ';
+        $sql .= ' AND eap.activity_type_id = ' . $activity_type . ' ';
+        if($status == 4)
+        {
+            $sql .= ' AND eap.execution_date BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
+        }
+        else{
+            $sql .= ' AND eap.activity_planning_date BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
+        }
+        $sql .= ' ORDER BY eap.activity_planning_id  DESC ';
+
+        $activity_approval = $this->grid->get_result_res($sql);
+
+        testdata($activity_approval);
+       /* if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
+
+            $activity['head'] = array('Sr. No.', 'Edit', 'Employee Name', 'Employee Code', 'Designation', 'Activity Planned Date', 'Activity Type','Action');
+
+            $activity['count'] = count($activity['head']);
+            if ($page != null || $page != "") {
+                $i = (($page * 10) - 9);
+            } else {
+                $i = 1;
+            }
+
+            foreach ($activity_approval['result'] as $rm) {
+
+                if ($local_date != null) {
+                    $date3 = strtotime($rm['activity_planning_date']);
+                    $activity_date = date($local_date, $date3);
+
+                } else {
+                    $activity_date = $rm['activity_planning_date'];
+                }
+                if($rm['status'] == 1)
+                {
+                    $approval_status = '<select name="status" class="approval_status" id="approval_status" ><option value="">Select Action</option><option attr-id="'. $rm['activity_planning_id'].'" value="2">Approve</option><option attr-id="'. $rm['activity_planning_id'].'"   value="3">Reject</option></select>';
+                    $edit_disabled[] = 0;
+                }
+                else{
+                    if($rm['status'] == '2')
+                    {
+                        $approval_status = 'Approve';
+                        $edit_disabled[]= 1;
+                    }
+                    elseif($rm['status'] == '3'){
+                        $approval_status = 'Reject';
+                        $edit_disabled[] = 1;
+                    }
+                    elseif($rm['status'] == '4'){
+                        $approval_status = 'Executed';
+                        $edit_disabled[]= 1;
+                    }
+                    else{
+                        $approval_status = 'Canceled';
+                        $edit_disabled[] = 1;
+                    }
+                }
+
+
+                $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['user_code'], $rm['desigination_country_name'],$activity_date, $rm['activity_type_country_name'],$approval_status );
+                $i++;
+            }
+            $activity['eye'] = '';
+            $activity['action'] = 'is_action';
+            $activity['delete'] = '';
+            $activity['edit_disabled'] = $edit_disabled ;
+            $activity['pagination'] = $activity_approval['pagination'];
+            // testdata($activity);
+            return $activity;
+        } else {
+            return false;
+        }*/
+
     }
 
 

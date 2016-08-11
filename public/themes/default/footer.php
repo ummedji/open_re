@@ -63,7 +63,15 @@ echo Assets::js();
             $(".in-up-details-list").toggleClass("in-up-details-list-par");
         });
 
+        $(".mute_ii").click(function(e){
+            $(".mute_ii").toggleClass("speaker");
+            $(".spkr-p").toggleClass("spkr-p-blk");
+            $(".mute-nl").toggleClass("mute-nl-none");
+        });
+
         //<![CDATA[
+
+     /*
         $(window).load(function(){
             document.getElementById("upload_file_data").onchange = function () {
                 document.getElementById("FileoadFile").value = this.value;
@@ -83,7 +91,10 @@ echo Assets::js();
                 }
                 document.getElementById('filename').value = filename;
             }
-        });//]]>
+        });
+        */
+
+        //]]>
 
         $(".zoom_in_btn").click(function(e){
             $(".zoom_out_btn").toggleClass("intro");

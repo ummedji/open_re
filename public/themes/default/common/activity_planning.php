@@ -6,9 +6,18 @@
                     <div class="default_box_white">
                         <div class="col-md-12 text-center tp_form inline-parent">
                             <div class="form-group">
+                                <?php if(isset($current_user->local_date) && !empty($current_user->local_date)){
+                                     $date = strtotime($activity_planning['activity_planning_date']);
+                                    $planning_date = date($current_user->local_date,$date);
+                                }
+                                else{
+                                    $planning_date = $activity_planning['activity_planning_date'];
+                                }
+                                ?>
+
                                 <label>Select Date<span style="color: red">*</span></label>
                                 <input type="text" class="form-control" name="planning_date" id="planning_date"
-                                       value="<?php echo $activity_planning['activity_planning_date'] ?>"
+                                       value="<?php echo $planning_date ?>"
                                        placeholder="">
                             </div>
                             <?php

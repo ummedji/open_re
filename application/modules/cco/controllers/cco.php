@@ -64,6 +64,17 @@ class Cco extends Front_Controller
         $campagain_data = $this->cco_model->campagain_data($farmer_role);
 
         Template::set('campagaine_data',$campagain_data);
+        Template::set_view("cco/main_screen_dialpad");
+        Template::render();
+    }
+
+    public function dialpad()
+    {
+        $customer_id = $this->session->userdata("customer_id");
+
+        $get_sidebar_selected_customer_data = $this->cco_model->get_dialed_customer_data($customer_id);
+
+        Template::set('sidebar_selected_customer_data',$get_sidebar_selected_customer_data);
         Template::set_view("cco/dialpad");
         Template::render();
     }
@@ -73,7 +84,29 @@ class Cco extends Front_Controller
         $campagainid = $_POST["campagainid"];
         $campagain_customer_data = $this->cco_model->get_campagain_allocated_customer_data($campagainid);
 
+        Template::set('campagain_customer_data',$campagain_customer_data);
 
+        Template::set_view("cco/campagain_customer_data");
+        Template::render();
+    }
+
+    public function set_customer_data()
+    {
+        $this->load->library('session');
+
+        $customerid = $_POST["customerid"];
+        $campagain_id = $_POST["campagainid"];
+        $user= $this->auth->user();
+        $logined_user_type = $user->role_id;
+        $logined_user_id = $user->id;
+        $logined_user_countryid = $user->country_id;
+
+        $this->session->set_userdata(array(
+            'user_id'       => $logined_user_id,
+            'country_id'    => $logined_user_countryid,
+            'customer_id'      => $customerid,
+            'campagain_id'  => $campagain_id
+        ));
 
     }
 

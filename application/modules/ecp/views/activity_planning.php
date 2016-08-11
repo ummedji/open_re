@@ -62,7 +62,7 @@ if (!$this->input->is_ajax_request()) {
                                         <div class="row form-group">
                                             <div class="col-md-3 col-sm-3 first_lb mrg_bottom_30"><label>Select Activity
                                                     Type<span style="color: red">*</span></label></div>
-                                            <div class="col-md-4 col-sm-8 cont_size_select mrg_bottom_30">
+                                            <div class="col-md-3 col-sm-8 cont_size_select mrg_bottom_30">
                                                 <select class="selectpicker" id="activity_type_id"
                                                         name="activity_type_id" data-live-search="true">
                                                     <option value="">Select Activity Type</option>

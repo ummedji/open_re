@@ -1,9 +1,13 @@
-<?php echo theme_view('header'); ?>
+<?php
+echo theme_view('header');
+?>
     <?php if ($this->session->userdata('user_id') !='') {
     ?>
     <div id="wrapper">
         <?php
+    if($this->uri->segment(2) != 'dialpad') {
         echo theme_view('_sitenav');
+    }
         ?>
         <!--inner contain-->
         <div class="inner_contain">

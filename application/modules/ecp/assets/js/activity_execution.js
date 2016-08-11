@@ -1,11 +1,6 @@
 $(document).ready(function() {
 
-    $('#execution_date').datepicker({
-        format: date_format,
-        autoclose: true
-    }).on('changeDate',function(e){
-        dateChangeEvent(e);
-    });
+
 
 
     $("select#activity_type_id").on("change",function() {
@@ -114,8 +109,19 @@ $(document).ready(function() {
     getPlanningTime();
     getPlanningDate();
     getDurationtime();
+    getExecutionDate();
 
 });
+
+function getExecutionDate()
+{
+    $('#execution_date').datepicker({
+        format: date_format,
+        autoclose: true
+    }).on('changeDate',function(e){
+        dateChangeEvent(e);
+    });
+}
 
 function getExecutionTime()
 {
@@ -1273,6 +1279,7 @@ function getActivityPlanningId(Id)
     getPlanningTime();
     getPlanningDate();
     getDurationtime();
+    getExecutionDate();
 
 }
 
@@ -1282,6 +1289,7 @@ function getActivityPlanningsId(Id)
     getPlanningTime();
     getPlanningDate();
     getDurationtime();
+    getExecutionDate();
 }
 
 $(document).on('click','.close',function(){

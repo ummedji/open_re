@@ -1,16 +1,13 @@
-<?php
-$segment_data = $this->uri->segment(2);
-?>
 <div id="cco_wrapper">
     <div class="cco_header">
         <div class="left_details pull-right">
-            <!--<div class="blk_list">
+            <div class="blk_list">
                 <a href="#">
-                    <img src="images/blacklist_icon.png" alt="" style="vertical-align: middle;">
+                    <img src="<?php echo Template::theme_url('images/blacklist_icon.png'); ?>" alt="" style="vertical-align: middle;">
                     <span>Add To Blacklist</span>
                 </a>
                 <div class="clearfix"></div>
-            </div>-->
+            </div>
             <div class="time_space">
                 <img src="<?php echo Template::theme_url('images/watch_icon.png'); ?>" alt="" style="vertical-align: middle;"> <span>2 : 30 : 05</span>
             </div>
@@ -20,182 +17,462 @@ $segment_data = $this->uri->segment(2);
     <div class="content_in">
         <div class="col-md-12 count-height">
             <div class="row" style="padding-top: 15px; padding-bottom: 15px;">
-                <div class="white-box">
-                    <div class="col-md-12 text-center sub_nave">
-                        <div class="inn_sub_nave">
-                            <ul>
-                                <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('/cco/farmer_dialpad') ?>">Farmers</a></li>
-                                <li class=""><a href="#">Channel Partners</a></li>
-                                <li><a href="#">Activity</a></li>
-                                <li class=""><a href="#">Employee</a></li>
+                <div class="col-md-3 resp-sidebar" style="z-index: 10;">
+                    <div class="left-side-details">
+                        <div class="up-detail-box">
+
+                            <?php
+                                    $customer_name = (isset($sidebar_selected_customer_data[0]["display_name"]) && !empty($sidebar_selected_customer_data[0]["display_name"])) ? $sidebar_selected_customer_data[0]["display_name"] : "";
+
+
+                                    $customer_code = (isset($sidebar_selected_customer_data[0]["user_code"]) && !empty($sidebar_selected_customer_data[0]["user_code"])) ? $sidebar_selected_customer_data[0]["user_code"] : "";
+
+                                    $customer_email = (isset($sidebar_selected_customer_data[0]["email"]) && !empty($sidebar_selected_customer_data[0]["email"]) ? $sidebar_selected_customer_data[0]["email"] : "") ;
+
+
+                                    $customer_primary_mobile_no = (isset($sidebar_selected_customer_data[0]["primary_mobile_no"]) && !empty($sidebar_selected_customer_data[0]["primary_mobile_no"])) ? $sidebar_selected_customer_data[0]["primary_mobile_no"] : "";
+
+                                    $customer_secondary_mobile_no = (isset($sidebar_selected_customer_data[0]["secondary_mobile_no"]) && !empty($sidebar_selected_customer_data[0]["secondary_mobile_no"])) ? $sidebar_selected_customer_data[0]["secondary_mobile_no"] : "";
+
+                                    $customer_landline_no = (isset($sidebar_selected_customer_data[0]["landline_no"]) && !empty($sidebar_selected_customer_data[0]["landline_no"]))? $sidebar_selected_customer_data[0]["landline_no"]:"";
+
+
+                                    $customer_gender = (isset($sidebar_selected_customer_data[0]["gender"]) && !empty($sidebar_selected_customer_data[0]["gender"]))? $sidebar_selected_customer_data[0]["gender"]:"";
+
+                                    $customer_level1 = (isset($sidebar_selected_customer_data[0]["level1"]) && !empty($sidebar_selected_customer_data[0]["level1"])) ? $sidebar_selected_customer_data[0]["level1"] :"";
+
+
+                                    $customer_level2 = (isset($sidebar_selected_customer_data[0]["level2"]) && !empty($sidebar_selected_customer_data[0]["level2"]))? $sidebar_selected_customer_data[0]["level2"]: "";
+
+
+                                    $customer_level3 = (isset($sidebar_selected_customer_data[0]["level3"]) && !empty($sidebar_selected_customer_data[0]["level3"]))? $sidebar_selected_customer_data[0]["level3"]:"";
+
+
+                                    $customer_desigination_name = (isset($sidebar_selected_customer_data[0]["desigination_country_name"]) && !empty($sidebar_selected_customer_data[0]["desigination_country_name"]))? $sidebar_selected_customer_data[0]["desigination_country_name"] : "";
+
+                            ?>
+
+                            <ul class="in-up-details-list">
+                                <li><a href="#"><i class="employee_name_ii"></i>Employee Name</a></li>
+                                <li><a href="#"><i class="employee_name_ii"></i>Employee Code</a></li>
+                                <li><a href="#"><i class="designation_ii"></i>Designation</a></li>
+                                <li><a href="#"><i class="gender_ii"></i>Gender</a></li>
+                                <li><a href="#"><i class="primary_mobile_no_ii"></i>Primary Mobile No.</a></li>
+                                <li><a href="#"><i class="primary_mobile_no_ii"></i>Other Contact No.</a></li>
+                                <li><a href="#"><i class="fixed_line_no_ii"></i>Fixed Line No.</a></li>
+                             <!--   <li><a href="#"><i class="country_ii"></i>Country</a></li>
+                                <li><a href="#"><i class="country_ii"></i>State</a></li>-->
+                                <li><a href="#"><i class="country_ii"></i>City</a></li>
+                                <li><a href="#"><i class="country_ii"></i>Provience 2</a></li>
+                                <li><a href="#"><i class="country_ii"></i>Provience 1</a></li>
+                                <li><a href="#"><i class="email_ii"></i>Email Address</a></li>
+                               <!-- <li><a href="#"><i class="user_ii"></i>Ashvin Upadala</a></li>
+                                <li><a href="#"><i class="primary_mobile_no_ii"></i>Wrong Number</a></li>
+                                <li><a href="#"><i></i>KTP No.</a></li>-->
                             </ul>
+                        </div>
+                        <div class="inside-detail-box">
+                            <ul class="in-up-details-list">
+                                <li><a href="#"><i class="employee_name_ii"></i><?php echo $customer_name; ?></a></li>
+                                <li><a href="#"><i class="employee_name_ii"></i><?php echo $customer_code; ?></a></li>
+                                <li><a href="#"><i class="designation_ii"></i><?php echo $customer_desigination_name; ?></a></li>
+                                <li><a href="#"><i class="gender_ii"></i><?php echo $customer_gender; ?></a></li>
+                                <li><a href="#"><i class="primary_mobile_no_ii"></i><?php echo $customer_primary_mobile_no; ?></a></li>
+                                <li><a href="#"><i class="primary_mobile_no_ii"></i><?php echo $customer_secondary_mobile_no; ?></a></li>
+                                <li><a href="#"><i class="fixed_line_no_ii"></i><?php echo $customer_landline_no; ?></a></li>
+                             <!--   <li><a href="#"><i class="country_ii"></i>India</a></li>
+                                <li><a href="#"><i class="country_ii"></i>Gujarat</a></li>-->
+
+                                <li><a href="#"><i class="country_ii"></i><?php echo $customer_level3; ?></a></li>
+                                <li><a href="#"><i class="country_ii"></i><?php echo $customer_level2; ?></a></li>
+                                <li><a href="#"><i class="country_ii"></i><?php echo $customer_level1; ?></a></li>
+                                <li><a href="#"><i class="email_ii"></i><?php echo $customer_email; ?></a></li>
+
+                              <!--  <li><a href="#"><i class="user_ii"></i>Sachin Dholu</a></li>
+                                <li><a href="#"><i class="primary_mobile_no_ii"></i>Wrong Number</a></li>
+                                <li><a href="#"><i></i>12345678910</a></li> -->
+                            </ul>
+                            <a href="#" class="open_sld">
+                                <img src="<?php echo Template::theme_url('images/open_icon.png'); ?>" style="vertical-align: middle;" alt="" class="hid-open-arrow">
+                                <img src="<?php echo Template::theme_url('images/close_icon.png'); ?>" style="vertical-align: middle;" alt="" class="show-open-arrow">
+                            </a>
                             <div class="clearfix"></div>
                         </div>
-                    </div>
-                    <div class="emty-height"></div>
-                    <div class="col-md-12 text-center tp_form inline-parent sbde-parent">
-                        <div class="form-group">
-                            <label>Campaign</label>
-                            <div class="inln_fld_top">
-                                <select class="selectpicker" id="Campaign" name="Campaign">
-                                    <option value="">Campaign Name</option>
-                                    <?php
-                                    if (isset($campagaine_data) && !empty($campagaine_data) && $campagaine_data != 0) {
-                                        foreach ($campagaine_data as $k => $campagainedata) {
-                                            ?>
-                                            <option value="<?php echo $campagainedata['campaign_id']; ?>"><?php echo $campagainedata['campaign_name']; ?></option>
-                                        <?php
-                                        }
-                                    }
-                                    ?>
 
-                                </select>
-                                <div class="clearfix"></div>
-                                <label id="Campaign-" class="error" for="Campaign"></label>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Call Mode</label>
-                            <div class="inln_fld_top">
-                                <select class="selectpicker" id="Call Mode" name="Call Mode">
-                                    <option value="">Call Mode</option>
-                                    <option value="Manual">Manual</option>
-                                    <option value="Auto">Auto</option>
-                                </select>
-                                <div class="clearfix"></div>
-                                <label id="to_date-error" class="error" for="Call Mode"></label>
-                            </div>
-                        </div>
                         <div class="clearfix"></div>
-                        <div id="custom-search-input">
-                            <div class="input-group col-md-12">
-                                <input type="text" class="form-control input-lg" placeholder="Search Farmer by Name" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-info btn-lg" type="button"><i class="glyphicon glyphicon-search"></i></button>
-                               </span>
+                    </div>
+                </div>
+                <div class="col-md-9">
+                    <div class="row">
+                        <div class="company_details_form">
+                            <form>
+                                <div class="col-md-4 col-sm-4 com_form">
+                                    <div class="form-group">
+                                        <label for="Campaign">Campaign</label>
+                                        <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4 com_form">
+                                    <div class="form-group">
+                                        <label for="Call Status">Call Status</label>
+                                        <input type="text" class="form-control" name="Call Status" id="Call Status" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 col-sm-4 com_form">
+                                    <div class="form-group">
+                                        <label for="Crop Stage">Crop Stage</label>
+                                        <input type="text" class="form-control" name="Crop Stage" id="Crop Stage" placeholder="">
+                                    </div>
+                                </div>
+                                <div class="col-md-4 com_form">
+                                    <div class="form-group">
+                                        <label for="Comments">Comments</label>
+                                        <textarea class="form-control" rows="3" name="Comments" id="Comments" placeholder=""></textarea>
+                                    </div>
+                                </div>
+                                <div class="col-md-8 com_form">
+                                    <div class="form-group">
+                                        <textarea class="form-control" rows="3" name="Remarks" id="Remarks" placeholder="Remarks">Remarks...</textarea>
+                                    </div>
+                                </div>
+                                <div class="clearfix"></div>
+                            </form>
+                            <div class="clearfix"></div>
+                        </div>
+
+                        <div class="main-actv-details-form">
+                            <div class="col-md-12">
+                                <div class="actv-details-form">
+                                    <h5>Personal Details</h5>
+                                    <div class="back_details">
+                                        <div class="row">
+                                            <div class="col-md-11">
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                                <div class="row">
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="clearfix"></div>
+                                        <div class="col-md-1 col-md-1-n">
+                                            <label class="space_llb">&nbsp;</label>
+                                            <button type="submit" class="btn btn-default back_details-button">Save</button>
+                                        </div>
+                                    </div>
+
+                                    <!--
+
+                                    <div class="pers-details-form">
+                                        <div class="row">
+                                            <div class="col-md-4 cl_space">calendar here...</div>
+                                            <div class="col-md-8 auto_form_scroll">
+                                                <div class="row">
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Activity Name">Activity Name</label>
+                                                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="EMP Name">EMP Name</label>
+                                                            <input type="text" class="form-control" name="EMP Name" id="EMP Name" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Mobile No.">Mobile No.</label>
+                                                            <input type="text" class="form-control" name="Mobile No." id="Mobile No." placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Crops">Crops</label>
+                                                            <select class="selectpicker" id="Crops" name="Crops">
+                                                                <option value="">Multiple</option>
+                                                                <option value="">Crops1</option>
+                                                            </select>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Products">Products</label>
+                                                            <select class="selectpicker" id="Products" name="Crops">
+                                                                <option value="">Multiple</option>
+                                                                <option value="">Products1</option>
+                                                            </select>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Diseases">Diseases</label>
+                                                            <select class="selectpicker" id="Diseases" name="Crops">
+                                                                <option value="">Multiple</option>
+                                                                <option value="">Diseases1</option>
+                                                            </select>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Key Attandee">Key Attandee</label>
+                                                            <input type="text" class="form-control" name="Key Attandee" id="Key Attandee" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 col-sm-6 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Geography">Geography</label>
+                                                            <input type="text" class="form-control" name="Geography" id="Geography" placeholder="">
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-12 com_form">
+                                                        <div class="form-group">
+                                                            <label for="Address" class="mx-wd-cont">Address</label>
+                                                            <textarea class="form-control" aria-controls="" rows="3" name="Address" id="Address" placeholder=""></textarea>
+                                                            <div class="clearfix"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    -->
+
+                                    <div class="clearfix"></div>
+                                </div>
+                                <div class="clearfix"></div>
                             </div>
                         </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div class="green-box">
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label><img src="<?php echo Template::theme_url('images/call-icon.svg'); ?>" alt=""></label>
-                            <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group">
-                            <label><img src="<?php echo Template::theme_url('images/call-icon.svg'); ?>" alt=""></label>
-                            <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="form-group" style="margin-bottom: 0;">
-                            <label><img src="<?php echo Template::theme_url('images/call-icon.svg'); ?>" alt=""></label>
-                            <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
-                        </div>
-                    </div>
-                    <div class="clearfix"></div>
-                </div>
-                <div id="no-more-tables">
-                    <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                        <thead class="cf">
-                        <tr>
-                            <th><a href="javascript: void(0);">Sr. No.</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th><a href="javascript: void(0);">Action</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th><a href="javascript: void(0);">Retailer Code</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric"><a href="javascript: void(0);">Retailer Name</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric"><a href="javascript: void(0);">PBG</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric"><a href="javascript: void(0);">Product SKU Name</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric"><a href="javascript: void(0);">Units</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric"><a href="javascript: void(0);">ROL Quantity</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric">
-                                <a href="javascript: void(0);">ROL Qty Kg/Ltr</a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="dialpad_main_screen">
 
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="1">1</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="66"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="66"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000064                                        </td>
-                            <td data-title="Retailer Name">
-                                abc11                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                B3                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_66"><span class="prd_sku" style="display:none;">3</span></div><div class="units_66"><span class="units">Kg/Ltr</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_66"><span class="rol_quantity">1234.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_66"><span class="rol_quantity_kg_ltr">1234.00</span></div>                                        </td>
-                        </tr>
-
-                        </tbody>
-                    </table>
+                    </div>
                     <div class="clearfix"></div>
                 </div>
-                <div class="clearfix"></div>
+                <div class="col-md-12 footer_info">
+                    <ul>
+                        <li style="border-left: none;"><a href="#">Schemes</a></li>
+                        <li class="active"><a href="#">Call History</a></li>
+                        <li><a href="#">Chat History</a></li>
+                        <li class="disable"><a href="#">Activity Details</a></li>
+                        <li><a href="#">Diseases Details</a></li>
+                        <li><a href="#">Product Details</a></li>
+                        <li><a href="#">Questions</a></li>
+                        <li style="border-left: none; border-bottom: none;"><a href="#">Order Status</a></li>
+                        <li style="border-bottom: none;"><a href="#">Complaints</a></li>
+                        <li style="border-bottom: none;"><a href="#">Order Tracking</a></li>
+                        <li style="border-bottom: none;"><a href="#">Order Place</a></li>
+                        <li style="border-bottom: none;"><a href="#">Feedback</a></li>
+                        <li style="border-bottom: none;"><a href="#">E Invoice /E Statement</a></li>
+                        <li style="border-bottom: none;"><a href="#">Script</a></li>
+                        <div class="clearfix"></div>
+                    </ul>
+                </div>
             </div>
         </div>
-        <!--  <div class="col-md-12 footer_menu">
-              <ul>
-                  <li><a href="#">Personal</a></li>
-                  <li><a href="#">Education Detail</a></li>
-                  <li><a href="#">Social Connection</a></li>
-                  <li><a href="#">Financial Details</a></li>
-                  <li><a href="#">Retailers</a></li>
-                  <li><a href="#">Crop</a></li>
-                  <li><a href="#">Products</a></li>
-                  <li><a href="#">Business Details</a></li>
-              </ul>
-          </div> -->
+        <div class="col-md-12 footer_menu">
+            <ul>
+                <li><a href="#">Personal</a></li>
+                <li><a href="#">Education Detail</a></li>
+                <li><a href="#">Social Connection</a></li>
+                <li><a href="#">Financial Details</a></li>
+                <li><a href="#">Retailers</a></li>
+                <li><a href="#">Crop</a></li>
+                <li><a href="#">Products</a></li>
+                <li><a href="#">Business Details</a></li>
+            </ul>
+        </div>
         <div class="clearfix"></div>
     </div>
     <div class="clearfix"></div>
 </div>
-<div class="right_slide emly_right_slide">
+<div class="right_slide">
     <ul>
-        <li><a href="#"><span class="btn_name">Recrding</span> <i class="missed-call_ii" aria-hidden="true"></i></a></li>
-        <li><a href="#"><span class="btn_name">Total Calls</span> <i class="total_calls_ii" aria-hidden="true"></i></a></li>
-        <li class="active"><a href="#"><span class="btn_name">Pending Calls</span> <i class="pending_calls_ii" aria-hidden="true"></i></a></li>
-        <li><a href="#"><span class="btn_name">General Reminders</span> <i class="general_reminders_ii" aria-hidden="true"></i></a></li>
-        <li><a href="#"><span class="btn_name">Break</span> <i class="break_ii" aria-hidden="true"></i></a></li>
-        <li><a href="#"><span class="btn_name">Campaign Details</span> <i class="campaign_details_ii" aria-hidden="true"></i></a></li>
-        <li><a href="#"><span class="btn_name">Call Bargin</span> <i class="call_bargin_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">Recrding</span> <i class="recrding_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">Transfer</span> <i class="transfer_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">Hold</span> <i class="hold_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">Conferance</span> <i class="conferance_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">End Call</span> <i class="end_call_ii" aria-hidden="true"></i></a></li>
+        <li class="active"><a href="#"><span class="btn_name mute-nl">Mute</span> <span class="btn_name spkr-p">Speaker</span> <i class="mute_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">LoudSpeaker</span> <i class="loudspeaker_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">Total Calls - 100</span> <i class="total_calls_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">Reminder - 3</span> <i class="reminder_ii" aria-hidden="true"></i></a></li>
+        <li><a href="#"><span class="btn_name">Campaign<br>Phasewise call</span> <i class="phasewise_call_ii" aria-hidden="true"></i></a></li>
     </ul>
 </div>
-<button class="btn btn-default campaign-details-btn">Campaign<br>Details</button>
+
 <div class="chat-box">
     <div class="chat-header">
         <h5>CHAT <span>2</span></h5>

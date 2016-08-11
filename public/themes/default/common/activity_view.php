@@ -47,9 +47,19 @@ if (isset($activity_view) && !empty($activity_view)) { ?>
                     <div class="default_box_white">
                         <div class="col-md-12 text-center tp_form inline-parent">
                             <div class="form-group">
+                                <?php
+                                if(isset($current_user->local_date) && !empty($current_user->local_date))
+                                {
+                                    $p_date = strtotime($activity_view['execution_date']);
+                                    $execution_date = date($current_user->local_date,$p_date);
+                                }
+                                else{
+                                    $execution_date = $activity_view['execution_date'];
+                                }
+                                ?>
+
                                 <label>Execution Date<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="planning_date" id="planning_date" value="<?php echo
-                                (!empty($activity_view['execution_date']) ? $activity_view['execution_date'] : ''); ?>" placeholder="" readonly />
+                                <input type="text" class="form-control" name="execution_date" id="execution_date" value="<?php echo $execution_date; ?>" placeholder="" readonly />
                             </div>
                             <?php
                             if(isset($activity_view['execution_time']) && !empty($activity_view['execution_time'])){
