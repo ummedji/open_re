@@ -59,7 +59,8 @@ $segment_data = $this->uri->segment(2);
                             <div class="inln_fld_top">
                                 <select class="selectpicker" id="Call Mode" name="Call Mode">
                                     <option value="">Call Mode</option>
-                                    <option value="">Products1</option>
+                                    <option value="Manual">Manual</option>
+                                    <option value="Auto">Auto</option>
                                 </select>
                                 <div class="clearfix"></div>
                                 <label id="to_date-error" class="error" for="Call Mode"></label>
@@ -102,54 +103,38 @@ $segment_data = $this->uri->segment(2);
                     <table class="col-md-12 table-bordered table-striped table-condensed cf">
                         <thead class="cf">
                         <tr>
-                            <th>
-                                <a href="javascript: void(0);">
-                                    Sr. No.                                    </a>
+                            <th><a href="javascript: void(0);">Sr. No.</a>
                                 <span class="rts_bordet"></span>
                             </th>
-                            <th>
-                                <a href="javascript: void(0);">
-                                    Action                                    </a>
+                            <th><a href="javascript: void(0);">Action</a>
                                 <span class="rts_bordet"></span>
                             </th>
-                            <th>
-                                <a href="javascript: void(0);">
-                                    Retailer Code                                    </a>
+                            <th><a href="javascript: void(0);">Retailer Code</a>
                                 <span class="rts_bordet"></span>
                             </th>
-                            <th class="numeric">
-                                <a href="javascript: void(0);">
-                                    Retailer Name                                    </a>
+                            <th class="numeric"><a href="javascript: void(0);">Retailer Name</a>
                                 <span class="rts_bordet"></span>
                             </th>
-                            <th class="numeric">
-                                <a href="javascript: void(0);">
-                                    PBG                                    </a>
+                            <th class="numeric"><a href="javascript: void(0);">PBG</a>
                                 <span class="rts_bordet"></span>
                             </th>
-                            <th class="numeric">
-                                <a href="javascript: void(0);">
-                                    Product SKU Name                                    </a>
+                            <th class="numeric"><a href="javascript: void(0);">Product SKU Name</a>
+                                <span class="rts_bordet"></span>
+                            </th>
+                            <th class="numeric"><a href="javascript: void(0);">Units</a>
+                                <span class="rts_bordet"></span>
+                            </th>
+                            <th class="numeric"><a href="javascript: void(0);">ROL Quantity</a>
                                 <span class="rts_bordet"></span>
                             </th>
                             <th class="numeric">
-                                <a href="javascript: void(0);">
-                                    Units                                    </a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric">
-                                <a href="javascript: void(0);">
-                                    ROL Quantity                                    </a>
-                                <span class="rts_bordet"></span>
-                            </th>
-                            <th class="numeric">
-                                <a href="javascript: void(0);">
-                                    ROL Qty Kg/Ltr                                    </a>
+                                <a href="javascript: void(0);">ROL Qty Kg/Ltr</a>
                                 <span class="rts_bordet"></span>
                             </th>
                         </tr>
                         </thead>
-                        <tbody class="tbl_body_row">
+                        <tbody class="dialpad_main_screen">
+
                         <tr>
                             <td data-title="Sr. No.">
                                 <div>
@@ -175,231 +160,7 @@ $segment_data = $this->uri->segment(2);
                             <td data-title="ROL Qty Kg/Ltr">
                                 <div class="rol_quantity_kg_ltr_66"><span class="rol_quantity_kg_ltr">1234.00</span></div>                                        </td>
                         </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="2">2</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="64"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="64"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000036                                        </td>
-                            <td data-title="Retailer Name">
-                                abc14                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                A2                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_64"><span class="prd_sku" style="display:none;">2</span></div><div class="units_64"><span class="units">Packages</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_64"><span class="rol_quantity">6666.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_64"><span class="rol_quantity_kg_ltr">9999.00</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="3">3</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="63"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="63"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                000004                                        </td>
-                            <td data-title="Retailer Name">
-                                abc15                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                B3                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_63"><span class="prd_sku" style="display:none;">3</span></div><div class="units_63"><span class="units">Kg/Ltr</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_63"><span class="rol_quantity">1234.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_63"><span class="rol_quantity_kg_ltr">1234.00</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="4">4</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="56"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="56"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000036                                        </td>
-                            <td data-title="Retailer Name">
-                                abc14                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                B3                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_56"><span class="prd_sku" style="display:none;">3</span></div><div class="units_56"><span class="units">Kg/Ltr</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_56"><span class="rol_quantity">888.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_56"><span class="rol_quantity_kg_ltr">888.00</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="5">5</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="55"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="55"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000076                                        </td>
-                            <td data-title="Retailer Name">
-                                abc13                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                A1                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_55"><span class="prd_sku" style="display:none;">1</span></div><div class="units_55"><span class="units">Box</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_55"><span class="rol_quantity">55.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_55"><span class="rol_quantity_kg_ltr">550.00</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="6">6</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="53"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="53"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000036                                        </td>
-                            <td data-title="Retailer Name">
-                                abc14                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                B3                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_53"><span class="prd_sku" style="display:none;">3</span></div><div class="units_53"><span class="units">Box</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_53"><span class="rol_quantity">50.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_53"><span class="rol_quantity_kg_ltr">62.50</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="7">7</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="52"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="52"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000036                                        </td>
-                            <td data-title="Retailer Name">
-                                abc14                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                A1                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_52"><span class="prd_sku" style="display:none;">1</span></div><div class="units_52"><span class="units">Kg/Ltr</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_52"><span class="rol_quantity">50.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_52"><span class="rol_quantity_kg_ltr">100.00</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="8">8</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="51"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="51"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000036                                        </td>
-                            <td data-title="Retailer Name">
-                                abc14                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                A2                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_51"><span class="prd_sku" style="display:none;">2</span></div><div class="units_51"><span class="units">Box</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_51"><span class="rol_quantity">50.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_51"><span class="rol_quantity_kg_ltr">12.50</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="9">9</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="47"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="47"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000064                                        </td>
-                            <td data-title="Retailer Name">
-                                abc11                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                A1                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_47"><span class="prd_sku" style="display:none;">1</span></div><div class="units_47"><span class="units">Kg/Ltr</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_47"><span class="rol_quantity">6.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_47"><span class="rol_quantity_kg_ltr">6.00</span></div>                                        </td>
-                        </tr>
-                        <tr>
-                            <td data-title="Sr. No.">
-                                <div>
-                                    <a href="javascript: void(0);" attr-prdid="10">10</a>
-                                </div>
-                            </td>
-                            <td data-title="Action" class="numeric">
-                                <div class="edit_i" prdid="46"><a href="javascript: void(0);"><i class="fa fa-pencil" aria-hidden="true"></i></a></div>
-                                <div class="delete_i" prdid="46"><a href="javascript: void(0);"><i class="fa fa-trash-o" aria-hidden="true"></i></a></div>
-                            </td>
-                            <td data-title="Retailer Code">
-                                0000064                                        </td>
-                            <td data-title="Retailer Name">
-                                abc11                                        </td>
-                            <td data-title="PBG">
-                                A                                        </td>
-                            <td data-title="Product SKU Name">
-                                A1                                        </td>
-                            <td data-title="Units">
-                                <div class="prd_46"><span class="prd_sku" style="display:none;">1</span></div><div class="units_46"><span class="units">Packages</span></div>                                        </td>
-                            <td data-title="ROL Quantity">
-                                <div class="rol_quantity_46"><span class="rol_quantity">25.00</span></div>                                        </td>
-                            <td data-title="ROL Qty Kg/Ltr">
-                                <div class="rol_quantity_kg_ltr_46"><span class="rol_quantity_kg_ltr">12.50</span></div>                                        </td>
-                        </tr>
+
                         </tbody>
                     </table>
                     <div class="clearfix"></div>

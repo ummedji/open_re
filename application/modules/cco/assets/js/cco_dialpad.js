@@ -4,11 +4,21 @@ $(document).ready(function(){
 
         var campagain_id = $(this).val();
 
-        $("tbody#geo_location_data").empty();
-        var num_count = 3;
-        get_geo_data(campagain_id,3,num_count);
+        $("tbody#dialpad_main_screen").empty();
 
-        get_campagain_grid_data(campagain_id);
+        $.ajax({
+            type: 'POST',
+            url: site_url + "cco/get_campagain_allocated_data",
+            data: {geo_id: campagain_id},
+            success: function (resp) {
+                var obj = jQuery.parseJSON(resp);
+
+                farmer_count = obj.total_count;
+                pending_data_count = obj.pending_count;
+            },
+            async:false
+        });
+
 
     });
 

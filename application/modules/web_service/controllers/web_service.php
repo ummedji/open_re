@@ -4452,10 +4452,10 @@ class Web_service extends Front_Controller
                 }
             }
 
-            $demonstration = $this->ecp_model->get_demonstration_by_id($user_id,$country_id,'web_service',$activity_id);
+           // $demonstration = $this->ecp_model->get_demonstration_by_id($user_id,$country_id,'web_service',$activity_id);
 
             $demonstration_array = array();
-            if (!empty($demonstration)) {
+           /* if (!empty($demonstration)) {
                 foreach ($demonstration as $demo) {
                   //  testdata($demo);
                     $demonstrations = array(
@@ -4464,7 +4464,7 @@ class Web_service extends Front_Controller
                     );
                     array_push($demonstration_array, $demonstrations);
                 }
-            }
+            }*/
           //  testdata($demonstrations);
 
             $data = array('geo_level' => $final_array, 'digital_library' => $DigitalLibrary_array,'demonstration'=>$demonstration_array);
