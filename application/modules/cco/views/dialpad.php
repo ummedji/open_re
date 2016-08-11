@@ -21,7 +21,7 @@
                     <div class="col-md-12 text-center sub_nave">
                         <div class="inn_sub_nave">
                             <ul>
-                                <li class="active"><a href="#">Farmers</a></li>
+                                <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('/cco/farmer_dialpad') ?>">Farmers</a></li>
                                 <li class=""><a href="#">Channel Partners</a></li>
                                 <li><a href="#">Activity</a></li>
                                 <li class=""><a href="#">Employee</a></li>
@@ -35,8 +35,18 @@
                             <label>Campaign</label>
                             <div class="inln_fld_top">
                                 <select class="selectpicker" id="Campaign" name="Campaign">
-                                    <option value="">Campaign</option>
-                                    <option value="">Products1</option>
+
+                                    <option value="">Campaign Name</option>
+                                    <?php
+                                    if (isset($campagaine_data) && !empty($campagaine_data) && $campagaine_data != 0) {
+                                        foreach ($campagaine_data as $k => $campagainedata) {
+                                            ?>
+                                            <option value="<?php echo $campagainedata['campaign_id']; ?>"><?php echo $campagainedata['campaign_name']; ?></option>
+                                        <?php
+                                        }
+                                    }
+                                    ?>
+
                                 </select>
                                 <div class="clearfix"></div>
                                 <label id="Campaign-" class="error" for="Campaign"></label>
@@ -431,86 +441,3 @@
     <div class="chat-content"></div>
     <div class="clearfix"></div>
 </div>
-<!--
-<script src="js/jquery.min.js"></script>
-<script src="js/bootstrap.min.js"></script>
-<script src="js/jquery.mCustomScrollbar.concat.min.js"></script>
-<script src="js/jquery-listslider.js"></script>
-<script src="js/bootstrap-select.min.js"></script>
-<script src="js/bootstrap-table.js"></script>
-<script src="js/bootstrap-table-filter-control.js"></script>
--->
-
-<script src="<?php echo Template::theme_url('js/jquery-listslider.js'); ?>"></script>
-<script src="<?php echo Template::theme_url('js/bootstrap.min.js'); ?>"></script>
-<script src="<?php echo Template::theme_url('js/jquery.mCustomScrollbar.concat.min.js'); ?>"></script>
-<script src="<?php echo Template::theme_url('js/bootstrap-select.min.js'); ?>"></script>
-<script src="<?php echo Template::theme_url('js/bootstrap-table.js'); ?>"></script>
-<script src="<?php echo Template::theme_url('js/bootstrap-table-filter-control.js'); ?>"></script>
-
-<script type="text/javascript">
-    $('.nav.nav-tabs').listslider({
-        left_label: '<span class="bre_lf_arrow"></span>',
-        right_label: '<span class="bre_rt_arrow"></span>'
-    });
-</script>
-<script type="text/javascript">
-    (function($){
-        $(".slide_icon").click(function(e){
-            $(".pr_title").toggleClass("li_title");
-            $(".pr_slide_menu").toggleClass("side_menu_space");
-            $(".pr_right_contain").toggleClass("inn_right_contain");
-            /*$(".pr_footer").toggleClass("footer");*/
-            $(".toggle_wieght_sp").toggleClass("wieght_sp");
-            $(".left_contain_big").toggleClass("left_contain");
-        });
-        $(".open_sld").click(function(e){
-            $(".inside-detail-box").toggleClass("slide_in_bx");
-            $(".hid-open-arrow").toggleClass("hid-open-arrow-h");
-            $(".show-open-arrow").toggleClass("show-open-arrow-s");
-            $(".in-up-details-list").toggleClass("in-up-details-list-par");
-        });
-        $(window).load(function(){
-
-            $("a[rel='load-content']").click(function(e){
-                e.preventDefault();
-                var url=$(this).attr("href");
-                $.get(url,function(data){
-                    $(".content .mCSB_container").append(data); //load new content inside .mCSB_container
-                    //scroll-to appended content
-                    $(".content").mCustomScrollbar("scrollTo","h2:last");
-                });
-            });
-
-            $(".content").delegate("a[href='top']","click",function(e){
-                e.preventDefault();
-                $(".content").mCustomScrollbar("scrollTo",$(this).attr("href"));
-            });
-
-        });
-    })(jQuery);
-</script>
-<script>
-    $(document).on('change', '.btn-file :file', function() {
-        var input = $(this),
-            numFiles = input.get(0).files ? input.get(0).files.length : 1,
-            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
-        input.trigger('fileselect', [numFiles, label]);
-    });
-
-    $(document).ready( function() {
-        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
-
-            var input = $(this).parents('.input-group').find(':text'),
-                log = numFiles > 1 ? numFiles + ' files selected' : label;
-
-            if( input.length ) {
-                input.val(log);
-            } else {
-                if( log ) alert(log);
-            }
-
-        });
-    });
-
-</script>

@@ -55,6 +55,14 @@ echo Assets::js();
             $(".opn_btn").toggleClass("opn_btn_par");
             $(".cls_btn").toggleClass("cls_btn_par");
         });
+
+        $(".open_sld").click(function(e){
+            $(".inside-detail-box").toggleClass("slide_in_bx");
+            $(".hid-open-arrow").toggleClass("hid-open-arrow-h");
+            $(".show-open-arrow").toggleClass("show-open-arrow-s");
+            $(".in-up-details-list").toggleClass("in-up-details-list-par");
+        });
+
         //<![CDATA[
         $(window).load(function(){
             document.getElementById("upload_file_data").onchange = function () {
@@ -152,7 +160,27 @@ echo Assets::js();
         });
 
 
+    $(document).on('change', '.btn-file :file', function() {
+        var input = $(this),
+            numFiles = input.get(0).files ? input.get(0).files.length : 1,
+            label = input.val().replace(/\\/g, '/').replace(/.*\//, '');
+        input.trigger('fileselect', [numFiles, label]);
+    });
 
+    $(document).ready( function() {
+        $('.btn-file :file').on('fileselect', function(event, numFiles, label) {
+
+            var input = $(this).parents('.input-group').find(':text'),
+                log = numFiles > 1 ? numFiles + ' files selected' : label;
+
+            if( input.length ) {
+                input.val(log);
+            } else {
+                if( log ) alert(log);
+            }
+
+        });
+    });
 
 </script>
 <script type="text/javascript">

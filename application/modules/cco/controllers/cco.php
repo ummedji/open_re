@@ -50,8 +50,19 @@ class Cco extends Front_Controller
         Template::render();
     }
 
-    public function dialpad()
+    public function farmer_dialpad()
     {
+        $user= $this->auth->user();
+        $logined_user_type = $user->role_id;
+        $logined_user_id = $user->id;
+        $logined_user_countryid = $user->country_id;
+
+        $farmer_role = 11;
+
+        $campagain_data = $this->cco_model->campagain_data($farmer_role);
+
+        Template::set('campagaine_data',$campagain_data);
+        Template::set_view("cco/dialpad");
         Template::render();
     }
 

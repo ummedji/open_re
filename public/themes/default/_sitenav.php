@@ -171,7 +171,7 @@
 
                                 elseif($segment=='cco'){ ?>
                                     <li role="presentation" class="">
-                                        <a href="<?php echo base_url('cco/dialpad'); ?>">DIALPAD</a>
+                                        <a href="<?php echo base_url('cco/farmer_dialpad'); ?>">DIALPAD</a>
                                     </li>
                                     <li role="presentation" class="">
                                         <a href="<?php echo base_url('cco/allocation'); ?>">ALLOCATION</a>

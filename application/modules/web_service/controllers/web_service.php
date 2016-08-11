@@ -4426,7 +4426,6 @@ class Web_service extends Front_Controller
             }
 
             $DigitalLibrary = $this->ecp_model->getDigitalLibraryDataByCountry($activity_id, $country_id);
-            // testdata($DigitalLibrary);
 
             $DigitalLibrary_array = array();
             if (!empty($DigitalLibrary)) {
@@ -4440,7 +4439,22 @@ class Web_service extends Front_Controller
                 }
             }
 
-            $data = array('geo_level' => $final_array, 'digital_library' => $DigitalLibrary_array);
+            $demonstration = $this->ecp_model->get_demonstration_by_id($user_id,$country_id,'web_service',$activity_id);
+
+            $demonstration_array = array();
+            if (!empty($demonstration)) {
+                foreach ($demonstration as $demo) {
+                  //  testdata($demo);
+                    $demonstrations = array(
+                        "id" => $demo['activity_planning_id'],
+                        "name" =>$demo['political_geography_name'].'::'.date('Y-m-d g:i a',strtotime($demo['execution_time'])),
+                    );
+                    array_push($demonstration_array, $demonstrations);
+                }
+            }
+          //  testdata($demonstrations);
+
+            $data = array('geo_level' => $final_array, 'digital_library' => $DigitalLibrary_array,'demonstration'=>$demonstration_array);
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
             $result['data'] = $data;

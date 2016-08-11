@@ -3390,9 +3390,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
-    public function get_demonstration_by_id($user_id,$country_id)
+    public function get_demonstration_by_id($user_id,$country_id,$web_service=null,$activity_id=null)
     {
-        $sql ='SELECT eap.activity_planning_id,eap.execution_date,eap.execution_time,mpgd.political_geography_name
+        if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+        {
+            if($activity_id == '6'){
+                $sql ='SELECT eap.activity_planning_id,eap.execution_date,eap.execution_time,mpgd.political_geography_name
                 FROM bf_ecp_activity_planning as eap
                  JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = eap.geo_level_id)
                  JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_id = eap.activity_type_id)
@@ -3400,15 +3403,41 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                  AND eap.country_id ='.$country_id.'
                  AND eamc.activity_type_code = "DP005"
                  AND eap.execution_date <= DATE_SUB(CURDATE(), INTERVAL -2 MONTH)';
-        $info = $this->db->query($sql);
-        $activity_details = $info->result_array();
-        if(isset($activity_details) && !empty($activity_details))
-        {
-            return $activity_details;
+                $info = $this->db->query($sql);
+                $activity_details = $info->result_array();
+                if(isset($activity_details) && !empty($activity_details))
+                {
+                    return $activity_details;
+                }
+                else{
+                    return array();
+                }
+            }
+            else{
+                return array();
+            }
+
         }
         else{
-            return array();
+            $sql ='SELECT eap.activity_planning_id,eap.execution_date,eap.execution_time,mpgd.political_geography_name
+                FROM bf_ecp_activity_planning as eap
+                 JOIN bf_master_political_geography_details AS mpgd ON (mpgd.political_geo_id = eap.geo_level_id)
+                 JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_id = eap.activity_type_id)
+                 WHERE eap.employee_id ='.$user_id.'
+                 AND eap.country_id ='.$country_id.'
+                 AND eamc.activity_type_code = "DP005"
+                 AND eap.execution_date <= DATE_SUB(CURDATE(), INTERVAL -2 MONTH)';
+            $info = $this->db->query($sql);
+            $activity_details = $info->result_array();
+            if(isset($activity_details) && !empty($activity_details))
+            {
+                return $activity_details;
+            }
+            else{
+                return array();
+            }
         }
+
     }
 
     public function get_details_by_planning_id($id,$user_id,$country_id)
