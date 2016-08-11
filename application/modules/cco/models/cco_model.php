@@ -578,6 +578,31 @@ class Cco_model extends BF_Model
 
     }
 
+    public function get_campagain_allocated_customer_data($campagainid)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_cco_campaign_allocation as bcca");
+        $this->db->join("bf_cco_campaign_allocation_customers as bccac","bccac.allocation_id = bcca.allocation_id");
+        $this->db->join("bf_users as bu","bu.id = bccac.customer_id");
+
+        $this->db->where('bcca.campaign_id',$campagainid);
+        $this->db->where('bcca.status','1');
+        $this->db->where('bcca.deleted','0');
+
+        $allocated_campagain_data = $this->db->get()->result_array();
+
+        testdata($allocated_campagain_data);
+
+        if(isset($allocated_campagain_data ) && !empty($allocated_campagain_data )){
+            return $allocated_campagain_data;
+        }
+        else{
+            return array();
+        }
+
+
+    }
+
 
 
 

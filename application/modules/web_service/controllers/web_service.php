@@ -4805,6 +4805,37 @@ class Web_service extends Front_Controller
     }
 
 
+    public function getDemoDetails()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $id = $this->input->get_post('demo_id');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($id) && !empty($id))) {
+
+            $activity_detail = $this->ecp_model->get_details_by_planning_id($id,$user_id,$country_id);
+
+            if(isset($activity_detail) && !empty($activity_detail))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = array($activity_detail);
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'No ddata.';
+                $result['data'] = array();
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
 
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
 

@@ -3442,8 +3442,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function get_details_by_planning_id($id,$user_id,$country_id)
     {
-        $this->db->select('geo_level_id_2,geo_level_id_3,geo_level_id_4,location,size_of_plot,spray_volume');
-        $this->db->from('ecp_activity_planning');
+        $this->db->select('eap.geo_level_id_2,eap.geo_level_id_3,eap.geo_level_id_4,eap.location,size_of_plot,eap.spray_volume,mpgd2.political_geography_name as geo_level_2,mpgd3.political_geography_name as geo_level_3,mpgd4.political_geography_name as geo_level_4');
+        //$this->db->select('*');
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('master_political_geography_details as mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2');
+        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = eap.geo_level_id_3');
+        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = eap.geo_level_id_4');
         $this->db->where('activity_planning_id',$id);
         $this->db->where('employee_id',$user_id);
         $this->db->where('country_id',$country_id);

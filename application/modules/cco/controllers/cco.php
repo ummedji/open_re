@@ -68,6 +68,15 @@ class Cco extends Front_Controller
         Template::render();
     }
 
+    public function get_campagain_allocated_data()
+    {
+        $campagainid = $_POST["campagainid"];
+        $campagain_customer_data = $this->cco_model->get_campagain_allocated_customer_data($campagainid);
+
+
+
+    }
+
     public function allocation()
     {
         Assets::add_module_js('cco', 'cco.js');

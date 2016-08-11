@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-    $("select#campagain").on("change",function(){
+    $("select#Campaign").on("change",function(){
 
         var campagain_id = $(this).val();
 
@@ -9,16 +9,11 @@ $(document).ready(function(){
         $.ajax({
             type: 'POST',
             url: site_url + "cco/get_campagain_allocated_data",
-            data: {geo_id: campagain_id},
+            data: {campagainid: campagain_id},
             success: function (resp) {
-                var obj = jQuery.parseJSON(resp);
 
-                farmer_count = obj.total_count;
-                pending_data_count = obj.pending_count;
-            },
-            async:false
+            }
         });
-
 
     });
 
