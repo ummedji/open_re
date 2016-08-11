@@ -4746,6 +4746,39 @@ class Web_service extends Front_Controller
     }
 
 
+    public function getActivityDateByType()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $mode = $this->input->get_post('mode');
+        $month = $this->input->get_post('months');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id) && (isset($mode) && !empty($mode)) && (isset($month) && !empty($month)))) {
+
+            $activity_detail = $this->ecp_model->getActivityDateByTypes($user_id,$country_id,$mode,$month);
+
+            if(isset($activity_detail) && !empty($activity_detail))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $activity_detail;
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'No ddata.';
+                $result['data'] = array();
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
+
     /*-------------------------------------------------ECP WEB SERVICE -------------------------------------------------*/
 
 	//ESP WEBSERVICE

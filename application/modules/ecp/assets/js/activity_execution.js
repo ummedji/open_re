@@ -113,6 +113,7 @@ $(document).ready(function() {
     getExecutionTime();
     getPlanningTime();
     getPlanningDate()
+    getDurationtime();
 
 });
 
@@ -128,6 +129,19 @@ function getPlanningTime()
     $('#planning_time').timepicker({
 
     });
+}
+function getDurationtime()
+{
+    $('#meeting_duration').timepicker(
+    {
+        disableFocus: true,
+        showInputs: true,
+        showSeconds: true,
+        showMeridian: false,
+        defaultValue: '00:00:00'
+    }
+
+    );
 }
 
 function getPlanningDate()
@@ -1120,6 +1134,7 @@ function getActivityById(activity_planning_id)
             getExecutionTime();
             getPlanningTime();
             getPlanningDate();
+            getDurationtime();
             $("select.selectpicker").selectpicker('refresh');
         },
         complete:function(){
@@ -1257,6 +1272,7 @@ function getActivityPlanningId(Id)
     $('#planning_id').val(Id);
     getPlanningTime();
     getPlanningDate();
+    getDurationtime();
 
 }
 
@@ -1265,6 +1281,7 @@ function getActivityPlanningsId(Id)
     $('#plannings_id').val(Id);
     getPlanningTime();
     getPlanningDate();
+    getDurationtime();
 }
 
 $(document).on('click','.close',function(){

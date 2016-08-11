@@ -20,7 +20,10 @@
 
                             <div class="form-group">
                                 <label>Duration of Meeting<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="meeting_duration" id="meeting_duration" placeholder="">
+                                <!--<input type="text" class="form-control" name="meeting_duration" id="meeting_duration" placeholder="">-->
+                                <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                    <input id="meeting_duration" name="planning_time" type="text" class="input-group-time form-control input-append">
+                                </div>
                             </div>
 
                         </div>

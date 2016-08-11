@@ -3712,4 +3712,52 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     }
 
 
+    public function getActivityDateByTypes($user_id,$country_id,$mode,$month)
+    {
+        /*if($mode == strtolower('all')){
+
+        }*/
+        if($mode == strtolower('incomplete'))
+        {
+            $status = '0';
+        }
+        elseif($mode == strtolower('approved'))
+        {
+            $status = '2';
+        }
+        elseif($mode == strtolower('rejected'))
+        {
+            $status = '3';
+        }
+        elseif($mode == strtolower('pending'))
+        {
+            $status = '1';
+        }
+        else{
+            $status = '';
+        }
+
+
+        $this->db->distinct();
+        $this->db->select('activity_planning_date');
+        $this->db->from('ecp_activity_planning');
+        $this->db->where('employee_id',$user_id);
+        $this->db->where('country_id',$country_id);
+        if(isset($status) && !empty($status))
+        {
+            $this->db->where('status',$status);
+        }
+        $this->db->where('DATE_FORMAT(activity_planning_date,"%Y-%m")',$month);
+        $activity_details = $this->db->get()->result_array();
+
+        if(isset($activity_details) && !empty($activity_details))
+        {
+            return $activity_details;
+        }
+        else {
+            return 0;
+        }
+    }
+
+
 }

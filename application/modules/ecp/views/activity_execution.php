@@ -32,7 +32,10 @@
                 </div>
                 <div class="form-group">
                     <label for="usr">Planning Time:</label>
-                    <input type="text" name="planning_time" value=""  id="planning_time" class="form-control planning_id" />
+                    <div class="bootstrap-timepicker bootstrap-timepicker-as time-picker-width">
+                        <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append">
+                    </div>
+                    <!--<input type="text" name="planning_time" value=""  id="planning_time" class="form-control planning_id" />-->
                 </div>
                 <input type="hidden" name="planning_id" value=""  id="plannings_id" class="form-control planning_id" />
               <!--  <div class="form-group" style="margin-bottom: 0;">
@@ -539,11 +542,11 @@
                            value="<?php echo $current_user->country_id; ?>"/>
                     <input class="current_local_date" type="hidden" name="current_local_date" id="current_local_date"
                            value="<?php echo $current_user->local_date; ?>"/>
+                    
                     <div class="col-md-12 table_bottom pln_table_bottom">
                         <div class="row">
                             <div class="save_btn">
-                                <!-- <button type="submit" class="btn btn-primary" id="check_save">Save</button>-->
-                                <input type="submit" class="btn btn-primary" id="check_save" name="Save">
+                                <button type="submit" class="btn btn-primary" id="check_save">Save</button>
                             </div>
                         </div>
                     </div>
