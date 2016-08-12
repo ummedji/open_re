@@ -1,3 +1,6 @@
+<?php
+//testdata($personal_general_data);
+?>
 <div class="actv-details-form">
     <h5>Personal Details</h5>
     <div class="back_details">
@@ -5,24 +8,30 @@
             <div class="col-md-11">
                 General Info </hr>
                 <div class="row">
+
+                    <?php
+                    $attributes = array('class' => '', 'id' => 'dialpad_general_info','name'=>'dialpad_general_info', 'autocomplete'=>'off');
+                    echo form_open('cco/add_update_general_info',$attributes);
+                    ?>
+
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Farmer Name">Farmer Name</label>
+                            <input type="text" class="form-control" name="farmer_name" id="farmer_name" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="First Name">First Name</label>
+                            <input type="text" class="form-control" name="first_name" id="first_name" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Last Name">Last Name</label>
+                            <input type="text" class="form-control" name="last_name" id="last_name" placeholder="">
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -31,22 +40,28 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Gender">Gender</label>
+
+                            <select class="form-control" placeholder="" name="gender">
+                                <option value="">Select Gender</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                            </select>
+                            <div class="clearfix"></div>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 com_form">
+                        <div class="form-group">
+                            <label for="Date Of Birth">Date Of Birth</label>
+                            <input type="text" class="form-control" name="dob" id="dob" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-                    <div class="col-md-4 col-sm-6 com_form">
-                        <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Email Id">Email Id</label>
+                            <input type="text" class="form-control" name="email_id" id="email_id" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -55,22 +70,22 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Primary Mobile No.">Primary Mobile No.</label>
+                            <input type="text" class="form-control" name="primary_mobile_no" id="primary_mobile_no" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Other Contact No.">Other Contact No.</label>
+                            <input type="text" class="form-control" name="secondary_mobile_no" id="secondary_mobile_no" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Fixed Line No.">Fixed Line No.</label>
+                            <input type="text" class="form-control" name="fixed_line_no" id="fixed_line_no" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -79,22 +94,22 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="KTP No.">KTP No.</label>
+                            <input type="text" class="form-control" name="ktp_no" id="ktp_no" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Introduction Year">Introduction Year</label>
+                            <input type="text" class="form-control" name="introduction_year" id="introduction_year" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Pincode">Pincode</label>
+                            <input type="text" class="form-control" name="pincode" id="pincode" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -103,22 +118,22 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Level 3">Level 3</label>
+                            <input type="text" class="form-control" name="geo_level_3" id="geo_level_3" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Level 2">Level 2</label>
+                            <input type="text" class="form-control" name="geo_level_2" id="geo_level_2" placeholder="">
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Level 1">Level 1</label>
+                            <input type="text" class="form-control" name="geo_level_1" id="geo_level_1" placeholder="">
                             <div class="clearfix"></div>
                         </div>
                     </div>
@@ -127,51 +142,36 @@
                 <div class="row">
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Adhar Card No.">Adhar Card No.</label>
+                            <input type="text" class="form-control" name="adhar_card_no" id="adhar_card_no" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Passport No.">Passport No.</label>
+                            <input type="text" class="form-control" name="passport_no" id="passport_no" placeholder="" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Activity Name">Lisence No.</label>
+                            <input type="text" class="form-control" name="lisence_no" id="lisence_no" placeholder=""/>
                             <div class="clearfix"></div>
                         </div>
                     </div>
 
                 </div>
                 <div class="row">
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-12 col-sm-6 com_form">
                         <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
+                            <label for="Address">Address</label>
+                            <textarea class="form-control" name="address" id="address" placeholder=""></textarea>
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
-                        <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
-                            <div class="clearfix"></div>
-                        </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
-                        <div class="form-group">
-                            <label for="Activity Name">Activity Name</label>
-                            <input type="text" class="form-control" name="Activity Name" id="Activity Name" placeholder="">
-                            <div class="clearfix"></div>
-                        </div>
-                    </div>
-
-                </div>
             </div>
 
         </div>
@@ -181,6 +181,9 @@
             <label class="space_llb">&nbsp;</label>
             <button type="submit" class="btn btn-default back_details-button">Save</button>
         </div>
+
+        <?php form_close(); ?>
+
     </div>
 
     <!--

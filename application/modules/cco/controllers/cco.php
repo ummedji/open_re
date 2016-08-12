@@ -30,8 +30,8 @@ class Cco extends Front_Controller
 
 
         $this->load->model('cco/cco_model');
-       // $this->load->model('ishop/ishop_model');
-      //  $this->load->model('esp/esp_model');
+        // $this->load->model('ishop/ishop_model');
+        //  $this->load->model('esp/esp_model');
 
         $this->set_current_user();
 
@@ -54,7 +54,7 @@ class Cco extends Front_Controller
     {
         Assets::add_module_js('cco', 'cco_dialpad.js');
 
-        $user= $this->auth->user();
+        $user = $this->auth->user();
         $logined_user_type = $user->role_id;
         $logined_user_id = $user->id;
         $logined_user_countryid = $user->country_id;
@@ -63,7 +63,7 @@ class Cco extends Front_Controller
 
         $campagain_data = $this->cco_model->campagain_data($farmer_role);
 
-        Template::set('campagaine_data',$campagain_data);
+        Template::set('campagaine_data', $campagain_data);
         Template::set_view("cco/main_screen_dialpad");
         Template::render();
     }
@@ -76,7 +76,7 @@ class Cco extends Front_Controller
 
         $get_sidebar_selected_customer_data = $this->cco_model->get_dialed_customer_data($customer_id);
 
-        Template::set('sidebar_selected_customer_data',$get_sidebar_selected_customer_data);
+        Template::set('sidebar_selected_customer_data', $get_sidebar_selected_customer_data);
         Template::set_view("cco/dialpad");
         Template::render();
     }
@@ -87,9 +87,12 @@ class Cco extends Front_Controller
 
         $get_personal_general_data = $this->cco_model->get_personal_general_data($customer_id);
 
-        Template::set('get_personal_general_data',$get_personal_general_data);
+        Template::set('personal_general_data', $get_personal_general_data);
 
-        Template::set_view("cco/dialpad_popup_views/general_details");
+      //  $this->load->view('cco/dialpad_popup_views/general_details');
+
+        Template::set_view("cco/dialpad_general_details");
+        // Template::set_block('sidebar', 'blog_sidebar');
         Template::render();
     }
 
@@ -98,7 +101,7 @@ class Cco extends Front_Controller
         $campagainid = $_POST["campagainid"];
         $campagain_customer_data = $this->cco_model->get_campagain_allocated_customer_data($campagainid);
 
-        Template::set('campagain_customer_data',$campagain_customer_data);
+        Template::set('campagain_customer_data', $campagain_customer_data);
 
         Template::set_view("cco/campagain_customer_data");
         Template::render();
@@ -110,16 +113,16 @@ class Cco extends Front_Controller
 
         $customerid = $_POST["customerid"];
         $campagain_id = $_POST["campagainid"];
-        $user= $this->auth->user();
+        $user = $this->auth->user();
         $logined_user_type = $user->role_id;
         $logined_user_id = $user->id;
         $logined_user_countryid = $user->country_id;
 
         $this->session->set_userdata(array(
-            'user_id'       => $logined_user_id,
-            'country_id'    => $logined_user_countryid,
-            'customer_id'      => $customerid,
-            'campagain_id'  => $campagain_id
+            'user_id' => $logined_user_id,
+            'country_id' => $logined_user_countryid,
+            'customer_id' => $customerid,
+            'campagain_id' => $campagain_id
         ));
 
     }
@@ -128,7 +131,7 @@ class Cco extends Front_Controller
     {
         Assets::add_module_js('cco', 'cco.js');
 
-        $user= $this->auth->user();
+        $user = $this->auth->user();
         $logined_user_type = $user->role_id;
         $logined_user_id = $user->id;
         $logined_user_countryid = $user->country_id;
@@ -136,14 +139,14 @@ class Cco extends Front_Controller
         $farmer_role = 11;
 
         $campagain_data = $this->cco_model->campagain_data($farmer_role);
-       // testdata($get_level_data);
+        // testdata($get_level_data);
 
-      //  $campagain_id = 1;
+        //  $campagain_id = 1;
         $get_cco_data = $this->cco_model->get_all_cco_data($logined_user_countryid);
 
 
-        Template::set('campagaine_data',$campagain_data);
-        Template::set('cco_data',$get_cco_data);
+        Template::set('campagaine_data', $campagain_data);
+        Template::set('cco_data', $get_cco_data);
         Template::render();
     }
 
@@ -152,21 +155,19 @@ class Cco extends Front_Controller
         $campagain_id = $_POST["campagainid"];
 
         $pag = (isset($_POST['page']) ? $_POST['page'] : '');
-        if($pag > 0)
-        {
+        if ($pag > 0) {
             $page = $pag;
-        }
-        else{
+        } else {
             $page = 1;
         }
 
-        $get_farmer_allocation_data = $this->cco_model->get_all_farmer_allocation_data($campagain_id,11,$page);
+        $get_farmer_allocation_data = $this->cco_model->get_all_farmer_allocation_data($campagain_id, 11, $page);
 
         // testdata($get_farmer_allocation_data);
         Template::set('table', $get_farmer_allocation_data);
 
         Template::set('td', $get_farmer_allocation_data['count']);
-        Template::set('pagination', (isset($get_farmer_allocation_data['pagination']) && !empty($get_farmer_allocation_data['pagination'])) ? $get_farmer_allocation_data['pagination'] : '' );
+        Template::set('pagination', (isset($get_farmer_allocation_data['pagination']) && !empty($get_farmer_allocation_data['pagination'])) ? $get_farmer_allocation_data['pagination'] : '');
 
         Template::set_view("cco/allocation");
         Template::render();
@@ -177,12 +178,12 @@ class Cco extends Front_Controller
     {
         $campagainid = $_POST["campagainid"];
         $leveldata = $_POST["leveldata"];
-       // $leveldata = 1;
-        $get_level_data = $this->cco_model->level_data($campagainid,$leveldata);
+        // $leveldata = 1;
+        $get_level_data = $this->cco_model->level_data($campagainid, $leveldata);
 
         echo json_encode($get_level_data);
         die;
-       // testdata($get_level_data);
+        // testdata($get_level_data);
 
     }
 
@@ -200,16 +201,13 @@ class Cco extends Front_Controller
     {
         $geoid = $_POST["geo_id"];
         $level = $_POST["leveldata"];
-        $selectedtype = isset($_POST["selectedtype"])? $_POST["selectedtype"]: NULL ;
+        $selectedtype = isset($_POST["selectedtype"]) ? $_POST["selectedtype"] : NULL;
 
-        $farmer_data_count = $this->cco_model->get_farmer_count($geoid,$level,$selectedtype);
+        $farmer_data_count = $this->cco_model->get_farmer_count($geoid, $level, $selectedtype);
 
-        if($farmer_data_count != 0)
-        {
+        if ($farmer_data_count != 0) {
             echo json_encode($farmer_data_count);
-        }
-        else
-        {
+        } else {
             echo 0;
         }
         die;
@@ -223,30 +221,25 @@ class Cco extends Front_Controller
         $level_1 = $_POST["level_1"];
         $cco_data = $_POST["cco_data"];
 
-        $selected_type = isset($_POST["selected_type"])? $_POST["selected_type"]: NULL;
+        $selected_type = isset($_POST["selected_type"]) ? $_POST["selected_type"] : NULL;
 
         $final_array = array();
 
-        if(!empty($campagain_data) && !empty($level_1) && !empty($cco_data))
-        {
+        if (!empty($campagain_data) && !empty($level_1) && !empty($cco_data)) {
 
-            foreach($level_1 as $key => $geo_data)
-            {
-                $geo_farmer_data = $this->cco_model->geo_farmer_data($geo_data,$selected_type);
+            foreach ($level_1 as $key => $geo_data) {
+                $geo_farmer_data = $this->cco_model->geo_farmer_data($geo_data, $selected_type);
                 //testdata($geo_farmer_data);
-                if($geo_farmer_data != 0)
-                {
-                    foreach($geo_farmer_data as $f_key => $farmerdata)
-                    {
+                if ($geo_farmer_data != 0) {
+                    foreach ($geo_farmer_data as $f_key => $farmerdata) {
                         $farmer_id = $farmerdata["id"];
 
                         //CHECK FARMER ALREADY ALLOCATED TO SOME CCO FOR SAME CAMPAGAIN
 
-                        $check_allocation_data = $this->cco_model->check_customer_allocation_data($farmer_id,$campagain_data);
-                        if($check_allocation_data == 0)
-                        {
+                        $check_allocation_data = $this->cco_model->check_customer_allocation_data($farmer_id, $campagain_data);
+                        if ($check_allocation_data == 0) {
                             //ASSIGIN CCO, CAMPAGAIN TO FARMERS
-                            $data = $this->cco_model->add_customer_allocation_data($farmer_id,$campagain_data,$cco_data,$geo_data);
+                            $data = $this->cco_model->add_customer_allocation_data($farmer_id, $campagain_data, $cco_data, $geo_data);
                             $final_array[] = $data;
                         }
                     }
@@ -254,11 +247,9 @@ class Cco extends Front_Controller
             }
         }
 
-        if(in_array(1,$final_array))
-        {
+        if (in_array(1, $final_array)) {
             return 1;
-        }
-        else{
+        } else {
             return 0;
         }
     }
@@ -276,7 +267,7 @@ class Cco extends Front_Controller
     {
         Assets::add_module_js('cco', 'cco_channel_partner.js');
 
-        $user= $this->auth->user();
+        $user = $this->auth->user();
         $logined_user_type = $user->role_id;
         $logined_user_id = $user->id;
         $logined_user_countryid = $user->country_id;
@@ -289,8 +280,8 @@ class Cco extends Front_Controller
         $get_cco_data = $this->cco_model->get_all_cco_data($logined_user_countryid);
 
 
-        Template::set('campagaine_data',$campagain_data);
-        Template::set('cco_data',$get_cco_data);
+        Template::set('campagaine_data', $campagain_data);
+        Template::set('cco_data', $get_cco_data);
         Template::render();
     }
 
@@ -299,12 +290,9 @@ class Cco extends Front_Controller
         $user_role = $_POST["roledata"];
         $campagain_data = $this->cco_model->campagain_data($user_role);
 
-        if($campagain_data != 0)
-        {
-           echo json_encode($campagain_data);
-        }
-        else
-        {
+        if ($campagain_data != 0) {
+            echo json_encode($campagain_data);
+        } else {
             echo 0;
         }
         die;
@@ -315,7 +303,6 @@ class Cco extends Front_Controller
     {
         Template::render();
     }
-
 
 
 }

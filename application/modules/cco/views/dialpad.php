@@ -141,9 +141,7 @@
                         </div>
 
                         <div class="main-actv-details-form">
-                            <div class="col-md-12" class="middle_contailner">
-
-
+                            <div class="col-md-12" id="dialpad_middle_contailner">
 
                             </div>
                         </div>

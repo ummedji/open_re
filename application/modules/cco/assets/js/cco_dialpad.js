@@ -51,7 +51,7 @@ function get_general_detail_data()
         url: site_url + "cco/get_customer_general_detail_data",
         data: {customerid: customer_id},
         success: function (resp) {
-
+            $("div#dialpad_middle_contailner").html(resp);
         }
     });
 
