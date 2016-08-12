@@ -1378,7 +1378,7 @@ $(document).on('change','select#demo_id',function(){
 
                     geolevel_3_Change();
 
-                }, 500);
+                }, 5000);
 
                 setTimeout(function(){
 
@@ -1387,7 +1387,7 @@ $(document).on('change','select#demo_id',function(){
 
                     $('select#geo_level_4').selectpicker('refresh');
 
-                }, 1000);
+                }, 8000);
 
                 $("#activity_address").val(resp.location);
                 $("#size_of_plot").val(resp.size_of_plot);

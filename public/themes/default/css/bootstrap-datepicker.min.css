@@ -500,6 +500,8 @@
     display: table-caption;
 }
 .datepicker.cal-parent .datepicker-months thead, .datepicker.cal-parent .datepicker-years thead { display: inherit;}
+.datepicker.cal-parent .datepicker-months thead, .datepicker.cal-parent .datepicker-decades thead { display: inherit;}
+.datepicker.cal-parent .datepicker-months thead, .datepicker.cal-parent .datepicker-centuries thead { display: inherit;}
 .datepicker.cal-parent th {
     -webkit-border-radius: 0px;
     -moz-border-radius: 0px;
