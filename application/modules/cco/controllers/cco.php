@@ -70,12 +70,26 @@ class Cco extends Front_Controller
 
     public function dialpad()
     {
+        Assets::add_module_js('cco', 'cco_dialpad.js');
+
         $customer_id = $this->session->userdata("customer_id");
 
         $get_sidebar_selected_customer_data = $this->cco_model->get_dialed_customer_data($customer_id);
 
         Template::set('sidebar_selected_customer_data',$get_sidebar_selected_customer_data);
         Template::set_view("cco/dialpad");
+        Template::render();
+    }
+
+    public function get_customer_general_detail_data()
+    {
+        $customer_id = $_POST["customerid"];
+
+        $get_personal_general_data = $this->cco_model->get_personal_general_data($customer_id);
+
+        Template::set('get_personal_general_data',$get_personal_general_data);
+
+        Template::set_view("cco/dialpad_popup_views/general_details");
         Template::render();
     }
 

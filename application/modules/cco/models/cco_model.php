@@ -652,6 +652,41 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_personal_general_data($customer_id)
+    {
+        $this->db->select("bu.email,bu.display_name,
+                           bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,bmucd.house_no,bmucd.address,bmucd.landmark,bmucd.pincode,
+                           bmpgd1.political_geography_name as level1,bmpgd2.political_geography_name as level2,bmpgd3.political_geography_name as level3,
+                           bmupd.first_name,bmupd.last_name,bmupd.gender,bmupd.dob,bmupd.introduction_year,
+                           bmusd.passport_no,bmusd.ktp_no,bmusd.aadhaar_card_no
+                         ");
+
+        $this->db->from("bf_users as bu");
+
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id","LEFT");
+        $this->db->join("bf_master_user_personal_details as bmupd","bmupd.user_id = bu.id","LEFT");
+
+        $this->db->join("bf_master_user_statutory_details as bmusd","bmusd.user_id = bu.id","LEFT");
+
+        $this->db->join("bf_master_political_geography_details as bmpgd1","bmpgd1.political_geo_id = bmucd.geo_level_id1","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd2","bmpgd2.political_geo_id = bmucd.geo_level_id2","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3","LEFT");
+
+        $this->db->where('bu.id',$customer_id);
+
+        $user_data = $this->db->get()->result_array();
+
+        if(isset($user_data ) && !empty($user_data ))
+        {
+            return $user_data;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
 
 
 

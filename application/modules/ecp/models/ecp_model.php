@@ -3820,7 +3820,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $status = 4;
         }
        // $sql = 'SELECT * ';
-        $sql = 'SELECT eap.activity_planning_id,eap.activity_planning_time,eap.execution_time,eap.proposed_attandence_count,bu.display_name,bu.user_code,mdc.desigination_country_name,eamc.activity_type_country_name,mpgd2.political_geography_name as geo_level_2,mpgd3.political_geography_name as geo_level_3,mpgd4.political_geography_name as geo_level_4 ';
+        $sql = 'SELECT eap.activity_planning_id,eap.activity_planning_time,eap.execution_time,eap.proposed_attandence_count,bu.display_name,bu.user_code,mdc.desigination_country_name,eamc.activity_type_country_name,eamc.activity_type_code,mpgd2.political_geography_name as geo_level_2,mpgd3.political_geography_name as geo_level_3,mpgd4.political_geography_name as geo_level_4 ';
         $sql .= 'FROM bf_ecp_activity_planning AS eap ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = eap.employee_id) ';
         $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.user_id = bu.id) ';
@@ -3828,7 +3828,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $sql .= 'JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
         $sql .= 'JOIN bf_master_political_geography_details AS mpgd2 ON (mpgd2.political_geo_id = eap.geo_level_id_2) ';
         $sql .= 'JOIN bf_master_political_geography_details as mpgd3 ON (mpgd3.political_geo_id = eap.geo_level_id_3) ';
-        $sql .= 'JOIN bf_master_political_geography_details as mpgd4 ON (mpgd4.political_geo_id = eap.geo_level_id_4) ';
+        $sql .= 'LEFT JOIN bf_master_political_geography_details as mpgd4 ON (mpgd4.political_geo_id = eap.geo_level_id_4) ';
 
         $sql .= 'WHERE 1 ';
         $sql .= ' AND eap.country_id ="' . $country_id . '" ';
@@ -3845,8 +3845,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
         $activity_approval = $this->grid->get_result_res($sql);
 
-        testdata($activity_approval);
-       /* if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
+        //testdata($activity_approval);
+        if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
 
             $activity['head'] = array('Sr. No.', 'Edit', 'Employee Name', 'Employee Code', 'Designation', 'Activity Planned Date', 'Activity Type','Action');
 
@@ -3866,45 +3866,21 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 } else {
                     $activity_date = $rm['activity_planning_date'];
                 }
-                if($rm['status'] == 1)
-                {
-                    $approval_status = '<select name="status" class="approval_status" id="approval_status" ><option value="">Select Action</option><option attr-id="'. $rm['activity_planning_id'].'" value="2">Approve</option><option attr-id="'. $rm['activity_planning_id'].'"   value="3">Reject</option></select>';
-                    $edit_disabled[] = 0;
-                }
-                else{
-                    if($rm['status'] == '2')
-                    {
-                        $approval_status = 'Approve';
-                        $edit_disabled[]= 1;
-                    }
-                    elseif($rm['status'] == '3'){
-                        $approval_status = 'Reject';
-                        $edit_disabled[] = 1;
-                    }
-                    elseif($rm['status'] == '4'){
-                        $approval_status = 'Executed';
-                        $edit_disabled[]= 1;
-                    }
-                    else{
-                        $approval_status = 'Canceled';
-                        $edit_disabled[] = 1;
-                    }
-                }
 
 
-                $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['user_code'], $rm['desigination_country_name'],$activity_date, $rm['activity_type_country_name'],$approval_status );
+
+                $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['user_code'], $rm['desigination_country_name'],$activity_date, $rm['activity_type_country_name'] );
                 $i++;
             }
             $activity['eye'] = '';
             $activity['action'] = 'is_action';
             $activity['delete'] = '';
-            $activity['edit_disabled'] = $edit_disabled ;
             $activity['pagination'] = $activity_approval['pagination'];
             // testdata($activity);
             return $activity;
         } else {
             return false;
-        }*/
+        }
 
     }
 

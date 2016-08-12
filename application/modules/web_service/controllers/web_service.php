@@ -4652,6 +4652,98 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+
+    public function getExecutionDataByMonth()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $cur_month = $this->input->get_post('month');
+        $cur_year = $this->input->get_post('year');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($cur_month) && !empty($cur_month)) && (isset($cur_year) && !empty($cur_year))) {
+            $activity_detail = $this->ecp_model->all_activity_execution($user_id,$country_id,'web_service',$cur_month,$cur_year);
+            // testdata($activity_detail);
+            if(isset($activity_detail) && !empty($activity_detail))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $activity_detail;
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'No ddata.';
+                $result['data'] = '';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
+    public function getViewDetailDataByMonth()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $cur_month = $this->input->get_post('month');
+        $cur_year = $this->input->get_post('year');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($cur_month) && !empty($cur_month)) && (isset($cur_year) && !empty($cur_year))) {
+            $activity_detail = $this->ecp_model->all_activity_view_details($user_id,$country_id,'web_service',$cur_month,$cur_year);
+          //  testdata($activity_detail);
+            if(isset($activity_detail) && !empty($activity_detail))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $activity_detail;
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'No ddata.';
+                $result['data'] = '';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+    public function getViewDataByMonth()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $cur_month = $this->input->get_post('month');
+        $cur_year = $this->input->get_post('year');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($cur_month) && !empty($cur_month)) && (isset($cur_year) && !empty($cur_year))) {
+            $activity_detail = $this->ecp_model->all_activity_view($user_id,$country_id,'web_service',$cur_month,$cur_year);
+            if(isset($activity_detail) && !empty($activity_detail))
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+                $result['data'] = $activity_detail;
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'No ddata.';
+                $result['data'] = '';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
     public function getMissedActivityByMonth()
     {
         $user_id = $this->input->get_post('user_id');

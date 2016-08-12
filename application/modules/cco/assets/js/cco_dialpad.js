@@ -14,6 +14,9 @@ $(document).ready(function(){
         });
 
     });
+
+    get_general_detail_data();
+
 });
 
 $(document).on("click","a.primary_no",function(){
@@ -38,3 +41,18 @@ $(document).on("click","a.primary_no",function(){
 
 
 });
+
+function get_general_detail_data()
+{
+    var customer_id = 4;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_general_detail_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+
+        }
+    });
+
+}
