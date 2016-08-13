@@ -1,7 +1,7 @@
 <?php
 
 if (isset($activity_view) && !empty($activity_view)) { ?>
-<div class="col-md-9">
+<div>
     <div class="top_form planning_parent">
         <div class="row">
             <div class="col-md-12">

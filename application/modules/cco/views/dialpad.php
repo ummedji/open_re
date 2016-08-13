@@ -22,6 +22,9 @@
                         <div class="up-detail-box">
 
                             <?php
+
+                            $customer_id = (isset($sidebar_selected_customer_data[0]["id"]) && !empty($sidebar_selected_customer_data[0]["id"])) ? $sidebar_selected_customer_data[0]["id"] : "";
+
                                     $customer_name = (isset($sidebar_selected_customer_data[0]["display_name"]) && !empty($sidebar_selected_customer_data[0]["display_name"])) ? $sidebar_selected_customer_data[0]["display_name"] : "";
 
 
@@ -109,6 +112,7 @@
                                 <div class="col-md-4 col-sm-4 com_form">
                                     <div class="form-group">
                                         <label for="Campaign">Campaign</label>
+                                        <input type="hidden" name="campagain_id" value="<?php echo $selected_campagain_data; ?>" id="camagain_id"/>
                                         <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
                                     </div>
                                 </div>
@@ -172,7 +176,7 @@
         </div>
         <div class="col-md-12 footer_menu">
             <ul>
-                <li><a href="#">Personal</a></li>
+                <li><a href="javascript:void(0);" onclick="get_general_detail_data(<?php echo $customer_id; ?>);">Personal</a></li>
                 <li><a href="#">Education Detail</a></li>
                 <li><a href="#">Social Connection</a></li>
                 <li><a href="#">Financial Details</a></li>
@@ -208,4 +212,7 @@
     </div>
     <div class="chat-content"></div>
     <div class="clearfix"></div>
+</div>
+<div id="success_file_popup">
+
 </div>

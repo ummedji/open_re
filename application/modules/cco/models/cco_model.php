@@ -203,11 +203,12 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function campagain_data($role)
+    public function campagain_data($role,$country_id)
     {
         $this->db->select("*");
         $this->db->from("bf_cco_campaign");
         $this->db->where("customer_type",$role);
+        $this->db->where("country_id",$country_id);
         $this->db->where("deleted","0");
         $this->db->where("status","1");
 
@@ -438,6 +439,47 @@ class Cco_model extends BF_Model
 
     }
 
+    /*-----------------------------------------------------------------------------------------*/
+
+    public function add_cco_allocation_activity_details($user_id,$country_id)
+    {
+
+        $check = $this->input->post("check");
+        $cco_data = $this->input->post("cco_data");
+        $activity_type = $this->input->post("activity_type");
+
+        if((isset($check) && !empty($check)) && (isset($cco_data) && !empty($cco_data))){
+
+            foreach($check as $k => $val)
+            {
+                $add_allocation_activity = array(
+                    'activity_id' => $val,
+                    'cco_id' => $cco_data,
+                    'activity_type' => $activity_type,
+                    'country_id' => $country_id,
+                    'created_by_user' => $user_id,
+                    'modified_by_user' => $user_id,
+                    'created_on' => date('Y-m-d H:i:s'),
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+                $this->db->insert('cco_activity_allocation', $add_allocation_activity);
+            }
+        }
+
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+    /*-----------------------------------------------------------------------------------------*/
+
+
+
+
+
     public function check_cco_campagain_data($cco_data,$campagain_data,$geo_data)
     {
         $sql = 'SELECT * FROM `bf_cco_campaign_allocation` as bcca
@@ -615,9 +657,8 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function get_dialed_customer_data($customer_id)
+    public function get_dialed_customer_data($phone_no)
     {
-
         $this->db->select("bu.id,bu.email,bu.display_name,bu.user_code,bu.country_id,
                            bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,
                            bmupd.gender,
@@ -639,7 +680,7 @@ class Cco_model extends BF_Model
         $this->db->join("bf_master_political_geography_details as bmpgd2","bmpgd2.political_geo_id = bmucd.geo_level_id2","LEFT");
         $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3","LEFT");
 
-        $this->db->where('bu.id',$customer_id);
+        $this->db->where('bmucd.primary_mobile_no',$phone_no);
 
         $user_data = $this->db->get()->result_array();
         if(isset($user_data ) && !empty($user_data ))
@@ -654,9 +695,12 @@ class Cco_model extends BF_Model
 
     public function get_personal_general_data($customer_id)
     {
-        $this->db->select("bu.email,bu.display_name,
+        $this->db->select("bu.id,bu.email,bu.display_name,
                            bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,bmucd.house_no,bmucd.address,bmucd.landmark,bmucd.pincode,
                            bmpgd1.political_geography_name as level1,bmpgd2.political_geography_name as level2,bmpgd3.political_geography_name as level3,
+
+                           bmpgd1.political_geo_id as level1_id,bmpgd2.political_geo_id as level2_id,bmpgd3.political_geo_id as level3_id,
+
                            bmupd.first_name,bmupd.last_name,bmupd.gender,bmupd.dob,bmupd.introduction_year,
                            bmusd.passport_no,bmusd.ktp_no,bmusd.aadhaar_card_no
                          ");
@@ -685,6 +729,153 @@ class Cco_model extends BF_Model
             return 0;
         }
 
+    }
+
+
+    public function get_personal_family_data($customer_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_master_user_family_details as bmufd");
+        $this->db->where('bmufd.user_id',$customer_id);
+
+        $user_family_data = $this->db->get()->result_array();
+
+        if(isset($user_family_data ) && !empty($user_family_data ))
+        {
+            return $user_family_data;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+
+    public function add_update_general_data()
+    {
+
+        $customer_id = $_POST["customer_id"];
+
+        $update_array = array();
+
+        $user_update_array = array(
+            'email' => $_POST["email_id"],
+            'display_name' => $_POST["customer_name"]
+        );
+
+        $this->db->where("id",$customer_id);
+        $this->db->update("bf_users",$user_update_array);
+
+        if($this->db->affected_rows() > 0){
+            $update_array[] = 1;
+        }
+
+        $contact_update_array = array(
+            'user_id' => $customer_id,
+            'primary_mobile_no' => $_POST["primary_mobile_no"],
+            'secondary_mobile_no' => $_POST["secondary_mobile_no"],
+            'landline_no' => $_POST["secondary_mobile_no"],
+            'address' => $_POST["address"],
+            'geo_level_id3' => $_POST["geo_level_3"],
+            'geo_level_id2' => $_POST["geo_level_2"],
+            'geo_level_id1' => $_POST["geo_level_1"],
+            'pincode' => $_POST["pincode"]
+        );
+
+        //CHECK CONTACT DETAIL IN TABLE FOR USER
+
+        $this->db->select("*");
+        $this->db->from("bf_master_user_contact_details as bmucd");
+        $this->db->where("bmucd.user_id",$customer_id);
+        $user_contact_data = $this->db->get()->result_array();
+
+        if(empty($user_contact_data))
+        {
+            $this->db->insert("bf_master_user_contact_details",$contact_update_array);
+            if($this->db->affected_rows() > 0){
+                $update_array[] = 1;
+            }
+        }
+        else
+        {
+            $this->db->where("user_id",$customer_id);
+            $this->db->update("bf_master_user_contact_details",$contact_update_array);
+            if($this->db->affected_rows() > 0){
+                $update_array[] = 1;
+            }
+        }
+
+        $personal_update_array = array(
+            'user_id' => $customer_id,
+            'first_name' => $_POST["first_name"],
+            'last_name' => $_POST["last_name"],
+            'gender' => $_POST["gender"],
+            'dob' => $_POST["dob"],
+            'introduction_year' => $_POST["introduction_year"]
+        );
+
+        //CHECK PERSONAL DETAIL IN TABLE FOR USER
+
+        $this->db->select("*");
+        $this->db->from("bf_master_user_personal_details as bmupd");
+        $this->db->where("bmupd.user_id",$customer_id);
+        $user_personal_data = $this->db->get()->result_array();
+
+        if(empty($user_personal_data))
+        {
+            $this->db->insert("bf_master_user_personal_details",$personal_update_array);
+            if($this->db->affected_rows() > 0){
+                $update_array[] = 1;
+            }
+        }
+        else
+        {
+            $this->db->where("user_id",$customer_id);
+            $this->db->update("bf_master_user_personal_details",$personal_update_array);
+            if($this->db->affected_rows() > 0){
+                $update_array[] = 1;
+            }
+        }
+
+
+        $statutory_update_array = array(
+            'user_id' => $customer_id,
+            'passport_no' => $_POST["passport_no"],
+            'ktp_no' => $_POST["ktp_no"],
+            'aadhaar_card_no' => $_POST["adhar_card_no"]
+        );
+
+        //CHECK SATUTARY DETAIL IN TABLE FOR USER
+
+        $this->db->select("*");
+        $this->db->from("bf_master_user_statutory_details as bmusd");
+        $this->db->where("bmusd.user_id",$customer_id);
+        $user_satutary_data = $this->db->get()->result_array();
+
+        if(empty($user_satutary_data))
+        {
+            $this->db->insert("bf_master_user_statutory_details",$statutory_update_array);
+            if($this->db->affected_rows() > 0){
+                $update_array[] = 1;
+            }
+        }
+        else
+        {
+            $this->db->where("user_id",$customer_id);
+            $this->db->update("bf_master_user_statutory_details",$statutory_update_array);
+            if($this->db->affected_rows() > 0){
+                $update_array[] = 1;
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 

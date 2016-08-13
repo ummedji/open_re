@@ -1,5 +1,5 @@
 <?php if (isset($activity_planning) && !empty($activity_planning)) { ?>
-    <div class="col-md-9">
+    <div>
         <div class="top_form planning_parent">
             <div class="row">
                 <div class="col-md-12">

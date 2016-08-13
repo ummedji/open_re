@@ -3845,12 +3845,13 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
         $activity_approval = $this->grid->get_result_res($sql);
 
-        //testdata($activity_approval);
+       // testdata($activity_approval);
         if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
 
-            $activity['head'] = array('Sr. No.', 'Edit', 'Employee Name', 'Employee Code', 'Designation', 'Activity Planned Date', 'Activity Type','Action');
+            $activity['head'] = array('Sr. No.', 'Select', 'Employee Name', 'Designation','Geo Level 3','Geo Level 2','Geo Level 1', 'Activity Planned Date', 'Minimum No. Of Attendances ');
 
             $activity['count'] = count($activity['head']);
+
             if ($page != null || $page != "") {
                 $i = (($page * 10) - 9);
             } else {
@@ -3860,23 +3861,22 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             foreach ($activity_approval['result'] as $rm) {
 
                 if ($local_date != null) {
-                    $date3 = strtotime($rm['activity_planning_date']);
-                    $activity_date = date($local_date, $date3);
+                    $date3 = strtotime($rm['activity_planning_time']);
+                    $activity_date = date($local_date .' g:i A', $date3);
 
                 } else {
-                    $activity_date = $rm['activity_planning_date'];
+                    $activity_date = $rm['activity_planning_time'];
                 }
 
 
 
-                $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['user_code'], $rm['desigination_country_name'],$activity_date, $rm['activity_type_country_name'] );
+                $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['desigination_country_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$activity_date, $rm['proposed_attandence_count'] );
                 $i++;
             }
-            $activity['eye'] = '';
-            $activity['action'] = 'is_action';
+            $activity['is_not_checkbox'] = 'is_checkbox';
+            $activity['action'] = '';
             $activity['delete'] = '';
             $activity['pagination'] = $activity_approval['pagination'];
-            // testdata($activity);
             return $activity;
         } else {
             return false;

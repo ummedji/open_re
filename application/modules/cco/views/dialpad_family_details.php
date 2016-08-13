@@ -1,56 +1,6 @@
 <?php
-//testdata($personal_general_data);
 
-$customer_id = (isset($personal_general_data[0]["id"]) && !empty($personal_general_data[0]["id"]))? $personal_general_data[0]["id"] : "";
-
-$customer_name = (isset($personal_general_data[0]["display_name"]) && !empty($personal_general_data[0]["display_name"]))? $personal_general_data[0]["display_name"] : "";
-
-$customer_email = (isset($personal_general_data[0]["email"]) && !empty($personal_general_data[0]["email"]))? $personal_general_data[0]["email"] : "";
-
-$customer_primary_mobile_no = (isset($personal_general_data[0]["primary_mobile_no"]) && !empty($personal_general_data[0]["primary_mobile_no"]))? $personal_general_data[0]["primary_mobile_no"] : "";
-
-$customer_secondary_mobile_no = (isset($personal_general_data[0]["secondary_mobile_no"]) && !empty($personal_general_data[0]["secondary_mobile_no"]))? $personal_general_data[0]["secondary_mobile_no"] : "";
-
-$customer_landline_no = (isset($personal_general_data[0]["landline_no"]) && !empty($personal_general_data[0]["landline_no"]))? $personal_general_data[0]["landline_no"] : "";
-
-$customer_house_no = (isset($personal_general_data[0]["house_no"]) && !empty($personal_general_data[0]["house_no"]))? $personal_general_data[0]["house_no"] : "";
-
-$customer_address = (isset($personal_general_data[0]["address"]) && !empty($personal_general_data[0]["address"]))? $personal_general_data[0]["address"] : "";
-
-$customer_landmark = (isset($personal_general_data[0]["landmark"]) && !empty($personal_general_data[0]["landmark"]))? $personal_general_data[0]["landmark"] : "";
-
-$customer_pincode = (isset($personal_general_data[0]["pincode"]) && !empty($personal_general_data[0]["pincode"]))? $personal_general_data[0]["pincode"] : "";
-
-$level1 = (isset($personal_general_data[0]["level1"]) && !empty($personal_general_data[0]["level1"]))? $personal_general_data[0]["level1"] : "";
-
-$level2 = (isset($personal_general_data[0]["level2"]) && !empty($personal_general_data[0]["level2"]))? $personal_general_data[0]["level2"] : "";
-
-$level3 = (isset($personal_general_data[0]["level3"]) && !empty($personal_general_data[0]["level3"]))? $personal_general_data[0]["level3"] : "";
-
-$level1_id = (isset($personal_general_data[0]["level1_id"]) && !empty($personal_general_data[0]["level1_id"]))? $personal_general_data[0]["level1_id"] : "";
-
-$level2_id = (isset($personal_general_data[0]["level2_id"]) && !empty($personal_general_data[0]["level2_id"]))? $personal_general_data[0]["level2_id"] : "";
-
-$level3_id = (isset($personal_general_data[0]["level3_id"]) && !empty($personal_general_data[0]["level3_id"]))? $personal_general_data[0]["level3_id"] : "";
-
-$customer_first_name = (isset($personal_general_data[0]["first_name"]) && !empty($personal_general_data[0]["first_name"]))? $personal_general_data[0]["first_name"] : "";
-
-$customer_last_name = (isset($personal_general_data[0]["last_name"]) && !empty($personal_general_data[0]["last_name"]))? $personal_general_data[0]["last_name"] : "";
-
-$customer_gender = (isset($personal_general_data[0]["gender"]) && !empty($personal_general_data[0]["gender"]))? $personal_general_data[0]["gender"] : "";
-
-$customer_dob = (isset($personal_general_data[0]["dob"]) && !empty($personal_general_data[0]["dob"]))? $personal_general_data[0]["dob"] : "";
-
-$customer_introduction_year = (isset($personal_general_data[0]["introduction_year"]) && !empty($personal_general_data[0]["introduction_year"]))? $personal_general_data[0]["introduction_year"] : "";
-
-$customer_passport_no = (isset($personal_general_data[0]["passport_no"]) && !empty($personal_general_data[0]["passport_no"]))? $personal_general_data[0]["passport_no"] : "";
-
-$customer_ktp_no = (isset($personal_general_data[0]["ktp_no"]) && !empty($personal_general_data[0]["ktp_no"]))? $personal_general_data[0]["ktp_no"] : "";
-
-$customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"]) && !empty($personal_general_data[0]["aadhaar_card_no"]))? $personal_general_data[0]["aadhaar_card_no"] : "";
-
-
-//$addres_data = $customer_house_no."\r\n".$customer_address."\r\n".$customer_landmark."\r\n".$level1."\r\n".$level2."\r\n".$level3."\r\n".$customer_pincode;
+//$customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"]) && !empty($personal_general_data[0]["aadhaar_card_no"]))? $personal_general_data[0]["aadhaar_card_no"] : "";
 
 ?>
 
@@ -68,9 +18,7 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
 
 <div class="actv-details-form">
 
-
-
-    <h5>Personal Details</h5>
+    <h5>Family Details</h5>
     <div class="back_details">
 
         <?php

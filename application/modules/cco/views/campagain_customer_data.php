@@ -68,7 +68,7 @@
                     <td data-title="Last Name"><?php echo $cust_data["last_name"]; ?></td>
                     <td data-title="Primary No.">
                         <div>
-                            <a href="javascript: void(0);" rel="<?php echo $cust_data["customer_id"]; ?>" class="primary_no" ><?php echo $cust_data["primary_mobile_no"]; ?></a>
+                            <a href="javascript: void(0);" rel="<?php echo $cust_data["primary_mobile_no"]; ?>" class="primary_no" ><?php echo $cust_data["primary_mobile_no"]; ?></a>
                         </div>
                     </td>
                     <td data-title="Other No."><?php echo $cust_data["secondary_mobile_no"]; ?></td>

@@ -30,12 +30,9 @@ class Cco extends Front_Controller
 
 
         $this->load->model('cco/cco_model');
-        // $this->load->model('ishop/ishop_model');
-        //  $this->load->model('esp/esp_model');
+        $this->load->model('ecp/ecp_model');
 
         $this->set_current_user();
-
-
         $this->lang->load('cco');
 
     }
@@ -61,7 +58,7 @@ class Cco extends Front_Controller
 
         $farmer_role = 11;
 
-        $campagain_data = $this->cco_model->campagain_data($farmer_role);
+        $campagain_data = $this->cco_model->campagain_data($farmer_role,$logined_user_countryid);
 
         Template::set('campagaine_data', $campagain_data);
         Template::set_view("cco/main_screen_dialpad");
@@ -72,11 +69,14 @@ class Cco extends Front_Controller
     {
         Assets::add_module_js('cco', 'cco_dialpad.js');
 
-        $customer_id = $this->session->userdata("customer_id");
+        $phone_no = $this->session->userdata("phone_no");
+        $campagain_id = $this->session->userdata("campagain_id");
 
-        $get_sidebar_selected_customer_data = $this->cco_model->get_dialed_customer_data($customer_id);
+        $get_sidebar_selected_customer_data = $this->cco_model->get_dialed_customer_data($phone_no);
 
         Template::set('sidebar_selected_customer_data', $get_sidebar_selected_customer_data);
+        Template::set('selected_campagain_data', $campagain_id);
+
         Template::set_view("cco/dialpad");
         Template::render();
     }
@@ -96,6 +96,24 @@ class Cco extends Front_Controller
         Template::render();
     }
 
+    public function get_customer_family_detail_data()
+    {
+        $customer_id = $_POST["customerid"];
+
+        $get_personal_family_data = $this->cco_model->get_personal_family_data($customer_id);
+
+        Template::set('personal_family_data', $get_personal_family_data);
+        Template::set_view("cco/dialpad_family_details");
+        Template::render();
+    }
+
+    public function add_update_general_info()
+    {
+        $update_data = $this->cco_model->add_update_general_data();
+        echo $update_data;
+        die;
+    }
+
     public function get_campagain_allocated_data()
     {
         $campagainid = $_POST["campagainid"];
@@ -111,7 +129,7 @@ class Cco extends Front_Controller
     {
         $this->load->library('session');
 
-        $customerid = $_POST["customerid"];
+        $phoneno = $_POST["phoneno"];
         $campagain_id = $_POST["campagainid"];
         $user = $this->auth->user();
         $logined_user_type = $user->role_id;
@@ -121,7 +139,7 @@ class Cco extends Front_Controller
         $this->session->set_userdata(array(
             'user_id' => $logined_user_id,
             'country_id' => $logined_user_countryid,
-            'customer_id' => $customerid,
+            'phone_no' => $phoneno,
             'campagain_id' => $campagain_id
         ));
 
@@ -138,7 +156,7 @@ class Cco extends Front_Controller
 
         $farmer_role = 11;
 
-        $campagain_data = $this->cco_model->campagain_data($farmer_role);
+        $campagain_data = $this->cco_model->campagain_data($farmer_role,$logined_user_countryid);
         // testdata($get_level_data);
 
         //  $campagain_id = 1;
@@ -273,7 +291,7 @@ class Cco extends Front_Controller
         $logined_user_countryid = $user->country_id;
 
         $user_role = 10;
-        $campagain_data = $this->cco_model->campagain_data($user_role);
+        $campagain_data = $this->cco_model->campagain_data($user_role,$logined_user_countryid);
         // testdata($get_level_data);
 
         //  $campagain_id = 1;
@@ -287,8 +305,11 @@ class Cco extends Front_Controller
 
     public function get_channel_campagain_data()
     {
+
+        $user = $this->auth->user();
+
         $user_role = $_POST["roledata"];
-        $campagain_data = $this->cco_model->campagain_data($user_role);
+        $campagain_data = $this->cco_model->campagain_data($user_role,$user->country_id);
 
         if ($campagain_data != 0) {
             echo json_encode($campagain_data);
@@ -297,6 +318,61 @@ class Cco extends Front_Controller
         }
         die;
     }
+
+
+    public function allocation_activity()
+    {
+        Assets::add_module_js('cco','allocation_activity.js');
+        $user= $this->auth->user();
+        $activity = $this->ecp_model->activity_type_details($user->country_id);
+
+        $cco_data = $this->cco_model->get_all_cco_data($user->country_id);
+        Template::set('cco_data', $cco_data);
+
+        Template::set('activity_type',$activity);
+        Template::set_view('cco/allocation_activity');
+        Template::render();
+
+    }
+
+    public function allocation_activity_view()
+    {
+        $user= $this->auth->user();
+
+        $radio_check = (isset($_POST['radio1']) && !empty($_POST['radio1'])) ? $_POST['radio1'] : 'planned_activity';
+
+        $form_dt = ((isset($_POST['from_date']) && !empty($_POST['from_date'])) ? $_POST['from_date'] : '');
+        $f_date = str_replace('/', '-', $form_dt);
+        $from_date = date('Y-m-d', strtotime($f_date));
+
+        $to_dt = ((isset($_POST['to_date']) && !empty($_POST['to_date'])) ? $_POST['to_date'] : '');
+        $t_date = str_replace('/', '-', $to_dt);
+        $to_date = date('Y-m-d', strtotime($t_date));
+
+        $activity_type = (isset($_POST['activity_type']) && !empty($_POST['activity_type'])) ? $_POST['activity_type'] : '';
+        $page= (isset($_POST['page']) && !empty($_POST['page'])) ? $_POST['page'] : '';
+        $activity = $this->ecp_model->get_all_activity_details($radio_check,$from_date,$to_date,$activity_type,$user->country_id,$user->local_date,$page);
+
+       // testdata($activity);
+        Template::set('table', $activity);
+
+        Template::set('td', $activity['count']);
+        Template::set('pagination', (isset($activity['pagination']) && !empty($activity['pagination'])) ? $activity['pagination'] : '' );
+
+        Template::set_view("cco/allocation_activity");
+        Template::render();
+
+    }
+
+    public function add_cco_activity_details()
+    {
+        //testdata($_POST);
+        $user =  $this->auth->user();
+        $data = $this->cco_model->add_cco_allocation_activity_details($user->id,$user->country_id);
+        echo $data;
+        die;
+    }
+
 
 
     public function activity()
