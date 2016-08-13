@@ -990,6 +990,18 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_customer_social_data($customer_id)
+    {
+        $this->db->select("bmusad.*");
+        $this->db->from("bf_master_user_social_account_details as bmusad");
+        $this->db->where("bmusad.user_id",$customer_id);
+
+        $social_data = $this->db->get()->result_array();
+
+        return $social_data;
+
+    }
+
     public function get_qualification_specialization_data($qualification_id)
     {
         $this->db->select("bmes.edu_specialization_id,bmes.edu_specialization_name");
@@ -1189,6 +1201,87 @@ class Cco_model extends BF_Model
         {
             return 0;
         }
+    }
+
+    public function add_update_education_data()
+    {
+
+        //testdata($_POST);
+
+        $update_array = array();
+        if(!empty($_POST["education_data_id"]))
+        {
+            $customer_id = $_POST['customer_id'];
+
+            foreach($_POST["education_data_id"] as $key=> $education_data_id)
+            {
+
+                $data_array = array(
+                    'user_id'=> $customer_id,
+                    'qualification_id'=> $_POST['qualification'][$key],
+                    'edu_specialization_id'=> $_POST['specialization'][$key],
+                    'instiute'=> $_POST['university'][$key]
+                );
+
+                if($education_data_id != "")
+                {
+                    //UPDATE QUERY
+
+                    $data_array["year"] = $_POST['year_data'][$key]."-01-01";
+
+                    $this->db->where("education_detail_id", $education_data_id);
+                    $this->db->update("bf_master_user_educational_details", $data_array);
+
+                    if($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+
+                }
+                else
+                {
+
+                    $data_array["year"] = $_POST['year_data'][$key]."-01-01";
+
+                    //INSERT QUERY
+                    if($_POST['qualification'][$key] != "") {
+                        $this->db->insert("bf_master_user_educational_details", $data_array);
+                    }
+
+                    if($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+
+                }
+
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+
+    }
+
+    public function add_update_social_data()
+    {
+        $update_array = array();
+
+        if(!empty($_POST))
+        {
+
+            
+
+        }
+
+        testdata($_POST);
+
+
     }
 
 

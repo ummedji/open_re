@@ -129,14 +129,14 @@ $(document).on('click', 'div.secondary_cont .eye_i', function () {
 /*Get  Secondary Sales Data*/
 
 
-$(document).on('click', 'div.secondary_cont .edit_i', function () {
+/*$(document).on('click', 'div.secondary_cont .edit_i', function () {
 
     var id = $(this).attr('prdid');
 
-   /* var invoice_no = $("div.secondary_cont div.invoice_no_"+id+" span.invoice_no").text();
+   /!* var invoice_no = $("div.secondary_cont div.invoice_no_"+id+" span.invoice_no").text();
     $("div.secondary_cont div.invoice_no_"+id).empty();
     $("div.secondary_cont div.invoice_no_"+id).append('<input id="invoice_no_'+id+'" type="text" name="invoice_no[]" value="'+invoice_no+'"/>');
-*/
+*!/
 
     //Invoice Date
 
@@ -159,7 +159,7 @@ $(document).on('click', 'div.secondary_cont .edit_i', function () {
 
     $(this).prop("disabled",true);
     return false;
-});
+});*/
 
 
 $(document).on('click', 'div.secondary_product .edit_i', function () {

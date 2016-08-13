@@ -78,17 +78,24 @@ $(function () {
                     }
                     else if(resp == 2){
                         get_scondary_sales_data(invoice_no,login_customer_id,customer_id);
+
+                        $('#order_traking_no').attr('readonly','readonly');
+                        $('#po_no').attr('readonly','readonly');
                     }
                     else{
                         already_assign_error = 0;
                         $('.error').css('display','none');
                         $('#invoice_no_error').empty();
+                        $('#order_traking_no').removeAttr('readonly','readonly');
+                        $('#po_no').removeAttr('readonly','readonly');
                     }
                 }
             });
         }
         else if($.trim(invoice_no) !=''){
             get_scondary_sales_data(invoice_no,login_customer_id,customer_id);
+            $('#order_traking_no').attr('readonly','readonly');
+            $('#po_no').attr('readonly','readonly');
         }
     });
 
@@ -125,6 +132,12 @@ $(function () {
     $('#reta_id').on('change',function(){
         $('#invoice_no').val('');
         $("#secondary_sls").empty();
+        $('#order_traking_no').val('');
+        $('#po_no').val('');
+        $('#invoice_date').val('');
+        $('#order_traking_no').removeAttr('readonly','readonly');
+        $('#po_no').removeAttr('readonly','readonly');
+
     });
 
     $("#sec_add_row").click(function() {

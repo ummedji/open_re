@@ -12,7 +12,6 @@ if(!empty($education_qualification_data) && $education_qualification_data != 0)
     }
 }
 
-//testdata($specialization_data);
 ?>
 
 <div class="actv-details-form">
@@ -37,6 +36,8 @@ if(!empty($education_qualification_data) && $education_qualification_data != 0)
                 if(!empty($personal_education_data)){
 
                 foreach($personal_education_data as $key=>$education_data){
+
+
                 ?>
                     <div class="rotate_data">
 
@@ -48,7 +49,7 @@ if(!empty($education_qualification_data) && $education_qualification_data != 0)
 
                                     <input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="<?php echo $education_data["education_detail_id"]; ?>" />
 
-                                    <select class="form-control qualification" placeholder="" name="qualification[]" >
+                                    <select rel="<?php echo $education_data['edu_specialization_id']; ?>" class="form-control qualification" placeholder="" name="qualification[]" >
                                         <option value="" >Select Qualification</option>
 
                                         <?php
@@ -91,13 +92,13 @@ if(!empty($education_qualification_data) && $education_qualification_data != 0)
 
                                 <div class="form-group">
                                     <label for="Institute/University">Institute/University</label>
-                                    <input class="form-control"  type="text" name="university[]" value=""/>
+                                    <input class="form-control"  type="text" name="university[]" value="<?php echo $education_data['instiute']; ?>"/>
                                     <div class="clearfix"></div>
                                 </div>
 
                                 <div class="form-group">
                                     <label for="Year">Year</label>
-                                    <input class="form-control year_data" id="year_data"  type="text" name="year_data[]" value=""/>
+                                    <input class="form-control year_data" id="year_data"  type="text" name="year_data[]" value="<?php echo date("Y",strtotime($education_data['year'])); ?>"/>
                                     <div class="clearfix"></div>
                                 </div>
 
@@ -196,8 +197,9 @@ if(!empty($education_qualification_data) && $education_qualification_data != 0)
 
             var parent_html  = $(this);
             var qualification_id = $(this).val();
+            var spec_id = $(this).attr("rel");
 
-            get_qualification_specilization_data(qualification_id,parent_html);
+            get_qualification_specilization_data(qualification_id,parent_html,spec_id);
 
         });
 

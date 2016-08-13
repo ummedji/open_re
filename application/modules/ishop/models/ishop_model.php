@@ -1584,7 +1584,7 @@ class Ishop_model extends BF_Model
                 }
                 $secondary['eye'] = 1;
                 $secondary['action'] = 'is_action';
-                $secondary['edit'] = 'is_edit';
+              //  $secondary['edit'] = 'is_edit';
                 $secondary['delete'] = 'is_delete';
                 $secondary['pagination'] = $secondary_sales['pagination'];
 
@@ -5160,7 +5160,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
        // echo $action_data."</br>";
 
       //  echo $sql;
-      //  die;
+       // die;
         if (!empty($web_service) && isset($web_service) && $web_service != null && $web_service == "web_service") {
 
             // For Pagination
@@ -8212,6 +8212,35 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
         }
 
+
+        if($loginusertype == '9')
+        {
+
+            $subsql = ' AND  f_bu.role_id ="'.$loginusertype.'" ';
+            if ($action_data != "po_acknowledgement") {
+                $sql .='  AND bio.order_status != 4  ';
+            }
+
+        }
+        elseif($loginusertype == '10')
+        {
+            $subsql = ' AND  f_bu.role_id = "'.$loginusertype.'" ';
+            if ($action_data != "po_acknowledgement") {
+                $sql .='  AND bio.order_status != 4  ';
+            }
+            //  $sql .='  AND bio.order_status != 4  ';
+        }
+        elseif($action_data == "order_status")
+        {
+            $subsql = ' AND bu.role_id="'.$loginusertype.'" ';
+        }
+        else
+        {
+            $subsql = '';
+        }
+
+
+/*
         if($action_data == "order_status")
         {
             $subsql = ' AND bu.role_id="'.$loginusertype.'" ';
@@ -8220,9 +8249,11 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
         {
             $subsql = ' ';
         }
+        */
 
         $sql .= ' AND bio.country_id = "' . $user_country_id . '" '.$subsql.' ORDER BY bio.created_on DESC ';
 
+      //  testdata($sql);
         $orderdata = $this->grid->get_result_res($sql,true,$page);
 
         if (isset($orderdata['result']) && !empty($orderdata['result'])) {
@@ -8651,7 +8682,14 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                         }
                         else{
                             $order_datetime = $od['order_date'];
-                            $estimated_date = $od["estimated_delivery_date"] ;
+                            if(!empty($od["estimated_delivery_date"]))
+                            {
+                                $estimated_date = $od["estimated_delivery_date"] ;
+                            }
+                            else{
+                                $estimated_date = '';
+                            }
+
                         }
                         $order_view['row'][] = array($i, $order_datetime, $od['PO_no'] , $od['order_tracking_no'] , $estimated_date,$od['product_sku_code'],$od['product_sku_name'],$od['unit'],$od['quantity'],$od['qty_kgl'],$od['amount'],$od['approved_quantity'], $od['display_name'], $order_status);
                         $i++;
@@ -8748,13 +8786,25 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                             $order_datetime = $order_date.' '.$t;
 
-                            $date1 = strtotime($od["estimated_delivery_date"]);
-                            $estimated_date =  date($local_date,$date1);
+                            if(!empty($od["estimated_delivery_date"]))
+                            {
+                                $date1 = strtotime($od["estimated_delivery_date"]);
+                                $estimated_date =  date($local_date,$date1);
+                            }
+                            else{
+                                $estimated_date = '';
+                            }
 
                         }
                         else{
                             $order_datetime = $od['order_date'];
-                            $estimated_date = $od["estimated_delivery_date"] ;
+                            if(!empty($od["estimated_delivery_date"]))
+                            {
+                                $estimated_date =  $od["estimated_delivery_date"] ;
+                            }
+                            else{
+                                $estimated_date = '';
+                            }
                         }
                         $order_view['row'][] = array($i, $od['t_dn'],$order_datetime, $od['PO_no'] , $od['order_tracking_no'],$estimated_date, $od['product_sku_code'], $od['product_sku_name'], $od['unit'], $od['quantity'], $od['qty_kgl'], $od['amount'], $od['display_name'], $order_status);
                         $i++;

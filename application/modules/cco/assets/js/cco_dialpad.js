@@ -106,6 +106,19 @@ function get_education_detail_data(customer_id)
     });
 }
 
+function get_social_detail_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_social_detail_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
 
 function get_geo_data(campagain_id,level_data,num_count)
 {
@@ -132,14 +145,15 @@ $('body').on("change","select.qualification",function(){
 
     var qualification = $(this).val();
     var parent_html = $(this);
+    var spec_id = "";
 
-    get_qualification_specilization_data(qualification,parent_html);
+    get_qualification_specilization_data(qualification,parent_html,spec_id);
 
 });
 
-function get_qualification_specilization_data(qualification,parent_html)
+function get_qualification_specilization_data(qualification,parent_html,spec_id)
 {
-    $.ajax({
+        $.ajax({
         type: 'POST',
         url: site_url + "cco/get_qualification_specialization",
         data: {qualification_id: qualification},
@@ -149,7 +163,15 @@ function get_qualification_specilization_data(qualification,parent_html)
             var html = "<option value=''>Select Specialization</option>";
 
             $.each( obj, function( key, value ) {
-                html += "<option value='"+value.edu_specialization_id+"'>"+value.edu_specialization_name+"</option>";
+
+                if(spec_id == value.edu_specialization_id){
+                    var selected_data = "selected = 'selected'";
+                }
+                else{
+                    var selected_data = "";
+                }
+
+                html += "<option "+selected_data+" value='"+value.edu_specialization_id+"'>"+value.edu_specialization_name+"</option>";
             });
 
             parent_html.parent().parent().parent().parent().find("select.specialization").html(html);
@@ -273,6 +295,82 @@ $(document).on("submit","form#dialpad_family_info",function(e){
     $.ajax({
         type: 'POST',
         url: site_url + "cco/add_update_family_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
+$(document).on("submit","form#dialpad_education_info",function(e){
+
+    e.preventDefault();
+
+    var param =  $("form#dialpad_education_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_education_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
+$(document).on("submit","form#dialpad_social_info",function(e){
+
+    e.preventDefault();
+
+    var param =  $("form#dialpad_social_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_social_info",
         data:param,
         success: function (resp) {
             var message = "";

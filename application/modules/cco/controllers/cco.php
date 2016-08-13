@@ -120,38 +120,31 @@ class Cco extends Front_Controller
         $get_education_qualification_data = $this->cco_model->get_education_qualification_data($user->country_id);
      //   testdata($get_education_qualification_data);
 
-        $selected_speclization_data = array();
-
-        foreach($get_personal_education_data as $key => $edu_data)
-        {
-            $spec_html = "";
-            $qualification_id = $edu_data["qualification_id"];
-
-            $specialization_data = $this->cco_model->get_qualification_specialization_data($qualification_id);
-
-            foreach($specialization_data as $spec_key => $spec_data)
-            {
-               // $spec_html .= '<option value="'.$spec_data['edu_specialization_id'].'">'.$spec_data["edu_specialization_name"].'</option>';
-            }
-
-            $selected_speclization_data = $spec_html;
-        }
-
-       // testdata($selected_speclization_data);
-
-        //$get_personal_education_data =
-
         Template::set('personal_education_data', $get_personal_education_data);
         //$education_data["qualification_id"]
         Template::set('education_qualification_data', $get_education_qualification_data);
-
-     //   Template::set('specialization_data', $selected_speclization_data);
 
         Template::set('customer_id', $customer_id);
 
         Template::set_view("cco/dialpad_eductaion_details");
         Template::render();
 
+    }
+
+    public function get_customer_social_detail_data()
+    {
+        $user = $this->auth->user();
+
+        $customer_id = $_POST["customerid"];
+
+        $get_social_data = $this->cco_model->get_customer_social_data($customer_id);
+
+        Template::set('social_data', $get_social_data);
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad_social_details");
+        Template::render();
     }
 
     public function add_update_general_info()
@@ -165,6 +158,20 @@ class Cco extends Front_Controller
     {
         $family_update_data = $this->cco_model->add_update_family_data();
         echo $family_update_data;
+        die;
+    }
+
+    public function add_update_education_info()
+    {
+        $education_update_data = $this->cco_model->add_update_education_data();
+        echo $education_update_data;
+        die;
+    }
+
+    public function add_update_social_info()
+    {
+        $social_update_data = $this->cco_model->add_update_social_data();
+        echo $social_update_data;
         die;
     }
 
