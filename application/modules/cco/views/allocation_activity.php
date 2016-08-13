@@ -114,6 +114,9 @@ if ($this->input->is_ajax_request()) {
     <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
         <div class="save_button">
             <div class="row">
+                <div class="col-md-3 save_btn">
+                    <button type="button" id="download_allocation" class="btn btn-primary">Download</button>
+                </div>
                 <div class="delete_button" style="display: none">
                     <div class="col-md-3 save_btn">
                         <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>

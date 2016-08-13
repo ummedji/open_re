@@ -130,8 +130,8 @@ function get_geo_data(campagain_id,level_data,num_count)
 
 $(document).on("change","select.qualification",function(){
 
+    var qualification = $(this).val();
 
-    
 });
 
 $(document).on("change","select#geo_level_3",function(){

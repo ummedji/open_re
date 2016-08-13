@@ -432,6 +432,74 @@ class Cco extends Front_Controller
     }
 
 
+    public function activity_allocation_details_csv_report()
+    {
+        $this->load->library('excel');
+        $user = $this->auth->user();
+
+
+        $activity_type = (isset($_GET['activity_type']) ? $_GET['activity_type'] : 'planned_activity');
+
+        $page = (isset($_GET['page']) ? $_GET['page'] : '');
+
+        $cco_activity = $this->cco_model->get_activity_details_by_type($user->id,$user->country_id,$activity_type,$page,$user->local_date,'csv');
+
+        $this->excel->setActiveSheetIndex(0);
+        $this->excel->getActiveSheet()->setTitle('Activity Allocation');
+
+        if(!empty($cco_activity) && isset($cco_activity))
+        {
+            $this->excel->getActiveSheet()->setCellValue('A1',$cco_activity['head'][0]);
+            $this->excel->getActiveSheet()->setCellValue('B1',$cco_activity['head'][1]);
+            $this->excel->getActiveSheet()->setCellValue('C1',$cco_activity['head'][2]);
+            $this->excel->getActiveSheet()->setCellValue('D1',$cco_activity['head'][3]);
+            $this->excel->getActiveSheet()->setCellValue('E1',$cco_activity['head'][4]);
+            $this->excel->getActiveSheet()->setCellValue('F1',$cco_activity['head'][5]);
+            $this->excel->getActiveSheet()->setCellValue('G1',$cco_activity['head'][6]);
+            $this->excel->getActiveSheet()->setCellValue('H1',$cco_activity['head'][7]);
+        }
+
+        //change the font size
+        $this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setSize(12);
+        //make the font become bold
+        $this->excel->getActiveSheet()->getStyle('A1:H1')->getFont()->setBold(true);
+
+        foreach(range('A1','H1') as $columnID) {
+            $this->excel->getActiveSheet()->getColumnDimension($columnID)->setAutoSize(true);
+        }
+
+        if(!empty($cco_activity))
+        {
+            foreach($cco_activity['row'] as $k=>$row)
+            {
+                $this->excel->getActiveSheet()->setCellValue('A'.($k+2), $row['0']);
+                $this->excel->getActiveSheet()->setCellValue('B'.($k+2), $row['1']);
+                $this->excel->getActiveSheet()->setCellValue('C'.($k+2), $row['2']);
+                $this->excel->getActiveSheet()->setCellValue('D'.($k+2), $row['3']);
+                $this->excel->getActiveSheet()->setCellValue('E'.($k+2), $row['4']);
+                $this->excel->getActiveSheet()->setCellValue('F'.($k+2), $row['5']);
+                $this->excel->getActiveSheet()->setCellValue('G'.($k+2), $row['6']);
+                $this->excel->getActiveSheet()->setCellValue('H'.($k+2), $row['7']);
+            }
+        }
+
+        $filename='activity_allocation_'.date('d-m-y').'.xlsx';
+        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'); //mime type
+        header('Content-Disposition: attachment;filename="'.$filename.'"'); //tell browser what's the file name
+        header('Cache-Control: max-age=0'); //no cache
+
+        //save it to Excel5 format (excel 2003 .XLS file), change this to 'Excel2007' (and adjust the filename extension, also the header mime type)
+        //if you want to save it as .XLSX Excel 2007 format
+        $objWriter = PHPExcel_IOFactory::createWriter($this->excel, 'Excel2007');
+        //force user to download the Excel file without writing it to server's HD
+        $objWriter->save('php://output');
+        exit();
+
+    }
+
+
+
+
 
 
     public function activity()

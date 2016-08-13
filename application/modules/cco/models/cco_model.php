@@ -482,7 +482,7 @@ class Cco_model extends BF_Model
 
     }
 
-    public function get_activity_details_by_type($user_id,$country_id,$activity_type,$page=null,$local_date=null)
+    public function get_activity_details_by_type($user_id,$country_id,$activity_type,$page=null,$local_date=null,$csv=null)
     {
         //$sql = 'SELECT * ';
         $sql = 'SELECT caa.activity_allocation_id,bu.display_name,bus.display_name as emp_name,mpgd2.political_geography_name as geo_level_2,mpgd3.political_geography_name as geo_level_3,mpgd4.political_geography_name as geo_level_4,eamc.activity_type_country_name,eap.activity_planning_time,eap.execution_time ';
@@ -500,67 +500,130 @@ class Cco_model extends BF_Model
         $sql .= ' AND caa.activity_type = "'. $activity_type . '" ';
         $sql .= ' ORDER BY caa.activity_allocation_id  DESC ';
 
-        $activity_approval = $this->grid->get_result_res($sql);
+        if(isset($csv) && !empty($csv) && $csv =='csv')
+        {
+            $activity_approval = $this->grid->get_result_res($sql,true,$page);
+        }
+        else{
+            $activity_approval = $this->grid->get_result_res($sql);
+        }
+
+
 
         if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
 
             if($activity_type == 'planned_activity'){
-                $activity['head'] = array('Sr. No.', 'Select','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
 
-                $activity['count'] = count($activity['head']);
+                if(isset($csv) && !empty($csv) && $csv =='csv')
+                {
+                    $activity['head'] = array('Sr. No.','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
 
-                if ($page != null || $page != "") {
-                    $i = (($page * 10) - 9);
-                } else {
                     $i = 1;
+
+                    foreach ($activity_approval['result'] as $rm) {
+
+                        if ($local_date != null) {
+                            $date3 = strtotime($rm['activity_planning_time']);
+                            $activity_date = date($local_date .' g:i A', $date3);
+
+                        } else {
+                            $activity_date = $rm['activity_planning_time'];
+                        }
+
+
+
+                        $activity['row'][] = array($i, $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
+                        $i++;
+                    }
                 }
+                else{
+                    $activity['head'] = array('Sr. No.', 'Select','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
 
-                foreach ($activity_approval['result'] as $rm) {
+                    $activity['count'] = count($activity['head']);
 
-                    if ($local_date != null) {
-                        $date3 = strtotime($rm['activity_planning_time']);
-                        $activity_date = date($local_date .' g:i A', $date3);
-
+                    if ($page != null || $page != "") {
+                        $i = (($page * 10) - 9);
                     } else {
-                        $activity_date = $rm['activity_planning_time'];
+                        $i = 1;
                     }
 
+                    foreach ($activity_approval['result'] as $rm) {
+
+                        if ($local_date != null) {
+                            $date3 = strtotime($rm['activity_planning_time']);
+                            $activity_date = date($local_date .' g:i A', $date3);
+
+                        } else {
+                            $activity_date = $rm['activity_planning_time'];
+                        }
 
 
-                    $activity['row'][] = array($i, $rm['activity_allocation_id'], $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
-                    $i++;
+
+                        $activity['row'][] = array($i, $rm['activity_allocation_id'], $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
+                        $i++;
+                    }
                 }
+
             }
             else{
-                $activity['head'] = array('Sr. No.', 'Select','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
 
-                $activity['count'] = count($activity['head']);
+                if(isset($csv) && !empty($csv) && $csv =='csv')
+                {
+                    $activity['head'] = array('Sr. No.','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
 
-                if ($page != null || $page != "") {
-                    $i = (($page * 10) - 9);
-                } else {
                     $i = 1;
+
+                    foreach ($activity_approval['result'] as $rm) {
+
+                        if ($local_date != null) {
+                            $date3 = strtotime($rm['execution_time']);
+                            $activity_date = date($local_date .' g:i A', $date3);
+
+                        } else {
+                            $activity_date = $rm['execution_time'];
+                        }
+
+                        $activity['row'][] = array($i, $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
+                        $i++;
+                    }
                 }
 
-                foreach ($activity_approval['result'] as $rm) {
+                else{
+                    $activity['head'] = array('Sr. No.', 'Select','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
 
-                    if ($local_date != null) {
-                        $date3 = strtotime($rm['execution_time']);
-                        $activity_date = date($local_date .' g:i A', $date3);
+                    $activity['count'] = count($activity['head']);
 
+                    if ($page != null || $page != "") {
+                        $i = (($page * 10) - 9);
                     } else {
-                        $activity_date = $rm['execution_time'];
+                        $i = 1;
                     }
 
-                    $activity['row'][] = array($i, $rm['activity_allocation_id'], $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
-                    $i++;
+                    foreach ($activity_approval['result'] as $rm) {
+
+                        if ($local_date != null) {
+                            $date3 = strtotime($rm['execution_time']);
+                            $activity_date = date($local_date .' g:i A', $date3);
+
+                        } else {
+                            $activity_date = $rm['execution_time'];
+                        }
+
+                        $activity['row'][] = array($i, $rm['activity_allocation_id'], $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
+                        $i++;
+                    }
                 }
+
             }
 
-            $activity['is_not_checkbox'] = 'is_checkbox';
-            $activity['action'] = '';
-            $activity['delete'] = '';
-            $activity['pagination'] = $activity_approval['pagination'];
+            if(!isset($csv) && empty($csv) && $csv !='csv')
+            {
+                $activity['is_not_checkbox'] = 'is_checkbox';
+                $activity['action'] = '';
+                $activity['delete'] = '';
+                $activity['pagination'] = $activity_approval['pagination'];
+            }
+
             return $activity;
         } else {
             return false;

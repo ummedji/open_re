@@ -218,3 +218,23 @@ $(document).on('click', 'div.cco_details input.check', function() {
 
     }
 });
+
+$('#download_csv').on('click',function(){
+
+    var param = $("#rol_limit").serialize();
+
+
+
+});
+
+$(document).on('click','#download_allocation',function(){
+
+    var activity_type = $('input[name=radio1]:checked').val();
+
+    var export_url = site_url + "cco/activity_allocation_details_csv_report?" + "activity_type="+activity_type+"&page="+$("input#page").val();
+
+    window.location.href = export_url;
+
+    return false;
+
+});
