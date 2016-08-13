@@ -29,105 +29,51 @@
                                 <div class="form-group">
                                     <label for="Degree/Qualification">Degree/Qualification</label>
 
+                                    <input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="<?php echo $family_data["family_detail_id"]; ?>" />
+
                                     <select class="form-control" placeholder="" name="qualification[]">
                                         <option value="">Select Qualification</option>
                                         <option <?php //echo $male_selected; ?> value="Male">Male</option>
                                         <option <?php //echo $female_selected; ?> value="Female">Female</option>
                                     </select>
 
-                                    <input type="text" class="form-control" name="[]" id="qualification" placeholder="" value="<?php echo $family_data["relative_name"]; ?>" />
                                     <div class="clearfix"></div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 com_form">
+
                                 <div class="form-group">
-                                    <label for="Relation">Relation</label>
-                                    <input type="text" class="form-control" name="relation[]" id="relation" placeholder="" value="<?php echo $family_data["relative_relation"]; ?>" />
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 com_form">
-                                <div class="form-group">
-                                    <label for="Mobile No.">Mobile No.</label>
-                                    <input type="text" class="form-control" name="contact_no[]" id="contact_no" placeholder="" value="<?php echo $family_data["mobile_no"]; ?>"/>
-                                    <div class="clearfix"></div>
-                                </div>
-                            </div>
+                                    <label for="Gender">Specialization</label>
 
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-6 com_form">
-                                <div class="form-group">
-                                    <label for="Gender">Gender</label>
-
-                                    <?php
-
-                                   // echo $customer_gender;
-                                    $male_selected = "";
-                                    $female_selected = "";
-
-                                    $customer_gender = $family_data["gender"];
-
-                                    if($customer_gender == "Male"){
-                                        $male_selected = "selected = 'selected'";
-                                    }
-                                    elseif($customer_gender == "Female"){
-                                        $female_selected = "selected = 'selected'";
-                                    }
-                                    ?>
-
-                                    <select class="form-control" placeholder="" name="gender[]">
-                                        <option value="">Select Gender</option>
-                                        <option <?php echo $male_selected; ?> value="Male">Male</option>
-                                        <option <?php echo $female_selected; ?> value="Female">Female</option>
+                                    <select class="form-control" placeholder="" name="specialization[]">
+                                        <option value="">Select Specialization</option>
+                                        <option <?php //echo $male_selected; ?> value="Male">Male</option>
+                                        <option <?php //echo $female_selected; ?> value="Female">Female</option>
                                     </select>
                                     <div class="clearfix"></div>
 
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 com_form">
+
                                 <div class="form-group">
-                                    <label for="Date Of Birth">Date Of Birth</label>
-                                    <input type="text" class="form-control dob" name="dob[]" id="dob" placeholder="" value="<?php echo $family_data["relative_dob"]; ?>"/>
+                                    <label for="Dependent">Institute/University</label>
+                                    <input class="form-control"  type="text" name="university[]" />
                                     <div class="clearfix"></div>
                                 </div>
-                            </div>
-                            <div class="col-md-4 col-sm-6 com_form">
-                                <div class="form-group">
-                                    <label for="Email Id">Email Id</label>
-                                    <input type="text" class="form-control" name="email_id[]" id="email_id" placeholder="" value="<?php echo $family_data["email_id"]; ?>" />
-                                    <div class="clearfix"></div>
-                                </div>
+
+
+
                             </div>
 
+
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-4 col-sm-6 com_form">
+
+                            </div>
                         </div>
                         <div class="row">
                             <div class="col-md-4 col-sm-6 com_form">
-                                <div class="form-group">
-                                    <label for="Dependent">Dependent</label>
 
-                                    <?php
-
-                                    $no_selected = "";
-                                    $yes_selected = "";
-
-                                    $customer_dependent = $family_data["dependent"];
-
-                                    if($customer_dependent == "0"){
-                                        $no_selected = "selected = 'selected'";
-                                    }
-                                    elseif($customer_gender == "Female"){
-                                        $yes_selected = "selected = 'selected'";
-                                    }
-                                    ?>
-
-                                    <select class="form-control" placeholder="" name="dependent[]">
-                                        <option <?php echo $no_selected; ?> value="0">No</option>
-                                        <option <?php echo $yes_selected; ?> value="1">Yes</option>
-                                    </select>
-
-                                    <div class="clearfix"></div>
-                                </div>
                             </div>
                         </div>
 

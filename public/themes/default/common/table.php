@@ -3,7 +3,7 @@
 
     </div>
     <?php
-
+ //testdata($table);
 $action_data = $this->uri->segment(2);
 if(isset($table) && count($table)>0 && $table != false) {
     ?>
@@ -58,8 +58,18 @@ if(isset($table) && count($table)>0 && $table != false) {
                             <tr>
                                 <?php
                                 foreach($rowary as $rwkey => $row) {
+
                                     ?>
-                                    <?php if($rwkey==0   && ($action_data !="get_prespective_order_details")) {
+                                    <?php if($rwkey==1 && isset($table['is_not_checkbox'])) {
+                                        ?>
+                                        <td data-title="<?php echo $table['head'][$rwkey]; ?>">
+                                                <label>
+                                                    <input type="checkbox" name="check[]" value="<?php echo $rowary[1]; ?>" id="check" class="check" /
+                                                </label>
+                                            <?php //echo $row;?>
+                                        </td>
+                                    <?php }
+                                    elseif($rwkey==0   && ($action_data !="get_prespective_order_details")) {
                                         ?>
                                         <td data-title="<?php echo $table['head'][$rwkey]; ?>">
                                             <div>
@@ -83,7 +93,7 @@ if(isset($table) && count($table)>0 && $table != false) {
                                                     ?>
                                                     <input type="radio" <?php echo $r_check; ?> name="radio_scheme_slab" id="radio_scheme" value="<?php echo $row;?>">
                                                     <?php
-                                                }
+                                                   }
                                                 else{
                                                     ?>
                                                     <input type="radio" name="radio_scheme_slab" id="radio_scheme" value="<?php echo $row;?>">

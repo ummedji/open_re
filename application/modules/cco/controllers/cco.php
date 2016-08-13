@@ -398,6 +398,35 @@ class Cco extends Front_Controller
     }
 
 
+    public function get_activity_by_type()
+    {
+        $user =  $this->auth->user();
+
+        $activity_type =  (isset($_POST['activity_type']) && !empty($_POST['activity_type'])) ? $_POST['activity_type'] : 'planned_activity';
+        $page = (isset($_POST['page']) && !empty($_POST['page'])) ? $_POST['page'] : '';
+
+        $cco_activity = $this->cco_model->get_activity_details_by_type($user->id,$user->country_id,$activity_type,$page,$user->local_date);
+
+        Template::set('table', $cco_activity);
+
+        Template::set('td', $cco_activity['count']);
+        Template::set('pagination', (isset($cco_activity['pagination']) && !empty($cco_activity['pagination'])) ? $cco_activity['pagination'] : '' );
+
+        Template::set_view("cco/allocation_activity");
+        Template::render();
+    }
+
+
+    public function delete_activity_allocation()
+    {
+        $allocation_id = $_POST["selected_cco"];
+        $data = $this->cco_model->delete_activity_allocations($allocation_id);
+        echo $data;
+        die;
+    }
+
+
+
 
     public function activity()
     {

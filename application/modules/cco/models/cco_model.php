@@ -463,6 +463,14 @@ class Cco_model extends BF_Model
                     'modified_on' => date('Y-m-d H:i:s')
                 );
                 $this->db->insert('cco_activity_allocation', $add_allocation_activity);
+
+
+                $update_activity= array(
+                    'is_cco' => '1'
+                );
+
+                $this->db->where('activity_planning_id',$val);
+                $this->db->update("ecp_activity_planning",$update_activity);
             }
         }
 
@@ -472,6 +480,131 @@ class Cco_model extends BF_Model
             return 0;
         }
 
+    }
+
+    public function get_activity_details_by_type($user_id,$country_id,$activity_type,$page=null,$local_date=null)
+    {
+        //$sql = 'SELECT * ';
+        $sql = 'SELECT caa.activity_allocation_id,bu.display_name,bus.display_name as emp_name,mpgd2.political_geography_name as geo_level_2,mpgd3.political_geography_name as geo_level_3,mpgd4.political_geography_name as geo_level_4,eamc.activity_type_country_name,eap.activity_planning_time,eap.execution_time ';
+        $sql .= 'FROM bf_cco_activity_allocation AS caa ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = caa.cco_id) ';
+        $sql .= 'JOIN bf_ecp_activity_planning AS eap ON (eap.activity_planning_id = caa.activity_id) ';
+        $sql .= 'JOIN bf_users AS bus ON (bus.id = eap.employee_id) ';
+        $sql .= 'JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
+        $sql .= 'JOIN bf_master_political_geography_details AS mpgd2 ON (mpgd2.political_geo_id = eap.geo_level_id_2) ';
+        $sql .= 'JOIN bf_master_political_geography_details as mpgd3 ON (mpgd3.political_geo_id = eap.geo_level_id_3) ';
+        $sql .= 'LEFT JOIN bf_master_political_geography_details as mpgd4 ON (mpgd4.political_geo_id = eap.geo_level_id_4) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND caa.country_id ="' . $country_id . '" ';
+        $sql .= ' AND caa.activity_type = "'. $activity_type . '" ';
+        $sql .= ' ORDER BY caa.activity_allocation_id  DESC ';
+
+        $activity_approval = $this->grid->get_result_res($sql);
+
+        if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
+
+            if($activity_type == 'planned_activity'){
+                $activity['head'] = array('Sr. No.', 'Select','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
+
+                $activity['count'] = count($activity['head']);
+
+                if ($page != null || $page != "") {
+                    $i = (($page * 10) - 9);
+                } else {
+                    $i = 1;
+                }
+
+                foreach ($activity_approval['result'] as $rm) {
+
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['activity_planning_time']);
+                        $activity_date = date($local_date .' g:i A', $date3);
+
+                    } else {
+                        $activity_date = $rm['activity_planning_time'];
+                    }
+
+
+
+                    $activity['row'][] = array($i, $rm['activity_allocation_id'], $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
+                    $i++;
+                }
+            }
+            else{
+                $activity['head'] = array('Sr. No.', 'Select','CCO Name', 'FC Name','Geo Level 3','Geo Level 2','Geo Level 1' , 'Activity Type', 'Activity Date');
+
+                $activity['count'] = count($activity['head']);
+
+                if ($page != null || $page != "") {
+                    $i = (($page * 10) - 9);
+                } else {
+                    $i = 1;
+                }
+
+                foreach ($activity_approval['result'] as $rm) {
+
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['execution_time']);
+                        $activity_date = date($local_date .' g:i A', $date3);
+
+                    } else {
+                        $activity_date = $rm['execution_time'];
+                    }
+
+                    $activity['row'][] = array($i, $rm['activity_allocation_id'], $rm['display_name'], $rm['emp_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$rm['activity_type_country_name'],$activity_date);
+                    $i++;
+                }
+            }
+
+            $activity['is_not_checkbox'] = 'is_checkbox';
+            $activity['action'] = '';
+            $activity['delete'] = '';
+            $activity['pagination'] = $activity_approval['pagination'];
+            return $activity;
+        } else {
+            return false;
+        }
+
+    }
+
+
+    public function delete_activity_allocations($allocation_id)
+    {
+        foreach($allocation_id as $K => $vl)
+        {
+            $activity_id = $this->get_activity_id_by_allocation_id($vl);
+
+            $update_activity= array(
+                'is_cco' => '0'
+            );
+
+            $this->db->where('activity_planning_id',$activity_id['activity_id']);
+            $this->db->update("ecp_activity_planning",$update_activity);
+
+            $this->db->where('activity_allocation_id', $vl);
+            $this->db->delete('cco_activity_allocation');
+        }
+
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+
+    public function get_activity_id_by_allocation_id($allocation_id)
+    {
+        $this->db->select('activity_id');
+        $this->db->from('bf_cco_activity_allocation');
+        $this->db->where('activity_allocation_id',$allocation_id);
+        $activity_id = $this->db->get()->row_array();
+
+        if(isset($activity_id) && !empty($activity_id))
+        {
+            return $activity_id;
+        }
     }
 
     /*-----------------------------------------------------------------------------------------*/

@@ -58,8 +58,8 @@
     ?>
 
 
-    <div class="col-md-12 full-height">
-        <div class="row">
+
+
             <div class="col-md-12 text-center plng_sub_nave">
                 <div class="inn_sub_nave">
                     <ul>
@@ -563,8 +563,7 @@
                 <div class="clearfix"></div>
             </div>
 
-        </div>
-    </div>
+
 <?php
  } else {
     echo theme_view('common/middle');

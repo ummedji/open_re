@@ -107,9 +107,19 @@ if ($this->input->is_ajax_request()) {
     <?php echo form_close(); ?>
 
 
-    <div id="middle_container" class="cco_data">
-        <?php
-            echo theme_view('common/middle');
-        ?>
+    <div id="middle_container" class="cco_details">
+
+    </div>
+
+    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+        <div class="save_button">
+            <div class="row">
+                <div class="delete_button" style="display: none">
+                    <div class="col-md-3 save_btn">
+                        <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 <?php } ?>

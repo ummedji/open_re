@@ -3819,21 +3819,25 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         else{
             $status = 4;
         }
-       // $sql = 'SELECT * ';
+
         $sql = 'SELECT eap.activity_planning_id,eap.activity_planning_time,eap.execution_time,eap.proposed_attandence_count,bu.display_name,bu.user_code,mdc.desigination_country_name,eamc.activity_type_country_name,eamc.activity_type_code,mpgd2.political_geography_name as geo_level_2,mpgd3.political_geography_name as geo_level_3,mpgd4.political_geography_name as geo_level_4 ';
+
+        //count(eapad.activity_planning_id) as attend_count
         $sql .= 'FROM bf_ecp_activity_planning AS eap ';
-        $sql .= 'JOIN bf_users AS bu ON (bu.id = eap.employee_id) ';
-        $sql .= 'JOIN bf_master_designation_role AS mdr ON (mdr.user_id = bu.id) ';
-        $sql .= 'JOIN bf_master_designation_country AS mdc ON (mdc.desigination_country_id = mdr.desigination_role_id) ';
-        $sql .= 'JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
-        $sql .= 'JOIN bf_master_political_geography_details AS mpgd2 ON (mpgd2.political_geo_id = eap.geo_level_id_2) ';
-        $sql .= 'JOIN bf_master_political_geography_details as mpgd3 ON (mpgd3.political_geo_id = eap.geo_level_id_3) ';
+        $sql .= 'LEFT JOIN bf_users AS bu ON (bu.id = eap.employee_id) ';
+        $sql .= 'LEFT JOIN bf_master_designation_role AS mdr ON (mdr.user_id = bu.id) ';
+        $sql .= 'LEFT JOIN bf_master_designation_country AS mdc ON (mdc.desigination_country_id = mdr.desigination_role_id) ';
+        $sql .= 'LEFT JOIN bf_ecp_activity_master_country AS eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
+        $sql .= 'LEFT JOIN bf_master_political_geography_details AS mpgd2 ON (mpgd2.political_geo_id = eap.geo_level_id_2) ';
+        $sql .= 'LEFT JOIN bf_master_political_geography_details as mpgd3 ON (mpgd3.political_geo_id = eap.geo_level_id_3) ';
         $sql .= 'LEFT JOIN bf_master_political_geography_details as mpgd4 ON (mpgd4.political_geo_id = eap.geo_level_id_4) ';
+       // $sql .= 'LEFT JOIN bf_ecp_activity_planning_attendees_details as eapad ON (eapad.activity_planning_id = eap.activity_planning_id) ';
 
         $sql .= 'WHERE 1 ';
         $sql .= ' AND eap.country_id ="' . $country_id . '" ';
         $sql .= ' AND eap.status = ' . $status . ' ';
         $sql .= ' AND eap.activity_type_id = ' . $activity_type . ' ';
+        $sql .= ' AND eap.is_cco = 0';
         if($status == 4)
         {
             $sql .= ' AND eap.execution_date BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $to_date . '"' . ' ';
@@ -3843,36 +3847,68 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
         $sql .= ' ORDER BY eap.activity_planning_id  DESC ';
 
+      //  echo $sql;
         $activity_approval = $this->grid->get_result_res($sql);
 
        // testdata($activity_approval);
         if (isset($activity_approval['result']) && !empty($activity_approval['result'])) {
 
-            $activity['head'] = array('Sr. No.', 'Select', 'Employee Name', 'Designation','Geo Level 3','Geo Level 2','Geo Level 1', 'Activity Planned Date', 'Minimum No. Of Attendances ');
 
-            $activity['count'] = count($activity['head']);
+            if($radio_check == 'planned_activity'){
+                $activity['head'] = array('Sr. No.', 'Select', 'Employee Name', 'Designation','Geo Level 3','Geo Level 2','Geo Level 1', 'Activity Planned Date', 'Minimum No. Of Attendances ');
 
-            if ($page != null || $page != "") {
-                $i = (($page * 10) - 9);
-            } else {
-                $i = 1;
-            }
+                $activity['count'] = count($activity['head']);
 
-            foreach ($activity_approval['result'] as $rm) {
-
-                if ($local_date != null) {
-                    $date3 = strtotime($rm['activity_planning_time']);
-                    $activity_date = date($local_date .' g:i A', $date3);
-
+                if ($page != null || $page != "") {
+                    $i = (($page * 10) - 9);
                 } else {
-                    $activity_date = $rm['activity_planning_time'];
+                    $i = 1;
                 }
 
+                foreach ($activity_approval['result'] as $rm) {
+
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['activity_planning_time']);
+                        $activity_date = date($local_date .' g:i A', $date3);
+
+                    } else {
+                        $activity_date = $rm['activity_planning_time'];
+                    }
 
 
-                $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['desigination_country_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$activity_date, $rm['proposed_attandence_count'] );
-                $i++;
+
+                    $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['desigination_country_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$activity_date, $rm['proposed_attandence_count'] );
+                    $i++;
+                }
             }
+            else{
+                $activity['head'] = array('Sr. No.', 'Select', 'Employee Name', 'Designation','Geo Level 3','Geo Level 2','Geo Level 1', 'Activity Execute Date', 'Minimum No. Of Attendances ');
+
+                $activity['count'] = count($activity['head']);
+
+                if ($page != null || $page != "") {
+                    $i = (($page * 10) - 9);
+                } else {
+                    $i = 1;
+                }
+
+                foreach ($activity_approval['result'] as $rm) {
+
+                    if ($local_date != null) {
+                        $date3 = strtotime($rm['execution_time']);
+                        $activity_date = date($local_date .' g:i A', $date3);
+
+                    } else {
+                        $activity_date = $rm['execution_time'];
+                    }
+
+
+
+                    $activity['row'][] = array($i, $rm['activity_planning_id'], $rm['display_name'], $rm['desigination_country_name'],$rm['geo_level_2'],$rm['geo_level_3'],$rm['geo_level_4'],$activity_date, $rm['proposed_attandence_count'] );
+                    $i++;
+                }
+            }
+
             $activity['is_not_checkbox'] = 'is_checkbox';
             $activity['action'] = '';
             $activity['delete'] = '';
