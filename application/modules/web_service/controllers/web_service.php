@@ -3877,6 +3877,35 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+    public function check_planning_date_in_leaves()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+        $planning_date = $this->input->get_post('planning_date');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($planning_date) && !empty($planning_date))) {
+            $check_date = $this->ecp_model->check_planning_date_in_leaves($user_id,$country_id,$planning_date);
+
+            if($check_date == 1)
+            {
+                $result['status'] = false;
+                $result['message'] = "You are Leave On this Date.";
+
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] ='';
+            }
+
+        }
+        else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+        $this->do_json($result);
+
+
+    }
 
     public function saveTotalCompititorRetailerAnalysis()
     {

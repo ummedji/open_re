@@ -1,3 +1,20 @@
+<?php
+$select_qualification_html = "";
+$selected_data = "";
+
+$select_qualification_html1 = "";
+
+if(!empty($education_qualification_data) && $education_qualification_data != 0)
+{
+    foreach($education_qualification_data as $qual_key => $qualification_data)
+    {
+        $select_qualification_html1 .= '<option '.$selected_data.' value="'.$qualification_data["qualification_id"].'">'. $qualification_data["qualification_name"].'</option>';
+    }
+}
+
+//testdata($specialization_data);
+?>
+
 <div class="actv-details-form">
 
     <h5>Education Details</h5>
@@ -16,7 +33,7 @@
                 <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
 
                 <?php
-
+              //  testdata($personal_education_data);
                 if(!empty($personal_education_data)){
 
                 foreach($personal_education_data as $key=>$education_data){
@@ -29,21 +46,32 @@
                                 <div class="form-group">
                                     <label for="Degree/Qualification">Degree/Qualification</label>
 
-                                    <input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="<?php //echo $family_data["family_detail_id"]; ?>" />
+                                    <input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="<?php echo $education_data["education_detail_id"]; ?>" />
 
                                     <select class="form-control qualification" placeholder="" name="qualification[]" >
                                         <option value="" >Select Qualification</option>
+
                                         <?php
-                                            if(!empty($education_qualification_data) && $education_qualification_data != 0)
+
+                                        if(!empty($education_qualification_data) && $education_qualification_data != 0)
+                                        {
+                                            foreach($education_qualification_data as $qual_key => $qualification_data)
                                             {
-                                                foreach($education_qualification_data as $qual_key => $qualification_data)
-                                                {
-                                        ?>
-                                                    <option value="<?php echo $qualification_data["qualification_id"]; ?>"><?php echo $qualification_data["qualification_name"]; ?></option>
-                                        <?php
+
+                                                if($education_data["qualification_id"] == $qualification_data["qualification_id"]){
+                                                    $selected_data = "selected = 'selected'";
                                                 }
+                                                else{
+                                                    $selected_data = "";
+                                                }
+
+                                                $select_qualification_html .= '<option '.$selected_data.' value="'.$qualification_data["qualification_id"].'">'. $qualification_data["qualification_name"].'</option>';
                                             }
+                                        }
+
                                         ?>
+                                        <?php echo $select_qualification_html; ?>
+
                                     </select>
 
                                     <div class="clearfix"></div>
@@ -51,6 +79,8 @@
 
                                 <div class="form-group">
                                     <label for="Gender">Specialization</label>
+
+
 
                                     <select class="form-control specialization" placeholder="" name="specialization[]">
 
@@ -103,6 +133,7 @@
 <div class="clearfix"></div>
 
 <script type="text/javascript">
+
     $("button.add_more").on('click',function(){
 
         var html = '';
@@ -118,10 +149,11 @@
 
         html += '<input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="" />';
 
-        html += '<select class="form-control" placeholder="" name="qualification[]">';
+        html += '<select class="form-control qualification" placeholder="" name="qualification[]">';
         html += '<option value="">Select Qualification</option>';
-        html += '<option value="Male">Male</option>';
-        html += '<option value="Female">Female</option>';
+
+        html += '<?php echo $select_qualification_html1; ?>';
+
         html += '</select>';
 
         html += '<div class="clearfix"></div>';
@@ -130,11 +162,10 @@
         html += '<div class="form-group">';
         html += '<label for="Gender">Specialization</label>';
 
-        html += '<select class="form-control" placeholder="" name="specialization[]">';
-        html += '<option value="">Select Specialization</option>';
-        html += '<option value="Male">Male</option>';
-        html += '<option value="Female">Female</option>';
+        html += '<select class="form-control specialization" placeholder="" name="specialization[]">';
+
         html += '</select>';
+
         html += '<div class="clearfix"></div>';
 
         html += '</div>';
@@ -158,4 +189,19 @@
         $("div.rotate_data:last").after(html);
 
     });
+
+    setTimeout(function(){
+
+        $( ".qualification" ).each(function( index ) {
+
+            var parent_html  = $(this);
+            var qualification_id = $(this).val();
+
+            get_qualification_specilization_data(qualification_id,parent_html);
+
+        });
+
+    }, 2000);
+
+
 </script>

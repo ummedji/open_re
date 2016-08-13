@@ -30,6 +30,9 @@ $(document).ready(function(){
             },
             to_date:{
                 required: true
+            },
+            cco_data:{
+                required: true
             }
         }
     });
@@ -62,6 +65,15 @@ $(document).ready(function(){
             return false;
         }
     });
+
+    var add_allocation_activity_validators = $("#add_cco_activity").validate({
+        rules: {
+
+            cco_data:{
+                required: true
+            }
+        }
+    });
 });
 
 $(document).on("change","input.select_customer_type",function(){
@@ -78,6 +90,7 @@ $(document).on("change","input.select_customer_type",function(){
         getActivityDetailByType(activity_type_selected);
 
     }
+
 });
 
 $(document).on("submit","#add_cco_activity",function(e){
@@ -86,38 +99,47 @@ $(document).on("submit","#add_cco_activity",function(e){
    var param = $("#add_cco_activity").serializeArray();
 
     param.push({name: 'activity_type', value: $('input[name=radio1]:checked').val()});
-    $('.svn_btn button').attr('disabled','disabled');
-    $.ajax({
-        type: 'POST',
-        url: site_url+'cco/add_cco_activity_details',
-        data: param,
-        success: function(resp){
-            var message = "";
-            if(resp == 1){
 
-                message += 'Data Inserted successfully.';
-            }
-            else{
-
-                message += 'Data not Inserted.';
-            }
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                        location.reload()
-                    }
-                });
-        }
-    });
+    var $valid = $("#add_cco_activity").valid();
+    if(!$valid) {
+        add_allocation_activity_validators.focusInvalid();
         return false;
+    }
+    else
+    {
+        $('.svn_btn button').attr('disabled','disabled');
+        $.ajax({
+            type: 'POST',
+            url: site_url+'cco/add_cco_activity_details',
+            data: param,
+            success: function(resp){
+                var message = "";
+                if(resp == 1){
+
+                    message += 'Data Inserted successfully.';
+                }
+                else{
+
+                    message += 'Data not Inserted.';
+                }
+                $('<div></div>').appendTo('body')
+                    .html('<div><b>'+message+'</b></div>')
+                    .dialog({
+                        appendTo: "#success_file_popup",
+                        modal: true,
+                        zIndex: 10000,
+                        autoOpen: true,
+                        width: 'auto',
+                        resizable: true,
+                        close: function (event, ui) {
+                            $(this).remove();
+                            location.reload()
+                        }
+                    });
+            }
+        });
+    }
+    return false;
 
 });
 
@@ -208,7 +230,7 @@ $(document).on('click', 'div.cco_details input.check', function() {
 
     if($(this).is(":checked"))
     {
-        $("div.delete_button").css("display","block");
+        $("div.delete_button").css("display","inline-block");
     }
     else
     {
@@ -219,13 +241,21 @@ $(document).on('click', 'div.cco_details input.check', function() {
     }
 });
 
-$('#download_csv').on('click',function(){
+$(document).on('click', 'div.activity_data input.check', function() {
 
-    var param = $("#rol_limit").serialize();
+    if($(this).is(":checked"))
+    {
+        $("button.save_btn").css("display","inline-block");
+    }
+    else
+    {
+        if($("div.activity_data tbody.tbl_body_row tr td:nth-child(2) input.check:checked").length <= 0) {
+            $("button.save_btn").css("display", "none");
+        }
 
-
-
+    }
 });
+
 
 $(document).on('click','#download_allocation',function(){
 

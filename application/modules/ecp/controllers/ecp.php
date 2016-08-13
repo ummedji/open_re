@@ -1230,7 +1230,9 @@ class Ecp extends Front_Controller
 
 	public function check_planning_date_in_leave()
 	{
+
 		$planning_date = $_POST['planning_date'];
+
 
 		$user = $this->auth->user();
 		$check_date = $this->ecp_model->check_planning_date_in_leaves($user->id,$user->country_id,$planning_date);

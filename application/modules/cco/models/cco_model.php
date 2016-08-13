@@ -670,6 +670,12 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_all_work_allocation($country_id)
+    {
+
+    }
+
+
     /*-----------------------------------------------------------------------------------------*/
 
 
@@ -982,6 +988,20 @@ class Cco_model extends BF_Model
         {
             return 0;
         }
+    }
+
+    public function get_qualification_specialization_data($qualification_id)
+    {
+        $this->db->select("bmes.edu_specialization_id,bmes.edu_specialization_name");
+        $this->db->from("bf_master_education_specialization as bmes");
+        $this->db->where("bmes.qualification_id",$qualification_id);
+        $this->db->where("bmes.deleted",0);
+        $this->db->where("bmes.status",1);
+
+        $spec_data = $this->db->get()->result_array();
+
+        return $spec_data;
+
     }
 
 

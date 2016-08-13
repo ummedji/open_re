@@ -1638,10 +1638,10 @@ class Ishop_model extends BF_Model
                     {
                         $unit = 'Packages';
                     }
-                    elseif($pd['unit'] == 'kg/ltr')
-                    {
+                    else {
                         $unit = 'Kg/Ltr';
                     }
+
                     if($csv == 'csv')
                     {
                         $product_view['row'][] = array($i, $pd['secondary_sales_product_id'], $pd['product_sku_code'], $pd['product_sku_name'], $pd['quantity'], $unit, $pd['qty_kgl'], $pd['amount']);

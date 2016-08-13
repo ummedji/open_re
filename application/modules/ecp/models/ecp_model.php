@@ -1975,8 +1975,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
-    public function check_planning_date_in_leaves($user_id, $country_id,$planning_date)
+    public function check_planning_date_in_leaves($user_id, $country_id,$plannin_date)
     {
+
+        $p_date = str_replace('/', '-', $plannin_date);
+        $planning_date = date('Y-m-d', strtotime($p_date));
+
         $this->db->select("*");
         $this->db->from("ecp_leave");
         $this->db->where("employee_id",$user_id);

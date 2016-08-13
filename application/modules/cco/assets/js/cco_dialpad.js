@@ -128,11 +128,34 @@ function get_geo_data(campagain_id,level_data,num_count)
     });
 }
 
-$(document).on("change","select.qualification",function(){
+$('body').on("change","select.qualification",function(){
 
     var qualification = $(this).val();
+    var parent_html = $(this);
+
+    get_qualification_specilization_data(qualification,parent_html);
 
 });
+
+function get_qualification_specilization_data(qualification,parent_html)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_qualification_specialization",
+        data: {qualification_id: qualification},
+        success: function (resp) {
+            var obj = $.parseJSON(resp);
+
+            var html = "<option value=''>Select Specialization</option>";
+
+            $.each( obj, function( key, value ) {
+                html += "<option value='"+value.edu_specialization_id+"'>"+value.edu_specialization_name+"</option>";
+            });
+
+            parent_html.parent().parent().parent().parent().find("select.specialization").html(html);
+        }
+    });
+}
 
 $(document).on("change","select#geo_level_3",function(){
 

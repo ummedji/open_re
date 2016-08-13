@@ -11,10 +11,9 @@
                     </ul>
                     <div class="clearfix"></div>
                 </div>
-
-                <div class="copy_btn">
-                    <a href="javascript:void(0);" id="work_allocated_summary"  data-toggle="modal" data-target="#WorkAllocatedSummary">Work Allocated Summary</a>
-                </div>
+            </div>
+            <div class="copy_btn">
+                <a href="javascript:void(0);" id="work_allocated_summary"  data-toggle="modal" data-target="#WorkAllocatedSummary">Work Allocated Summary</a>
             </div>
         </div>
     </div>
@@ -99,17 +98,18 @@ echo form_open('cco/add_allocation',$attributes); ?>
 <?php echo form_close(); ?>
 <?php } ?>
 <div id="middle_container" class="allocation_container">
-    <?php
-    if($this->input->is_ajax_request())
-    {
-        echo theme_view('common/middle');
-    }
-    ?>
 
 </div>
-
+<?php
+if($this->input->is_ajax_request())
+{
+    echo theme_view('common/middle');
+}
+?>
 
 <!-- Modal -->
+
+<?php if(!$this->input->is_ajax_request()){ ?>
 <div id="WorkAllocatedSummary" class="modal fade tr_modal" role="dialog">
     <div class="modal-dialog">
 
@@ -121,7 +121,7 @@ echo form_open('cco/add_allocation',$attributes); ?>
             </div>
 
             <div class="modal-body">
-                <div class="col-md-12 distributore_form">
+               <!-- <div class="col-md-12 distributore_form">
                     <div class="row">
 
                         <div id="no-more-tables">
@@ -145,7 +145,11 @@ echo form_open('cco/add_allocation',$attributes); ?>
                         </div>
 
                     </div>
+                </div>-->
+                <div id="middle_container" class="work_allocation">
+
                 </div>
+
                 <div class="clearfix"></div>
             </div>
             <div class="modal-footer">
@@ -155,4 +159,5 @@ echo form_open('cco/add_allocation',$attributes); ?>
             </div>
         </div>
     </div>
-
+</div>
+    <?php } ?>
