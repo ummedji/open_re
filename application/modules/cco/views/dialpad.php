@@ -177,7 +177,7 @@
         <div class="col-md-12 footer_menu">
             <ul>
                 <li><a href="javascript:void(0);" onclick="get_general_detail_data(<?php echo $customer_id; ?>);">Personal</a></li>
-                <li><a href="#">Education Detail</a></li>
+                <li><a href="javascript:void(0);" onclick = "get_education_detail_data(<?php echo $customer_id; ?>);">Education Detail</a></li>
                 <li><a href="#">Social Connection</a></li>
                 <li><a href="#">Financial Details</a></li>
                 <li><a href="#">Retailers</a></li>

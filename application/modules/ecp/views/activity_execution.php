@@ -78,7 +78,7 @@
                     <div class="clearfix"></div>
                 </div>
             </div>
-            <!--<div>-->
+            <div>
                 <div class="col-md-9">
                     <div  id="activity_execution_main">
                         <div class="top_form planning_parent">
@@ -561,7 +561,7 @@
                     </div>
                 </div>
                 <div class="clearfix"></div>
-            <!--</div>-->
+            </div>
 
         </div>
     </div>

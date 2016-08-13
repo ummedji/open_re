@@ -85,6 +85,20 @@ function get_family_detail_data(customer_id)
     });
 }
 
+function get_education_detail_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_education_detail_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
+
 function get_geo_data(campagain_id,level_data,num_count)
 {
     $.ajax({

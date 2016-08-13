@@ -750,6 +750,24 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_personal_education_data($customer_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_master_user_educational_details as bmued");
+        $this->db->where('bmued.user_id',$customer_id);
+
+        $user_education_data = $this->db->get()->result_array();
+
+        if(isset($user_education_data ) && !empty($user_education_data ))
+        {
+            return $user_education_data;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
 
     public function add_update_general_data()
     {
@@ -880,7 +898,6 @@ class Cco_model extends BF_Model
 
     public function add_update_family_data()
     {
-        testdata($_POST);
         $update_array = array();
         if(!empty($_POST["relative_id"]))
         {
@@ -904,8 +921,8 @@ class Cco_model extends BF_Model
                 {
                     //UPDATE QUERY
 
-                    $this->db->where("family_detail_id",$relative_id);
-                    $this->db->update("bf_master_user_family_details",$data_array);
+                    $this->db->where("family_detail_id", $relative_id);
+                    $this->db->update("bf_master_user_family_details", $data_array);
 
                     if($this->db->affected_rows() > 0) {
                         $update_array[] = 1;
@@ -915,8 +932,9 @@ class Cco_model extends BF_Model
                 else
                 {
                     //INSERT QUERY
-
-                    $this->db->insert("bf_master_user_family_details",$data_array);
+                    if($_POST['relative_name'][$key] != "" && $_POST['relation'][$key] && $_POST['email_id'][$key] != "") {
+                        $this->db->insert("bf_master_user_family_details", $data_array);
+                    }
 
                     if($this->db->affected_rows() > 0) {
                         $update_array[] = 1;

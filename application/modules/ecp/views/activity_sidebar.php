@@ -1,4 +1,4 @@
-<!--<div>-->
+<div>
     <div class="top_form planning_parent" style="padding: 10px 5px 10px 5px;">
         <div class="panel act_panel with-nav-tabs panel-default">
             <?php if($action =='activity_execution') { ?>
@@ -330,4 +330,14 @@
         <div class="clearfix"></div>
     </div>
     <div class="clearfix"></div>
-<!--</div>-->
+</div>
+</div>
+<div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
+</div>
+<div class="clearfix"></div>
