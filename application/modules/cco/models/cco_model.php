@@ -881,7 +881,7 @@ class Cco_model extends BF_Model
     public function add_update_family_data()
     {
         testdata($_POST);
-
+        $update_array = array();
         if(!empty($_POST["relative_id"]))
         {
             $customer_id = $_POST['customer_id'];
@@ -904,18 +904,37 @@ class Cco_model extends BF_Model
                 {
                     //UPDATE QUERY
 
-                    
+                    $this->db->where("family_detail_id",$relative_id);
+                    $this->db->update("bf_master_user_family_details",$data_array);
+
+                    if($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
 
                 }
                 else
                 {
                     //INSERT QUERY
 
+                    $this->db->insert("bf_master_user_family_details",$data_array);
+
+                    if($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+
                 }
 
             }
         }
 
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 
