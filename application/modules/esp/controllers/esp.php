@@ -67,7 +67,7 @@ class Esp extends Front_Controller
             if ($user_data != 0) {
 
                 $html .= '<div class="form-group">';
-                $html .= '<label>Level<span style="color: red">*</span></label>';
+                $html .= '<label>Level<span style="color: red">*</span> &nbsp;</label>';
                 $html .= '<select class="employee_data selectpicker"  id="employee_data" name="employee_data" data-live-search="true">';
                 $html .= '<option value="">Select Employee</option>';
                 foreach ($user_data as $key => $value) {
@@ -105,7 +105,7 @@ class Esp extends Front_Controller
         if ($pbg_data != 0) {
 
             $html .= '<div class="form-group">';
-            $html .= '<label>Select PBG <span style="color: red">*</span></label>';
+            $html .= '<label>Select PBG <span style="color: red">*</span> &nbsp;</label>';
             $html .= '<select class="pbg_data selectpicker"  id="pbg_data" name="pbg_data" data-live-search="true">';
             $html .= '<option value="">Select PBG</option>';
             foreach ($pbg_data as $key => $value) {
@@ -205,7 +205,7 @@ class Esp extends Front_Controller
 
         if ($pbg_sku_data != 0) {
 
-            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
+            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf inpt-right-aln">';
             $html .= '<thead>';
             $html .= '<tr style="border-bottom: solid 1px #b1b1b1;">';
             $html .= '<th></th>';
@@ -2874,7 +2874,7 @@ class Esp extends Front_Controller
             //CREATE HTML FOR DATA
 
 
-            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
+            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf inpt-right-aln">';
             $html .= '<thead>';
             $html .= '<tr>';
             //$html .= '<th>Product SKU Code</th>';
@@ -3567,7 +3567,7 @@ class Esp extends Front_Controller
 
         if ($pbg_sku_data != 0) {
 
-            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf">';
+            $html .= '<table class="col-md-12 table-bordered table-striped table-condensed cf inpt-right-aln">';
             $html .= '<thead>';
             $html .= '<tr style="border-bottom: solid 1px #b1b1b1;">';
             $html .= '<th></th>';

@@ -111,15 +111,21 @@ class Cco extends Front_Controller
 
     public function get_customer_education_detail_data()
     {
+        $user = $this->auth->user();
 
         $customer_id = $_POST["customerid"];
 
         $get_personal_education_data = $this->cco_model->get_personal_education_data($customer_id);
 
+        $get_education_qualification_data = $this->cco_model->get_education_qualification_data($user->country_id);
+     //   testdata($get_education_qualification_data);
+
         Template::set('personal_education_data', $get_personal_education_data);
+        Template::set('education_qualification_data', $get_education_qualification_data);
+
         Template::set('customer_id', $customer_id);
 
-        Template::set_view("cco/dialpad_education_details");
+        Template::set_view("cco/dialpad_eductaion_details");
         Template::render();
 
     }

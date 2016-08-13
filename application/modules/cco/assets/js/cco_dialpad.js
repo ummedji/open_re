@@ -23,6 +23,14 @@ $('body').on('focus',".dob", function(){
         autoclose: true
     });
 });
+$('body').on('focus',".year_data", function(){
+    $(this).datepicker({
+        format: "yyyy",
+        autoclose: true,
+        viewMode: "years",
+        minViewMode: "years"
+    });
+});
 
 $(document).on("click","a.primary_no",function(){
 
@@ -119,6 +127,12 @@ function get_geo_data(campagain_id,level_data,num_count)
         }
     });
 }
+
+$(document).on("change","select.qualification",function(){
+
+
+    
+});
 
 $(document).on("change","select#geo_level_3",function(){
 

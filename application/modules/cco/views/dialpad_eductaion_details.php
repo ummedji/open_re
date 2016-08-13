@@ -29,12 +29,21 @@
                                 <div class="form-group">
                                     <label for="Degree/Qualification">Degree/Qualification</label>
 
-                                    <input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="<?php echo $family_data["family_detail_id"]; ?>" />
+                                    <input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="<?php //echo $family_data["family_detail_id"]; ?>" />
 
-                                    <select class="form-control" placeholder="" name="qualification[]">
-                                        <option value="">Select Qualification</option>
-                                        <option <?php //echo $male_selected; ?> value="Male">Male</option>
-                                        <option <?php //echo $female_selected; ?> value="Female">Female</option>
+                                    <select class="form-control qualification" placeholder="" name="qualification[]" >
+                                        <option value="" >Select Qualification</option>
+                                        <?php
+                                            if(!empty($education_qualification_data) && $education_qualification_data != 0)
+                                            {
+                                                foreach($education_qualification_data as $qual_key => $qualification_data)
+                                                {
+                                        ?>
+                                                    <option value="<?php echo $qualification_data["qualification_id"]; ?>"><?php echo $qualification_data["qualification_name"]; ?></option>
+                                        <?php
+                                                }
+                                            }
+                                        ?>
                                     </select>
 
                                     <div class="clearfix"></div>
@@ -43,38 +52,27 @@
                                 <div class="form-group">
                                     <label for="Gender">Specialization</label>
 
-                                    <select class="form-control" placeholder="" name="specialization[]">
-                                        <option value="">Select Specialization</option>
-                                        <option <?php //echo $male_selected; ?> value="Male">Male</option>
-                                        <option <?php //echo $female_selected; ?> value="Female">Female</option>
+                                    <select class="form-control specialization" placeholder="" name="specialization[]">
+
                                     </select>
                                     <div class="clearfix"></div>
 
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="Dependent">Institute/University</label>
-                                    <input class="form-control"  type="text" name="university[]" />
+                                    <label for="Institute/University">Institute/University</label>
+                                    <input class="form-control"  type="text" name="university[]" value=""/>
                                     <div class="clearfix"></div>
                                 </div>
 
-
-
-                            </div>
-
-
-
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-4 col-sm-6 com_form">
+                                <div class="form-group">
+                                    <label for="Year">Year</label>
+                                    <input class="form-control year_data" id="year_data"  type="text" name="year_data[]" value=""/>
+                                    <div class="clearfix"></div>
+                                </div>
 
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-6 com_form">
 
-                            </div>
                         </div>
 
                     </div>
@@ -114,72 +112,45 @@
         html += '<div class="row">';
 
         html += '<div class="col-md-4 col-sm-6 com_form">';
+
         html += '<div class="form-group">';
-        html += '<label for="Relative Name">Relative Name</label>';
+        html += '<label for="Degree/Qualification">Degree/Qualification</label>';
 
-        html += '<input type="hidden" class="form-control" name="relative_id[]" id="relative_id" placeholder="" value="" />';
+        html += '<input type="hidden" class="form-control" name="education_data_id[]" id="education_data_id" placeholder="" value="" />';
 
-        html += '<input type="text" class="form-control" name="relative_name[]" id="relative_name" placeholder="" value="" />';
+        html += '<select class="form-control" placeholder="" name="qualification[]">';
+        html += '<option value="">Select Qualification</option>';
+        html += '<option value="Male">Male</option>';
+        html += '<option value="Female">Female</option>';
+        html += '</select>';
+
         html += '<div class="clearfix"></div>';
         html += '</div>';
-        html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
-        html += '<div class="form-group">';
-        html += '<label for="Relation">Relation</label>';
-        html += '<input type="text" class="form-control" name="relation[]" id="relation" placeholder="" value="" />';
-        html += '<div class="clearfix"></div>';
-        html += '</div>';
-        html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
-        html += '<div class="form-group">';
-        html += '<label for="Mobile No.">Mobile No.</label>';
-        html += '<input type="text" class="form-control" name="contact_no[]" id="contact_no" placeholder="" value=""/>';
-        html += '<div class="clearfix"></div>';
-        html += '</div>';
-        html += '</div>';
 
-        html += '</div>';
-        html += '<div class="row">';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
         html += '<div class="form-group">';
-        html += '<label for="Gender">Gender</label>';
-        html += '<select class="form-control" placeholder="" name="gender[]">';
-        html += '<option value="">Select Gender</option>';
+        html += '<label for="Gender">Specialization</label>';
+
+        html += '<select class="form-control" placeholder="" name="specialization[]">';
+        html += '<option value="">Select Specialization</option>';
         html += '<option value="Male">Male</option>';
         html += '<option value="Female">Female</option>';
         html += '</select>';
         html += '<div class="clearfix"></div>';
 
         html += '</div>';
-        html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
-        html += '<div class="form-group">';
-        html += '<label for="Date Of Birth">Date Of Birth</label>';
-        html += '<input type="text" class="form-control dob" name="dob[]" id="dob" placeholder="" value=""/>';
-        html += '<div class="clearfix"></div>';
 
-        html += '</div>';
-        html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
         html += '<div class="form-group">';
-        html += '<label for="Email Id">Email Id</label>';
-        html += '<input type="text" class="form-control" name="email_id[]" id="email_id" placeholder="" value="" />';
+        html += '<label for="Institute/University">Institute/University</label>';
+        html += '<input class="form-control"  type="text" name="university[]" value=""/>';
         html += '<div class="clearfix"></div>';
         html += '</div>';
-        html += '</div>';
 
-        html += '</div>';
-        html += '<div class="row">';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
         html += '<div class="form-group">';
-        html += '<label for="Dependent">Dependent</label>';
-        html += '<select class="form-control" placeholder="" name="dependent[]">';
-        html += '<option value="0">No</option>';
-        html += '<option value="1">Yes</option>';
-        html += '</select>';
-
+        html += '<label for="Year">Year</label>';
+        html += '<input class="form-control year_data" id="year_data"  type="text" name="year_data[]" value=""/>';
         html += '<div class="clearfix"></div>';
         html += '</div>';
+
         html += '</div>';
         html += '</div>';
         html += '</div>';

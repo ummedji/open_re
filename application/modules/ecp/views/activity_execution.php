@@ -52,10 +52,7 @@
 </div>
 
 
-<?php if (!$this->input->is_ajax_request()) {
-    $attributes = array('class' => '', 'id' => 'activity_execution', 'name' => 'activity_execution');
-    echo form_open_multipart('', $attributes);
-    ?>
+
 
 
 
@@ -79,6 +76,10 @@
                 </div>
             </div>
             <div>
+                <?php if (!$this->input->is_ajax_request()) {
+                $attributes = array('class' => '', 'id' => 'activity_execution', 'name' => 'activity_execution');
+                echo form_open_multipart('', $attributes);
+                ?>
                 <div class="col-md-9">
                     <div  id="activity_execution_main">
                         <div class="top_form planning_parent">

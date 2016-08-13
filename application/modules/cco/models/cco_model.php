@@ -901,6 +901,26 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_education_qualification_data($country_id)
+    {
+        $this->db->select("bmq.qualification_id,bmq.qualification_name");
+        $this->db->from("bf_master_qualification as bmq");
+        $this->db->where("bmq.country_id",$country_id);
+        $this->db->where("bmq.deleted",0);
+        $this->db->where("bmq.status",1);
+
+        $qualification_data = $this->db->get()->result_array();
+
+        if(isset($qualification_data ) && !empty($qualification_data ))
+        {
+            return $qualification_data;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
 
     public function add_update_general_data()
     {
