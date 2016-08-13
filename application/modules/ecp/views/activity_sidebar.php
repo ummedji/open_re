@@ -51,7 +51,7 @@
                 </div>
                 <br>
                 <br>
-            <label>Planned Activity</label>
+                <label>Planned Activity</label>
                 <div id="accordion" class="as_accordion" role="tablist" aria-multiselectable="true">
                     <?php
                     if (is_array($current_activity) && count($current_activity) > 0) {
@@ -325,6 +325,7 @@
                     </div>
                 </div>
             </div>
+            <div class="clearfix"></div>
         </div>
         <div class="clearfix"></div>
     </div>

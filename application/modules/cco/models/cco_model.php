@@ -881,6 +881,41 @@ class Cco_model extends BF_Model
     public function add_update_family_data()
     {
         testdata($_POST);
+
+        if(!empty($_POST["relative_id"]))
+        {
+            $customer_id = $_POST['customer_id'];
+
+            foreach($_POST["relative_id"] as $key=> $relative_id)
+            {
+
+                $data_array = array(
+                    'user_id'=> $customer_id,
+                    'relative_name'=> $_POST['relative_name'][$key],
+                    'relative_relation'=> $_POST['relation'][$key],
+                    'relative_dob'=> $_POST['dob'][$key],
+                    'gender'=> $_POST['gender'][$key],
+                    'dependent'=> $_POST['dependent'][$key],
+                    'mobile_no'=> $_POST['contact_no'][$key],
+                    'email_id'=> $_POST['email_id'][$key]
+                );
+
+                if($relative_id != "")
+                {
+                    //UPDATE QUERY
+
+                    
+
+                }
+                else
+                {
+                    //INSERT QUERY
+
+                }
+
+            }
+        }
+
     }
 
 
