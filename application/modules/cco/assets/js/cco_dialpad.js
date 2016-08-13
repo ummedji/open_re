@@ -17,6 +17,13 @@ $(document).ready(function(){
 
 });
 
+$('body').on('focus',".dob", function(){
+    $(this).datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    });
+});
+
 $(document).on("click","a.primary_no",function(){
 
     var phone_no = $(this).attr("rel");
@@ -25,6 +32,8 @@ $(document).on("click","a.primary_no",function(){
     dialpad(phone_no,campagain_id);
 
 });
+
+
 
 function dialpad(phone_no,campagain_id)
 {
@@ -203,3 +212,42 @@ $(document).on("submit","form#dialpad_general_info",function(e){
     });
     return false;
 });
+
+$(document).on("submit","form#dialpad_family_info",function(e){
+
+    e.preventDefault();
+
+    var param =  $("form#dialpad_family_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_family_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+

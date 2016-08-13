@@ -103,6 +103,8 @@ class Cco extends Front_Controller
         $get_personal_family_data = $this->cco_model->get_personal_family_data($customer_id);
 
         Template::set('personal_family_data', $get_personal_family_data);
+        Template::set('customer_id', $customer_id);
+
         Template::set_view("cco/dialpad_family_details");
         Template::render();
     }

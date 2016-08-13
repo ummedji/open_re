@@ -139,7 +139,7 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                     <div class="col-md-4 col-sm-6 com_form">
                         <div class="form-group">
                             <label for="Date Of Birth">Date Of Birth</label>
-                            <input type="text" class="form-control" name="dob" id="dob" placeholder="" value="<?php echo $customer_dob; ?>"/>
+                            <input type="text" class="form-control dob" name="dob" id="dob" placeholder="" value="<?php echo $customer_dob; ?>"/>
                             <div class="clearfix"></div>
                         </div>
                     </div>

@@ -2681,9 +2681,12 @@ table.request_table {
 }
 .panel.act_panel .panel-heading {
     background-color: transparent;
-    border: none;
+    /*border: none;*/
     padding: 0;
+    border: 1px solid #ddd;
+    border-bottom: none;
 }
+.panel.act_panel .collapse.in { border: 1px solid #ddd; border-bottom: none;}
 ul.activity_list { margin: 0; padding: 0 15px; text-align: center;}
 .activity_list li {
     list-style: none;
@@ -2706,6 +2709,7 @@ ul.activity_list { margin: 0; padding: 0 15px; text-align: center;}
 .as_accordion .panel {
     margin-bottom: 0 !important;
     border-radius: 0;
+    border: none;
 }
 ul.acc_list { margin: 0; padding: 0; text-align: center;}
 .acc_list li {
@@ -2716,8 +2720,9 @@ ul.acc_list { margin: 0; padding: 0; text-align: center;}
     font-size: 13px;
     font-family: 'Exo2-Regular';
     color: #000000;
+    line-height: 13px;
 }
-.acc_list li:first-child { width: 38px;}
+.acc_list li:first-child { width: 40px; float: left;}
 .acc_list li a{ color: #000000; text-decoration: none;}
 .acc_list li:last-child {border-right: none;}
 
