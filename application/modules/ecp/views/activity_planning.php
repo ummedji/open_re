@@ -510,6 +510,7 @@ if (!$this->input->is_ajax_request()) {
                         <div class="clearfix"></div>
                     </div>
                 </div>
+                <div class="clearfix"></div>
             </div>
 
             <?php echo form_close(); ?>

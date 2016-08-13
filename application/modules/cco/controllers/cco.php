@@ -116,6 +116,13 @@ class Cco extends Front_Controller
         die;
     }
 
+    public function add_update_family_info()
+    {
+        $family_update_data = $this->cco_model->add_update_family_data();
+        echo $family_update_data;
+        die;
+    }
+
     public function get_campagain_allocated_data()
     {
         $campagainid = $_POST["campagainid"];

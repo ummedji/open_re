@@ -497,6 +497,7 @@
                         <div class="clearfix"></div>
                     </div>
                 </div>
+                <div class="clearfix"></div>
             </div>
             <?php echo form_close(); ?>
         </div>
