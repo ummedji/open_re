@@ -119,6 +119,60 @@ function get_social_detail_data(customer_id)
     });
 }
 
+function get_financial_detail_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_financial_detail_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
+
+function get_complaint_detail_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_complaint_detail_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
+function get_complaint_view_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_complaint_view_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
+
+function get_retailer_view_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_retailer_view_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
 
 function get_geo_data(campagain_id,level_data,num_count)
 {
@@ -247,10 +301,108 @@ function get_row_geo_data(parent_html,parent_geo_id,level_data,num_count,dialpad
         }
     });
 }
+function get_customer_feedback_data(customer_id)
+{
+    //var customer_id = 4;
+    var campagain_id = $("input#camagain_id").val();
+    // alert(campagain_id);
+    var num_count = 3;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_feedback_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
+$(document).on("submit","form#dialpad_feedback_view_info",function(e){
+
+    e.preventDefault();
+
+    var param =  $("form#dialpad_feedback_view_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_feedback_view_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
+$(document).on('click', 'div.allocation_container .delete_i', function () {
+    var id = $(this).attr('prdid');
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+'cco/delete_allocation_data',
+                        data: {allocation_id:id},
+                        success: function(resp){
+                            location.reload();
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
+
+    return false;
+
+});
 
 $(document).on("submit","form#dialpad_general_info",function(e){
 
     e.preventDefault();
+
+    var customer_id = $("input#customer_id").val();
 
     var param =  $("form#dialpad_general_info").serializeArray();
 
@@ -277,7 +429,8 @@ $(document).on("submit","form#dialpad_general_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        location.reload()
+                        get_general_detail_data(customer_id);
+                       // location.reload()
                     }
                 });
 
@@ -289,7 +442,7 @@ $(document).on("submit","form#dialpad_general_info",function(e){
 $(document).on("submit","form#dialpad_family_info",function(e){
 
     e.preventDefault();
-
+    var customer_id = $("input#customer_id").val();
     var param =  $("form#dialpad_family_info").serializeArray();
 
     $.ajax({
@@ -315,7 +468,8 @@ $(document).on("submit","form#dialpad_family_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        location.reload()
+                        get_family_detail_data(customer_id);
+                        //location.reload()
                     }
                 });
 
@@ -327,7 +481,7 @@ $(document).on("submit","form#dialpad_family_info",function(e){
 $(document).on("submit","form#dialpad_education_info",function(e){
 
     e.preventDefault();
-
+    var customer_id = $("input#customer_id").val();
     var param =  $("form#dialpad_education_info").serializeArray();
 
     $.ajax({
@@ -353,7 +507,8 @@ $(document).on("submit","form#dialpad_education_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        location.reload()
+                        get_education_detail_data(customer_id);
+                        //location.reload()
                     }
                 });
 
@@ -366,6 +521,7 @@ $(document).on("submit","form#dialpad_social_info",function(e){
 
     e.preventDefault();
 
+    var customer_id = $("input#customer_id").val();
     var param =  $("form#dialpad_social_info").serializeArray();
 
     $.ajax({
@@ -391,7 +547,48 @@ $(document).on("submit","form#dialpad_social_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        location.reload()
+                        get_social_detail_data(customer_id);
+                        //location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
+$(document).on("submit","form#dialpad_financial_info",function(e){
+
+    e.preventDefault();
+
+    var customer_id = $("input#customer_id").val();
+    var param =  $("form#dialpad_financial_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_financial_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        get_financial_detail_data(customer_id);
+                        //location.reload()
                     }
                 });
 

@@ -112,7 +112,7 @@
             <?php } elseif($action =='activity_view') { ?>
 
             <?php } elseif($action =='activity_planning') { ?>
-                <div class="panel-heading">
+                <div class="panel-heading" style="border: none;">
                     <ul class="activity_list">
                         <li class="active"><a href="#tab0default" data-toggle="tab" data-attr="all">All</a></li>
                         <li><a href="#tab1default" data-toggle="tab" data-attr="i">Incomplete Entry</a></li>

@@ -4,21 +4,21 @@
 
 ?>
 
-<div class="text-center sub_nave">
-    <div class="inn_sub_nave">
-        <ul>
-            <li class=""><a class="personal_info" href="javascript:void(0);" onclick="get_general_detail_data(<?php echo $customer_id; ?>);" >General</a></li>
-            <li class=""><a class="family_info" href="javascript:void(0);" onclick="get_family_detail_data(<?php echo $customer_id; ?>);" >Family</a></li>
-        </ul>
-    </div>
-</div>
-
 <div class="clearfix"></div>
 
 
 <div class="actv-details-form">
+    <div class="col-md-12 text-center plng_sub_nave_cco">
+        <div class="inn_sub_nave">
+            <ul>
+                <li class=""><a class="personal_info" href="javascript:void(0);" onclick="get_general_detail_data(<?php echo $customer_id; ?>);" >General</a></li>
+                <li class=""><a class="family_info" href="javascript:void(0);" onclick="get_family_detail_data(<?php echo $customer_id; ?>);" >Family</a></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+    </div>
 
-    <h5>Family Details</h5>
+    <h5 style=" margin-bottom: 30px;">Family Details</h5>
     <div class="back_details">
 
         <?php
@@ -28,8 +28,8 @@
 
         <div class="row">
 
-            <div class="col-md-11" id="family_detail_data">
-                Family Info </hr>
+            <div class="col-md-12" id="family_detail_data">
+                <hr><h6 class="gn-info-tl">Family Info</h6>
 
                 <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
 
@@ -41,9 +41,9 @@
                 ?>
                     <div class="rotate_data">
 
-                        <div class="row">
+                        <div class="row cco-form-fl">
 
-                            <div class="col-md-4 col-sm-6 com_form">
+                            <div class="col-md-4 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label for="Relative Name">Relative Name</label>
 
@@ -53,14 +53,14 @@
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-6 com_form">
+                            <div class="col-md-4 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label for="Relation">Relation</label>
                                     <input type="text" class="form-control" name="relation[]" id="relation" placeholder="" value="<?php echo $family_data["relative_relation"]; ?>" />
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-6 com_form">
+                            <div class="col-md-4 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label for="Mobile No.">Mobile No.</label>
                                     <input type="text" class="form-control" name="contact_no[]" id="contact_no" placeholder="" value="<?php echo $family_data["mobile_no"]; ?>"/>
@@ -69,8 +69,8 @@
                             </div>
 
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-6 com_form">
+                        <div class="row cco-form-fl">
+                            <div class="col-md-4 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label for="Gender">Gender</label>
 
@@ -99,14 +99,14 @@
 
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-6 com_form">
+                            <div class="col-md-4 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label for="Date Of Birth">Date Of Birth</label>
                                     <input type="text" class="form-control dob" name="dob[]" id="dob" placeholder="" value="<?php echo $family_data["relative_dob"]; ?>"/>
                                     <div class="clearfix"></div>
                                 </div>
                             </div>
-                            <div class="col-md-4 col-sm-6 com_form">
+                            <div class="col-md-4 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label for="Email Id">Email Id</label>
                                     <input type="text" class="form-control" name="email_id[]" id="email_id" placeholder="" value="<?php echo $family_data["email_id"]; ?>" />
@@ -115,8 +115,8 @@
                             </div>
 
                         </div>
-                        <div class="row">
-                            <div class="col-md-4 col-sm-6 com_form">
+                        <div class="row cco-form-fl">
+                            <div class="col-md-4 col-sm-6 tp_form">
                                 <div class="form-group">
                                     <label for="Dependent">Dependent</label>
 
@@ -153,17 +153,19 @@
 
             </div>
 
-            <div class="col-md-11">
-                <button type="button" class="btn btn-default back_details-button add_more">More</button>
+            <div class="col-md-12">
+                <button type="button" style="padding: 5px 30px;" class="btn btn-default back_details-button add_more">More</button>
             </div>
 
         </div>
 
         <div class="clearfix"></div>
-        <div class="col-md-1 col-md-1-n">
-            <label class="space_llb">&nbsp;</label>
-            <button type="submit" class="btn btn-default back_details-button">Save</button>
+        <div class="col-md-12 text-right">
+            <div class="row save_btn">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
         </div>
+
 
         <?php form_close(); ?>
 
@@ -179,9 +181,9 @@
 
         html += '<div class="rotate_data">';
 
-        html += '<div class="row">';
+        html += '<div class="row cco-form-fl">';
 
-        html += '<div class="col-md-4 col-sm-6 com_form">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
         html += '<div class="form-group">';
         html += '<label for="Relative Name">Relative Name</label>';
 
@@ -191,14 +193,14 @@
         html += '<div class="clearfix"></div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
         html += '<div class="form-group">';
         html += '<label for="Relation">Relation</label>';
         html += '<input type="text" class="form-control" name="relation[]" id="relation" placeholder="" value="" />';
         html += '<div class="clearfix"></div>';
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
         html += '<div class="form-group">';
         html += '<label for="Mobile No.">Mobile No.</label>';
         html += '<input type="text" class="form-control" name="contact_no[]" id="contact_no" placeholder="" value=""/>';
@@ -207,8 +209,8 @@
         html += '</div>';
 
         html += '</div>';
-        html += '<div class="row">';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
+        html += '<div class="row cco-form-fl">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
         html += '<div class="form-group">';
         html += '<label for="Gender">Gender</label>';
         html += '<select class="form-control" placeholder="" name="gender[]">';
@@ -220,7 +222,7 @@
 
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
         html += '<div class="form-group">';
         html += '<label for="Date Of Birth">Date Of Birth</label>';
         html += '<input type="text" class="form-control dob" name="dob[]" id="dob" placeholder="" value=""/>';
@@ -228,7 +230,7 @@
 
         html += '</div>';
         html += '</div>';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
         html += '<div class="form-group">';
         html += '<label for="Email Id">Email Id</label>';
         html += '<input type="text" class="form-control" name="email_id[]" id="email_id" placeholder="" value="" />';
@@ -237,8 +239,8 @@
         html += '</div>';
 
         html += '</div>';
-        html += '<div class="row">';
-        html += '<div class="col-md-4 col-sm-6 com_form">';
+        html += '<div class="row cco-form-fl">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
         html += '<div class="form-group">';
         html += '<label for="Dependent">Dependent</label>';
         html += '<select class="form-control" placeholder="" name="dependent[]">';

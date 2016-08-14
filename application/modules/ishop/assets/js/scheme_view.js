@@ -179,6 +179,21 @@ $(document).on('click','#delete_schemes',function(e){
 
 });
 
+$(document).on('click', 'div.scheme_view_middle_container input.check_checked', function() {
+
+
+    if($(this).is(":checked"))
+    {
+        $("button#delete_schemes").css("display","inline-block");
+    }
+    else
+    {
+        if($("div.scheme_view_middle_container tbody.tbl_body_row tr td:nth-child(2) input.check_checked:checked").length <= 0) {
+            $("button#delete_schemes").css("display", "none");
+        }
+
+    }
+});
 
 $(document).on('click','.delete_i',function(e){
     e.preventDefault();

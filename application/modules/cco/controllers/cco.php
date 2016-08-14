@@ -80,6 +80,26 @@ class Cco extends Front_Controller
         Template::set_view("cco/dialpad");
         Template::render();
     }
+    public function get_customer_feedback_data()
+    {   $user=$this->auth->user();
+        $logged_in_user=$user->display_name;
+        $customer_id = $_POST["customerid"];
+        $get_user_data = $this->cco_model->get_user_data($customer_id);
+        $get_feedback_data = $this->cco_model->get_feedback_data($customer_id);
+        Template::set('get_user_data', $get_user_data);
+        Template::set('logged_in_user', $logged_in_user);
+        Template::set('customer_id', $customer_id);
+        Template::set('get_feedback_data', $get_feedback_data);
+        Template::set_view("cco/dialpad_feedback_details");
+        Template::render();
+    }
+    public function add_update_feedback_view_info()
+    {
+
+        $feedback_update_data = $this->cco_model->add_update_feedback_data();
+        echo $feedback_update_data;
+        die;
+    }
 
     public function get_customer_general_detail_data()
     {
@@ -147,6 +167,101 @@ class Cco extends Front_Controller
         Template::render();
     }
 
+    public function get_customer_complaint_detail_data()
+    {
+        $user = $this->auth->user();
+
+        $customer_id = $_POST["customerid"];
+
+       // $get_social_data = $this->cco_model->get_customer_social_data($customer_id);
+
+       // Template::set('social_data', $get_social_data);
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad_complaint_details");
+        Template::render();
+    }
+
+    public function get_customer_complaint_view_data()
+    {
+        $user = $this->auth->user();
+
+        $customer_id = $_POST["customerid"];
+
+        // $get_social_data = $this->cco_model->get_customer_social_data($customer_id);
+
+        // Template::set('social_data', $get_social_data);
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad_complaint_view");
+        Template::render();
+    }
+
+    public  function get_customer_financial_detail_data()
+    {
+        $user = $this->auth->user();
+
+        $customer_id = $_POST["customerid"];
+
+        $get_all_electronic_data = $this->cco_model->get_electronic_data();
+        $get_all_vehicles_data = $this->cco_model->get_vehicles_data();
+
+        $get_customer_pa_income = $this->cco_model->get_customer_pa_income_data($customer_id);
+
+        $get_financial_electronic_data = $this->cco_model->get_customer_financial_electronic_data($customer_id);
+        $get_financial_vechiles_data = $this->cco_model->get_customer_financial_vehicles_data($customer_id);
+
+        //dumpme($get_financial_electronic_data);
+        //testdata($get_financial_vechiles_data);
+
+        Template::set('financial_electronic_data', $get_financial_electronic_data);
+        Template::set('financial_vechiles_data', $get_financial_vechiles_data);
+
+        Template::set('all_electronic_data', $get_all_electronic_data);
+        Template::set('all_vechiles_data', $get_all_vehicles_data);
+
+        Template::set('customer_pa_income', $get_customer_pa_income);
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad_financial_view");
+        Template::render();
+    }
+
+    public function get_customer_retailer_view_data()
+    {
+        $user = $this->auth->user();
+
+        $customer_id = $_POST["customerid"];
+
+        $get_user_data = $this->cco_model->get_user_data($customer_id);
+
+        $customer_level_2 = (isset($get_user_data[0]["geo_level_id2"]) && !empty($get_user_data[0]["geo_level_id2"]))? $get_user_data[0]["geo_level_id2"] : "";
+
+        if($customer_level_2 != "")
+        {
+            $user_role = 10;
+            $get_retailer_data = $this->cco_model->get_customer_location_retailer_data($user_role,$customer_level_2);
+        }
+        else
+        {
+            $get_retailer_data = "";
+        }
+
+        testdata($get_retailer_data);
+
+        // Template::set('social_data', $get_social_data);
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad_retailer_details");
+        Template::render();
+    }
+
+
+
     public function add_update_general_info()
     {
         $update_data = $this->cco_model->add_update_general_data();
@@ -172,6 +287,13 @@ class Cco extends Front_Controller
     {
         $social_update_data = $this->cco_model->add_update_social_data();
         echo $social_update_data;
+        die;
+    }
+
+    public function add_update_financial_info()
+    {
+        $financial_update_data = $this->cco_model->add_update_financial_detail_data();
+        echo $financial_update_data;
         die;
     }
 
@@ -473,8 +595,8 @@ class Cco extends Front_Controller
         Template::set('td', $cco_activity['count']);
         Template::set('pagination', (isset($cco_activity['pagination']) && !empty($cco_activity['pagination'])) ? $cco_activity['pagination'] : '' );
 
-        Template::set_view("cco/allocation_activity");
-        Template::render();
+            Template::set_view("cco/allocation_activity");
+            Template::render();
     }
 
 
@@ -550,6 +672,19 @@ class Cco extends Front_Controller
         $objWriter->save('php://output');
         exit();
 
+    }
+
+
+    public function work_transfer_allocation()
+    {
+        Assets::add_module_js('cco','work_transfer.js');
+        $user= $this->auth->user();
+
+        $cco_data = $this->cco_model->get_all_cco_data($user->country_id);
+
+        Template::set('cco_data', $cco_data);
+        Template::set_view("cco/work_transfer");
+        Template::render();
     }
 
 

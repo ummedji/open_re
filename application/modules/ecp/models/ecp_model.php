@@ -3117,23 +3117,24 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
 
             }
+            if($web_service !='web_service'){
 
-            if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
-                $data = $this->do_upload();
+                if(isset($_POST['upload_file_data']) && !empty($_POST['upload_file_data'])){
+                    $data = $this->do_upload();
 
-                foreach($data as $K=> $upload_data)
-                {
-                    $upload_details = array(
-                        'activity_planning_id' => $insert_id,
-                        'files_name' => isset($upload_data['name']) ?  $upload_data['name']  : '',
-                        'upload_type' => isset($upload_data['type']) ? $upload_data['type'] : '',
-                    );
+                    foreach($data as $K=> $upload_data)
+                    {
+                        $upload_details = array(
+                            'activity_planning_id' => $insert_id,
+                            'files_name' => isset($upload_data['name']) ?  $upload_data['name']  : '',
+                            'upload_type' => isset($upload_data['type']) ? $upload_data['type'] : '',
+                        );
 
-                    $this->db->insert('ecp_activity_planning_upload_details', $upload_details);
+                        $this->db->insert('ecp_activity_planning_upload_details', $upload_details);
+                    }
                 }
-
-
             }
+
             return $insert_id;
         }
         else{
@@ -3141,7 +3142,28 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
     }
 
-    function do_upload(){
+    public function fileUploadGalleryData($activity_planning_id)
+    {
+        $data = $this->do_upload();
+        foreach($data as $K=> $upload_data)
+        {
+            $upload_details = array(
+                'activity_planning_id' => $activity_planning_id,
+                'files_name' => isset($upload_data['name']) ?  $upload_data['name']  : '',
+                'upload_type' => isset($upload_data['type']) ? $upload_data['type'] : '',
+            );
+
+                $this->db->insert('ecp_activity_planning_upload_details', $upload_details);
+        }
+
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    public function do_upload(){
 
         $this->load->library('upload');
 
@@ -3195,8 +3217,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         //  upload an image options
         $config = array();
         $config['upload_path'] = FCPATH . 'assets/uploads/activity_gallery/';
-        $config['allowed_types'] = 'gif|jpg|png|jpeg';
-        $config['max_size']      = '5000000000000';
+        $config['allowed_types'] = 'gif|jpg|png|jpeg|mp4|3gp|avi';
+        $config['max_size']      = '50000000000000000';
         $config['overwrite']     = FALSE;
 
 

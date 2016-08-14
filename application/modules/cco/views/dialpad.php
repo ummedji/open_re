@@ -163,10 +163,10 @@
                         <li><a href="#">Product Details</a></li>
                         <li><a href="#">Questions</a></li>
                         <li style="border-left: none; border-bottom: none;"><a href="#">Order Status</a></li>
-                        <li style="border-bottom: none;"><a href="#">Complaints</a></li>
+                        <li style="border-bottom: none;"><a href="javascript:void(0);" onclick = "get_complaint_detail_data(<?php echo $customer_id; ?>);">Complaints</a></li>
                         <li style="border-bottom: none;"><a href="#">Order Tracking</a></li>
                         <li style="border-bottom: none;"><a href="#">Order Place</a></li>
-                        <li style="border-bottom: none;"><a href="#">Feedback</a></li>
+                        <li style="border-bottom: none;"><a href="javascript:void(0);" onclick="get_customer_feedback_data(<?php echo $customer_id; ?>);">Feedback</a></li>
                         <li style="border-bottom: none;"><a href="#">E Invoice /E Statement</a></li>
                         <li style="border-bottom: none;"><a href="#">Script</a></li>
                         <div class="clearfix"></div>
@@ -179,8 +179,8 @@
                 <li><a href="javascript:void(0);" onclick="get_general_detail_data(<?php echo $customer_id; ?>);">Personal</a></li>
                 <li><a href="javascript:void(0);" onclick = "get_education_detail_data(<?php echo $customer_id; ?>);">Education Detail</a></li>
                 <li><a href="javascript:void(0);" onclick="get_social_detail_data(<?php echo $customer_id; ?>);">Social Connection</a></li>
-                <li><a href="#">Financial Details</a></li>
-                <li><a href="#">Retailers</a></li>
+                <li><a href="javascript:void(0);" onclick = "get_financial_detail_data(<?php echo $customer_id; ?>);">Financial Details</a></li>
+                <li><a href="javascript:void(0);" onclick = "get_retailer_view_data(<?php echo $customer_id; ?>);" >Retailers</a></li>
                 <li><a href="#">Crop</a></li>
                 <li><a href="#">Products</a></li>
                 <li><a href="#">Business Details</a></li>

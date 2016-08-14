@@ -54,23 +54,24 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
 
 ?>
 
-<div class="text-center sub_nave">
-    <div class="inn_sub_nave">
-        <ul>
-            <li class=""><a class="personal_info" href="javascript:void(0);" onclick="get_general_detail_data(<?php echo $customer_id; ?>);" >General</a></li>
-            <li class=""><a class="family_info" href="javascript:void(0);" onclick="get_family_detail_data(<?php echo $customer_id; ?>);" >Family</a></li>
-        </ul>
-    </div>
-</div>
+
 
 <div class="clearfix"></div>
 
 
 <div class="actv-details-form">
 
+    <div class="col-md-12 text-center plng_sub_nave_cco">
+        <div class="inn_sub_nave">
+            <ul>
+                <li class=""><a class="personal_info" href="javascript:void(0);" onclick="get_general_detail_data(<?php echo $customer_id; ?>);" >General</a></li>
+                <li class=""><a class="family_info" href="javascript:void(0);" onclick="get_family_detail_data(<?php echo $customer_id; ?>);" >Family</a></li>
+            </ul>
+            <div class="clearfix"></div>
+        </div>
+    </div>
 
-
-    <h5>Personal Details</h5>
+    <h5 style=" margin-bottom: 30px;">Personal Details</h5>
     <div class="back_details">
 
         <?php
@@ -79,11 +80,11 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
         ?>
 
         <div class="row">
-            <div class="col-md-11">
-                General Info </hr>
-                <div class="row">
+            <div class="col-md-12">
+                <hr><h6 class="gn-info-tl">General Info</h6>
+                <div class="row cco-form-fl">
 
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Farmer Name">Farmer Name</label>
 
@@ -93,14 +94,14 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="First Name">First Name</label>
                             <input type="text" class="form-control" name="first_name" id="first_name" placeholder="" value="<?php echo $customer_first_name; ?>" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Last Name">Last Name</label>
                             <input type="text" class="form-control" name="last_name" id="last_name" placeholder="" value="<?php echo $customer_last_name; ?>"/>
@@ -109,8 +110,8 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 com_form">
+                <div class="row cco-form-fl">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Gender">Gender</label>
 
@@ -136,14 +137,14 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
 
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Date Of Birth">Date Of Birth</label>
                             <input type="text" class="form-control dob" name="dob" id="dob" placeholder="" value="<?php echo $customer_dob; ?>"/>
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Email Id">Email Id</label>
                             <input type="text" class="form-control" name="email_id" id="email_id" placeholder="" value="<?php echo $customer_email; ?>" />
@@ -152,22 +153,22 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 com_form">
+                <div class="row cco-form-fl">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Primary Mobile No.">Primary Mobile No.</label>
                             <input type="text" class="form-control" name="primary_mobile_no" id="primary_mobile_no" placeholder="" value="<?php echo $customer_primary_mobile_no; ?>" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Other Contact No.">Other Contact No.</label>
                             <input type="text" class="form-control" name="secondary_mobile_no" id="secondary_mobile_no" placeholder="" value="<?php echo $customer_secondary_mobile_no; ?>" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Fixed Line No.">Fixed Line No.</label>
                             <input type="text" class="form-control" name="fixed_line_no" id="fixed_line_no" placeholder="" value="<?php echo $customer_landline_no; ?>" />
@@ -176,22 +177,22 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 com_form">
+                <div class="row cco-form-fl">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="KTP No.">KTP No.</label>
                             <input type="text" class="form-control" name="ktp_no" id="ktp_no" placeholder="" value="<?php echo $customer_ktp_no; ?>" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Introduction Year">Introduction Year</label>
                             <input type="text" class="form-control" name="introduction_year" id="introduction_year" placeholder="" value="<?php echo $customer_introduction_year; ?>" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Pincode">Pincode</label>
                             <input type="text" class="form-control" name="pincode" id="pincode" placeholder="" value="<?php echo $customer_pincode; ?>" />
@@ -200,8 +201,8 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 com_form">
+                <div class="row cco-form-fl">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Level 3">Level 3</label>
 
@@ -213,7 +214,7 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Level 2">Level 2</label>
                            <!-- <input type="text" class="form-control" name="geo_level_2" id="geo_level_2" placeholder="" value="<?php //echo $level2; ?>" /> -->
@@ -225,7 +226,7 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Level 1">Level 1</label>
 
@@ -238,22 +239,22 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-4 col-sm-6 com_form">
+                <div class="row cco-form-fl">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Adhar Card No.">Adhar Card No.</label>
                             <input type="text" class="form-control" name="adhar_card_no" id="adhar_card_no" placeholder="" value="<?php echo $customer_aadhaar_card_no; ?>" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Passport No.">Passport No.</label>
                             <input type="text" class="form-control" name="passport_no" id="passport_no" placeholder="" value="<?php echo $customer_passport_no; ?>" />
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-4 col-sm-6 com_form">
+                    <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Activity Name">Lisence No.</label>
                             <input type="text" class="form-control" name="lisence_no" id="lisence_no" placeholder="" value="<?php echo ""; ?>" />
@@ -262,8 +263,8 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                     </div>
 
                 </div>
-                <div class="row">
-                    <div class="col-md-12 col-sm-6 com_form">
+                <div class="row cco-form-fl">
+                    <div class="col-md-12 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Address">Address</label>
                             <textarea class="form-control" style="height: 72px!important;" name="address" id="address" placeholder=""><?php echo $customer_address; ?></textarea>
@@ -276,9 +277,10 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
         </div>
 
         <div class="clearfix"></div>
-        <div class="col-md-1 col-md-1-n">
-            <label class="space_llb">&nbsp;</label>
-            <button type="submit" class="btn btn-default back_details-button">Save</button>
+        <div class="col-md-12 text-right">
+            <div class="row save_btn">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
         </div>
 
         <?php form_close(); ?>

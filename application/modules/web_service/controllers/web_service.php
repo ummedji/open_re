@@ -5043,6 +5043,33 @@ class Web_service extends Front_Controller
     }
 
 
+    public function uploadGalleryData()
+    {
+        $id = $this->input->get_post('planning_id');
+
+        if ((isset($id) && !empty($id))) {
+
+            $activity_detail = $this->ecp_model->fileUploadGalleryData($id);
+
+            if($activity_detail == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'Data Not Updated.';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
 
 
 

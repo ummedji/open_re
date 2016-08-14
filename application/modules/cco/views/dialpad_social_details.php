@@ -13,7 +13,7 @@ $twt_account = (isset($social_data[0]["twt_account"]) && !empty($social_data[0][
 ?>
 <div class="actv-details-form">
 
-    <h5>Social Connections</h5>
+    <h5 style="margin: 0px 0 20px 0;">Social Connections</h5>
     <div class="back_details">
 
         <?php
@@ -31,44 +31,32 @@ $twt_account = (isset($social_data[0]["twt_account"]) && !empty($social_data[0][
                     <div class="rotate_data">
 
                         <div class="row">
-
-                            <div class="col-md-4 col-sm-6 com_form">
-                                <div class="form-group">
-                                    <label for="Facebook Account">Facebook Account</label>
-
-                                    <input type="hidden" class="form-control" name="social_id" id="social_id" placeholder="" value="<?php echo $social_id; ?>" />
-
-                                    <input type="text" class="form-control" name="fb_account" id="fb_account" placeholder="" value="<?php echo $facebook_account; ?>" />
-
-                                    <div class="clearfix"></div>
+                            <div class="col-md-8 col-md-offset-2 cco-form-fl">
+                                <div class="row tp_form">
+                                    <div class="form-group">
+                                        <div class="col-md-6 text-right-cco"><label for="Facebook Account">Facebook Account</label></div>
+                                        <div class="col-md-6">
+                                            <input type="hidden" class="form-control" name="social_id" id="social_id" placeholder="" value="<?php echo $social_id; ?>" />
+                                            <input type="text" class="form-control" name="fb_account" id="fb_account" placeholder="" value="<?php echo $facebook_account; ?>" />
+                                        </div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 text-right-cco"><label for="Mail Account">Mail Account</label></div>
+                                        <div class="col-md-6"><input type="text" class="form-control" name="mail_account" id="mail_account" placeholder="" value="<?php echo $mail_account; ?>" /></div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 text-right-cco"><label for="LinkedIn Account">LinkedIn Account</label></div>
+                                        <div class="col-md-6"><input type="text" class="form-control" name="linkedin_account" id="linkedin_account" placeholder="" value="<?php echo $linkedin_account; ?>" /></div>
+                                        <div class="clearfix"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-6 text-right-cco"><label for="Twitter Account">Twitter Account</label></div>
+                                        <div class="col-md-6"><input type="text" class="form-control" name="twitter_account" id="twitter_account" placeholder="" value="<?php echo $twt_account; ?>" /></div>
+                                        <div class="clearfix"></div>
+                                    </div>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="Mail Account">Mail Account</label>
-
-                                    <input type="text" class="form-control" name="mail_account" id="mail_account" placeholder="" value="<?php echo $mail_account; ?>" />
-
-                                    <div class="clearfix"></div>
-
-                                </div>
-
-                                <div class="form-group">
-
-                                    <label for="LinkedIn Account">LinkedIn Account</label>
-
-                                    <input type="text" class="form-control" name="linkedin_account" id="linkedin_account" placeholder="" value="<?php echo $linkedin_account; ?>" />
-
-                                    <div class="clearfix"></div>
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="Twitter Account">Twitter Account</label>
-
-                                    <input type="text" class="form-control" name="twitter_account" id="twitter_account" placeholder="" value="<?php echo $twt_account; ?>" />
-
-                                    <div class="clearfix"></div>
-                                </div>
-
                             </div>
 
                         </div>
@@ -80,9 +68,10 @@ $twt_account = (isset($social_data[0]["twt_account"]) && !empty($social_data[0][
         </div>
 
         <div class="clearfix"></div>
-        <div class="col-md-1 col-md-1-n">
-            <label class="space_llb">&nbsp;</label>
-            <button type="submit" class="btn btn-default back_details-button">Save</button>
+        <div class="col-md-12 text-right">
+            <div class="row save_btn">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
         </div>
 
         <?php form_close(); ?>

@@ -19,7 +19,7 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
                     <thead class="cf">
                     <tr>
                         <th>Sr. No. <span class="rts_bordet"></span></th>
-                        <th><input type="checkbox" name="" id="scheme_check"/>Select All <span class="rts_bordet"></span></th>
+                        <th><input type="checkbox" name="" id="scheme_check" class="check_checked"/>Select All <span class="rts_bordet"></span></th>
                         <th>Action <span class="rts_bordet"></span></th>
                         <th>Region <span class="rts_bordet"></span></th>
                         <th>Territory Code <span class="rts_bordet"></span></th>
@@ -80,7 +80,7 @@ if(isset($scheme_table) && count($scheme_table)>0 && $scheme_table !=false) { ?>
                 <div class="form-group">
                     <div class="row">
                         <div class="col-md-3 save_btn">
-                            <button id="delete_schemes" type="submit" style="background-color: red;" class="btn btn-primary">Delete</button>
+                            <button id="delete_schemes" type="submit" style="background-color: red; display: none" class="btn btn-primary" >Delete</button>
                         </div>
                     </div>
                 </div>

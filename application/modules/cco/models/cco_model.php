@@ -1001,6 +1001,121 @@ class Cco_model extends BF_Model
         return $social_data;
 
     }
+    public function get_feedback_data($customer_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_cco_feedback as bcf");
+        $this->db->where('bcf.customer_id',$customer_id);
+        $user_feedback_data = $this->db->get()->result_array();
+
+            return $user_feedback_data;
+    }
+    public function get_user_data($customer_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_users as bu");
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id");
+
+        $this->db->where('bu.id',$customer_id);
+
+        $user_feedback_data = $this->db->get()->result_array();
+
+
+        return $user_feedback_data;
+    }
+
+    public function add_update_feedback_data()
+    {
+
+        $customer_id = $_POST["customer_id"];
+        $user = $this->auth->user();
+        $logined_user_id = $user->id;
+        $update_array = array();
+
+        $feedback_update_array = array(
+            'customer_id' => $customer_id,
+            'feedback_subject' => $_POST["subject"],
+            'feedback_description' => $_POST["description"],
+            'cco_id'=>$logined_user_id,
+            'created_by_user'=>$logined_user_id,
+            'modified_by_user'=>$logined_user_id,
+            'created_on' => date('Y-m-d H:i:s'),
+            'modified_on' => date('Y-m-d H:i:s')
+        );
+
+        $result=$this->db->insert("bf_cco_feedback",$feedback_update_array);
+        if($this->db->affected_rows() > 0) {
+            $update_array[] = 1;
+        }
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+
+    public function get_electronic_data()
+    {
+        $this->db->select("bme.*");
+        $this->db->from("bf_master_electonic as bme");
+        $this->db->where("bme.deleted",0);
+        $this->db->where("bme.status",1);
+
+        $electronic_data = $this->db->get()->result_array();
+
+        return $electronic_data;
+    }
+
+    public function get_vehicles_data()
+    {
+        $this->db->select("bmv.*");
+        $this->db->from("bf_master_vehicles as bmv");
+        $this->db->where("bmv.deleted",0);
+        $this->db->where("bmv.status",1);
+
+        $vehicles_data = $this->db->get()->result_array();
+
+        return $vehicles_data;
+    }
+
+    public function get_customer_financial_electronic_data($customer_id)
+    {
+        $this->db->select("bmufed.*,bme.*");
+        $this->db->from("bf_master_user_financial_electronic_details as bmufed");
+        $this->db->join("bf_master_electonic as bme","bme.electonic_id = bmufed.electronic_owned_id");
+        $this->db->where("bmufed.user_id",$customer_id);
+
+        $financial_electronic_data = $this->db->get()->result_array();
+
+        return $financial_electronic_data;
+    }
+
+    public function get_customer_financial_vehicles_data($customer_id)
+    {
+        $this->db->select("bmufvd.*,bmv.*");
+        $this->db->from("bf_master_user_financial_vehicles_details as bmufvd");
+        $this->db->join("bf_master_vehicles as bmv","bmv.vehicle_id = bmufvd.vehicles_owned_id");
+        $this->db->where("bmufvd.user_id",$customer_id);
+
+        $financial_vehicles_data = $this->db->get()->result_array();
+
+        return $financial_vehicles_data;
+    }
+
+    public function get_customer_pa_income_data($customer_id)
+    {
+        $this->db->select("bmupd.*");
+        $this->db->from("bf_master_user_personal_details as bmupd");
+        $this->db->where("bmupd.user_id",$customer_id);
+
+        $pa_income_data = $this->db->get()->result_array();
+
+        return $pa_income_data;
+    }
 
     public function get_qualification_specialization_data($qualification_id)
     {
@@ -1016,6 +1131,24 @@ class Cco_model extends BF_Model
 
     }
 
+    public function get_customer_location_retailer_data($user_role,$customer_level_2)
+    {
+        $user = $this->auth->user();
+        $logined_user_country_id = $user->country_id;
+
+        $this->db->select("*");
+        $this->db->from("bf_users as bu");
+        $this->db->join("bf_master_user_contact_details as bmucd");
+        $this->db->where("bu.role_id",$user_role);
+        $this->db->where("bmucd.geo_level_id1",$customer_level_2);
+        $this->db->where("bu.country_id",$logined_user_country_id);
+        $this->db->where("bu.deleted",0);
+        $this->db->where("bu.status",1);
+
+        $retailer_data = $this->db->get()->result_array();
+
+        return $retailer_data;
+    }
 
     public function add_update_general_data()
     {
@@ -1274,18 +1407,139 @@ class Cco_model extends BF_Model
 
         if(!empty($_POST))
         {
+            $data_array = array(
+                'user_id' => $_POST["customer_id"],
+                'facebook_account' => $_POST["fb_account"],
+                'gmail_plus_account' => $_POST["mail_account"],
+                'linkedin_account' => $_POST["linkedin_account"],
+                'twt_account' => $_POST["twitter_account"]
+            );
 
-            
+            if($_POST['social_id'] == "")
+            {
+                //INSERT
+                $this->db->insert("bf_master_user_social_account_details", $data_array);
+                if($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
+            }
+            else
+            {
+                //UPDATE
+                $this->db->where("social_id", $_POST['social_id']);
+                $this->db->update("bf_master_user_social_account_details", $data_array);
 
+                if($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
+
+            }
         }
 
-        testdata($_POST);
-
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
 
     }
 
+    public function add_update_financial_detail_data()
+    {
+        $update_array = array();
+
+        $customer_id = $_POST["customer_id"];
+
+        if(!empty($_POST)) {
+
+            if (trim($_POST["average_pa_income"]) != "")
+            {
+                $this->db->select("bmupd.*");
+                $this->db->from("bf_master_user_personal_details as bmupd");
+                $this->db->where("bmupd.user_id", $customer_id);
+                $user_personal_data = $this->db->get()->result_array();
+
+                if (!empty($user_personal_data)) {
+
+                    $pa_income_array = array(
+                        'average_pa_income' => $_POST["average_pa_income"]
+                    );
+
+                    //UPDATE
+                    $this->db->where("user_id", $customer_id);
+                    $this->db->update("bf_master_user_personal_details", $pa_income_array);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                } else {
+
+                    $pa_income_array = array(
+                        'user_id' => $customer_id,
+                        'average_pa_income' => $_POST["average_pa_income"]
+                    );
+
+                    //INSERT
+                    $this->db->insert("bf_master_user_personal_details", $pa_income_array);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                }
+
+            }
 
 
+            $this->db->where('user_id', $customer_id);
+            $this->db->delete('bf_master_user_financial_electronic_details');
 
-	
+            foreach($_POST["electronic_owned"] as $ele_key => $electronic_data)
+            {
+                $electronic_data_array = array(
+                    'user_id' => $customer_id,
+                    'electronic_owned_id' => $electronic_data
+                );
+                //INSERT
+                $this->db->insert("bf_master_user_financial_electronic_details", $electronic_data_array);
+
+                if($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
+
+            }
+
+            $this->db->where('user_id', $customer_id);
+            $this->db->delete('bf_master_user_financial_vehicles_details');
+
+            foreach($_POST["vehicles_owned"] as $veh_key => $vehicles_data)
+            {
+
+                $vehicle_data_array = array(
+                    'user_id' => $customer_id,
+                    'vehicles_owned_id' => $vehicles_data
+                );
+
+                //INSERT
+                $this->db->insert("bf_master_user_financial_vehicles_details", $vehicle_data_array);
+
+                if($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
 }

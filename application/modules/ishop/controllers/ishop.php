@@ -187,8 +187,6 @@ class Ishop extends Front_Controller
 		Template::set('td', $primary_sales_details['count']);
 		Template::set('pagination', (isset($primary_sales_details['pagination']) && !empty($primary_sales_details['pagination'])) ? $primary_sales_details['pagination'] : '' );
 
-		//testdata($primary_sales_details);
-
 		Template::set('table', $primary_sales_details);
 		Template::set_view('ishop/primary_sales');
 		Template::render();

@@ -12,6 +12,7 @@
                             <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/allocation') ?>">Farmers</a></li>
                             <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='channel_partner_allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/channel_partner_allocation') ?>">Channel Partners</a></li>
                             <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='allocation_activity') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/allocation_activity') ?>">Activity</a></li>
+                            <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='work_transfer_allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/work_transfer_allocation') ?>">Work Transfer</a></li>
                         </ul>
                         <div class="clearfix"></div>
                     </div>
@@ -95,7 +96,6 @@ if ($this->input->is_ajax_request()) {
             <label>CCO Name</label>
             <select id="cco_data" class="cco_data selectpicker" name="cco_data">
                 <option value="">Select CCO</option>
-
                 <?php
                 if(!empty($cco_data)) {
                     foreach ($cco_data as $c_key => $ccodata) { ?>

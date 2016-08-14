@@ -18,6 +18,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                 </div>
             <?php
             }
+            $year = date("Y");
             ?>
             <div class="col-md-12 text-center tp_form inline-parent distributore_form" style="margin-top: 15px;">
                 <div class="row">
@@ -25,7 +26,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                         <div class="form-group">
                             <label>Year<span style="color: red">*</span></label>
                             <div class="inln_fld_top">
-                                <input type="text" class="form-control" name="year" id="year" placeholder="" autocomplete="off" >
+                                <input type="text" class="form-control" name="year" id="year" placeholder="" value="<?php echo $year ?>" autocomplete="off" >
                                 <div class="clearfix"></div>
                                 <label id="year-error" class="error" for="year"></label>
                             </div>
@@ -95,7 +96,7 @@ echo form_open('ishop/view_schemes_details',$attributes); ?>
                         <div class="form-group">
                             <!--<div class="row">-->
                                 <div class="inl_button save_btn">
-                                    <button type="submit" class="btn btn-primary gren_btn">Execute</button>
+                                    <button type="submit" id="view_sch" class="btn btn-primary gren_btn">Execute</button>
                                 </div>
                             </div>
                         </div>
@@ -120,3 +121,14 @@ if ($this->input->is_ajax_request()) {
 <div id="middle_container" class="scheme_view_middle_container">
 
 </div>
+<?php if($current_user->role_id != 8){ ?>
+    <script type="text/javascript">
+
+        $( window ).on("load",function() {
+            setTimeout(function(){
+                $("button#view_sch").trigger("click");
+            }, 500);
+        });
+
+    </script>
+<?php } ?>

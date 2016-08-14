@@ -2991,6 +2991,7 @@ ul.in-up-details-list {margin: 0; padding: 0;}
     list-style: none;
     display: block;
     border-bottom: dashed 1px #a7b8c2;
+    min-height: 42px;
 }
 .in-up-details-list li:last-child{ border-bottom: none;}
 .in-up-details-list li a {
@@ -3151,6 +3152,7 @@ ul.in-up-details-list {margin: 0; padding: 0;}
     background-color: #ffffff;
     border: solid 1px #c6c6ca;
     padding: 15px;
+    overflow: hidden;
 }
 .actv-details-form h5 {
     font-family: 'Exo2-Regular';
@@ -3802,3 +3804,343 @@ ul.bot-tl-s-box li:last-child { padding: 30px 0;}
 }
 @media screen and (max-width: 767px){.in-activities-box { padding: 10px 0;}}
 /****End Dashboard css****/
+
+/****CCO css****/
+.plng_sub_nave_cco {
+    margin-top: -15px;
+    margin-bottom: -45px;
+}
+.cco-feld {
+    margin-bottom: 20px;
+}
+.cco-feld .tp_form .form-group label { font-weight: normal;}
+.cco-form-fl .tp_form .form-group label { font-weight: normal !important;}
+.cco-feld h4 {
+    font-family: 'Exo2-Regular';
+    font-size: 14px;
+    color: #000000;
+    display: block;
+    margin-bottom: 10px;
+}
+.cco-feld .tp_form .form-group input::-webkit-input-placeholder {
+    font-family: 'Exo2-Medium';
+    font-size: 13px;
+    color: #4d4e4e;
+}
+.cco-feld .tp_form .form-group input::-moz-placeholder {
+    font-family: 'Exo2-Medium';
+    font-size: 13px;
+    color: #4d4e4e;
+}
+.cco-feld .tp_form .form-group input:-ms-input-placeholder {
+    font-family: 'Exo2-Medium';
+    font-size: 13px;
+    color: #4d4e4e;
+}
+.cco-feld .tp_form .form-group input:-moz-placeholder {
+    font-family: 'Exo2-Medium';
+    font-size: 13px;
+    color: #4d4e4e;
+}
+@media screen and (max-width: 991px) {
+    .plng_sub_nave_cco {margin-bottom: 0px;}
+}
+h6.gn-info-tl{
+    font-family: 'Exo2-Regular';
+    font-size: 14px;
+    color: #4d4e4e;
+    display: inline-block;
+    background-color: #fff;
+    margin-top: 0;
+    padding-right: 15px;
+}
+.back_details hr {
+    margin: 0px 0 -12px 0;
+    display: block;
+}
+.text-right-cco { text-align: right;}
+@media screen and (max-width: 991px){
+    .text-right-cco { text-align: left;}
+}
+/****End CCO css****/
+
+
+/* start Call Campaign Popup css */
+.scroll-h{
+    height: 197px;
+}
+.campaign-popup .modal-content{
+    background-color: #65ac1e !important;
+    padding: 10px;
+}
+.campaign-popup .modal-content .close{
+    background-color: #ffffff;
+    color: #bcbcbc;
+    border-radius: 50%;
+    border: 2px solid #d7d7d7;
+    top: -15px;
+    right: -15px;
+}
+.company-name{
+    margin-left: -15px;
+    margin-right: -15px;
+    padding: 10px;
+    background-color: #00793a;
+}
+.company-name .form-control{
+    height: 25px;
+    border-radius: inherit;
+}
+.company-name label{
+    color: #ffffff;
+    font-family: Exo2-Regular;
+    padding-right: 10px;
+}
+.company-name img{
+    margin-left: 10px;
+}
+.company-details{
+    border: 1px solid #528c18;
+    padding: 5px 5px 5px 5px;
+    background-color: #f3f3f8;
+    margin: 10px -15px 0px -15px;
+}
+.c-name{
+    margin-left: 15px;
+    background-color: #65ac1e;
+}
+.c-name h4{
+    margin: 0px;
+    padding: 62px 0px 62px 0px;
+    color: #ffffff;
+    text-align: center;
+    font-family: Exo2-Regular;
+}
+.c-details{
+    padding: 5px 0px 5px 0px;
+}
+.c-bottom-b{
+    border-bottom: 1px solid #c8c8c8;
+}
+.r-border{
+    border-right: 1px solid #c8c8c8;
+}
+.r-border:last-child{
+    border-right: none;
+}
+.b-box-border{
+    background-color: #ffffff;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    border: 1px solid #accf8b;
+}
+.p-comany h2{
+    margin: 0px;
+    color: #65ac1e;
+    font-family: Exo2-SemiBold;
+    text-transform: uppercase;
+}
+.manth-s-e h6{
+    color: #b1b2b2;
+    text-transform: capitalize;
+    font-family: Exo2-Medium;
+    margin: 0px 0px 5px 0px !important
+}
+.mont-date h6{
+    margin: 0px;
+    color: #22834d;
+    font-family: Exo2-Regular;
+}
+.parpose h6{
+    margin-top: 2px;
+    /*padding-bottom: 35px;*/
+    height: 50px;
+    color: #949595;
+    text-transform: capitalize;
+    font-family: Exo2-Medium;
+}
+.pandding-call h6{
+    color: #949595;
+    text-transform: capitalize;
+    font-family: Exo2-Medium;
+}
+.call-no h6{
+    color: #22834d;
+}
+@media (min-width: 992px){
+    .campaign-popup .modal-lg  {
+        width: 1000px;
+    }
+
+}
+@media screen and (min-width:767px)and (max-width: 991px) {
+    .r-border {
+        border-right: none !important;
+        margin-bottom: 25px;
+    }
+    .call-no h6{
+        float: right;
+        margin-right: 27px;
+    }
+}
+@media screen and (max-width: 767px){
+    .c-name{
+        margin-right: 15px;
+    }
+    .r-border {
+        border-right: none !important;
+
+    }
+    .c-bottom-b,.pandding-call{
+        padding-left: 15px;
+    }
+    .mont-date h6,.call-no h6{
+        float: right;
+        margin-right: 15px;
+    }
+    .p-comany h2{
+        padding-bottom: 10px;
+    }
+    .campaign-popup .modal-content .close {
+        top: -10px;
+        right: -10px;
+    }
+    .default_popup .modal-content .close{
+        width: 35px;
+        height: 35px;
+    }
+
+}
+@media screen and (min-width: 450px) and (max-width: 767px){
+    .company-name img{
+        left: 0;
+        margin-left: 354px;
+        top: 6px;
+        position: absolute;
+    }
+    .company-name .form-control{
+        margin-left: 115px;
+        margin-top: -27px;
+        width: 215px;
+    }
+}
+@media screen and (max-width: 449px){
+    .company-name img{
+        left: 0;
+        margin-left: 240px;
+        top: 32px;
+        position: absolute;
+    }
+    .company-name .form-control{
+        width: 215px;
+    }
+}
+.table-recorde{
+    border: 1px solid #528c18;
+    padding: 10px;
+    margin-top: 10px;
+    background-color: #fff;
+}
+.table-recorde .table>tbody>tr>td, .table>tbody>tr>th, .table>tfoot>tr>td, .table>tfoot>tr>th, .table>thead>tr>td, .table>thead>tr>th{
+    text-align: center;
+}
+.table-recorde .thead-default{
+    background-color: #65ac1e;
+    border-bottom: none;
+}
+
+.table-recorde thead tr th{
+    font-family: Exo2-SemiBold;
+    color: #ffffff;
+    padding: 10px 10px !important;
+    border-bottom: none !important;
+}
+.table-recorde tr th img{
+    padding-right: 5px;
+}
+.table-recorde tr td img{
+    padding-right: 5px;
+}
+.table-recorde tbody tr{
+    border-bottom: 1px solid #c8c8c8;
+}
+.table-recorde tbody tr h2{
+    margin: 0px;
+    font-size: 24px;
+    color: #65ac1e;
+    font-family: Exo2-SemiBold;
+}
+.table-recorde tbody .red-text{
+    color: #f25454;
+    font-family: Exo2-Medium;
+}
+.table-recorde tbody .orang-text{
+    color: #ffc562;
+    font-family: Exo2-Medium;
+}
+.table-recorde tbody .blue-text{
+    color: #1e5dac;
+    font-family: Exo2-Medium;
+}
+.table-recorde tbody .sky-text{
+    color: #59dce0;
+    font-family: Exo2-Medium;
+}
+.table-recorde tbody .time-t{
+    color: #409b6b;
+    font-family: Exo2-Medium;
+}
+.table-recorde tbody .persone{
+    font-family: Exo2-Regular;
+    text-align: left !important;
+    padding-left: 50px;
+}
+.btn-complete{
+    background-color: #d1d2d5;
+    color: #4d4e4e;
+    text-transform: capitalize;
+    border: none;
+    border-radius: 2px;
+    padding: 5px 35px;
+    font-family: Exo2-Regular;
+}
+.btn-start-calling{
+    border: 1px solid #d0d0d0;
+    border-radius: 2px;
+    padding: 5px 30px;
+    background-color: #65ac1e;
+    color: #ffffff;
+    text-transform: capitalize;
+    font-family: Exo2-Regular;
+}
+.company-details .mCSB_scrollTools .mCSB_draggerContainer{
+    right: 8px;
+}
+.company-details .mCSB_scrollTools .mCSB_draggerRail{
+    width: 8px;
+}
+.company-details .mCSB_dragger{
+    height: 40px !important;
+}
+.company-details .mCSB_scrollTools .mCSB_dragger .mCSB_dragger_bar{
+    background-color: #65ac1e;
+}
+.grey-colour .c-name h4{
+    padding: 15px 0px 110px 0px;
+}
+.grey-colour .c-name h4{
+    color: #949595;
+}
+.grey-colour .c-name{
+    background-color: #ffffff;
+}
+.grey-colour .p-comany h2{
+    color: #949595;
+}
+.grey-colour .mont-date h6{
+    color: #4d4e4e;
+}
+.grey-colour{
+    border: 1px solid #d9d9dd
+}
+/* End Call Campaign Popup css */
