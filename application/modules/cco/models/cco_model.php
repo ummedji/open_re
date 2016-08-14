@@ -1138,12 +1138,12 @@ class Cco_model extends BF_Model
 
         $this->db->select("*");
         $this->db->from("bf_users as bu");
-        $this->db->join("bf_master_user_contact_details as bmucd");
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id");
         $this->db->where("bu.role_id",$user_role);
         $this->db->where("bmucd.geo_level_id1",$customer_level_2);
         $this->db->where("bu.country_id",$logined_user_country_id);
         $this->db->where("bu.deleted",0);
-        $this->db->where("bu.status",1);
+        $this->db->where("bu.active",1);
 
         $retailer_data = $this->db->get()->result_array();
 
