@@ -61,7 +61,7 @@
 
     </div>
     <div class="clearfix"></div>
-    Retailers
+    <h6 class="defau-tl">Retailers</h6>
     <div class="row">
 
         <div class="col-md-11" id="retailer_customer_relation_detail_data">
@@ -78,9 +78,9 @@
                                     {
                             ?>
                                         <div class="col-md-6">
-                                                        <span><?php echo $relation_retailer_data["display_name"]; ?></span>
-                                            <div class="delete_i" prdid ="<?php echo $relation_retailer_data["CtoC_mapping_id"];?>">
-                                                <a href="javascript: void(0);">
+                                            <label style="margin: 0;"><?php echo $relation_retailer_data["display_name"]; ?></label>
+                                            <div class="delete_i" style="margin-left: 5px; display: inline-block;" prdid ="<?php echo $relation_retailer_data["CtoC_mapping_id"];?>">
+                                                <a href="javascript: void(0);" style="color: #ff0000;">
                                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                 </a>
                                             </div>

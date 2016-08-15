@@ -52,17 +52,32 @@ class Cco extends Front_Controller
         Assets::add_module_js('cco', 'cco_dialpad.js');
 
         $user = $this->auth->user();
-        $logined_user_type = $user->role_id;
-        $logined_user_id = $user->id;
-        $logined_user_countryid = $user->country_id;
-
         $farmer_role = 11;
 
-        $campagain_data = $this->cco_model->campagain_data($farmer_role,$logined_user_countryid);
+        $campagain_data = $this->cco_model->campagain_data($farmer_role,$user->country_id);
 
+        $cco_campaign_data = $this->cco_model->get_all_campaign_data($user->id,$user->role_id,$user->country_id);
+
+        $campaign_details =  $this->cco_model->get_all_campaign_details($user->id,$user->role_id,$user->country_id);
+
+
+        Template::set('cco_campaign_data', $cco_campaign_data);
         Template::set('campagaine_data', $campagain_data);
+        Template::set('campaign_details', $campaign_details);
         Template::set_view("cco/main_screen_dialpad");
         Template::render();
+    }
+
+    public function getAllPhaseDetailsByCampaignId()
+    {
+        $user=$this->auth->user();
+        $campaign_id = $_POST["campaign_id"];
+
+        $PhaseDetails = $this->cco_model->getAllPhaseDetailByCampaignId($campaign_id,$user->id,$user->role_id,$user->country_id);
+        Template::set('phase_detail', $PhaseDetails);
+        Template::set_view("cco/main_screen_dialpad");
+        Template::render();
+
     }
 
     public function dialpad()
@@ -124,6 +139,35 @@ class Cco extends Front_Controller
         $feedback_id = $_POST["feedback_id"];
         $data = $this->cco_model->delete_feedback($feedback_id);
         echo $data;
+        die;
+    }
+    public function get_complaint_sub_from_complaint_type()
+    {   $user=$this->auth->user();
+        /*$logged_in_user=$user->display_name;*/
+        $complaint_type_id = $_POST["complaint_type_id"];
+        $complaint_sub_data = $this->cco_model->get_complaint_sub_from_complaint_type($complaint_type_id);
+        echo json_encode($complaint_sub_data);
+        die;
+    }
+    public function get_complaint_date_from_complaint_sub()
+    {   $user=$this->auth->user();
+        /*$logged_in_user=$user->display_name;*/
+        $complaint_subject_id = $_POST["complaint_subject_id"];
+        $complaint_due_date_data = $this->cco_model->get_complaint_date_from_complaint_sub($complaint_subject_id);
+
+        $due_date=$complaint_due_date_data['reminder1_days'];
+        $due_date2=$complaint_due_date_data['reminder2_days'];
+        $due_date3=$complaint_due_date_data['reminder3_days'];
+        $other_desigination_person1_id=$complaint_due_date_data['other_desigination_person1_id'];
+        $reminder1_other_desigination_id=$complaint_due_date_data['reminder1_other_desigination_id'];
+        $reminder1_desigination_id=$complaint_due_date_data['reminder1_desigination_id'];
+
+        $Complaint_due_date=date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + $due_date, date('Y')));
+        $Complaint_due_date2=date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + $due_date2, date('Y')));
+        $Complaint_due_date3=date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + $due_date3, date('Y')));
+        //$combine_array=array_push($complaint_due_date_data,$Complaint_due_date);
+        $combine_array = array_merge($complaint_due_date_data, array('complaint_due_date' => $Complaint_due_date,'complaint_due_date2' => $Complaint_due_date2,'complaint_due_date3' => $Complaint_due_date3,'other_desigination_person1_id' => $other_desigination_person1_id,'reminder1_other_desigination_id' => $reminder1_other_desigination_id,'reminder1_desigination_id' => $reminder1_desigination_id,));
+        echo json_encode($combine_array);
         die;
     }
 
@@ -199,14 +243,33 @@ class Cco extends Front_Controller
 
         $customer_id = $_POST["customerid"];
 
-       // $get_social_data = $this->cco_model->get_customer_social_data($customer_id);
 
-       // Template::set('social_data', $get_social_data);
+        $random_complaint_no = $this->get_complaint_no();
 
+
+        $get_customer_complaint_data= $this->cco_model->get_customer_social_data($customer_id);
+        $get_customer_complaint_type= $this->cco_model->get_customer_complaint_type();
+        //testdata($get_customer_complaint_type);
+        Template::set('unique_id', $random_complaint_no);
         Template::set('customer_id', $customer_id);
-
+        Template::set('get_customer_complaint_type', $get_customer_complaint_type);
         Template::set_view("cco/dialpad/dialpad_complaint_details");
         Template::render();
+
+    }
+
+    public function get_complaint_no()
+    {
+        $six_digit_random_number = mt_rand(100000, 999999);
+        $get_complaint_unique_id = $this->cco_model->get_customer_complaint_unique($six_digit_random_number);
+        $ccnt = count($get_complaint_unique_id);
+
+        if($ccnt > 0){
+            $this->get_complaint_no();
+        }
+        else{
+            return $six_digit_random_number;
+        }
     }
 
     public function get_customer_complaint_view_data()
@@ -296,11 +359,43 @@ class Cco extends Front_Controller
 
         $get_customer_farming_data = $this->cco_model->get_customer_farming_data($customer_id);
 
-        Template::set('customer_farming_data', $get_customer_farming_data);
+        $get_all_crop_data = $this->cco_model->get_all_crop_data($customer_id);
 
-        //  $this->load->view('cco/dialpad_popup_views/general_details');
+        $get_allocated_crop_data = $this->cco_model->customer_crop_data($customer_id);
+
+        Template::set('customer_farming_data', $get_customer_farming_data);
+        Template::set('all_crop_data', $get_all_crop_data);
+        Template::set('allocated_crop_data', $get_allocated_crop_data);
+
+        Template::set('customer_id', $customer_id);
 
         Template::set_view("cco/dialpad/dialpad_farming_details");
+        // Template::set_block('sidebar', 'blog_sidebar');
+        Template::render();
+
+    }
+
+    public function get_diseases_detail_view_data()
+    {
+        $customer_id = $_POST["customerid"];
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad/dialpad_disease_details");
+        // Template::set_block('sidebar', 'blog_sidebar');
+        Template::render();
+    }
+
+    public function get_diseases_detail_data()
+    {
+        $search_data = $_POST["searchdata"];
+
+        $searched_data = $this->cco_model->get_search_disease_detail($search_data);
+
+        Template::set('searched_data', $searched_data);
+        Template::set('search_type', 'disease');
+
+        Template::set_view("cco/dialpad/table_layout");
         // Template::set_block('sidebar', 'blog_sidebar');
         Template::render();
 
@@ -347,6 +442,49 @@ class Cco extends Front_Controller
         echo $retailer_update_data;
         die;
     }
+
+    public function add_update_crop_farming_info()
+    {
+        $farmer_crop_update_data = $this->cco_model->add_update_farming_crop_detail_data();
+        echo $farmer_crop_update_data;
+        die;
+    }
+
+    public function get_address_lat_long_data()
+    {
+        $address = $_POST["address_data"];
+
+        $latlong_data = $this->getLatLong($address);
+        echo json_encode($latlong_data);
+        die;
+    }
+
+    public function getLatLong($address)
+    {
+        if(!empty($address)){
+            //Formatted address
+            $formattedAddr = str_replace(' ','+',$address);
+            //Send request and receive json data by address
+          //  $geocodeFromAddr = file_get_contents('http://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false');
+
+            $geocodeFromAddr = file_get_contents('https://maps.googleapis.com/maps/api/geocode/json?address='.$formattedAddr.'&sensor=false');
+
+            $output = json_decode($geocodeFromAddr);
+
+            //Get latitude and longitute from json data
+            $data['latitude']  = $output->results[0]->geometry->location->lat;
+            $data['longitude'] = $output->results[0]->geometry->location->lng;
+            //Return latitude and longitude of the given address
+            if(!empty($data)){
+                return $data;
+            }else{
+                return false;
+            }
+        }else{
+            return false;
+        }
+    }
+
 
     public function delete_customer_retailer_relation_data()
     {

@@ -55,7 +55,7 @@ echo form_open('',$attributes); ?>
                             <div class="clearfix"></div>
                         </div>
                     </div>
-                    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+                    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px; margin-bottom: 10px;">
                         <div class="save_button">
                             <div class="row">
                                 <div class="col-md-3 save_btn">

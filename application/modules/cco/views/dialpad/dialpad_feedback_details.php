@@ -26,16 +26,6 @@
 
                                     <?php
                                     $customer_name = (isset($get_user_data['0']['username']) && !empty($get_user_data['0']['username'])) ? $get_user_data['0']['username'] : "";
-                                    $customer_type_c= (isset($get_user_data['0']['role_id']) && !empty($get_user_data['0']['role_id'])) ? $get_user_data['0']['role_id'] : "";
-                                    if($customer_type_c =="9"){
-                                        $customer_type="Distributor";
-                                    }
-                                    if($customer_type_c =="10"){
-                                        $customer_type="Retailer";
-                                    }
-                                    if($customer_type_c =="11"){
-                                        $customer_type="Farmer";
-                                    }
 
                                     ?>
 

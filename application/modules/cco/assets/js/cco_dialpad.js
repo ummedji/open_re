@@ -41,8 +41,31 @@ $(document).on("click","a.primary_no",function(){
 
 });
 
+$(document).on('change','#campaign_data',function(){
 
+    var campaign_id = $(this).val();
+    getAllPhaseDetails(campaign_id);
+});
 
+function getAllPhaseDetails(campaign_id)
+{
+    $(".campaign_box").parent().parent().addClass("grey-colour");
+    var id = 'campaign_'+campaign_id;
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/getAllPhaseDetailsByCampaignId",
+        data: {campaign_id:campaign_id},
+        success: function (resp) {
+            $('.phase_details').html(resp);
+
+            $('div#'+id).removeClass("grey-colour");
+        }
+    });
+}
+$(document).on('click','.close',function(){
+        $(".campaign_box").parent().parent().addClass("grey-colour");
+    $('.phase_details').html('');
+});
 function dialpad(phone_no,campagain_id)
 {
     $.ajax({
@@ -188,6 +211,23 @@ function get_farming_view_data(customer_id)
             get_geo_data(campagain_id,3,num_count);
         }
     });
+}
+
+function get_diseases_detail_data(customer_id)
+{
+    var campagain_id = $("input#camagain_id").val();
+    var num_count = 1;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_diseases_detail_view_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+          //  get_geo_data(campagain_id,1,num_count);
+        }
+    });
+
 }
 
 
@@ -442,6 +482,60 @@ $(document).on('click', 'div#feedback_data .edit_i', function () {
 
 });
 
+function get_complaint_subject_from_complaint_type(complaint_type_id)
+{
+
+
+
+    $.ajax({
+        url: site_url+'cco/get_complaint_sub_from_complaint_type',
+        method: "POST",
+        data: { complaint_type_id: complaint_type_id },
+        cache: false,
+        success: function (result) {
+            var json = JSON.parse(result);
+            console.log(json);
+            $("#complaint_subject").html("<option value=''>Select Subject</option>");
+            $.each(json, function (i, item) {
+
+                    $('#complaint_subject').append($('<option>', {value: item.complaint_id,text: item.complaint_subject}));
+
+            });
+        }
+    });
+}
+function get_complaint_date_from_complaint_subject(complaint_subject_id)
+{
+
+
+
+    $.ajax({
+        url: site_url+'cco/get_complaint_date_from_complaint_sub',
+        method: "POST",
+        data: { complaint_subject_id: complaint_subject_id },
+        cache: false,
+        async: true,
+        success: function (result) {
+
+            var obj = $.parseJSON(result);
+
+            console.log(obj);
+
+            $("input#Complaint_due_date").val(obj.complaint_due_date);
+            $("input#complaint_date1").val(obj.complaint_due_date);
+            $("input#complaint_date2").val(obj.complaint_due_date2);
+            $("input#complaint_date3").val(obj.complaint_due_date3);
+
+            $("#designstion").html("<option value=''>Select Designation</option>");
+            $.each(obj, function (i, item) {
+
+                $('#designstion').append($('<option>', {value: item.other_desigination_person1_id,text: item.other_desigination_person1_id}));
+
+            });
+        }
+    });
+}
+
 $(document).on("submit","form#dialpad_general_info",function(e){
 
     e.preventDefault();
@@ -672,6 +766,46 @@ $(document).on("submit","form#dialpad_retailer_info",function(e){
                     close: function (event, ui) {
                         $(this).remove();
                         get_retailer_view_data(customer_id);
+                        //location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
+$(document).on("submit","form#dialpad_farming_info",function(e){
+
+    e.preventDefault();
+
+    var customer_id = $("input#customer_id").val();
+    var param =  $("form#dialpad_farming_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_crop_farming_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        get_farming_view_data(customer_id);
                         //location.reload()
                     }
                 });

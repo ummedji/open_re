@@ -1,8 +1,4 @@
 $(document).ready(function() {
-
-
-
-
     $("select#activity_type_id").on("change",function() {
         activityTypeChange();
     });
@@ -18,17 +14,57 @@ $(document).ready(function() {
             },
             execution_time:{
                 required: true
-            },
-            planning_date:{
-                required: true
-            },
-            planning_time:{
-                required: true
             }
         }
     });
 
     /*Validation Rule*/
+
+    $(document).on('click', '#planning_save', function () {
+
+        var param = $("#activity_execution").serializeArray();
+
+        var $valid = $("#activity_execution").valid();
+        if(!$valid) {
+            activity_execution_validators.focusInvalid();
+            return false;
+        }
+        else
+        {
+            $.ajax({
+                type: 'POST',
+                url: site_url + "ecp/add_followup_activity_details",
+                data: param,
+                success: function (resp) {
+                    var message = "";
+                    if(resp != 0){
+                        $('#activity_planning_id').val(resp);
+                        message += 'Data Inserted successfully.';
+                    }
+                    else{
+
+                        message += 'Data not Inserted.';
+                    }
+                    $('<div></div>').appendTo('body')
+                        .html('<div><b>'+message+'</b></div>')
+                        .dialog({
+                            appendTo: "#success_file_popup",
+                            modal: true,
+                            zIndex: 10000,
+                            autoOpen: true,
+                            width: 'auto',
+                            resizable: true,
+                            close: function (event, ui) {
+                                $(this).remove();
+
+                            }
+                        });
+                }
+            });
+
+        }
+        return false;
+    });
 
 
 
@@ -1138,6 +1174,7 @@ function getActivityById(activity_planning_id)
             $("#activity_execution_main").html(resp);
             getRating();
             getExecutionTime();
+            getExecutionDate();
             getPlanningTime();
             getPlanningDate();
             getDurationtime();
@@ -1174,74 +1211,38 @@ function getRating()
     });
 }
 
-$(document).on('click', '#planning_save', function () {
-
-    var param = $("#activity_execution").serializeArray();
-
-    var $valid = $("#activity_execution").valid();
-    if(!$valid) {
-        activity_unplanned_validators.focusInvalid();
-        return false;
-    }
-    else
-    {
-        $.ajax({
-            type: 'POST',
-            url: site_url + "ecp/add_activity_planning_details",
-            data: param,
-            success: function (resp) {
-                var message = "";
-                if(resp != 0){
-                    $('#activity_planning_id').val(resp);
-                    message += 'Data Inserted successfully.';
-                }
-                else{
-
-                    message += 'Data not Inserted.';
-                }
-                $('<div></div>').appendTo('body')
-                    .html('<div><b>'+message+'</b></div>')
-                    .dialog({
-                        appendTo: "#success_file_popup",
-                        modal: true,
-                        zIndex: 10000,
-                        autoOpen: true,
-                        width: 'auto',
-                        resizable: true,
-                        close: function (event, ui) {
-                            $(this).remove();
-
-                        }
-                    });
-            }
-        });
-
-    }
-    return false;
-});
 
 //$(document).on('click','#check_save',function(){
 
 $(document).on('submit', 'form#activity_execution', function (e) {
-    e.preventDefault(e);
-    alert("dsfgsgs");
-    //$(document).on('click','#check_save',function(){
-    //e.preventDefault();
-    return false;
+    e.preventDefault();
+   alert("dsfgsgs");
+//$(document).on('click','#check_save',function(e){
+ //   e.preventDefault();
+
+   // $this = $("form#activity_execution");
 
     var param = new FormData(this);
 
+   // var param = "HERE";
+
+
     var $valid = $("#activity_execution").valid();
     if(!$valid) {
+
         activity_execution_validators.focusInvalid();
         return false;
     }
     else
     {
+
         $.ajax({
             type: 'POST',
             url: site_url + "ecp/add_activity_execution_details",
             data: param,
+            cache: false,
+            contentType: false,
+            processData: false,
             success: function (resp) {
                 var message = "";
                 if(resp != 0){
@@ -1265,7 +1266,10 @@ $(document).on('submit', 'form#activity_execution', function (e) {
 
                         }
                     });
+                return false;
+
             }
+
         });
     }
     return false;

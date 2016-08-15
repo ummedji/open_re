@@ -22,7 +22,7 @@
                                 <label>Duration of Meeting<span style="color: red">*</span></label>
                                 <!--<input type="text" class="form-control" name="meeting_duration" id="meeting_duration" placeholder="">-->
                                 <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                    <input id="meeting_duration" name="planning_time" type="text" class="input-group-time form-control input-append">
+                                    <input id="meeting_duration" name="meeting_duration" type="text" class="input-group-time form-control input-append">
                                 </div>
                             </div>
 
@@ -792,14 +792,14 @@
                             <div class="col-md-9 tp_form  inline-parent" id="follow_up" style="display: none">
                                 <div class="form-group">
                                     <label>Planning Date<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="">
+                                    <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="" required readonly />
                                 </div>
 
                                 <div class="form-group rsp-datepiker">
                                     <label>Planning Time<span style="color: red">*</span></label>
 
                                     <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                        <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append">
+                                        <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append" required  readonly />
                                     </div>
                                 </div>
                                 <div class="col-md-12 save_btn">
@@ -832,8 +832,8 @@
         <div class="col-md-12 table_bottom pln_table_bottom">
             <div class="row">
                 <div class="save_btn">
-                   <!-- <button type="submit" class="btn btn-primary" id="check_save">Save</button>-->
-                    <input type="submit" class="btn btn-primary" id="check_save" name="Save">
+                   <button type="submit" class="btn btn-primary" id="check_save">Save</button>
+                   <!-- <input type="submit" class="btn btn-primary" id="check_save" name="Save">-->
                 </div>
             </div>
         </div>

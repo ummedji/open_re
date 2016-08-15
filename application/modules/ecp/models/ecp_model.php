@@ -2894,13 +2894,15 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
            // $execution_date = $this->input->post("execution_date");
             $pl_time = $this->input->post("execution_time");
+
             $date_time= $execution_date.' '.$pl_time;
             $execution_date_time = date('Y-m-d H:i:s', strtotime($date_time));
+
             $crop =  explode(',',$this->input->post("crop"));
             $product_sku =  explode(',',$this->input->post("product_sku"));
             $diseases =  explode(',',$this->input->post("diseases"));
             $farmers =  explode(',',$this->input->post("farmers"));
-            $farmer_num =  explode(',',$this->input->post("farmer_num"));
+            $farmer_num =  explode(',', $this->input->post("farmer_num"));
             $digital_id  =  explode(',',$this->input->post("digital_id"));
             $joint_id  =  explode(',',$this->input->post("joint_id"));
             $product_samples =  explode(',',$this->input->post("product_samples"));
@@ -3016,13 +3018,12 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
             }
 
-            if(isset($farmers) && !empty($farmers)){
-
+            if(isset($farmers) && !empty($farmers) ){
                 foreach($farmers as $k => $val_frm)
                 {
                     $key_farmer_details = array(
                         'activity_planning_id' => $insert_id,
-                        'customer_id' => isset($val_frm) ? $val_frm : '',
+                        'customer_id' => isset($val_frm) ? $val_frm : '0',
                         'mobile_no' => isset($farmer_num[$k]) ? $farmer_num[$k] : '',
                     );
 
@@ -3524,10 +3525,15 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     }
 
 
-    public function rescheduling_activity_detail($user_id,$country_id)
+    public function rescheduling_activity_detail($user_id,$country_id,$type)
     {
-
-        $planning_id = $this->input->post("planning_id");
+        if($type == 'reschedule'){
+            $planning_id = $this->input->post("planning_id");
+        }
+        else
+        {
+            $planning_id = $this->input->post("inserted_activity_planning_id");
+        }
 
         $plan_date = $this->input->post("planning_date");
         $pl_date = str_replace('/', '-', $plan_date);
@@ -3556,35 +3562,67 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $activity_planning_id = $activity_details['activity_planning_id'];
 
 
+        if($type == 'reschedule'){
+            $activity_planning = array(
+                'activity_planning_date' => isset($planning_date) ? $planning_date : '',
+                'activity_planning_time' => isset($planning_time) ? $planning_time : '',
+                'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
+                'geo_level_id_2' => (isset($geo_level_2) && !empty($geo_level_2)) ? $geo_level_2 : 0,
+                'geo_level_id_3' => (isset($geo_level_3) && !empty($geo_level_3)) ? $geo_level_3 : 0,
+                'geo_level_id_4' => (isset($geo_level_4) && !empty($geo_level_4)) ? $geo_level_4 : 0,
+                'geo_level_id' => (isset($geo_level) && !empty($geo_level)) ? $geo_level : 0,
+                'location' => isset($activity_address) ? $activity_address :''   ,
+                'proposed_attandence_count' => (isset($attandence_count) && !empty($attandence_count)) ? $attandence_count : '0',
+                'point_discussion' => isset($pod) ? $pod : '',
+                'alert' => isset($set_alert) ? $set_alert : '',
+                'size_of_plot' => (isset($size_of_plot) && !empty($size_of_plot)) ? $size_of_plot : 0,
+                'spray_volume' => (isset($spray_volume) && !empty($spray_volume)) ? $spray_volume : 0,
+                'amount' => '0',
+                'employee_id' => $user_id,
+                'country_id' => $country_id,
+                'status' => (isset($status) && !empty($status)) ? $status : 0,
+                'submit_status' =>  (isset($submit_status) && !empty($submit_status)) ? $submit_status : 0,
+                'submit_date' =>  date('Y-m-d'),
+                'reference_type' => '2',
+                'reference_id' => $activity_planning_id,
+                'is_planned' => '1',
+                'created_by_user' => $user_id,
+                'created_on' => date('Y-m-d H:i:s'),
+                'modified_on' => date('Y-m-d H:i:s'),
 
-        $activity_planning = array(
-            'activity_planning_date' => isset($planning_date) ? $planning_date : '',
-            'activity_planning_time' => isset($planning_time) ? $planning_time : '',
-            'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
-            'geo_level_id_2' => (isset($geo_level_2) && !empty($geo_level_2)) ? $geo_level_2 : 0,
-            'geo_level_id_3' => (isset($geo_level_3) && !empty($geo_level_3)) ? $geo_level_3 : 0,
-            'geo_level_id_4' => (isset($geo_level_4) && !empty($geo_level_4)) ? $geo_level_4 : 0,
-            'geo_level_id' => (isset($geo_level) && !empty($geo_level)) ? $geo_level : 0,
-            'location' => isset($activity_address) ? $activity_address :''   ,
-            'proposed_attandence_count' => (isset($attandence_count) && !empty($attandence_count)) ? $attandence_count : '0',
-            'point_discussion' => isset($pod) ? $pod : '',
-            'alert' => isset($set_alert) ? $set_alert : '',
-            'size_of_plot' => (isset($size_of_plot) && !empty($size_of_plot)) ? $size_of_plot : 0,
-            'spray_volume' => (isset($spray_volume) && !empty($spray_volume)) ? $spray_volume : 0,
-            'amount' => '0',
-            'employee_id' => $user_id,
-            'country_id' => $country_id,
-            'status' => (isset($status) && !empty($status)) ? $status : 0,
-            'submit_status' =>  (isset($submit_status) && !empty($submit_status)) ? $submit_status : 0,
-            'submit_date' =>  date('Y-m-d'),
-            'reference_type' => '2',
-            'reference_id' => $activity_planning_id,
-            'is_planned' => '1',
-            'created_by_user' => $user_id,
-            'created_on' => date('Y-m-d H:i:s'),
-            'modified_on' => date('Y-m-d H:i:s'),
+            );
+        }
+        else{
+            $activity_planning = array(
+                'activity_planning_date' => isset($planning_date) ? $planning_date : '',
+                'activity_planning_time' => isset($planning_time) ? $planning_time : '',
+                'activity_type_id' => isset($activity_type_id) ? $activity_type_id : '',
+                'geo_level_id_2' => (isset($geo_level_2) && !empty($geo_level_2)) ? $geo_level_2 : 0,
+                'geo_level_id_3' => (isset($geo_level_3) && !empty($geo_level_3)) ? $geo_level_3 : 0,
+                'geo_level_id_4' => (isset($geo_level_4) && !empty($geo_level_4)) ? $geo_level_4 : 0,
+                'geo_level_id' => (isset($geo_level) && !empty($geo_level)) ? $geo_level : 0,
+                'location' => isset($activity_address) ? $activity_address :''   ,
+                'proposed_attandence_count' => (isset($attandence_count) && !empty($attandence_count)) ? $attandence_count : '0',
+                'point_discussion' => isset($pod) ? $pod : '',
+                'alert' => isset($set_alert) ? $set_alert : '',
+                'size_of_plot' => (isset($size_of_plot) && !empty($size_of_plot)) ? $size_of_plot : 0,
+                'spray_volume' => (isset($spray_volume) && !empty($spray_volume)) ? $spray_volume : 0,
+                'amount' => '0',
+                'employee_id' => $user_id,
+                'country_id' => $country_id,
+                'status' =>  '0',
+                'submit_status' =>  '1',
+                'submit_date' =>  date('Y-m-d'),
+                'reference_type' => '1',
+                'reference_id' => $activity_planning_id,
+                'is_planned' => '1',
+                'created_by_user' => $user_id,
+                'created_on' => date('Y-m-d H:i:s'),
+                'modified_on' => date('Y-m-d H:i:s'),
 
-        );
+            );
+        }
+
 
         $insert_array = array();
         if ($this->db->insert('ecp_activity_planning', $activity_planning)) {
@@ -3763,23 +3801,28 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
         if(in_array(1,$insert_array))
         {
-            $activity_planning = array(
-                //'cancle_reson' => (isset($cancle_reson) && !empty($cancle_reson))  ? $cancle_reson : '',
-                'status' => '5',
-                'modified_by_user' => $user_id,
-                'modified_on' => date('Y-m-d H:i:s'),
+            if($type == 'reschedule'){
+                $activity_planning = array(
+                    //'cancle_reson' => (isset($cancle_reson) && !empty($cancle_reson))  ? $cancle_reson : '',
+                    'status' => '5',
+                    'modified_by_user' => $user_id,
+                    'modified_on' => date('Y-m-d H:i:s'),
 
-            );
+                );
 
-            $this->db->where('activity_planning_id',$planning_id);
-            $this->db->update('ecp_activity_planning', $activity_planning);
+                $this->db->where('activity_planning_id',$planning_id);
+                $this->db->update('ecp_activity_planning', $activity_planning);
 
 
-            if ($this->db->affected_rows() > 0) {
-                return 1;
+                if ($this->db->affected_rows() > 0) {
+                    return 1;
+                }
+                else{
+                    return 0;
+                }
             }
             else{
-                return 0;
+                return 1;
             }
         }
         else{
@@ -3948,6 +3991,20 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
 
     }
+
+
+    public function totalPendingActivitys($user_id, $country_id)
+    {
+       $this->db->select('*');
+       $this->db->from('bf_ecp_activity_planning');
+       $this->db->where('employee_id',$user_id);
+       $this->db->where('country_id',$country_id);
+       $this->db->where('status','1');
+        $query = $this->db->get();
+        $rowcount = $query->num_rows();
+        return $rowcount;
+    }
+
 
 
 }

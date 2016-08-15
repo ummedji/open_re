@@ -1,6 +1,7 @@
 <?php
 $segment_data = $this->uri->segment(2);
 ?>
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div id="cco_wrapper">
     <div class="cco_header">
         <div class="left_details pull-right">
@@ -133,7 +134,8 @@ $segment_data = $this->uri->segment(2);
         <li><a href="#"><span class="btn_name">Call Bargin</span> <i class="call_bargin_ii" aria-hidden="true"></i></a></li>
     </ul>
 </div>
-<button class="btn btn-default campaign-details-btn">Campaign<br>Details</button>
+<button type="button" class="btn btn-default campaign-details-btn"  data-toggle="modal" data-target="#myModal2">Campaign<br>Details</button>
+
 <div class="chat-box">
     <div class="chat-header">
         <h5>CHAT <span>2</span></h5>
@@ -142,3 +144,6 @@ $segment_data = $this->uri->segment(2);
     <div class="chat-content"></div>
     <div class="clearfix"></div>
 </div>
+<?php } ?>
+<?php $this->load->view('campaign_details_popup'); ?>
+

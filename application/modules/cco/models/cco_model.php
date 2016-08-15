@@ -203,11 +203,13 @@ class Cco_model extends BF_Model
         }
     }
 
-    public function campagain_data($role,$country_id)
+    public function campagain_data($role = null,$country_id)
     {
         $this->db->select("*");
         $this->db->from("bf_cco_campaign");
-        $this->db->where("customer_type",$role);
+        if($role != null) {
+            $this->db->where("customer_type", $role);
+        }
         $this->db->where("country_id",$country_id);
         $this->db->where("deleted","0");
         $this->db->where("status","1");
@@ -670,10 +672,109 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_all_campaign_data($user_id,$role_id,$country_id)
+    {
+        $this->db->select('cc.campaign_id,cc.campaign_name');
+        $this->db->from('cco_campaign_allocation as cca');
+        $this->db->join('cco_campaign as cc','cc.campaign_id = cca.campaign_id');
+        if($role_id == '18')
+        {
+            $this->db->where('cc.country_id',$country_id);
+        }
+        else{
+            $this->db->where('cca.cco_id',$user_id);
+            $this->db->where('cc.country_id',$country_id);
+        }
+
+        $campaign = $this->db->get()->result_array();
+
+        if(isset($campaign) && !empty($campaign))
+        {
+            return $campaign;
+        }
+    }
+
+
+    public function get_all_campaign_details($user_id,$role_id,$country_id)
+    {
+        //$this->db->select('*');
+        $this->db->select('cc.campaign_id,cc.campaign_name,cc.campaign_purpose,ccp.phase_id,ccp.phase_name,ccp.start_date,ccp.end_date,ccp.phase_purpose,sum(ccd.is_call_done) as total_call,cca.customer_count');
+        $this->db->from('cco_campaign as cc');
+        $this->db->join('cco_campaign_phase as ccp','ccp.campaign_id = cc.campaign_id','LEFT');
+        $this->db->join('cco_call_details as ccd','ccd.phase_id = ccp.phase_id','LEFT');
+        $this->db->join('cco_campaign_allocation as cca','cca.campaign_id = cc.campaign_id','LEFT');
+
+        if($role_id == '18')
+        {
+            $this->db->where('cc.country_id',$country_id);
+        }
+        else{
+            $this->db->where('cca.cco_id',$user_id);
+            $this->db->where('cc.country_id',$country_id);
+        }
+
+        $this->db->where('cc.deleted','0');
+        $this->db->where('cc.status','1');
+        $this->db->group_by('ccp.phase_id');
+        $this->db->order_by('cc.campaign_id','ASC');
+
+        $campaign = $this->db->get()->result_array();
+
+        $final_array=array();
+        if(isset($campaign) && !empty($campaign))
+        {
+
+            foreach($campaign as $k =>$val)
+            {
+                $inner_array = array();
+                $final_array[$val['campaign_id']]['campaign'] = $val['campaign_name'];
+                $final_array[$val['campaign_id']]['campaign_id'] = $val['campaign_id'];
+
+
+                $inner_array["phase_name"] = isset($val['phase_name']) && !empty($val['phase_name']) ? $val['phase_name'] : '';
+                $inner_array["start_date"] = isset($val['start_date']) && !empty($val['start_date']) ? $val['start_date'] : '';
+                $inner_array["end_date"] = isset($val['end_date']) && !empty($val['end_date']) ? $val['end_date'] : '';
+                $inner_array["campaign_purpose"] = isset($val['campaign_purpose']) && !empty($val['campaign_purpose']) ? $val['campaign_purpose'] : '';
+                $inner_array["total_call"] = isset($val['total_call']) && !empty($val['total_call']) ? $val['total_call'] : '0';
+                $inner_array["customer_count"] = isset($val['customer_count']) && !empty($val['customer_count']) ? $val['customer_count'] : '0';
+
+                $final_array[$val['campaign_id']]['phase'][] = $inner_array;
+
+            }
+
+        }
+        return $final_array;
+    }
+
+
+    public function getAllPhaseDetailByCampaignId($campaign_id,$user_id,$role_id,$country_id)
+    {
+        $this->db->select('ccp.phase_name,ccp.avg_call_duration,sum(ccd.is_call_done) as total_call,cca.customer_count,ccp.end_date,ccp.phase_status,');
+        $this->db->from('cco_campaign_phase as ccp');
+        $this->db->join('cco_call_details as ccd','ccd.phase_id = ccp.phase_id','LEFT');
+        $this->db->join('cco_campaign_allocation as cca','cca.campaign_id = ccp.campaign_id','LEFT');
+        $this->db->where('ccp.campaign_id',$campaign_id);
+
+        if($role_id == '19')
+        {
+            $this->db->where('cca.cco_id',$user_id);
+        }
+        
+        $this->db->group_by('ccp.phase_id');
+        $this->db->order_by('ccp.phase_id','ASC');
+
+        $phase_details = $this->db->get()->result_array();
+
+        if(isset($phase_details) && !empty($phase_details))
+        {
+            return $phase_details;
+        }
+    }
+
+
     public function get_all_work_allocation($country_id)
     {
         $cco_work_array = array();
-
 
         /* Get Campaign Work */
 		$sql = "SELECT id as cco_id, display_name AS cco_name, COUNT(*)AS tot_campaign, SUM(customer_count) AS tot_c_customer,
@@ -1216,7 +1317,60 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+    public function get_customer_complaint_unique($six_digit_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_cco_complaint_details as bccd");
+        $this->db->where('bccd.complaint_number',$six_digit_id);
+        $user_customer_complaint_unique_id = $this->db->get()->result_array();
+        return $user_customer_complaint_unique_id;
 
+    }
+    public function get_customer_complaint_type()
+    {
+        $user = $this->auth->user();
+
+        $this->db->select("bmct.*");
+        $this->db->from("bf_master_complaint_type as bmct");
+
+        $this ->db->where('bmct.country_id',$user->country_id);
+        $this->db->where('bmct.status',1);
+        $this->db->where('bmct.deleted',0);
+        $this->db->order_by('bmct.complaint_type_name','asc');
+        $user_customer_complaint_type = $this->db->get()->result_array();
+        return $user_customer_complaint_type;
+
+    }
+    public function get_complaint_sub_from_complaint_type($complaint_type_id)
+    {
+        $user = $this->auth->user();
+
+        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id");
+        $this->db->from("bf_master_complaint_detail as bmcd");
+
+        $this ->db->where('bmcd.complaint_type_id',$complaint_type_id);
+        $this->db->where('bmcd.status',1);
+        $this->db->where('bmcd.deleted',0);
+        $this->db->order_by('bmcd.complaint_subject','asc');
+        $user_customer_complaint_subject = $this->db->get()->result_array();
+        return $user_customer_complaint_subject;
+
+    }
+    public function get_complaint_date_from_complaint_sub($complaint_subject_id)
+    {
+        $user = $this->auth->user();
+
+        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id,bmcd.reminder1_days,bmcd.reminder2_days,bmcd.reminder3_days,bmcd.other_desigination_person1_id,bmcd.reminder1_other_desigination_id,bmcd.reminder1_desigination_id");
+        $this->db->from("bf_master_complaint_detail as bmcd");
+
+        $this ->db->where('bmcd.complaint_id',$complaint_subject_id);
+        $this->db->where('bmcd.status',1);
+        $this->db->where('bmcd.deleted',0);
+        $this->db->order_by('bmcd.complaint_subject','asc');
+        $user_customer_complaint_subject = $this->db->get()->row_array();
+        return $user_customer_complaint_subject;
+
+    }
 
     public function get_electronic_data()
     {
@@ -1794,6 +1948,7 @@ class Cco_model extends BF_Model
         $this->db->select("bu.id,bu.email,bu.display_name,
                            bmpgd1.political_geography_name as level1,bmpgd2.political_geography_name as level2,bmpgd3.political_geography_name as level3,
                            bmpgd1.political_geo_id as level1_id,bmpgd2.political_geo_id as level2_id,bmpgd3.political_geo_id as level3_id,
+                           bmcfd.house_no,bmcfd.address,bmcfd.landmark,bmcfd.geo_level_id1 as farm_level1,bmcfd.geo_level_id2  as farm_level2,bmcfd.geo_level_id3  as farm_level3,bmcfd.pincode,bmcfd.latitude,bmcfd.longitude
                          ");
 
         $this->db->from("bf_users as bu");
@@ -1803,6 +1958,8 @@ class Cco_model extends BF_Model
         $this->db->join("bf_master_political_geography_details as bmpgd1","bmpgd1.political_geo_id = bmucd.geo_level_id1","LEFT");
         $this->db->join("bf_master_political_geography_details as bmpgd2","bmpgd2.political_geo_id = bmucd.geo_level_id2","LEFT");
         $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3","LEFT");
+
+        $this->db->join("bf_master_customer_farming_details as bmcfd","bmcfd.user_id = bu.id","LEFT");
 
         $this->db->where('bu.id',$customer_id);
 
@@ -1816,6 +1973,166 @@ class Cco_model extends BF_Model
         {
             return 0;
         }
+
+    }
+
+    public function get_all_crop_data($customer_id)
+    {
+        $user = $this->auth->user();
+
+        $customer_crop = $this->customer_crop_data($customer_id);
+        $ignore_crop_data = array();
+
+        if(!empty($customer_crop))
+        {
+            foreach($customer_crop as $key => $crop_data)
+            {
+                $ignore_crop_data[] = $crop_data["crop_id"];
+            }
+        }
+
+
+        $this->db->select("crop_country_id,crop_name");
+        $this->db->from("bf_master_crop_country");
+
+        if(!empty($ignore_crop_data))
+        {
+            $this->db->where_not_in('crop_country_id', $ignore_crop_data);
+        }
+
+        $this->db->where("country_id",$user->country_id);
+        $this->db->where("deleted",0);
+        $this->db->where("status",1);
+
+        $crop_data = $this->db->get()->result_array();
+        return $crop_data;
+    }
+
+    public function customer_crop_data($customer_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_master_customer_crop_details as bmccd");
+
+        $this->db->join("bf_master_crop_country as bmcc","bmcc.crop_country_id = bmccd.crop_id");
+
+        $this->db->where("user_id",$customer_id);
+
+        $allocated_crop_data = $this->db->get()->result_array();
+        return $allocated_crop_data;
+    }
+
+    public function add_update_farming_crop_detail_data()
+    {
+        $update_array = array();
+        $customer_id = $_POST["customer_id"];
+       // testdata($_POST);
+
+        $this->db->select("*");
+        $this->db->from("bf_master_customer_farming_details");
+        $this->db->where("user_id",$customer_id);
+        $farming_data = $this->db->get()->result_array();
+
+        $data_array = array(
+            'user_id' => $_POST["customer_id"],
+            'house_no' => $_POST["house_no"],
+            'address' => $_POST["address"],
+            'landmark' => $_POST["landmark"],
+            'geo_level_id1' => $_POST["geo_level_1"],
+            'geo_level_id2' => $_POST["geo_level_2"],
+            'geo_level_id3' => $_POST["geo_level_3"],
+            'pincode' => $_POST["pincode"],
+            'latitude' => $_POST["latitude"],
+            'longitude' => $_POST["longitude"]
+        );
+
+        if(empty($farming_data))
+        {
+
+            //INSERT FARMING DATA
+
+            $this->db->insert("bf_master_customer_farming_details",$data_array);
+
+            if ($this->db->affected_rows() > 0) {
+                $update_array[] = 1;
+            }
+        }
+        else
+        {
+            //UPDATE DATA
+
+            $customer_framing_detail_id = $farming_data[0]["customer_framing_detail_id"];
+
+            $this->db->where("customer_framing_detail_id",$customer_framing_detail_id);
+            $this->db->update("bf_master_customer_farming_details",$data_array);
+
+            if ($this->db->affected_rows() > 0) {
+                $update_array[] = 1;
+            }
+        }
+
+        if(!empty($_POST["crop_name"]))
+        {
+            foreach($_POST["crop_name"] as $key => $crop_id)
+            {
+
+                $yiled_data = isset($_POST["yield_contribution"][$key]) ? $_POST["yield_contribution"][$key] : "";
+
+                if($crop_id != "" && $yiled_data != "")
+                {
+                    $crop_data_array = array(
+                        'user_id' => $customer_id,
+                        'crop_id' => $crop_id,
+                        'yeild_HA' => $yiled_data
+                    );
+
+                    //INSERT CROP DATA
+
+                    $this->db->insert("bf_master_customer_crop_details",$crop_data_array);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+
+                }
+
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
+    public function get_search_disease_detail($search_data)
+    {
+        $user = $this->auth->user();
+
+        $sql = "SELECT
+                bmdc.disease_name,
+                bmcds.symptoms_country_name,
+                bmpsc.product_sku_name,
+                bmcc.crop_name
+
+                FROM `bf_master_disease_country` as bmdc
+                LEFT JOIN bf_disease_symptoms_mapping as bdsm ON bdsm.country_disease_id = bmdc.disease_country_id
+                LEFT JOIN bf_master_country_disease_symptoms as bmcds ON bmcds.country_symptoms_id = bdsm.country_symptom_id
+                LEFT JOIN bf_master_disease_crop_product_mapping as bmdcp ON bmdcp.disease_id = bmdc.disease_country_id
+                LEFT JOIN bf_master_crop_country as bmcc ON  bmcc.crop_country_id = bmdcp.crop_id
+                LEFT JOIN bf_master_product_sku_country as bmpsc ON  bmpsc.product_sku_country_id = bmdcp.product_sku_id
+                WHERE bmdc.disease_name LIKE '%".$search_data."%' AND bmdc.country_id = ".$user->country_id." AND bmdc.deleted = 0  AND bmdc.status = 1";
+
+        $disease_info = $this->db->query($sql);
+
+        $disease_detail_data = $disease_info->result_array();
+
+        //testdata($disease_detail_data);
+        return $disease_detail_data;
 
     }
 

@@ -26,45 +26,81 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Id">Complaint Id</label>
-                                <input type="text" class="form-control" id="Complaint Id" placeholder="">
+                                <input type="text" class="form-control" id="Complaint Id" placeholder="" value="<?php echo $unique_id; ?>">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Status">Status</label>
                                 <select class="form-control">
-                                    <option>Status1</option>
-                                    <option>Status2</option>
+                                    <option value="0" selected="selected">Pending</option>
+                                    <option value="1">In Progress</option>
+                                    <option value="2">Resolved</option>
+                                    <option value="3">Reopen</option>
                                 </select>
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Type">Complaint Type</label>
-                                <select class="form-control">
-                                    <option>Complaint Type1</option>
-                                    <option>Complaint Type2</option>
+
+
+
+
+                                <select class="form-control" name="complaint_type" id="complaint_type">
+                                    <option value="">Select Complaint Type</option>
+
+                                    <?php
+                                    if(!empty($get_customer_complaint_type))
+                                    {
+                                        foreach($get_customer_complaint_type as $comp_key => $complaint_data)
+                                        {
+                                           /* $selected = "";
+                                            foreach($financial_electronic_data as $sel_key => $selected_electronic_data)
+                                            {
+                                                if($electronic_data["electonic_id"] == $selected_electronic_data["electronic_owned_id"])
+                                                {
+                                                    $selected = "selected = 'selected'";
+                                                }
+                                            }
+                                            */
+
+                                            ?>
+                                            <option <?php //echo $selected; ?> value="<?php echo $complaint_data["complaint_type_id"]; ?>"><?php echo $complaint_data["complaint_type_name"]; ?></option>
+                                            <?php
+                                        }
+                                    }
+                                    ?>
+
                                 </select>
+
+                            </div>
+                        </div>
+
+                        <div class="col-md-4 col-sm-6 tp_form">
+                            <div class="form-group">
+                                <label for="Complaint Subject">Complaint Subject</label>
+                                <!--<input type="text" class="form-control" id="Complaint Subject" placeholder="">-->
+
+                                <select class="form-control" id="complaint_subject" name="complaint_subject">
+                                    <option>Select Subject</option>
+                                </select>
+
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Entry Date">Complaint Entry Date</label>
-                                <input type="text" class="form-control" id="Complaint Id" placeholder="">
+                                <input type="text" class="form-control" id="Complaint Id" placeholder="" value="<?php echo date("Y-m-d"); ?>">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Due Date">Complaint Due Date</label>
-                                <input type="text" class="form-control" id="Complaint Due Date" placeholder="">
+                                <input type="text" class="form-control" id="Complaint_due_date" placeholder="" name="Complaint_due_date" value="">
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-6 tp_form">
-                            <div class="form-group">
-                                <label for="Complaint Subject">Complaint Subject</label>
-                                <input type="text" class="form-control" id="Complaint Subject" placeholder="">
-                            </div>
-                        </div>
+
 
                     </div>
                 </div>
@@ -102,31 +138,29 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="Complaint Subject" placeholder="First Education Data">
+                                <input type="text" class="form-control" id="complaint_date1" placeholder="First Education Data">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Designstion</label>
-                                <select class="form-control">
-                                    <option>Complaint Type1</option>
-                                    <option>Complaint Type2</option>
+                                <select class="form-control" name="designstion" id="designstion">
+                                    <option>Select Designation</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="Complaint Subject" placeholder="Second Education Data">
+                                <input type="text" class="form-control" id="complaint_date2" placeholder="Second Education Data">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Person Name</label>
-                                <select class="form-control">
-                                    <option>Complaint Type1</option>
-                                    <option>Complaint Type2</option>
+                                <select class="form-control" name="person_name" id="person_name">
+                                    <option>Select Person</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="Complaint Subject" placeholder="Third Education Data">
+                                <input type="text" class="form-control" id="complaint_date3" placeholder="Third Education Data">
                             </div>
                         </div>
                     </div>
@@ -150,3 +184,22 @@
     <div class="clearfix"></div>
 </div>
 <div class="clearfix"></div>
+
+<script type="application/javascript">
+
+        $("#complaint_type").change(function () {
+
+            var complaint_type_id = $(this).val();
+
+            get_complaint_subject_from_complaint_type(complaint_type_id);
+        });
+
+        $("#complaint_subject").change(function () {
+
+            var complaint_subject_id = $(this).val();
+
+            get_complaint_date_from_complaint_subject(complaint_subject_id);
+        });
+
+
+</script>

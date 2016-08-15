@@ -74,7 +74,7 @@ echo form_open('ecp/material_request',$attributes); ?>
         </div>
     </div>
     <div class="clearfix"></div>
-</div>
+<!--</div>-->
 <?php echo form_close(); ?>
 
 <?php }?>

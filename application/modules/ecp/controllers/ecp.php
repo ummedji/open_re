@@ -1243,6 +1243,7 @@ class Ecp extends Front_Controller
 
 	public function add_activity_planning_details()
 	{
+		testdata($_POST);
 		$user = $this->auth->user();
 		$add= $this->ecp_model->addActivityPlanning($user->id,$user->country_id,$user->local_date);
 		echo $add;
@@ -1680,8 +1681,9 @@ class Ecp extends Front_Controller
 
 	public function add_activity_execution_details()
 	{
+
 		$user = $this->auth->user();
-		$add= $this->ecp_model->addActivityExecution($user->id,$user->country_id,$user->local_date);
+				$add= $this->ecp_model->addActivityExecution($user->id,$user->country_id,$user->local_date);
 		echo $add;
 		die;
 	}
@@ -1914,7 +1916,17 @@ class Ecp extends Front_Controller
 	{
 		//testdata($_POST);
 		$user = $this->auth->user();
-		$id = $this->ecp_model->rescheduling_activity_detail($user->id,$user->country_id);
+		$type = 'reschedule';
+		$id = $this->ecp_model->rescheduling_activity_detail($user->id,$user->country_id,$type);
+		echo $id;
+		die;
+	}
+
+	public function add_followup_activity_details()
+	{
+		$user = $this->auth->user();
+		$type = 'execute';
+		$id = $this->ecp_model->rescheduling_activity_detail($user->id,$user->country_id,$type);
 		echo $id;
 		die;
 	}

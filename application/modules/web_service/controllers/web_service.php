@@ -4587,6 +4587,24 @@ class Web_service extends Front_Controller
         $this->do_json($result);
     }
 
+    public function totalPendingActivity()
+    {
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id))) {
+            $submit = $this->ecp_model->totalPendingActivitys($user_id, $country_id);
+            $result['status'] = true;
+            $result['message'] = 'Success.';
+            $result['data'] = $submit;
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+
+    }
     public function approvalActivityPlanning()
     {
         $user_id = $this->input->get_post('user_id');

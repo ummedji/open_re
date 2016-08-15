@@ -7,7 +7,10 @@
                         <div class="col-md-12 text-center tp_form inline-parent">
                             <div class="form-group">
                                 <label>Select Date<span style="color: red">*</span></label>
-                                <input type="text" class="form-control" name="planning_date" id="planning_date" value="<?php echo $activity['activity_planning_date'] ?>"  placeholder="">
+                                <?php
+                                $planning_date = date($current_user->local_date,strtotime($activity['activity_planning_date']));
+                                ?>
+                                <input type="text" class="form-control" name="planning_date" value="<?php echo $planning_date ?>"  placeholder="" readonly>
                             </div>
 
                             <?php
@@ -19,7 +22,7 @@
                             <div class="form-group">
                                 <label>Time<span style="color: red">*</span></label>
                                 <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                    <input id="planning_time" name="planning_time" type="text" value="<?php echo $plan_time; ?>"  class="input-group-time form-control input-append">
+                                    <input name="planning_time" type="text" value="<?php echo $plan_time; ?>"  class="input-group-time form-control input-append" readonly>
                                 </div>
                             </div>
                         </div>

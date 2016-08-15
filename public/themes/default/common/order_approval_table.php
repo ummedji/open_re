@@ -167,8 +167,8 @@
                 if ($action_data == "get_order_status_data_details") {
 
                     ?>
-                    <div class="col-md-2 save_btn">
-                        <button type="submit" id="update_order_details" class="btn btn-primary gren_btn"
+                    <div class="col-md-12 save_btn">
+                        <button type="submit" id="update_order_details" class="btn btn-primary"
                                 style="margin-top: 3px; margin-bottom: 20px; ">Save
                         </button>
                         <br/>

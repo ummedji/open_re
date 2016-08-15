@@ -1061,6 +1061,7 @@ input[readonly] {
 	/*border: 0px;*/
     text-align: center;
 }
+.form-group input[readonly] { text-align: left;}
 
 /*#no-more-tables tbody tr td[data-title="Credit Limit"],*/
 /*#no-more-tables tbody tr td[data-title="Product SKU Code"] input,*/
@@ -3067,6 +3068,7 @@ ul.in-up-details-list {margin: 0; padding: 0;}
     background-color: #ffffff;
     border: solid 1px #bfc0c5;
     border-radius: 10px;
+    overflow: hidden;
 }
 .footer_info ul li {
     list-style: none;
@@ -3240,6 +3242,12 @@ ul.in-up-details-list {margin: 0; padding: 0;}
         width: 100%;
         text-align: left;
     }
+}
+.defau-tl {
+    font-family: 'Exo2-Regular';
+    font-size: 14px;
+    color: #000000;
+    display: block;
 }
 /****end cco style****/
 /****chate css****/
@@ -3884,8 +3892,11 @@ h6.gn-info-tl{
     color: #bcbcbc;
     border-radius: 50%;
     border: 2px solid #d7d7d7;
-    top: -15px;
+    top: -14px;
     right: -15px;
+    position: absolute;
+    width: 40px;
+    height: 40px;
 }
 .company-name{
     margin-left: -15px;
@@ -4148,5 +4159,8 @@ h6.gn-info-tl{
 }
 .grey-colour{
     border: 1px solid #d9d9dd
+}
+#myModal2 .close{
+    opacity: 1 !important;
 }
 /* End Call Campaign Popup css */
