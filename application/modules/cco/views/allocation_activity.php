@@ -1,7 +1,7 @@
-<?php if(!$this->input->is_ajax_request()){ ?>
+<?php if (!$this->input->is_ajax_request()) { ?>
     <?php
-    $attributes = array('class' => '', 'id' =>'allocation_activity','name'=>'allocation_activity', 'autocomplete'=>'off');
-    echo form_open('',$attributes);
+    $attributes = array('class' => '', 'id' => 'allocation_activity', 'name' => 'allocation_activity', 'autocomplete' => 'off');
+    echo form_open('', $attributes);
     ?>
     <div class="col-md-12">
         <div class="top_form">
@@ -9,25 +9,32 @@
                 <div class="col-md-12 text-center sub_nave">
                     <div class="inn_sub_nave">
                         <ul>
-                            <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/allocation') ?>">Farmers</a></li>
-                            <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='channel_partner_allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/channel_partner_allocation') ?>">Channel Partners</a></li>
-                            <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='allocation_activity') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/allocation_activity') ?>">Activity</a></li>
-                            <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='work_transfer_allocation') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/work_transfer_allocation') ?>">Work Transfer</a></li>
+                            <li class="<?php echo ($this->uri->segment(1) == 'cco' && $this->uri->segment(2) == 'allocation') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url('cco/allocation') ?>">Farmers</a></li>
+                            <li class="<?php echo ($this->uri->segment(1) == 'cco' && $this->uri->segment(2) == 'channel_partner_allocation') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url('cco/channel_partner_allocation') ?>">Channel Partners</a>
+                            </li>
+                            <li class="<?php echo ($this->uri->segment(1) == 'cco' && $this->uri->segment(2) == 'allocation_activity') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url('cco/allocation_activity') ?>">Activity</a></li>
+                            <li class="<?php echo ($this->uri->segment(1) == 'cco' && $this->uri->segment(2) == 'work_transfer_allocation') ? 'active' : ''; ?>">
+                                <a href="<?php echo base_url('cco/work_transfer_allocation') ?>">Work Transfer</a></li>
                         </ul>
                         <div class="clearfix"></div>
                     </div>
                 </div>
                 <div class="copy_btn">
-                    <a href="javascript:void(0);" id="work_allocated_summary"  data-toggle="modal" data-target="#WorkAllocatedSummary">Work Allocated Summary</a>
+                    <a href="javascript:void(0);" id="work_allocated_summary">Work Allocated Summary</a>
                 </div>
 
                 <div class="col-md-12 text-center radio_space">
                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio1" value="planned_activity" checked="checked" />
+                        <input class="select_customer_type" type="radio" name="radio1" id="radio1"
+                               value="planned_activity" checked="checked"/>
                         <label for="radio1">Planned Activities</label>
                     </div>
                     <div class="radio">
-                        <input class="select_customer_type" type="radio" name="radio1" id="radio2" value="executed_activity" />
+                        <input class="select_customer_type" type="radio" name="radio1" id="radio2"
+                               value="executed_activity"/>
                         <label for="radio2">Executed Activities</label>
                     </div>
                     <div class="clearfix"></div>
@@ -38,15 +45,17 @@
                         <div class="col-md-3 col-sm-8 tp_form">
                             <div class="form-group">
                                 <label>Type Of Activity<span style="color: red">*</span></label>
-                                <select class="selectpicker" name="activity_type" id="activity_type" title="" data-live-search="true">
+                                <select class="selectpicker" name="activity_type" id="activity_type" title=""
+                                        data-live-search="true">
                                     <option value="">Select Activity Type</option>
 
                                     <?php
-                                    if(isset($activity_type) && !empty($activity_type)) {
-                                        foreach($activity_type as $k =>$val){ ?>
-                                        <option value="<?php echo $val['activity_type_country_id'] ?>"><?php echo $val['activity_type_country_name'] ?></option>
+                                    if (isset($activity_type) && !empty($activity_type)) {
+                                        foreach ($activity_type as $k => $val) { ?>
+                                            <option
+                                                value="<?php echo $val['activity_type_country_id'] ?>"><?php echo $val['activity_type_country_name'] ?></option>
                                         <?php }
-                                     } ?>
+                                    } ?>
 
                                 </select>
                             </div>
@@ -54,18 +63,20 @@
                         <div class="col-md-3 col-sm-8 tp_form">
                             <div class="form-group">
                                 <label>From Date<span style="color: red">*</span></label>
-                                <input type="text" name="from_date" value=""  id="from_date" class="form-control" />
+                                <input type="text" name="from_date" value="" id="from_date" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-8 tp_form">
                             <div class="form-group">
                                 <label>To Date<span style="color: red">*</span></label>
-                                <input type="text" name="to_date" value=""  id="to_date" class="form-control" />
+                                <input type="text" name="to_date" value="" id="to_date" class="form-control"/>
                             </div>
                         </div>
                         <div class="col-md-2 save_btn">
                             <label>&nbsp;</label>
-                            <button type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important;">Execute</button>
+                            <button type="submit" class="btn btn-primary gren_btn" style="padding: 0 !important;">
+                                Execute
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -80,11 +91,11 @@ if ($this->input->is_ajax_request()) {
     echo theme_view('common/middle');
 }
 ?>
-<?php if(!$this->input->is_ajax_request()){ ?>
+<?php if (!$this->input->is_ajax_request()) { ?>
 
     <?php
-    $attributes = array('class' => '', 'id' =>'add_cco_activity','name'=>'add_cco_activity', 'autocomplete'=>'off');
-    echo form_open('',$attributes);
+    $attributes = array('class' => '', 'id' => 'add_cco_activity', 'name' => 'add_cco_activity', 'autocomplete' => 'off');
+    echo form_open('', $attributes);
     ?>
 
     <div id="middle_container" class="activity_data">
@@ -97,12 +108,12 @@ if ($this->input->is_ajax_request()) {
             <select id="cco_data" class="cco_data selectpicker" name="cco_data">
                 <option value="">Select CCO</option>
                 <?php
-                if(!empty($cco_data)) {
+                if (!empty($cco_data)) {
                     foreach ($cco_data as $c_key => $ccodata) { ?>
 
                         <option value="<?php echo $ccodata["id"]; ?>"><?php echo $ccodata["display_name"]; ?></option>
-                        <?php  }
-                    } ?>
+                    <?php }
+                } ?>
             </select>
             <div class="inl_button save_btn" style="vertical-align: top;">
                <button title="Save" type="submit" class="btn btn-primary save_btn" style="display: none">Save</button>
@@ -124,63 +135,16 @@ if ($this->input->is_ajax_request()) {
                 </div>
                 <div class="delete_button" style="display: none">
                     <div class="save_btn">
-                        <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>
+                        <button type="button" id='cancel_data' class="btn btn-primary" style="background-color: red">
+                            Delete
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 <?php } ?>
-
-<?php if(!$this->input->is_ajax_request()){ ?>
-    <div id="WorkAllocatedSummary" class="modal fade tr_modal" role="dialog">
-        <div class="modal-dialog">
-
-            <!-- Modal content-->
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    <h4 class="modal-title" id="popup_title">Work Allocated Summary</h4>
-                </div>
-
-                <div class="modal-body">
-                    <!-- <div class="col-md-12 distributore_form">
-                         <div class="row">
-
-                             <div id="no-more-tables">
-                                 <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                                     <thead class="cf">
-                                         <tr>
-                                             <th class="first_th">CCO Name<span class="rts_bordet"></span></th>
-                                             <th class="numeric">Allocated Campagain <span class="rts_bordet"></span></th>
-                                             <th>Customer To Call<span class="rts_bordet"></span></th>
-                                             <th class="numeric">Pending Customer To Call<span class="rts_bordet"></span></th>
-                                             <th class="numeric">No. Of Activity<span class="rts_bordet"></span></th>
-                                             <th class="numeric">No. Of Employee To Call<span class="rts_bordet"></span></th>
-                                             <th class="numeric">No. Of Employee To Pending<span class="rts_bordet"></span></th>
-                                             <th class="numeric">Total Call Pending<span class="rts_bordet"></span></th>
-                                         </tr>
-                                     </thead>
-                                     <tbody id="order_place_data">
-                                     </tbody>
-                                 </table>
-                                 <div class="clearfix"></div>
-                             </div>
-
-                         </div>
-                     </div>-->
-                    <div id="middle_container" class="work_allocation">
-
-                    </div>
-
-                    <div class="clearfix"></div>
-                </div>
-                <div class="modal-footer">
-                    <div class="col-md-12 text-center">
-                        <button type="button" class="btn btn-default close_default_bb" data-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!-- Modal -->
+<?php if (!$this->input->is_ajax_request()) { ?>
+    <div id="WorkAllocatedSummary" class="modal fade tr_modal" role="dialog"></div>
 <?php } ?>

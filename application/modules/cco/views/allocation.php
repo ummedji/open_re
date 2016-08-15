@@ -14,7 +14,7 @@
                 </div>
             </div>
             <div class="copy_btn">
-                <a href="javascript:void(0);" id="work_allocated_summary"  data-toggle="modal" data-target="#WorkAllocatedSummary">Work Allocated Summary</a>
+                <a href="javascript:void(0);" id="work_allocated_summary">Work Allocated Summary</a>
             </div>
         </div>
     </div>
@@ -112,58 +112,7 @@ if($this->input->is_ajax_request())
     echo theme_view('common/middle');
 }
 ?>
-
 <!-- Modal -->
-
 <?php if(!$this->input->is_ajax_request()){ ?>
-<div id="WorkAllocatedSummary" class="modal fade tr_modal" role="dialog">
-    <div class="modal-dialog">
-
-        <!-- Modal content-->
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title" id="popup_title">Work Allocated Summary</h4>
-            </div>
-
-            <div class="modal-body">
-               <!-- <div class="col-md-12 distributore_form">
-                    <div class="row">
-
-                        <div id="no-more-tables">
-                            <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                                <thead class="cf">
-                                    <tr>
-                                        <th class="first_th">CCO Name<span class="rts_bordet"></span></th>
-                                        <th class="numeric">Allocated Campagain <span class="rts_bordet"></span></th>
-                                        <th>Customer To Call<span class="rts_bordet"></span></th>
-                                        <th class="numeric">Pending Customer To Call<span class="rts_bordet"></span></th>
-                                        <th class="numeric">No. Of Activity<span class="rts_bordet"></span></th>
-                                        <th class="numeric">No. Of Employee To Call<span class="rts_bordet"></span></th>
-                                        <th class="numeric">No. Of Employee To Pending<span class="rts_bordet"></span></th>
-                                        <th class="numeric">Total Call Pending<span class="rts_bordet"></span></th>
-                                    </tr>
-                                </thead>
-                                <tbody id="order_place_data">
-                                </tbody>
-                            </table>
-                            <div class="clearfix"></div>
-                        </div>
-
-                    </div>
-                </div>-->
-                <div id="middle_container" class="work_allocation">
-
-                </div>
-
-                <div class="clearfix"></div>
-            </div>
-            <div class="modal-footer">
-                <div class="col-md-12 text-center">
-                    <button type="button" class="btn btn-default close_default_bb" data-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-    <?php } ?>
+<div id="WorkAllocatedSummary" class="modal fade tr_modal" role="dialog"></div>
+<?php } ?>

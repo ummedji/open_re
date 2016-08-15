@@ -672,7 +672,80 @@ class Cco_model extends BF_Model
 
     public function get_all_work_allocation($country_id)
     {
+        $cco_work_array = array();
 
+
+        /* Get Campaign Work */
+		$sql = "SELECT id as cco_id, display_name AS cco_name, COUNT(*)AS tot_campaign, SUM(customer_count) AS tot_c_customer,
+                        SUM(total_call) AS tot_c_call, SUM(pending_call) AS tot_c_pending_call FROM (
+                        SELECT bu.id,bu.display_name,bc.campaign_id,bc.campaign_name, bca.customer_count,
+                        (bca.customer_count*bc.no_phase) AS `total_call`,
+                        ((bca.customer_count*bc.no_phase) - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
+                         WHERE bccd.ca_id = bca.campaign_id AND bccd.ca_type = 'campaign'
+                        )) AS `pending_call`
+                        FROM bf_users AS bu
+                        JOIN bf_cco_campaign_allocation AS bca ON (bca.cco_id = bu.id)
+                        JOIN bf_cco_campaign AS bc ON (bc.campaign_id = bca.campaign_id)
+                        WHERE bu.country_id = $country_id
+                        AND (bu.role_id = 19 AND bu.deleted = 0 AND bu.active = 1)
+                        AND (bca.deleted = 0 AND bca.status = 1)
+                        ORDER BY bu.display_name ASC
+                        ) AS campaign_table GROUP BY id
+                    ";
+
+        $campaign_sql = $this->db->query($sql);
+        $campaign_data = $campaign_sql->result_array();
+
+        foreach ($campaign_data as $campaign)
+        {
+            $campaign['tot_activity'] = 0;
+            $campaign['tot_a_customer'] = 0;
+            $campaign['tot_a_call'] = 0;
+            $campaign['tot_a_pending_call'] = 0;
+            $campaign['tot_pending_call'] = $campaign['tot_c_pending_call']+$campaign['tot_a_pending_call'];
+            $cco_work_array[$campaign['cco_id']] = $campaign;
+        }
+
+        /* Get Activity Work */
+        $sql1 = "SELECT id as cco_id, display_name AS cco_name, COUNT(*) AS tot_activity, SUM(ec_count) AS tot_a_customer, SUM(ec_count) AS tot_a_call,SUM(pending_call) AS tot_a_pending_call
+                        FROM (
+                        SELECT bu.id, bu.display_name, bca.ec_count,
+                        (bca.ec_count - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
+                         WHERE bccd.ca_id = bca.activity_allocation_id AND bccd.ca_type = 'activity'
+                        )) AS pending_call
+                        FROM bf_users AS bu
+                        JOIN bf_cco_activity_allocation AS bca ON (bca.cco_id = bu.id)
+
+                        WHERE bu.country_id = $country_id
+                        AND (bu.role_id = 19 AND bu.deleted = 0 AND bu.active = 1)
+                        AND (bca.deleted = 0 AND bca.status = 1)
+                        ORDER BY bu.display_name ASC
+                        )  AS activity_table GROUP BY id";
+
+        $activity_sql = $this->db->query($sql1);
+        $activity_data = $activity_sql->result_array();
+
+        foreach ($activity_data as $activity)
+        {
+            if(!isset($cco_work_array[$activity['cco_id']]))
+            {
+                $campaign = array();
+                $campaign['cco_id'] = $activity['cco_id'];
+                $campaign['cco_name'] = $activity['cco_name'];
+                $campaign['tot_campaign'] = 0;
+                $campaign['tot_c_customer'] = 0;
+                $campaign['tot_c_call'] = 0;
+                $campaign['tot_c_pending_call'] = 0;
+
+                $cco_work_array[$activity['cco_id']] = $campaign;
+            }
+
+            $activity['tot_pending_call'] = $cco_work_array[$activity['cco_id']]['tot_c_pending_call']+$activity['tot_a_pending_call'];
+            $cco_work_array[$activity['cco_id']] = array_merge($cco_work_array[$activity['cco_id']],$activity);
+        }
+
+        $cco_work_allocation = array_values($cco_work_array);
+        return $cco_work_allocation;
     }
 
 

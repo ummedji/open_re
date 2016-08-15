@@ -153,3 +153,17 @@ function removeOverlay() {
     $("#ajax_loader").removeAttr('style');
 }
 
+/* CCO :: Get Allocated Work Summary */
+$(document).on('click','#work_allocated_summary',function(){
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/work_allocation",
+        data: {},
+        dataType : 'html',
+        success: function (resp) {
+            $("#WorkAllocatedSummary").html(resp);
+            $('#WorkAllocatedSummary').modal({show:true});
+        }
+    });
+});
+/* CCO :: Get Allocated Work Summary */

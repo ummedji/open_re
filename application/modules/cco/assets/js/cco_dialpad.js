@@ -175,13 +175,17 @@ function get_retailer_view_data(customer_id)
 
 function get_farming_view_data(customer_id)
 {
+
+    var campagain_id = $("input#camagain_id").val();
+    var num_count = 3;
+
     $.ajax({
         type: 'POST',
         url: site_url + "cco/get_customer_farming_view_data",
         data: {customerid: customer_id},
         success: function (resp) {
             $("div#dialpad_middle_contailner").html(resp);
-            //get_geo_data(campagain_id,3,num_count);
+            get_geo_data(campagain_id,3,num_count);
         }
     });
 }
@@ -415,6 +419,7 @@ $(document).on('click', 'div#feedback_data .delete_i', function () {
     return false;
 
 });
+
 $(document).on('click', 'div#feedback_data .edit_i', function () {
 
     var customer_id = $("input#customer_id").val();

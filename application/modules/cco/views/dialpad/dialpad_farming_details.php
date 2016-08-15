@@ -107,6 +107,26 @@ $level3_id = (isset($customer_farming_data[0]["level3_id"]) && !empty($customer_
                     </div>
 
                 </div>
+
+                <div class="row cco-form-fl">
+                    <div class="col-md-4 col-sm-6 tp_form">
+                        <div class="form-group">
+                            <label for="Crop Name">Crop Name</label>
+
+                            <select class="form-control" name="crop_name" id="crop_name">
+                                <option value="">Select Crop</option>
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="col-md-4 col-sm-6 tp_form">
+                        <div class="form-group">
+                            <label for="Yield Contribution">Yield Contribution</label>
+                            <input type="text" class="form-control" name="yield_contribution" id="yield_contribution" placeholder="" value="<?php //echo $customer_last_name; ?>" />
+                        </div>
+                    </div>
+                </div>
+
             </div>
 
         </div>

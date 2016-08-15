@@ -17,7 +17,7 @@ jQuery.fn.extend({
         }
 
         if (config.scroll_offset === undefined) {
-            config.scroll_offset = 100;
+            config.scroll_offset = 500;
         }
 
         for (var i = 0; i < this.length; i++) {

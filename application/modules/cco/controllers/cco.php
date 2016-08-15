@@ -589,14 +589,15 @@ class Cco extends Front_Controller
     public function work_allocation()
     {
         $user= $this->auth->user();
-        $activity = $this->cco_model->get_all_work_allocation($user->country_id);
+        $work_allocation= $this->cco_model->get_all_work_allocation($user->country_id);
 
-        Template::set('table', $activity);
+        /*Template::set('table', $activity);
 
         Template::set('td', $activity['count']);
         Template::set('pagination', (isset($activity['pagination']) && !empty($activity['pagination'])) ? $activity['pagination'] : '' );
-
-        Template::set_view("cco/allocation_activity");
+        */
+        Template::set('work_allocation', $work_allocation);
+        Template::set_view("cco/work_allocation_summary");
         Template::render();
     }
 
