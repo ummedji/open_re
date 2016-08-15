@@ -8,7 +8,7 @@
         echo form_open('cco/add_update_feedback_view_info',$attributes);
         ?>
         <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
-
+        <input type="hidden" class="form-control" name="feedback_edit_id" id="feedback_edit_id" placeholder="" value="" />
 
         <div class="row">
 

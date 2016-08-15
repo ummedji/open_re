@@ -1006,9 +1006,10 @@ class Cco_model extends BF_Model
 
 
       //  $sql = ' SELECT  * ';
-        $sql = ' SELECT  bcf.feedback_subject,bcf.feedback_description,bcf.feedback_id,bcf.created_on,bu.display_name,bmctc.customer_type_name ';
+        $sql = ' SELECT  bcf.feedback_subject,bcf.feedback_description,bcf.feedback_id,bcf.created_on,bu.display_name,bmctc.customer_type_name,bu1.display_name as entered_by_user ';
         $sql .= ' FROM bf_cco_feedback as bcf ';
         $sql .= ' JOIN bf_users as bu ON (bu.id = bcf.customer_id) ';
+        $sql .= ' JOIN bf_users as bu1 ON (bu1.id = bcf.created_by_user) ';
         $sql .= ' JOIN bf_master_customer_type_country as bmctc ON (bmctc.customer_type_id = bu.user_type_id AND bmctc.country_id = bu.country_id) ';
 
         $sql .= 'WHERE 1 ';
@@ -1042,7 +1043,7 @@ class Cco_model extends BF_Model
                             $created_date = $rm['created_on'];
                         }
 
-                        $feedback['row'][] = array($i, $rm['feedback_id'], $created_date,$rm['customer_type_name'],$rm['feedback_subject'],$rm['feedback_description'],$rm['display_name']);
+                        $feedback['row'][] = array($i, $rm['feedback_id'], $created_date,$rm['customer_type_name'],$rm['feedback_subject'],$rm['feedback_description'],$rm['entered_by_user']);
                         $i++;
                     }
 
@@ -1072,29 +1073,55 @@ class Cco_model extends BF_Model
 
         return $user_feedback_data;
     }
+    public function get_feedback_data_edit($feedback_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_cco_feedback as bcf");
+        $this->db->where('bcf.feedback_id',$feedback_id);
+        $user_feedback_data_edit = $this->db->get()->row_array();
+        return $user_feedback_data_edit;
+
+    }
 
     public function add_update_feedback_data()
     {
+        if(!empty($_POST)) {
+            $customer_id = $_POST["customer_id"];
+            $user = $this->auth->user();
+            $logined_user_id = $user->id;
+            $update_array = array();
 
-        $customer_id = $_POST["customer_id"];
-        $user = $this->auth->user();
-        $logined_user_id = $user->id;
-        $update_array = array();
+            $feedback_update_array = array(
+                'customer_id' => $customer_id,
+                'feedback_subject' => $_POST["subject"],
+                'feedback_description' => $_POST["description"],
+                'cco_id' => $logined_user_id,
+                'created_by_user' => $logined_user_id,
+                'modified_by_user' => $logined_user_id,
+                'created_on' => date('Y-m-d H:i:s'),
+                'modified_on' => date('Y-m-d H:i:s')
+            );
+            if($_POST['feedback_edit_id'] == "") {
+                if ($_POST['subject'] != "" && $_POST['description'] != ""){
+                    $result = $this->db->insert("bf_cco_feedback", $feedback_update_array);
+                        if ($this->db->affected_rows() > 0) {
+                            $update_array[] = 1;
+                        }
+                    }
+            }
+            else
+            {
+                //UPDATE
+                if ($_POST['subject'] != "" && $_POST['description'] != "") {
+                    $this->db->where("feedback_id", $_POST['feedback_edit_id']);
+                    $this->db->update("bf_cco_feedback", $feedback_update_array);
 
-        $feedback_update_array = array(
-            'customer_id' => $customer_id,
-            'feedback_subject' => $_POST["subject"],
-            'feedback_description' => $_POST["description"],
-            'cco_id'=>$logined_user_id,
-            'created_by_user'=>$logined_user_id,
-            'modified_by_user'=>$logined_user_id,
-            'created_on' => date('Y-m-d H:i:s'),
-            'modified_on' => date('Y-m-d H:i:s')
-        );
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                }
 
-        $result=$this->db->insert("bf_cco_feedback",$feedback_update_array);
-        if($this->db->affected_rows() > 0) {
-            $update_array[] = 1;
+            }
         }
         if(in_array(1,$update_array))
         {
@@ -1687,6 +1714,36 @@ class Cco_model extends BF_Model
         {
             return 0;
         }
+    }
+
+    public function get_customer_farming_data($customer_id)
+    {
+        $this->db->select("bu.id,bu.email,bu.display_name,
+                           bmpgd1.political_geography_name as level1,bmpgd2.political_geography_name as level2,bmpgd3.political_geography_name as level3,
+                           bmpgd1.political_geo_id as level1_id,bmpgd2.political_geo_id as level2_id,bmpgd3.political_geo_id as level3_id,
+                         ");
+
+        $this->db->from("bf_users as bu");
+
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id","LEFT");
+
+        $this->db->join("bf_master_political_geography_details as bmpgd1","bmpgd1.political_geo_id = bmucd.geo_level_id1","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd2","bmpgd2.political_geo_id = bmucd.geo_level_id2","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3","LEFT");
+
+        $this->db->where('bu.id',$customer_id);
+
+        $farm_user_data = $this->db->get()->result_array();
+        //testdata($farm_user_data);
+        if(isset($farm_user_data ) && !empty($farm_user_data ))
+        {
+            return $farm_user_data;
+        }
+        else
+        {
+            return 0;
+        }
+
     }
 
 }

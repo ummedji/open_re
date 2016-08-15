@@ -348,7 +348,7 @@ $(document).on("submit","form#dialpad_feedback_view_info",function(e){
         success: function (resp) {
             var message = "";
             if(resp == 1){
-                message += 'Data Inserted successfully.';
+                message += 'Data added successfully.';
             }
             else{
                 message += 'Data not Inserted.';
@@ -416,11 +416,24 @@ $(document).on('click', 'div#feedback_data .delete_i', function () {
 
 });
 $(document).on('click', 'div#feedback_data .edit_i', function () {
+
     var customer_id = $("input#customer_id").val();
     var id = $(this).attr('prdid');
-    $("input#subject.form-control").val("Dolly Duck");
 
+    $.ajax({
+        type: 'POST',
+        url: site_url+'cco/get_customer_feedback_data_edit',
+        data: {feedback_id:id},
+        success: function(resp){
 
+            var obj = $.parseJSON(resp);
+
+            $("input#subject").val(obj.feedback_subject);
+            $("textarea#description").val(obj.feedback_description);
+            $("input#feedback_edit_id").val(obj.feedback_id);
+
+        }
+    });
 
 });
 

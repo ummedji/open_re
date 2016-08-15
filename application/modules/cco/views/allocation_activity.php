@@ -116,7 +116,7 @@ if ($this->input->is_ajax_request()) {
 
     </div>
 
-    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px; margin-bottom: 10px;">
+    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 0px; margin-bottom: 10px;">
         <div class="save_button">
             <div class="row">
                 <div class="save_btn" style="display: inline-block;">

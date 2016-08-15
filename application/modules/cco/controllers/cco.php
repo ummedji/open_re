@@ -80,6 +80,15 @@ class Cco extends Front_Controller
         Template::set_view("cco/dialpad");
         Template::render();
     }
+    public function get_customer_feedback_data_edit()
+    {   $user=$this->auth->user();
+        /*$logged_in_user=$user->display_name;*/
+        $feedback_id = $_POST["feedback_id"];
+        $feedback_data = $this->cco_model->get_feedback_data_edit($feedback_id);
+        echo json_encode($feedback_data);
+        die;
+    }
+
     public function get_customer_feedback_data()
     {   $user=$this->auth->user();
         /*$logged_in_user=$user->display_name;*/
@@ -90,7 +99,7 @@ class Cco extends Front_Controller
 
         $feedback_data = $this->cco_model->get_feedback_data($customer_id,$page,$user->local_date,$user->country_id);
 
-        //testdata($feedback_data);
+     //   testdata($feedback_data);
         Template::set('get_user_data', $get_user_data);
         Template::set('customer_id', $customer_id);
         //Template::set('get_feedback_data', $get_feedback_data);
@@ -100,7 +109,7 @@ class Cco extends Front_Controller
         Template::set('td', $feedback_data['count']);
         Template::set('pagination', (isset($feedback_data['pagination']) && !empty($feedback_data['pagination'])) ? $feedback_data['pagination'] : '' );
 
-        Template::set_view("cco/dialpad_feedback_details");
+        Template::set_view("cco/dialpad/dialpad_feedback_details");
         Template::render();
     }
     public function add_update_feedback_view_info()
@@ -280,6 +289,22 @@ class Cco extends Front_Controller
     }
 
 
+    public function get_customer_farming_view_data()
+    {
+
+        $customer_id = $_POST["customerid"];
+
+        $get_customer_farming_data = $this->cco_model->get_customer_farming_data($customer_id);
+
+        Template::set('customer_farming_data', $get_customer_farming_data);
+
+        //  $this->load->view('cco/dialpad_popup_views/general_details');
+
+        Template::set_view("cco/dialpad/dialpad_farming_details");
+        // Template::set_block('sidebar', 'blog_sidebar');
+        Template::render();
+
+    }
 
     public function add_update_general_info()
     {

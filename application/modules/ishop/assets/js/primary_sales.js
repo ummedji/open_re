@@ -290,7 +290,7 @@ $(document).on('click', 'div.primary_sls', function () { // <-- changes
 
 
 
-   
+
 });
 
 $("#primary_sales").on("submit",function(){

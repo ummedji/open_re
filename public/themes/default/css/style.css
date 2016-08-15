@@ -2686,6 +2686,7 @@ table.request_table {
     padding: 0;
     border: 1px solid #ddd;
     border-bottom: none;
+    border-radius: 0;
 }
 .panel.act_panel .collapse.in { border: 1px solid #ddd; border-bottom: none;}
 ul.activity_list { margin: 0; padding: 0 15px; text-align: center;}
