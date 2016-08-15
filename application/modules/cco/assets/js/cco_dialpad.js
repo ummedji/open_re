@@ -173,6 +173,20 @@ function get_retailer_view_data(customer_id)
     });
 }
 
+function get_farming_view_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_farming_view_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+
+
 
 function get_geo_data(campagain_id,level_data,num_count)
 {
@@ -319,11 +333,13 @@ function get_customer_feedback_data(customer_id)
     });
 }
 
+
 $(document).on("submit","form#dialpad_feedback_view_info",function(e){
 
     e.preventDefault();
 
     var param =  $("form#dialpad_feedback_view_info").serializeArray();
+    var customer_id = $("input#customer_id").val();
 
     $.ajax({
         type: 'POST',
@@ -348,7 +364,7 @@ $(document).on("submit","form#dialpad_feedback_view_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        location.reload()
+                        get_customer_feedback_data(customer_id);
                     }
                 });
 
@@ -357,7 +373,8 @@ $(document).on("submit","form#dialpad_feedback_view_info",function(e){
     return false;
 });
 
-$(document).on('click', 'div.allocation_container .delete_i', function () {
+$(document).on('click', 'div#feedback_data .delete_i', function () {
+    var customer_id = $("input#customer_id").val();
     var id = $(this).attr('prdid');
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
@@ -376,10 +393,11 @@ $(document).on('click', 'div.allocation_container .delete_i', function () {
 
                     $.ajax({
                         type: 'POST',
-                        url: site_url+'cco/delete_allocation_data',
-                        data: {allocation_id:id},
+                        url: site_url+'cco/delete_feedback_data',
+                        data: {feedback_id:id},
                         success: function(resp){
-                            location.reload();
+                            //location.reload();
+                            get_customer_feedback_data(customer_id);
                         }
                     });
 
@@ -395,6 +413,14 @@ $(document).on('click', 'div.allocation_container .delete_i', function () {
         });
 
     return false;
+
+});
+$(document).on('click', 'div#feedback_data .edit_i', function () {
+    var customer_id = $("input#customer_id").val();
+    var id = $(this).attr('prdid');
+    $("input#subject.form-control").val("Dolly Duck");
+
+
 
 });
 
@@ -588,6 +614,46 @@ $(document).on("submit","form#dialpad_financial_info",function(e){
                     close: function (event, ui) {
                         $(this).remove();
                         get_financial_detail_data(customer_id);
+                        //location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
+$(document).on("submit","form#dialpad_retailer_info",function(e){
+
+    e.preventDefault();
+
+    var customer_id = $("input#customer_id").val();
+    var param =  $("form#dialpad_retailer_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_retailer_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Inserted successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        get_retailer_view_data(customer_id);
                         //location.reload()
                     }
                 });

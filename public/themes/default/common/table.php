@@ -3,7 +3,7 @@
 
     </div>
     <?php
- //testdata($table);
+
 $action_data = $this->uri->segment(2);
 if(isset($table) && count($table)>0 && $table != false) {
     ?>

@@ -93,8 +93,8 @@ echo form_open('cco/add_allocation',$attributes);
     </div>
 </div>
 
-<div class="col-md-12 ad_mr_top">
-    <div class="row">
+<div class="col-md-12 cco_name_par text-center tp_form inline-parent">
+    <div class="form-group">
         <label>CCO Name</label>
         <select id="cco_data" class="cco_data selectpicker" name="cco_data">
             <option value="">Select CCO</option>
@@ -109,7 +109,9 @@ echo form_open('cco/add_allocation',$attributes);
             }
             ?>
         </select>
-        <button style="display:none;" title="Save" type="submit" class="btn btn-primary save_btn">Save</button>
+        <div class="inl_button save_btn" style="vertical-align: top;">
+           <button style="display:none;" title="Save" type="submit" class="btn btn-primary save_btn">Save</button>
+        </div>
     </div>
 </div>
 <?php echo form_close(); ?>

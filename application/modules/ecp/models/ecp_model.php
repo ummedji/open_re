@@ -3180,13 +3180,14 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $_FILES['upload_file_data']['error']	= $files['upload_file_data']['error'][$i];
             $_FILES['upload_file_data']['size']		= $files['upload_file_data']['size'][$i];
 
-           $this->upload->initialize($this->set_upload_options());
+            $this->upload->initialize($this->set_upload_options());
 
             $file_name = array();
 
             if($uploads_data = $this->upload->do_upload('upload_file_data'))
             {
                 $upload_data 	= $this->upload->data();
+
                 $file_name['name'] 	=   $upload_data['file_name'];
 
                 $img = array('image/gif','image/jpg','image/png','image/jpeg');
@@ -3202,9 +3203,11 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
 
             }
-            else{
-                $file_name = 1;
+            else
+            {
+                $file_name[] = $_FILES['upload_file_data']['error'];
             }
+
 
             $final_array[] = $file_name;
 

@@ -13,9 +13,11 @@ echo theme_view('header');
         <div class="inner_contain">
 
             <?php
-            if($this->uri->segment(1) != 'cco') {
-                echo theme_view('sidebar');
-            }
+          //  if($this->uri->segment(1) != 'cco') {
+    if($this->uri->segment(2) != 'dialpad') {
+        echo theme_view('sidebar');
+    }
+          //  }
             ?>
             <div class="right_contain">
                 <div class="inn_right_contain pr_right_contain">

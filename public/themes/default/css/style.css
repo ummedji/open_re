@@ -3862,6 +3862,11 @@ h6.gn-info-tl{
 @media screen and (max-width: 991px){
     .text-right-cco { text-align: left;}
 }
+.cco_name_par.tp_form .form-group label { font-weight: normal !important;}
+@media screen and (max-width: 991px){
+    .cco_name_par .bootstrap-select { margin-bottom: 10px !important;}
+}
+
 /****End CCO css****/
 
 

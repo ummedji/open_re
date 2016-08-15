@@ -1001,14 +1001,63 @@ class Cco_model extends BF_Model
         return $social_data;
 
     }
-    public function get_feedback_data($customer_id)
+    public function get_feedback_data($customer_id,$page = null,$local_date=null,$country_id)
     {
-        $this->db->select("*");
-        $this->db->from("bf_cco_feedback as bcf");
-        $this->db->where('bcf.customer_id',$customer_id);
-        $user_feedback_data = $this->db->get()->result_array();
 
-            return $user_feedback_data;
+
+      //  $sql = ' SELECT  * ';
+        $sql = ' SELECT  bcf.feedback_subject,bcf.feedback_description,bcf.feedback_id,bcf.created_on,bu.display_name,bmctc.customer_type_name ';
+        $sql .= ' FROM bf_cco_feedback as bcf ';
+        $sql .= ' JOIN bf_users as bu ON (bu.id = bcf.customer_id) ';
+        $sql .= ' JOIN bf_master_customer_type_country as bmctc ON (bmctc.customer_type_id = bu.user_type_id AND bmctc.country_id = bu.country_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND bcf.deleted =0 ';
+        $sql .= ' AND bcf.status =1 ';
+        $sql .= ' AND bcf.customer_id ="'.$customer_id.'" ';
+
+       // $sql .= 'ORDER BY bcca.allocation_id DESC ';
+
+        $feedback_data = $this->grid->get_result_res($sql);
+
+        if (isset($feedback_data['result']) && !empty($feedback_data['result'])) {
+
+            $feedback['head'] = array('Sr. No.', 'Action','Date','Customer Type', 'Subject','Discription','Entered By');
+
+            $feedback['count'] = count($feedback['head']);
+
+                    if ($page != null || $page != "") {
+                        $i = (($page * 10) - 9);
+                    } else {
+                        $i = 1;
+                    }
+
+                    foreach ($feedback_data['result'] as $rm) {
+
+                        if ($local_date != null) {
+                            $date3 = strtotime($rm['created_on']);
+                            $created_date = date($local_date, $date3);
+
+                        } else {
+                            $created_date = $rm['created_on'];
+                        }
+
+                        $feedback['row'][] = array($i, $rm['feedback_id'], $created_date,$rm['customer_type_name'],$rm['feedback_subject'],$rm['feedback_description'],$rm['display_name']);
+                        $i++;
+                    }
+
+
+            $feedback['action'] = 'is_action';
+            $feedback['delete'] = 'is_delete';
+            $feedback['edit'] = 'is_edit';
+            $feedback['pagination'] = $feedback_data['pagination'];
+
+            return $feedback;
+        }
+        else {
+            return false;
+        }
+
     }
     public function get_user_data($customer_id)
     {
@@ -1053,6 +1102,17 @@ class Cco_model extends BF_Model
         }
         else
         {
+            return 0;
+        }
+    }
+    public function delete_feedback($feedback_id)
+    {
+        $this ->db->where('feedback_id',$feedback_id);
+        $this->db->delete("bf_cco_feedback");
+
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
             return 0;
         }
     }
@@ -1131,23 +1191,56 @@ class Cco_model extends BF_Model
 
     }
 
-    public function get_customer_location_retailer_data($user_role,$customer_level_2)
+    public function get_customer_location_retailer_data($customer_id,$user_role,$customer_level_2)
     {
         $user = $this->auth->user();
-        $logined_user_country_id = $user->country_id;
+
+        $customer_relation_retailer_data = $this->customer_relation_retailer_data($customer_id,$user_role);
+        $ignore_retailer_data = array();
+
+        if(!empty($customer_relation_retailer_data))
+        {
+            foreach($customer_relation_retailer_data as $key => $retailer_data)
+            {
+                $ignore_retailer_data[] = $retailer_data["id"];
+            }
+        }
 
         $this->db->select("*");
         $this->db->from("bf_users as bu");
         $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id");
         $this->db->where("bu.role_id",$user_role);
         $this->db->where("bmucd.geo_level_id1",$customer_level_2);
-        $this->db->where("bu.country_id",$logined_user_country_id);
+        $this->db->where("bu.country_id",$user->country_id);
+
+        if(!empty($ignore_retailer_data))
+        {
+            $this->db->where_not_in('bu.id', $ignore_retailer_data);
+        }
+
         $this->db->where("bu.deleted",0);
         $this->db->where("bu.active",1);
 
         $retailer_data = $this->db->get()->result_array();
 
         return $retailer_data;
+    }
+
+    public function customer_relation_retailer_data($customer_id,$user_role)
+    {
+        $user = $this->auth->user();
+
+        $this->db->select("*");
+        $this->db->from("bf_master_customer_to_customer_mapping as bmctcm");
+        $this->db->join("bf_users as bu","bu.id = bmctcm.to_customer_id");
+        $this->db->where("bmctcm.from_customer_id",$customer_id);
+        $this->db->where("bu.role_id",$user_role);
+        $this->db->where("bmctcm.deleted",0);
+        $this->db->where("bmctcm.status",1);
+
+        $customer_relation_retailer_data = $this->db->get()->result_array();
+
+        return $customer_relation_retailer_data;
     }
 
     public function add_update_general_data()
@@ -1539,7 +1632,61 @@ class Cco_model extends BF_Model
         {
             return 0;
         }
+    }
 
+    public function add_update_retailer_detail_data()
+    {
+        $update_array = array();
+        $customer_id = $_POST["customer_id"];
+
+        if(!empty($_POST["retailer_data"]))
+        {
+            foreach ($_POST["retailer_data"] as $ret_key => $retailer_data)
+            {
+
+                $retailer_data_array = array(
+                    'from_customer_id' => $customer_id,
+                    'to_customer_id' => $retailer_data
+                );
+
+                //INSERT
+                $this->db->insert("bf_master_customer_to_customer_mapping", $retailer_data_array);
+
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public function delete_customer_retailer_relation_data()
+    {
+        $update_array = array();
+
+        $this->db->where('CtoC_mapping_id', $_POST["relation_id"]);
+        $this->db->delete('bf_master_customer_to_customer_mapping');
+
+        if ($this->db->affected_rows() > 0) {
+            $update_array[] = 1;
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
 }

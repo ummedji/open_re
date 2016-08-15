@@ -91,8 +91,8 @@ if ($this->input->is_ajax_request()) {
 
     </div>
 
-    <div class="col-md-12 ad_mr_top">
-        <div class="row">
+    <div class="col-md-12 cco_name_par text-center tp_form inline-parent">
+        <div class="form-group">
             <label>CCO Name</label>
             <select id="cco_data" class="cco_data selectpicker" name="cco_data">
                 <option value="">Select CCO</option>
@@ -104,7 +104,9 @@ if ($this->input->is_ajax_request()) {
                         <?php  }
                     } ?>
             </select>
-            <button title="Save" type="submit" class="btn btn-primary save_btn" style="display: none">Save</button>
+            <div class="inl_button save_btn" style="vertical-align: top;">
+               <button title="Save" type="submit" class="btn btn-primary save_btn" style="display: none">Save</button>
+            </div>
         </div>
     </div>
     <?php echo form_close(); ?>
@@ -114,14 +116,14 @@ if ($this->input->is_ajax_request()) {
 
     </div>
 
-    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+    <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px; margin-bottom: 10px;">
         <div class="save_button">
             <div class="row">
-                <div class="col-md-3 save_btn">
+                <div class="save_btn" style="display: inline-block;">
                     <button type="button" id="download_allocation" class="btn btn-primary">Download</button>
                 </div>
                 <div class="delete_button" style="display: none">
-                    <div class="col-md-3 save_btn">
+                    <div class="save_btn">
                         <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Delete</button>
                     </div>
                 </div>

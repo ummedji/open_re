@@ -181,7 +181,7 @@
                 <li><a href="javascript:void(0);" onclick="get_social_detail_data(<?php echo $customer_id; ?>);">Social Connection</a></li>
                 <li><a href="javascript:void(0);" onclick = "get_financial_detail_data(<?php echo $customer_id; ?>);">Financial Details</a></li>
                 <li><a href="javascript:void(0);" onclick = "get_retailer_view_data(<?php echo $customer_id; ?>);" >Retailers</a></li>
-                <li><a href="#">Crop</a></li>
+                <li><a href="javascript:void(0);" onclick = "get_crop_view_data(<?php echo $customer_id; ?>);">Crop</a></li>
                 <li><a href="#">Products</a></li>
                 <li><a href="#">Business Details</a></li>
             </ul>
