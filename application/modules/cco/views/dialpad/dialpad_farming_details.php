@@ -107,8 +107,8 @@ $level3_id = (isset($customer_farming_data[0]["level3_id"]) && !empty($customer_
                     </div>
 
                 </div>
-
-                <div class="row cco-form-fl">
+                <div class="rotate">
+                    <div class="row cco-form-fl">
                     <div class="col-md-4 col-sm-6 tp_form">
                         <div class="form-group">
                             <label for="Crop Name">Crop Name</label>
@@ -125,6 +125,11 @@ $level3_id = (isset($customer_farming_data[0]["level3_id"]) && !empty($customer_
                             <input type="text" class="form-control" name="yield_contribution" id="yield_contribution" placeholder="" value="<?php //echo $customer_last_name; ?>" />
                         </div>
                     </div>
+                </div>
+                </div>
+
+                <div class="col-md-12 text-center" style="margin-bottom: 10px;">
+                    <button type="button" style="padding: 5px 30px;" class="btn btn-default back_details-button add_more">More</button>
                 </div>
 
             </div>
@@ -175,5 +180,38 @@ $level3_id = (isset($customer_farming_data[0]["level3_id"]) && !empty($customer_
             $("select#geo_level_2").val(selceted_level_2);
             $("select#geo_level_1").val(selceted_level_1);
         }, 2000);
+
+
+    $("button.add_more").on('click',function(){
+
+        var html = '';
+
+        html += '<div class="rotate_data">';
+
+        html += '<div class="row cco-form-fl">';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
+        html += '<div class="form-group">';
+        html += '<label for="Crop Name">Crop Name</label>';
+
+        html += '<select class="form-control" name="crop_name" id="crop_name">';
+        html += '<option value="">Select Crop</option>';
+        html += '</select>';
+
+        html += '</div>';
+        html += '</div>';
+        html += '<div class="col-md-4 col-sm-6 tp_form">';
+        html += '<div class="form-group">';
+        html += '<label for="Yield Contribution">Yield Contribution</label>';
+        html += '<input type="text" class="form-control" name="yield_contribution" id="yield_contribution" placeholder="" value="" />';
+        html += '</div>';
+        html += '</div>';
+        html += '</div>'
+
+        html += '</div>';
+
+        $("div.rotate_data:last").after(html);
+
+    });
+
 
 </script>
