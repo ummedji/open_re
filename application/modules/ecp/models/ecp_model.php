@@ -2729,6 +2729,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $this->db->join('master_disease_country as mdc','mdc.disease_country_id = eapdd.activity_planning_diseases_details_id');
         $this->db->where('activity_planning_id',$activity_planning_id);
         $Diseases= $this->db->get()->result_array();
+        testdata($Diseases);
         if(isset($Diseases) && !empty($Diseases))
         {
             return $Diseases;

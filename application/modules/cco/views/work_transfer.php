@@ -114,14 +114,14 @@
     </div>
 </div>
 
-<div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
+<div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 0px; margin-bottom: 10px;">
     <div class="save_button">
         <div class="row">
-            <div class="col-md-3 save_btn">
+            <div class="save_btn" style="display: inline-block;">
                 <button type="button" id="submit" class="btn btn-primary">Transfer</button>
             </div>
-            <div class="delete_button">
-                <div class="col-md-3 save_btn">
+            <div class="delete_button" style="display: inline-block;">
+                <div class="save_btn">
                     <button type="button" id ='cancel_data' class="btn btn-primary" style="background-color: red">Cancel</button>
                 </div>
             </div>
