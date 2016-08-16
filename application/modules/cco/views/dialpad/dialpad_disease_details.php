@@ -59,7 +59,7 @@
             $.ajax({
                 type: 'POST',
                 url: site_url + "cco/get_diseases_detail_data",
-                data: {searchdata: search_data},
+                data: {searchdata: search_data,customerid : customer_id},
                 success: function (resp) {
                     $("div#searched_data").html(resp);
                     //  get_geo_data(campagain_id,1,num_count);

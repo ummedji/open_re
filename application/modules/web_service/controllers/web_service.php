@@ -65,7 +65,7 @@ class Web_service extends Front_Controller
                     if (trim($unq_no) != trim($user_info['unq_no'])) {
                         $result['status'] = 'logout';
                         $result['message'] = 'Due to login from another device you are logged out from current device';
-                        $result['data'] = '';
+                        $result['data'] = array();
                         return $result;
                     }
                 }
@@ -173,7 +173,7 @@ class Web_service extends Front_Controller
         if (trim($login) == '' || trim($password) == '') {
             $result['status'] = false;
             $result['message'] = 'Please Provide Required Data.';
-            $result['data'] = '';
+            $result['data'] = array();
         } else {
             if ($info = (isset($login, $password) && true === $this->auth->login($login, $password))) {
                 $this->db->select('*');
@@ -214,7 +214,7 @@ class Web_service extends Front_Controller
                 } else {
                     $result['status'] = false;
                     $result['message'] = 'You have no access!';
-                    $result['data'] = '';
+                    $result['data'] = array();
                 }
             } else {
                 $this->db->select('*');
@@ -226,7 +226,7 @@ class Web_service extends Front_Controller
                     if ($code_data1['active'] == 0) {
                         $result['status'] = false;
                         $result['message'] = lang('error_inactive');
-                        $result['data'] = '';
+                        $result['data'] = array();
                     } else {
                         if (isset($attempt) && $attempt >= 3) {
 
@@ -235,19 +235,19 @@ class Web_service extends Front_Controller
                             if ($res == true) {
                                 $result['status'] = false;
                                 $result['message'] = lang('error_inactive');
-                                $result['data'] = '';
+                                $result['data'] = array();
                             }
 
                         } else {
                             $result['status'] = false;
                             $result['message'] = 'E-Mail Or Password Incorrect';
-                            $result['data'] = '';
+                            $result['data'] = array();
                         }
                     }
                 } else {
                     $result['status'] = false;
                     $result['message'] = 'E-Mail Or Password Incorrect';
-                    $result['data'] = '';
+                    $result['data'] = array();
                 }
             }
         }
@@ -881,12 +881,12 @@ class Web_service extends Front_Controller
                 if ($po_data_status == '1') {
                     $result['status'] = true;
                     $result['message'] = 'Success';
-                    $result['data'] = '';
+                    $result['data'] =  array();
                 }
                 else{
                     $result['status'] = false;
                     $result['message'] = 'Data not updated';
-                    $result['data'] = '';
+                    $result['data'] =  array();
                 }
 
             }
@@ -3672,7 +3672,7 @@ class Web_service extends Front_Controller
             }
             $result['status'] = true;
             $result['message'] = 'Retrieved Successfully.';
-            $result['data'] = '';
+            $result['data'] =  array();
         } else {
             $result['status'] = false;
             $result['message'] = "All Fields are Required.";
@@ -3917,7 +3917,7 @@ class Web_service extends Front_Controller
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Saved Successfully.';
-                $result['data'] = '';
+                $result['data'] =  array();
             } else {
                 $result['status'] = false;
                 $result['message'] = 'Fail';
@@ -3941,7 +3941,7 @@ class Web_service extends Front_Controller
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Saved Successfully.';
-                $result['data'] = '';
+                $result['data'] =  array();
             } else {
                 $result['status'] = false;
                 $result['message'] = 'Fail';
@@ -4004,7 +4004,7 @@ class Web_service extends Front_Controller
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Saved Successfully.';
-                $result['data'] = '';
+                $result['data'] =  array();
             } else {
                 $result['status'] = false;
                 $result['message'] = 'Fail';
@@ -4028,7 +4028,7 @@ class Web_service extends Front_Controller
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Saved Successfully.';
-                $result['data'] = '';
+                $result['data'] =  array();
             } else {
                 $result['status'] = false;
                 $result['message'] = 'Fail';
@@ -4160,7 +4160,7 @@ class Web_service extends Front_Controller
             if ($delete == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Deleted Successfully.';
-                $result['data'] = '';
+                $result['data'] =  array();
             }
 
         } else {
@@ -4198,7 +4198,7 @@ class Web_service extends Front_Controller
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Success.';
-                $result['data'] = '';
+                $result['data'] =  array();
             }
 
         } else {
@@ -4237,7 +4237,7 @@ class Web_service extends Front_Controller
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Success.';
-                $result['data'] = '';
+                $result['data'] =  array();
             }
 
         } else {
@@ -4576,7 +4576,7 @@ class Web_service extends Front_Controller
             if ($submit != 0) {
                 $result['status'] = true;
                 $result['message'] = 'Success.';
-                $result['data'] = '';
+                $result['data'] =  array();
             }
 
         } else {
@@ -4649,12 +4649,12 @@ class Web_service extends Front_Controller
             {
                 $result['status'] = true;
                 $result['message'] = 'Success.';
-                $result['data'] = '';
+                $result['data'] =  array();
             }
             else{
                 $result['status'] = false;
                 $result['message'] = 'Something Went Wrong.';
-                $result['data'] = '';
+                $result['data'] =  array();
             }
 
 
@@ -4688,7 +4688,7 @@ class Web_service extends Front_Controller
             else{
                 $result['status'] = true;
                 $result['message'] = 'No ddata.';
-                $result['data'] = '';
+                $result['data'] = array();
             }
 
         } else {
@@ -4719,7 +4719,7 @@ class Web_service extends Front_Controller
             else{
                 $result['status'] = true;
                 $result['message'] = 'No ddata.';
-                $result['data'] = '';
+                $result['data'] = array();
             }
 
         } else {
@@ -4750,7 +4750,7 @@ class Web_service extends Front_Controller
             else{
                 $result['status'] = true;
                 $result['message'] = 'No ddata.';
-                $result['data'] = '';
+                $result['data'] = array();
             }
 
         } else {
@@ -4779,7 +4779,7 @@ class Web_service extends Front_Controller
             else{
                 $result['status'] = true;
                 $result['message'] = 'No ddata.';
-                $result['data'] = '';
+                $result['data'] = array();
             }
 
         } else {
@@ -4899,7 +4899,7 @@ class Web_service extends Front_Controller
             else{
                 $result['status'] = true;
                 $result['message'] = 'No ddata.';
-                $result['data'] = '';
+                $result['data'] = array();
             }
 
         } else {

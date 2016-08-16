@@ -116,6 +116,44 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_geo_level_data($political_geo_id,$level,$selectedtype=NULL)
+    {
+        if($selectedtype == NULL)
+        {
+            $user_role = 11;
+        }
+        elseif($selectedtype == "retailer")
+        {
+            $user_role = 10;
+        }
+        elseif($selectedtype == "distributor")
+        {
+            $user_role = 9;
+        }
+
+
+        $geo_query = "SELECT bmpg.political_geo_id, bmpg.political_geography_name,
+        SUM(IF(ISNULL(bmucd.user_id),0,1)) AS tot_count,
+        SUM(IF(ISNULL(bccac.customer_id),0,1)) AS tot_allocated,
+        (SUM(IF(ISNULL(bmucd.user_id),0,1)) - SUM(IF(ISNULL(bccac.customer_id),0,1))) AS tot_not_allocated
+        FROM `bf_master_political_geography_details` AS bmpg
+        LEFT JOIN `bf_master_user_contact_details` AS bmucd ON (bmucd.geo_level_id".$level." = bmpg.political_geo_id)
+        LEFT JOIN `bf_cco_campaign_allocation_customers` AS bccac ON (bccac.customer_id = bmucd.user_id)
+        LEFT JOIN `bf_users` AS bu ON (bu.id = bmucd.user_id AND bu.`role_id` = $user_role AND bu.deleted= 0)
+        WHERE bmpg.parent_geo_id = $political_geo_id
+        GROUP BY bmpg.political_geo_id
+        ORDER BY bmpg.political_geography_name, bmpg.political_geo_id";
+
+        $geo_data = $this->db->query($geo_query);
+        $geo_location_data = $geo_data->result_array();
+
+        if (isset($geo_location_data) && !empty($geo_location_data)) {
+            return $geo_location_data;
+        } else {
+            return 0;
+        }
+    }
+
     /**
      * @param $campaign_location_id
      * @param $global_head_user
@@ -1242,10 +1280,10 @@ class Cco_model extends BF_Model
 
         $this->db->where('bu.id',$customer_id);
 
-        $user_feedback_data = $this->db->get()->result_array();
+        $user_data = $this->db->get()->result_array();
 
 
-        return $user_feedback_data;
+        return $user_data;
     }
     public function get_feedback_data_edit($feedback_id)
     {
@@ -2109,9 +2147,30 @@ class Cco_model extends BF_Model
 
     }
 
-    public function get_search_disease_detail($search_data)
+    public function get_search_disease_detail($search_data,$customer_id)
     {
         $user = $this->auth->user();
+
+        //GET CUSTOMER 2nd LEVEL DATA
+        $user_data = $this->get_user_data($customer_id);
+
+        //GET ALL LOCATIONS WHO HAVING THAT LEVEL AS PARENT
+
+        $geo_level_id2 = (isset($user_data[0]["geo_level_id2"]) && !empty($user_data[0]["geo_level_id2"])) ? $user_data[0]["geo_level_id2"] : "";
+
+        $all_child_geo_data_array = array();
+
+        if($geo_level_id2 != "")
+        {
+            $all_child_geo_data = $this->get_child_data($geo_level_id2);
+            if(!empty($all_child_geo_data) && $all_child_geo_data != 0)
+            {
+                foreach($all_child_geo_data as $key => $geo_data) {
+                    $all_child_geo_data_array[] = $geo_data["political_geo_id"];
+                }
+            }
+        }
+      //  testdata($user_data);
 
         $sql = "SELECT
                 bmdc.disease_name,

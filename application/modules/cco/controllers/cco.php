@@ -389,8 +389,10 @@ class Cco extends Front_Controller
     public function get_diseases_detail_data()
     {
         $search_data = $_POST["searchdata"];
+        $customer_id = $_POST["customerid"];
 
-        $searched_data = $this->cco_model->get_search_disease_detail($search_data);
+
+        $searched_data = $this->cco_model->get_search_disease_detail($search_data,$customer_id);
 
         Template::set('searched_data', $searched_data);
         Template::set('search_type', 'disease');
@@ -598,6 +600,18 @@ class Cco extends Front_Controller
         $parentgeoid = $_POST["parentgeoid"];
 
         $get_level_data = $this->cco_model->get_child_data($parentgeoid);
+
+        echo json_encode($get_level_data);
+        die;
+    }
+
+    public function get_next_level_geo_data()
+    {
+        $parentgeoid = $_POST["parentgeoid"];
+        $level = $_POST["leveldata"];
+        $selectedtype = isset($_POST["selectedtype"]) ? $_POST["selectedtype"] : NULL;
+
+        $get_level_data = $this->cco_model->get_geo_level_data($parentgeoid,$level,$selectedtype);
 
         echo json_encode($get_level_data);
         die;

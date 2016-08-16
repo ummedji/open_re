@@ -3851,6 +3851,22 @@ ul.bot-tl-s-box li:last-child { padding: 30px 0;}
     font-size: 13px;
     color: #4d4e4e;
 }
+ul.corp-list {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    background-color: #fefdfd;
+    border: solid 1px #eeeded;
+}
+ul.corp-list li {
+    list-style: none;
+    display: inline-block;
+    padding: 3px 5px;
+    border-right: solid 1px #eeeded;
+}
+ul.corp-list li:last-child { border-right: none;}
+ul.corp-list li:first-child { width: 100px;}
+ul.corp-list li:nth-child(2) { min-width: 80px;}
 @media screen and (max-width: 991px) {
     .plng_sub_nave_cco {margin-bottom: 0px;}
 }

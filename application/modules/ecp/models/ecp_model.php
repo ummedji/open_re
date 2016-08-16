@@ -2011,7 +2011,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
     public function addActivityPlanning($user_id,$country_id,$web_service=null)
     {
-       // testdata($_POST);
         $activity_planning_id = $this->input->post("inserted_activity_planning_id");
         $activity_type_id = $this->input->post("activity_type_id");
         $geo_level_4 = $this->input->post("geo_level_4");
@@ -2067,19 +2066,19 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $pl_time = $this->input->post("planning_time");
             $date_time= $planning_date.' '.$pl_time;
             $planning_date_time = date('Y-m-d H:i:s', strtotime($date_time));
-            $crop =  explode(',',$this->input->post("crop"));
-            $product_sku =  explode(',',$this->input->post("product_sku"));
-            $diseases =  explode(',',$this->input->post("diseases"));
-            $farmers =  explode(',',$this->input->post("farmers"));
-            $farmer_num =  explode(',',$this->input->post("farmer_num"));
-            $digital_id  =  explode(',',$this->input->post("digital_id"));
-            $joint_id  =  explode(',',$this->input->post("joint_id"));
-            $product_samples =  explode(',',$this->input->post("product_samples"));
-            $product_samples_qty =  explode(',',$this->input->post("product_samples_qty"));
-            $product_materials =  explode(',',$this->input->post("product_materials"));
-            $product_materials_qty =  explode(',',$this->input->post("product_materials_qty"));
-            $materials =  explode(',',$this->input->post("materials"));
-            $materials_qty =  explode(',',$this->input->post("materials_qty"));
+            $crop =  (trim($this->input->post("crop")) != "" ? explode(',',$this->input->post("crop")) : "");
+            $product_sku =  (trim($this->input->post("product_sku")) != "" ? explode(',',$this->input->post("product_sku")) : '');
+            $diseases =  (trim($this->input->post("diseases")) != "" ? explode(',',$this->input->post("diseases")) : '');
+            $farmers =  (trim($this->input->post("farmers")) != "" ? explode(',',$this->input->post("farmers")) : '');
+            $farmer_num =  (trim($this->input->post("farmer_num")) != "" ? explode(',',$this->input->post("farmer_num")) : '');
+            $digital_id  =  (trim($this->input->post("digital_id")) != "" ? explode(',',$this->input->post("digital_id")) : '');
+            $joint_id  =  (trim($this->input->post("joint_id")) != "" ? explode(',',$this->input->post("joint_id")) : '');
+            $product_samples =  (trim($this->input->post("product_samples")) != "" ? explode(',',$this->input->post("product_samples")) : '');
+            $product_samples_qty =  (trim($this->input->post("product_samples_qty")) != "" ? explode(',',$this->input->post("product_samples_qty")) : '');
+            $product_materials = (trim($this->input->post("product_materials")) != "" ? explode(',',$this->input->post("product_materials")) : '') ;
+            $product_materials_qty = (trim($this->input->post("product_materials_qty")) != "" ? explode(',',$this->input->post("product_materials_qty")) : '');
+            $materials =  ( trim($this->input->post("materials")) != "" ? explode(',',$this->input->post("materials")) : '');
+            $materials_qty =  (trim($this->input->post("materials_qty")) != "" ? explode(',',$this->input->post("materials_qty")) : '');
         }
         else{
 
@@ -2408,7 +2407,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
 
                 if(isset($farmers) && !empty($farmers)){
-
                     foreach($farmers as $k => $val_frm)
                     {
                         $key_farmer_details = array(
@@ -2612,7 +2610,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 $activity['delete'] = '';
                 $activity['edit_disabled'] = $edit_disabled ;
                 $activity['pagination'] = $activity_approval['pagination'];
-               // testdata($activity);
+
                 return $activity;
             } else {
                 return false;
@@ -2726,11 +2724,9 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     public function getDiseasesDetails($activity_planning_id){
         $this->db->select('eapdd.diseases_id,mdc.disease_name');
         $this->db->from('ecp_activity_planning_diseases_details as eapdd');
-        $this->db->join('master_disease_country as mdc','mdc.disease_country_id = eapdd.activity_planning_diseases_details_id');
+        $this->db->join('master_disease_country as mdc','mdc.disease_country_id = eapdd.diseases_id');
         $this->db->where('activity_planning_id',$activity_planning_id);
         $Diseases= $this->db->get()->result_array();
-        echo $this->db->last_query();
-        testdata($Diseases);
         if(isset($Diseases) && !empty($Diseases))
         {
             return $Diseases;
@@ -2869,7 +2865,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     public function addActivityUnplanned($user_id,$country_id,$web_service = null,$local_date = null)
     {
 
-
         $activity_type_id = $this->input->post("activity_type_id");
         $geo_level_4 = $this->input->post("geo_level_4");
         $geo_level_3 = $this->input->post("geo_level_3");
@@ -2900,21 +2895,21 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $date_time= $execution_date.' '.$pl_time;
             $execution_date_time = date('Y-m-d H:i:s', strtotime($date_time));
 
-            $crop =  explode(',',$this->input->post("crop"));
-            $product_sku =  explode(',',$this->input->post("product_sku"));
-            $diseases =  explode(',',$this->input->post("diseases"));
-            $farmers =  explode(',',$this->input->post("farmers"));
-            $farmer_num =  explode(',', $this->input->post("farmer_num"));
-            $digital_id  =  explode(',',$this->input->post("digital_id"));
-            $joint_id  =  explode(',',$this->input->post("joint_id"));
-            $product_samples =  explode(',',$this->input->post("product_samples"));
-            $product_samples_qty =  explode(',',$this->input->post("product_samples_qty"));
-            $product_materials =  explode(',',$this->input->post("product_materials"));
-            $product_materials_qty =  explode(',',$this->input->post("product_materials_qty"));
-            $materials =  explode(',',$this->input->post("materials"));
-            $materials_qty =  explode(',',$this->input->post("materials_qty"));
-            $customer_no = explode(',',$this->input->post("customer_no"));
-            $customer_name =explode(',', $this->input->post("customer_name"));
+            $crop = (trim($this->input->post("crop")) != "" ? explode(',',$this->input->post("crop")) : '');
+            $product_sku = (trim($this->input->post("product_sku")) != "" ? explode(',',$this->input->post("product_sku")) : '');
+            $diseases = ( trim($this->input->post("diseases")) != "" ? explode(',',$this->input->post("diseases")) : '');
+            $farmers = (trim($this->input->post("farmers")) != "" ? explode(',',$this->input->post("farmers")) : '');
+            $farmer_num = (trim($this->input->post("farmer_num")) != "" ? explode(',', $this->input->post("farmer_num")) : '');
+            $digital_id  = (trim($this->input->post("digital_id")) != "" ? explode(',',$this->input->post("digital_id")) : '');;
+            $joint_id  = (trim($this->input->post("joint_id")) != "" ? explode(',',$this->input->post("joint_id")) : '');
+            $product_samples = (trim($this->input->post("product_samples")) != "" ? explode(',',$this->input->post("product_samples")) : '');
+            $product_samples_qty = (trim($this->input->post("product_samples_qty")) != "" ? explode(',',$this->input->post("product_samples_qty")) : '');
+            $product_materials = (trim($this->input->post("product_materials")) != "" ? explode(',',$this->input->post("product_materials")) : '' );
+            $product_materials_qty =  (trim($this->input->post("product_materials_qty")) != ""  ? explode(',',$this->input->post("product_materials_qty")) : "" );
+            $materials = (trim($this->input->post("materials")) != ""  ? explode(',',$this->input->post("materials")) : '');
+            $materials_qty = (trim($this->input->post("materials_qty")) != "" ? explode(',',$this->input->post("materials_qty")) : '');
+            $customer_no = (trim($this->input->post("customer_no")) != ""  ? explode(',',$this->input->post("customer_no")) : '');
+            $customer_name = (trim($this->input->post("customer_name")) != "" ? explode(',', $this->input->post("customer_name")) : '' );
             $activity_note = $this->input->post("activity_note");
             $rating = $this->input->post("rating");
             $amount = $this->input->post("amount");
@@ -3020,7 +3015,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
                 }
             }
 
-            if(isset($farmers) && !empty($farmers) ){
+            if(isset($farmers) && !empty($farmers)){
+                testdata($farmers);
                 foreach($farmers as $k => $val_frm)
                 {
                     $key_farmer_details = array(
@@ -3246,8 +3242,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $date_time= $execution_date.' '.$pl_time;
             $execution_date_time = date('Y-m-d H:i:s', strtotime($date_time));
             $meeting_duration = $this->input->post("meeting_duration");
-            $customer_no = explode(',',$this->input->post("customer_no"));
-            $customer_name =explode(',', $this->input->post("customer_name"));
+            $customer_no = (trim($this->input->post("customer_no")) != "" ?  explode(',',$this->input->post("customer_no")) : '');
+            $customer_name =(trim($this->input->post("customer_name")) != "" ? explode(',', $this->input->post("customer_name")) : '');
             $activity_note = $this->input->post("activity_note");
             $rating = $this->input->post("rating");
             $amount = $this->input->post("amount");

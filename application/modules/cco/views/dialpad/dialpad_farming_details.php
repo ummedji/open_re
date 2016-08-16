@@ -204,8 +204,10 @@ if(!empty($all_crop_data) && $all_crop_data != 0)
                 </div>
                 </div>
 
-                <div class="col-md-12 text-center" style="margin-bottom: 10px;">
-                    <button type="button" style="padding: 5px 30px;" class="btn btn-default back_details-button add_more">More</button>
+                <div class="col-md-12 text-left" style="margin-bottom: 10px;">
+                    <div class="row">
+                        <button type="button" style="padding: 5px 30px;" class="btn btn-default back_details-button add_more">More</button>
+                    </div>
                 </div>
 
             </div>
@@ -229,7 +231,7 @@ if(!empty($all_crop_data) && $all_crop_data != 0)
     <div class="row">
 
         <div class="col-md-11" id="customer_crop_detail_data">
-            <div class="col-md-8 col-md-offset-2 cco-form-fl">
+            <div class="col-md-10 col-md-offset-1 cco-form-fl">
                 <div class="row tp_form">
                     <div class="form-group">
 
@@ -241,14 +243,17 @@ if(!empty($all_crop_data) && $all_crop_data != 0)
                             foreach($allocated_crop_data as $data_key => $cust_crop_data)
                             {
                                 ?>
-                                <div class="col-md-6">
-                                    <label style="margin: 0;"><?php echo $cust_crop_data["crop_name"]; ?></label>&nbsp;&nbsp;&nbsp;<label style="margin: 0;"><?php echo $cust_crop_data["yeild_HA"]; ?></label>
-                                    <div class="delete_i" style="margin-left: 5px; display: inline-block;" prdid ="<?php echo $cust_crop_data["customer_crop_detail_id"];?>">
-                                        <a href="javascript: void(0);" style="color: #ff0000;">
-                                            <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                        </a>
-                                    </div>
-                                </div>
+                                <ul class="corp-list">
+                                    <li><label style="margin: 0;"><?php echo $cust_crop_data["crop_name"]; ?></label></li>
+                                    <li><label style="margin: 0;"><?php echo $cust_crop_data["yeild_HA"]; ?></label></li>
+                                    <li style="text-align: center;">
+                                        <div class="delete_i" style="display: inline-block;" prdid ="<?php echo $cust_crop_data["customer_crop_detail_id"];?>">
+                                            <a href="javascript: void(0);" style="color: #ff0000;">
+                                                <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                            </a>
+                                        </div>
+                                    </li>
+                                </ul>
                                 <div class="clearfix"></div>
                             <?php
                             }
