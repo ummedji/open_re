@@ -2665,7 +2665,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $activity['products_request'] = $this->getProductsRequest($activity_planning_id);
         $activity['material_request'] = $this->getMaterialRequest($activity_planning_id);
         $activity['customer'] = $this->getAllCustomer($activity_planning_id);
-
+        $activity['image_gallery'] = $this->getAllUploadFiles($activity_planning_id);
         if(!empty($activity))
 
             return $activity;
@@ -2673,6 +2673,28 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         else
             return array();
 
+    }
+
+
+    public function getAllUploadFiles($activity_planning_id)
+    {
+        $this->db->select('files_name');
+        $this->db->from('ecp_activity_planning_upload_details as eapud');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $file = $this->db->get()->result_array();
+
+        if(isset($file) && !empty($file))
+        {
+            $final_arry = array();
+            foreach($file as $k=> $vl)
+            {
+                $final_arry[] = base_url('assets/uploads/activity_gallery/'.$vl['files_name']);
+            }
+            return $final_arry;
+        }
+        else{
+            return array();
+        }
     }
 
     public function getAllCustomer($activity_planning_id)
