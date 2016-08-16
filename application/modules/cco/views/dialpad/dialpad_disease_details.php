@@ -52,8 +52,8 @@
     $("input#search_disease").on("keyup",function(){
 
         var search_data = $(this).val();
-        if(search_data.length > 3)
-        {
+       // if(search_data.length > 3)
+      //  {
 
             var customer_id = $("input#customer_id").val();
             $.ajax({
@@ -66,7 +66,7 @@
                 }
             });
 
-        }
+      //  }
 
     });
 

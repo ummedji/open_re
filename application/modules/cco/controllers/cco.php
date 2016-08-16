@@ -68,6 +68,23 @@ class Cco extends Front_Controller
         Template::render();
     }
 
+
+    public function activity_dialpad()
+    {
+        Assets::add_module_js('cco', 'cco_dialpad.js');
+
+        $user = $this->auth->user();
+
+        $cco_campaign_data = $this->cco_model->get_all_campaign_data($user->id,$user->role_id,$user->country_id);
+
+        $campaign_details =  $this->cco_model->get_all_campaign_details($user->id,$user->role_id,$user->country_id);
+
+        Template::set('cco_campaign_data', $cco_campaign_data);
+        Template::set('campaign_details', $campaign_details);
+        Template::set_view("cco/main_screen_dialpad");
+        Template::render();
+    }
+
     public function getAllPhaseDetailsByCampaignId()
     {
         $user=$this->auth->user();
@@ -134,6 +151,13 @@ class Cco extends Front_Controller
         echo $feedback_update_data;
         die;
     }
+    public function add_update_complaint_view_info()
+    {
+
+        $feedback_update_data = $this->cco_model->add_update_complaint_data();
+        echo $feedback_update_data;
+        die;
+    }
     public function delete_feedback_data()
     {
         $feedback_id = $_POST["feedback_id"];
@@ -149,25 +173,50 @@ class Cco extends Front_Controller
         echo json_encode($complaint_sub_data);
         die;
     }
+    public function get_person_data_from_desigination()
+    {   $user=$this->auth->user();
+        /*$logged_in_user=$user->display_name;*/
+        $desigination_country_id = $_POST["desigination_country_id"];
+        $person_data = $this->cco_model->get_person_data_from_desigination($desigination_country_id);
+        echo json_encode($person_data);
+        die;
+    }
     public function get_complaint_date_from_complaint_sub()
     {   $user=$this->auth->user();
         /*$logged_in_user=$user->display_name;*/
         $complaint_subject_id = $_POST["complaint_subject_id"];
         $complaint_due_date_data = $this->cco_model->get_complaint_date_from_complaint_sub($complaint_subject_id);
 
-        $due_date = $complaint_due_date_data['reminder1_days'];
-        $due_date2 = $complaint_due_date_data['reminder2_days'];
-        $due_date3 = $complaint_due_date_data['reminder3_days'];
-        $other_desigination_person1_id = $complaint_due_date_data['other_desigination_person1_id'];
-        $reminder1_other_desigination_id=$complaint_due_date_data['reminder1_other_desigination_id'];
-        $reminder1_desigination_id=$complaint_due_date_data['reminder1_desigination_id'];
+        $due_date=$complaint_due_date_data['reminder1_days'];
+        $due_date2=$complaint_due_date_data['reminder2_days'];
+        $due_date3=$complaint_due_date_data['reminder3_days'];
+      //  $other_desigination_person1_id=$complaint_due_date_data['other_desigination_person1_id'];
+     //   $reminder1_other_desigination_id=$complaint_due_date_data['reminder1_other_desigination_id'];
+     //   $reminder1_desigination_id=$complaint_due_date_data['reminder1_desigination_id'];
 
         $Complaint_due_date=date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + $due_date, date('Y')));
         $Complaint_due_date2=date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + $due_date2, date('Y')));
         $Complaint_due_date3=date('Y-m-d', mktime(0, 0, 0, date('m'), date('d') + $due_date3, date('Y')));
         //$combine_array=array_push($complaint_due_date_data,$Complaint_due_date);
-        $combine_array = array_merge($complaint_due_date_data, array('complaint_due_date' => $Complaint_due_date,'complaint_due_date2' => $Complaint_due_date2,'complaint_due_date3' => $Complaint_due_date3,'other_desigination_person1_id' => $other_desigination_person1_id,'reminder1_other_desigination_id' => $reminder1_other_desigination_id,'reminder1_desigination_id' => $reminder1_desigination_id,));
+        $combine_array = array_merge($complaint_due_date_data, array('complaint_due_date' => $Complaint_due_date,'complaint_due_date2' => $Complaint_due_date2,'complaint_due_date3' => $Complaint_due_date3));
         echo json_encode($combine_array);
+        die;
+    }
+
+    public function get_complaint_responsible_designation()
+    {
+        $complaint_subject_id = $_POST["complaint_subject_id"];
+
+        $complaint_responsible_person_data = $this->cco_model->get_complaint_responsible_desigination_data($complaint_subject_id);
+        if(!empty($complaint_responsible_person_data))
+        {
+            $res = json_encode($complaint_responsible_person_data);
+        }
+        else
+        {
+            $res = "";
+        }
+        echo $res;
         die;
     }
 
@@ -389,10 +438,8 @@ class Cco extends Front_Controller
     public function get_diseases_detail_data()
     {
         $search_data = $_POST["searchdata"];
-        $customer_id = $_POST["customerid"];
 
-
-        $searched_data = $this->cco_model->get_search_disease_detail($search_data,$customer_id);
+        $searched_data = $this->cco_model->get_search_disease_detail($search_data);
 
         Template::set('searched_data', $searched_data);
         Template::set('search_type', 'disease');
@@ -401,6 +448,25 @@ class Cco extends Front_Controller
         // Template::set_block('sidebar', 'blog_sidebar');
         Template::render();
 
+    }
+
+    public function get_customer_order_status_data()
+    {
+        $customer_id = $_POST["customerid"];
+
+        $page_number = (isset($_POST["page"]) && !empty($_POST["page"])) ? $_POST["page"]: 1;
+
+        $scroll_status = (isset($_POST["scroll_status"]) && !empty($_POST["scroll_status"])) ? $_POST["scroll_status"]: null;
+
+
+        $default_order_data = $this->cco_model->get_order_data($customer_id,$page_number,$scroll_status);
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set('default_order_data', $default_order_data);
+        Template::set_view("cco/dialpad/dialpad_order_status_data");
+
+        Template::render();
     }
 
     public function add_update_general_info()
@@ -512,6 +578,20 @@ class Cco extends Front_Controller
         Template::set('campagain_customer_data', $campagain_customer_data);
 
         Template::set_view("cco/campagain_customer_data");
+        Template::render();
+    }
+
+    public function get_activity_type_allocated_data()
+    {
+        $user = $user = $this->auth->user();
+        $activity_type = $_POST["activity_type"];
+        $activity_customer_data = $this->cco_model->get_activity_type_allocated_customer_data($user->id,$user->role_id,$user->country_id,$activity_type);
+
+        Template::set('activity_customer_data', $activity_customer_data);
+        Template::set('current_user', $user);
+
+        Template::set_view("cco/activity_customer_data");
+
         Template::render();
     }
 

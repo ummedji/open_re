@@ -18,7 +18,7 @@
         $attributes = array('class' => '', 'id' => 'dialpad_complaint_info','name'=>'dialpad_complaint_info', 'autocomplete'=>'off');
         echo form_open('cco/add_update_complaint_info',$attributes);
         ?>
-
+        <input type="hidden" class="form-control" name="complaint_edit_id" id="complaint_edit_id" placeholder="" value="" />
         <div class="row">
             <div class="cco-feld">
                 <div class="col-md-12">
@@ -26,13 +26,13 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Id">Complaint Id</label>
-                                <input type="text" class="form-control" id="Complaint Id" placeholder="" value="<?php echo $unique_id; ?>">
+                                <input readonly type="text" class="form-control" id="complaint_id" placeholder="" value="<?php echo $unique_id; ?>">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Status">Status</label>
-                                <select class="form-control">
+                                <select class="form-control" name="complaint_status" id="complaint_status">
                                     <option value="0" selected="selected">Pending</option>
                                     <option value="1">In Progress</option>
                                     <option value="2">Resolved</option>
@@ -91,7 +91,7 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Entry Date">Complaint Entry Date</label>
-                                <input readonly type="text" class="form-control" id="Complaint Id" placeholder="" value="<?php echo date("Y-m-d"); ?>">
+                                <input readonly type="text" class="form-control" id="complaint_entry_date" name="complaint_entry_date" placeholder="" value="<?php echo date("Y-m-d"); ?>">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
@@ -112,13 +112,13 @@
                         <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Remark</label>
-                                <textarea class="form-control" rows="3" name="Comments" id="Comments" placeholder=""></textarea>
+                                <textarea class="form-control" rows="3" name="remarks" id="remarks" placeholder=""></textarea>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Complaint Body</label>
-                                <textarea class="form-control" rows="3" name="Comments" id="Comments" placeholder=""></textarea>
+                                <textarea class="form-control" rows="3" name="complaint_data" id="complaint_data" placeholder=""></textarea>
                             </div>
                         </div>
                     </div>
@@ -138,29 +138,29 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="complaint_date1" placeholder="First Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date1" placeholder="First Education Data">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Designstion</label>
-                                <select disabled class="form-control" name="designstion" id="designstion">
+                                <select  class="form-control" name="designstion" id="designstion">
                                     <option>Select Designation</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="complaint_date2" placeholder="Second Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date2" placeholder="Second Education Data">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Person Name</label>
-                                <select disabled class="form-control" name="person_name" id="person_name">
+                                <select  class="form-control" name="person_name" id="person_name">
                                     <option>Select Person</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="complaint_date3" placeholder="Third Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date3" placeholder="Third Education Data">
                             </div>
                         </div>
                     </div>
@@ -200,6 +200,13 @@
 
             get_complaint_date_from_complaint_subject(complaint_subject_id);
         });
+        $("#designstion").change(function () {
 
+
+
+            var desigination_country_id = $(this).val();
+
+            get_person_data_from_desigination(desigination_country_id);
+        });
 
 </script>

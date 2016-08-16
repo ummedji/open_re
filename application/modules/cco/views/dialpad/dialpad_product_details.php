@@ -1,6 +1,6 @@
 <div class="actv-details-form">
 
-    <h5 style="margin: 0px 0 20px 0;">Disease Details</h5>
+    <h5 style="margin: 0px 0 20px 0;">Product Details</h5>
     <div class="back_details">
 
         <?php
@@ -10,7 +10,7 @@
 
         <div class="row">
 
-            <div class="col-md-11" id="disease_detail_data">
+            <div class="col-md-11" id="product_detail_data">
 
 
                 <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
@@ -22,7 +22,7 @@
                                 <div class="row tp_form">
                                     <div class="form-group">
                                         <div class="col-md-6 text-right-cco">
-                                            <input type="text" class="form-control" name="search_disease" id="search_disease" placeholder="Search Disease Name" value="" />
+                                            <input type="text" class="form-control" name="search_product" id="search_product" placeholder="Search Product Name" value="" />
                                         </div>
                                         <div class="clearfix"></div>
                                     </div>
@@ -49,24 +49,26 @@
 
 <script type="text/javascript">
 
-    $("input#search_disease").on("keyup",function(){
+    $("input#search_product").on("keyup",function(){
 
         var search_data = $(this).val();
-        if(search_data.length > 3)
-        {
-
+      //  if(search_data.length > 1)
+      //  {
             var customer_id = $("input#customer_id").val();
             $.ajax({
                 type: 'POST',
-                url: site_url + "cco/get_diseases_detail_data",
+                url: site_url + "cco/get_product_detail_data",
                 data: {searchdata: search_data,customerid : customer_id},
                 success: function (resp) {
                     $("div#searched_data").html(resp);
                     //  get_geo_data(campagain_id,1,num_count);
                 }
             });
+       // }
+      //  else
+      //  {
 
-        }
+      //  }
 
     });
 

@@ -794,7 +794,7 @@
                             <div class="col-md-9 tp_form  inline-parent" id="follow_up" style="display: none">
                                 <div class="form-group">
                                     <label>Planning Date<span style="color: red">*</span></label>
-                                    <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="" required readonly />
+                                    <input type="text" data-provide="datepicker" class="form-control" name="planning_date" id="planning_date" placeholder="" required readonly />
                                 </div>
 
                                 <div class="form-group rsp-datepiker">

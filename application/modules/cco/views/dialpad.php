@@ -160,9 +160,10 @@
                         <li><a href="#">Chat History</a></li>
                         <li class="disable"><a href="#">Activity Details</a></li>
                         <li><a href="javascript:void(0);" onclick = "get_diseases_detail_data(<?php echo $customer_id; ?>);">Diseases Details</a></li>
-                        <li><a href="#">Product Details</a></li>
+                        <li><a href="javascript:void(0);" onclick = "get_product_detail_data(<?php echo $customer_id; ?>);">Product Details</a></li>
+
                         <li><a href="#">Questions</a></li>
-                        <li style="border-left: none; border-bottom: none;"><a href="#">Order Status</a></li>
+                        <li style="border-left: none; border-bottom: none;"><a href="javascript:void(0);" onclick = "get_order_status_data(<?php echo $customer_id; ?>);">Order Status</a></li>
                         <li style="border-bottom: none;"><a href="javascript:void(0);" onclick = "get_complaint_detail_data(<?php echo $customer_id; ?>);">Complaints</a></li>
                         <li style="border-bottom: none;"><a href="#">Order Tracking</a></li>
                         <li style="border-bottom: none;"><a href="#">Order Place</a></li>

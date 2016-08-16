@@ -95,8 +95,7 @@
                                 <div class="col-md-12 text-center tp_form inline-parent">
                                     <div class="form-group">
                                         <label>Select Date<span style="color: red">*</span></label>
-                                        <input type="text" class="form-control" name="planning_date"
-                                               id="planning_date" placeholder="">
+                                        <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="">
                                     </div>
 
                                     <div class="form-group">

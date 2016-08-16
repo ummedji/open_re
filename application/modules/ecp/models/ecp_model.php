@@ -3566,12 +3566,18 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
        $activity_details =  $this->editViewActivityPlanning($planning_id);
 
-       // testdata($activity_details);
         $activity_type_id = $activity_details['activity_type_id'];
         $geo_level_2 = $activity_details['geo_level_id_2'];
         $geo_level_3 = $activity_details['geo_level_id_3'];
         $geo_level_4 = $activity_details['geo_level_id_4'];
-        $geo_level = $activity_details['geo_level_id_4'];
+        if(!empty($geo_level_4))
+        {
+            $geo = $activity_details['geo_level_id_4'];
+        }
+        else{
+            $geo = $activity_details['geo_level_id_3'];
+        }
+        $geo_level = $geo;
         $activity_address = $activity_details['location'];
         $attandence_count = $activity_details['proposed_attandence_count'];
         $pod = $activity_details['point_discussion'];
@@ -4025,6 +4031,18 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $rowcount = $query->num_rows();
         return $rowcount;
     }
+
+    /*public function check_planning_date_by_leave($user_id,$country_id,$leave_date)
+    {
+        $this->db->select('*');
+        $this->db->from('ecp_activity_planning');
+        $this->db->where('employee_id',$user_id);
+        $this->db->where('country_id',$country_id);
+        $this->db->where('activity_planning_date',$leave_date);
+        //$this->db->where('status','1');
+        $activity_details = $this->db->get()->result_array();
+        testdata($activity_details);
+    }*/
 
 
 

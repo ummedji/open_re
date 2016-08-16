@@ -726,12 +726,15 @@ class Ecp extends Front_Controller
 
 	public function check_leave_type()
 	{
+
 		$user = $this->auth->user();
 
 		$cur_date = (isset($_POST['cur_date']) ? $_POST['cur_date'] : '');
 
 		$date = str_replace('/', '-', $cur_date);
 		$leave_date = date('Y-m-d', strtotime($date));
+
+		//$plan_date = $this->ecp_model->check_planning_date_by_leave($user->id,$user->country_id,$leave_date);
 
 		$leave_type= $this->ecp_model->leave_type_details($user->id,$user->country_id,$leave_date);
 		echo json_encode($leave_type);

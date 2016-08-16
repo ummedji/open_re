@@ -15,6 +15,21 @@ $(document).ready(function(){
 
     });
 
+    $("select#activity_type").on("change",function(){
+
+        var activity_type = $(this).val();
+
+        $.ajax({
+            type: 'POST',
+            url: site_url + "cco/get_activity_type_allocated_data",
+            data: {activity_type : activity_type},
+            success: function (resp) {
+               $("div#customer_data").html(resp);
+            }
+        });
+
+    });
+
 });
 
 $('body').on('focus',".dob", function(){
@@ -253,6 +268,37 @@ function get_geo_data(campagain_id,level_data,num_count)
     });
 }
 
+function get_product_detail_data(customer_id)
+{
+    var campagain_id = $("input#camagain_id").val();
+    var num_count = 1;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_product_detail_view_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //  get_geo_data(campagain_id,1,num_count);
+        }
+    });
+
+}
+
+function get_order_status_data(customer_id)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_order_status_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //  get_geo_data(campagain_id,1,num_count);
+        }
+    });
+}
+
+
 $('body').on("change","select.qualification",function(){
 
     var qualification = $(this).val();
@@ -417,6 +463,45 @@ $(document).on("submit","form#dialpad_feedback_view_info",function(e){
     return false;
 });
 
+$(document).on("submit","form#dialpad_complaint_info",function(e){
+
+    e.preventDefault();
+
+    var param =  $("form#dialpad_complaint_info").serializeArray();
+    var customer_id = $("input#customer_id").val();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_complaint_view_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data added successfully.';
+            }
+            else{
+                message += 'Data not Inserted.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        get_customer_feedback_data(customer_id);
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
 $(document).on('click', 'div#feedback_data .delete_i', function () {
     var customer_id = $("input#customer_id").val();
     var id = $(this).attr('prdid');
@@ -504,10 +589,30 @@ function get_complaint_subject_from_complaint_type(complaint_type_id)
         }
     });
 }
-function get_complaint_date_from_complaint_subject(complaint_subject_id)
+function get_person_data_from_desigination(desigination_country_id)
 {
 
 
+
+    $.ajax({
+        url: site_url+'cco/get_person_data_from_desigination',
+        method: "POST",
+        data: { desigination_country_id: desigination_country_id },
+        cache: false,
+        success: function (result) {
+            var json = JSON.parse(result);
+            console.log(json);
+            $("#person_name").html("<option value=''>Select Person</option>");
+            $.each(json, function (i, item) {
+
+                $('#person_name').append($('<option>', {value: item.id,text: item.display_name}));
+
+            });
+        }
+    });
+}
+function get_complaint_date_from_complaint_subject(complaint_subject_id)
+{
 
     $.ajax({
         url: site_url+'cco/get_complaint_date_from_complaint_sub',
@@ -519,36 +624,44 @@ function get_complaint_date_from_complaint_subject(complaint_subject_id)
 
             var obj = $.parseJSON(result);
 
-            console.log(obj);
-
             $("input#Complaint_due_date").val(obj.complaint_due_date);
             $("input#complaint_date1").val(obj.complaint_due_date);
             $("input#complaint_date2").val(obj.complaint_due_date2);
             $("input#complaint_date3").val(obj.complaint_due_date3);
 
-           var q = $.type(obj.reminder1_other_desigination_id);
-
-            var w =$.type(obj.other_desigination_person1_id);
-
-            //alert(q+"====="+w);
-
-           // return false;
-            if(obj.reminder1_other_desigination_id == null || obj.other_desigination_person1_id == null)
+            if(obj.reminder1_desigination_id != null)
             {
                 $("#designstion").html("<option value=''>Select Designation</option>");
-                $('#designstion').append($('<option>', {value: obj.desigination_country_id_for,text: obj.desigination_country_name_for}));
+                $('#designstion').append($('<option>', {
+                    value: obj.desigination_country_id_for,
+                    text: obj.desigination_country_name_for
+                }));
                 $('#designstion').removeAttr("disabled");
+                $('#person_name').removeAttr("disabled");
             }
-            else
-            {
-                $("#designstion").html("<option value=''>Select Designation</option>");
-                $('#designstion').append($('<option>', {value: obj.reminder1_other_desigination_id,text: obj.desigination_country_name}).attr('selected', 'selected'));
-                $("#person_name").html("<option value=''>Select Person</option>");
-                $('#person_name').append($('<option>', {value: obj.other_desigination_person1_id,text: obj.display_name}).attr('selected', 'selected'));
-            }
-
         }
     });
+
+    $.ajax({
+        url: site_url+'cco/get_complaint_responsible_designation',
+        method: "POST",
+        data: { complaint_subject_id: complaint_subject_id },
+        cache: false,
+        async: true,
+        success: function (result) {
+
+            if(result != "")
+            {
+                var obj = $.parseJSON(result);
+                console.log(obj);
+
+                $.each(obj, function (i, item) {
+                    $('#designstion').append($('<option>', {value: item.desigination_country_id,text: item.desigination_country_name}));
+                });
+            }
+        }
+    });
+
 }
 
 $(document).on("submit","form#dialpad_general_info",function(e){

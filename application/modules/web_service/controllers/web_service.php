@@ -5011,7 +5011,8 @@ class Web_service extends Front_Controller
 
         if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($id) && !empty($id))) {
 
-            $activity_detail = $this->ecp_model->rescheduling_activity_detail($user_id,$country_id);
+            $type = 'reschedule';
+            $activity_detail = $this->ecp_model->rescheduling_activity_detail($user_id,$country_id,$type);
 
             if($activity_detail == 1)
             {
@@ -5086,6 +5087,37 @@ class Web_service extends Front_Controller
 
         $this->do_json($result);
     }
+
+    public function addFollowupActivityDetails()
+    {
+        $id = $this->input->get_post('inserted_activity_planning_id');
+        $user_id = $this->input->get_post('user_id');
+        $country_id = $this->input->get_post('country_id');
+
+        if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id)) && (isset($id) && !empty($id))) {
+
+            $type = 'execute';
+            $activity_detail = $this->ecp_model->rescheduling_activity_detail($user_id,$country_id,$type);
+
+            if($activity_detail == 1)
+            {
+                $result['status'] = true;
+                $result['message'] = 'Success.';
+            }
+            else{
+                $result['status'] = true;
+                $result['message'] = 'Data Not Inserted.';
+            }
+
+        } else {
+            $result['status'] = false;
+            $result['message'] = "All Fields are Required.";
+        }
+
+        $this->do_json($result);
+    }
+
+
 
 
 

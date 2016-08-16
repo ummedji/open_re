@@ -787,7 +787,7 @@ class Cco_model extends BF_Model
 
     public function getAllPhaseDetailByCampaignId($campaign_id,$user_id,$role_id,$country_id)
     {
-        $this->db->select('ccp.phase_name,ccp.avg_call_duration,sum(ccd.is_call_done) as total_call,cca.customer_count,ccp.end_date,ccp.phase_status,');
+        $this->db->select('ccp.phase_name,ccp.avg_call_duration,sum(ccd.is_call_done) as total_call,cca.customer_count,ccp.end_date,ccp.phase_status');
         $this->db->from('cco_campaign_phase as ccp');
         $this->db->join('cco_call_details as ccd','ccd.phase_id = ccp.phase_id','LEFT');
         $this->db->join('cco_campaign_allocation as cca','cca.campaign_id = ccp.campaign_id','LEFT');
@@ -806,6 +806,41 @@ class Cco_model extends BF_Model
         if(isset($phase_details) && !empty($phase_details))
         {
             return $phase_details;
+        }
+    }
+
+
+    public function get_activity_type_allocated_customer_data($user_id,$role_id,$country_id,$activity_type)
+    {
+        $this->db->select('bus.user_code,display_name,eap.activity_planning_time,eap.proposed_attandence_count,eamc   .activity_type_country_name,caa.called_status,mpgd2.political_geography_name as level_2,mpgd3.political_geography_name as level_3,mpgd4.political_geography_name as level_4,mdc.desigination_country_name,mucd.primary_mobile_no');
+       // $this->db->select('*');
+        $this->db->from('cco_activity_allocation as caa');
+        $this->db->join('ecp_activity_planning as eap','eap.activity_planning_id = caa.activity_id');
+        $this->db->join('users as bus','bus.id = eap.employee_id');
+        $this->db->join('ecp_activity_master_country AS eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details AS mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2');
+        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = eap.geo_level_id_3');
+        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = eap.geo_level_id_4','left');
+        $this->db->join('master_designation_role as mdr','mdr.user_id = eap.employee_id');
+        $this->db->join('master_designation_country as mdc','mdc.desigination_country_id = mdr.desigination_id');
+        $this->db->join('master_user_contact_details as mucd','mucd.user_id = eap.employee_id');
+        $this->db->where('caa.activity_type',$activity_type);
+        $this->db->where('caa.country_id',$country_id);
+
+        if($role_id == '19')
+        {
+            $this->db->where('cca.cco_id',$user_id);
+        }
+
+        //$this->db->group_by('ccp.phase_id');
+        $this->db->order_by('eap.activity_planning_time','ASC');
+
+
+        $activity_details = $this->db->get()->result_array();
+       // testdata($activity_details);
+        if(isset($activity_details) && !empty($activity_details))
+        {
+            return $activity_details;
         }
     }
 
@@ -1344,6 +1379,66 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+
+    public function add_update_complaint_data()
+    {
+        if(!empty($_POST)) {
+            $customer_id = $_POST["customer_id"];
+            $user = $this->auth->user();
+            $logined_user_id = $user->id;
+            $update_array = array();
+
+            $feedback_update_array = array(
+                'complaint_id' => $_POST["complaint_id"],
+                'complaint_number' => $_POST["complaint_number"],
+                'complaint_status' => $_POST["complaint_status"],
+                'complaint_type_id' => $_POST["complaint_type"],
+                'complaint_entry_date' => $_POST["complaint_entry_date"],
+                'complaint_due_date' => $_POST["complaint_due_date"],
+                'complaint_subject' => $_POST["complaint_subject"],
+                'remarks' => $_POST["remarks"],
+                'complaint_data' => $_POST["complaint_data"],
+                'assigned_to_id' => $_POST["assigned_to_id"],
+                'escalation_date_1' => $_POST["escalation_date_1"],
+                'escalation_date_2' => $_POST["escalation_date_2"],
+                'escalation_date_3' => $_POST["escalation_date_3"],
+                'created_by_user' => $logined_user_id,
+                'modified_by_user' => $logined_user_id,
+                'created_on' => date('Y-m-d H:i:s'),
+                'modified_on' => date('Y-m-d H:i:s')
+            );
+            if($_POST['complaint_edit_id'] == "") {
+                //INSERT
+                if ($_POST['subject'] != "" && $_POST['description'] != ""){
+                    $result = $this->db->insert("bf_cco_feedback", $feedback_update_array);
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                }
+            }
+            else
+            {
+                //UPDATE
+                if ($_POST['comments'] != "" && $_POST['remarks'] != "") {
+                    $this->db->where("feedback_id", $_POST['feedback_edit_id']);
+                    $this->db->update("bf_cco_feedback", $feedback_update_array);
+
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                }
+
+            }
+        }
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
     public function delete_feedback($feedback_id)
     {
         $this ->db->where('feedback_id',$feedback_id);
@@ -1394,15 +1489,31 @@ class Cco_model extends BF_Model
         return $user_customer_complaint_subject;
 
     }
+    public function get_person_data_from_desigination($desigination_country_id)
+    {
+        $user = $this->auth->user();
+
+        $this->db->select("bmdr.*,bu.*");
+        $this->db->from("bf_master_designation_role as bmdr");
+        $this->db->join("bf_users as bu","bu.id = bmdr.user_id",'left');
+        $this->db->where('bmdr.desigination_id',$desigination_country_id);
+        $this->db->where('bmdr.status',1);
+        $this->db->where('bmdr.deleted',0);
+        $this->db->order_by('bu.display_name','asc');
+        $user_person_data = $this->db->get()->result_array();
+         //echo $this->db->last_query();die;
+        return $user_person_data;
+
+    }
     public function get_complaint_date_from_complaint_sub($complaint_subject_id)
     {
         $user = $this->auth->user();
 
-        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id,bmcd.reminder1_days,bmcd.reminder2_days,bmcd.reminder3_days,bmcd.other_desigination_person1_id,bmcd.reminder1_other_desigination_id,bmcd.reminder1_desigination_id,bmdc.desigination_country_name,bu.display_name,bmdcm.desigination_country_name as desigination_country_name_for");
+        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id,
+        bmcd.reminder1_days,bmcd.reminder2_days,bmcd.reminder3_days
+        ");
+
         $this->db->from("bf_master_complaint_detail as bmcd");
-        $this->db->join("bf_master_designation_country as bmdc","bmcd.reminder1_other_desigination_id = bmdc.desigination_country_id", 'left');
-        $this->db->join("bf_master_designation_country as bmdcm","bmcd.reminder1_desigination_id = bmdcm.desigination_country_id", 'left');
-        $this->db->join("bf_users as bu","bmcd.other_desigination_person1_id = bu.id", 'left');
 
         $this ->db->where('bmcd.complaint_id',$complaint_subject_id);
         $this->db->where('bmcd.status',1);
@@ -1410,7 +1521,29 @@ class Cco_model extends BF_Model
         $this->db->order_by('bmcd.complaint_subject','asc');
         $user_customer_complaint_subject = $this->db->get()->row_array();
 
+       // echo $this->db->last_query();die;
+
         return $user_customer_complaint_subject;
+
+    }
+
+    public function get_complaint_responsible_desigination_data($complaint_subject_id)
+    {
+        $sql = "SELECT bmdc.desigination_country_id,bmdc.desigination_country_name FROM `bf_master_complaint_detail` as bmcd
+        JOIN bf_master_designation_country as bmdc ON bmdc.desigination_country_id = FIND_IN_SET(bmdc.desigination_country_id,bmcd.reminder1_desigination_id)
+        WHERE
+        bmcd.complaint_id = '".$complaint_subject_id."'
+        AND
+        bmcd.status =1
+        AND
+        bmcd.deleted = 0";
+
+        $designation_info = $this->db->query($sql);
+
+        $designation_detail_data = $designation_info->result_array();
+
+        //testdata($disease_detail_data);
+        return $designation_detail_data;
 
     }
 
@@ -2184,17 +2317,16 @@ class Cco_model extends BF_Model
     bmdc.disease_name,
     bmcds.symptoms_country_name,
     bmpsc.product_sku_name,
-    bmcc.crop_name, ";
+    bmcc.crop_name ";
 
     if ($child_str != "") {
 
-        $sql .= " beapdd.activity_planning_id,
+        $sql .= " ,beapdd.activity_planning_id,
         beap.employee_id,
         beap.activity_planning_time,
         bmucd.primary_mobile_no,
         beamc.activity_type_country_name,
         bu.display_name ";
-
     }
 
     $sql .= " FROM `bf_master_disease_country` as bmdc
@@ -2242,21 +2374,181 @@ class Cco_model extends BF_Model
      }
 
     $sql .= " AND bmdc.country_id =  ".$user->country_id."
-
     AND bmdc.deleted = 0
-
     AND bmdc.status = 1 ";
 
-//echo $sql;
-   //     die;
+    $disease_info = $this->db->query($sql);
 
-        $disease_info = $this->db->query($sql);
-
-        $disease_detail_data = $disease_info->result_array();
+    $disease_detail_data = $disease_info->result_array();
 
         //testdata($disease_detail_data);
         return $disease_detail_data;
 
+    }
+
+
+   public function get_search_product_detail($search_data,$customer_id)
+   {
+       $user = $this->auth->user();
+
+       //GET CUSTOMER 2nd LEVEL DATA
+       $user_data = $this->get_user_data($customer_id);
+
+       //GET ALL LOCATIONS WHO HAVING THAT LEVEL AS PARENT
+       $geo_level_id2 = (isset($user_data[0]["geo_level_id2"]) && !empty($user_data[0]["geo_level_id2"])) ? $user_data[0]["geo_level_id2"] : "";
+
+       $all_child_geo_data_array = array();
+
+       $child_str = "";
+
+       if ($geo_level_id2 != "")
+       {
+           $all_child_geo_data = $this->get_child_data($geo_level_id2);
+           if (!empty($all_child_geo_data) && $all_child_geo_data != 0)
+           {
+               foreach ($all_child_geo_data as $key => $geo_data)
+               {
+                   $all_child_geo_data_array[] = $geo_data["political_geo_id"];
+               }
+               $child_str = implode(",", $all_child_geo_data_array);
+           }
+       }
+
+       $sql = "SELECT
+       bmdc.disease_name,
+       bmcds.symptoms_country_name,
+       bmpsc.product_sku_name,
+       bmcc.crop_name ";
+
+       if ($child_str != "")
+       {
+           $sql .= " ,beap.activity_planning_id,
+           beap.employee_id,
+           beap.activity_planning_time,
+           bmucd.primary_mobile_no,
+           beamc.activity_type_country_name,
+           bu.display_name ";
+       }
+
+       $sql .= " FROM `bf_master_product_sku_country` as bmpsc
+
+       LEFT JOIN bf_master_disease_crop_product_mapping as bmdcp ON bmdcp.product_sku_id = bmpsc.product_sku_country_id
+
+       LEFT JOIN `bf_master_disease_country` as bmdc ON bmdc.disease_country_id = bmdcp.disease_id
+
+       LEFT JOIN bf_disease_symptoms_mapping as bdsm ON bdsm.country_disease_id = bmdcp.disease_id
+
+       LEFT JOIN bf_master_country_disease_symptoms as bmcds ON bmcds.country_symptoms_id = bdsm.country_symptom_id
+
+       LEFT JOIN bf_master_crop_country as bmcc ON  bmcc.crop_country_id = bmdcp.crop_id
+       ";
+
+       if($child_str != "")
+       {
+           $sql .= " LEFT JOIN bf_ecp_activity_planning_product_details as beappd ON beappd.product_sku_id = bmpsc.product_sku_country_id
+
+           LEFT JOIN bf_ecp_activity_planning as beap ON beap.activity_planning_id = beappd.activity_planning_id
+
+           LEFT JOIN bf_ecp_activity_master_country as beamc ON beamc.activity_type_country_id = beap.activity_type_id
+
+           LEFT JOIN bf_users as bu ON bu.id = beap.employee_id
+
+           LEFT JOIN bf_master_user_contact_details as bmucd ON bmucd.user_id = bu.id ";
+       }
+
+       $sql .= "  WHERE 1
+       AND bmpsc.product_sku_name LIKE '%".$search_data."%' ";
+
+       if($child_str != "")
+       {
+           $sql .= " AND
+            (
+                beap.geo_level_id_2 IN (" . $child_str . ")
+                OR
+                beap.geo_level_id_3  IN (" . $child_str . ")
+                OR
+                beap.geo_level_id_4  IN (" . $child_str . ")
+            )
+                AND beap.status = 2 ";
+       }
+
+       $sql .= " AND bmpsc.country_id =  ".$user->country_id."
+       AND bmpsc.deleted = 0
+       AND bmpsc.status = 1 ";
+
+       $product_info = $this->db->query($sql);
+
+       $product_detail_data = $product_info->result_array();
+
+       //testdata($disease_detail_data);
+       return $product_detail_data;
+
+   }
+
+    public function get_order_data($customer_id,$page_number,$scroll_status)
+    {
+        $item_per_page = 10;
+        $page_number = filter_var($page_number, FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_STRIP_HIGH);
+
+//throw HTTP error if page number is not valid
+        if(!is_numeric($page_number)){
+            header('HTTP/1.1 500 Invalid page number!');
+            exit();
+        }
+
+//get current starting point of records
+        $position = (($page_number-1) * $item_per_page);
+
+        $sql = "SELECT
+        bio.customer_id_to,bu1.display_name as order_taken_name,bu.display_name,bio.order_date,bio.estimated_delivery_date,bio.order_tracking_no,bio.read_status
+        FROM `bf_ishop_orders` as bio
+        JOIN `bf_users` as bu ON `bu`.`id` = `bio`.`customer_id_to`
+        JOIN `bf_users` as bu1 ON `bu1`.`id` = `bio`.`order_taken_by_id`
+        WHERE `bio`.`customer_id_from` = '".$customer_id."' ORDER BY `bio`.`order_id` DESC  LIMIT $position, $item_per_page";
+
+        $order_info = $this->db->query($sql);
+
+        $order_data = $order_info->result_array();
+
+        if($scroll_status != null)
+        {
+            $html = "";
+                    if(!empty($default_order_data))
+                    {
+                        $i = 1;
+
+                        foreach($default_order_data as $key => $order_data)
+                        {
+                            $html .= "<tr>";
+                            $html .= "<td>11</td>";
+                            $html .= "<td>".$order_data['order_date']."</td>";
+                            $html .= "<td>".$order_data['order_tracking_no']."</td>";
+                            $html .= "<td>".$order_data['display_name']."</td>";
+                            $html .= "<td>".$order_data['estimated_delivery_date']."</td>";
+                            $html .= "<td>".$order_data['order_taken_name']."</td>";
+
+                                if($order_data['read_status'] == 0)
+                                {
+                                    $read_status = "Unread";
+                                }
+                                else
+                                {
+                                    $read_status = "Read";
+                                }
+
+                            $html .= "<td>".$read_status."</td>";
+                            $html .= "</tr>";
+
+                            $i++;
+                        }
+                    }
+            echo $html;
+            die;
+        }
+        else
+        {
+            return $order_data;
+        }
     }
 
 }
