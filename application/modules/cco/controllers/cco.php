@@ -155,10 +155,10 @@ class Cco extends Front_Controller
         $complaint_subject_id = $_POST["complaint_subject_id"];
         $complaint_due_date_data = $this->cco_model->get_complaint_date_from_complaint_sub($complaint_subject_id);
 
-        $due_date=$complaint_due_date_data['reminder1_days'];
-        $due_date2=$complaint_due_date_data['reminder2_days'];
-        $due_date3=$complaint_due_date_data['reminder3_days'];
-        $other_desigination_person1_id=$complaint_due_date_data['other_desigination_person1_id'];
+        $due_date = $complaint_due_date_data['reminder1_days'];
+        $due_date2 = $complaint_due_date_data['reminder2_days'];
+        $due_date3 = $complaint_due_date_data['reminder3_days'];
+        $other_desigination_person1_id = $complaint_due_date_data['other_desigination_person1_id'];
         $reminder1_other_desigination_id=$complaint_due_date_data['reminder1_other_desigination_id'];
         $reminder1_desigination_id=$complaint_due_date_data['reminder1_desigination_id'];
 

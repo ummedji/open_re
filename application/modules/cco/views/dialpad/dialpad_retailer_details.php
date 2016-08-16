@@ -65,7 +65,7 @@
     <div class="row">
 
         <div class="col-md-11" id="retailer_customer_relation_detail_data">
-            <div class="col-md-8 col-md-offset-2 cco-form-fl">
+            <div class="col-md-10 col-md-offset-1 cco-form-fl">
                 <div class="row tp_form">
                     <div class="form-group">
 
@@ -77,14 +77,25 @@
                                     foreach($customer_relation_retailer_data as $data_key => $relation_retailer_data)
                                     {
                             ?>
-                                        <div class="col-md-6">
-                                            <label style="margin: 0;"><?php echo $relation_retailer_data["display_name"]; ?></label>
-                                            <div class="delete_i" style="margin-left: 5px; display: inline-block;" prdid ="<?php echo $relation_retailer_data["CtoC_mapping_id"];?>">
+                                        <!--<div class="col-md-6">
+                                            <label style="margin: 0;"><?php /*echo $relation_retailer_data["display_name"]; */?></label>
+                                            <div class="delete_i" style="margin-left: 5px; display: inline-block;" prdid ="<?php /*echo $relation_retailer_data["CtoC_mapping_id"];*/?>">
                                                 <a href="javascript: void(0);" style="color: #ff0000;">
                                                     <i class="fa fa-trash-o" aria-hidden="true"></i>
                                                 </a>
                                             </div>
-                                        </div>
+                                        </div>-->
+                                        <ul class="corp-list">
+                                            <li><label style="margin: 0;"><strong><?php echo $relation_retailer_data["display_name"]; ?></strong></label></li>
+                                            <!--<li><label style="margin: 0;"><?php /*echo $cust_crop_data["yeild_HA"]; */?></label></li>-->
+                                            <li style="text-align: center; min-width: auto;">
+                                                <div class="delete_i" style="display: inline-block;" prdid ="<?php echo $relation_retailer_data["CtoC_mapping_id"];?>">
+                                                    <a href="javascript: void(0);" style="color: #ff0000;">
+                                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                                    </a>
+                                                </div>
+                                            </li>
+                                        </ul>
                                         <div class="clearfix"></div>
                             <?php
                                     }

@@ -1398,9 +1398,10 @@ class Cco_model extends BF_Model
     {
         $user = $this->auth->user();
 
-        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id,bmcd.reminder1_days,bmcd.reminder2_days,bmcd.reminder3_days,bmcd.other_desigination_person1_id,bmcd.reminder1_other_desigination_id,bmcd.reminder1_desigination_id");
+        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id,bmcd.reminder1_days,bmcd.reminder2_days,bmcd.reminder3_days,bmcd.other_desigination_person1_id,bmcd.reminder1_other_desigination_id,bmcd.reminder1_desigination_id,bmdc.desigination_country_name,bu.display_name");
         $this->db->from("bf_master_complaint_detail as bmcd");
-
+        $this->db->join("bf_master_designation_country as bmdc","bmcd.reminder1_other_desigination_id = bmdc.desigination_country_id");
+        $this->db->join("bf_users as bu","bmcd.other_desigination_person1_id = bu.id");
         $this ->db->where('bmcd.complaint_id',$complaint_subject_id);
         $this->db->where('bmcd.status',1);
         $this->db->where('bmcd.deleted',0);
@@ -2170,7 +2171,7 @@ class Cco_model extends BF_Model
                 }
             }
         }
-      //  testdata($user_data);
+        testdata($all_child_geo_data_array);
 
         $sql = "SELECT
                 bmdc.disease_name,

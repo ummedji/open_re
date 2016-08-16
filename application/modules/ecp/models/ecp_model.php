@@ -2642,10 +2642,10 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
     {
         $this->db->select('eap.activity_planning_id,eap.activity_planning_date,eap.activity_planning_time,eap.execution_date,eap.execution_time,eap.meeting_duration,eap.activity_type_id,eap.geo_level_id_2,eap.geo_level_id_3,eap.geo_level_id_4,eap.location,eap.proposed_attandence_count,eap.point_discussion,eap.alert,eap.size_of_plot,eap.spray_volume,eap.amount,eap.rating,eap.activity_note,eap.employee_id,amc.activity_type_code,amc.activity_type_country_name,mpgd2.political_geography_name as geo_level_name_2,,mpgd3.political_geography_name as geo_level_name_3,mpgd4.political_geography_name as geo_level_name_4,eap.status,eap.submit_status');
         $this->db->from('ecp_activity_planning as eap');
-        $this->db->join('ecp_activity_master_country as amc','amc.activity_type_country_id = eap.activity_type_id');
-        $this->db->join('master_political_geography_details as mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2');
-        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = eap.geo_level_id_3');
-        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = eap.geo_level_id_4');
+        $this->db->join('ecp_activity_master_country as amc','amc.activity_type_country_id = eap.activity_type_id','left');
+        $this->db->join('master_political_geography_details as mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2','left');
+        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = eap.geo_level_id_3','left');
+        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = eap.geo_level_id_4','left');
         $this->db->where('eap.activity_planning_id',$activity_planning_id);
         $activity = $this->db->get()->row_array();
 

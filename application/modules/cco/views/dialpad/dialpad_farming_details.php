@@ -244,7 +244,7 @@ if(!empty($all_crop_data) && $all_crop_data != 0)
                             {
                                 ?>
                                 <ul class="corp-list">
-                                    <li><label style="margin: 0;"><?php echo $cust_crop_data["crop_name"]; ?></label></li>
+                                    <li><label style="margin: 0;"><strong><?php echo $cust_crop_data["crop_name"]; ?></strong></label></li>
                                     <li><label style="margin: 0;"><?php echo $cust_crop_data["yeild_HA"]; ?></label></li>
                                     <li style="text-align: center;">
                                         <div class="delete_i" style="display: inline-block;" prdid ="<?php echo $cust_crop_data["customer_crop_detail_id"];?>">

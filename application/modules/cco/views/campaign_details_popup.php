@@ -8,7 +8,7 @@
                 <div class="container-fluid">
                     <div class="row">
                         <div class="col-md-12">
-                            <div class="company-name">
+                            <div class="company-name campaign-grp">
                                 <div class="form-inline">
                                     <label>Campaign Name</label>
                                     <select id="campaign_data" class="campaign_data selectpicker" name="campaign_data">

@@ -3928,6 +3928,26 @@ h6.gn-info-tl{
     color: #ffffff;
     font-family: Exo2-Regular;
     padding-right: 10px;
+    font-weight: normal;
+}
+.campaign-grp .form-inline .btn-group>.btn {
+    font-family: 'Exo2-Regular';
+    font-size: 14px;
+    color: #767676;
+    border-radius: 0;
+    border-color: #c9c9c9;
+    background-color: #fff;
+    outline: none;
+    height: 28px;
+    box-shadow: none;
+    padding: 0px 30px 0 12px;
+    margin-bottom: 2px;
+}
+.campaign-grp .form-inline .btn-group .caret {
+    border: none;
+    background: url(../images/select_arrow.png) no-repeat 0 0;
+    height: 7px;
+    width: 13px;
 }
 .company-name img{
     margin-left: 10px;
@@ -3997,9 +4017,8 @@ h6.gn-info-tl{
     text-transform: capitalize;
     font-family: Exo2-Medium;
 }
-.call-no h6{
-    color: #22834d;
-}
+.call-no h6{ color: #22834d; }
+.grey-colour .call-no h6{ color: #4d4e4e; }
 @media (min-width: 992px){
     .campaign-popup .modal-lg  {
         width: 1000px;
@@ -4159,7 +4178,7 @@ h6.gn-info-tl{
     background-color: #65ac1e;
 }
 .grey-colour .c-name h4{
-    padding: 15px 0px 110px 0px;
+    padding: 62px 0px 62px 0px;
 }
 .grey-colour .c-name h4{
     color: #949595;

@@ -91,13 +91,13 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Entry Date">Complaint Entry Date</label>
-                                <input type="text" class="form-control" id="Complaint Id" placeholder="" value="<?php echo date("Y-m-d"); ?>">
+                                <input readonly type="text" class="form-control" id="Complaint Id" placeholder="" value="<?php echo date("Y-m-d"); ?>">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Due Date">Complaint Due Date</label>
-                                <input type="text" class="form-control" id="Complaint_due_date" placeholder="" name="Complaint_due_date" value="">
+                                <input readonly type="text" class="form-control" id="Complaint_due_date" placeholder="" name="Complaint_due_date" value="">
                             </div>
                         </div>
 
@@ -132,7 +132,7 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Department</label>
-                                <select class="form-control">
+                                <select disabled class="form-control">
                                     <option>Complaint Type1</option>
                                     <option>Complaint Type2</option>
                                 </select>
@@ -144,7 +144,7 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Designstion</label>
-                                <select class="form-control" name="designstion" id="designstion">
+                                <select disabled class="form-control" name="designstion" id="designstion">
                                     <option>Select Designation</option>
                                 </select>
                             </div>
@@ -155,7 +155,7 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Person Name</label>
-                                <select class="form-control" name="person_name" id="person_name">
+                                <select disabled class="form-control" name="person_name" id="person_name">
                                     <option>Select Person</option>
                                 </select>
                             </div>
