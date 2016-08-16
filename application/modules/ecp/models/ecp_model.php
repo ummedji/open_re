@@ -1510,7 +1510,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         }
 
         if ($radio_checked == 10) {
-            if ($parent_id != null && $second_perent == null) {
+            if ($parent_id != null && $second_perent != null) {
                 $query1 .= " GROUP BY `bmpgd`.`political_geography_name` ";
             } else {
                 $query1 .= " GROUP BY `bmpgd`.`political_geography_name` " . $query1_end;
@@ -1520,7 +1520,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $query = $this->db->query($query1);
         $geo_loc_data = $query->result_array();
         // echo $this->db->last_query();
-        //die;
+
         return $geo_loc_data;
     }
 
@@ -2904,6 +2904,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $attandence_count = $this->input->post("attandence_count");
         $size_of_plot = $this->input->post("size_of_plot");
         $spray_volume = $this->input->post("spray_volume");
+        $meeting_duration = $this->input->post("meeting_duration");
 
         if(isset($web_service) && !empty($web_service) && $web_service=='web_service')
         {
@@ -2969,6 +2970,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             'execution_date' => (isset($execution_date) && !empty($execution_date)) ? $execution_date : '',
             'execution_time' => (isset($execution_date_time) && !empty($execution_date_time)) ? $execution_date_time : '',
             'activity_type_id' => (isset($activity_type_id) && !empty($activity_type_id)) ? $activity_type_id : '',
+            'meeting_duration' => (isset($meeting_duration) && !empty($meeting_duration)) ? $meeting_duration : '00:00:00',
             'geo_level_id_2' => (isset($geo_level_2) && !empty($geo_level_2)) ? $geo_level_2 : 0,
             'geo_level_id_3' => (isset($geo_level_3) && !empty($geo_level_3)) ? $geo_level_3 : 0,
             'geo_level_id_4' => (isset($geo_level_4) && !empty($geo_level_4))? $geo_level_4 : 0,
@@ -3038,7 +3040,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             }
 
             if(isset($farmers) && !empty($farmers)){
-                testdata($farmers);
                 foreach($farmers as $k => $val_frm)
                 {
                     $key_farmer_details = array(

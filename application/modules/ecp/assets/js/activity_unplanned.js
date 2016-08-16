@@ -20,6 +20,17 @@ $(document).ready(function() {
 
     });
 
+    $('#meeting_duration').timepicker(
+        {
+            disableFocus: true,
+            showInputs: true,
+            showSeconds: true,
+            showMeridian: false,
+            defaultValue: '00:00:00'
+        }
+
+    );
+
     $("select#activity_type_id").on("change",function() {
         var activity_type_selected = $('option:selected', this).attr('code');
         set_activity_type(activity_type_selected);
@@ -727,7 +738,7 @@ function retailerDetails()
         '<th style="padding: 4px 0;">Action</th>'+
         '</tr>'+
         '</thead>'+
-        '<tbody id="farmer_detail" class="tbl_body_row">'+
+        '<tbody id="retailer_detail" class="tbl_body_row">'+
         '</tbody>'+
         '</table>'+
         '<div class="clearfix"></div>'+
@@ -1079,8 +1090,6 @@ $(document).on('submit', 'form#activity_unplanned', function (e) {
     e.preventDefault();
 
     var param = new FormData(this);
-    console.log(param);
-
    /* var $valid = $("#activity_unplanned").valid();
     if(!$valid) {
         activity_unplanned_validators.focusInvalid();
@@ -1120,7 +1129,7 @@ $(document).on('submit', 'form#activity_unplanned', function (e) {
                         resizable: true,
                         close: function (event, ui) {
                             $(this).remove();
-
+                            location.reload();
                         }
                     });
             }

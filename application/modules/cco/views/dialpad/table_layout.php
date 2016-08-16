@@ -40,22 +40,31 @@
         <tbody class="tbl_body_row">
 
         <?php
-            foreach($searched_data as$key => $searchdata){
-        ?>
+        if(!empty($searched_data)) {
+            foreach ($searched_data as $key => $searchdata) {
+                ?>
                 <tr>
                     <td><?php echo $searchdata['disease_name']; ?></td>
                     <td><?php echo $searchdata['symptoms_country_name']; ?></td>
                     <td><?php echo $searchdata['product_sku_name']; ?></td>
                     <td><?php echo $searchdata['crop_name']; ?></td>
-                    <td></td>
+                    <td><?php echo $searchdata['activity_planning_time']; ?></td>
+                    <td><?php echo $searchdata['display_name']; ?></td>
+                    <td><?php echo $searchdata['primary_mobile_no']; ?></td>
+                    <td><?php echo $searchdata['activity_type_country_name']; ?></td>
+                </tr>
+            <?php
+            }
+        }
+        else{
+        ?>
+            <tr>
+            <td colspan="8">No data found</td>
                 </tr>
         <?php
-            }
-
+        }
         ?>
-
         </tbody>
-
     </table>
     <div class="clearfix"></div>
 </div>

@@ -1622,7 +1622,10 @@ class Ecp extends Front_Controller
 
 				$geo_level_2 = $this->ecp_model->get_customer_type_geo_data($role_id, $user->country_id, $activity['employee_id'], null, null);
 
+
 				$geo_level_3 = $this->ecp_model->get_customer_type_geo_data($role_id, $user->country_id, $activity['employee_id'], $perent_id, $second_perent);
+
+				//testdata($geo_level_3);
 
 			} else {
 				$role_id = 11;

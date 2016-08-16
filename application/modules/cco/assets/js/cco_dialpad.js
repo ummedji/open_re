@@ -525,19 +525,28 @@ function get_complaint_date_from_complaint_subject(complaint_subject_id)
             $("input#complaint_date1").val(obj.complaint_due_date);
             $("input#complaint_date2").val(obj.complaint_due_date2);
             $("input#complaint_date3").val(obj.complaint_due_date3);
-            if(obj.reminder1_other_desigination_id !="" && obj.other_desigination_person1_id !="" )
+
+           var q = $.type(obj.reminder1_other_desigination_id);
+
+            var w =$.type(obj.other_desigination_person1_id);
+
+            //alert(q+"====="+w);
+
+           // return false;
+            if(obj.reminder1_other_desigination_id == null || obj.other_desigination_person1_id == null)
+            {
+                $("#designstion").html("<option value=''>Select Designation</option>");
+                $('#designstion').append($('<option>', {value: obj.desigination_country_id_for,text: obj.desigination_country_name_for}));
+                $('#designstion').removeAttr("disabled");
+            }
+            else
             {
                 $("#designstion").html("<option value=''>Select Designation</option>");
                 $('#designstion').append($('<option>', {value: obj.reminder1_other_desigination_id,text: obj.desigination_country_name}).attr('selected', 'selected'));
                 $("#person_name").html("<option value=''>Select Person</option>");
                 $('#person_name').append($('<option>', {value: obj.other_desigination_person1_id,text: obj.display_name}).attr('selected', 'selected'));
             }
-            else
-            {
-                $("#designstion").html("<option value=''>Select Designation</option>");
-                $('#designstion').append($('<option>', {value: obj.reminder1_desigination_id,text: obj.desigination_country_name}).attr('selected', 'selected'));
-                $('#designstion').removeAttr("disabled");
-            }
+
         }
     });
 }

@@ -1398,15 +1398,18 @@ class Cco_model extends BF_Model
     {
         $user = $this->auth->user();
 
-        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id,bmcd.reminder1_days,bmcd.reminder2_days,bmcd.reminder3_days,bmcd.other_desigination_person1_id,bmcd.reminder1_other_desigination_id,bmcd.reminder1_desigination_id,bmdc.desigination_country_name,bu.display_name");
+        $this->db->select("bmcd.complaint_subject,bmcd.complaint_id,bmcd.reminder1_days,bmcd.reminder2_days,bmcd.reminder3_days,bmcd.other_desigination_person1_id,bmcd.reminder1_other_desigination_id,bmcd.reminder1_desigination_id,bmdc.desigination_country_name,bu.display_name,bmdcm.desigination_country_name as desigination_country_name_for");
         $this->db->from("bf_master_complaint_detail as bmcd");
-        $this->db->join("bf_master_designation_country as bmdc","bmcd.reminder1_other_desigination_id = bmdc.desigination_country_id");
-        $this->db->join("bf_users as bu","bmcd.other_desigination_person1_id = bu.id");
+        $this->db->join("bf_master_designation_country as bmdc","bmcd.reminder1_other_desigination_id = bmdc.desigination_country_id", 'left');
+        $this->db->join("bf_master_designation_country as bmdcm","bmcd.reminder1_desigination_id = bmdcm.desigination_country_id", 'left');
+        $this->db->join("bf_users as bu","bmcd.other_desigination_person1_id = bu.id", 'left');
+
         $this ->db->where('bmcd.complaint_id',$complaint_subject_id);
         $this->db->where('bmcd.status',1);
         $this->db->where('bmcd.deleted',0);
         $this->db->order_by('bmcd.complaint_subject','asc');
         $user_customer_complaint_subject = $this->db->get()->row_array();
+
         return $user_customer_complaint_subject;
 
     }
@@ -2161,31 +2164,91 @@ class Cco_model extends BF_Model
 
         $all_child_geo_data_array = array();
 
-        if($geo_level_id2 != "")
-        {
+        $child_str = "";
+
+        if ($geo_level_id2 != "") {
             $all_child_geo_data = $this->get_child_data($geo_level_id2);
-            if(!empty($all_child_geo_data) && $all_child_geo_data != 0)
-            {
-                foreach($all_child_geo_data as $key => $geo_data) {
+            if (!empty($all_child_geo_data) && $all_child_geo_data != 0) {
+                foreach ($all_child_geo_data as $key => $geo_data) {
                     $all_child_geo_data_array[] = $geo_data["political_geo_id"];
                 }
+
+                $child_str = implode(",", $all_child_geo_data_array);
             }
         }
-        testdata($all_child_geo_data_array);
+        //   testdata($all_child_geo_data_array);
+
 
         $sql = "SELECT
-                bmdc.disease_name,
-                bmcds.symptoms_country_name,
-                bmpsc.product_sku_name,
-                bmcc.crop_name
 
-                FROM `bf_master_disease_country` as bmdc
-                LEFT JOIN bf_disease_symptoms_mapping as bdsm ON bdsm.country_disease_id = bmdc.disease_country_id
-                LEFT JOIN bf_master_country_disease_symptoms as bmcds ON bmcds.country_symptoms_id = bdsm.country_symptom_id
-                LEFT JOIN bf_master_disease_crop_product_mapping as bmdcp ON bmdcp.disease_id = bmdc.disease_country_id
-                LEFT JOIN bf_master_crop_country as bmcc ON  bmcc.crop_country_id = bmdcp.crop_id
-                LEFT JOIN bf_master_product_sku_country as bmpsc ON  bmpsc.product_sku_country_id = bmdcp.product_sku_id
-                WHERE bmdc.disease_name LIKE '%".$search_data."%' AND bmdc.country_id = ".$user->country_id." AND bmdc.deleted = 0  AND bmdc.status = 1";
+    bmdc.disease_name,
+    bmcds.symptoms_country_name,
+    bmpsc.product_sku_name,
+    bmcc.crop_name, ";
+
+    if ($child_str != "") {
+
+        $sql .= " beapdd.activity_planning_id,
+        beap.employee_id,
+        beap.activity_planning_time,
+        bmucd.primary_mobile_no,
+        beamc.activity_type_country_name,
+        bu.display_name ";
+
+    }
+
+    $sql .= " FROM `bf_master_disease_country` as bmdc
+
+    LEFT JOIN bf_disease_symptoms_mapping as bdsm ON bdsm.country_disease_id = bmdc.disease_country_id
+
+    LEFT JOIN bf_master_country_disease_symptoms as bmcds ON bmcds.country_symptoms_id = bdsm.country_symptom_id
+
+    LEFT JOIN bf_master_disease_crop_product_mapping as bmdcp ON bmdcp.disease_id = bmdc.disease_country_id
+
+    LEFT JOIN bf_master_crop_country as bmcc ON  bmcc.crop_country_id = bmdcp.crop_id
+
+    LEFT JOIN bf_master_product_sku_country as bmpsc ON  bmpsc.product_sku_country_id = bmdcp.product_sku_id ";
+
+
+    if ($child_str != "")
+    {
+        $sql .= " LEFT JOIN bf_ecp_activity_planning_diseases_details as beapdd ON beapdd.diseases_id = bmdc.disease_country_id
+
+        LEFT JOIN bf_ecp_activity_planning as beap ON beap.activity_planning_id = beapdd.activity_planning_id
+
+        LEFT JOIN bf_ecp_activity_master_country as beamc ON beamc.activity_type_country_id = beap.activity_type_id
+
+        LEFT JOIN bf_users as bu ON bu.id = beap.employee_id
+
+        LEFT JOIN bf_master_user_contact_details as bmucd ON bmucd.user_id = bu.id ";
+    }
+
+    $sql .= "  WHERE 1
+
+    AND bmdc.disease_name LIKE '%".$search_data."%' ";
+
+     if($child_str != "")
+     {
+         $sql .= " AND
+        (
+            beap.geo_level_id_2 IN (" . $child_str . ")
+            OR
+            beap.geo_level_id_3  IN (" . $child_str . ")
+            OR
+            beap.geo_level_id_4  IN (" . $child_str . ")
+        )
+        AND beap.status = 2 ";
+
+     }
+
+    $sql .= " AND bmdc.country_id =  ".$user->country_id."
+
+    AND bmdc.deleted = 0
+
+    AND bmdc.status = 1 ";
+
+//echo $sql;
+   //     die;
 
         $disease_info = $this->db->query($sql);
 

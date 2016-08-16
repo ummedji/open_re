@@ -361,6 +361,7 @@
                     <?php } ?>
 
                     <?php if (isset($activity_execution['key_retailer']) && !empty($activity_execution['key_retailer'])) { ?>
+
                         <div class="default_box_white">
                             <div class="col-md-12 plng_title"><h5>Key Retailer Details</h5></div>
                             <div class="col-md-8 col-md-offset-2">
@@ -373,8 +374,9 @@
                                         </tr>
                                         </thead>
                                         <tbody id="farmer_detail" class="tbl_body_row">
-                                        <?php if (isset($activity_execution['key_retailer']) && !empty($activity_execution['key_farmer'])) {
+                                        <?php if (isset($activity_execution['key_retailer']) && !empty($activity_execution['key_retailer'])) {
                                             foreach ($activity_execution['key_retailer'] as $kf => $vf) {
+
                                                 ?>
                                                 <tr>
                                                     <td data-title='Key Retailer'>
