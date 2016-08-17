@@ -9,149 +9,124 @@
         ?>
 
         <div class="row">
-
-            <div class="col-md-11" id="order_place_data">
-
+            <div class="col-md-12 text-center" id="order_place_data">
                 <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
-
-                    <div class="rotate_data">
-
+                    <div class="rotate_data" style="display: inline-block;">
                         <div class="row">
+                            <div class="col-md-2_ tp_form" style="float: none;">
+                                <div class="form-group">
+                                    <label>Select Retailer</label>
+                                    <div class="inln_fld">
+                                        <select class="lva form-control" id="retailer_data" data-live-search="true" name="retailer_data" required>
+                                            <option value="">Select Retailer</option>
 
-
-                            <div class="">
-                                <div class="row">
-                                    <div class="col-md-2_ tp_form">
-
-                                        <div class="form-group">
-                                            <label>Select Retailer</label>
-
-                                            <select class="lva" id="retailer_data" data-live-search="true" name="retailer_data" required>
-                                                <option value="">Select Retailer</option>
-
-                                                <?php
-                                                  if(isset($customer_retailer_data) && !empty($customer_retailer_data))
-                                                  {
-                                                      foreach($customer_retailer_data as $k=> $retailer_data)
-                                                      {
-                                                          ?>
-                                                          <option value="<?php echo $retailer_data['id']; ?>" attr-name="<?php echo $retailer_data['display_name']; ?>" ><?php echo $retailer_data['display_name']; ?></option>
-                                                      <?php
-                                                      }
-                                                  }
-
-                                                ?>
-
-                                            </select>
-
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-md-2_ tp_form">
-                                        <div class="form-group">
-                                            <label>Product Sku Name</label>
-                                            <div class="inln_fld">
-                                                <select class="lva" id="prod_sku" data-live-search="true" name="prod_sku" required>
-                                                    <option value="">Product Name</option>
-                                                    <?php
-                                                    if(isset($product_sku) && !empty($product_sku))
-                                                    {
-                                                        foreach($product_sku as $k=> $prd_sku)
-                                                        {
-                                                            ?>
-                                                            <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
-                                                        <?php
-                                                        }
-                                                    }
-
+                                            <?php
+                                            if(isset($customer_retailer_data) && !empty($customer_retailer_data))
+                                            {
+                                                foreach($customer_retailer_data as $k=> $retailer_data)
+                                                {
                                                     ?>
-                                                </select>
-                                                <div class="clearfix"></div>
-                                                <label id="prod_sku-error" class="error" for="prod_sku"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-2_ tp_form">
-                                        <div class="form-group">
-                                            <label for="invoice_date">Units</label>
-                                            <div class="inln_fld">
-                                                <select class="lva" id="units" data-live-search="true" name="units" required>
-                                                    <option value="">Select Unit</option>
-                                                    <option value="box">Box</option>
-                                                    <option value="packages">Packages</option>
-                                                    <option value="kg/ltr">Kg/Ltr</option>
-                                                </select>
-                                                <div class="clearfix"></div>
-                                                <label id="units-error" class="error" for="units"></label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3_ tp_form">
-                                        <div class="form-group">
-                                            <label for="invoice_date">Quantity</label>
-                                            <div class="inln_fld">
-                                                <input type="text" class="form-control allownumericwithdecimal lva" name="quantity" id="quantity" placeholder="" required>
-                                                <div class="clearfix"></div>
-                                                <label id="quantity-error" class="error" for="quantity"></label>
-                                            </div>
-                                        </div>
+                                                    <option value="<?php echo $retailer_data['id']; ?>" attr-name="<?php echo $retailer_data['display_name']; ?>" ><?php echo $retailer_data['display_name']; ?></option>
+                                                    <?php
+                                                }
+                                            }
 
+                                            ?>
+
+                                        </select>
+                                        <div class="clearfix"></div>
+                                        <label class="error"></label>
                                     </div>
-                                    <div class="plus_btn"><a title="Add Product" href="javascript:void(0);" id="order_place_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-2_ tp_form">
+                                <div class="form-group">
+                                    <label>Product Sku Name</label>
+                                    <div class="inln_fld">
+                                        <select class="lva form-control" id="prod_sku" data-live-search="true" name="prod_sku" required>
+                                            <option value="">Product Name</option>
+                                            <?php
+                                            if(isset($product_sku) && !empty($product_sku))
+                                            {
+                                                foreach($product_sku as $k=> $prd_sku)
+                                                {
+                                                    ?>
+                                                    <option value="<?php echo $prd_sku['product_sku_country_id']; ?>" attr-name="<?php echo $prd_sku['product_sku_name']; ?>" attr-code="<?php echo $prd_sku['product_sku_code']; ?>"><?php echo $prd_sku['product_sku_name']; ?></option>
+                                                    <?php
+                                                }
+                                            }
+
+                                            ?>
+                                        </select>
+                                        <div class="clearfix"></div>
+                                        <label id="prod_sku-error" class="error" for="prod_sku"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-2_ tp_form">
+                                <div class="form-group">
+                                    <label for="invoice_date">Units</label>
+                                    <div class="inln_fld">
+                                        <select class="lva form-control" id="units" data-live-search="true" name="units" required>
+                                            <option value="">Select Unit</option>
+                                            <option value="box">Box</option>
+                                            <option value="packages">Packages</option>
+                                            <option value="kg/ltr">Kg/Ltr</option>
+                                        </select>
+                                        <div class="clearfix"></div>
+                                        <label id="units-error" class="error" for="units"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3_ tp_form">
+                                <div class="form-group">
+                                    <label for="invoice_date">Quantity</label>
+                                    <div class="inln_fld">
+                                        <input type="text" class="form-control allownumericwithdecimal lva" name="quantity" id="quantity" placeholder="" required>
+                                        <div class="clearfix"></div>
+                                        <label id="quantity-error" class="error" for="quantity"></label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="plus_btn plus_btn_ordplc"><a title="Add Product" href="javascript:void(0);" id="order_place_add_row"><i class="fa fa-plus" aria-hidden="true"></i></a></div>
+                         </div>
+                    </div>
+                        <div class="clearfix"></div>
+            </div>
+                <div id="order_data">
+                    <div class="col-md-12 ad_mr_top">
+                        <div class="row">
+                            <div id="no-more-tables">
+                                <table class="col-md-12 table-bordered table-striped table-condensed cf">
+                                    <thead class="cf">
+                                    <tr>
+                                        <th class="first_th">Sr. No. <span class="rts_bordet"></span></th>
+                                        <th>Product SKU Code <span class="rts_bordet"></span></th>
+                                        <th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>
+                                        <th class="numeric">Units <span class="rts_bordet"></span></th>
+                                        <th class="numeric">Quantity <span class="rts_bordet"></span></th>
+                                        <th class="numeric">Qty <div class="wl_sp">(Kg/Ltr)</div> <span class="rts_bordet"></span></th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="tbody_order_place_data">
+                                    </tbody>
+                                </table>
                                 <div class="clearfix"></div>
                             </div>
-                            <div class="clearfix"></div>
-
                         </div>
-
-
-
-        <div class="clearfix"></div>
-
-        <div id="order_data">
-
-            <div class="col-md-12 ad_mr_top">
-                <div class="row">
-
-                    <div id="no-more-tables">
-                        <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                            <thead class="cf">
-                            <tr>
-                                <th class="first_th">Sr. No. <span class="rts_bordet"></span></th>
-
-                                <th>Product SKU Code <span class="rts_bordet"></span></th>
-                                <th class="numeric">Product SKU Name <span class="rts_bordet"></span></th>
-                                <th class="numeric">Units <span class="rts_bordet"></span></th>
-                                <th class="numeric">Quantity <span class="rts_bordet"></span></th>
-                                <th class="numeric">Qty <div class="wl_sp">(Kg/Ltr)</div> <span class="rts_bordet"></span></th>
-                            </tr>
-                            </thead>
-                            <tbody id="tbody_order_place_data">
-                            </tbody>
-                        </table>
-                        <div class="clearfix"></div>
                     </div>
                 </div>
-            </div>
-
-        </div>
-    </div>
-    <div class="clearfix"></div>
-
+                <div class="clearfix"></div>
                 <div class="clearfix"></div>
                 <div class="col-md-12 text-right">
-                    <div class="row save_btn">
+                    <div class="save_btn">
                         <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-
                 <?php form_close(); ?>
-
-</div>
-
+        </div>
 
 <div class="clearfix"></div>
 

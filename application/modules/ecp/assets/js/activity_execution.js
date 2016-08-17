@@ -164,6 +164,14 @@ function getExecutionTime()
     $('#execution_time').timepicker({
 
     });
+    /*$('#execution_time').timepicker().on('click', function () {
+        $('.timepicker').click(function(e) {
+            e.stopPropagation(); // prevent clicks on datepicker from collapsing 'parent'
+        });
+    });*/
+    $('#followup').click(function(){
+        $(this).timepicker();
+    });
 }
 
 function getPlanningTime()

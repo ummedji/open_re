@@ -478,6 +478,7 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     vertical-align: top;
     margin-top: 3px;
 }
+.rotate_data .tp_form .form-group label { font-weight: normal;}
 .tp_form .form-group input {
     font-family:'Exo2-Regular';
     font-size: 15px;
@@ -2128,6 +2129,13 @@ input[type="checkbox"].styled:checked + label:after, input[type="radio"].styled:
     vertical-align: middle;
 }
 .corp_text .bootstrap-select { width: 180px !important;}
+.plus_btn_ordplc {
+    border: solid 1px #c9c9c9 !important;
+    height: 30px;
+    width: 30px;
+    padding: 5px;
+    margin-top: 0px;
+}
 @media screen and (max-width: 1199px) and (min-width: 992px) {.corp_text .bootstrap-select { width: 130px !important;}}
 @media screen and (max-width: 1363px) { .corp_text .plus_btn { margin-top: 0px !important;} }
 @media screen and (max-width: 991px) {

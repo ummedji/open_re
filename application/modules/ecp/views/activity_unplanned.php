@@ -537,7 +537,7 @@
                                         <button type="button" class="btn btn-primary" name="follow_up" id="followup">Add Followup Meetings</button>
                                     </div>
                                 </div>
-                                <div class="col-md-9 tp_form  inline-parent" id="follow_up" style="display: none">
+                                <div class="col-md-9 tp_form text-center inline-parent" id="follow_up" style="display: none">
                                     <div class="form-group">
                                         <label>Planning Date<span style="color: red">*</span></label>
                                         <input type="text" class="form-control" name="planning_date" id="planning_date" placeholder="" />
@@ -550,7 +550,7 @@
                                             <input id="planning_time" name="planning_time" type="text" class="input-group-time form-control input-append" />
                                         </div>
                                     </div>
-                                    <div class="col-md-12 save_btn">
+                                    <div class="col-md-12 save_btn text-center">
                                         <input type="hidden" class="form-control" name="reference_type" id="" value="follow_up" placeholder=""/>
                                         <button type="button" class="btn btn-primary" id="planning_save">Save</button>
                                         <button type="button" class="btn btn-primary" id="planning_close">close</button>
