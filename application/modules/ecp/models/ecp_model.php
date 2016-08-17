@@ -3396,13 +3396,16 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
             $this->db->select('eap.activity_planning_date,eap.execution_date,eap.execution_time,eap.activity_planning_time,eamc.activity_type_country_name,mpgd.political_geography_name,eap.activity_planning_id,eap.status');
         }
         $this->db->from('ecp_activity_planning as eap');
-        $this->db->join('ecp_activity_master_country as eamc','eamc.activity_type_country_id = eap.activity_type_id');
-        $this->db->join('master_political_geography_details as mpgd','mpgd.political_geo_id = eap.geo_level_id');
+        $this->db->join('ecp_activity_master_country as eamc', 'eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details as mpgd', 'mpgd.political_geo_id = eap.geo_level_id');
 
         $this->db->where('eap.country_id', $country_id);
         $this->db->where('eap.employee_id', $user_id);
-        $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%c")', $cur_month);
-        $this->db->where('DATE_FORMAT(eap.activity_planning_date,"%Y")', $cur_year);
+
+        $cmy = $cur_month . "-" . $cur_year;
+        $this->db->where("(DATE_FORMAT(eap.activity_planning_date,'%c-%Y') = '$cmy'
+                            OR DATE_FORMAT(eap.execution_date,'%c-%Y') = '$cmy')
+                        ");
 
         $this->db->order_by('eap.activity_planning_time', 'ASC');
 
@@ -3410,33 +3413,41 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
 
         // testdata($activity_details);
 
-        if (isset($activity_details) && !empty($activity_details)) {
+        if (isset($activity_details) && !empty($activity_details))
+        {
+            $dt_array = array();
 
-            if(isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+            $date_array = array();
+            foreach ($activity_details as $k => $val)
             {
-                $date_array = array();
 
-                foreach ($activity_details as $k => $val)
+                $val_pla_date = date("n-Y",strtotime($val["activity_planning_date"]));
+                $val_exe_date = date("n-Y",strtotime($val["execution_date"]));
+
+                if($val_pla_date == $cmy || $val_exe_date == $cmy)
                 {
-                    $date_array[$val["activity_planning_date"]][] = $val;
+                    $act_date = ((!is_null($val["execution_date"]) && trim($val["execution_date"])!='' && $val_exe_date == $cmy) ? $val["execution_date"] : $val["activity_planning_date"]);
+                    if(!isset($dt_array[$act_date]))
+                    {
+                        $dt_array[$act_date] = array();
+                    }
+                    $date_array[$act_date][] = $val;
                 }
-
+            }
+            ksort($date_array);
+            //testdata($date_array);
+            if (isset($web_service) && !empty($web_service) && $web_service == 'web_service')
+            {
                 $date_array = array_values($date_array);
-
                 return $date_array;
             }
-            else{
-                $date_array = array();
-
-                foreach ($activity_details as $k => $val)
-                {
-                    $date_array[$val["activity_planning_date"]][] = $val;
-                }
-
+            else
+            {
                 return $date_array;
             }
-
-        } else {
+        }
+        else
+        {
             return false;
         }
     }
