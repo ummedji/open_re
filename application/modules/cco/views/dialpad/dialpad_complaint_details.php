@@ -19,6 +19,7 @@
         echo form_open('cco/add_update_complaint_info',$attributes);
         ?>
         <input type="hidden" class="form-control" name="complaint_edit_id" id="complaint_edit_id" placeholder="" value="" />
+        <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
         <div class="row">
             <div class="cco-feld">
                 <div class="col-md-12">
@@ -26,13 +27,13 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Id">Complaint Id</label>
-                                <input readonly type="text" class="form-control" id="complaint_id" placeholder="" value="<?php echo $unique_id; ?>">
+                                <input readonly type="text" class="form-control" id="complaint_id" name="complaint_id" placeholder="" value="<?php echo $unique_id; ?>">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Status">Status</label>
-                                <select class="form-control" name="complaint_status" id="complaint_status">
+                                <select class="form-control" name="complaint_status" id="complaint_status" name="complaint_status">
                                     <option value="0" selected="selected">Pending</option>
                                     <option value="1">In Progress</option>
                                     <option value="2">Resolved</option>
@@ -138,7 +139,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input readonly type="text" class="form-control" id="complaint_date1" placeholder="First Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date1" name="complaint_date1" placeholder="First Education Data">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
@@ -149,7 +150,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input readonly type="text" class="form-control" id="complaint_date2" placeholder="Second Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date2" name="complaint_date2" placeholder="Second Education Data">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
@@ -160,7 +161,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input readonly type="text" class="form-control" id="complaint_date3" placeholder="Third Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date3" name="complaint_date3" placeholder="Third Education Data">
                             </div>
                         </div>
                     </div>

@@ -158,15 +158,15 @@
                         <li style="border-left: none;"><a href="#">Schemes</a></li>
                         <li class="active"><a href="#">Call History</a></li>
                         <li><a href="#">Chat History</a></li>
-                        <li class="disable"><a href="#">Activity Details</a></li>
+                        <li class="disable"><a href="javascript:void(0);" onclick = "get_activity_detail_data(<?php echo $customer_id; ?>);">Activity Details</a></li>
                         <li><a href="javascript:void(0);" onclick = "get_diseases_detail_data(<?php echo $customer_id; ?>);">Diseases Details</a></li>
                         <li><a href="javascript:void(0);" onclick = "get_product_detail_data(<?php echo $customer_id; ?>);">Product Details</a></li>
 
                         <li><a href="#">Questions</a></li>
-                        <li style="border-left: none; border-bottom: none;"><a href="javascript:void(0);" onclick = "get_order_status_data(<?php echo $customer_id; ?>);">Order Status</a></li>
+                        <li style="border-left: none; border-bottom: none;"><a href="javascript:void(0);" onclick = "get_order_status_data(<?php echo $customer_id; ?>,null);">Order Status</a></li>
                         <li style="border-bottom: none;"><a href="javascript:void(0);" onclick = "get_complaint_detail_data(<?php echo $customer_id; ?>);">Complaints</a></li>
                         <li style="border-bottom: none;"><a href="#">Order Tracking</a></li>
-                        <li style="border-bottom: none;"><a href="#">Order Place</a></li>
+                        <li style="border-bottom: none;"><a href="javascript:void(0);" onclick = "get_order_place_data(<?php echo $customer_id; ?>);">Order Place</a></li>
                         <li style="border-bottom: none;"><a href="javascript:void(0);" onclick="get_customer_feedback_data(<?php echo $customer_id; ?>);">Feedback</a></li>
                         <li style="border-bottom: none;"><a href="#">E Invoice /E Statement</a></li>
                         <li style="border-bottom: none;"><a href="#">Script</a></li>
@@ -217,3 +217,63 @@
 <div id="success_file_popup">
 
 </div>
+
+<script type="text/javascript">
+
+    $(document).on('click', 'div#searched_data .eye_i', function (e) {
+
+        e.preventDefault();
+        //alert("INNN");
+
+        var customer_id = $("input#customer_id").val();
+        var id = $(this).attr('prdid');
+
+        $('div#searched_data').find('tr.bg_focus').removeClass();
+        $(this).parents("tr").addClass("bg_focus");
+
+        //var radio_checked = $('input[name=radio1]:checked').val();
+        // var login_customer_type = $("input#login_customer_type" ).val();
+        // currentpage = $("input.page_function" ).val();
+
+        $.ajax({
+            type: 'POST',
+            url: site_url+'cco/get_order_data_details',
+            data: {orderid: id},
+            success: function(resp){
+                $("div#detail_data").empty();
+                $("#detail_data").html(resp);
+
+                $("input#customer_id").val(customer_id);
+            }
+        });
+
+        return false;
+    });
+
+   // $("div#detail_data .rotate_data").remove();
+   // $("div#detail_data .title").remove();
+
+    $("input#search_by_otn").on("keyup",function(){
+
+        var search_data = $(this).val();
+
+        var customer_id = $("input#customer_id").val();
+
+        get_order_status_data(customer_id,search_data);
+
+        /*   $.ajax({
+         type: 'POST',
+         url: site_url + "cco/get_product_detail_data",
+         data: {searchdata: search_data,customerid : customer_id},
+         success: function (resp) {
+         $("div#searched_data").html(resp);
+         //  get_geo_data(campagain_id,1,num_count);
+         }
+         });
+
+         */
+    });
+
+    //get_order_status_data(customer_id)
+
+</script>

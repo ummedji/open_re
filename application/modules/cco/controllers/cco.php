@@ -31,6 +31,7 @@ class Cco extends Front_Controller
 
         $this->load->model('cco/cco_model');
         $this->load->model('ecp/ecp_model');
+        $this->load->model('ishop/ishop_model');
 
         $this->set_current_user();
         $this->lang->load('cco');
@@ -306,21 +307,6 @@ class Cco extends Front_Controller
         Template::render();
 
     }
-
-    public function get_complaint_no()
-    {
-        $six_digit_random_number = mt_rand(100000, 999999);
-        $get_complaint_unique_id = $this->cco_model->get_customer_complaint_unique($six_digit_random_number);
-        $ccnt = count($get_complaint_unique_id);
-
-        if($ccnt > 0){
-            $this->get_complaint_no();
-        }
-        else{
-            return $six_digit_random_number;
-        }
-    }
-
     public function get_customer_complaint_view_data()
     {
         $user = $this->auth->user();
@@ -336,6 +322,22 @@ class Cco extends Front_Controller
         Template::set_view("cco/dialpad/dialpad_complaint_view");
         Template::render();
     }
+
+
+    public function get_complaint_no()
+    {
+        $six_digit_random_number = mt_rand(100000, 999999);
+        $get_complaint_unique_id = $this->cco_model->get_customer_complaint_unique($six_digit_random_number);
+        $ccnt = count($get_complaint_unique_id);
+
+        if($ccnt > 0){
+            $this->get_complaint_no();
+        }
+        else{
+            return $six_digit_random_number;
+        }
+    }
+
 
     public  function get_customer_financial_detail_data()
     {
@@ -424,6 +426,257 @@ class Cco extends Front_Controller
 
     }
 
+    public function get_activity_detail_view_data()
+    {
+        $customer_id = $_POST["customerid"];
+
+        $geo_level = $this->cco_model->get_geo_by_customer_id($customer_id);
+
+        Template::set('geo_level', $geo_level);
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad/dialpad_activity_detail");
+        // Template::set_block('sidebar', 'blog_sidebar');
+        Template::render();
+    }
+
+    public function activity_planning_sidebar_calender($activity_details=array(),$action=''){
+
+        // make it dynamically
+        $act_status = array('i','p','a','r','e','c');
+
+        $activity_by_date = array();
+        if(!empty($activity_details) && count($activity_details)  > 0){
+            foreach($activity_details as $act)
+            {
+                if(isset($act['execution_date']) && !empty($act['execution_date']))
+                {
+                    $act_date = $act['execution_date'];
+                } else {
+                    $act_date = $act['activity_planning_date'];
+                }
+
+                if(!isset($activity_by_date[$act_date]))
+                {
+                    $activity_by_date[$act_date] = array();
+                }
+            }
+        }
+
+        $user = $this->auth->user();
+
+// Get current year, month and day
+        list($iNowYear, $iNowMonth, $iNowDay) = explode('-', date('Y-m-d'));
+
+// Get current year and month depending on possible GET parameters
+        if (isset($_REQUEST['cur_month'])) {
+            list($iMonth, $iYear) = explode('-', $_REQUEST['cur_month']);
+            $iMonth = (int)$iMonth;
+            $iYear = (int)$iYear;
+        } else {
+            list($iMonth, $iYear) = explode('-', date('n-Y'));
+        }
+
+// Get name and number of days of specified month
+        $iTimestamp = mktime(0, 0, 0, $iMonth, $iNowDay, $iYear);
+        list($sMonthName, $iDaysInMonth) = explode('-', date('F-t', $iTimestamp));
+
+// Get previous year and month
+        $iPrevYear = $iYear;
+        $iPrevMonth = $iMonth - 1;
+        if ($iPrevMonth <= 0) {
+            $iPrevYear--;
+            $iPrevMonth = 12; // set to December
+        }
+
+// Get next year and month
+        $iNextYear = $iYear;
+        $iNextMonth = $iMonth + 1;
+        if ($iNextMonth > 12) {
+            $iNextYear++;
+            $iNextMonth = 1;
+        }
+
+// Get number of days of previous month
+        $iPrevDaysInMonth = (int)date('t', mktime(0, 0, 0, $iPrevMonth, $iNowDay, $iPrevYear));
+
+// Get numeric representation of the day of the week of the first day of specified (current) month
+        $iFirstDayDow = (int)date('w', mktime(0, 0, 0, $iMonth, 1, $iYear));
+
+// On what day the previous month begins
+        $iPrevShowFrom = $iPrevDaysInMonth - $iFirstDayDow + 1;
+
+// If previous month
+        $bPreviousMonth = ($iFirstDayDow > 0);
+
+// Initial day
+        $iCurrentDay = ($bPreviousMonth) ? $iPrevShowFrom : 1;
+
+        $bNextMonth = false;
+        $sCalTblRows = '';
+
+// Generate rows for the calendar
+        for ($i = 0; $i < 6; $i++) { // 6-weeks range
+            $sCalTblRows .= '<tr>';
+            for ($j = 0; $j < 7; $j++) { // 7 days a week
+
+                $clr = array('i','a','r','p');
+
+                $sClass = '';
+                if ($iNowYear == $iYear && $iNowMonth == $iMonth && $iNowDay == $iCurrentDay && !$bPreviousMonth && !$bNextMonth) {
+                    $sClass = 'today';
+                } elseif (!$bPreviousMonth && !$bNextMonth) {
+
+
+                    if(($iCurrentDay > date("d") && $iMonth >= date("n")) || ($iMonth > date("n"))){
+                        $sClass = 'current';
+                    }
+                    else
+                    {
+                        $sClass = 'prev';
+                    }
+
+                }
+                $dYear = $iYear;
+                $dMonth = $iMonth;
+                if($bPreviousMonth==1){
+                    $dMonth--;
+                } else if($bNextMonth==1){
+                    if($iMonth==12){
+                        $dMonth = 1;
+                        $dYear++;
+                    } else {
+                        $dMonth++;
+                    }
+                }
+
+
+                $activity_date = strtotime($dYear.'-'.$dMonth.'-'.$iCurrentDay);
+                $date = $dYear.'-'.$dMonth.'-'.$iCurrentDay;
+
+                if($activity_date < strtotime(date('Y-m-d')))
+                {
+                    $style = "pointer-events: none;opacity: 0.7;";
+                }
+                else
+                {
+                    $style = "";
+                }
+                $act_class = "";
+                if(!empty($activity_details) && !empty($action))
+                {
+                    /*if($action == 'activity_planning')
+                    {*/
+                    if(count($activity_by_date)>0)
+                    {
+                        foreach($activity_by_date as $k => $ld)
+                        {
+                            if($activity_date == strtotime($k))
+                            {
+                                $act_class = " act_date ".@implode(" ",$ld);
+                            }
+                        }
+                    }
+
+                    /*}*/
+                }
+
+                $actClass = array_rand($clr,1);
+
+                $sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date act_'.$clr[$actClass].$act_class.'" rel="'.$date.'"  href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+
+                // Next day
+                $iCurrentDay++;
+                if ($bPreviousMonth && $iCurrentDay > $iPrevDaysInMonth) {
+                    $bPreviousMonth = false;
+                    $iCurrentDay = 1;
+                }
+                if (!$bPreviousMonth && !$bNextMonth && $iCurrentDay > $iDaysInMonth) {
+                    $bNextMonth = true;
+                    $iCurrentDay = 1;
+                }
+            }
+            $sCalTblRows .= '</tr>';
+        }
+
+// Prepare replacement keys and generate the calendar
+        $aKeys = array(
+            '__prev_month__' => "{$iPrevMonth}-{$iPrevYear}",
+            '__next_month__' => "{$iNextMonth}-{$iNextYear}",
+            '__cal_caption__' => $sMonthName . ', ' . $iYear,
+            '__cal_rows__' => $sCalTblRows,
+        );
+//$sCalendarItself = strtr(file_get_contents('calendar.html'), $aKeys);
+        $sCalendarItself = '';
+
+        $sCalendarItself .= '<div class="navigation">';
+        $sCalendarItself .= '<a class="prev" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__prev_month__"].'\');"></a> ';
+        $sCalendarItself .= '<div class="title" >'.$aKeys['__cal_caption__'].'</div>';
+        $sCalendarItself .= '<a class="next" href="javascript: void(0);" onclick="getActivityCalenderData(\''.$aKeys["__next_month__"].'\');"></a>';
+        $sCalendarItself .= '</div><table>
+    <tr>
+        <th class="weekday">Sun</th>
+        <th class="weekday">Mon</th>
+        <th class="weekday">Tue</th>
+        <th class="weekday">Wed</th>
+        <th class="weekday">Thu</th>
+        <th class="weekday">Fri</th>
+        <th class="weekday">Sat</th>
+    </tr>';
+
+        $sCalendarItself .= $aKeys["__cal_rows__"];
+        $sCalendarItself .= '</table>';
+
+     /*   if ($this->input->is_ajax_request()) {*/
+		echo $sCalendarItself;
+		die;
+
+       /* }
+        else{
+            return $sCalendarItself;
+        }*/
+    }
+
+
+
+    public function getActivityDetailByMonth()
+    {
+        $user = $this->auth->user();
+
+       // testdata($_POST);
+        $geo_level_2 = !empty($_POST['param'][1]['value']) ? $_POST['param'][1]['value'] : '0';
+        $geo_level_3 = !empty($_POST['param'][2]['value']) ? $_POST['param'][2]['value'] : '0';
+        $geo_level_4 = !empty($_POST['param'][3]['value']) ? $_POST['param'][3]['value'] : '0';
+        $cur_month = !empty($_POST['cur_month']) ? $_POST['cur_month'] : '';
+
+
+        $activity_detail = $this->cco_model->all_activity_view_details($user->id,$user->country_id,$geo_level_2,$geo_level_3,$geo_level_4,$cur_month);
+
+        $action ='activity_planning';
+
+        $cal_data = $this->activity_planning_sidebar_calender($activity_detail,$action);
+        return $cal_data;
+    }
+
+    public function getActivityDetailByDate()
+    {
+        $user = $this->auth->user();
+
+        $geo_level_2 = !empty($_POST['param'][1]['value']) ? $_POST['param'][1]['value'] : '0';
+        $geo_level_3 = !empty($_POST['param'][2]['value']) ? $_POST['param'][2]['value'] : '0';
+        $geo_level_4 = !empty($_POST['param'][3]['value']) ? $_POST['param'][3]['value'] : '0';
+
+        $cur_date = !empty($_POST['cur_date']) ? $_POST['cur_date'] : '';
+
+
+        $activity_detail = $this->cco_model->all_activity_view_details_by_date($user->id,$user->country_id,$cur_date,$geo_level_2,$geo_level_3,$geo_level_4);
+        testdata($activity_detail);
+
+        /*Template::set_view("cco/dialpad/dialpad_activity_detail");
+        Template::render();*/
+
+    }
+
     public function get_diseases_detail_view_data()
     {
         $customer_id = $_POST["customerid"];
@@ -453,21 +706,99 @@ class Cco extends Front_Controller
     public function get_customer_order_status_data()
     {
         $customer_id = $_POST["customerid"];
-
-        $page_number = (isset($_POST["page"]) && !empty($_POST["page"])) ? $_POST["page"]: 1;
-
-        $scroll_status = (isset($_POST["scroll_status"]) && !empty($_POST["scroll_status"])) ? $_POST["scroll_status"]: null;
+        $search_data = $_POST["searchdata"];
 
 
-        $default_order_data = $this->cco_model->get_order_data($customer_id,$page_number,$scroll_status);
+
+    //    $page_number = (isset($_POST["page"]) && !empty($_POST["page"])) ? $_POST["page"]: 1;
+
+    //    $scroll_status = (isset($_POST["scroll_status"]) && !empty($_POST["scroll_status"])) ? $_POST["scroll_status"]: null;
+
+        $pag = (isset($_POST['page']) ? $_POST['page'] : '');
+
+        if($pag > 0)
+        {
+            $page = $pag;
+        }
+        else{
+            $page = 1;
+        }
+
+        $default_order_data = $this->cco_model->get_order_data($customer_id,$page,$search_data);
 
         Template::set('customer_id', $customer_id);
 
-        Template::set('default_order_data', $default_order_data);
+        Template::set('table', $default_order_data);
+
+        Template::set('td', $default_order_data['count']);
+        Template::set('pagination', (isset($default_order_data['pagination']) && !empty($default_order_data['pagination'])) ? $default_order_data['pagination'] : '' );
+
+      //  Template::set('default_order_data', $default_order_data);
         Template::set_view("cco/dialpad/dialpad_order_status_data");
 
         Template::render();
     }
+
+    public function get_order_data_details()
+    {
+        $order_id = $_POST["orderid"];
+
+        $order_details= $this->cco_model->order_status_product_details($order_id);
+
+        Template::set('table',$order_details);
+        Template::set_view("cco/dialpad/dialpad_order_status_data");
+
+        Template::render();
+
+    }
+
+    public function get_customer_order_place_data()
+    {
+        $customer_id = $_POST["customerid"];
+
+        $user = $this->auth->user();
+
+        $get_customer_retailer_data = $this->cco_model->get_customer_retailer_data($customer_id);
+        $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+
+        Template::set('customer_id', $customer_id);
+
+        Template::set('product_sku', $product_sku);
+
+        Template::set('customer_retailer_data', $get_customer_retailer_data);
+
+        Template::set_view("cco/dialpad/dialpad_order_place_details");
+
+        Template::render();
+
+    }
+
+    public function get_quantity_conversion_data()
+    {
+
+        $skuid = $_POST['skuid'];
+        $quantity_data = $_POST['quantity_data'];
+        $unit_data = $_POST['unit'];
+
+        $conversion_data= $this->ishop_model->get_product_conversion_data($skuid,$quantity_data,$unit_data);
+        echo $conversion_data;
+        die;
+
+    }
+
+    public function cco_order_place_details(){
+
+        $user_id = $this->session->userdata('user_id');
+
+        $user= $this->auth->user();
+        $user_country_id = $user->country_id;
+        $order_data = $this->cco_model->add_cco_order_place_details($user->id,$user_country_id);
+
+        echo $order_data;
+        die;
+
+    }
+
 
     public function add_update_general_info()
     {

@@ -844,6 +844,145 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_geo_by_customer_id($customer_id)
+    {
+        $this->db->select('mucd.geo_level_id3,mpgd.political_geography_name');
+        $this->db->from('master_user_contact_details as mucd');
+        $this->db->join('master_political_geography_details AS mpgd','mpgd.political_geo_id = mucd.geo_level_id3');
+        $this->db->where('mucd.user_id',$customer_id);
+        $geo = $this->db->get()->result_array();
+
+        if(isset($geo) && !empty($geo))
+        {
+            return $geo;
+        }
+        else{
+            return '';
+        }
+
+    }
+
+    public function all_activity_view_details($user_id,$country_id,$geo_level_2,$geo_level_3,$geo_level_4,$cur_month)
+    {
+        $this->db->select('activity_planning_date');
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.geo_level_id_2', $geo_level_2);
+        $this->db->where('eap.geo_level_id_3', $geo_level_3);
+        $this->db->where('eap.geo_level_id_4', $geo_level_4);
+        $this->db->where('eap.status','2');
+        $this->db->where('DATE_FORMAT(eap.activity_planning_time,"%c-%Y")',$cur_month);
+        $this->db->order_by('eap.activity_planning_time','ASC');
+        $activity_details = $this->db->get()->result_array();
+
+        if (isset($activity_details) && !empty($activity_details)) {
+            return $activity_details;
+        } else {
+            return false;
+        }
+    }
+
+    public function all_activity_view_details_by_date($user_id,$country_id,$cur_date,$geo_level_2,$geo_level_3,$geo_level_4){
+
+        $this->db->select('eap.activity_planning_id,eamc.activity_type_country_name,mucd.primary_mobile_no,bus.display_name,eap.proposed_attandence_count,eap.location,mpgd.political_geography_name');
+       // $this->db->select('*');
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('users as bus','bus.id = eap.employee_id');
+        $this->db->join('master_user_contact_details as mucd','mucd.user_id = eap.employee_id');
+        $this->db->join('ecp_activity_master_country AS eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details AS mpgd','mpgd.political_geo_id = eap.geo_level_id');
+        $this->db->where('eap.country_id', $country_id);
+        $this->db->where('eap.geo_level_id_2', $geo_level_2);
+        $this->db->where('eap.geo_level_id_3', $geo_level_3);
+        $this->db->where('eap.geo_level_id_4', $geo_level_4);
+        $this->db->where('eap.status','2');
+        $this->db->where('DATE_FORMAT(eap.activity_planning_time,"%Y-%c-%d")',$cur_date);
+        $this->db->order_by('eap.activity_planning_time','ASC');
+        $activity_details = $this->db->get()->result_array();
+
+        $final_array =array();
+        foreach($activity_details as $k => $ad)
+        {
+            $activity["activity_data"] = $ad;
+            $activity['crop'] = $this->getCropDetails($ad['activity_planning_id']);
+            $activity['products'] = $this->getProductDetails($ad['activity_planning_id']);
+            $activity['diseases'] = $this->getDiseasesDetails($ad['activity_planning_id']);
+            $activity['join_visit'] = $this->getJointVisitEnployee($ad['activity_planning_id']);
+
+            $final_array[] = $activity;
+        }
+
+        if (isset($final_array) && !empty($final_array)) {
+            return $final_array;
+        } else {
+            return false;
+        }
+
+    }
+
+    public function getCropDetails($activity_planning_id)
+    {
+        $this->db->select('eapcd.crop_id,mcc.crop_name');
+        $this->db->from('ecp_activity_planning_crop_details as eapcd');
+        $this->db->join('master_crop_country as mcc','mcc.crop_country_id = eapcd.crop_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $Crop= $this->db->get()->result_array();
+        if(isset($Crop) && !empty($Crop))
+        {
+            return $Crop;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getProductDetails($activity_planning_id){
+        $this->db->select('eappd.product_sku_id,mpsc.product_sku_name');
+        $this->db->from('ecp_activity_planning_product_details as eappd');
+        $this->db->join('master_product_sku_country as mpsc','mpsc.product_sku_country_id = eappd.product_sku_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $Product= $this->db->get()->result_array();
+        if(isset($Product) && !empty($Product))
+        {
+            return $Product;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getDiseasesDetails($activity_planning_id){
+        $this->db->select('eapdd.diseases_id,mdc.disease_name');
+        $this->db->from('ecp_activity_planning_diseases_details as eapdd');
+        $this->db->join('master_disease_country as mdc','mdc.disease_country_id = eapdd.diseases_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $Diseases= $this->db->get()->result_array();
+        if(isset($Diseases) && !empty($Diseases))
+        {
+            return $Diseases;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getJointVisitEnployee($activity_planning_id){
+
+        $this->db->select('eapjvd.joint_visit_details_id,eapjvd.employee_id,v_emp.display_name');
+        $this->db->from('ecp_activity_planning_joint_visit_details as eapjvd');
+        $this->db->join('users as v_emp','v_emp.id = eapjvd.employee_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $VisitEnployee= $this->db->get()->result_array();
+        if(isset($VisitEnployee) && !empty($VisitEnployee))
+        {
+            return $VisitEnployee;
+        }
+        else{
+            return array();
+        }
+    }
+
+
 
     public function get_all_work_allocation($country_id)
     {
@@ -1388,20 +1527,21 @@ class Cco_model extends BF_Model
             $logined_user_id = $user->id;
             $update_array = array();
 
-            $feedback_update_array = array(
-                'complaint_id' => $_POST["complaint_id"],
-                'complaint_number' => $_POST["complaint_number"],
+            $complaint_update_array = array(
+
+                'customer_id' => $_POST["customer_id"],
+                'complaint_number' => $_POST["complaint_id"],
                 'complaint_status' => $_POST["complaint_status"],
                 'complaint_type_id' => $_POST["complaint_type"],
                 'complaint_entry_date' => $_POST["complaint_entry_date"],
-                'complaint_due_date' => $_POST["complaint_due_date"],
+                'complaint_due_date' => $_POST["Complaint_due_date"],
                 'complaint_subject' => $_POST["complaint_subject"],
                 'remarks' => $_POST["remarks"],
                 'complaint_data' => $_POST["complaint_data"],
-                'assigned_to_id' => $_POST["assigned_to_id"],
-                'escalation_date_1' => $_POST["escalation_date_1"],
-                'escalation_date_2' => $_POST["escalation_date_2"],
-                'escalation_date_3' => $_POST["escalation_date_3"],
+                'assigned_to_id' => $_POST["person_name"],
+                'escalation_date_1' => $_POST["complaint_date1"],
+                'escalation_date_2' => $_POST["complaint_date2"],
+                'escalation_date_3' => $_POST["complaint_date3"],
                 'created_by_user' => $logined_user_id,
                 'modified_by_user' => $logined_user_id,
                 'created_on' => date('Y-m-d H:i:s'),
@@ -1409,8 +1549,8 @@ class Cco_model extends BF_Model
             );
             if($_POST['complaint_edit_id'] == "") {
                 //INSERT
-                if ($_POST['subject'] != "" && $_POST['description'] != ""){
-                    $result = $this->db->insert("bf_cco_feedback", $feedback_update_array);
+                if ($_POST['remarks'] != "" && $_POST['complaint_data'] != ""){
+                    $result = $this->db->insert("bf_cco_complaint_details", $complaint_update_array);
                     if ($this->db->affected_rows() > 0) {
                         $update_array[] = 1;
                     }
@@ -1421,7 +1561,7 @@ class Cco_model extends BF_Model
                 //UPDATE
                 if ($_POST['comments'] != "" && $_POST['remarks'] != "") {
                     $this->db->where("feedback_id", $_POST['feedback_edit_id']);
-                    $this->db->update("bf_cco_feedback", $feedback_update_array);
+                    $this->db->update("bf_cco_feedback", $complaint_update_array);
 
                     if ($this->db->affected_rows() > 0) {
                         $update_array[] = 1;
@@ -2485,70 +2625,293 @@ class Cco_model extends BF_Model
 
    }
 
-    public function get_order_data($customer_id,$page_number,$scroll_status)
+    public function get_order_data($customer_id,$page=null,$search_data)
     {
-        $item_per_page = 10;
-        $page_number = filter_var($page_number, FILTER_SANITIZE_NUMBER_INT, FILTER_FLAG_STRIP_HIGH);
 
-//throw HTTP error if page number is not valid
-        if(!is_numeric($page_number)){
-            header('HTTP/1.1 500 Invalid page number!');
-            exit();
-        }
-
-//get current starting point of records
-        $position = (($page_number-1) * $item_per_page);
-
-        $sql = "SELECT
+        $sql = "SELECT SQL_CALC_FOUND_ROWS bio.order_id,
         bio.customer_id_to,bu1.display_name as order_taken_name,bu.display_name,bio.order_date,bio.estimated_delivery_date,bio.order_tracking_no,bio.read_status
         FROM `bf_ishop_orders` as bio
         JOIN `bf_users` as bu ON `bu`.`id` = `bio`.`customer_id_to`
         JOIN `bf_users` as bu1 ON `bu1`.`id` = `bio`.`order_taken_by_id`
-        WHERE `bio`.`customer_id_from` = '".$customer_id."' ORDER BY `bio`.`order_id` DESC  LIMIT $position, $item_per_page";
+        WHERE `bio`.`customer_id_from` = '".$customer_id."' ";
 
-        $order_info = $this->db->query($sql);
-
-        $order_data = $order_info->result_array();
-
-        if($scroll_status != null)
+        if($search_data != null)
         {
-            $html = "";
-                    if(!empty($default_order_data))
-                    {
-                        $i = 1;
+            $sql .= " AND `bio`.`order_tracking_no` LIKE '%".$search_data."%' ";
+        }
 
-                        foreach($default_order_data as $key => $order_data)
-                        {
-                            $html .= "<tr>";
-                            $html .= "<td>11</td>";
-                            $html .= "<td>".$order_data['order_date']."</td>";
-                            $html .= "<td>".$order_data['order_tracking_no']."</td>";
-                            $html .= "<td>".$order_data['display_name']."</td>";
-                            $html .= "<td>".$order_data['estimated_delivery_date']."</td>";
-                            $html .= "<td>".$order_data['order_taken_name']."</td>";
+        $sql .= " ORDER BY `bio`.`order_id` DESC ";
 
-                                if($order_data['read_status'] == 0)
-                                {
-                                    $read_status = "Unread";
-                                }
-                                else
-                                {
-                                    $read_status = "Read";
-                                }
+        //$order_info = $this->db->query($sql);
 
-                            $html .= "<td>".$read_status."</td>";
-                            $html .= "</tr>";
+        $orderdata = $this->grid->get_result_res($sql);
 
-                            $i++;
-                        }
-                    }
-            echo $html;
-            die;
+        //testdata($orderdata);
+
+        if (isset($orderdata['result']) && !empty($orderdata['result'])) {
+
+            $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.','Retailers Name','EDD', 'Entered By', 'Read (Y/N)');
+            $order_view['count'] = count($order_view['head']);
+
+            if ($page != null || $page != "") {
+                $i = (($page * 10) - 9);
+            } else {
+                $i = 1;
+            }
+
+            foreach ($orderdata['result'] as $od)
+            {
+
+                if($od['read_status'] == 0)
+                {
+                    $read_status = "Unread";
+                }
+                else
+                {
+                    $read_status = "Read";
+                }
+
+                $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['order_tracking_no'], $od['display_name'], $od['estimated_delivery_date'], $od['order_taken_name'],$read_status);
+
+                $i++;
+            }
+
+            $order_view['pagination'] = $orderdata['pagination'];
+            $order_view['action'] = 'is_action';
+            $order_view['eye'] = 'is_eye';
+
+            return $order_view;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public function order_status_product_details($order_id)
+    {
+
+        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id,bio.order_status ';
+
+        $sql .= ' FROM bf_ishop_product_order as bipo ';
+        $sql .= ' JOIN bf_ishop_orders as bio ON (bio.order_id = bipo.order_id) ';
+        $sql .= '  JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
+        $sql .= '  JOIN bf_master_product_sku_regional as psr ON (psr.product_sku_id = psc.product_sku_id) ';
+
+        $sql .= ' WHERE 1 ';
+
+        $sql .= ' AND bipo.order_id =' . $order_id . ' ';
+
+        $order_detail = $this->grid->get_result_res($sql);
+
+        //testdata($order_detail);
+
+        $product_view=array();
+        if (isset($order_detail['result']) && !empty($order_detail['result']))
+        {
+
+            $product_view['head'] = array('Sr. No.', '', 'Product SKU Code', 'Product SKU Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
+            $product_view['count'] = count($product_view['head']);
+
+            $i =1;
+            foreach ($order_detail['result'] as $od)
+            {
+
+                if($od['unit'] == 'kg/ltr')
+                {
+                    $unit = 'Kg/Ltr';
+                }
+                elseif($od['unit'] == 'box')
+                {
+                    $unit = 'Box';
+                }
+                elseif($od['unit'] == 'packages')
+                {
+                    $unit = 'Packages';
+                }
+                else{
+                    $unit = '';
+                }
+
+                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],$unit, $od['quantity'],  $od['quantity_kg_ltr'] );
+
+                $i++;
+            }
+
+            return $product_view;
+
         }
         else
         {
-            return $order_data;
+            return false;
         }
     }
+
+    public function get_customer_retailer_data($customer_id)
+    {
+        $this->db->select("bu.id,bu.display_name");
+        $this->db->from("bf_users as bu");
+        $this->db->join("bf_master_customer_to_customer_mapping as bmctcm","bmctcm.to_customer_id = bu.id","left");
+        $this->db->where("bmctcm.from_customer_id",$customer_id);
+
+        $this->db->where("bu.deleted",0);
+        $this->db->where("bu.active",1);
+
+        $retailer_data = $this->db->get()->result_array();
+        return $retailer_data;
+    }
+
+
+    public function add_cco_order_place_details($user_id, $user_country_id)
+    {
+
+        $farmer_id = $this->input->post("customer_id");
+        $retailer_id = $this->input->post("retailer_data");
+
+        $customer_id_from = $farmer_id;
+        $customer_id_to = $retailer_id;
+        $order_taken_by_id = $user_id;
+
+        $order_date = date("Y-m-d");
+        $order_status = 0;
+
+        $po_no = NULL;
+
+        $units = $this->input->post("units");
+        $product_sku_id = $this->input->post("product_sku_id");
+        $quantity = $this->input->post("quantity");
+        $Qty = $this->input->post("Qty");
+
+        $rand_type = 'otn';
+        $table = 'bf_ishop_orders';
+
+        $rand_data = $this->get_random_no($rand_type, $table);
+
+
+        $order_place_data = array(
+            'customer_id_from' => $customer_id_from,
+            'customer_id_to' => $customer_id_to,
+            'order_taken_by_id' => $order_taken_by_id,
+            'order_date' => $order_date,
+            'order_tracking_no' => $rand_data,
+            'PO_no' => $po_no,
+            'order_status' => $order_status,
+            'country_id' => $user_country_id,
+            'created_by_user' => $user_id,
+            'status' => '1',
+            'created_on' => date('Y-m-d H:i:s')
+        );
+        //testdata($order_place_data);
+
+        $update_array = array();
+
+        if ($this->db->insert('bf_ishop_orders', $order_place_data)) {
+            $insert_id = $this->db->insert_id();
+
+            $update_array[] = 1;
+        }
+
+        $order_id = $insert_id;
+        $total = 0;
+        foreach ($product_sku_id as $key => $prd_sku) {
+
+            $amt = $this->get_product_price_by_product($prd_sku,'ishop');
+            $amt= $amt * $Qty[$key];
+            $order_data = array(
+                'order_id' => $order_id,
+                'product_sku_id' => $prd_sku,
+                'quantity' => $quantity[$key],
+                'unit' => $units[$key],
+                'quantity_kg_ltr' => $Qty[$key],
+                'amount' => $amt,
+            );
+
+            $total = $total + $amt;
+
+            $this->db->insert('bf_ishop_product_order', $order_data);
+
+            if($this->db->affected_rows() > 0) {
+                $update_array[] = 1;
+            }
+
+        }
+
+        $total_array= array(
+            'total_amount' =>$total,
+        );
+
+        $this->db->where('order_id',$order_id);
+        $this->db->update('ishop_orders',$total_array);
+
+        if($this->db->affected_rows() > 0) {
+            $update_array[] = 1;
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
+    public function get_product_price_by_product($prd_sku,$price_type)
+    {
+        $this->db->select('*');
+        $this->db->from('master_price');
+        $this->db->where('price_type',$price_type);
+        $this->db->where('product_sku_country_id',$prd_sku);
+        $price = $this->db->get()->row_array();
+
+        if(isset($price) && !empty($price)){
+            //  testdata($price['price']);
+            return $price['price'];
+        }
+
+    }
+
+    public function get_random_no($rand_type, $table)
+    {
+
+        if ($rand_type == 'otn') {
+            $random_no = 'O' . mt_rand(100000, 999999);
+        } elseif ($rand_type == 'etn') {
+            $random_no = 'E' . mt_rand(100000, 999999);
+        }
+
+        $check_data = $this->check_unique_random_data($rand_type, $table, $random_no);
+        if ($check_data == 1) {
+            $this->get_random_no($rand_type, $table);
+        } else {
+            return $random_no;
+        }
+
+    }
+
+    public function check_unique_random_data($rand_type, $table, $random_no)
+    {
+
+        $this->db->select('*');
+        $this->db->from($table);
+
+        if (($table == 'bf_ishop_orders') && $rand_type == 'otn') {
+            $this->db->where('order_tracking_no', $random_no);
+        } elseif ($table == 'ishop_secondary_sales' && $rand_type == 'etn') {
+            $this->db->where('etn_no', $random_no);
+        }
+
+        $rand_data = $this->db->get()->result_array();
+        if (isset($rand_data) && !empty($rand_data)) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+
+
 
 }

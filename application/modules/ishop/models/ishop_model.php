@@ -4240,6 +4240,8 @@ class Ishop_model extends BF_Model
         $this->db->where('product_sku_id', $skuid);
         $product_conversion_data = $this->db->get()->result_array();
 
+        //echo $this->db->last_query();
+//die;
         $result = "";
 
         if (!empty($product_conversion_data)) {

@@ -228,6 +228,24 @@ function get_farming_view_data(customer_id)
     });
 }
 
+function get_activity_detail_data(customer_id)
+{
+   // var campagain_id = $("input#camagain_id").val();
+  //  var num_count = 1;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_activity_detail_view_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //  get_geo_data(campagain_id,1,num_count);
+            $('.selectpicker').select('refresh');
+        }
+    });
+
+}
+
 function get_diseases_detail_data(customer_id)
 {
     var campagain_id = $("input#camagain_id").val();
@@ -285,11 +303,26 @@ function get_product_detail_data(customer_id)
 
 }
 
-function get_order_status_data(customer_id)
+function get_order_status_data(customer_id,search_data)
 {
+
     $.ajax({
         type: 'POST',
         url: site_url + "cco/get_customer_order_status_data",
+        data: {customerid: customer_id,searchdata:search_data},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //  get_geo_data(campagain_id,1,num_count);
+        }
+    });
+}
+
+function get_order_place_data(customer_id)
+{
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_order_place_data",
         data: {customerid: customer_id},
         success: function (resp) {
             $("div#dialpad_middle_contailner").html(resp);
@@ -493,7 +526,9 @@ $(document).on("submit","form#dialpad_complaint_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        get_customer_feedback_data(customer_id);
+                        //get_customer_complaint_data();
+                        location.reload();
+
                     }
                 });
 

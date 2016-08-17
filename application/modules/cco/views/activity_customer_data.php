@@ -46,20 +46,20 @@
             {
                 ?>
                 <tr>
-                    <td data-title="Farmer Call Name"><?php echo $activity_data["user_code"]; ?></td>
-                    <td data-title="First Name"><?php echo $activity_data["display_name"]; ?></td>
-                    <td data-title="Last Name"><?php echo $activity_data["desigination_country_name"]; ?></td>
+                    <td data-title="Employee Code"><?php echo $activity_data["user_code"]; ?></td>
+                    <td data-title="Employee Name"><?php echo $activity_data["display_name"]; ?></td>
+                    <td data-title="Designation"><?php echo $activity_data["desigination_country_name"]; ?></td>
                     <td data-title="Primary No.">
                         <div>
                             <a href="javascript: void(0);" rel="<?php echo $activity_data["primary_mobile_no"]; ?>" class="primary_no" ><?php echo $activity_data["primary_mobile_no"]; ?></a>
                         </div>
                     </td>
-                    <td data-title="Other No."><?php echo $activity_data["level_2"]; ?></td>
-                    <td data-title="Fixed Landline No."><?php echo $activity_data["level_3"]; ?></td>
-                    <td data-title="Pincode"><?php echo $activity_data["level_4"]; ?></td>
-                    <td data-title="Level 3"><?php echo date($current_user->local_date.' g:i A',strtotime($activity_data["activity_planning_time"])); ?></td>
-                    <td data-title="Level 2"><?php echo $activity_data["proposed_attandence_count"]; ?></td>
-                    <td data-title="Level 1"><?php echo $activity_data["activity_type_country_name"]; ?></td>
+                    <td data-title="Geo Level 3"><?php echo $activity_data["level_2"]; ?></td>
+                    <td data-title="Geo Level 2"><?php echo $activity_data["level_3"]; ?></td>
+                    <td data-title="Geo Level 1"><?php echo $activity_data["level_4"]; ?></td>
+                    <td data-title="Planned Date"><?php echo date($current_user->local_date.' g:i A',strtotime($activity_data["activity_planning_time"])); ?></td>
+                    <td data-title="Customers"><?php echo $activity_data["proposed_attandence_count"]; ?></td>
+                    <td data-title="Activity Type"><?php echo $activity_data["activity_type_country_name"]; ?></td>
                     <?php if($activity_data["called_status"] == '0')
                             {
                                 $status = 'Pending';
@@ -67,7 +67,7 @@
                         else{
                             $status = 'Done';
                          }?>
-                    <td data-title="Remarks"><?php echo $status; ?></td>
+                    <td data-title="Called Status"><?php echo $status; ?></td>
                 </tr>
                 <?php
             }

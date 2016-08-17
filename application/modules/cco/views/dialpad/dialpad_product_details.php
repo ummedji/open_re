@@ -52,8 +52,7 @@
     $("input#search_product").on("keyup",function(){
 
         var search_data = $(this).val();
-      //  if(search_data.length > 1)
-      //  {
+
             var customer_id = $("input#customer_id").val();
             $.ajax({
                 type: 'POST',
@@ -64,12 +63,6 @@
                     //  get_geo_data(campagain_id,1,num_count);
                 }
             });
-       // }
-      //  else
-      //  {
-
-      //  }
-
     });
 
 </script>
