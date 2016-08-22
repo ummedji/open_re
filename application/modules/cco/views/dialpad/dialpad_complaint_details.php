@@ -33,7 +33,7 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Status">Status</label>
-                                <select class="form-control" name="complaint_status" id="complaint_status" name="complaint_status">
+                                <select class="form-control" name="complaint_status" id="complaint_status" >
                                     <option value="0" selected="selected">Pending</option>
                                     <option value="1">In Progress</option>
                                     <option value="2">Resolved</option>
@@ -209,5 +209,6 @@
 
             get_person_data_from_desigination(desigination_country_id);
         });
+
 
 </script>

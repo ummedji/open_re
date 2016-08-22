@@ -40,6 +40,7 @@ echo Assets::js();
         $('#stock_month').datepicker('place')
         $('#invoice_month').datepicker('place')
         $('#order_date').datepicker('place')
+        $('#planning_date').datepicker('place')
     });
 
 </script>

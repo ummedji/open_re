@@ -26,7 +26,7 @@ $segment_data = $this->uri->segment(2);
                         <div class="inn_sub_nave">
                             <ul>
                                 <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/farmer_dialpad') ?>">Farmers</a></li>
-                                <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/farmer_dialpad') ?>">Channel Partners</a></li>
+                                <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/channel_partner_dialpad') ?>">Channel Partners</a></li>
                                 <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='activity_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/activity_dialpad') ?>">Activity</a></li>
                                 <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/farmer_dialpad') ?>">Employee</a></li>
                             </ul>
@@ -110,7 +110,81 @@ $segment_data = $this->uri->segment(2);
                             <div class="clearfix"></div>
                         </div>
 
+                    <?php }
+                    elseif($this->uri->segment(2)=='channel_partner_dialpad'){ ?>
+
+                        <div class="col-md-12 text-center tp_form inline-parent sbde-parent">
+                            <div class="form-group">
+                                <label>Channel Partner</label>
+                                <div class="inln_fld_top">
+                                    <select class="selectpicker" id="channel_partner" name="channel_partner">
+                                        <option value="">Select Channel Partner</option>
+                                        <?php
+
+                                        if($channel_partner_data != 0 || !empty($channel_partner_data)){
+                                            foreach($channel_partner_data as $data_key => $ch_prtner_data) {
+                                                ?>
+                                                <option
+                                                    value="<?php echo $ch_prtner_data["role_id"]; ?>"><?php echo $ch_prtner_data["customer_type_name"]; ?></option>
+
+                                            <?php
+                                            }
+                                        } ?>
+                                    </select>
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Call Mode</label>
+                                <div class="inln_fld_top">
+                                    <select class="selectpicker" id="Call Mode" name="Call Mode">
+                                        <option value="">Call Mode</option>
+                                        <option value="Manual">Manual</option>
+                                        <option value="Auto">Auto</option>
+                                    </select>
+                                    <div class="clearfix"></div>
+                                    <label id="to_date-error" class="error" for="Call Mode"></label>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                              <!--  <label>Call Mode</label>-->
+                                <div class="inln_fld_top">
+
+                                    <input type="text" name="search_by_contact_no" id="search_by_contact_no" placeholder="Search Distributor By Contact No."/>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
+                        </div>
+                        <div class="clearfix"></div>
+                    <div class="col-md-12 text-center tp_form inline-parent sbde-parent">
+                        <div class="form-group">
+                            <label>Campaign</label>
+                            <select class="selectpicker" id="Campaign" name="Campaign">
+
+                                <?php
+                                if (isset($campagaine_data) && !empty($campagaine_data) && $campagaine_data != 0) {
+                                    foreach ($campagaine_data as $k => $campagainedata) {
+                                        ?>
+                                        <option value="<?php echo $campagainedata['campaign_id']; ?>"><?php echo $campagainedata['campaign_name']; ?></option>
+                                    <?php
+                                    }
+                                }
+                                ?>
+                            </select>
+                            <div class="clearfix"></div>
+                            <label id="Campaign-" class="error" for="Campaign"></label>
+
+                        </div>
+                    </div>
+
                     <?php } ?>
+
+
+
+
 
                    <!-- <div class="col-md-12 text-center tp_form inline-parent sbde-parent">
                         <div class="form-group">
@@ -162,6 +236,8 @@ $segment_data = $this->uri->segment(2);
                         <div class="form-group">
                             <label><img src="<?php echo Template::theme_url('images/call-icon.svg'); ?>" alt=""></label>
                             <input type="text" class="form-control" name="Campaign" id="Campaign" placeholder="">
+
+                            <input type="hidden" class="form-control" name="selected_action" id="selected_action" placeholder="" value="<?php echo $this->uri->segment(2); ?>" />
                         </div>
                     </div>
                     <div class="col-md-4">

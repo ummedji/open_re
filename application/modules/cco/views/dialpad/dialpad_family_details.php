@@ -32,7 +32,8 @@
                 <hr><h6 class="gn-info-tl">Family Info</h6>
 
                 <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
-
+                <div class="rotate_data">
+                </div>
                 <?php
 
                 if(!empty($personal_family_data)){

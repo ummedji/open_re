@@ -844,6 +844,142 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_executed_activity_allocated_customer_data($user_id,$role_id,$country_id,$activity_type)
+    {
+        $this->db->select('eap.activity_planning_id,bus.user_code,display_name,eamc.activity_type_country_name,caa.called_status,mpgd2.political_geography_name as level_2,mpgd3.political_geography_name as level_3,mpgd4.political_geography_name as level_4,mdc.desigination_country_name,eap.execution_time');
+        // $this->db->select('*');
+        $this->db->from('cco_activity_allocation as caa');
+        $this->db->join('ecp_activity_planning as eap','eap.activity_planning_id = caa.activity_id');
+        $this->db->join('users as bus','bus.id = eap.employee_id');
+        $this->db->join('ecp_activity_master_country AS eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->join('master_political_geography_details AS mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2');
+        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = eap.geo_level_id_3');
+        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = eap.geo_level_id_4','left');
+        $this->db->join('master_designation_role as mdr','mdr.user_id = eap.employee_id');
+        $this->db->join('master_designation_country as mdc','mdc.desigination_country_id = mdr.desigination_id');
+        $this->db->join('master_user_contact_details as mucd','mucd.user_id = eap.employee_id');
+
+        $this->db->join('ecp_activity_planning_key_customer_details as eapkcd','eapkcd.activity_planning_id = eap.activity_planning_id','left');
+        $this->db->join('ecp_activity_planning_attendees_details as eapad','eapad.activity_planning_id = eap.activity_planning_id','left');
+
+
+
+        $this->db->where('caa.activity_type',$activity_type);
+        $this->db->where('caa.country_id',$country_id);
+
+        if($role_id == '19')
+        {
+            $this->db->where('cca.cco_id',$user_id);
+        }
+
+        //$this->db->group_by('ccp.phase_id');
+        $this->db->order_by('eap.execution_time','ASC');
+
+
+        $activity_details = $this->db->get()->result_array();
+        $final_array = array();
+        if(isset($activity_details) && !empty($activity_details))
+        {
+            foreach($activity_details as $val)
+            {
+                $final_array[$val['activity_planning_id']]['activity_details'] = $val;
+                //$final_array['kc'] = $this->get_count_key_customer($val['activity_planning_id']);
+                //$final_array['ad'] = $this->get_count_customer($val['activity_planning_id']);
+                $kc = $this->get_count_key_customer($val['activity_planning_id']);
+                $ad = $this->get_count_customer($val['activity_planning_id']);
+
+                $final_array[$val['activity_planning_id']]['customer_count'] = ($kc + $ad);
+            }
+            return $final_array;
+        }
+    }
+
+    public function get_customer_details_by_id($id)
+    {
+        $this->db-> select('execution_time,eamc.activity_type_country_name');
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country AS eamc','eamc.activity_type_country_id = eap.activity_type_id');
+        $this->db->where('activity_planning_id',$id);
+        $activity_details = $this->db->get()->row_array();
+        $activity_details['key_customer'] = $this->get_key_customer($id);
+        $activity_details['ad'] = $this->get_customer($id);
+       if(!empty($activity_details))
+       {
+           return $activity_details;
+       }
+    }
+
+    public function get_key_customer($id){
+        //$this->db->select('*');
+        $this->db->select('eapkcd.mobile_no,mupd.first_name,mupd.first_name,mupd.middle_name,mupd.last_name,mupd.call_name,mucd.primary_mobile_no,mucd.secondary_mobile_no,mucd.landline_no,mucd.pincode,mpgd2.political_geography_name as level_2,mpgd3.political_geography_name as level_3,mpgd4.political_geography_name as level_4');
+        $this->db->from('ecp_activity_planning_key_customer_details as eapkcd');
+        $this->db->join('users AS bu','bu.id = eapkcd.customer_id');
+        $this->db->join('master_user_contact_details AS mucd','mucd.user_id = eapkcd.customer_id','left');
+        $this->db->join('master_user_personal_details AS mupd','mupd.user_id = eapkcd.customer_id','left');
+        $this->db->join('master_political_geography_details AS mpgd2','mpgd2.political_geo_id = mucd.geo_level_id3','left');
+        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = mucd.geo_level_id2','left');
+        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = mucd.geo_level_id1','left');
+        $this->db->where('activity_planning_id',$id);
+        $key_customer_details = $this->db->get()->result_array();
+
+        if(isset($key_customer_details) && !empty($key_customer_details))
+        {
+            return $key_customer_details;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function get_customer($id){
+        $this->db->select('*');
+        $this->db->from('ecp_activity_planning_attendees_details as eapad');
+        $this->db->where('activity_planning_id',$id);
+        $customer_details = $this->db->get()->result_array();
+
+        if(isset($customer_details) && !empty($customer_details))
+        {
+            return $customer_details;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function get_count_key_customer($activity_planning_id)
+    {
+        $this->db->select('*');
+        $this->db->from('ecp_activity_planning_key_customer_details as eapkcd');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $query = $this->db->get();
+        $rowcount = $query->num_rows();
+
+        if(isset($rowcount) && !empty($rowcount))
+        {
+            return $rowcount;
+        }
+        else{
+            return 0;
+        }
+    }
+
+    public function get_count_customer($activity_planning_id)
+    {
+        $this->db->select('*');
+        $this->db->from('ecp_activity_planning_attendees_details as eapad');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $query = $this->db->get();
+        $rowcount = $query->num_rows();
+
+        if(isset($rowcount) && !empty($rowcount))
+        {
+            return $rowcount;
+        }
+        else{
+            return 0;
+        }
+    }
+
     public function get_geo_by_customer_id($customer_id)
     {
         $this->db->select('mucd.geo_level_id3,mpgd.political_geography_name');
@@ -851,7 +987,6 @@ class Cco_model extends BF_Model
         $this->db->join('master_political_geography_details AS mpgd','mpgd.political_geo_id = mucd.geo_level_id3');
         $this->db->where('mucd.user_id',$customer_id);
         $geo = $this->db->get()->result_array();
-
         if(isset($geo) && !empty($geo))
         {
             return $geo;
@@ -1387,6 +1522,80 @@ class Cco_model extends BF_Model
         return $social_data;
 
     }
+    public function get_complaint_data($customer_id,$page = null,$local_date=null,$country_id,$complaint_type_id)
+    {
+
+
+        //$sql = ' SELECT  bccd.created_by_user ';
+       $sql = ' SELECT bccd.complaint_number, bccd.complaint_id,bmcd.complaint_subject,bccd.complaint_entry_date,bccd.complaint_due_date,bu.display_name,bccd.created_by_user,bccd.complaint_status,bu1.display_name as dis_name';
+        $sql .= ' FROM bf_cco_complaint_details as bccd ';
+        $sql .= ' JOIN bf_users as bu ON (bu.id = bccd.assigned_to_id) ';
+        $sql .= ' JOIN bf_users as bu1 ON (bu1.id = bccd.created_by_user) ';
+        $sql .= ' JOIN bf_master_customer_type_country as bmctc ON (bmctc.customer_type_id = bu.user_type_id AND bmctc.country_id = bu.country_id) ';
+        $sql .= ' JOIN bf_master_complaint_detail as bmcd ON (bmcd.complaint_id = bccd.complaint_subject) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND bccd.deleted =0 ';
+        $sql .= ' AND bccd.status =1 ';
+        $sql .= ' AND bccd.complaint_type_id ="'.$complaint_type_id.'" ';
+
+       // $sql .= 'ORDER BY bcca.allocation_id DESC ';
+    //testdata($sql);
+        $complaint_data = $this->grid->get_result_res($sql);
+      // testdata($complaint_data);
+
+
+        if (isset($complaint_data['result']) && !empty($complaint_data['result'])) {
+
+            $complaint['head'] = array('Sr. No.', 'Action','Complaint Number','Complaint Subject','Complaint Entry Date', 'Complaint Due Date','Responsible Person','Entered By','Status Of Complaint');
+
+            $complaint['count'] = count($complaint['head']);
+
+                    if ($page != null || $page != "") {
+                        $i = (($page * 10) - 9);
+                    } else {
+                        $i = 1;
+                    }
+
+                    foreach ($complaint_data['result'] as $rm) {
+
+                       /* if ($local_date != null) {
+                            $date3 = strtotime($rm['created_on']);
+                            $created_date = date($local_date, $date3);
+
+                        } else {
+                            $created_date = $rm['created_on'];
+                        }*/
+                        if($rm['complaint_status'] == '0'){
+                            $complaint_status='Pending';
+                        }
+                        if($rm['complaint_status'] == '1'){
+                            $complaint_status='In Progress';
+                        }
+                        if($rm['complaint_status'] == '2'){
+                            $complaint_status='Resolved';
+                        }
+                        if($rm['complaint_status'] == '3'){
+                            $complaint_status='Reopen';
+                        }
+
+                        $complaint['row'][] = array($i,$rm['complaint_id'],$rm['complaint_number'],$rm['complaint_subject'],$rm['complaint_entry_date'],$rm['complaint_due_date'],$rm['display_name'],$rm['dis_name'],$complaint_status);
+                        $i++;
+                    }
+
+
+            $complaint['action'] = 'is_action';
+            $complaint['delete'] = 'is_delete';
+            $complaint['edit'] = 'is_edit';
+            $complaint['pagination'] = $complaint_data['pagination'];
+
+            return $complaint;
+        }
+        else {
+            return false;
+        }
+
+    }
     public function get_feedback_data($customer_id,$page = null,$local_date=null,$country_id)
     {
 
@@ -1466,6 +1675,18 @@ class Cco_model extends BF_Model
         $this->db->where('bcf.feedback_id',$feedback_id);
         $user_feedback_data_edit = $this->db->get()->row_array();
         return $user_feedback_data_edit;
+
+    }
+    public function get_complaint_data_edit($complaint_id)
+    {
+        $this->db->select("bccd.assigned_to_id,bccd.remarks,bccd.complaint_data,bccd.complaint_type_id,bccd.complaint_number, bccd.complaint_id,bccd.complaint_subject,bccd.complaint_entry_date,bccd.complaint_due_date,bu.display_name,bccd.created_by_user,bccd.complaint_status,bu1.display_name as dis_name");
+        $this->db->from("bf_cco_complaint_details as bccd");
+        $this->db->join("bf_users as bu","bu.id = bccd.assigned_to_id");
+        $this->db->join("bf_users as bu1","bu1.id = bccd.created_by_user");
+        $this->db->join("bf_master_complaint_detail as bmcd","bmcd.complaint_id = bccd.complaint_subject");
+        $this->db->where('bccd.complaint_id',$complaint_id);
+        $user_complaint_data_edit = $this->db->get()->row_array();
+        return $user_complaint_data_edit;
 
     }
 
@@ -1583,6 +1804,17 @@ class Cco_model extends BF_Model
     {
         $this ->db->where('feedback_id',$feedback_id);
         $this->db->delete("bf_cco_feedback");
+
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    public function delete_complaint($complaint_id)
+    {
+        $this ->db->where('complaint_id',$complaint_id);
+        $this->db->delete("bf_cco_complaint_details");
 
         if ($this->db->affected_rows() > 0) {
             return 1;
@@ -2627,6 +2859,15 @@ class Cco_model extends BF_Model
 
     public function get_order_data($customer_id,$page=null,$search_data)
     {
+        $this->db->select("bu.role_id");
+        $this->db->from("bf_users as bu");
+        $this->db->where("bu.id",$customer_id);
+        $user_role_data = $this->db->get()->result_array();
+
+       // if(!empty($user_role_data))
+       // {
+       //     $user_role_data
+       // }
 
         $sql = "SELECT SQL_CALC_FOUND_ROWS bio.order_id,
         bio.customer_id_to,bu1.display_name as order_taken_name,bu.display_name,bio.order_date,bio.estimated_delivery_date,bio.order_tracking_no,bio.read_status
@@ -2650,7 +2891,28 @@ class Cco_model extends BF_Model
 
         if (isset($orderdata['result']) && !empty($orderdata['result'])) {
 
-            $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.','Retailers Name','EDD', 'Entered By', 'Read (Y/N)');
+
+            if($user_role_data[0]["role_id"] == 9)
+            {
+                $user_header_title = "";
+
+                $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.','EDD', 'Entered By', 'Read (Y/N)');
+
+            }
+            elseif($user_role_data[0]["role_id"] == 10)
+            {
+                $user_header_title = "Distributor Name";
+
+                $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.',$user_header_title,'EDD', 'Entered By', 'Read (Y/N)');
+            }
+            elseif($user_role_data[0]["role_id"] == 11)
+            {
+                $user_header_title = "Retailer Name";
+
+                $order_view['head'] = array('Sr. No.', 'Action', 'Order Date', 'Order Tracking No.',$user_header_title,'EDD', 'Entered By', 'Read (Y/N)');
+            }
+
+
             $order_view['count'] = count($order_view['head']);
 
             if ($page != null || $page != "") {
@@ -2671,7 +2933,29 @@ class Cco_model extends BF_Model
                     $read_status = "Read";
                 }
 
-                $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['order_tracking_no'], $od['display_name'], $od['estimated_delivery_date'], $od['order_taken_name'],$read_status);
+
+                if($user_role_data[0]["role_id"] == 9)
+                {
+                    //$user_header_title = "";
+
+                    $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['order_tracking_no'], $od['estimated_delivery_date'], $od['order_taken_name'],$read_status);
+
+                }
+                elseif($user_role_data[0]["role_id"] == 10)
+                {
+                    //$user_header_title = "Distributor Name";
+
+                    $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['order_tracking_no'], $od['display_name'], $od['estimated_delivery_date'], $od['order_taken_name'],$read_status);
+                }
+                elseif($user_role_data[0]["role_id"] == 11)
+                {
+                   // $user_header_title = "Retailer Name";
+
+                    $order_view['row'][] = array($i, $od['order_id'], $od['order_date'], $od['order_tracking_no'], $od['display_name'], $od['estimated_delivery_date'], $od['order_taken_name'],$read_status);
+                }
+
+
+
 
                 $i++;
             }
@@ -2905,6 +3189,24 @@ class Cco_model extends BF_Model
         $rand_data = $this->db->get()->result_array();
         if (isset($rand_data) && !empty($rand_data)) {
             return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+    public function get_channel_partner_data($user_id,$user_role_id,$user_country_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_master_customer_type_country as bmctc");
+        $this->db->join("bf_master_role_to_customer_type_mapping as bmrtctm","bmrtctm.customer_type_regional_id = bmctc.customer_type_id");
+
+        $this->db->where("bmctc.country_id",$user_country_id);
+        $this->db->where("bmrtctm.role_id !=",11);
+
+        $partner_data = $this->db->get()->result_array();
+        if (isset($partner_data) && !empty($partner_data)) {
+            return $partner_data;
         } else {
             return 0;
         }

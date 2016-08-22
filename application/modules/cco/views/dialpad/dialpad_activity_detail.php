@@ -71,54 +71,10 @@
             </div>
             <div class="clearfix"></div>
         </div>
-        <!--<div>
-            <table class="col-md-12 table-bordered table-striped table-condensed cf">
-                <thead class="cf">
-                <tr>
-                    <th>Activity Name<span class="rts_bordet"></span></th>
-                    <th>Employee Name<span class="rts_bordet"></span></th>
-                    <th class="numeric">Mobile No.<span class="rts_bordet"></span></th>
-                    <th class="numeric">Crops<span class="rts_bordet"></span></th>
-                    <th class="numeric">Products<span class="rts_bordet"></span></th>
-                    <th class="numeric">Disease<span class="rts_bordet"></span></th>
-                    <th class="numeric">Attendee<span class="rts_bordet"></span></th>
-                    <th class="numeric">Geography<span class="rts_bordet"></span></th>
-                    <th class="numeric">Address<span class="rts_bordet"></span></th>
-                </tr>
-                </thead>
-                <tbody class="dialpad_main_screen">
 
-                <?php
-/*                if(!empty($activity_customer_data))
-                {
-                    testdata($activity_customer_data);
-                    foreach($activity_customer_data as $key=>$activity_data)
-                    {
-                        */?>
-                        <tr>
-                            <td data-title="Activity Name"><?php /*echo $activity_data["activity_type_country_name"]; */?></td>
-                            <td data-title="Employee Name"><?php /*echo $activity_data["display_name"]; */?></td>
-                            <td data-title="Mobile No."><?php /*echo $activity_data["primary_mobile_no"]; */?></td>
-                            <?php /**/?>
-                            <td data-title="Crops"><?php /*echo $activity_data["primary_mobile_no"]; */?></td>
-                            <td data-title="Products"><?php /*echo $activity_data["level_2"]; */?></td>
-                            <td data-title="Disease"><?php /*echo $activity_data["level_3"]; */?></td>
-                            <td data-title="Attendee"><?php /*echo $activity_data["level_4"]; */?></td>
-                            <td data-title="Geography"><?php /*echo $activity_data["activity_planning_time"]; */?></td>
-                            <td data-title="Geography"><?php /*echo $activity_data["proposed_attandence_count"]; */?></td>
-                        </tr>
-                        <?php
-/*                    }
-                }
-                else{
-                    */?>
-                    <h1 align="center" class="on_data">No Data Available</h1>
-                    <?php
-/*                }
-                */?>
-                </tbody>
-            </table>
-        </div>-->
+        <div id ="activity_screen">
+
+        </div>
     </div>
     <div class="clearfix"></div>
 </div>
@@ -173,7 +129,7 @@ $(document).on('click','.activity_date',function(){
         url: site_url + "cco/getActivityDetailByDate",
         data: {cur_date:cur_date,param:param},
         success: function (resp) {
-
+            $("#activity_screen").html(resp);
             return false;
         }
     });

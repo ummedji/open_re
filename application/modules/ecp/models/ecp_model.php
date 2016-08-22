@@ -1512,7 +1512,11 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         if ($radio_checked == 10) {
             if ($parent_id != null && $second_perent == null) {
                 $query1 .= " GROUP BY `bmpgd`.`political_geography_name` ";
-            } else {
+            }
+           /* elseif ($parent_id != null && $second_perent != null) {
+                $query1 .= " GROUP BY `bmpgd`.`political_geography_name` ";
+            }*/
+            else {
                 $query1 .= " GROUP BY `bmpgd`.`political_geography_name` " . $query1_end;
             }
         }

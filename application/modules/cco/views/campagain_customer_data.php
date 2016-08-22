@@ -2,9 +2,32 @@
     <table class="col-md-12 table-bordered table-striped table-condensed cf">
         <thead class="cf">
         <tr>
-            <th><a href="javascript: void(0);">Farmer Call Name</a>
+
+            <th>
+                <?php
+
+                if($selectedpartner == "farmer")
+                {
+                    $selected_data = "Farmer Call Name";
+                }
+                elseif($selectedpartner == "distributor")
+                {
+                    $selected_data = "Distributor Call Name";
+                }
+                elseif($selectedpartner == "retailer")
+                {
+                    $selected_data = "Retailer Call Name";
+                }
+                elseif($selectedpartner == "employee")
+                {
+                    $selected_data = "Employee Call Name";
+                }
+                ?>
+
+                <a href="javascript: void(0);"><?php echo $selected_data; ?></a>
                 <span class="rts_bordet"></span>
             </th>
+
             <th><a href="javascript: void(0);">First Name</a>
                 <span class="rts_bordet"></span>
             </th>

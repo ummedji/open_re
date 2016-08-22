@@ -4,10 +4,31 @@ $(document).ready(function(){
 
         var campagain_id = $(this).val();
 
+        if($("input#selected_action").val() == "farmer_dialpad")
+        {
+           var selected_partner = "farmer";
+        }
+        else if($("input#selected_action").val() == "channel_partner_dialpad")
+        {
+            var selected_partner = $("select#channel_partner").val();
+            if(selected_partner == 10)
+            {
+                selected_partner = "retailer";
+            }
+            else if(selected_partner == 9)
+            {
+                selected_partner = "distributor";
+            }
+        }
+        else if($("input#selected_action").val() == "employee_dialpad")
+        {
+            var selected_partner = "employee";
+        }
+
         $.ajax({
             type: 'POST',
             url: site_url + "cco/get_campagain_allocated_data",
-            data: {campagainid: campagain_id},
+            data: {campagainid: campagain_id,selectedpartner:selected_partner},
             success: function (resp) {
                 $("div#customer_data").html(resp);
             }
@@ -332,6 +353,38 @@ function get_order_place_data(customer_id)
 }
 
 
+$(document).on("change","select#channel_partner",function(){
+
+    var selected_channel_partner = $(this).val();
+
+   // get_campgian_data(selected_channel_partner);
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_campagain_data",
+        data: {selected_channel_partner: selected_channel_partner},
+        success: function (resp) {
+            var html_data = "";
+            html_data += '<option value="">Campaign Name</option>';
+            if(resp != 0)
+            {
+                var obj = $.parseJSON(resp);
+                $.each( obj, function( key, value ) {
+                    html_data += "<option value='"+value.campaign_id+"'>"+value.campaign_name+"</option>";
+                });
+            }
+
+            $("select#Campaign").html(html_data);
+
+            $("select#Campaign").selectpicker('refresh');
+
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+
+});
+
+
 $('body').on("change","select.qualification",function(){
 
     var qualification = $(this).val();
@@ -451,6 +504,23 @@ function get_customer_feedback_data(customer_id)
         data: {customerid: customer_id},
         success: function (resp) {
             $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+function get_complaint_data_from_complaint_type_id(complaint_type_id,customer_id)
+{
+    //var customer_id = 4;
+   // var campagain_id = $("input#camagain_id").val();
+    // alert(campagain_id);
+    //var num_count = 3;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_complaint_data_from_type_id",
+        data: {complaint_type_id: complaint_type_id,customer_id: customer_id},
+        success: function (resp) {
+            $("div#complaint_data").html(resp);
             //get_geo_data(campagain_id,3,num_count);
         }
     });
@@ -579,6 +649,48 @@ $(document).on('click', 'div#feedback_data .delete_i', function () {
     return false;
 
 });
+$(document).on('click', 'div#complaint_data .delete_i', function () {
+    var customer_id = $("input#customer_id").val();
+    var id = $(this).attr('prdid');
+    $('<div></div>').appendTo('body')
+        .html('<div>Are You Sure?</div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            title: 'Are You Sure?',
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            buttons: {
+                OK: function () {
+                    $(this).dialog("close");
+
+
+                    $.ajax({
+                        type: 'POST',
+                        url: site_url+'cco/delete_complaint_data',
+                        data: {complaint_id:id},
+                        success: function(resp){
+                            //location.reload();
+                            get_complaint_view_data(customer_id);
+                        }
+                    });
+
+                },
+                Cancel: function () {
+                    $(this).dialog("close");
+
+                }
+            },
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
+
+    return false;
+
+});
 
 $(document).on('click', 'div#feedback_data .edit_i', function () {
 
@@ -596,6 +708,35 @@ $(document).on('click', 'div#feedback_data .edit_i', function () {
             $("input#subject").val(obj.feedback_subject);
             $("textarea#description").val(obj.feedback_description);
             $("input#feedback_edit_id").val(obj.feedback_id);
+
+        }
+    });
+
+});
+$(document).on('click', 'div#complaint_data .edit_i', function () {
+
+    var customer_id = $("input#customer_id").val();
+    var id = $(this).attr('prdid');
+
+    $.ajax({
+        type: 'POST',
+        url: site_url+'cco/get_customer_complaint_data_edit',
+        data: {complaint_id:id},
+        success: function(resp){
+
+            var obj = $.parseJSON(resp);
+
+            $("select#complaint_status").val(obj.complaint_status);
+            $("select#complaint_type_edit").val(obj.complaint_type_id);
+            $("input#complaint_subject_edit").val(obj.complaint_subject);
+
+
+            $("input#complaint_id").val(obj.complaint_number);
+            $("input#Complaint_entry_date_edit").val(obj.complaint_entry_date);
+            $("input#complaint_date1_edit").val(obj.complaint_due_date);
+            $("input#remark_edit").val(obj.remarks);
+            $("input#Comments").val(obj.complaint_data);
+            $("select#person_name_edit").val(obj.assigned_to_id);
 
         }
     });
@@ -624,6 +765,28 @@ function get_complaint_subject_from_complaint_type(complaint_type_id)
         }
     });
 }
+function get_complaint_subject_from_complaint_type_edit(complaint_type_id)
+{
+
+
+
+    $.ajax({
+        url: site_url+'cco/get_complaint_sub_from_complaint_type',
+        method: "POST",
+        data: { complaint_type_id: complaint_type_id },
+        cache: false,
+        success: function (result) {
+            var json = JSON.parse(result);
+            console.log(json);
+            $("#complaint_subject_edit").html("<option value=''>Select Subject</option>");
+            $.each(json, function (i, item) {
+
+                $('#complaint_subject_edit').append($('<option>', {value: item.complaint_id,text: item.complaint_subject}));
+
+            });
+        }
+    });
+}
 function get_person_data_from_desigination(desigination_country_id)
 {
 
@@ -641,6 +804,28 @@ function get_person_data_from_desigination(desigination_country_id)
             $.each(json, function (i, item) {
 
                 $('#person_name').append($('<option>', {value: item.id,text: item.display_name}));
+
+            });
+        }
+    });
+}
+function get_person_data_from_desigination_edit(desigination_country_id)
+{
+
+
+
+    $.ajax({
+        url: site_url+'cco/get_person_data_from_desigination',
+        method: "POST",
+        data: { desigination_country_id: desigination_country_id },
+        cache: false,
+        success: function (result) {
+            var json = JSON.parse(result);
+            console.log(json);
+            $("#person_name_edit").html("<option value=''>Select Person</option>");
+            $.each(json, function (i, item) {
+
+                $('#person_name_edit').append($('<option>', {value: item.id,text: item.display_name}));
 
             });
         }
@@ -692,6 +877,58 @@ function get_complaint_date_from_complaint_subject(complaint_subject_id)
 
                 $.each(obj, function (i, item) {
                     $('#designstion').append($('<option>', {value: item.desigination_country_id,text: item.desigination_country_name}));
+                });
+            }
+        }
+    });
+
+}
+function get_complaint_date_from_complaint_subject_edit(complaint_subject_id)
+{
+
+    $.ajax({
+        url: site_url+'cco/get_complaint_date_from_complaint_sub',
+        method: "POST",
+        data: { complaint_subject_id: complaint_subject_id },
+        cache: false,
+        async: true,
+        success: function (result) {
+
+            var obj = $.parseJSON(result);
+
+            $("input#Complaint_entry_date_edit").val(obj.complaint_due_date);
+            $("input#complaint_date1_edit").val(obj.complaint_due_date);
+            $("input#complaint_date2_edit").val(obj.complaint_due_date2);
+            $("input#complaint_date3_edit").val(obj.complaint_due_date3);
+
+            if(obj.reminder1_desigination_id != null)
+            {
+                $("#designstion_edit").html("<option value=''>Select Designation</option>");
+                $('#designstion_edit').append($('<option>', {
+                    value: obj.desigination_country_id_for,
+                    text: obj.desigination_country_name_for
+                }));
+                $('#designstion_edit').removeAttr("disabled");
+                $('#person_name_edit').removeAttr("disabled");
+            }
+        }
+    });
+
+    $.ajax({
+        url: site_url+'cco/get_complaint_responsible_designation',
+        method: "POST",
+        data: { complaint_subject_id: complaint_subject_id },
+        cache: false,
+        async: true,
+        success: function (result) {
+
+            if(result != "")
+            {
+                var obj = $.parseJSON(result);
+                console.log(obj);
+
+                $.each(obj, function (i, item) {
+                    $('#designstion_edit').append($('<option>', {value: item.desigination_country_id,text: item.desigination_country_name}));
                 });
             }
         }
@@ -973,6 +1210,20 @@ $(document).on("submit","form#dialpad_farming_info",function(e){
                     }
                 });
 
+        }
+    });
+    return false;
+});
+
+$(document).on('click','tr.activity_details',function(){
+   var id =  $(this).attr('id');
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_details",
+        data:{id:id},
+        success: function (resp) {
+            $("#executed_customer").html(resp);
         }
     });
     return false;

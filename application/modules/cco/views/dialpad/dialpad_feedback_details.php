@@ -75,7 +75,7 @@
         echo theme_view('common/middle');
     }
     ?>
-        </div>
+    </div>
 
     <?php if(!$this->input->is_ajax_request()){ ?>
 
