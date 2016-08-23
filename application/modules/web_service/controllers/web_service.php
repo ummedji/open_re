@@ -4279,7 +4279,7 @@ class Web_service extends Front_Controller
 
             $final_array = array();
             $designations = $this->ecp_model->get_all_designation_by_country($country_id);
-
+           
             if (!empty($designations)) {
                 foreach ($designations as $k2 => $designation) {
                     $g2 = array(
@@ -4287,9 +4287,9 @@ class Web_service extends Front_Controller
                         "desigination_name" => $designation['desigination_country_name'],
                     );
                     $final_array['designation'][] = $g2; // Add Geo Level 2 Into Final Array
-                    $role_id = $designation['role_id'];
+                    $designation_id = $designation['desigination_country_id'];
 
-                    $employees = $this->ecp_model->get_employee_by_role_id($role_id, $country_id);
+                    $employees = $this->ecp_model->get_employee_by_role_id($designation_id, $country_id);
                     if (!empty($employees)) {
                         foreach ($employees as $k1 => $employee) {
                             $final_array['designation'][$k2]['employees'][] = $employee; // Add Geo Level 1 Into Final Array
