@@ -259,6 +259,7 @@ class Ecp_model extends BF_Model
 
     public function get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id, $page, $local_date, $country_id, $web_service = null)
     {
+       // testdata();
         $sql = 'SELECT SQL_CALC_FOUND_ROWS emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,bu.user_code,emr.material_request_status,emr.recived_status,emr.disptched_date,emr.disptched_qty,emr.remark,emr.executor_remark,mdc.desigination_country_name ';
         $sql .= 'FROM bf_ecp_material_request AS emr ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = emr.employee_id) ';
@@ -336,7 +337,7 @@ class Ecp_model extends BF_Model
                     }
 
                     if ($rm['material_request_status'] == '0') {
-                        $request_status = '<select name="request_status" class="request_status" id="request_status" ><option value="0">Pending</option><option  value="1">Approve</option><option  value="2">Reject</option></select>
+                        $request_status = '<select name="request_status[]" class="request_status" id="request_status" ><option value="0">Pending</option><option  value="1">Approve</option><option  value="2">Reject</option></select>
                     <input type="hidden" id="mr_id" class="mr_id" name="mr_id[]" value="' . $rm['material_request_id'] . '">';
                     } elseif ($rm['material_request_status'] == '1') {
                         $request_status = 'Approve';
@@ -391,16 +392,39 @@ class Ecp_model extends BF_Model
         $update_array= array();
 
         foreach ($mr_id as $K => $m_id) {
-            $disptched_qty = isset($disptched_quantity[$K]) ? $disptched_quantity[$K] : '0';
-            $executor_remark = isset($executor_remarks[$K]) ? $executor_remarks[$K] : '';
-            $update_material_details = array(
-                'disptched_qty' => $disptched_qty,
-                'material_request_status' => $request_status[$K],
-                'executor_remark' => $executor_remark,
-                'disptched_date' => $disptched_date,
-                'modified_by_user' => $user_id,
-                'modified_on' => date('Y-m-d H:i:s')
-            );
+            $disptched_qty = !empty($disptched_quantity[$K]) ? $disptched_quantity[$K] : '0';
+            $executor_remark = !empty($executor_remarks[$K]) ? $executor_remarks[$K] : '';
+
+            if($request_status[$K] == '1'){
+                $update_material_details = array(
+                    'disptched_qty' => $disptched_qty,
+                    'material_request_status' => $request_status[$K],
+                    'executor_remark' => $executor_remark,
+                    'disptched_date' => $disptched_date,
+                    'modified_by_user' => $user_id,
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+            }
+            elseif($request_status[$K] == '2'){
+                $update_material_details = array(
+                    'disptched_qty' => $disptched_qty,
+                    'material_request_status' => $request_status[$K],
+                    'executor_remark' => $executor_remark,
+                    'disptched_date' => null,
+                    'modified_by_user' => $user_id,
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+            }
+            else{
+                $update_material_details = array(
+                    'disptched_qty' => '0.0',
+                    'material_request_status' => $request_status[$K],
+                    'executor_remark' => null,
+                    'disptched_date' => null,
+                    'modified_by_user' => $user_id,
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+            }
 
             $this->db->where('material_request_id', $m_id);
             $this->db->update('ecp_material_request', $update_material_details);

@@ -4279,7 +4279,7 @@ class Web_service extends Front_Controller
 
             $final_array = array();
             $designations = $this->ecp_model->get_all_designation_by_country($country_id);
-           
+
             if (!empty($designations)) {
                 foreach ($designations as $k2 => $designation) {
                     $g2 = array(

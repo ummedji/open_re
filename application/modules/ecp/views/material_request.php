@@ -38,7 +38,7 @@ echo form_open('ecp/material_request',$attributes); ?>
                             ?>
                         </select>
                         <div class="clearfix"></div>
-                        <label id="promotional_country_id-error" class="error" for="promotional_country_id"></label>
+               <label id="promotional_country_id-error" class="error" for="promotional_country_id"></label>
                     </div>
 
                 </div>
@@ -47,7 +47,7 @@ echo form_open('ecp/material_request',$attributes); ?>
                     <div class="inln_fld_top text-left">
                         <input type="text" class="form-control allownumericwithdecimal" name="quantity" id="quantity" placeholder="">
                         <div class="clearfix"></div>
-                        <label id="quantity-error" class="error" for="quantity"></label>
+                       <label id="quantity-error" class="error" for="quantity"></label>
                     </div>
                 </div>
             </div>
@@ -74,10 +74,10 @@ echo form_open('ecp/material_request',$attributes); ?>
         </div>
     </div>
     <div class="clearfix"></div>
-<!--</div>-->
+</div>
 <?php echo form_close(); ?>
 
-<?php }?>
+<?php } ?>
 
 <?php $attributes = array('class' => '', 'id' => 'update_material_request','name'=>'update_material_request');
 echo form_open('',$attributes); ?>

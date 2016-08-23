@@ -118,8 +118,16 @@ class Ecp extends Front_Controller
 	{
 		$user = $this->auth->user();
 
-		$from_date = (isset($_POST['from_date']) ? $_POST['from_date'] : '');
-		$to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+		$form_dt = ((isset($_POST['from_date']) && !empty($_POST['from_date'])) ? $_POST['from_date'] : '');
+		$f_date = str_replace('/', '-', $form_dt);
+		$from_date = date('Y-m-d', strtotime($f_date));
+
+		$to_dt = ((isset($_POST['to_date']) && !empty($_POST['to_date'])) ? $_POST['to_date'] : '');
+		$t_date = str_replace('/', '-', $to_dt);
+		$to_date = date('Y-m-d', strtotime($t_date));
+
+		//$from_date = (isset($_POST['from_date']) ? $_POST['from_date'] : '');
+		//$to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
 		$status_id = (isset($_POST['status_id']) ? $_POST['status_id'] : '');
 		$employee_id = (isset($_POST['employee_id']) ? $_POST['employee_id'] : '');
 

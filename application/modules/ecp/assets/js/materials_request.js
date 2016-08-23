@@ -17,10 +17,10 @@ $(document).ready(function() {
     });
 
 
-    $("#material_request").on("submit",function(e){
+    $(document).on("submit","#material_request",function(e){
         e.preventDefault();
         var param = $("#material_request").serializeArray();
-        //console.log(param);
+
         var $valid = $("#material_request").valid();
         if(!$valid) {
             material_request_validators.focusInvalid();
