@@ -105,6 +105,8 @@ class Cco extends Front_Controller
         $phone_no = $this->session->userdata("phone_no");
         $campagain_id = $this->session->userdata("campagain_id");
 
+        testdata($phone_no);
+
         $get_sidebar_selected_customer_data = $this->cco_model->get_dialed_customer_data($phone_no);
 
         Template::set('sidebar_selected_customer_data', $get_sidebar_selected_customer_data);

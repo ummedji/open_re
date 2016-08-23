@@ -983,6 +983,79 @@ $(document).on('click','div#searched_data div.delete_i',function(){
 });
 
 
+$(document).on('click', 'div#detail_data .edit_i', function () {
+    var id = $(this).attr('prdid');
+
+    var row_data = $(this).parent().parent().attr("class");
+    row_data = row_data.split("_");
+    //UNIT
+    var unit_value = $("div.unit_" + id + " span.unit").text();
+
+
+    var selected_data1 = "";
+    var selected_data2 = "";
+    var selected_data3 = "";
+
+    if (unit_value === "Box") {
+
+        selected_data1 = 'selected = "selected"';
+    }
+
+    if (unit_value === "Packages") {
+
+        selected_data2 = 'selected = "selected"';
+    }
+
+    if (unit_value === "Kg/Ltr") {
+
+        selected_data3 = 'selected = "selected"';
+    }
+
+
+    $("div.unit_" + id).empty();
+    $("div.unit_" + id).append('<select name="units[' + row_data[1] + ']" class="select_unitdata" id="units_' + id + '"> <option ' + selected_data1 + ' value="box">Box</option> <option ' + selected_data2 + ' value="packages">Packages</option><option ' + selected_data3 + ' value="kg/ltr">Kg/Ltr</option> </select>');
+
+    //QUANTITY
+
+    var qty_value = $("div.qty_" + id + " span.qty").text();
+    $("div.qty_" + id).empty();
+    $("div.qty_" + id).append('<input id="quantity_' + id + '" type="text" class="quantity_data allownumericwithdecimal" name="quantity[' + row_data[1] + ']" value="' + qty_value + '"/>');
+
+
+    var login_customer_type = $("input#login_customer_type").val();
+
+    if (login_customer_type != 8)
+    {
+        //AMOUNT
+
+        var amount_value = $("div.amount_" + id + " span.amount").text();
+        $("div.amount_" + id).empty();
+        $("div.amount_" + id).append('<input id="amount_' + id + '" class="allownumericwithdecimal" type="text" name="amount[' + row_data[1] + ']" value="' + amount_value + '"/>');
+
+        //APPROVED QUANTITY
+
+        var dispatched_quantity_value = $("div.dispatched_quantity_" + id + " span.dispatched_quantity").text();
+        $("div.dispatched_quantity_" + id).empty();
+        $("div.dispatched_quantity_" + id).append('<input id="dispatched_quantity_' + id + '" class="allownumericwithdecimal" type="text" name="dispatched_quantity[' + row_data[1] + ']" value="' + dispatched_quantity_value + '"/>');
+    }
+
+
+    /*  $.ajax({
+     type: 'POST',
+     url: site_url+'ishop/get_order_status_data_details',
+     data: {id: id,radiochecked:radio_checked,logincustomertype:login_customer_type},
+     success: function(resp){
+     $("div#order_status_table_container").empty();
+     $("#order_status_table_container").html(resp);
+     }
+     });*/
+    $(this).prop("disabled",true);
+    return false;
+});
+
+
+
+
 $(document).on("submit","form#dialpad_general_info",function(e){
 
     e.preventDefault();

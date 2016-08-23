@@ -3017,7 +3017,13 @@ class Cco_model extends BF_Model
                     $unit = '';
                 }
 
-                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],$unit, $od['quantity'],  $od['quantity_kg_ltr'] );
+                $order_id_data = '<input type="hidden" name="product_order_id[]" value="'.$od['product_order_id'].'" />';
+                $unit_data = $order_id_data.'<div class="unit_data"><span class="unitdata">'.$unit.'</span></div>';
+
+                $quantity_data = '<div class="quantity_data"><span class="quantitydata">'.$od['quantity'].'</span></div>';
+                $quantity_kg_ltr_data = '<div class="qty_kg_ltr_data"><span class="qty_kg_ltrdata">'.$od['quantity_kg_ltr'].'</span></div>';
+
+                $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],$unit_data,$quantity_data,$quantity_kg_ltr_data);
 
                 $i++;
             }
