@@ -3017,11 +3017,13 @@ class Cco_model extends BF_Model
                     $unit = '';
                 }
 
-                $order_id_data = '<input type="hidden" name="product_order_id[]" value="'.$od['product_order_id'].'" />';
+                $order_id_data = '<input type="hidden" name="product_order_id[]" value="'.$od['product_order_id'].'" /><input class="product_sku_data" type="hidden" name="product_sku_id[]" value="'.$od['product_sku_id'].'" />';
+
                 $unit_data = $order_id_data.'<div class="unit_data"><span class="unitdata">'.$unit.'</span></div>';
 
-                $quantity_data = '<div class="quantity_data"><span class="quantitydata">'.$od['quantity'].'</span></div>';
-                $quantity_kg_ltr_data = '<div class="qty_kg_ltr_data"><span class="qty_kg_ltrdata">'.$od['quantity_kg_ltr'].'</span></div>';
+                $quantity_data = '<div class="quantity_data"><input readonly class="quantitydata" type="text" name="quantitydata[]" value="'.$od['quantity'].'"/></div>';
+
+                $quantity_kg_ltr_data = '<div class="qty_kg_ltr_data"><input readonly type="text" class="qty_kg_ltrdata" name="qty_kg_ltrdata[]" value="'.$od['quantity_kg_ltr'].'"/></div>';
 
                 $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],$unit_data,$quantity_data,$quantity_kg_ltr_data);
 

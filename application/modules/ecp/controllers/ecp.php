@@ -994,6 +994,7 @@ class Ecp extends Front_Controller
 
 		$activity_by_date = array();
 		if(!empty($activity_details) && count($activity_details)  > 0){
+			//testdata($activity_details);
 			foreach($activity_details as $act)
 			{
 				if(isset($act['execution_date']) && !empty($act['execution_date']))
@@ -1010,13 +1011,14 @@ class Ecp extends Front_Controller
 				}
 
 
-				if(!in_array($act_status[$act['status']],$activity_by_date[$act_date]))
+				if(!in_array("act_".$act_status[$act['status']],$activity_by_date[$act_date]))
 				{
 					$activity_by_date[$act_date][]= "act_".$act_status[$act['status']];
 				}
 			}
 		}
 
+		//testdata($activity_by_date);
 
 
 		$user = $this->auth->user();
@@ -1076,7 +1078,6 @@ class Ecp extends Front_Controller
 			$sCalTblRows .= '<tr>';
 			for ($j = 0; $j < 7; $j++) { // 7 days a week
 
-				$clr = array('i','a','r','p');
 
 				$sClass = '';
 				if ($iNowYear == $iYear && $iNowMonth == $iMonth && $iNowDay == $iCurrentDay && !$bPreviousMonth && !$bNextMonth) {
@@ -1136,9 +1137,9 @@ class Ecp extends Front_Controller
 					/*}*/
 				}
 
-				$actClass = array_rand($clr,1);
 
-				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date act_'.$clr[$actClass].$act_class.'"  href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
+
+				$sCalTblRows .= '<td class="'.$sClass.'" style="'.$style.'" ><a class="activity_date '.$act_class.'"  href="javascript: void(0)">'.$iCurrentDay.'</a></td>';
 
 				// Next day
 				$iCurrentDay++;

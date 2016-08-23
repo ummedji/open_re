@@ -4363,9 +4363,15 @@ class Web_service extends Front_Controller
         $country_id = $this->input->get_post('country_id');
         if ((isset($user_id) && !empty($user_id)) && (isset($country_id) && !empty($country_id))) {
             $insert = $this->ecp_model->update_materials_detail($user_id, 'web_service');
+
             if ($insert == 1) {
                 $result['status'] = true;
                 $result['message'] = 'Success.';
+                $result['data'] = array();
+            }
+            else{
+                $result['status'] = false;
+                $result['message'] = 'Data not Updated';
                 $result['data'] = array();
             }
 

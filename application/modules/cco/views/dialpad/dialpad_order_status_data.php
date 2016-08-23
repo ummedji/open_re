@@ -59,9 +59,31 @@
     </div>
     <div class="clearfix"></div>
 
+    <?php
+     $attributes = array('class' => '', 'id' => 'dialpad_update_order_status','name'=>'dialpad_update_order_status', 'autocomplete'=>'off');
+     echo form_open('cco/add_update_order_status',$attributes);
+    ?>
+
+
     <div id="detail_data">
 
+
+        <?php if ($this->input->is_ajax_request()) { ?>
+
+        <div class="clearfix"></div>
+        <div class="col-md-12 text-right">
+            <div class="row save_btn">
+                <button type="submit" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+        <?php
+        }
+        ?>
     </div>
+
+    <?php
+    echo form_close();
+    ?>
 
 </div>
 <div class="clearfix"></div>

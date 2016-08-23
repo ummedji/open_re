@@ -2315,7 +2315,7 @@ ul.acc_list { margin: 0; padding: 0; text-align: center;}
     margin-right: 2px;
 }
 .select2-selection__choice { display: none; }
-#calendar table td a.act_date{ background-color: yellow; }
+#calendar table td a.act_date{ background-color: yellow;}
 #calendar table td a.act_dsb{ background-color: #EEEEEE; }
 #middle_container_product .zoom_space{ display: none; }
 .time-picker-width{ width: 100%; }

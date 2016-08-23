@@ -404,6 +404,13 @@ class Ecp_model extends BF_Model
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
+                $this->db->where('material_request_id', $m_id);
+                $this->db->update('ecp_material_request', $update_material_details);
+
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+
+                }
             }
             elseif($request_status[$K] == '2'){
                 $update_material_details = array(
@@ -414,8 +421,15 @@ class Ecp_model extends BF_Model
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
+                $this->db->where('material_request_id', $m_id);
+                $this->db->update('ecp_material_request', $update_material_details);
+
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+
+                }
             }
-            else{
+          /*  else{
                 $update_material_details = array(
                     'disptched_qty' => '0.0',
                     'material_request_status' => $request_status[$K],
@@ -424,14 +438,8 @@ class Ecp_model extends BF_Model
                     'modified_by_user' => $user_id,
                     'modified_on' => date('Y-m-d H:i:s')
                 );
-            }
+            }*/
 
-            $this->db->where('material_request_id', $m_id);
-            $this->db->update('ecp_material_request', $update_material_details);
-            if ($this->db->affected_rows() > 0) {
-                $update_array[]=1;
-
-            }
         }
         if(in_array(1,$update_array))
         {
@@ -3901,6 +3909,8 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         /*if($mode == strtolower('all')){
 
         }*/
+
+        $status = '';
         if($mode == strtolower('incomplete'))
         {
             $status = '0';
@@ -3917,9 +3927,6 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         {
             $status = '1';
         }
-        else{
-            $status = '';
-        }
 
 
         $this->db->distinct();
@@ -3927,7 +3934,7 @@ AND `bu`.`country_id` = '" . $country_id . "' " . $sub_query;
         $this->db->from('ecp_activity_planning');
         $this->db->where('employee_id',$user_id);
         $this->db->where('country_id',$country_id);
-        if(isset($status) && !empty($status))
+        if(trim($status)!='')
         {
             $this->db->where('status',$status);
         }
