@@ -2963,6 +2963,7 @@ class Cco_model extends BF_Model
             $order_view['pagination'] = $orderdata['pagination'];
             $order_view['action'] = 'is_action';
             $order_view['eye'] = 'is_eye';
+            $order_view['delete'] = 'is_delete';
 
             return $order_view;
         }

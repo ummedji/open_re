@@ -122,18 +122,18 @@ $(document).on('click', 'div.materials_cont .delete_i', function () {
 });
 
 $(document).on("change","select#designation_id",function(){
-    var role_id = $(this).val();
-    get_employee_by_role_id(role_id);
+    var designation_id = $(this).val();
+    get_employee_by_role_id(designation_id);
 
 
 });
 
-function get_employee_by_role_id(role_id)
+function get_employee_by_role_id(designation_id)
 {
     $.ajax({
         type: 'POST',
-        url: site_url+"ecp/get_employees_by_role_id",
-        data: {role_id:role_id},
+        url: site_url+"ecp/get_employees_by_designation_id",
+        data: {designation_id:designation_id},
         dataType : 'json',
         success: function(resp){
 

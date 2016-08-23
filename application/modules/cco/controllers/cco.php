@@ -825,6 +825,13 @@ class Cco extends Front_Controller
 
     }
 
+    public function delete_product_order_data()
+    {
+        $order_id = $_POST["data_id"];
+        $detail_delete = $this->ishop_model->delete_order_data($order_id);
+        die;
+    }
+
     public function get_customer_order_place_data()
     {
         $customer_id = $_POST["customerid"];

@@ -96,6 +96,7 @@ class Ecp extends Front_Controller
 		$user = $this->auth->user();
 
 		$designation =  $this->ecp_model->get_all_designation_by_country($user->country_id);
+		//testdata($designation);
 	//	$employee =  $this->ecp_model->get_all_employee_by_country_id($user->country_id);
 		Template::set('designation', $designation);
 		Template::set('current_user', $user);
@@ -103,12 +104,12 @@ class Ecp extends Front_Controller
 		Template::render();
 	}
 
-	public function get_employees_by_role_id()
+	public function get_employees_by_designation_id()
 	{
-		$role_id=$_POST['role_id'];
+		$designation_id=$_POST['designation_id'];
 		//testdata($role_id);
 		$user = $this->auth->user();
-		$employee =  $this->ecp_model->get_employee_by_role_id($role_id,$user->country_id);
+		$employee =  $this->ecp_model->get_employee_by_role_id($designation_id,$user->country_id);
 		echo json_encode($employee);
 		die;
 

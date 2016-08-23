@@ -50,7 +50,7 @@ if (!$this->input->is_ajax_request()) {
                             if(isset($designation) && !empty($designation)) {
                                 foreach ($designation as $key => $val_designation) {
                                     ?>
-                                    <option value="<?php echo $val_designation['role_id']; ?>" role="<?php echo $val_designation['role_id']; ?>"><?php echo $val_designation['desigination_country_name']; ?></option>
+                                    <option value="<?php echo $val_designation['desigination_country_id']; ?>" role="<?php echo $val_designation['desigination_country_id']; ?>"><?php echo $val_designation['desigination_country_name']; ?></option>
                                     <?php
                                 }
                             }

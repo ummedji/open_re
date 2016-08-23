@@ -85,15 +85,13 @@ class Ecp_model extends BF_Model
 
     public function get_all_designation_by_country($country_id)
     {
-        $this->db->select('mdc.desigination_country_id,mdc.desigination_country_name,mdr.role_id');
+        $this->db->select('mdc.desigination_country_id,mdc.desigination_country_name');
         $this->db->from('master_designation_country as mdc');
-        $this->db->join('master_designation_role as mdr', 'mdr.desigination_id = mdc.desigination_country_id');
         $this->db->where('mdc.country_id', $country_id);
         $this->db->where('mdc.status', '1');
         $this->db->where('mdc.deleted', '0');
         $this->db->order_by('desigination_country_name', 'ASC');
         $designation = $this->db->get()->result_array();
-        // testdata($designation);
         if (isset($designation) && !empty($designation)) {
             return $designation;
         } else {
@@ -101,16 +99,17 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function get_employee_by_role_id($role_id, $country_id)
+    public function get_employee_by_role_id($designation_id, $country_id)
     {
-        $this->db->select('id,display_name');
-        $this->db->from('users');
-        $this->db->where('role_id', $role_id);
-        $this->db->where('country_id', $country_id);
-        $this->db->where('type', 'Employee');
-        $this->db->where('active', '1');
-        $this->db->where('deleted', '0');
-        $this->db->order_by('display_name', 'ASC');
+        $this->db->select('bu.id,bu.display_name');
+        $this->db->from('master_designation_role as mdr');
+        $this->db->join('users as bu','bu.id = mdr.user_id');
+        $this->db->where('mdr.desigination_id',$designation_id);
+        $this->db->where('bu.country_id', $country_id);
+        $this->db->where('bu.type', 'Employee');
+        $this->db->where('bu.active', '1');
+        $this->db->where('bu.deleted', '0');
+        $this->db->order_by('bu.display_name', 'ASC');
         $employees = $this->db->get()->result_array();
         if (isset($employees) && !empty($employees)) {
             return $employees;
