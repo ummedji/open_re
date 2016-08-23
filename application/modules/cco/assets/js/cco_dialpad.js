@@ -941,8 +941,7 @@ function get_complaint_date_from_complaint_subject_edit(complaint_subject_id)
 $(document).on('click','div#searched_data div.delete_i',function(){
 
     var id = $(this).attr('prdid');
-
-    alert(id);
+    var customer_id = $("input#customer_id").val();
 
     $('<div></div>').appendTo('body')
         .html('<div>Are You Sure?</div>')
@@ -964,6 +963,7 @@ $(document).on('click','div#searched_data div.delete_i',function(){
                         data: {data_id:id},
                         success: function(resp){
                             //location.reload();
+                            get_order_status_data(customer_id,null);
                         }
                     });
 

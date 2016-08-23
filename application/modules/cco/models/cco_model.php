@@ -2994,7 +2994,7 @@ class Cco_model extends BF_Model
         if (isset($order_detail['result']) && !empty($order_detail['result']))
         {
 
-            $product_view['head'] = array('Sr. No.', '', 'Product SKU Code', 'Product SKU Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
+            $product_view['head'] = array('Sr. No.', 'Action', 'Product SKU Code', 'Product SKU Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
             $product_view['count'] = count($product_view['head']);
 
             $i =1;
@@ -3021,6 +3021,9 @@ class Cco_model extends BF_Model
 
                 $i++;
             }
+
+            $product_view['action'] = 'is_action';
+            $product_view['edit'] = 'is_edit';
 
             return $product_view;
 
