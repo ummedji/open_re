@@ -25,7 +25,7 @@
 
                             $customer_id = (isset($sidebar_selected_customer_data[0]["id"]) && !empty($sidebar_selected_customer_data[0]["id"])) ? $sidebar_selected_customer_data[0]["id"] : "";
 
-                            echo $customer_id;die;
+                            //echo $customer_id;die;
 
                                     $customer_name = (isset($sidebar_selected_customer_data[0]["display_name"]) && !empty($sidebar_selected_customer_data[0]["display_name"])) ? $sidebar_selected_customer_data[0]["display_name"] : "";
 
