@@ -51,7 +51,6 @@
         <?php
         if(!empty($activity_customer_data))
         {
-
             if(!empty($activity_customer_data['key_customer'])){
                 foreach($activity_customer_data['key_customer'] as $key_cust => $key_customer_data) {
                     ?>
@@ -61,7 +60,7 @@
                         <td data-title="Last Name"><?php echo $key_customer_data["last_name"]; ?></td>
                         <td data-title="Primary No.">
                             <div>
-                                <a href="javascript: void(0);" rel="<?php echo $key_customer_data["primary_mobile_no"]; ?>" class="primary_no" ><?php echo $key_customer_data["primary_mobile_no"]; ?></a>
+                                <a href="javascript: void(0);" rel-activity_id="<?php echo $activity_customer_data['activity_planning_id']?>" rel-activity_type="executed_activity"  rel="<?php echo $key_customer_data["primary_mobile_no"]; ?>" class="primary_no" ><?php echo $key_customer_data["primary_mobile_no"]; ?></a>
                             </div>
                         </td>
                         <td data-title="Other No."><?php echo  $key_customer_data["secondary_mobile_no"]; ?></td>

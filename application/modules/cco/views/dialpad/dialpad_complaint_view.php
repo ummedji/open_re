@@ -17,6 +17,7 @@
         echo form_open('cco/add_update_complaint_view_info',$attributes);
         ?>
         <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
+        <input type="hidden" class="form-control" name="complaint_edit_id" id="complaint_edit_id" placeholder="" value="" />
         <div class="row">
             <div class="cco-feld">
                 <div class="col-md-12">
@@ -70,7 +71,7 @@
                         <div class="col-md-12 col-sm-12 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Address</label>
-                                <textarea class="form-control" rows="3" name="Comments" id="Comments" placeholder=""></textarea>
+                                <textarea class="form-control" rows="3" name="address" id="address" placeholder=""></textarea>
                             </div>
                         </div>
 
@@ -170,13 +171,13 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Entry Date">Complaint Entry Date</label>
-                                <input type="text" class="form-control" id="Complaint_entry_date_edit" name="Complaint_entry_date" placeholder="">
+                                <input type="text" class="form-control" id="Complaint_entry_date_edit" name="Complaint_entry_date" placeholder="" value="">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Due Date">Complaint Due Date</label>
-                                <input type="text" class="form-control" id="complaint_date1_edit" name="complaint_date1" placeholder="">
+                                <input type="text" class="form-control" id="Complaint_due_date_edit" name="Complaint_due_date" placeholder="">
                             </div>
                         </div>
 
@@ -198,13 +199,13 @@
                         <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Remark</label>
-                                <textarea class="form-control" rows="3" id="remark_edit" name="remark" placeholder=""></textarea>
+                                <textarea class="form-control" rows="3" id="remark_edit" name="remarks" placeholder=""></textarea>
                             </div>
                         </div>
                         <div class="col-md-6 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Subject">Complaint Body</label>
-                                <textarea class="form-control" rows="3" name="Comments" id="Comments"  placeholder=""></textarea>
+                                <textarea class="form-control" rows="3" name="complaint_data" id="Comments"  placeholder=""></textarea>
                             </div>
                         </div>
                     </div>
@@ -285,8 +286,6 @@
 
     });
     $("#complaint_type_edit").change(function () {
-
-
 
         var complaint_type_id = $(this).val();
         var customer_id= $('#customer_id').val();

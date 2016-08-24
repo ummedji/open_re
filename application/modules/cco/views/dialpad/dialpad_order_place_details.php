@@ -15,25 +15,87 @@
                         <div class="row">
                             <div class="col-md-2_ tp_form" style="float: none;">
                                 <div class="form-group">
-                                    <label>Select Retailer</label>
-                                    <div class="inln_fld">
-                                        <select class="lva form-control" id="retailer_data" data-live-search="true" name="retailer_data" required>
-                                            <option value="">Select Retailer</option>
 
-                                            <?php
-                                            if(isset($customer_retailer_data) && !empty($customer_retailer_data))
+                                    <?php
+
+                                        $action_data = $this->session->userdata("action_data");
+                                        $selected_type_data = $this->session->userdata("activity_type");
+
+                                        if($action_data == "farmer_dialpad")
+                                        {
+                                            $label = "Select Retailer";
+                                        }
+                                        elseif($action_data == "channel_partner_dialpad")
+                                        {
+                                            if($selected_type_data == 10)
                                             {
-                                                foreach($customer_retailer_data as $k=> $retailer_data)
-                                                {
-                                                    ?>
-                                                    <option value="<?php echo $retailer_data['id']; ?>" attr-name="<?php echo $retailer_data['display_name']; ?>" ><?php echo $retailer_data['display_name']; ?></option>
-                                                    <?php
-                                                }
+                                                $label = "Select Distributor";
                                             }
+                                            elseif($selected_type_data == 9)
+                                            {
+                                                $label = "";
+                                            }
+                                        }
+                                    ?>
+                                    <label><?php echo $label; ?></label>
+                                    <div class="inln_fld">
+                                    <?php
+                                        if($action_data == "farmer_dialpad")
+                                        {
+                                            $label = "Select Retailer";
+                                    ?>
+                                    <select class="lva form-control" id="retailer_data" data-live-search="true" name="retailer_data" required>
+                                            <option value=""><?php echo $label; ?></option>
 
-                                            ?>
+                                        <?php
+                                        if(isset($customer_retailer_data) && !empty($customer_retailer_data))
+                                        {
+                                            foreach($customer_retailer_data as $k=> $retailer_data)
+                                            {
+                                                ?>
+                                                <option value="<?php echo $retailer_data['id']; ?>" attr-name="<?php echo $retailer_data['display_name']; ?>" ><?php echo $retailer_data['display_name']; ?></option>
+                                            <?php
+                                            }
+                                        }
+
+                                        ?>
 
                                         </select>
+
+                                       <?php
+                                        }
+                                        elseif($action_data == "channel_partner_dialpad")
+                                        {
+                                            if($selected_type_data == 10)
+                                            {
+                                                $label = "Select Distributor";
+                                        ?>
+                                                <select class="lva form-control" id="retailer_data" data-live-search="true" name="retailer_data" required>
+                                                    <option value=""><?php echo $label; ?></option>
+
+                                                    <?php
+                                                    if(isset($customer_retailer_data) && !empty($customer_retailer_data))
+                                                    {
+                                                        foreach($customer_retailer_data as $k=> $retailer_data)
+                                                        {
+                                                            ?>
+                                                            <option value="<?php echo $retailer_data['id']; ?>" attr-name="<?php echo $retailer_data['display_name']; ?>" ><?php echo $retailer_data['display_name']; ?></option>
+                                                        <?php
+                                                        }
+                                                    }
+                                                    ?>
+                                                </select>
+                                        <?php
+                                            }
+                                            elseif($selected_type_data == 9)
+                                            {
+                                                $label = "";
+                                         ?>
+                                        <?php
+                                            }
+                                        }
+                                    ?>
+
                                         <div class="clearfix"></div>
                                         <label class="error"></label>
                                     </div>

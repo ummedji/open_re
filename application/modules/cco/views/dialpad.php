@@ -147,9 +147,15 @@
                         </div>
 
                         <div class="main-actv-details-form">
-                            <div class="col-md-12" id="dialpad_middle_contailner">
+                            <?php if (!$this->input->is_ajax_request()) { ?>
+                                <div class="col-md-12" id="dialpad_middle_contailner">
 
-                            </div>
+                                </div>
+                            <?php } ?>
+<!--
+                            <div class="col-md-12" id="detail_data">
+
+                            </div>-->
                         </div>
 
                     </div>
@@ -160,7 +166,18 @@
                         <li style="border-left: none;"><a href="#">Schemes</a></li>
                         <li class="active"><a href="#">Call History</a></li>
                         <li><a href="#">Chat History</a></li>
-                        <li class="disable"><a href="javascript:void(0);" onclick = "get_activity_detail_data(<?php echo $customer_id; ?>);">Activity Details</a></li>
+                        <?php if($this->session->userdata("activity_type") == 'planned_activity'){
+
+
+                            ?>
+                            <li class="disable"><a href="javascript:void(0);" onclick = "get_planned_activity_detail_data(<?php echo $customer_id; ?>,<?php echo $selected_campagain_data ;?>);">Activity Details</a></li>
+                       <?php  }
+                        elseif($this->session->userdata("activity_type") == 'executed_activity') { ?>
+                            <li class="disable"><a href="javascript:void(0);" onclick = "get_executed_activity_detail_data(<?php echo $customer_id; ?>,<?php echo $selected_campagain_data ;?>);">Activity Details</a></li>
+                       <?php } else{ ?>
+                            <li class="disable"><a href="javascript:void(0);" onclick = "get_activity_detail_data(<?php echo $customer_id; ?>);">Activity Details</a></li>
+                       <?php }?>
+
                         <li><a href="javascript:void(0);" onclick = "get_diseases_detail_data(<?php echo $customer_id; ?>);">Diseases Details</a></li>
                         <li><a href="javascript:void(0);" onclick = "get_product_detail_data(<?php echo $customer_id; ?>);">Product Details</a></li>
 

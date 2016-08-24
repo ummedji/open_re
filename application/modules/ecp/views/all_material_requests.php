@@ -43,7 +43,7 @@ if (!$this->input->is_ajax_request()) {
 
                 <div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 10px;">
                     <div class="form-group">
-                        <label>Designation<span style="color: red">*</span></label>
+                        <label>Designation</label>
                         <select class="selectpicker" id="designation_id" name="designation_id" data-live-search="true">
                             <option value="">Select Designation</option>
                             <?php
@@ -58,7 +58,7 @@ if (!$this->input->is_ajax_request()) {
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Employee<span style="color: red">*</span></label>
+                        <label>Employee</label>
                         <select class="selectpicker" id="employee_id" name="employee_id" data-live-search="true">
                         </select>
                     </div>

@@ -45,6 +45,7 @@
             {
                 foreach($activity_customer_data as $key=>$activity_data)
                 {
+
                     ?>
                     <tr>
                         <td data-title="Employee Code"><?php echo $activity_data["user_code"]; ?></td>
@@ -52,7 +53,7 @@
                         <td data-title="Designation"><?php echo $activity_data["desigination_country_name"]; ?></td>
                         <td data-title="Primary No.">
                             <div>
-                                <a href="javascript: void(0);" rel="<?php echo $activity_data["primary_mobile_no"]; ?>" class="primary_no" ><?php echo $activity_data["primary_mobile_no"]; ?></a>
+                                <a href="javascript: void(0);" rel-activity_id="<?php echo $activity_data['activity_planning_id']?>" rel-activity_type="planned_activity" rel="<?php echo $activity_data["primary_mobile_no"]; ?>" class="primary_no" ><?php echo $activity_data["primary_mobile_no"]; ?></a>
                             </div>
                         </td>
                         <td data-title="Geo Level 3"><?php echo $activity_data["level_2"]; ?></td>

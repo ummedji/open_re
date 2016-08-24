@@ -2139,8 +2139,6 @@ class Ishop extends Front_Controller
         public function update_order_status_detail_data() {
             $detail_data = $_POST;
 
-           // testdata($detail_data);
-
             $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
             echo $detail_update;
             die;

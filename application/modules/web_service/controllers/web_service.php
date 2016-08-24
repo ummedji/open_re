@@ -4324,13 +4324,13 @@ class Web_service extends Front_Controller
         $t_date = str_replace('/', '-', $to_dt);
         $to_date = date('Y-m-d', strtotime($t_date));
 
-
+        $designation_id = (isset($_POST['designation_id']) ? $_POST['designation_id'] : '');
         $status_id = $this->input->get_post('status_id');
         $employee_id = $this->input->get_post('employee_id');
 
-        if ((isset($user_id) && !empty($user_id)) && (isset($from_date) && !empty($from_date)) && (isset($to_date) && !empty($to_date)) && (isset($status_id)) && (isset($employee_id) && !empty($employee_id)) && (isset($country_id) && !empty($country_id))) {
+        if ((isset($user_id) && !empty($user_id)) && (isset($from_date) && !empty($from_date)) && (isset($to_date) && !empty($to_date)) && (isset($status_id)) && (isset($country_id) && !empty($country_id))) {
 
-            $materials_request = $this->ecp_model->get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id, $page = null, $local_date = null, $country_id, $web_service = 'web_service');
+            $materials_request = $this->ecp_model->get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id, $page = null, $local_date = null, $country_id, $web_service = 'web_service',$designation_id);
 
             if (!empty($materials_request)) {
                 // For Pagination

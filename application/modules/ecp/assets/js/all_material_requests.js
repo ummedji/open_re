@@ -24,12 +24,6 @@ $(document).ready(function() {
             to_date:{
                 required: true
             },
-            designation_id:{
-                required: true
-            },
-            employee_id:{
-                required: true
-            },
             status_id:{
                 required: true
             }
@@ -123,6 +117,7 @@ $(document).on('click', 'div.materials_cont .delete_i', function () {
 
 $(document).on("change","select#designation_id",function(){
     var designation_id = $(this).val();
+
     get_employee_by_role_id(designation_id);
 
 

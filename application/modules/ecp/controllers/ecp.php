@@ -129,6 +129,7 @@ class Ecp extends Front_Controller
 		//$from_date = (isset($_POST['from_date']) ? $_POST['from_date'] : '');
 		//$to_date = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
 		$status_id = (isset($_POST['status_id']) ? $_POST['status_id'] : '');
+		$designation_id = (isset($_POST['designation_id']) ? $_POST['designation_id'] : '');
 		$employee_id = (isset($_POST['employee_id']) ? $_POST['employee_id'] : '');
 
 		$pag = (isset($_POST['page']) ? $_POST['page'] : '');
@@ -140,7 +141,7 @@ class Ecp extends Front_Controller
 			$page = 1;
 		}
 
-		$materials_request_details = $this->ecp_model->get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id,$page,$user->local_date,$user->country_id);
+		$materials_request_details = $this->ecp_model->get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id,$page,$user->local_date,$user->country_id,null,$designation_id);
 
 		Template::set('td', $materials_request_details['count']);
 		Template::set('pagination', (isset($materials_request_details['pagination']) && !empty($materials_request_details['pagination'])) ? $materials_request_details['pagination'] : '' );

@@ -812,7 +812,7 @@ class Cco_model extends BF_Model
 
     public function get_activity_type_allocated_customer_data($user_id,$role_id,$country_id,$activity_type)
     {
-        $this->db->select('bus.user_code,display_name,eap.activity_planning_time,eap.proposed_attandence_count,eamc   .activity_type_country_name,caa.called_status,mpgd2.political_geography_name as level_2,mpgd3.political_geography_name as level_3,mpgd4.political_geography_name as level_4,mdc.desigination_country_name,mucd.primary_mobile_no');
+        $this->db->select('eap.activity_planning_id,bus.user_code,display_name,eap.activity_planning_time,eap.proposed_attandence_count,eamc   .activity_type_country_name,caa.called_status,mpgd2.political_geography_name as level_2,mpgd3.political_geography_name as level_3,mpgd4.political_geography_name as level_4,mdc.desigination_country_name,mucd.primary_mobile_no');
        // $this->db->select('*');
         $this->db->from('cco_activity_allocation as caa');
         $this->db->join('ecp_activity_planning as eap','eap.activity_planning_id = caa.activity_id');
@@ -896,7 +896,7 @@ class Cco_model extends BF_Model
 
     public function get_customer_details_by_id($id)
     {
-        $this->db-> select('execution_time,eamc.activity_type_country_name');
+        $this->db-> select('eap.activity_planning_id,eap.execution_time,eamc.activity_type_country_name');
         $this->db->from('ecp_activity_planning as eap');
         $this->db->join('ecp_activity_master_country AS eamc','eamc.activity_type_country_id = eap.activity_type_id');
         $this->db->where('activity_planning_id',$id);
@@ -1117,6 +1117,174 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function get_planned_activity_details_data($customer_id,$activity_planning_id)
+    {
+        $this->db->select('eap.activity_planning_id,eap.activity_planning_date,eap.activity_planning_time,eap.execution_date,eap.execution_time,eap.meeting_duration,eap.activity_type_id,eap.geo_level_id_2,eap.geo_level_id_3,eap.geo_level_id_4,eap.location,eap.proposed_attandence_count,eap.point_discussion,eap.alert,eap.size_of_plot,eap.spray_volume,eap.amount,eap.rating,eap.activity_note,eap.employee_id,amc.activity_type_code,amc.activity_type_country_name,mpgd2.political_geography_name as geo_level_name_2,,mpgd3.political_geography_name as geo_level_name_3,mpgd4.political_geography_name as geo_level_name_4,eap.status,eap.submit_status');
+        $this->db->from('ecp_activity_planning as eap');
+        $this->db->join('ecp_activity_master_country as amc','amc.activity_type_country_id = eap.activity_type_id','left');
+        $this->db->join('master_political_geography_details as mpgd2','mpgd2.political_geo_id = eap.geo_level_id_2','left');
+        $this->db->join('master_political_geography_details as mpgd3','mpgd3.political_geo_id = eap.geo_level_id_3','left');
+        $this->db->join('master_political_geography_details as mpgd4','mpgd4.political_geo_id = eap.geo_level_id_4','left');
+        $this->db->where('eap.activity_planning_id',$activity_planning_id);
+        $activity = $this->db->get()->row_array();
+
+        $activity['crop'] = $this->getCropDetails($activity_planning_id);
+        $activity['products'] = $this->getProductDetails($activity_planning_id);
+        $activity['diseases'] = $this->getDiseasesDetails($activity_planning_id);
+        if($activity['activity_type_code'] == 'RMP003' ||$activity['activity_type_code'] == 'RVP004')
+        {
+            $activity['key_retailer'] = $this->getKeyRetailerDetails($activity_planning_id);
+        }
+        else{
+            $activity['key_farmer'] = $this->getKeyFarmerDetails($activity_planning_id);
+        }
+        $activity['digital_library'] = $this->getDigitalLibraryDetails($activity_planning_id);
+        $activity['join_visit'] = $this->getJointVisitEnployee($activity_planning_id);
+        $activity['products_sample'] = $this->getProductsSample($activity_planning_id);
+        $activity['products_request'] = $this->getProductsRequest($activity_planning_id);
+        $activity['material_request'] = $this->getMaterialRequest($activity_planning_id);
+        $activity['customer'] = $this->getAllCustomer($activity_planning_id);
+        $activity['image_gallery'] = $this->getAllUploadFiles($activity_planning_id);
+        if(!empty($activity))
+
+            return $activity;
+
+        else
+            return array();
+    }
+
+
+    public function getAllUploadFiles($activity_planning_id)
+    {
+        $this->db->select('files_name');
+        $this->db->from('ecp_activity_planning_upload_details as eapud');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $file = $this->db->get()->result_array();
+
+        if(isset($file) && !empty($file))
+        {
+            $final_arry = array();
+            foreach($file as $k=> $vl)
+            {
+                $final_arry[] = base_url('assets/uploads/activity_gallery/'.$vl['files_name']);
+            }
+            return $final_arry;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getAllCustomer($activity_planning_id)
+    {
+        $this->db->select('customer_name,mobile_no');
+        $this->db->from('ecp_activity_planning_attendees_details as eapad');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $attendees = $this->db->get()->result_array();
+        if(isset($attendees) && !empty($attendees))
+        {
+            return $attendees;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getKeyFarmerDetails($activity_planning_id){
+
+        $this->db->select('eapkcd.customer_id,buf.display_name,eapkcd.mobile_no');
+        $this->db->from('ecp_activity_planning_key_customer_details as eapkcd');
+        $this->db->join('users as buf','buf.id = eapkcd.customer_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $KeyFarmer = $this->db->get()->result_array();
+        if(isset($KeyFarmer) && !empty($KeyFarmer))
+        {
+            return $KeyFarmer;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getKeyRetailerDetails($activity_planning_id){
+        $this->db->select('eapkcd.customer_id,buf.display_name,eapkcd.mobile_no');
+        $this->db->from('ecp_activity_planning_key_customer_details as eapkcd');
+        $this->db->join('users as buf','buf.id = eapkcd.customer_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $KeyRetailer = $this->db->get()->result_array();
+        if(isset($KeyRetailer) && !empty($KeyRetailer))
+        {
+            return $KeyRetailer;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getDigitalLibraryDetails($activity_planning_id){
+
+        $this->db->select('eapdld.digital_library_id,edlm.library_name');
+        $this->db->from('ecp_activity_planning_digital_library_details as eapdld');
+        $this->db->join('ecp_digital_library_master as edlm','edlm.digital_library_id = eapdld.digital_library_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $DigitalLibrary = $this->db->get()->result_array();
+        if(isset($DigitalLibrary) && !empty($DigitalLibrary))
+        {
+            return $DigitalLibrary;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getProductsSample($activity_planning_id){
+        $this->db->select('eappsd.product_sku_id,mpsc.product_sku_name,eappsd.quantity');
+        $this->db->from('ecp_activity_planning_promo_sample_details as eappsd');
+        $this->db->join('master_product_sku_country as mpsc','mpsc.product_sku_country_id = eappsd.product_sku_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $ProductsSample = $this->db->get()->result_array();
+        if(isset($ProductsSample) && !empty($ProductsSample))
+        {
+            return $ProductsSample;
+        }
+        else{
+            return array();
+        }
+
+    }
+
+    public function getProductsRequest($activity_planning_id){
+
+        $this->db->select('eaprpd.product_sku_id,mpsc.product_sku_name,eaprpd.quantity');
+        $this->db->from('ecp_activity_planning_required_product_details as eaprpd');
+        $this->db->join('master_product_sku_country as mpsc','mpsc.product_sku_country_id = eaprpd.product_sku_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $ProductsRequest = $this->db->get()->result_array();
+        if(isset($ProductsRequest) && !empty($ProductsRequest))
+        {
+            return $ProductsRequest;
+        }
+        else{
+            return array();
+        }
+    }
+
+    public function getMaterialRequest($activity_planning_id){
+
+        $this->db->select('eaprmd.material_id,mpmc.promotional_material_country_name,eaprmd.quantity');
+        $this->db->from('ecp_activity_planning_required_material_details as eaprmd');
+        $this->db->join('master_promotional_material_country as mpmc','mpmc.promotional_country_id= eaprmd.material_id');
+        $this->db->where('activity_planning_id',$activity_planning_id);
+        $MaterialRequest= $this->db->get()->result_array();
+        if(isset($MaterialRequest) && !empty($MaterialRequest))
+        {
+            return $MaterialRequest;
+        }
+        else{
+            return array();
+        }
+    }
+
 
 
     public function get_all_work_allocation($country_id)
@@ -1194,6 +1362,71 @@ class Cco_model extends BF_Model
 
         $cco_work_allocation = array_values($cco_work_array);
         return $cco_work_allocation;
+    }
+
+
+    public function get_all_work_allocation_to_cco($cco_id)
+    {
+        $cco_work_array = array();
+
+        /* Get Campaign Work */
+        $sql = "SELECT bc.campaign_id,bc.campaign_name, bca.customer_count,
+                (bca.customer_count*bc.no_phase) AS `tot_c_call`,
+                ((bca.customer_count*bc.no_phase) - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
+                WHERE bccd.ca_id = bca.campaign_id AND bccd.ca_type = 'campaign'
+                )) AS `tot_c_pending_call`
+                FROM bf_users AS bu
+                JOIN bf_cco_campaign_allocation AS bca ON (bca.cco_id = bu.id)
+                JOIN bf_cco_campaign AS bc ON (bc.campaign_id = bca.campaign_id)
+                WHERE (bu.id = ".$cco_id." AND bu.deleted = 0 AND bu.active = 1)
+                AND (bca.deleted = 0 AND bca.status = 1)
+                ORDER BY bu.display_name ASC";
+
+        $campaign_sql = $this->db->query($sql);
+        $campaign_data = $campaign_sql->result_array();
+
+        foreach ($campaign_data as $campaign)
+        {
+            $campaign['activity_id'] = 0;
+            $campaign['activity_name'] ='-';
+            $campaign['tot_a_call'] = 0;
+            $campaign['tot_a_pending_call'] = 0;
+            $campaign['tot_a_customer'] = 0;
+            $campaign['tot_pending_call'] = $campaign['tot_c_pending_call']+$campaign['tot_a_pending_call'];
+            $cco_work_array[] = $campaign;
+        }
+
+        /* Get Activity Work */
+        $sql1 = "SELECT beap.activity_planning_id as activity_id,bemc.activity_type_country_name as activity_name,
+                 bca.ec_count AS tot_a_call,
+                (bca.ec_count - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
+                WHERE bccd.ca_id = bca.activity_allocation_id AND bccd.ca_type = 'activity'
+                )) AS tot_a_pending_call
+                FROM bf_users AS bu
+                JOIN bf_cco_activity_allocation AS bca ON (bca.cco_id = bu.id)
+                JOIN bf_ecp_activity_planning AS beap ON (beap.activity_planning_id = bca.activity_id)
+                JOIN bf_ecp_activity_master_country AS bemc ON (bemc.activity_type_id = beap.activity_type_id)
+                WHERE (bu.id = ".$cco_id." AND bu.deleted = 0 AND bu.active = 1)
+                AND (bca.deleted = 0 AND bca.status = 1)
+                ORDER BY bu.display_name ASC";
+
+        $activity_sql = $this->db->query($sql1);
+        $activity_data = $activity_sql->result_array();
+
+        foreach ($activity_data as $activity)
+        {
+            $campaign = array();
+            $campaign['campaign_id'] = 0;
+            $campaign['campaign_name'] = '-';
+            $campaign['customer_count'] = 0;
+            $campaign['tot_c_call'] = 0;
+            $campaign['tot_c_pending_call'] = 0;
+            $activity['tot_a_customer'] = $activity['tot_a_call'];
+            $activity['tot_pending_call'] = $campaign['tot_c_pending_call']+$activity['tot_a_pending_call'];
+            $cco_work_array[] = array_merge($campaign,$activity);
+        }
+
+        return $cco_work_array;
     }
 
 
@@ -1382,7 +1615,7 @@ class Cco_model extends BF_Model
 
     public function get_dialed_customer_data($phone_no)
     {
-        $this->db->select("bu.id,bu.email,bu.display_name,bu.user_code,bu.country_id,
+        $this->db->select("bu.id,bu.role_id,bu.email,bu.display_name,bu.user_code,bu.country_id,
                            bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,
                            bmupd.gender,
                            bmpgd1.political_geography_name as level1,
@@ -1679,7 +1912,7 @@ class Cco_model extends BF_Model
     }
     public function get_complaint_data_edit($complaint_id)
     {
-        $this->db->select("bccd.assigned_to_id,bccd.remarks,bccd.complaint_data,bccd.complaint_type_id,bccd.complaint_number, bccd.complaint_id,bccd.complaint_subject,bccd.complaint_entry_date,bccd.complaint_due_date,bu.display_name,bccd.created_by_user,bccd.complaint_status,bu1.display_name as dis_name");
+        $this->db->select("bccd.complaint_id,bccd.designation_id,bccd.assigned_to_id,bccd.remarks,bccd.complaint_data,bccd.complaint_type_id,bccd.complaint_number, bccd.complaint_id,bccd.complaint_subject,bccd.complaint_entry_date,bccd.complaint_due_date,bccd.escalation_date_1,bccd.escalation_date_2,bccd.escalation_date_3,bu.display_name,bccd.created_by_user,bccd.complaint_status,bu1.display_name as dis_name");
         $this->db->from("bf_cco_complaint_details as bccd");
         $this->db->join("bf_users as bu","bu.id = bccd.assigned_to_id");
         $this->db->join("bf_users as bu1","bu1.id = bccd.created_by_user");
@@ -1754,7 +1987,7 @@ class Cco_model extends BF_Model
                 'complaint_number' => $_POST["complaint_id"],
                 'complaint_status' => $_POST["complaint_status"],
                 'complaint_type_id' => $_POST["complaint_type"],
-                'complaint_entry_date' => $_POST["complaint_entry_date"],
+                'complaint_entry_date' => $_POST["Complaint_entry_date"],
                 'complaint_due_date' => $_POST["Complaint_due_date"],
                 'complaint_subject' => $_POST["complaint_subject"],
                 'remarks' => $_POST["remarks"],
@@ -1763,6 +1996,7 @@ class Cco_model extends BF_Model
                 'escalation_date_1' => $_POST["complaint_date1"],
                 'escalation_date_2' => $_POST["complaint_date2"],
                 'escalation_date_3' => $_POST["complaint_date3"],
+                'designation_id'=>$_POST["designstion"],
                 'created_by_user' => $logined_user_id,
                 'modified_by_user' => $logined_user_id,
                 'created_on' => date('Y-m-d H:i:s'),
@@ -1780,9 +2014,9 @@ class Cco_model extends BF_Model
             else
             {
                 //UPDATE
-                if ($_POST['comments'] != "" && $_POST['remarks'] != "") {
-                    $this->db->where("feedback_id", $_POST['feedback_edit_id']);
-                    $this->db->update("bf_cco_feedback", $complaint_update_array);
+                if ($_POST['remarks'] != "" && $_POST['complaint_data'] != "") {
+                    $this->db->where("complaint_id", $_POST['complaint_edit_id']);
+                    $this->db->update("bf_cco_complaint_details", $complaint_update_array);
 
                     if ($this->db->affected_rows() > 0) {
                         $update_array[] = 1;
@@ -3017,13 +3251,13 @@ class Cco_model extends BF_Model
                     $unit = '';
                 }
 
-                $order_id_data = '<input type="hidden" name="product_order_id[]" value="'.$od['product_order_id'].'" /><input class="product_sku_data" type="hidden" name="product_sku_id[]" value="'.$od['product_sku_id'].'" />';
+                $order_id_data = '<input type="hidden" name="order_product_id[]" value="'.$od['product_order_id'].'" /><input class="product_sku_data" type="hidden" name="product_sku_id[]" value="'.$od['product_sku_id'].'" />';
 
-                $unit_data = $order_id_data.'<div class="unit_data"><span class="unitdata">'.$unit.'</span></div>';
+                $unit_data = $order_id_data.'<div class="unit_data"><input readonly class="unitdata" name="units[]" value="'.$unit.'" /></div>';
 
-                $quantity_data = '<div class="quantity_data"><input readonly class="quantitydata" type="text" name="quantitydata[]" value="'.$od['quantity'].'"/></div>';
+                $quantity_data = '<div class="quantity_data"><input readonly class="quantitydata" type="text" name="quantity[]" value="'.$od['quantity'].'"/></div>';
 
-                $quantity_kg_ltr_data = '<div class="qty_kg_ltr_data"><input readonly type="text" class="qty_kg_ltrdata" name="qty_kg_ltrdata[]" value="'.$od['quantity_kg_ltr'].'"/></div>';
+                $quantity_kg_ltr_data = '<div class="qty_kg_ltr_data"><input readonly type="text" class="qty_kg_ltrdata" name="quantity_kg_ltr[]" value="'.$od['quantity_kg_ltr'].'"/></div>';
 
                 $product_view['row'][] = array($i, $od['product_order_id'], $od['product_sku_code'], $od['product_sku_name'],$unit_data,$quantity_data,$quantity_kg_ltr_data);
 
@@ -3046,8 +3280,8 @@ class Cco_model extends BF_Model
     {
         $this->db->select("bu.id,bu.display_name");
         $this->db->from("bf_users as bu");
-        $this->db->join("bf_master_customer_to_customer_mapping as bmctcm","bmctcm.to_customer_id = bu.id","left");
-        $this->db->where("bmctcm.from_customer_id",$customer_id);
+        $this->db->join("bf_master_customer_to_customer_mapping as bmctcm","bmctcm.from_customer_id = bu.id","left");
+        $this->db->where("bmctcm.to_customer_id",$customer_id);
 
         $this->db->where("bu.deleted",0);
         $this->db->where("bu.active",1);
@@ -3060,15 +3294,32 @@ class Cco_model extends BF_Model
     public function add_cco_order_place_details($user_id, $user_country_id)
     {
 
-        $farmer_id = $this->input->post("customer_id");
-        $retailer_id = $this->input->post("retailer_data");
+        $from_customer_id = $this->input->post("customer_id");
+        $to_customer_id = isset($_POST["retailer_data"]) ? $_POST["retailer_data"] : 0;
 
-        $customer_id_from = $farmer_id;
-        $customer_id_to = $retailer_id;
+        $customer_id_from = $from_customer_id;
+        $customer_id_to = $to_customer_id;
         $order_taken_by_id = $user_id;
 
         $order_date = date("Y-m-d");
-        $order_status = 0;
+
+        $action_data = $this->session->userdata("action_data");
+        $selected_type_data = $this->session->userdata("activity_type");
+
+        $caller_data = $this->session->userdata("caller_data");
+
+        if(isset($caller_data[0]["role_id"]) && $caller_data[0]["role_id"] == 11)
+        {
+            $order_status = 0;
+        }
+        elseif(isset($caller_data[0]["role_id"]) && $caller_data[0]["role_id"] == 10)
+        {
+            $order_status = 4;
+        }
+        elseif(isset($caller_data[0]["role_id"]) && $caller_data[0]["role_id"] == 9)
+        {
+            $order_status = 4;
+        }
 
         $po_no = NULL;
 

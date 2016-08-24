@@ -3,13 +3,6 @@
     <h5 class="title" style="margin: 0px 0 20px 0;">Order Status</h5>
     <div class="back_details">
 
-        <?php
-       // $attributes = array('class' => '', 'id' => 'dialpad_social_info','name'=>'dialpad_social_info', 'autocomplete'=>'off');
-       // echo form_open('cco/add_update_social_info',$attributes);
-        ?>
-
-
-
         <div class="row">
 
             <div class="col-md-11" id="product_detail_data">
@@ -48,6 +41,7 @@
         <div class="clearfix"></div>
 
 
+
         <div id="searched_data">
             <?php
             if ($this->input->is_ajax_request()) {
@@ -56,69 +50,37 @@
             ?>
         </div>
 
-    </div>
-    <div class="clearfix"></div>
 
-    <?php
-     $attributes = array('class' => '', 'id' => 'dialpad_update_order_status','name'=>'dialpad_update_order_status', 'autocomplete'=>'off');
-     echo form_open('cco/add_update_order_status',$attributes);
-    ?>
+        <?php
+        if (isset($_POST["mode"]) && $_POST["mode"] == "list_data") {
+            $attributes = array('class' => '', 'id' => 'dialpad_update_order_status', 'name' => 'dialpad_update_order_status', 'autocomplete' => 'off');
+            echo form_open('', $attributes);
 
+        }
+        ?>
 
-    <div id="detail_data">
-
-
-        <?php if ($this->input->is_ajax_request()) { ?>
-
-        <div class="clearfix"></div>
-        <div class="col-md-12 text-right">
-            <div class="row save_btn">
-                <button type="submit" class="btn btn-primary">Save</button>
+        <div id="detail_data">
+            <div class="clearfix"></div>
+            <div class="col-md-12 text-right">
+                <div class="row save_btn">
+                    <button style="display: none;" type="submit" class="btn btn-primary" id="update_order_data">Save</button>
+                </div>
             </div>
         </div>
+
         <?php
+        if (isset($_POST["mode"]) && $_POST["mode"] == "list_data")
+        {
+            echo form_close();
         }
         ?>
     </div>
 
-    <?php
-    echo form_close();
-    ?>
-
+    <div class="clearfix"></div>
 </div>
 <div class="clearfix"></div>
 
 <script type="text/javascript">
-
-    $(document).on('click', 'div#searched_data .eye_i', function (e) {
-
-        e.preventDefault();
-        //alert("INNN");
-
-        var customer_id = $("input#customer_id").val();
-        var id = $(this).attr('prdid');
-
-        $('div#searched_data').find('tr.bg_focus').removeClass();
-        $(this).parents("tr").addClass("bg_focus");
-
-        //var radio_checked = $('input[name=radio1]:checked').val();
-       // var login_customer_type = $("input#login_customer_type" ).val();
-        // currentpage = $("input.page_function" ).val();
-
-        $.ajax({
-            type: 'POST',
-            url: site_url+'cco/get_order_data_details',
-            data: {orderid: id},
-            success: function(resp){
-                $("div#detail_data").empty();
-                $("#detail_data").html(resp);
-
-                $("input#customer_id").val(customer_id);
-            }
-        });
-
-        return false;
-    });
 
     $("div#detail_data .rotate_data").remove();
     $("div#detail_data .title").remove();
@@ -131,19 +93,6 @@
 
         get_order_status_data(customer_id,search_data);
 
-     /*   $.ajax({
-            type: 'POST',
-            url: site_url + "cco/get_product_detail_data",
-            data: {searchdata: search_data,customerid : customer_id},
-            success: function (resp) {
-                $("div#searched_data").html(resp);
-                //  get_geo_data(campagain_id,1,num_count);
-            }
-        });
-
-        */
     });
-
-    //get_order_status_data(customer_id)
 
 </script>

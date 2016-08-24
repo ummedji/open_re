@@ -125,6 +125,7 @@ class Cco extends Front_Controller
     {   $user=$this->auth->user();
         /*$logged_in_user=$user->display_name;*/
         $complaint_id = $_POST["complaint_id"];
+
         $complaint_data = $this->cco_model->get_complaint_data_edit($complaint_id);
         echo json_encode($complaint_data);
         die;
@@ -483,6 +484,35 @@ class Cco extends Front_Controller
         Template::render();
     }
 
+    public function get_planned_activity_detail_data()
+    {
+        $customer_id = $_POST["customerid"];
+        $activity_id = $_POST["activity_id"];
+
+        $activity_details = $this->cco_model->get_planned_activity_details_data($customer_id,$activity_id);
+
+        Template::set('activity_details', $activity_details);
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad/dialpad_planed_activity_detail");
+        Template::render();
+    }
+
+    public function get_executed_activity_detail_data()
+    {
+        $customer_id = $_POST["customerid"];
+        $activity_id = $_POST["activity_id"];
+
+        $activity_details = $this->cco_model->get_planned_activity_details_data($customer_id,$activity_id);
+
+        Template::set('activity_details', $activity_details);
+        Template::set('customer_id', $customer_id);
+
+        Template::set_view("cco/dialpad/dialpad_executed_activity_detail");
+        Template::render();
+    }
+
+
     public function activity_planning_sidebar_calender($activity_details=array(),$action=''){
 
         // make it dynamically
@@ -834,6 +864,16 @@ class Cco extends Front_Controller
         die;
     }
 
+    public function update_order_status_detail_data() {
+        $detail_data = $_POST;
+
+         testdata($detail_data);
+
+        $detail_update = $this->ishop_model->update_order_detail_data($detail_data);
+        echo $detail_update;
+        die;
+    }
+
     public function get_customer_order_place_data()
     {
         $customer_id = $_POST["customerid"];
@@ -1082,6 +1122,11 @@ class Cco extends Front_Controller
 
         $phoneno = $_POST["phoneno"];
         $campagain_id = $_POST["campagainid"];
+        $activity_type = $_POST["activity_type"];
+        $action_data = $_POST["action_data"];
+
+        $get_caller_called_data = $this->cco_model->get_dialed_customer_data($phoneno);
+
         $user = $this->auth->user();
         $logined_user_type = $user->role_id;
         $logined_user_id = $user->id;
@@ -1091,7 +1136,10 @@ class Cco extends Front_Controller
             'user_id' => $logined_user_id,
             'country_id' => $logined_user_countryid,
             'phone_no' => $phoneno,
-            'campagain_id' => $campagain_id
+            'campagain_id' => $campagain_id,
+            'activity_type' => $activity_type,
+            'action_data' => $action_data,
+            'caller_data' => $get_caller_called_data
         ));
 
     }
@@ -1459,7 +1507,13 @@ class Cco extends Front_Controller
         Template::render();
     }
 
+    public function get_allocated_work()
+    {
+        $cco = $this->input->post('cco');
+        $cco_work_data = $this->cco_model->get_all_work_allocation_to_cco($cco);
 
+
+    }
 
 
 

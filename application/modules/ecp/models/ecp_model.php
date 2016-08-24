@@ -257,9 +257,14 @@ class Ecp_model extends BF_Model
         }
     }
 
-    public function get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id, $page, $local_date, $country_id, $web_service = null)
+    public function get_all_materials_request_details_view($from_date, $to_date, $status_id, $employee_id, $page, $local_date, $country_id, $web_service = null,$designation_id)
     {
-       // testdata();
+
+        if((isset($designation_id) && !empty($designation_id)) && empty($employee_id))
+        {
+            $employee_id = $this->GetAllEmployeeByDesignationId($designation_id);
+        }
+
         $sql = 'SELECT SQL_CALC_FOUND_ROWS emr.material_request_id,emr.material_request_date,mpmc.promotional_material_country_name,emr.quantity,bu.display_name as emp,bu.user_code,emr.material_request_status,emr.recived_status,emr.disptched_date,emr.disptched_qty,emr.remark,emr.executor_remark,mdc.desigination_country_name ';
         $sql .= 'FROM bf_ecp_material_request AS emr ';
         $sql .= 'JOIN bf_users AS bu ON (bu.id = emr.employee_id) ';
@@ -274,11 +279,14 @@ class Ecp_model extends BF_Model
         }
         $sql .= 'AND emr.material_request_status ="' . $status_id . '" ';
 
+
+
         if (isset($employee_id) && !empty($employee_id)) {
-            $sql .= 'AND emr.employee_id ="' . $employee_id . '" ';
+            $sql .= 'AND emr.employee_id IN ("' . $employee_id . '") ';
         }
         $sql .= 'AND emr.country_id ="' . $country_id . '" ';
         $sql .= 'ORDER BY emr.material_request_id DESC ';
+       
         if (!empty($web_service) && $web_service == 'web_service') {
             // For Pagination
             $limit = 10;
@@ -372,6 +380,29 @@ class Ecp_model extends BF_Model
         }
     }
 
+
+    public function GetAllEmployeeByDesignationId($designation_id)
+    {
+        $this->db->select('user_id');
+        $this->db->from('bf_master_designation_role');
+        $this->db->where('desigination_id', $designation_id);
+        $this->db->where('status', '1');
+        $this->db->where('deleted', '0');
+        $employee = $this->db->get()->result_array();
+
+        if (isset($employee) && !empty($employee)) {
+            $emp_id = array();
+            foreach($employee as $k=> $val)
+            {
+                $emp_id[] = $val['user_id'];
+            }
+            $employee = implode(',',$emp_id);
+            return $employee;
+        } else {
+            return false;
+        }
+
+    }
 
     public function update_materials_detail($user_id, $web_service = null)
     {
