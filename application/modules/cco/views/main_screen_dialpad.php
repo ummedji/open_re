@@ -287,6 +287,7 @@ $segment_data = $this->uri->segment(2);
         <li><a href="#"><span class="btn_name">Total Calls</span> <i class="total_calls_ii" aria-hidden="true"></i></a></li>
         <li class="active"><a href="#"><span class="btn_name">Pending Calls</span> <i class="pending_calls_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">General Reminders</span> <i class="general_reminders_ii" aria-hidden="true"></i></a></li>
+        <li class="btn_call"><a href="#"><span class="btn_name">Dial Call</span> <i class="end_call_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Break</span> <i class="break_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Campaign Details</span> <i class="campaign_details_ii" aria-hidden="true"></i></a></li>
         <li><a href="javascript:void(0);" onclick="get_missedcall_data();" data-toggle="modal" data-target="#missedcall_Modal" ><span class="btn_name">Missed Calls</span> <i class="call_bargin_ii" aria-hidden="true"></i></a></li>
@@ -306,3 +307,4 @@ $segment_data = $this->uri->segment(2);
 <?php } ?>
 <?php $this->load->view('campaign_details_popup'); ?>
 <?php $this->load->view('missedcall_popup'); ?>
+<?php $this->load->view('calling_popup'); ?>

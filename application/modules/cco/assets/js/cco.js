@@ -28,6 +28,7 @@ $(document).ready(function(){
     });
 });
 
+
 function get_geo_data(campagain_id,level_data,num_count)
 {
     $.ajax({

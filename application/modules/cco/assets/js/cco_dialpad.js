@@ -74,6 +74,7 @@ $('body').on('focus',".year_data", function(){
     });
 });
 
+
 $(document).on('click','.btn_call',function(){
     $(".cco-popup").css("display","block");
 });
@@ -91,6 +92,7 @@ $(document).on('click',"#allow_call",function(){
 
     $(".cco-popup").css("display","none");
 });
+
 
 $(document).on("click","a.primary_no",function(){
     var phone_no = $(this).attr("rel");
@@ -688,7 +690,8 @@ function get_missedcall_data()
         url: site_url + "cco/get_missedcall_data",
         data: {customerid: customer_id},
         success: function (resp) {
-            $("div#dialpad_middle_contailner").html(resp);
+           // alert(resp);
+            $("div#missedcall_data").html(resp);
             //get_geo_data(campagain_id,3,num_count);
         }
     });

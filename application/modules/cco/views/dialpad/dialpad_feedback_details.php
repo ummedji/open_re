@@ -69,7 +69,7 @@
 
     </div>
     <div class="clearfix"></div>
-    <div id="feedback_datal">
+    <div id="feedback_data">
     <?php
     if ($this->input->is_ajax_request()) {
         echo theme_view('common/middle');

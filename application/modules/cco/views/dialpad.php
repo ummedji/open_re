@@ -218,7 +218,7 @@
         <li><a href="#"><span class="btn_name">Transfer</span> <i class="transfer_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Hold</span> <i class="hold_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Conferance</span> <i class="conferance_ii" aria-hidden="true"></i></a></li>
-        <li class="btn_call"><a href="#"><span class="btn_name">Dial Call</span> <i class="end_call_ii" aria-hidden="true"></i></a></li>
+
         <li><a href="#"><span class="btn_name">End Call</span> <i class="end_call_ii" aria-hidden="true"></i></a></li>
         <li class="active"><a href="#"><span class="btn_name mute-nl">Mute</span> <span class="btn_name spkr-p">Speaker</span> <i class="mute_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">LoudSpeaker</span> <i class="loudspeaker_ii" aria-hidden="true"></i></a></li>
@@ -239,7 +239,6 @@
 <div id="success_file_popup">
 
 </div>
-<?php $this->load->view('calling_popup'); ?>
 
 <script type="text/javascript">
 
