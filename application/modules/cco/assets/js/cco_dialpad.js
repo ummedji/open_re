@@ -59,6 +59,12 @@ $('body').on('focus',".dob", function(){
         autoclose: true
     });
 });
+$('body').on('focus',".due_date", function(){
+    $(this).datepicker({
+        format: "yyyy-mm-dd",
+        autoclose: true
+    });
+});
 $('body').on('focus',".year_data", function(){
     $(this).datepicker({
         format: "yyyy",
@@ -68,8 +74,25 @@ $('body').on('focus',".year_data", function(){
     });
 });
 
-$(document).on("click","a.primary_no",function(){
+$(document).on('click','.btn_call',function(){
+    $(".cco-popup").css("display","block");
+});
 
+$(document).on('click',".btn-cco",function(){
+    $(".cco-popup").css("display","none");
+});
+
+$(document).on('click',"#allow_call",function(){
+
+    var phone_no = $("input#input_call").val();
+    var action_data = $("input#selected_action").val();
+
+    dialpad(phone_no,null,null,null);
+
+    $(".cco-popup").css("display","none");
+});
+
+$(document).on("click","a.primary_no",function(){
     var phone_no = $(this).attr("rel");
     var activity_id = $(this).attr("rel-activity_id");
     var activity_type = $(this).attr("rel-activity_type");
@@ -89,6 +112,10 @@ $(document).on("click","a.primary_no",function(){
     {
         var channel_partner_data = $("select#channel_partner").val();
         dialpad(phone_no,campagain_id,channel_partner_data,action_data);
+    }
+    else if(action_data == 'employee_dialpad')
+    {
+        dialpad(phone_no,null,null,action_data);
     }
 
 });
@@ -230,6 +257,22 @@ function get_complaint_view_data(customer_id)
         success: function (resp) {
             $("div#dialpad_middle_contailner").html(resp);
             //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+function get_customer_business_view_data(customer_id)
+{
+
+    var campagain_id = $("input#camagain_id").val();
+    var num_count = 3;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_business_view_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            get_geo_data(campagain_id,3,num_count);
         }
     });
 }
@@ -633,6 +676,99 @@ function get_customer_feedback_data(customer_id)
         }
     });
 }
+function get_missedcall_data()
+{
+    var customer_id = 4;
+    var campagain_id = $("input#camagain_id").val();
+    // alert(campagain_id);
+    var num_count = 3;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_missedcall_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+function block_phone_number(phone_no)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/block_phone_number",
+        data: {phone_no: phone_no},
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Phone Blocked successfully.';
+            }
+            else{
+                message += 'Phone Already Blocked.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        //get_customer_feedback_data(customer_id);
+
+                    }
+                });
+        }
+    });
+}
+function get_customer_schemes_data(customer_id)
+{
+    //var customer_id = 4;
+    var campagain_id = $("input#camagain_id").val();
+    // alert(campagain_id);
+    var num_count = 3;
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_customer_schemes_data",
+        data: {customerid: customer_id},
+        success: function (resp) {
+            $("div#dialpad_middle_contailner").html(resp);
+            //get_geo_data(campagain_id,3,num_count);
+        }
+    });
+}
+$(document).on("submit","form#dialpad_scheme_view_info",function(e){
+
+
+    e.preventDefault();
+
+    var param = $("#dialpad_scheme_view_info").serializeArray();
+
+
+    var $valid = $("#dialpad_scheme_view_info").valid();
+    if(!$valid) {
+        scheme_view_validators.focusInvalid();
+        return false;
+    }
+    else
+    {
+        $.ajax({
+            type: 'POST',
+            url: site_url+"cco/view_schemes_details",
+            data: param,
+            dataType : 'html',
+            success: function(resp){
+                $("#middle_container").html(resp);
+            }
+        });
+        return false;
+    }
+});
 function get_complaint_data_from_complaint_type_id(complaint_type_id,customer_id)
 {
     //var customer_id = 4;
@@ -691,6 +827,7 @@ $(document).on("submit","form#dialpad_feedback_view_info",function(e){
     return false;
 });
 
+
 $(document).on("submit","form#dialpad_complaint_info",function(e){
 
     e.preventDefault();
@@ -721,8 +858,9 @@ $(document).on("submit","form#dialpad_complaint_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        //get_customer_complaint_data();
-                        location.reload();
+                        get_customer_complaint_data(customer_id);
+
+                        //location.reload();
 
                     }
                 });
@@ -762,7 +900,7 @@ $(document).on("submit","form#dialpad_complaint_view_info",function(e){
                     resizable: true,
                     close: function (event, ui) {
                         $(this).remove();
-                        //get_customer_complaint_data();
+                        get_customer_complaint_data(customer_id);
                        // location.reload();
 
                     }
@@ -903,8 +1041,8 @@ $(document).on('click', 'div#complaint_data .edit_i', function () {
 
             $("input#complaint_id").val(obj.complaint_number);
             $("input#Complaint_entry_date_edit").val(obj.complaint_entry_date);
-            $("input#Complaint_due_date_edit").val(obj.complaint_due_date);
-            $("input#complaint_date1_edit").val(obj.escalation_date_1);
+            //$("input#Complaint_due_date_edit").val(obj.complaint_due_date);
+            //$("input#complaint_date1_edit").val(obj.escalation_date_1);
             $("input#complaint_date2_edit").val(obj.escalation_date_2);
             $("input#complaint_date3_edit").val(obj.escalation_date_3);
             $("textarea#remark_edit").val(obj.remarks);
@@ -914,12 +1052,15 @@ $(document).on('click', 'div#complaint_data .edit_i', function () {
 
             setTimeout(function(){
                 $("select#complaint_subject_edit").val(obj.complaint_subject);
+                $("input#Complaint_due_date_edit").val(obj.complaint_due_date);
+                $("input#complaint_date1_edit").val(obj.escalation_date_1);
             }, 1000);
             setTimeout(function(){
                 $("select#designstion_edit").val(obj.designation_id);
             }, 2000);
             setTimeout(function(){
                 $("select#person_name_edit").val(obj.assigned_to_id);
+
             }, 3000);
 
         }
@@ -1011,6 +1152,7 @@ function get_person_data_from_desigination_edit(desigination_country_id)
         }
     });
 }
+
 function get_complaint_date_from_complaint_subject(complaint_subject_id)
 {
 
@@ -1054,7 +1196,8 @@ function get_complaint_date_from_complaint_subject(complaint_subject_id)
             {
                 var obj = $.parseJSON(result);
                 console.log(obj);
-
+                $("select#designstion").empty();
+                $("#designstion").html("<option value=''>Select Designstion</option>");
                 $.each(obj, function (i, item) {
                     $('#designstion').append($('<option>', {value: item.desigination_country_id,text: item.desigination_country_name}));
                 });
@@ -1063,6 +1206,7 @@ function get_complaint_date_from_complaint_subject(complaint_subject_id)
     });
 
 }
+
 function get_complaint_date_from_complaint_subject_edit(complaint_subject_id)
 {
 
@@ -1109,6 +1253,7 @@ function get_complaint_date_from_complaint_subject_edit(complaint_subject_id)
 */
                // var html_data = "";
                 $("select#designstion_edit").empty();
+                $("#designstion_edit").html("<option value=''>Select Designstion</option>");
                 $.each(JSON.parse(result), function(key, value) {
                     $('select#designstion_edit').append('<option value="' + value.desigination_country_id + '">' + value.desigination_country_name + '</option>');
                 });
@@ -1126,7 +1271,6 @@ function get_complaint_date_from_complaint_subject_edit(complaint_subject_id)
     });
 
 }
-
 
 
 $(document).on('click','div#searched_data div.delete_i',function(){
@@ -1211,7 +1355,7 @@ $(document).on('click', 'div#detail_data .edit_i', function () {
 
     //QUANTITY
 
-    $(this).parent().parent().find("div.quantity_data").html('<input  type="text" class="quantity_data allownumericwithdecimal" name="quantity_data[]" value="' + quantity_value + '"/>');
+    $(this).parent().parent().find("div.quantity_data").html('<input  type="text" class="quantity_data allownumericwithdecimal" name="quantity[]" value="' + quantity_value + '"/>');
 
     return false;
 });
@@ -1315,6 +1459,69 @@ $(document).on("submit","form#dialpad_general_info",function(e){
     });
     return false;
 });
+
+$(document).on("change","select.level_data",function(){
+
+    var selected_level_data = $(this).val();
+
+    var level_no = $(this).attr("attr-level");
+
+    var level = level_no-1;
+    $(this).parent().parent().parent().nextAll("div.location_level_data").remove();
+
+    get_level_location_data(selected_level_data,level);
+
+    get_location_employee_data(selected_level_data);
+
+});
+
+function get_level_location_data(selected_level_data,level)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_next_level_data",
+        data: {parentgeoid:selected_level_data},
+        success: function (resp) {
+
+            if(resp != 0) {
+                var obj = $.parseJSON(resp);
+
+                var html = "<div class='form-group location_level_data'>";
+                html += "<label>Level " + level + "</label>";
+                html += "<div class='inln_fld_top'>";
+                html += "<select attr-level = '" + level + "'  class='selectpicker level_data' >";
+                html += "<option value=''>Select Location</option>";
+                $.each(obj, function (key, value) {
+                    html += "<option value='" + value.political_geo_id + "'>" + value.political_geography_name + "</option>";
+                });
+
+                html += "</select>";
+                html += "</div>";
+                html += "</div>";
+
+                $("div.main_level_data div.location_level_data").last().after(html);
+
+                $("select.level_data").selectpicker("refresh");
+
+            }
+        }
+    });
+}
+
+function get_location_employee_data(selected_level_data)
+{
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_level_employee_data",
+        data: {parentgeoid: selected_level_data},
+        success: function (resp) {
+            $("div#customer_data").html(resp);
+        }
+    });
+}
+
+
+
 
 $(document).on("submit","form#dialpad_family_info",function(e){
 
@@ -1545,6 +1752,46 @@ $(document).on("submit","form#dialpad_farming_info",function(e){
                     close: function (event, ui) {
                         $(this).remove();
                         get_farming_view_data(customer_id);
+                        //location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
+$(document).on("submit","form#dialpad_business_info",function(e){
+
+    e.preventDefault();
+
+    var customer_id = $("input#customer_id").val();
+    var param =  $("form#dialpad_business_info").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_business_info",
+        data:param,
+        success: function (resp) {
+            var message = "";
+            if(resp == 1){
+                message += 'Data Addes Successfully.';
+            }
+            else{
+                message += 'Data not Added.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        get_business_view_data(customer_id);
                         //location.reload()
                     }
                 });

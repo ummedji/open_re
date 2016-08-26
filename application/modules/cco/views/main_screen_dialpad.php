@@ -28,7 +28,7 @@ $segment_data = $this->uri->segment(2);
                                 <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/farmer_dialpad') ?>">Farmers</a></li>
                                 <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/channel_partner_dialpad') ?>">Channel Partners</a></li>
                                 <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='activity_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/activity_dialpad') ?>">Activity</a></li>
-                                <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='farmer_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/farmer_dialpad') ?>">Employee</a></li>
+                                <li class="<?php echo ($this->uri->segment(1)=='cco' && $this->uri->segment(2)=='employee_dialpad') ? 'active' :'' ;?>"><a href="<?php echo base_url('cco/employee_dialpad') ?>">Employee</a></li>
                             </ul>
                             <div class="clearfix"></div>
                         </div>
@@ -180,55 +180,59 @@ $segment_data = $this->uri->segment(2);
                         </div>
                     </div>
 
-                    <?php } ?>
+                    <?php }
+                    elseif($this->uri->segment(2)=='employee_dialpad') { ?>
 
-
-
-
-
-                   <!-- <div class="col-md-12 text-center tp_form inline-parent sbde-parent">
-                        <div class="form-group">
-                            <label>Campaign</label>
-                            <div class="inln_fld_top">
-                                <select class="selectpicker" id="Campaign" name="Campaign">
-                                    <option value="">Campaign Name</option>
-                                    <?php
-/*                                    if (isset($campagaine_data) && !empty($campagaine_data) && $campagaine_data != 0) {
-                                        foreach ($campagaine_data as $k => $campagainedata) {
-                                            */?>
-                                            <option value="<?php /*echo $campagainedata['campaign_id']; */?>"><?php /*echo $campagainedata['campaign_name']; */?></option>
+                        <div class="col-md-12 text-center tp_form inline-parent sbde-parent main_level_data">
+                            <div class="form-group location_level_data">
+                                <label>Level 6</label>
+                                <div class="inln_fld_top">
+                                    <select attr-level = "6"  class="selectpicker level_data" id="level_6_data" name="level_6_data">
+                                        <option value="">Select Location</option>
                                         <?php
-/*                                        }
-                                    }
-                                    */?>
 
-                                </select>
-                                <div class="clearfix"></div>
-                                <label id="Campaign-" class="error" for="Campaign"></label>
+                                        if($higest_level_data != 0 || !empty($higest_level_data)){
+                                            foreach($higest_level_data as $data_key => $level_data) {
+                                                ?>
+                                                <option
+                                                    value="<?php echo $level_data["political_geo_id"]; ?>"><?php echo $level_data["political_geography_name"]; ?></option>
+
+                                            <?php
+                                            }
+                                        } ?>
+                                    </select>
+                                    <div class="clearfix"></div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <label>Call Mode</label>
-                            <div class="inln_fld_top">
-                                <select class="selectpicker" id="Call Mode" name="Call Mode">
-                                    <option value="">Call Mode</option>
-                                    <option value="Manual">Manual</option>
-                                    <option value="Auto">Auto</option>
-                                </select>
-                                <div class="clearfix"></div>
-                                <label id="to_date-error" class="error" for="Call Mode"></label>
+
+                            <div class="form-group">
+                                <label>Call Mode</label>
+                                <div class="inln_fld_top">
+                                    <select class="selectpicker" id="Call_Mode" name="Call_Mode">
+                                        <option value="">Call Mode</option>
+                                        <option value="Manual">Manual</option>
+                                        <option value="Auto">Auto</option>
+                                    </select>
+                                    <div class="clearfix"></div>
+                                    <label id="to_date-error" class="error" for="Call Mode"></label>
+                                </div>
                             </div>
+
+                            <div class="form-group">
+                                <!--  <label>Call Mode</label>-->
+                                <div class="inln_fld_top">
+
+                                    <input type="text" name="search_by_contact_no" id="search_by_contact_no" placeholder="Search Employee By Contact No."/>
+
+                                    <div class="clearfix"></div>
+                                </div>
+                            </div>
+                            <div class="clearfix"></div>
                         </div>
                         <div class="clearfix"></div>
-                        <div id="custom-search-input">
-                            <div class="input-group col-md-12">
-                                <input type="text" class="form-control input-lg" placeholder="Search Farmer by Name" />
-                                <span class="input-group-btn">
-                                    <button class="btn btn-info btn-lg" type="button"><i class="glyphicon glyphicon-search"></i></button>
-                               </span>
-                            </div>
-                        </div>
-                    </div>-->
+
+                    <?php } ?>
+
                     <div class="clearfix"></div>
                 </div>
                 <div class="green-box">
@@ -285,6 +289,7 @@ $segment_data = $this->uri->segment(2);
         <li><a href="#"><span class="btn_name">General Reminders</span> <i class="general_reminders_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Break</span> <i class="break_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Campaign Details</span> <i class="campaign_details_ii" aria-hidden="true"></i></a></li>
+        <li><a href="javascript:void(0);" onclick="get_missedcall_data();" data-toggle="modal" data-target="#missedcall_Modal" ><span class="btn_name">Missed Calls</span> <i class="call_bargin_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Call Bargin</span> <i class="call_bargin_ii" aria-hidden="true"></i></a></li>
     </ul>
 </div>
@@ -300,4 +305,4 @@ $segment_data = $this->uri->segment(2);
 </div>
 <?php } ?>
 <?php $this->load->view('campaign_details_popup'); ?>
-
+<?php $this->load->view('missedcall_popup'); ?>

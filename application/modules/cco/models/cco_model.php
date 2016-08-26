@@ -387,15 +387,31 @@ class Cco_model extends BF_Model
 
         if($selected_type == null){
             $user_role = 11;
+            $user_role2 = "";
         }
         elseif($selected_type == "retailer"){
             $user_role = 10;
+            $user_role2 = "";
         }
         elseif($selected_type == "distributor"){
             $user_role = 9;
+            $user_role2 = "";
+        }
+        elseif($selected_type == "employee"){
+            $user_role = 7;
+            $user_role2 = 8;
         }
 
-        $sql = 'SELECT bu.id FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE bu.`role_id` = '.$user_role.' AND bu.deleted= 0 AND bmucd.geo_level_id1 = '.$geo_data;
+        $sql = 'SELECT bu.id FROM `bf_users` as bu JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id WHERE ';
+
+        $sql .= ' bu.`role_id` = '.$user_role ;
+
+        if($user_role2 != "")
+        {
+            $sql .= ' OR bu.`role_id` = '.$user_role2 ;
+        }
+
+        $sql .= ' AND bu.deleted= 0 AND bmucd.geo_level_id1 = '.$geo_data;
 
         $info = $this->db->query($sql);
         // For Pagination
@@ -410,7 +426,105 @@ class Cco_model extends BF_Model
         }
     }
 
+    public function geo_employee_data($geo_data,$selected_type=null,$page)
+    {
+        if($selected_type == null){
+            $user_role = 11;
+            $user_role2 = "";
+        }
+        elseif($selected_type == "retailer"){
+            $user_role = 10;
+            $user_role2 = "";
+        }
+        elseif($selected_type == "distributor"){
+            $user_role = 9;
+            $user_role2 = "";
+        }
+        elseif($selected_type == "employee"){
+            $user_role = 7;
+            $user_role2 = 8;
+        }
 
+        $sql = 'SELECT
+                bu.user_code,bu.display_name,bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,
+                mpgd3.political_geography_name as level_3,mpgd2.political_geography_name as level_2,mpgd1.political_geography_name as level_1
+                FROM `bf_users` as bu
+
+                JOIN bf_master_user_contact_details as bmucd on bmucd.user_id = bu.id
+                LEFT JOIN bf_master_political_geography_details AS mpgd3 ON mpgd3.political_geo_id = bmucd.geo_level_id3
+                LEFT JOIN bf_master_political_geography_details AS mpgd2 ON mpgd2.political_geo_id = bmucd.geo_level_id2
+                LEFT JOIN bf_master_political_geography_details AS mpgd1 ON mpgd1.political_geo_id = bmucd.geo_level_id1
+
+                WHERE ';
+
+        $sql .= ' bu.`role_id` = '.$user_role ;
+
+        if($user_role2 != "")
+        {
+            $sql .= ' OR bu.`role_id` = '.$user_role2 ;
+        }
+
+
+
+        $sql .= ' AND bu.deleted= 0 AND bmucd.geo_level_id1 = '.$geo_data.' ';
+
+        //echo $sql;
+
+        $employee_data = $this->grid->get_result_res($sql);
+
+        if (isset($employee_data['result']) && !empty($employee_data['result'])) {
+
+            $employee['head'] = array('Sr No.', '','Employee Code','Employee Name','Level 3','Level 2','Level 1','Designation','Reporting Person','Primary Number','Secondary Number','Landline No.');
+
+            $employee['count'] = count($employee['head']);
+
+            if ($page != null || $page != "") {
+                $i = (($page * 10) - 9);
+            } else {
+                $i = 1;
+            }
+
+            foreach ($employee_data['result'] as $rm) {
+
+               /* if ($local_date != null) {
+                    $date3 = strtotime($rm['created_on']);
+                    $created_date = date($local_date, $date3);
+
+                } else {
+                    $created_date = $rm['created_on'];
+                }
+                */
+
+               $primary_no = '<a href="javascript: void(0);" rel="'.$rm["primary_mobile_no"].'"  class="primary_no">'.$rm["primary_mobile_no"].'</a>';
+
+                $employee['row'][] = array($i,'',$rm["user_code"],$rm['display_name'],$rm['level_3'],$rm['level_2'],$rm['level_1'],'','',$primary_no,$rm['secondary_mobile_no'],$rm['landline_no']);
+                $i++;
+            }
+
+
+            //$feedback['action'] = 'is_action';
+           // $feedback['delete'] = 'is_delete';
+            //$feedback['edit'] = 'is_edit';
+            $employee['pagination'] = $employee_data['pagination'];
+
+            return $employee;
+        }
+        else {
+            return false;
+        }
+
+        //$info = $this->db->query($sql);
+        // For Pagination
+        //$employee_data = $info->result_array();
+
+        //if(!empty($employee_data)) {
+        //    return $employee_data;
+        //}
+        //else
+        //{
+        //   return 0;
+        //}
+    }
 
     public function add_customer_allocation_data($farmer_id,$campagain_data,$cco_data,$geo_data)
     {
@@ -696,7 +810,6 @@ class Cco_model extends BF_Model
         }
     }
 
-
     public function get_activity_id_by_allocation_id($allocation_id)
     {
         $this->db->select('activity_id');
@@ -731,7 +844,6 @@ class Cco_model extends BF_Model
             return $campaign;
         }
     }
-
 
     public function get_all_campaign_details($user_id,$role_id,$country_id)
     {
@@ -784,7 +896,6 @@ class Cco_model extends BF_Model
         return $final_array;
     }
 
-
     public function getAllPhaseDetailByCampaignId($campaign_id,$user_id,$role_id,$country_id)
     {
         $this->db->select('ccp.phase_name,ccp.avg_call_duration,sum(ccd.is_call_done) as total_call,cca.customer_count,ccp.end_date,ccp.phase_status');
@@ -808,7 +919,6 @@ class Cco_model extends BF_Model
             return $phase_details;
         }
     }
-
 
     public function get_activity_type_allocated_customer_data($user_id,$role_id,$country_id,$activity_type)
     {
@@ -1153,7 +1263,6 @@ class Cco_model extends BF_Model
             return array();
     }
 
-
     public function getAllUploadFiles($activity_planning_id)
     {
         $this->db->select('files_name');
@@ -1285,8 +1394,6 @@ class Cco_model extends BF_Model
         }
     }
 
-
-
     public function get_all_work_allocation($country_id)
     {
         $cco_work_array = array();
@@ -1364,13 +1471,12 @@ class Cco_model extends BF_Model
         return $cco_work_allocation;
     }
 
-
     public function get_all_work_allocation_to_cco($cco_id)
     {
         $cco_work_array = array();
 
         /* Get Campaign Work */
-        $sql = "SELECT bc.campaign_id,bc.campaign_name, bca.customer_count,
+        $sql = "SELECT bc.campaign_id,bc.campaign_name,bca.allocation_id, bca.customer_count,'campaign' AS allocation_type,
                 (bca.customer_count*bc.no_phase) AS `tot_c_call`,
                 ((bca.customer_count*bc.no_phase) - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
                 WHERE bccd.ca_id = bca.campaign_id AND bccd.ca_type = 'campaign'
@@ -1380,25 +1486,27 @@ class Cco_model extends BF_Model
                 JOIN bf_cco_campaign AS bc ON (bc.campaign_id = bca.campaign_id)
                 WHERE (bu.id = ".$cco_id." AND bu.deleted = 0 AND bu.active = 1)
                 AND (bca.deleted = 0 AND bca.status = 1)
+                AND  UNIX_TIMESTAMP(NOW()) <= UNIX_TIMESTAMP(bc.end_date)
                 ORDER BY bu.display_name ASC";
-
+       // echo $sql; die;
         $campaign_sql = $this->db->query($sql);
         $campaign_data = $campaign_sql->result_array();
 
         foreach ($campaign_data as $campaign)
         {
             $campaign['activity_id'] = 0;
+            $campaign['activity_allocation_id'] = 0;
             $campaign['activity_name'] ='-';
             $campaign['tot_a_call'] = 0;
             $campaign['tot_a_pending_call'] = 0;
             $campaign['tot_a_customer'] = 0;
             $campaign['tot_pending_call'] = $campaign['tot_c_pending_call']+$campaign['tot_a_pending_call'];
+           // $campaign['type_data'] = $campaign['allocation_type'];
             $cco_work_array[] = $campaign;
         }
 
         /* Get Activity Work */
-        $sql1 = "SELECT beap.activity_planning_id as activity_id,bemc.activity_type_country_name as activity_name,
-                 bca.ec_count AS tot_a_call,
+        $sql1 = "SELECT beap.activity_planning_id as activity_id,bemc.activity_type_country_name as activity_name,bca.activity_allocation_id,bca.ec_count AS tot_a_call,'activity' AS allocation_type,
                 (bca.ec_count - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
                 WHERE bccd.ca_id = bca.activity_allocation_id AND bccd.ca_type = 'activity'
                 )) AS tot_a_pending_call
@@ -1417,24 +1525,254 @@ class Cco_model extends BF_Model
         {
             $campaign = array();
             $campaign['campaign_id'] = 0;
+            $campaign['allocation_id'] = 0;
             $campaign['campaign_name'] = '-';
             $campaign['customer_count'] = 0;
             $campaign['tot_c_call'] = 0;
             $campaign['tot_c_pending_call'] = 0;
             $activity['tot_a_customer'] = $activity['tot_a_call'];
             $activity['tot_pending_call'] = $campaign['tot_c_pending_call']+$activity['tot_a_pending_call'];
+           // $campaign['allocation_type'] = $activity['allocation_type'];
             $cco_work_array[] = array_merge($campaign,$activity);
         }
 
         return $cco_work_array;
     }
 
+    public function get_cco_work_allocation($country_id,$cco_id)
+    {
+        $cco_work_array = array();
+
+        /* Get Campaign Work */
+        $sql = "SELECT id as cco_id, display_name AS cco_name, COUNT(*)AS tot_campaign, SUM(customer_count) AS tot_c_customer,
+                        SUM(total_call) AS tot_c_call, SUM(pending_call) AS tot_c_pending_call FROM (
+                        SELECT bu.id,bu.display_name,bc.campaign_id,bc.campaign_name, bca.customer_count,
+                        (bca.customer_count*bc.no_phase) AS `total_call`,
+                        ((bca.customer_count*bc.no_phase) - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
+                         WHERE bccd.ca_id = bca.campaign_id AND bccd.ca_type = 'campaign'
+                        )) AS `pending_call`
+                        FROM bf_users AS bu
+                        JOIN bf_cco_campaign_allocation AS bca ON (bca.cco_id = bu.id)
+                        JOIN bf_cco_campaign AS bc ON (bc.campaign_id = bca.campaign_id)
+                        WHERE bu.country_id = $country_id
+                        AND bca.cco_id != ".$cco_id."
+                        AND (bu.role_id = 19 AND bu.deleted = 0 AND bu.active = 1)
+                        AND (bca.deleted = 0 AND bca.status = 1)
+                        ORDER BY bu.display_name ASC
+                        ) AS campaign_table GROUP BY id
+                    ";
+
+        $campaign_sql = $this->db->query($sql);
+        $campaign_data = $campaign_sql->result_array();
+
+        foreach ($campaign_data as $campaign)
+        {
+            $campaign['tot_activity'] = 0;
+            $campaign['tot_a_customer'] = 0;
+            $campaign['tot_a_call'] = 0;
+            $campaign['tot_a_pending_call'] = 0;
+            $campaign['tot_pending_call'] = $campaign['tot_c_pending_call']+$campaign['tot_a_pending_call'];
+            $cco_work_array[$campaign['cco_id']] = $campaign;
+        }
+
+        /* Get Activity Work */
+        $sql1 = "SELECT id as cco_id, display_name AS cco_name, COUNT(*) AS tot_activity, SUM(ec_count) AS tot_a_customer, SUM(ec_count) AS tot_a_call,SUM(pending_call) AS tot_a_pending_call
+                        FROM (
+                        SELECT bu.id, bu.display_name, bca.ec_count,
+                        (bca.ec_count - (SELECT COUNT(*) AS tot FROM bf_cco_call_details AS bccd
+                         WHERE bccd.ca_id = bca.activity_allocation_id AND bccd.ca_type = 'activity'
+                        )) AS pending_call
+                        FROM bf_users AS bu
+                        JOIN bf_cco_activity_allocation AS bca ON (bca.cco_id = bu.id)
+
+                        WHERE bu.country_id = $country_id
+                        AND bca.cco_id != ".$cco_id."
+                        AND (bu.role_id = 19 AND bu.deleted = 0 AND bu.active = 1)
+                        AND (bca.deleted = 0 AND bca.status = 1)
+                        ORDER BY bu.display_name ASC
+                        )  AS activity_table GROUP BY id";
+
+        $activity_sql = $this->db->query($sql1);
+        $activity_data = $activity_sql->result_array();
+
+        foreach ($activity_data as $activity)
+        {
+            if(!isset($cco_work_array[$activity['cco_id']]))
+            {
+                $campaign = array();
+                $campaign['cco_id'] = $activity['cco_id'];
+                $campaign['cco_name'] = $activity['cco_name'];
+                $campaign['tot_campaign'] = 0;
+                $campaign['tot_c_customer'] = 0;
+                $campaign['tot_c_call'] = 0;
+                $campaign['tot_c_pending_call'] = 0;
+                $cco_work_array[$activity['cco_id']] = $campaign;
+            }
+
+            $activity['tot_pending_call'] = $cco_work_array[$activity['cco_id']]['tot_c_pending_call']+$activity['tot_a_pending_call'];
+            $cco_work_array[$activity['cco_id']] = array_merge($cco_work_array[$activity['cco_id']],$activity);
+        }
+
+        $cco_work_allocation = array_values($cco_work_array);
+        return $cco_work_allocation;
+    }
+
+    public function add_work_transfer_data_allocation($user_id,$country_id)
+    {
+        $cco_data = $this->input->post("cco_data");
+        $allocation_id = $this->input->post("allocation_id");
+        $allocation_type = $this->input->post("allocation_type");
+        $cco_id = $this->input->post("cco_id");
+        $update_array= array();
+        if((isset($allocation_id) && !empty($allocation_id)) && (isset($allocation_type) && !empty($allocation_type))){
+
+            foreach($allocation_id as $k => $val)
+            {
+                $cco_transfer_work = array(
+                    'allocation_id' => $val,
+                    'alocation_type' => $allocation_type[$k],
+                    'old_cco_id' => $cco_data,
+                    'new_cco_id' => $cco_id,
+                    'country_id' => $country_id,
+                    'created_by_user' => $user_id,
+                    'modified_by_user' => $user_id,
+                    'created_on' => date('Y-m-d H:i:s'),
+                    'modified_on' => date('Y-m-d H:i:s')
+                );
+
+
+
+                $this->db->insert('cco_transfer_work', $cco_transfer_work);
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[]=1;
+
+                }
+
+
+                if(trim(strtolower($allocation_type[$k])) == 'campaign')
+                {
+                    $update_campaign= array(
+                        'transfer_status' => '1',
+                        'cco_id' => $cco_id
+                    );
+
+                    $this->db->where('allocation_id',$val);
+                    $this->db->update("cco_campaign_allocation",$update_campaign);
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[]=1;
+
+                    }
+                }
+                else{
+                    $update_activity= array(
+                        'transfer_status' => '1',
+                        'cco_id' => $cco_id
+                    );
+                   // echo "Act";
+                   // dumpme($update_activity);
+
+                    $this->db->where('activity_allocation_id',$val);
+                    $this->db->update("cco_activity_allocation",$update_activity);
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[]=1;
+
+                    }
+                }
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else{
+            return 0;
+        }
+
+    }
+
+    public function get_all_transfer_cco_data($country_id,$local_date = null,$page=null){
+
+
+        $sql = 'SELECT * from ( ';
+
+        $sql .= ' SELECT bu.display_name as old_cco_name,bus.display_name as new_cco_name,ctw.created_on,bcc.campaign_name as dataname,bcc.no_phase ';
+
+        $sql .= 'FROM bf_cco_transfer_work AS ctw ';
+        $sql .= 'JOIN bf_users AS bu ON (bu.id = ctw.old_cco_id) ';
+        $sql .= 'JOIN bf_users AS bus ON (bus.id = ctw.new_cco_id) ';
+        $sql .= 'JOIN bf_cco_campaign_allocation AS cca ON (cca.allocation_id = ctw.allocation_id) ';
+        $sql .= 'JOIN bf_cco_campaign AS bcc ON (bcc.campaign_id = cca.campaign_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND ctw.alocation_type ="campaign" ';
+        $sql .= ' AND ctw.country_id ="' . $country_id . '" ';
+
+        $sql .= ' UNION ';
+
+        $sql .= 'SELECT bu.display_name as old_cco_name,bus.display_name as new_cco_name,ctw.created_on,eamc.activity_type_country_name AS dataname,0 AS no_phase ';
+
+        $sql .= 'FROM bf_cco_transfer_work AS ctw ';
+         $sql .= 'JOIN bf_users AS bu ON (bu.id = ctw.old_cco_id) ';
+        $sql .= 'JOIN bf_users AS bus ON (bus.id = ctw.new_cco_id) ';
+         $sql .= 'JOIN bf_cco_activity_allocation AS caa ON (caa.activity_allocation_id = ctw.allocation_id) ';
+         $sql .= 'JOIN bf_ecp_activity_planning as eap ON (eap.activity_planning_id = caa.activity_id) ';
+         $sql .= 'JOIN bf_ecp_activity_master_country as eamc ON (eamc.activity_type_country_id = eap.activity_type_id) ';
+
+        $sql .= 'WHERE 1 ';
+        $sql .= ' AND ctw.alocation_type ="activity" ';
+        $sql .= ' AND ctw.country_id ="' . $country_id . '" ';
+
+        $sql .= ' ) a
+        order by a.created_on DESC ';
+
+
+        $transfer_data = $this->grid->get_result_res($sql);
+
+        //testdata($transfer_data);
+        if (isset($transfer_data['result']) && !empty($transfer_data['result'])) {
+
+
+            $transfer['head'] = array('Sr. No.', 'Campaign Name/ Activity Name','Total Phase', 'From CCO','To CCO','Transfer Date');
+
+            $transfer['count'] = count($transfer['head']);
+
+            if ($page != null || $page != "") {
+                $i = (($page * 10) - 9);
+            } else {
+                $i = 1;
+            }
+
+            foreach ($transfer_data['result'] as $rm) {
+
+                if ($local_date != null) {
+                    $date3 = strtotime($rm['created_on']);
+                    $created_on = date($local_date .' g:i A', $date3);
+
+                } else {
+                    $created_on = $rm['created_on'];
+                }
+
+                $transfer['row'][] = array($i, $rm['dataname'],$rm['no_phase'], $rm['old_cco_name'], $rm['new_cco_name'],$created_on);
+                        $i++;
+            }
+
+
+            $transfer['action'] = '';
+            $transfer['delete'] = '';
+            $transfer['pagination'] = $transfer_data['pagination'];
+
+            return $transfer;
+        }
+        else {
+            return false;
+        }
+    }
+
+
+
 
     /*-----------------------------------------------------------------------------------------*/
-
-
-
-
 
     public function check_cco_campagain_data($cco_data,$campagain_data,$geo_data)
     {
@@ -1676,6 +2014,8 @@ class Cco_model extends BF_Model
 
         $user_data = $this->db->get()->result_array();
 
+      //  dumpme($user_data);
+
         if(isset($user_data ) && !empty($user_data ))
         {
             return $user_data;
@@ -1685,6 +2025,26 @@ class Cco_model extends BF_Model
             return 0;
         }
 
+    }
+
+    public function get_business_geo_data_to_retailer($customer_id)
+    {
+        $this->db->select('mbgd.business_geo_id,mbgd.business_georaphy_name');
+        $this->db->from('master_user_contact_details as mucd');
+        $this->db->join('master_business_political_geo_mapping as mbpgm', 'mbpgm.polotical_geo_id = mucd.geo_level_id1');
+        $this->db->join('master_business_geography_details as mbgd','mbgd.business_geo_id = mbpgm.business_geo_id');
+        $this->db->where('mucd.user_id', $customer_id);
+      //  $this->db->where('bu.country_id', $country_id);
+       // $this->db->order_by('bu.display_name');
+       // $this->db->group_by('bu.id');
+        $data = $this->db->get()->row_array();
+         //echo $this->db->last_query();
+         //testdata($data);
+        if (isset($data) && !empty($data)) {
+            return $data;
+        } else {
+            return false;
+        }
     }
 
 
@@ -1755,6 +2115,7 @@ class Cco_model extends BF_Model
         return $social_data;
 
     }
+
     public function get_complaint_data($customer_id,$page = null,$local_date=null,$country_id,$complaint_type_id)
     {
 
@@ -1829,6 +2190,7 @@ class Cco_model extends BF_Model
         }
 
     }
+
     public function get_feedback_data($customer_id,$page = null,$local_date=null,$country_id)
     {
 
@@ -1888,6 +2250,55 @@ class Cco_model extends BF_Model
         }
 
     }
+
+    public function get_missedcall_data($page = null,$local_date=null)
+    {
+
+
+        $sql = ' SELECT  * ';
+       // $sql = ' SELECT  bcf.feedback_subject,bcf.feedback_description,bcf.feedback_id,bcf.created_on,bu.display_name,bmctc.customer_type_name,bu1.display_name as entered_by_user ';
+        $sql .= ' FROM bf_cco_missedcall  ';
+        //$sql .= ' JOIN bf_users as bu ON (bu.id = bcf.customer_id) ';
+        //$sql .= ' JOIN bf_users as bu1 ON (bu1.id = bcf.created_by_user) ';
+       // $sql .= ' JOIN bf_master_customer_type_country as bmctc ON (bmctc.customer_type_id = bu.user_type_id AND bmctc.country_id = bu.country_id) ';
+
+        $sql .= 'WHERE 1 ';
+        //$sql .= ' AND bcf.deleted =0 ';
+        //$sql .= ' AND bcf.status =1 ';
+
+
+        // $sql .= 'ORDER BY bcca.allocation_id DESC ';
+//testdata($sql);
+        $feedback_data = $this->grid->get_result_res($sql);
+
+        if (isset($feedback_data['result']) && !empty($feedback_data['result'])) {
+
+            $feedback['head'] = array('Sr No.','Name','Mob. Number','Date','Time','Type','Caller Type');
+
+            $feedback['count'] = count($feedback['head']);
+
+            if ($page != null || $page != "") {
+                $i = (($page * 10) - 9);
+            } else {
+                $i = 1;
+            }
+
+            foreach ($feedback_data['result'] as $rm) {
+                $feedback['row'][] = array($i,$rm['cco_id'],$rm['cco_id'],$rm['cco_id'],$rm['customer_id'],$rm['number'],$rm['missedcall_date']);
+                $i++;
+            }
+
+
+
+            $feedback['pagination'] = $feedback_data['pagination'];
+           // testdata($feedback);
+            return $feedback;
+        }
+        else {
+            return false;
+        }
+
+    }
     public function get_user_data($customer_id)
     {
         $this->db->select("*");
@@ -1901,6 +2312,7 @@ class Cco_model extends BF_Model
 
         return $user_data;
     }
+
     public function get_feedback_data_edit($feedback_id)
     {
         $this->db->select("*");
@@ -1910,6 +2322,7 @@ class Cco_model extends BF_Model
         return $user_feedback_data_edit;
 
     }
+
     public function get_complaint_data_edit($complaint_id)
     {
         $this->db->select("bccd.complaint_id,bccd.designation_id,bccd.assigned_to_id,bccd.remarks,bccd.complaint_data,bccd.complaint_type_id,bccd.complaint_number, bccd.complaint_id,bccd.complaint_subject,bccd.complaint_entry_date,bccd.complaint_due_date,bccd.escalation_date_1,bccd.escalation_date_2,bccd.escalation_date_3,bu.display_name,bccd.created_by_user,bccd.complaint_status,bu1.display_name as dis_name");
@@ -1921,6 +2334,50 @@ class Cco_model extends BF_Model
         $user_complaint_data_edit = $this->db->get()->row_array();
         return $user_complaint_data_edit;
 
+    }
+
+    public function block_phone_number($phone_no)
+    {
+        if(!empty($_POST)) {
+            $phone_no = $_POST["phone_no"];
+            $user = $this->auth->user();
+            $logined_user_id = $user->id;
+            $update_array = array();
+
+            $block_array = array(
+                'phone_number' => $phone_no,
+                'created_by_user' => $logined_user_id,
+                'modified_by_user' => $logined_user_id,
+                'created_on' => date('Y-m-d H:i:s'),
+                'modified_on' => date('Y-m-d H:i:s')
+            );
+            $this->db->select("bccbu.phone_number");
+            $this->db->from("bf_cco_blacklist_users as bccbu");
+            $this->db->where('bccbu.phone_number',$phone_no);
+            $already_block_data = $this->db->get()->row_array();
+            if(empty($already_block_data)){
+
+                if ($_POST['phone_no'] != "") {
+                    $result = $this->db->insert("bf_cco_blacklist_users", $block_array);
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                }
+            }
+            else
+            {
+                $update_array[] = 0;
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public function add_update_feedback_data()
@@ -1981,13 +2438,19 @@ class Cco_model extends BF_Model
             $logined_user_id = $user->id;
             $update_array = array();
 
+            if(isset($_POST["updated_due_date"]) && !empty($_POST["updated_due_date"]))
+            {
+                $_POST["Complaint_due_date"] = $_POST["updated_due_date"];
+                $_POST["complaint_date1"]= $_POST["updated_due_date"];
+            }
+
             $complaint_update_array = array(
 
                 'customer_id' => $_POST["customer_id"],
                 'complaint_number' => $_POST["complaint_id"],
                 'complaint_status' => $_POST["complaint_status"],
                 'complaint_type_id' => $_POST["complaint_type"],
-                'complaint_entry_date' => $_POST["Complaint_entry_date"],
+                'complaint_entry_date' => $_POST["complaint_entry_date"],
                 'complaint_due_date' => $_POST["Complaint_due_date"],
                 'complaint_subject' => $_POST["complaint_subject"],
                 'remarks' => $_POST["remarks"],
@@ -2034,6 +2497,7 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+
     public function delete_feedback($feedback_id)
     {
         $this ->db->where('feedback_id',$feedback_id);
@@ -2045,6 +2509,7 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+
     public function delete_complaint($complaint_id)
     {
         $this ->db->where('complaint_id',$complaint_id);
@@ -2056,6 +2521,7 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+
     public function get_customer_complaint_unique($six_digit_id)
     {
         $this->db->select("*");
@@ -2065,6 +2531,7 @@ class Cco_model extends BF_Model
         return $user_customer_complaint_unique_id;
 
     }
+
     public function get_customer_complaint_type()
     {
         $user = $this->auth->user();
@@ -2080,6 +2547,7 @@ class Cco_model extends BF_Model
         return $user_customer_complaint_type;
 
     }
+
     public function get_complaint_sub_from_complaint_type($complaint_type_id)
     {
         $user = $this->auth->user();
@@ -2095,6 +2563,7 @@ class Cco_model extends BF_Model
         return $user_customer_complaint_subject;
 
     }
+
     public function get_person_data_from_desigination($desigination_country_id)
     {
         $user = $this->auth->user();
@@ -2111,6 +2580,7 @@ class Cco_model extends BF_Model
         return $user_person_data;
 
     }
+
     public function get_complaint_date_from_complaint_sub($complaint_subject_id)
     {
         $user = $this->auth->user();
@@ -2133,6 +2603,31 @@ class Cco_model extends BF_Model
 
     }
 
+    public function get_all_higest_level_data($country_id)
+    {
+        $sql = "SELECT
+        bmpglr.political_geography_level_id,
+        bmpglc.political_geography_countrylevel_id,
+        bmpgd.political_geo_id,
+        bmpgd.political_geography_name
+
+        FROM `bf_master_political_geography_level_regional` as bmpglr
+
+        JOIN bf_master_political_geography_level_country as bmpglc ON bmpglc.level_id = bmpglr.political_geography_level_id
+
+        JOIN bf_master_political_geography_details as bmpgd ON bmpgd.geo_level_id = bmpglc.political_geography_countrylevel_id
+
+        WHERE bmpglr.level = 'L6'
+
+        AND bmpglc.country_id = $country_id";
+
+        $level_info = $this->db->query($sql);
+
+        $level_data = $level_info->result_array();
+
+        return $level_data;
+    }
+
     public function get_complaint_responsible_desigination_data($complaint_subject_id)
     {
         $sql = "SELECT bmdc.desigination_country_id,bmdc.desigination_country_name FROM `bf_master_complaint_detail` as bmcd
@@ -2148,7 +2643,7 @@ class Cco_model extends BF_Model
 
         $designation_detail_data = $designation_info->result_array();
 
-        //testdata($disease_detail_data);
+        //testdata($sql);
         return $designation_detail_data;
 
     }
@@ -2258,6 +2753,8 @@ class Cco_model extends BF_Model
 
         $retailer_data = $this->db->get()->result_array();
 
+      //  echo $this->db->last_query();
+
         return $retailer_data;
     }
 
@@ -2265,15 +2762,27 @@ class Cco_model extends BF_Model
     {
         $user = $this->auth->user();
 
-        $this->db->select("*");
+      /*  $this->db->select("*");
         $this->db->from("bf_master_customer_to_customer_mapping as bmctcm");
         $this->db->join("bf_users as bu","bu.id = bmctcm.to_customer_id");
         $this->db->where("bmctcm.from_customer_id",$customer_id);
         $this->db->where("bu.role_id",$user_role);
         $this->db->where("bmctcm.deleted",0);
         $this->db->where("bmctcm.status",1);
+*/
+
+        $this->db->select("*");
+        $this->db->from("bf_master_customer_to_customer_mapping as bmctcm");
+        $this->db->join("bf_users as bu","bu.id = bmctcm.from_customer_id");
+        $this->db->where("bmctcm.to_customer_id",$customer_id);
+        $this->db->where("bu.role_id",$user_role);
+        $this->db->where("bmctcm.deleted",0);
+        $this->db->where("bmctcm.status",1);
 
         $customer_relation_retailer_data = $this->db->get()->result_array();
+
+      //  echo $this->db->last_query();
+        //die;
 
         return $customer_relation_retailer_data;
     }
@@ -2299,15 +2808,26 @@ class Cco_model extends BF_Model
 
         $contact_update_array = array(
             'user_id' => $customer_id,
-            'primary_mobile_no' => $_POST["primary_mobile_no"],
-            'secondary_mobile_no' => $_POST["secondary_mobile_no"],
-            'landline_no' => $_POST["secondary_mobile_no"],
-            'address' => $_POST["address"],
-            'geo_level_id3' => $_POST["geo_level_3"],
-            'geo_level_id2' => $_POST["geo_level_2"],
-            'geo_level_id1' => $_POST["geo_level_1"],
-            'pincode' => $_POST["pincode"]
+            'primary_mobile_no' => (isset($_POST["primary_mobile_no"]) && !empty($_POST["primary_mobile_no"]))?$_POST["primary_mobile_no"]:NULL,
+            'secondary_mobile_no' => (isset($_POST["secondary_mobile_no"]) && !empty($_POST["secondary_mobile_no"]))?$_POST["secondary_mobile_no"]:NULL,
+            'landline_no' => (isset($_POST["fixed_line_no"]) && !empty($_POST["fixed_line_no"]))?$_POST["fixed_line_no"]:NULL,
+            'address' => (isset($_POST["address"]) && !empty($_POST["address"]))?$_POST["address"]:NULL,
+            'pincode' =>(isset($_POST["pincode"]) && !empty($_POST["pincode"]))?$_POST["pincode"]:NULL
         );
+
+        if((isset($_POST["geo_level_3"]) && !empty($_POST["geo_level_3"])))
+        {
+            $contact_update_array["geo_level_id3"] = $_POST["geo_level_3"];
+        }
+        if((isset($_POST["geo_level_2"]) && !empty($_POST["geo_level_2"])))
+        {
+            $contact_update_array["geo_level_id2"] = $_POST["geo_level_2"];
+        }
+        if((isset($_POST["geo_level_1"]) && !empty($_POST["geo_level_1"])))
+        {
+            $contact_update_array["geo_level_id1"] = $_POST["geo_level_1"];
+        }
+
 
         //CHECK CONTACT DETAIL IN TABLE FOR USER
 
@@ -2334,11 +2854,11 @@ class Cco_model extends BF_Model
 
         $personal_update_array = array(
             'user_id' => $customer_id,
-            'first_name' => $_POST["first_name"],
-            'last_name' => $_POST["last_name"],
-            'gender' => $_POST["gender"],
-            'dob' => $_POST["dob"],
-            'introduction_year' => $_POST["introduction_year"]
+            'first_name' => (isset($_POST["first_name"]) && !empty($_POST["first_name"]))?$_POST["first_name"]:NULL,
+            'last_name' => (isset($_POST["last_name"]) && !empty($_POST["last_name"]))?$_POST["last_name"]:NULL,
+            'gender' => (isset($_POST["gender"]) && !empty($_POST["gender"]))?$_POST["gender"]:NULL,
+            'dob' => (isset($_POST["dob"]) && !empty($_POST["dob"]))?$_POST["dob"]:NULL,
+            'introduction_year' => (isset($_POST["introduction_year"]) && !empty($_POST["introduction_year"]))?$_POST["introduction_year"]:NULL
         );
 
         //CHECK PERSONAL DETAIL IN TABLE FOR USER
@@ -2367,9 +2887,9 @@ class Cco_model extends BF_Model
 
         $statutory_update_array = array(
             'user_id' => $customer_id,
-            'passport_no' => $_POST["passport_no"],
-            'ktp_no' => $_POST["ktp_no"],
-            'aadhaar_card_no' => $_POST["adhar_card_no"]
+            'passport_no' => (isset($_POST["passport_no"]) && !empty($_POST["passport_no"]))?$_POST["passport_no"]:NULL,
+            'ktp_no' => (isset($_POST["ktp_no"]) && !empty($_POST["ktp_no"]))?$_POST["ktp_no"]:NULL,
+            'aadhaar_card_no' => (isset($_POST["adhar_card_no"]) && !empty($_POST["adhar_card_no"]))?$_POST["adhar_card_no"]:NULL
         );
 
         //CHECK SATUTARY DETAIL IN TABLE FOR USER
@@ -2680,8 +3200,8 @@ class Cco_model extends BF_Model
             {
 
                 $retailer_data_array = array(
-                    'from_customer_id' => $customer_id,
-                    'to_customer_id' => $retailer_data
+                    'from_customer_id' => $retailer_data,
+                    'to_customer_id' => $customer_id
                 );
 
                 //INSERT
@@ -2741,6 +3261,39 @@ class Cco_model extends BF_Model
         $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3","LEFT");
 
         $this->db->join("bf_master_customer_farming_details as bmcfd","bmcfd.user_id = bu.id","LEFT");
+
+        $this->db->where('bu.id',$customer_id);
+
+        $farm_user_data = $this->db->get()->result_array();
+        //testdata($farm_user_data);
+        if(isset($farm_user_data ) && !empty($farm_user_data ))
+        {
+            return $farm_user_data;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
+    public function get_customer_business_data($customer_id)
+    {
+        $this->db->select("bu.id,bu.email,bu.display_name,
+                           bmpgd1.political_geography_name as level1,bmpgd2.political_geography_name as level2,bmpgd3.political_geography_name as level3,
+                           bmpgd1.political_geo_id as level1_id,bmpgd2.political_geo_id as level2_id,bmpgd3.political_geo_id as level3_id,
+                           bmcfd.house_no,bmcfd.address,bmcfd.landmark,bmcfd.geo_level_id1 as farm_level1,bmcfd.geo_level_id2  as farm_level2,bmcfd.geo_level_id3  as farm_level3,bmcfd.pincode,bmcfd.latitude,bmcfd.longitude,bmcfd.avg_daily_counter,bmcfd.avg_daily_footfalls
+                         ");
+
+        $this->db->from("bf_users as bu");
+
+        $this->db->join("bf_master_user_contact_details as bmucd","bmucd.user_id = bu.id","LEFT");
+
+        $this->db->join("bf_master_political_geography_details as bmpgd1","bmpgd1.political_geo_id = bmucd.geo_level_id1","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd2","bmpgd2.political_geo_id = bmucd.geo_level_id2","LEFT");
+        $this->db->join("bf_master_political_geography_details as bmpgd3","bmpgd3.political_geo_id = bmucd.geo_level_id3","LEFT");
+
+        $this->db->join("bf_master_customer_business_details as bmcfd","bmcfd.user_id = bu.id","LEFT");
 
         $this->db->where('bu.id',$customer_id);
 
@@ -2876,6 +3429,69 @@ class Cco_model extends BF_Model
 
                 }
 
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+
+    }
+
+    public function add_update_business_detail_data()
+    {
+        $update_array = array();
+        $customer_id = $_POST["customer_id"];
+        // testdata($_POST);
+
+        $this->db->select("*");
+        $this->db->from("bf_master_customer_business_details");
+        $this->db->where("user_id",$customer_id);
+        $business_data = $this->db->get()->result_array();
+
+        $data_array = array(
+
+            'user_id' => $_POST["customer_id"],
+            'avg_daily_counter' => $_POST["daily_counter"],
+            'avg_daily_footfalls' => $_POST["daily_footfalls"],
+            'house_no' => $_POST["house_no"],
+            'address' => $_POST["address"],
+            'landmark' => $_POST["landmark"],
+            'geo_level_id1' => $_POST["geo_level_1"],
+            'geo_level_id2' => $_POST["geo_level_2"],
+            'geo_level_id3' => $_POST["geo_level_3"],
+            'pincode' => $_POST["pincode"],
+            'latitude' => $_POST["latitude"],
+            'longitude' => $_POST["longitude"]
+        );
+
+        if(empty($business_data))
+        {
+
+            //INSERT FARMING DATA
+
+            $this->db->insert("bf_master_customer_business_details",$data_array);
+
+            if ($this->db->affected_rows() > 0) {
+                $update_array[] = 1;
+            }
+        }
+        else
+        {
+            //UPDATE DATA
+
+            $customer_business_detail_id = $business_data[0]["customer_business_id"];
+
+            $this->db->where("customer_business_id",$customer_business_detail_id);
+            $this->db->update("bf_master_customer_business_details",$data_array);
+
+            if ($this->db->affected_rows() > 0) {
+                $update_array[] = 1;
             }
         }
 
@@ -3209,7 +3825,7 @@ class Cco_model extends BF_Model
     public function order_status_product_details($order_id)
     {
 
-        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id,bio.order_status ';
+        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,bipo.order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id,bio.order_status ';
 
         $sql .= ' FROM bf_ishop_product_order as bipo ';
         $sql .= ' JOIN bf_ishop_orders as bio ON (bio.order_id = bipo.order_id) ';
@@ -3251,7 +3867,7 @@ class Cco_model extends BF_Model
                     $unit = '';
                 }
 
-                $order_id_data = '<input type="hidden" name="order_product_id[]" value="'.$od['product_order_id'].'" /><input class="product_sku_data" type="hidden" name="product_sku_id[]" value="'.$od['product_sku_id'].'" />';
+                $order_id_data = '<input type="hidden" name="order_product_id[]" value="'.$od['product_order_id'].'" /><input class="product_sku_data" type="hidden" name="product_sku_id[]" value="'.$od['product_sku_id'].'" /><input class="order_id_data" type="hidden" name="order_id" value="'.$order_id.'" />';
 
                 $unit_data = $order_id_data.'<div class="unit_data"><input readonly class="unitdata" name="units[]" value="'.$unit.'" /></div>';
 
@@ -3379,7 +3995,6 @@ class Cco_model extends BF_Model
             if($this->db->affected_rows() > 0) {
                 $update_array[] = 1;
             }
-
         }
 
         $total_array= array(

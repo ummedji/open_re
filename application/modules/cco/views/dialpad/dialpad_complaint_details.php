@@ -139,18 +139,18 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input readonly type="text" class="form-control" id="complaint_date1" name="complaint_date1" placeholder="First Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date1" name="complaint_date1" placeholder="First Escalation Date">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
-                                <label for="Complaint Subject">Designstion</label>
+                                <label for="Complaint Subject">Designation</label>
                                 <select  class="form-control" name="designstion" id="designstion">
                                     <option>Select Designation</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input readonly type="text" class="form-control" id="complaint_date2" name="complaint_date2" placeholder="Second Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date2" name="complaint_date2" placeholder="Second Escalation Date">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
@@ -161,7 +161,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input readonly type="text" class="form-control" id="complaint_date3" name="complaint_date3" placeholder="Third Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date3" name="complaint_date3" placeholder="Third Escalation Date">
                             </div>
                         </div>
                     </div>

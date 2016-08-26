@@ -29,7 +29,7 @@
 
                                     ?>
 
-                                        <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="" value="<?php echo $customer_name; ?>"   />
+                                        <input readonly type="text" class="form-control" name="customer_name" id="customer_name" placeholder="" value="<?php echo $customer_name; ?>"   />
                                         <div class="clearfix"></div>
                                     </div>
                                 </div>
@@ -69,7 +69,7 @@
 
     </div>
     <div class="clearfix"></div>
-    <div id="feedback_data">
+    <div id="feedback_datal">
     <?php
     if ($this->input->is_ajax_request()) {
         echo theme_view('common/middle');

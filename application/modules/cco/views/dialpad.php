@@ -3,8 +3,10 @@
         <div class="left_details pull-right">
             <div class="blk_list">
                 <a href="#">
+                    <?php $phone_no= $this->session->userdata('phone_no'); ?>
+
                     <img src="<?php echo Template::theme_url('images/blacklist_icon.png'); ?>" alt="" style="vertical-align: middle;">
-                    <span>Add To Blacklist</span>
+                    <span><a href="javascript:void(0);" onclick="block_phone_number(<?php echo $phone_no; ?>);">Add To Blacklist</a></span>
                 </a>
                 <div class="clearfix"></div>
             </div>
@@ -163,7 +165,7 @@
                 </div>
                 <div class="col-md-12 footer_info">
                     <ul>
-                        <li style="border-left: none;"><a href="#">Schemes</a></li>
+                        <li style="border-left: none;"><a href="javascript:void(0);" onclick="get_customer_schemes_data(<?php echo $customer_id; ?>);">Schemes</a></li>
                         <li class="active"><a href="#">Call History</a></li>
                         <li><a href="#">Chat History</a></li>
                         <?php if($this->session->userdata("activity_type") == 'planned_activity'){
@@ -203,7 +205,7 @@
                 <li><a href="javascript:void(0);" onclick = "get_retailer_view_data(<?php echo $customer_id; ?>);" >Retailers</a></li>
                 <li><a href="javascript:void(0);" onclick = "get_farming_view_data(<?php echo $customer_id; ?>);">Crop</a></li>
                 <li><a href="#">Products</a></li>
-                <li><a href="#">Business Details</a></li>
+                <li><a href="javascript:void(0);" onclick = "get_customer_business_view_data(<?php echo $customer_id; ?>);">Business Details</a></li>
             </ul>
         </div>
         <div class="clearfix"></div>
@@ -216,6 +218,7 @@
         <li><a href="#"><span class="btn_name">Transfer</span> <i class="transfer_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Hold</span> <i class="hold_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">Conferance</span> <i class="conferance_ii" aria-hidden="true"></i></a></li>
+        <li class="btn_call"><a href="#"><span class="btn_name">Dial Call</span> <i class="end_call_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">End Call</span> <i class="end_call_ii" aria-hidden="true"></i></a></li>
         <li class="active"><a href="#"><span class="btn_name mute-nl">Mute</span> <span class="btn_name spkr-p">Speaker</span> <i class="mute_ii" aria-hidden="true"></i></a></li>
         <li><a href="#"><span class="btn_name">LoudSpeaker</span> <i class="loudspeaker_ii" aria-hidden="true"></i></a></li>
@@ -236,6 +239,7 @@
 <div id="success_file_popup">
 
 </div>
+<?php $this->load->view('calling_popup'); ?>
 
 <script type="text/javascript">
 
@@ -280,17 +284,6 @@
 
         get_order_status_data(customer_id,search_data);
 
-        /*   $.ajax({
-         type: 'POST',
-         url: site_url + "cco/get_product_detail_data",
-         data: {searchdata: search_data,customerid : customer_id},
-         success: function (resp) {
-         $("div#searched_data").html(resp);
-         //  get_geo_data(campagain_id,1,num_count);
-         }
-         });
-
-         */
     });
 
     //get_order_status_data(customer_id)

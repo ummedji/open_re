@@ -1,3 +1,8 @@
+<?php
+$attributes = array('class' => '', 'id' => 'work_trf','name'=>'work_trf', 'autocomplete'=>'off');
+echo form_open('',$attributes);
+?>
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div class="col-md-12">
     <div class="top_form">
         <div class="row">
@@ -29,96 +34,31 @@
         </div>
     </div>
 </div>
+<?php }?>
 
+<?php
+if ($this->input->is_ajax_request()) {
+    echo theme_view('common/middle');
+}
+?>
+
+<?php if (!$this->input->is_ajax_request()) { ?>
 <div id="cco_work_details">
-    <div class="col-md-12">
-        <div class="row">
-            <div id="no-more-tables">
-                <table class="col-md-12 table-bordered table-striped table-condensed cf" id="table">
-                    <thead class="cf">
-                    <tr>
-                        <th>Sr. No. <span class="rts_bordet"></span></th>
-                        <th><span class="rts_bordet"></span></th>
-                        <th>Allocated Campaign<span class="rts_bordet"></span></th>
-                        <th class="numeric">Customer To Call<span class="rts_bordet"></span></th>
-                        <th class="numeric">Customer Pending <span class="rts_bordet"></span></th>
-                        <th class="numeric">Activity<span class="rts_bordet"></span></th>
-                        <th class="numeric">Employee To Call<span class="rts_bordet"></span></th>
-                        <th class="numeric">Employee Pending To Call<span class="rts_bordet"></span></th>
-                        <th class="numeric">Total Call Pending</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td data-title="Sr. No." class="numeric">1.</td>
-                        <td data-title="" class="numeric"></td>
-                        <td data-title="Allocated Campaign">Product SKU 1</td>
-                        <td data-title="Customer To Call">1 Kg.</td>
-                        <td data-title="Customer Pending">1 Kg.</td>
-                        <td data-title="Activity">1 Kg.</td>
-                        <td data-title="Employee To Call">1 Kg.</td>
-                        <td data-title="Employee Pending To Call">1 Kg.</td>
-                        <td data-title="Total Call Pending">1 Kg.</td>
 
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
 </div>
 
-<div class="col-md-12 text-center double-arrow">
-    <a href="#"><img src="<?php echo Template::theme_url('images/double_arrow.svg'); ?>" alt=""></a>
-</div>
+
 
 <div id="cco_work_transfer_details">
 
-    <div class="col-md-12">
-        <div class="row">
-            <div id="no-more-tables">
-                <table class="col-md-12 table-bordered table-striped table-condensed cf" id="table">
-                    <thead class="cf">
-                    <tr>
-                        <th>Sr. No. <span class="rts_bordet"></span></th>
-                        <th><span class="rts_bordet"></span></th>
-                        <th>CCO Name<span class="rts_bordet"></span></th>
-                        <th>Allocated Campaign<span class="rts_bordet"></span></th>
-                        <th class="numeric">Customer To Call<span class="rts_bordet"></span></th>
-                        <th class="numeric">Customer Pending <span class="rts_bordet"></span></th>
-                        <th class="numeric">Activity<span class="rts_bordet"></span></th>
-                        <th class="numeric">Employee To Call<span class="rts_bordet"></span></th>
-                        <th class="numeric">Employee Pending To Call<span class="rts_bordet"></span></th>
-                        <th class="numeric">Total Call Pending</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td data-title="Sr. No." class="numeric">1.</td>
-                        <td data-title="" class="numeric"></td>
-                        <td data-title="CCO Name">Product SKU 1</td>
-                        <td data-title="Allocated Campaign">Product SKU 1</td>
-                        <td data-title="Customer To Call">1 Kg.</td>
-                        <td data-title="Customer Pending">1 Kg.</td>
-                        <td data-title="Activity">1 Kg.</td>
-                        <td data-title="Employee To Call">1 Kg.</td>
-                        <td data-title="Employee Pending To Call">1 Kg.</td>
-                        <td data-title="Total Call Pending">1 Kg.</td>
-                    </tr>
-                    </tbody>
-                </table>
-                <div class="clearfix"></div>
-            </div>
-        </div>
-    </div>
 </div>
 
-<div class="col-md-12 text-center tp_form inline-parent" style="margin-top: 0px; margin-bottom: 10px;">
+<div class="col-md-12 text-center tp_form inline-parent transfer_btn" style="margin-top: 0px; margin-bottom: 10px; display: none">
     <div class="save_button">
         <div class="row">
             <div class="save_btn" style="display: inline-block;">
-                <button type="button" id="submit" class="btn btn-primary">Transfer</button>
+                <button type="submit" class="btn btn-primary gren_btn">Transfer</button>
+              <!--  <button type="button" id="submit" class="btn btn-primary">Transfer</button>-->
             </div>
             <div class="delete_button" style="display: inline-block;">
                 <div class="save_btn">
@@ -128,10 +68,16 @@
         </div>
     </div>
 </div>
+<?php } ?>
 
-<div id="cco_allocation_details">
+<?php echo form_close(); ?>
+<?php if (!$this->input->is_ajax_request()) { ?>
+<div id="cco_allocation_details" style="margin-top: 50px">
 
+    <?php
+    echo theme_view('common/middle');
+    ?>
 </div>
-
+<?php } ?>
 <div class="clearfix"></div>
 

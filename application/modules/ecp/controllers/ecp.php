@@ -985,7 +985,6 @@ class Ecp extends Front_Controller
 	}
 
 
-
 	public function activity_planning_sidebar_calender($activity_details=array(),$action=''){
 
 		//testdata($activity_details);
@@ -1193,8 +1192,6 @@ class Ecp extends Front_Controller
 			return $sCalendarItself;
 		}
 	}
-
-
 
 
 	public function get_geo_activity()
@@ -1815,9 +1812,9 @@ class Ecp extends Front_Controller
 	public function getActivityViewSidebar()
 	{
 		@list($cur_month,$cur_year) = isset($_POST['cur_month']) ? @explode("-",$_POST['cur_month']) : '';
-
-		$cal_data = $this->getActivityDetailByMonth($cur_month,$cur_year);
-		$activity_data = $this->getActivityDetailPlanByMonth($cur_month,$cur_year);
+			//getActivityViewDetailByMonth  getActivityViewDetailPlanByMonth
+		$cal_data = $this->getActivityViewDetailByMonth($cur_month,$cur_year);
+		$activity_data = $this->getActivityViewDetailPlanByMonth($cur_month,$cur_year);
 
 		Template::set('action','activity_view');
 		Template::set('cal_data', $cal_data);

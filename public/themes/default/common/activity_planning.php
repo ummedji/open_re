@@ -85,8 +85,6 @@
                                 /*                                        }*/
                                 ?>
                                 <!--Demonstration Dropdown-->
-                            </div>
-
 
                             <!--GEO  Dropdown-->
                             <div class="row form-group" id="geo">

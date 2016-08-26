@@ -2739,6 +2739,7 @@ ul.in-up-details-list {margin: 0; padding: 0;}
     color: #000000;
     display: block;
 }
+.dialpad-plnd-content { margin-top: 40px;}
 /****end cco style****/
 /****chate css****/
 .chat-box {
@@ -3577,3 +3578,95 @@ h6.gn-info-tl{
 .grey-colour{border: 1px solid #d9d9dd}
 #myModal2 .close{opacity: 1 !important;}
 /* End Call Campaign Popup css */
+
+
+/* cco popup */
+.cco-popup{
+    position: absolute;
+    top: 110px;
+    z-index: 999;
+    left: 35%;
+    display: none;
+}
+
+@media screen and (max-width: 767px) {
+    .cco-popup {
+        left: 20%;
+        right: 20%;
+    }
+}
+@media screen and (max-width: 414px) {
+    .cco-popup {
+        left: 10%;
+        right: 10%;
+    }
+}
+.cco-popup .form-control {
+    border-radius: inherit;
+    height: 25px;
+}
+.cco-popup  .modal-content {
+    box-shadow: 0 0 2px #b4b4b4;
+}
+.cco-popup .modal-content {
+    border-radius: 0;
+    box-shadow: none;
+    border: 1px solid #e0e0e0;
+    position: relative;
+    background-color: #fff;
+}
+.cco-popup .modal-content .close {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    background-color: #00793a;
+    opacity: 1;
+    color: #fff;
+    text-shadow: none;
+    line-height: inherit;
+    width: 40px;
+    height: 40px;
+    z-index: 10;
+}
+.filter-content-cco {
+    background-color: #ffffff;
+    padding: 35px 0px 20px 0px;
+}
+.btn-baring {
+    margin-top: 15px;
+}
+.btn-cco {
+
+    border: none;
+    padding: 4px 20px;
+    color: #ffffff;
+    margin: 6px 10px 0px 0px;
+    border: 1px solid #bcbfc2;
+    font-family: Exo2-Medium;
+}
+.btn-cco-r{
+    background-color: red;
+}
+.btn-cco-a{
+    background-color: green;
+}
+.b-label{
+    border-bottom: 1px solid #000000;
+}
+.input_call{
+    border: none;
+    width: 100%;
+}
+.input_call:focus{
+    outline: none;
+    border: none;
+}
+.input_call::-webkit-input-placeholder{
+    text-align: center;
+}
+@media (min-width: 768px){
+    .cco-popup .modal-dialog {
+        width: 300px;
+        margin: 30px auto;
+    }
+}

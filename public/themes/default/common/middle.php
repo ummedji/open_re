@@ -16,6 +16,15 @@ if (isset($activity_execution)) {
 if (isset($activity_view)) {
     echo theme_view('common/activity_view');
 }
+
+if (isset($cco_work_details)) {
+    echo theme_view('common/cco_work_details');
+}
+
+if (isset($cco_work_transfer)) {
+    echo theme_view('common/cco_work_transfer');
+}
+
 if (isset($table)) {
     echo theme_view('common/table');
 }

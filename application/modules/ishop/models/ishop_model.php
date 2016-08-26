@@ -6187,7 +6187,7 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     if (isset($detail_data["units"][$key]) && $detail_data["units"][$key] != "") {
                         $unit_data = $detail_data["units"][$key];
 
-                        $update_array["unit"] = $unit_data;
+                        $update_array["unit"] = strtolower($unit_data);
 
                     }
                 }
@@ -6220,6 +6220,26 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
 
                     }
                 }
+                else
+                {
+                    if(isset($detail_data['product_sku_id']) && !empty($detail_data['product_sku_id'])) {
+                        $sku_data = $detail_data['product_sku_id'][$key];
+
+                        $amt = $this->get_product_price_by_product($sku_data, 'ishop');
+                        if (isset($detail_data["quantity"][$key]) && $detail_data["quantity"][$key] != "") {
+                            $qty = $detail_data["quantity"][$key];
+                        } else {
+                            $qty = 0;
+                        }
+                        $amt = $amt * $qty;
+
+                        $update_array["amount"] = $amt;
+
+                     //   $total_amount = $total_amount + $amt;
+
+                    }
+                }
+
 
                 if (isset($detail_data["dispatched_quantity"]) && !empty($detail_data["dispatched_quantity"])) {
                     if (isset($detail_data["dispatched_quantity"][$key]) && $detail_data["dispatched_quantity"][$key] != "") {
@@ -6237,9 +6257,23 @@ WHERE `bu`.`role_id` = " . $default_type . " AND `bu`.`type` = 'Customer' AND `b
                     $final_array[] = 1;
                 }
 
-                $amount_data = array(
-                    'total_amount' => $total_amount
-                );
+                if (isset($detail_data["amount"]) && !empty($detail_data["amount"]))
+                {
+                    $amount_data = array(
+                        'total_amount' => $total_amount
+                    );
+                }
+                else
+                {
+                    $this->db->select("SUM(amount) as total_amount");
+                    $this->db->from("bf_ishop_product_order");
+                    $this->db->where("order_id",$detail_data["order_id"]);
+                    $product_order_data = $this->db->get()->result_array();
+
+                    $amount_data = array(
+                        'total_amount' => $product_order_data[0]['total_amount']
+                    );
+                }
 
                 $id = $this->db->update('bf_ishop_orders', $amount_data, array('order_id' => $detail_data["order_id"]));
 

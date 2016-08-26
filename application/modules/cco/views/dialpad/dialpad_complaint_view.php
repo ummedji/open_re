@@ -9,7 +9,7 @@
             <div class="clearfix"></div>
         </div>
     </div>
-    <h5>Social Connections</h5>
+    <h5>Complaints</h5>
     <div class="back_details">
 
         <?php
@@ -114,7 +114,7 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Id">Complaint Id</label>
-                                <input type="text" class="form-control" id="complaint_id" name="complaint_id" placeholder="">
+                                <input readonly type="text" class="form-control" id="complaint_id" name="complaint_id" placeholder="">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
@@ -171,20 +171,20 @@
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Entry Date">Complaint Entry Date</label>
-                                <input type="text" class="form-control" id="Complaint_entry_date_edit" name="Complaint_entry_date" placeholder="" value="">
+                                <input readonly type="text" class="form-control" id="Complaint_entry_date_edit" name="complaint_entry_date" placeholder="" value="">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
                                 <label for="Complaint Due Date">Complaint Due Date</label>
-                                <input type="text" class="form-control" id="Complaint_due_date_edit" name="Complaint_due_date" placeholder="">
+                                <input readonly type="text" class="form-control" id="Complaint_due_date_edit" name="Complaint_due_date" placeholder="">
                             </div>
                         </div>
 
                         <div class="col-md-4 col-sm-6 tp_form">
-                            <div class="form-group">
+                            <div class="form-group due_date">
                                 <label for="Complaint Subject">Updated Due Date</label>
-                                <input type="text" class="form-control"  placeholder="">
+                                <input type="text" class="form-control"  id="updated_due_date_edit" name="updated_due_date" placeholder="">
                             </div>
                         </div>
 
@@ -226,18 +226,18 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="complaint_date1_edit" name="complaint_date1" placeholder="First Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date1_edit" name="complaint_date1" placeholder="First Escalation Date">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
                             <div class="form-group">
-                                <label for="Complaint Subject">Designstion</label>
+                                <label for="Complaint Subject">Designation</label>
                                 <select class="form-control" name="designstion" id="designstion_edit">
                                     <option>Select Designation</option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="complaint_date2_edit" name="complaint_date2" placeholder="Second Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date2_edit" name="complaint_date2" placeholder="Second Escalation Date">
                             </div>
                         </div>
                         <div class="col-md-4 col-sm-6 tp_form">
@@ -248,7 +248,7 @@
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" id="complaint_date3_edit" name="complaint_date3" placeholder="Third Education Data">
+                                <input readonly type="text" class="form-control" id="complaint_date3_edit" name="complaint_date3" placeholder="Third Escalation Date">
                             </div>
                         </div>
                     </div>

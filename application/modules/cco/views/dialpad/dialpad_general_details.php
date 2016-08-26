@@ -292,11 +292,15 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
 <div class="clearfix"></div>
 
 <script type="text/javascript">
-    var selceted_level_3 =  '<?php echo $level3_id; ?>';
-    var selceted_level_2 =  '<?php echo $level2_id; ?>';
-    var selceted_level_1 =  '<?php echo $level1_id; ?>';
 
         setTimeout(function(){
+
+            var selceted_level_3 =  '<?php echo $level3_id; ?>';
+            var selceted_level_2 =  '<?php echo $level2_id; ?>';
+            var selceted_level_1 =  '<?php echo $level1_id; ?>';
+
+           // alert(selceted_level_2);
+
             $("select#geo_level_3").val(selceted_level_3);
 
             var parent_html = "";
@@ -317,6 +321,12 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
         }, 1000);
 
         setTimeout(function(){
+
+            var selceted_level_2 =  '<?php echo $level2_id; ?>';
+            var selceted_level_1 =  '<?php echo $level1_id; ?>';
+
+          //  alert(selceted_level_2);
+
             $("select#geo_level_2").val(selceted_level_2);
             $("select#geo_level_1").val(selceted_level_1);
         }, 2000);
