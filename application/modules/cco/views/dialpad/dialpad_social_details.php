@@ -11,6 +11,9 @@ $linkedin_account = (isset($social_data[0]["linkedin_account"]) && !empty($socia
 $twt_account = (isset($social_data[0]["twt_account"]) && !empty($social_data[0]["twt_account"]))? $social_data[0]["twt_account"] : "";
 
 ?>
+<?php
+$customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+?>
 <div class="actv-details-form">
 
     <h5 style="margin: 0px 0 20px 0;">Social Connections</h5>

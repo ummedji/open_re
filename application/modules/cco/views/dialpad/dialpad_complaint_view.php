@@ -1,5 +1,10 @@
 <div class="actv-details-form">
     <div class="col-md-12 text-center plng_sub_nave_cco">
+
+        <?php
+        $customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+        ?>
+
         <div class="inn_sub_nave">
             <ul>
 

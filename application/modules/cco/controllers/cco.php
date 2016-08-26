@@ -26,6 +26,9 @@ class Cco extends Front_Controller
         $this->lang->load('application');
         $this->load->library('events');
         $this->load->library('form_validation');
+
+        $this->load->library('session');
+
         $this->load->helper('form');
 
 
@@ -65,6 +68,7 @@ class Cco extends Front_Controller
         Template::set('cco_campaign_data', $cco_campaign_data);
         Template::set('campagaine_data', $campagain_data);
         Template::set('campaign_details', $campaign_details);
+
         Template::set_view("cco/main_screen_dialpad");
         Template::render();
     }
@@ -122,11 +126,29 @@ class Cco extends Front_Controller
         $phone_no = $this->session->userdata("phone_no");
         $campagain_id = $this->session->userdata("campagain_id");
 
+        $customer_id= (isset($this->session->userdata['caller_data']['0']['id']) && !empty($this->session->userdata['caller_data']['0']['id']))? $this->session->userdata['caller_data']['0']['id'] : "";
+
+        $role_id= (isset($this->session->userdata['caller_data']['0']['role_id']) && !empty($this->session->userdata['caller_data']['0']['role_id'])) ?$this->session->userdata['caller_data']['0']['role_id'] :"";
+        $user = $this->auth->user();
+
+        $caller_status = $this->session->userdata("caller_status");
+
+       // testdata($caller_status);
+
+
+        $campagain_data = $this->cco_model->campagain_data($role_id,$user->country_id);
+
+        $call_status_data = $this->cco_model->call_status_data($campagain_id,$customer_id);
+       // testdata($call_status_data);
+
         $get_sidebar_selected_customer_data = $this->cco_model->get_dialed_customer_data($phone_no);
 
         Template::set('sidebar_selected_customer_data', $get_sidebar_selected_customer_data);
         Template::set('selected_campagain_data', $campagain_id);
+        Template::set('campagaine_data', $campagain_data);
+        Template::set('call_status_data', $call_status_data);
 
+        //testdata($cco_data);
         Template::set_view("cco/dialpad");
         Template::render();
     }
@@ -138,6 +160,20 @@ class Cco extends Front_Controller
         $feedback_data = $this->cco_model->get_feedback_data_edit($feedback_id);
         echo json_encode($feedback_data);
         die;
+    }
+    public function get_cco_data()
+    {   $user=$this->auth->user();
+        $logged_in_user=$user->id;
+
+        $cco_data_for = $this->cco_model->get_cco_data_bargin($user->country_id,$logged_in_user);
+        Template::set('logged_in_user', $logged_in_user);
+        Template::set_view("cco/bargin_popup");
+        Template::render();
+
+        echo json_encode($cco_data_for);
+        die;
+
+
     }
 
     public function get_customer_complaint_data_edit()
@@ -152,10 +188,13 @@ class Cco extends Front_Controller
     public function get_customer_business_view_data()
     {
 
-        $customer_id = $_POST["customerid"];
+        //$customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
 
-        $get_customer_business_data = $this->cco_model->get_customer_business_data($customer_id);
-
+        $get_customer_business_data = array();
+        if($customer_id != "") {
+            $get_customer_business_data = $this->cco_model->get_customer_business_data($customer_id);
+        }
         //$get_all_crop_data = $this->cco_model->get_all_crop_data($customer_id);
 
         //$get_allocated_crop_data = $this->cco_model->customer_crop_data($customer_id);
@@ -175,13 +214,23 @@ class Cco extends Front_Controller
     public function get_customer_feedback_data()
     {   $user=$this->auth->user();
         /*$logged_in_user=$user->display_name;*/
-        $customer_id = $_POST["customerid"];
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+
+        //$customer_id = $_POST["customerid"];
         $page = (isset($_POST["page"]) && !empty($_POST["page"])) ? $_POST["page"] : '';
 
-        $get_user_data = $this->cco_model->get_user_data($customer_id);
+        $get_user_data = array();
+        $feedback_data = array();
+        $feedback_data_count = 0;
 
-        $feedback_data = $this->cco_model->get_feedback_data($customer_id,$page,$user->local_date,$user->country_id);
+        if($customer_id != "") {
+            $get_user_data = $this->cco_model->get_user_data($customer_id);
+            $feedback_data = $this->cco_model->get_feedback_data($customer_id, $page, $user->local_date, $user->country_id);
 
+            $feedback_data_count = $feedback_data['count'];
+
+        }
      //   testdata($feedback_data);
         Template::set('get_user_data', $get_user_data);
         Template::set('customer_id', $customer_id);
@@ -189,7 +238,7 @@ class Cco extends Front_Controller
 
         Template::set('table', $feedback_data);
 
-        Template::set('td', $feedback_data['count']);
+        Template::set('td', $feedback_data_count);
         Template::set('pagination', (isset($feedback_data['pagination']) && !empty($feedback_data['pagination'])) ? $feedback_data['pagination'] : '' );
 
         Template::set_view("cco/dialpad/dialpad_feedback_details");
@@ -198,18 +247,10 @@ class Cco extends Front_Controller
     public function get_missedcall_data()
     {
         $user=$this->auth->user();
-        /*$logged_in_user=$user->display_name;*/
-       // $customer_id = $_POST["customerid"];
+
         $page = (isset($_POST["page"]) && !empty($_POST["page"])) ? $_POST["page"] : '';
 
-        //$get_user_data = $this->cco_model->get_user_data($customer_id);
-
         $missedcall_data = $this->cco_model->get_missedcall_data($page,$user->local_date);
-
-        //   testdata($feedback_data);
-       // Template::set('get_user_data', $get_user_data);
-        //Template::set('customer_id', $customer_id);
-        //Template::set('get_feedback_data', $get_feedback_data);
 
         Template::set('table', $missedcall_data);
 
@@ -224,7 +265,8 @@ class Cco extends Front_Controller
     {
 
         $user = $this->auth->user();
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        //$customer_id = $_POST["customerid"];
         $get_business_geo_data_to_retailer = $this->cco_model->get_business_geo_data_to_retailer($customer_id);
         $login_user_type= $user->role_id;
         $default_retailer_role = 10;
@@ -308,6 +350,21 @@ class Cco extends Front_Controller
     {
 
         $feedback_update_data = $this->cco_model->add_update_feedback_data();
+        echo $feedback_update_data;
+        die;
+    }
+    public function add_update_bargin_info()
+    {
+        $cco_id=$_POST["cco_id"];
+        $phone_no=$_POST["phone_no"];
+        $bargin_info = $this->cco_model->add_update_bargin_info($cco_id,$phone_no);
+        echo $bargin_info;
+        die;
+    }
+    public function add_update_upper_dialpad_info()
+    {
+
+        $feedback_update_data = $this->cco_model->add_update_upper_dialpad_info();
         echo $feedback_update_data;
         die;
     }
@@ -399,9 +456,19 @@ class Cco extends Front_Controller
 
     public function get_customer_general_detail_data()
     {
-        $customer_id = $_POST["customerid"];
 
-        $get_personal_general_data = $this->cco_model->get_personal_general_data($customer_id);
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+
+        //$customer_id = ;
+
+        if($customer_id != "") {
+            $get_personal_general_data = $this->cco_model->get_personal_general_data($customer_id);
+        }
+        else
+        {
+            $get_personal_general_data = array();
+        }
 
         Template::set('personal_general_data', $get_personal_general_data);
 
@@ -414,9 +481,16 @@ class Cco extends Front_Controller
 
     public function get_customer_family_detail_data()
     {
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
 
-        $get_personal_family_data = $this->cco_model->get_personal_family_data($customer_id);
+        if($customer_id != "")
+        {
+            $get_personal_family_data = $this->cco_model->get_personal_family_data($customer_id);
+        }
+        else
+        {
+            $get_personal_family_data = array();
+        }
 
         Template::set('personal_family_data', $get_personal_family_data);
         Template::set('customer_id', $customer_id);
@@ -429,9 +503,14 @@ class Cco extends Front_Controller
     {
         $user = $this->auth->user();
 
-        $customer_id = $_POST["customerid"];
-
-        $get_personal_education_data = $this->cco_model->get_personal_education_data($customer_id);
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+       // $customer_id = $_POST["customerid"];
+if($customer_id != "") {
+    $get_personal_education_data = $this->cco_model->get_personal_education_data($customer_id);
+}
+        else{
+            $get_personal_education_data = array();
+        }
 
         $get_education_qualification_data = $this->cco_model->get_education_qualification_data($user->country_id);
      //   testdata($get_education_qualification_data);
@@ -451,10 +530,16 @@ class Cco extends Front_Controller
     {
         $user = $this->auth->user();
 
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        // $customer_id = $_POST["customerid"];
+        if($customer_id != "") {
 
-        $get_social_data = $this->cco_model->get_customer_social_data($customer_id);
-
+            $get_social_data = $this->cco_model->get_customer_social_data($customer_id);
+        }
+        else
+        {
+            $get_social_data = array();
+        }
         Template::set('social_data', $get_social_data);
 
         Template::set('customer_id', $customer_id);
@@ -467,13 +552,17 @@ class Cco extends Front_Controller
     {
         $user = $this->auth->user();
 
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        // $customer_id = $_POST["customerid"];
+        if($customer_id != "") {
 
+            $get_customer_complaint_data = $this->cco_model->get_customer_social_data($customer_id);
+        }else{
+            $get_customer_complaint_data = array();
+        }
 
-        $random_complaint_no = $this->get_complaint_no();
+            $random_complaint_no = $this->get_complaint_no();
 
-
-        $get_customer_complaint_data= $this->cco_model->get_customer_social_data($customer_id);
         $get_customer_complaint_type= $this->cco_model->get_customer_complaint_type();
         //testdata($get_customer_complaint_type);
         Template::set('unique_id', $random_complaint_no);
@@ -488,7 +577,8 @@ class Cco extends Front_Controller
     {
         $user = $this->auth->user();
 
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        // $customer_id = $_POST["customerid"];
 
         // $get_social_data = $this->cco_model->get_customer_social_data($customer_id);
         $get_customer_complaint_type= $this->cco_model->get_customer_complaint_type();
@@ -519,15 +609,28 @@ class Cco extends Front_Controller
     {
         $user = $this->auth->user();
 
-        $customer_id = $_POST["customerid"];
+     //   $customer_id = $_POST["customerid"];
 
         $get_all_electronic_data = $this->cco_model->get_electronic_data();
         $get_all_vehicles_data = $this->cco_model->get_vehicles_data();
 
-        $get_customer_pa_income = $this->cco_model->get_customer_pa_income_data($customer_id);
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        // $customer_id = $_POST["customerid"];
+        if($customer_id != "")
+        {
 
-        $get_financial_electronic_data = $this->cco_model->get_customer_financial_electronic_data($customer_id);
-        $get_financial_vechiles_data = $this->cco_model->get_customer_financial_vehicles_data($customer_id);
+            $get_customer_pa_income = $this->cco_model->get_customer_pa_income_data($customer_id);
+
+            $get_financial_electronic_data = $this->cco_model->get_customer_financial_electronic_data($customer_id);
+            $get_financial_vechiles_data = $this->cco_model->get_customer_financial_vehicles_data($customer_id);
+
+        }
+        else
+        {
+            $get_customer_pa_income = array();
+            $get_financial_electronic_data = array();
+            $get_financial_vechiles_data = array();
+        }
 
         //dumpme($get_financial_electronic_data);
         //testdata($get_financial_vechiles_data);
@@ -550,9 +653,16 @@ class Cco extends Front_Controller
     {
         $user = $this->auth->user();
 
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        // $customer_id = $_POST["customerid"];
+        if($customer_id != "") {
 
-        $get_user_data = $this->cco_model->get_user_data($customer_id);
+            $get_user_data = $this->cco_model->get_user_data($customer_id);
+        }
+        else
+        {
+            $get_user_data = array();
+        }
 
         $caller_data = $this->session->userdata("caller_data");
 
@@ -581,7 +691,14 @@ class Cco extends Front_Controller
             $get_retailer_data = "";
         }
 
-        $get_customer_retailer_relation_data = $this->cco_model->customer_relation_retailer_data($customer_id,$user_role);
+        if($customer_id != "") {
+
+            $get_customer_retailer_relation_data = $this->cco_model->customer_relation_retailer_data($customer_id, $user_role);
+        }
+        else
+        {
+            $get_customer_retailer_relation_data = array();
+        }
 
         Template::set('customer_relation_retailer_data', $get_customer_retailer_relation_data);
 
@@ -596,14 +713,22 @@ class Cco extends Front_Controller
     public function get_customer_farming_view_data()
     {
 
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        // $customer_id = $_POST["customerid"];
+        if($customer_id != "") {
 
-        $get_customer_farming_data = $this->cco_model->get_customer_farming_data($customer_id);
+            $get_customer_farming_data = $this->cco_model->get_customer_farming_data($customer_id);
 
-        $get_all_crop_data = $this->cco_model->get_all_crop_data($customer_id);
+            $get_all_crop_data = $this->cco_model->get_all_crop_data($customer_id);
 
-        $get_allocated_crop_data = $this->cco_model->customer_crop_data($customer_id);
-
+            $get_allocated_crop_data = $this->cco_model->customer_crop_data($customer_id);
+        }
+        else
+        {
+            $get_customer_farming_data = array();
+            $get_all_crop_data = array();
+            $get_allocated_crop_data = array();
+        }
         Template::set('customer_farming_data', $get_customer_farming_data);
         Template::set('all_crop_data', $get_all_crop_data);
         Template::set('allocated_crop_data', $get_allocated_crop_data);
@@ -618,9 +743,15 @@ class Cco extends Front_Controller
 
     public function get_activity_detail_view_data()
     {
-        $customer_id = $_POST["customerid"];
-
-        $geo_level = $this->cco_model->get_geo_by_customer_id($customer_id);
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        // $customer_id = $_POST["customerid"];
+        if($customer_id != "") {
+            $geo_level = $this->cco_model->get_geo_by_customer_id($customer_id);
+        }
+        else
+        {
+            $geo_level = array();
+        }
 
         Template::set('geo_level', $geo_level);
         Template::set('customer_id', $customer_id);
@@ -631,13 +762,25 @@ class Cco extends Front_Controller
 
     public function get_planned_activity_detail_data()
     {
-        $customer_id = $_POST["customerid"];
-        $activity_id = $_POST["activity_id"];
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+
+        $activity_id = (isset($_POST["activity_id"]) && !empty($_POST["activity_id"]))? $_POST["activity_id"] : "";
+
+      //  $customer_id = $_POST["customerid"];
+      //  $activity_id = $_POST["activity_id"];
         $user = $this->auth->user();
 
-        $activity_details = $this->cco_model->get_planned_activity_details_data($customer_id,$activity_id);
+        $activity_details = array();
+        $digitalLibrary = array();
 
-        $digitalLibrary = $this->ecp_model->getDigitalLibraryDataByCountry($activity_details['activity_type_id'], $user->country_id);
+        if($customer_id != "" && $activity_id != "")
+        {
+            $activity_details = $this->cco_model->get_planned_activity_details_data($customer_id, $activity_id);
+
+            $digitalLibrary = $this->ecp_model->getDigitalLibraryDataByCountry($activity_details['activity_type_id'], $user->country_id);
+        }
+
         $crop_details = $this->ecp_model->crop_details_by_country_id($user->country_id);
         $product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
         $diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
@@ -647,8 +790,12 @@ class Cco extends Front_Controller
 
         $sr_employee_visit = array();
         $jr_employee_visit = array();
-        $sr_employee_visit = $this->ecp_model->get_employee_for_loginuser($customer_id,$global_head_user);
-        $jr_employee_visit = $this->ecp_model->get_jr_employee_for_loginuser($customer_id,$global_jr_user);
+
+        if($customer_id != "") {
+
+            $sr_employee_visit = $this->ecp_model->get_employee_for_loginuser($customer_id, $global_head_user);
+            $jr_employee_visit = $this->ecp_model->get_jr_employee_for_loginuser($customer_id, $global_jr_user);
+        }
 
 
         $employee_visit = array_merge($sr_employee_visit,$jr_employee_visit) ;
@@ -669,12 +816,22 @@ class Cco extends Front_Controller
     {
         $user = $this->auth->user();
 
-        $customer_id = $_POST["customerid"];
-        $activity_id = $_POST["activity_id"];
+      //  $customer_id = $_POST["customerid"];
+      //  $activity_id = $_POST["activity_id"];
 
-        $activity_details = $this->cco_model->get_planned_activity_details_data($customer_id,$activity_id);
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        $activity_id = (isset($_POST["activity_id"]) && !empty($_POST["activity_id"]))? $_POST["activity_id"] : "";
 
-        $digitalLibrary = $this->ecp_model->getDigitalLibraryDataByCountry($activity_details['activity_type_id'], $user->country_id);
+        $activity_details = array();
+        $digitalLibrary = array();
+
+        if($customer_id != "" && $activity_id != "") {
+            $activity_details = $this->cco_model->get_planned_activity_details_data($customer_id, $activity_id);
+
+            $digitalLibrary = $this->ecp_model->getDigitalLibraryDataByCountry($activity_details['activity_type_id'], $user->country_id);
+        }
+
+
         $crop_details = $this->ecp_model->crop_details_by_country_id($user->country_id);
         $product_sku = $this->ishop_model->get_product_sku_by_user_id($user->country_id);
         $diseases_details = $this->ecp_model->get_diseases_by_user_id($user->country_id);
@@ -684,9 +841,12 @@ class Cco extends Front_Controller
 
         $sr_employee_visit = array();
         $jr_employee_visit = array();
-        $sr_employee_visit = $this->ecp_model->get_employee_for_loginuser($customer_id,$global_head_user);
-        $jr_employee_visit = $this->ecp_model->get_jr_employee_for_loginuser($customer_id,$global_jr_user);
 
+        if($customer_id != "")
+        {
+            $sr_employee_visit = $this->ecp_model->get_employee_for_loginuser($customer_id, $global_head_user);
+            $jr_employee_visit = $this->ecp_model->get_jr_employee_for_loginuser($customer_id, $global_jr_user);
+        }
 
         $employee_visit = array_merge($sr_employee_visit,$jr_employee_visit) ;
 
@@ -940,7 +1100,8 @@ class Cco extends Front_Controller
 
     public function get_diseases_detail_view_data()
     {
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+       // $customer_id = $_POST["customerid"];
 
         Template::set('customer_id', $customer_id);
 
@@ -951,10 +1112,13 @@ class Cco extends Front_Controller
 
     public function get_diseases_detail_data()
     {
-        $search_data = $_POST["searchdata"];
-        $customerid = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        $search_data = (isset($_POST["searchdata"]) && !empty($_POST["searchdata"]))? $_POST["searchdata"] : "";
 
-        $searched_data = $this->cco_model->get_search_disease_detail($search_data,$customerid);
+      //  $search_data = $_POST["searchdata"];
+      //  $customerid = $_POST["customerid"];
+
+        $searched_data = $this->cco_model->get_search_disease_detail($search_data,$customer_id);
 
         Template::set('searched_data', $searched_data);
         Template::set('search_type', 'disease');
@@ -967,7 +1131,8 @@ class Cco extends Front_Controller
 
     public function get_product_detail_view_data()
     {
-        $customer_id = $_POST["customerid"];
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+       // $customer_id = $_POST["customerid"];
 
         Template::set('customer_id', $customer_id);
 
@@ -978,8 +1143,11 @@ class Cco extends Front_Controller
 
     public function get_product_detail_data()
     {
-        $search_data = $_POST["searchdata"];
-        $customerid = $_POST["customerid"];
+        //$search_data = $_POST["searchdata"];
+        //$customerid = $_POST["customerid"];
+
+        $customerid = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        $search_data = (isset($_POST["searchdata"]) && !empty($_POST["searchdata"]))? $_POST["searchdata"] : "";
 
         $searched_data = $this->cco_model->get_search_product_detail($search_data,$customerid);
 
@@ -992,10 +1160,287 @@ class Cco extends Front_Controller
 
     }
 
-    public function get_customer_order_status_data()
+    public function get_employee_order_status_data()
     {
         $customer_id = $_POST["customerid"];
-        $search_data = $_POST["searchdata"];
+        $role_id = $_POST["role_id"];
+
+        $user= $this->auth->user();
+
+        $distributor= $this->ishop_model->get_distributor_by_user_id($user->country_id);
+
+        $retailer= $this->ishop_model->get_retailer_by_user_id($user->country_id);
+
+        $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
+
+        $logined_user_type = $role_id;
+        $logined_user_id = $customer_id;
+        $logined_user_countryid = $user->country_id;
+        $local_date = $user->local_date;
+
+
+        $get_geo_level_data = "";
+        $action_data = 'order_status';
+
+        if($logined_user_type == 8){
+
+            //FOR FO
+            $default_type_selected = 11;
+
+            $get_geo_level_data = $this->ishop_model->get_employee_geo_data($user->id,$user->country_id,$logined_user_type,null,$default_type_selected,$action_data);
+
+
+        }
+
+        Template::set('login_customer_type',$logined_user_type);
+        Template::set('login_customer_id',$logined_user_id);
+        Template::set('login_customer_countryid',$logined_user_countryid);
+        Template::set('local_date',$local_date);
+
+        Template::set('distributor',$distributor);
+        Template::set('retailer',$retailer);
+        Template::set('product_sku',$product_sku);
+
+
+        Template::set('geo_level_data',$get_geo_level_data);
+
+        Template::set_view('cco/employee_order_status');
+        Template::render();
+
+
+
+    }
+
+    public function get_geo_fo_userdata(){
+
+        $user= $this->auth->user();
+        $selected_user_id = $_POST['user_id']; // login user id
+        $user_country = $user->country_id;
+        $login_customer_type = $_POST['login_customer_type']; //FO or HO or DISTRIBUTOR or RETAILER
+        $customer_type_selected = $_POST['customer_type_selected']; // SELECTED CHECKBOX Retailer, Farmer, Distributor
+
+        $url_data = $_POST['urlsegment'];
+
+        if($customer_type_selected == "farmer"){
+            $default_type = 11;
+        }
+        else if($customer_type_selected == "retailer"){
+            $default_type = 10;
+        }
+        else if($customer_type_selected == "distributor"){
+            $default_type = 9;
+        }
+
+        $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,null,$default_type,$url_data);
+        echo json_encode($get_geo_level_data);
+        die;
+
+    }
+
+    public function get_lowergeo_from_uppergeo_data() {
+
+        $selected_user_id = $_POST['user_id']; // login user id
+        $user_country = $_POST['user_country'];
+        $login_customer_type = $_POST['login_customer_type']; //FO or HO or DISTRIBUTOR or RETAILER
+        $parent_geo_id = $_POST['parent_geo_id']; // SELECTED CHECKBOX Retailer, Farmer, Distributor
+        $checkedtype = $_POST['checkedtype'];
+
+        $default_type ='';
+        if($checkedtype == "farmer"){
+            $default_type = 11;
+        }
+        else if($checkedtype == "retailer"){
+            $default_type = 10;
+
+        }
+        else if($checkedtype == "distributor"){
+            $default_type = 9;
+
+        }
+        $url_data = $_POST['urlsegment'];
+       // $radio_selected_data = $_POST['checkedtype'];
+        // echo $url_data;
+        //echo $selected_user_id."===".$user_country."===".$login_customer_type."===".$parent_geo_id;
+
+        $get_geo_level_data = $this->ishop_model->get_employee_geo_data($selected_user_id,$user_country,$login_customer_type,$parent_geo_id,$default_type,$url_data);
+
+        echo json_encode($get_geo_level_data);
+        die;
+
+    }
+
+    public function get_user_by_geo_data(){
+        $selected_geo_id = $_POST['selected_geo_id'];
+        $login_user_country_id = $_POST['country_id'];
+        $checked_data = $_POST['checked_data'];
+
+        $mobile_num = null;
+        if(isset($_POST['moblie_num'])){
+
+            $mobile_num = $_POST['moblie_num'];
+
+        }
+
+        $user_data = $this->ishop_model->get_user_for_geo_data($selected_geo_id,$login_user_country_id,$checked_data,$mobile_num);
+        echo $user_data;
+        die;
+
+    }
+
+    public function get_employee_all_order_data() {
+
+
+
+        $user= $this->auth->user();
+
+        $local_date = $user->local_date;
+        $login_customer_type = 8;
+        $login_customer_id =  $_POST["login_customer_id"];
+        $login_customer_countryid =  $user->country_id;
+
+        $pag = (isset($_POST['page']) ? $_POST['page'] : '');
+        if($pag > 0)
+        {
+            $page = $pag;
+        }
+        else{
+            $page = 1;
+        }
+
+        $loginusertype = 8;
+        $order_data = array();
+
+        if($loginusertype == 8){
+
+            //FOR FO
+
+            $radio_checked = $_POST["radio1"];
+
+            if($radio_checked == "farmer"){
+
+                $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+                $f_date = str_replace('/', '-', $form_dt);
+                $from_date = date('Y-m-d', strtotime($f_date));
+
+                $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+                $t_date = str_replace('/', '-', $to_dt);
+                $todate = date('Y-m-d', strtotime($t_date));
+
+                $loginuserid = $_POST["login_customer_id"];
+
+                $order_tracking_no = (isset($_POST['order_tracking_no']) ? $_POST['order_tracking_no'] : '');
+
+                $farmer_data =  (isset($_POST['farmer_data']) ? $_POST['farmer_data'] : '');
+
+
+                $order_data = $this->cco_model->get_employee_order_data($loginusertype,$user->country_id,$radio_checked,$loginuserid,$farmer_data,$from_date,$todate,$order_tracking_no,null,$page,null,null,null,$user->local_date);
+
+
+
+            }elseif($radio_checked == "distributor"){
+
+                $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+                $f_date = str_replace('/', '-', $form_dt);
+                $from_date = date('Y-m-d', strtotime($f_date));
+
+                $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+                $t_date = str_replace('/', '-', $to_dt);
+                $todate = date('Y-m-d', strtotime($t_date));
+                $loginuserid = $_POST["login_customer_id"];
+
+
+                $geo_level_1_data = $_POST["geo_level_1_data"];
+                $distributor_id = $_POST["distributor_data"];
+                $page_function = $_POST["page_function"];
+
+                $order_data = $this->cco_model->get_employee_order_data($loginusertype,$user->country_id,$radio_checked,$loginuserid,$distributor_id,$from_date,$todate,null,null,$page,null,null,null,$user->local_date);
+
+
+
+            }
+            elseif($radio_checked == "retailer"){
+
+                $form_dt = (isset($_POST['form_date']) ? $_POST['form_date'] : '');
+                $f_date = str_replace('/', '-', $form_dt);
+                $from_date = date('Y-m-d', strtotime($f_date));
+
+                $to_dt = (isset($_POST['to_date']) ? $_POST['to_date'] : '');
+                $t_date = str_replace('/', '-', $to_dt);
+                $todate = date('Y-m-d', strtotime($t_date));
+
+                $loginuserid = $_POST["login_customer_id"];
+
+                $customer_id = $_POST["retailer_data"];
+                $page_function = $_POST["page_function"];
+
+                $order_data = $this->cco_model->get_employee_order_data($loginusertype,$user->country_id,$radio_checked,$loginuserid,$customer_id,$from_date,$todate,null,null,$page,null,null,null,$user->local_date);
+
+                //echo "<pre>";
+                //print_r($order_data);
+
+                //die;
+            }
+        }
+
+        Template::set('table', $order_data);
+
+        Template::set('td', $order_data['count']);
+        Template::set('pagination', (isset($order_data['pagination']) && !empty($order_data['pagination'])) ? $order_data['pagination'] : '' );
+
+        Template::set('local_date', $local_date);
+        Template::set('login_customer_type', $login_customer_type);
+        Template::set('login_customer_id', $login_customer_id);
+        Template::set('login_customer_countryid', $login_customer_countryid);
+
+        Template::set_view('cco/employee_order_status');
+        Template::render();
+
+    }
+
+    public function get_order_status_data_details() {
+
+        $user= $this->auth->user();
+
+        $order_id = (isset($_POST['id']) ? $_POST['id'] : '');
+        $radiochecked = (isset($_POST['radiochecked']) ? $_POST['radiochecked'] : '');
+        $logincustomertype = 8;
+
+        $action_data = (isset($_POST['segment_data']) ? $_POST['segment_data'] : '');
+
+        $order_details = "";
+
+        if(isset($order_id) && !empty($order_id))
+        {
+            $order_details= $this->ishop_model->order_status_product_details_view_by_id($order_id,$radiochecked,$logincustomertype,$action_data);
+        }
+
+        $local_date = $user->local_date;
+        $login_customer_type = 8;
+        $login_customer_id =  $_POST["login_customer_id"];
+        $login_customer_countryid =  $user->country_id;
+
+        Template::set('local_date', $local_date);
+        Template::set('login_customer_type', $login_customer_type);
+        Template::set('login_customer_id', $login_customer_id);
+        Template::set('login_customer_countryid', $login_customer_countryid);
+
+        Template::set('table',$order_details);
+        Template::set_view('cco/employee_order_status');
+        Template::render();
+
+    }
+
+
+
+    public function get_customer_order_status_data()
+    {
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        $search_data = (isset($_POST["searchdata"]) && !empty($_POST["searchdata"]))? $_POST["searchdata"] : "";
+
+
+        //$customer_id = $_POST["customerid"];
+        //$search_data = $_POST["searchdata"];
 
 
 
@@ -1013,7 +1458,12 @@ class Cco extends Front_Controller
             $page = 1;
         }
 
-        $default_order_data = $this->cco_model->get_order_data($customer_id,$page,$search_data);
+        $default_order_data = array();
+
+        if($customer_id != "")
+        {
+            $default_order_data = $this->cco_model->get_order_data($customer_id, $page, $search_data);
+        }
 
         Template::set('customer_id', $customer_id);
 
@@ -1027,6 +1477,8 @@ class Cco extends Front_Controller
 
         Template::render();
     }
+
+
 
     public function get_order_data_details()
     {
@@ -1060,11 +1512,18 @@ class Cco extends Front_Controller
 
     public function get_customer_order_place_data()
     {
-        $customer_id = $_POST["customerid"];
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+       // $customer_id = $_POST["customerid"];
 
         $user = $this->auth->user();
 
-        $get_customer_retailer_data = $this->cco_model->get_customer_retailer_data($customer_id);
+        $get_customer_retailer_data = array();
+        if($customer_id != "")
+        {
+            $get_customer_retailer_data = $this->cco_model->get_customer_retailer_data($customer_id);
+        }
+
         $product_sku= $this->ishop_model->get_product_sku_by_user_id($user->country_id);
 
         Template::set('customer_id', $customer_id);
@@ -1104,6 +1563,79 @@ class Cco extends Front_Controller
         die;
 
     }
+
+    public function view_transfer()
+    {
+        $user= $this->auth->user();
+
+        $get_cco_data = $this->cco_model->get_cco_data($user->country_id,$user->id,$user->role_id);
+        $designation = $this->cco_model->get_designation_data($user->country_id);
+
+
+        Template::set('current_user', $user);
+        Template::set('get_cco_data', $get_cco_data);
+        Template::set('designation', $designation);
+
+        Template::set_view("cco/dialpad/add_transfer");
+        Template::render();
+    }
+
+    public function get_call_history_detail_data()
+    {
+        $user= $this->auth->user();
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        $phone_no = (isset($_POST["phone_no"]) && !empty($_POST["phone_no"]))? $_POST["phone_no"] : "";
+
+
+        $pag = (isset($_POST['page']) ? $_POST['page'] : '');
+        if ($pag > 0) {
+            $page = $pag;
+        } else {
+            $page = 1;
+        }
+
+        $history_detail= $this->cco_model->get_call_history_details_data($user->country_id,$user->id,$customer_id,$phone_no,$user->local_date,$page);
+
+
+
+        Template::set('td', $history_detail['count']);
+        Template::set('pagination', (isset($history_detail['pagination']) && !empty($history_detail['pagination'])) ? $history_detail['pagination'] : '' );
+
+        Template::set('table', $history_detail);
+
+        Template::set_view("cco/dialpad/call_history");
+        Template::render();
+
+
+    }
+
+
+    public function get_employee_by_designation()
+    {
+        $user= $this->auth->user();
+        $designation_id = $_POST['designation_id'];
+        $employee = $this->cco_model->get_employee_data($user->country_id,$designation_id);
+        echo json_encode($employee);
+        die;
+    }
+
+    public function add_cco_transfer()
+    {
+        $user= $this->auth->user();
+        $add = $this->cco_model->add_cco_transfer_call($user->id,$user->country_id);
+        echo json_encode($add);
+        die;
+    }
+
+    public function add_emp_transfer()
+    {
+        $user= $this->auth->user();
+        $add = $this->cco_model->add_emp_transfer_call($user->id,$user->country_id);
+        echo json_encode($add);
+        die;
+    }
+
 
     public function channel_partner_dialpad()
     {
@@ -1303,14 +1835,22 @@ class Cco extends Front_Controller
 
     public function set_customer_data()
     {
-        $this->load->library('session');
 
         $phoneno = $_POST["phoneno"];
-        $campagain_id = $_POST["campagainid"];
-        $activity_type = $_POST["activity_type"];
-        $action_data = $_POST["action_data"];
+        $campagain_id = (isset($_POST["campagainid"]) && !empty($_POST["campagainid"]))?$_POST["campagainid"] :"";
+        $activity_type = (isset($_POST["activity_type"]) && !empty($_POST["activity_type"]))?$_POST["activity_type"] :"";
+        $action_data = (isset($_POST["action_data"]) && !empty($_POST["action_data"]))?$_POST["action_data"] :"";
 
         $get_caller_called_data = $this->cco_model->get_dialed_customer_data($phoneno);
+
+        if(!empty($get_caller_called_data))
+        {
+            $number_status = 'TRUE';
+        }
+        else
+        {
+            $number_status = 'FALSE';
+        }
 
         $user = $this->auth->user();
         $logined_user_type = $user->role_id;
@@ -1324,7 +1864,8 @@ class Cco extends Front_Controller
             'campagain_id' => $campagain_id,
             'activity_type' => $activity_type,
             'action_data' => $action_data,
-            'caller_data' => $get_caller_called_data
+            'caller_data' => $get_caller_called_data,
+            'caller_status' => $number_status
         ));
 
     }
@@ -1382,6 +1923,48 @@ class Cco extends Front_Controller
         $leveldata = $_POST["leveldata"];
         // $leveldata = 1;
         $get_level_data = $this->cco_model->level_data($campagainid, $leveldata);
+
+        echo json_encode($get_level_data);
+        die;
+        // testdata($get_level_data);
+
+    }
+
+    public function get_questions_detail_view_data()
+    {
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"]))? $_POST["customerid"] : "";
+        $campagain_id = (isset($_POST["campagain_id"]) && !empty($_POST["campagain_id"]))? $_POST["campagain_id"] : "";
+        $campagain_phase_data = $this->cco_model->get_campagain_phasedata($campagain_id);
+
+       // testdata($campagain_phase_data);
+
+        Template::set('campagain_phase_data', $campagain_phase_data);
+        Template::set_view("cco/dialpad/dialpad_questions_details");
+        Template::render();
+
+    }
+
+    public function get_phase_question_data()
+    {
+        $phaseid = $_POST["phaseid"];
+        $campagain_id = $_POST["campagain_id"];
+
+        $campagain_phase_question_data = $this->cco_model->get_campagain_phase_question_data($phaseid,$campagain_id);
+
+
+
+    }
+
+    public function get_level_data_for_unkown_no()
+    {
+
+        $leveldata = $_POST["leveldata"];
+
+        $user = $this->auth->user();
+
+        // $leveldata = 1;
+        $get_level_data = $this->cco_model->level_data_for_unkown($leveldata,$user->country_id);
 
         echo json_encode($get_level_data);
         die;
@@ -1735,12 +2318,33 @@ class Cco extends Front_Controller
     }
 
     public function add_work_transfer_data(){
-
-
         $user= $this->auth->user();
         $insert = $this->cco_model->add_work_transfer_data_allocation($user->id,$user->country_id);
         echo $insert;
         die;
+    }
+
+    public function add_reminder()
+    {
+        $user= $this->auth->user();
+
+        if(isset($_POST['reminder_type'])){
+            if($_POST['reminder_type']=='delete'){
+                $this->cco_model->delete_reminder();
+            } else {
+                $this->cco_model->save_reminder();
+            }
+        }
+
+        $reminder_detail = $this->cco_model->get_reminder();
+
+        Template::set('pg', $this->input->post('pg'));
+        Template::set('current_user', $user);
+        Template::set('reminder_data', (isset($reminder_detail['result']) ? $reminder_detail['result'] : array()));
+        Template::set('reminder_data_pagination', (isset($reminder_detail['pagination']) ? $reminder_detail['pagination'] : ''));
+
+        Template::set_view("cco/dialpad/add_reminder");
+        Template::render();
     }
 
 

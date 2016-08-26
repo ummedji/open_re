@@ -11,7 +11,9 @@
         <div class="row">
 
             <div class="col-md-11" id="disease_detail_data">
-
+                <?php
+                $customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+                ?>
 
                 <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
 

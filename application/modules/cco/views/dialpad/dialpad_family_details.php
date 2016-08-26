@@ -3,6 +3,9 @@
 //$customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"]) && !empty($personal_general_data[0]["aadhaar_card_no"]))? $personal_general_data[0]["aadhaar_card_no"] : "";
 
 ?>
+<?php
+$customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+?>
 
 <div class="clearfix"></div>
 

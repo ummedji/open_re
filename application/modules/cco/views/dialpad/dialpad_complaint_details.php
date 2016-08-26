@@ -1,5 +1,10 @@
 <link rel="stylesheet" type="text/css" href="http://webcluesglobal.com/qa/re/public/themes/default/css/bootstrap-select.min.css" media="screen" />
 <script type="text/javascript" src="http://localhost/open_re/trunk/public/themes/default/js/bootstrap-select.min.js"></script>
+
+<?php
+$customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+?>
+
 <div class="actv-details-form">
     <div class="col-md-12 text-center plng_sub_nave_cco">
         <div class="inn_sub_nave">

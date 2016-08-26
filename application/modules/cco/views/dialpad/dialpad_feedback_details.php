@@ -2,6 +2,9 @@
     <h5>Feedback</h5>
     <div class="back_details">
 
+        <?php
+        $customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+        ?>
 
         <?php
         $attributes = array('class' => '', 'id' => 'dialpad_feedback_view_info','name'=>'dialpad_feedback_view_info', 'autocomplete'=>'off');

@@ -1341,18 +1341,18 @@ class Ishop extends Front_Controller
             $selected_geo_id = $_POST['selected_geo_id'];
             $login_user_country_id = $_POST['country_id'];
             $checked_data = $_POST['checked_data'];
-            
+
             $mobile_num = null;
             if(isset($_POST['moblie_num'])){
-                
+
                 $mobile_num = $_POST['moblie_num'];
-                
+
             }
 
             $user_data = $this->ishop_model->get_user_for_geo_data($selected_geo_id,$login_user_country_id,$checked_data,$mobile_num);
             echo $user_data;
             die;
-            
+
         }
 
         /**

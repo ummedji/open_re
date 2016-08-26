@@ -25,80 +25,61 @@ class Cco_model extends BF_Model
                 $final_array[] = $this->recursive_location_data($campaign_location_id, $global_head_user, $flag = 1, $leveldata);
             }
         }
-/*
-        $final_array = array();
-        if(!empty($global_head_user))
-        {
-            foreach($global_head_user as $key => $location_data)
-            {
-                $inner_array = array();
 
-                $political_geo_id = $location_data["political_geo_id"];
-                $geo_level_id = $location_data["geo_level_id"];
-                $parent_geo_id = $location_data["parent_geo_id"];
-                $political_geography_name = $location_data["political_geography_name"];
-
-                $inner_array["political_geo_id"] = $political_geo_id;
-                $inner_array["political_geography_name"] = $political_geography_name;
-
-                $inner_array["middle_data"] = array();
-
-                //GET ALL CHILD DATA
-
-                $middle_child_data = $this->get_child_data($political_geo_id);
-
-                if(!empty($middle_child_data))
-                {
-                    foreach ($middle_child_data as $key1 => $middlechilddata)
-                    {
-
-                        $middle_inner_array = array();
-
-                        $middle_political_geo_id = $middlechilddata["political_geo_id"];
-                        $middle_geo_level_id = $middlechilddata["geo_level_id"];
-                        $middle_parent_geo_id = $middlechilddata["parent_geo_id"];
-                        $middle_political_geography_name = $middlechilddata["political_geography_name"];
-
-                        $middle_inner_array["middle_political_geo_id"] = $middle_political_geo_id;
-                        $middle_inner_array["middle_political_geography_name"] = $middle_political_geography_name;
-
-                        $inner_array["middle_data"][$middle_political_geo_id] = $middle_inner_array;
-
-                        $lowest_child_data = $this->get_child_data($middle_political_geo_id);
-
-                        if(!empty($lowest_child_data))
-                        {
-                            foreach($lowest_child_data as $key2 => $lowestchilddata)
-                            {
-                                $lowest_data_array = array();
-
-                                $lowest_political_geo_id = $lowestchilddata["political_geo_id"];
-                                $lowest_geo_level_id = $lowestchilddata["geo_level_id"];
-                                $lowest_parent_geo_id = $lowestchilddata["parent_geo_id"];
-                                $lowest_political_geography_name = $lowestchilddata["political_geography_name"];
-
-                                $lowest_data_array["lowest_political_geo_id"] = $lowest_political_geo_id;
-                                $lowest_data_array["lowest_political_geography_name"] = $lowest_political_geography_name;
-
-                                $inner_array["middle_data"][$middle_political_geo_id]["lowest_data"][] = $lowest_data_array;
-                            }
-                        }
-                    }
-                }
-                $final_array[] = $inner_array;
-            }
-        }
-        */
-
-       // testdata($final_array);
-       // echo json_encode($final_data);
-      //  die;
        return $final_array;
+    }
 
-       // testdata($global_head_user);
+    public function level_data_for_unkown($leveldata,$country_id)
+    {
 
-      //  return $campagain_data;
+        $sql = ' SELECT bmpgd2.political_geo_id,bmpgd2.political_geography_name FROM bf_master_political_geography_details as bmpgd ';
 
+        $sql .= ' LEFT JOIN bf_master_political_geography_details as bmpgd1 ON bmpgd1.political_geo_id = bmpgd.parent_geo_id ';
+        $sql .= ' LEFT JOIN bf_master_political_geography_details as bmpgd2 ON bmpgd2.political_geo_id = bmpgd1.parent_geo_id ';
+
+        $sql .= ' LEFT JOIN bf_master_political_geography_level_country as bmpglc ON bmpglc.level_id = bmpgd.geo_level_id ';
+
+        $sql .= ' WHERE bmpgd.geo_level_id = "'.$leveldata.'" AND bmpglc.country_id = "'.$country_id.'" GROUP BY bmpgd2.political_geo_id';
+
+        $geo_data = $this->db->query($sql);
+        $geo_location_data = $geo_data->result_array();
+
+        if (isset($geo_location_data) && !empty($geo_location_data)) {
+            return $geo_location_data;
+        } else {
+            return 0;
+        }
+
+    }
+
+    public function get_campagain_phasedata($campagain_id)
+    {
+        $this->db->select("bccp.phase_id,bccp.phase_name,bccp.script");
+        $this->db->from("bf_cco_campaign_phase as bccp");
+        $this->db->where("bccp.campaign_id",$campagain_id);
+
+        $campagain_phase_data = $this->db->get()->result_array();
+
+        return $campagain_phase_data;
+    }
+
+    public function get_campagain_phase_question_data($phaseid,$campagain_id)
+    {
+
+        $user = $this->auth->user();
+
+        $this->db->select("*");
+        $this->db->from("bf_cco_campaign_phase_questions as bccpq");
+        $this->db->join("bf_questions_master as bqm","bqm.question_id = bccp.question_id");
+
+        $this->db->where("bccpq.country_id",$user->country_id);
+        $this->db->where("bccpq.phase_id",$phaseid);
+        $this->db->where("bccpq.campagain_or_activity_id",$campagain_id);
+        $this->db->where("bccpq.task_type",'campaign');
+
+        $campagain_phase_question_data = $this->db->get()->result_array();
+
+        return $campagain_phase_question_data;
     }
 
     public function get_child_data($political_geo_id)
@@ -256,6 +237,21 @@ class Cco_model extends BF_Model
 
         if (isset($campagain_data) && !empty($campagain_data)) {
             return $campagain_data;
+        } else {
+            return 0;
+        }
+    }
+    public function call_status_data($campagain_id,$customer_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_cco_campaign_allocation_customers");
+        $this->db->where("campaign_id", $campagain_id);
+        $this->db->where("customer_id",$customer_id);
+
+        $call_status_data = $this->db->get()->result_array();
+
+        if (isset($call_status_data) && !empty($call_status_data)) {
+            return $call_status_data;
         } else {
             return 0;
         }
@@ -1770,6 +1766,445 @@ class Cco_model extends BF_Model
     }
 
 
+    public function get_employee_order_data($loginusertype, $user_country_id, $radio_checked, $loginuserid, $customer_id=null, $from_date=null, $todate = null, $order_tracking_no = null, $order_po_no = null, $page = null, $page_function = null, $order_status = null, $web_service = null,$local_date=null)
+    {
+        $sql = ' SELECT SQL_CALC_FOUND_ROWS bio.order_id,bio.customer_id_from,bio.customer_id_to,bio.order_taken_by_id,bio.order_date,bio.PO_no,bio.order_tracking_no,bio.estimated_delivery_date,bio.total_amount,bio.order_status,bio.read_status, f_bu.role_id,f_bu.user_code as f_u_code, bicl.credit_limit,bu.display_name,f_bu.display_name as f_dn,t_bu.display_name as t_dn,bio.created_on ';
+
+        $sql .= ' FROM bf_ishop_orders as bio ';
+        $sql .= ' LEFT JOIN bf_users AS bu ON (bu.id = bio.order_taken_by_id) ';
+        $sql .= ' LEFT JOIN bf_users as f_bu ON (f_bu.id = bio.customer_id_from) ';
+        $sql .= ' LEFT JOIN bf_users as t_bu ON (t_bu.id = bio.customer_id_to) ';
+        $sql .= ' LEFT JOIN bf_ishop_credit_limit as bicl ON (bicl.customer_id = bio.customer_id_from) ';
+        $sql .= 'WHERE 1 ';
+
+        if (isset($page_function) && !empty($page_function)) {
+            $action_data = $page_function;
+        } else {
+            $action_data = $this->uri->segment(2);
+        }
+        if ($action_data != "order_approval") {
+            if ($order_tracking_no != null) {
+                $sql .= ' AND bio.order_tracking_no =' . '"' . $order_tracking_no . '"' . ' ';
+                $sql .= ' AND f_bu.role_id = 11  ';
+            } else {
+                if ($action_data != "po_acknowledgement") {
+                    $sql .= ' AND bio.order_date BETWEEN ' . '"' . $from_date . '"' . ' AND ' . '"' . $todate . '"' . ' ';
+                }
+                if ($action_data == "po_acknowledgement") {
+                    $sql .= ' AND bio.order_taken_by_id !=' . $customer_id . ' ';
+                    $sql .= ' AND bio.order_status = 4 ';
+                }
+                $sql .= ' AND bio.customer_id_from =' . $customer_id . ' ';
+            }
+
+        }
+
+        if ($action_data == "get_order_status_data" || $action_data == "order_status") {
+            $subsql = ' AND bu.role_id="' . $loginusertype . '" ';
+        } else {
+            $subsql = '';
+        }
+
+        $sql .= ' AND bio.country_id = "' . $user_country_id . '" ' . $subsql . ' ORDER BY bio.created_on DESC ';
+
+        // echo $action_data."</br>";
+
+        //  echo $sql;
+        // die;
+
+        $orderdata = $this->grid->get_result_res($sql);
+
+        if (isset($orderdata['result']) && !empty($orderdata['result'])) {
+
+            if ($loginusertype == 8) {
+                //FOR FO
+                if ($radio_checked == "farmer") {
+
+                    $order_view['head'] = array('Sr. No.', 'Farmer Name', 'Retailer Name', 'Order Tracking No.', 'Entered By', 'Read');
+                    $order_view['count'] = count($order_view['head']);
+                } elseif ($radio_checked == "retailer") {
+
+                    $order_view['head'] = array('Sr. No.', 'Retailer Code', 'Retailer Name', 'Distributor Name', 'Order Date', 'PO NO', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                    $order_view['count'] = count($order_view['head']);
+                } elseif ($radio_checked == "distributor") {
+
+                    $order_view['head'] = array('Sr. No.', 'Distributor Code', 'Distributor Name', 'Order Date', 'PO NO', 'Order Tracking No.', 'EDD', 'Amount', 'Entered By', 'Status');
+                    $order_view['count'] = count($order_view['head']);
+                }
+
+                if ($page != null || $page != "") {
+                    $i = (($page * 10) - 9);
+                } else {
+                    $i = 1;
+                }
+
+                foreach ($orderdata['result'] as $od) {
+
+                    if ($od['order_status'] == 0) {
+                        $order_status = "Pending";
+                    } elseif ($od['order_status'] == 1) {
+                        $order_status = "Dispatched";
+                    } elseif ($od['order_status'] == 2) {
+                        $order_status = "";
+                    } elseif ($od['order_status'] == 3) {
+                        $order_status = "Rejected";
+                    } elseif ($od['order_status'] == 4) {
+                        $order_status = "Un Acknowledge";
+                    }
+
+
+                    $otn = '<div class="eye_i" prdid ="' . $od['order_id'] . '"><a href="javascript:void(0);">' . $od['order_tracking_no'] . '</a></div>';
+
+
+                    if ($radio_checked == "farmer") {
+
+                        if ($od['read_status'] == 0) {
+                            $read_status = "Unread";
+                        } else {
+                            $read_status = "Read";
+                        }
+
+                        $order_view['row'][] = array($i, $od['f_dn'] , $od['t_dn'], $otn, $od['display_name'], $read_status);
+
+                    } elseif ($radio_checked == "retailer") {
+
+                        if ($od['order_status'] == 4) {
+                            $read_status = "Un Acknowledge";
+                        } else {
+                            $read_status = "Acknowledge";
+                        }
+                        if($local_date != null){
+                            $date = strtotime($od['order_date']);
+                            $order_date = date($local_date,$date);
+
+                            $time= strtotime($od['created_on']);
+                            $t= date('g:i a',$time);
+
+                            $order_datetime = $order_date.' '.$t;
+                        }
+                        else{
+                            $order_datetime = $od['order_date'];
+                        }
+
+                        $order_view['row'][] = array($i, $od['f_u_code'], $od['f_dn'], $od['t_dn'], $order_datetime, $od["PO_no"], $otn, $od["estimated_delivery_date"], $od["total_amount"], $od['display_name'], $read_status);
+
+                    } elseif ($radio_checked == "distributor") {
+                        if($local_date != null){
+                            $date = strtotime($od['order_date']);
+                            $order_date = date($local_date,$date);
+
+                            $time= strtotime($od['created_on']);
+                            $t= date('g:i a',$time);
+
+                            $order_datetime = $order_date.' '.$t;
+
+                            if(!empty($od["estimated_delivery_date"]))
+                            {
+                                $date1 = strtotime($od["estimated_delivery_date"]);
+                                $estimated_date =  date($local_date,$date1);
+                            }
+                            else{
+
+                                $estimated_date = '';
+                            }
+
+
+                        }
+                        else{
+                            $order_datetime = $od['order_date'];
+                            $estimated_date = $od["estimated_delivery_date"] ;
+                        }
+                        $order_view['row'][] = array($i, $od['f_u_code'], $od['f_dn'], $order_datetime, $od["PO_no"], $otn, $estimated_date, $od["total_amount"], $od['display_name'], $order_status);
+                    }
+                    $i++;
+                }
+                $order_view['eye'] = '';
+            }
+
+            $order_view['pagination'] = $orderdata['pagination'];
+            return $order_view;
+        }
+        else{
+            return false;
+        }
+    }
+
+
+    public function order_status_product_details_view_by_id($order_id, $radiochecked, $logincustomertype, $action_data = null)
+    {
+
+        $sql = 'SELECT bipo.product_order_id as id,bipo.product_order_id,psr.product_sku_code,psc.product_sku_name, bipo.quantity_kg_ltr,bipo.quantity,bipo.unit,bipo.amount,bipo.dispatched_quantity,psr.product_sku_id,bio.order_status ';
+
+        $sql .= ' FROM bf_ishop_product_order as bipo ';
+        $sql .= ' JOIN bf_ishop_orders as bio ON (bio.order_id = bipo.order_id) ';
+        $sql .= '  JOIN bf_master_product_sku_country as psc ON (psc.product_sku_country_id = bipo.product_sku_id) ';
+        $sql .= '  JOIN bf_master_product_sku_regional as psr ON (psr.product_sku_id = psc.product_sku_id) ';
+        $sql .= ' WHERE 1 ';
+        $sql .= ' AND bipo.order_id =' . $order_id . ' ';
+
+
+        $order_detail = $this->grid->get_result_res($sql);
+
+        if (isset($order_detail['result']) && !empty($order_detail['result'])) {
+            $product_view=array();
+                if ($logincustomertype == 8) {
+                    if ($radiochecked == "farmer") {
+                        $product_view['head'] = array('Sr. No.', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr');
+                        $product_view['count'] = count($product_view['head']);
+                    } elseif ($radiochecked == "retailer") {
+                        $product_view['head'] = array('Sr. No.', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr', 'Amount', 'Approved Quantity');
+                        $product_view['count'] = count($product_view['head']);
+                    } elseif ($radiochecked == "distributor") {
+                        $product_view['head'] = array('Sr. No.', 'Product Code', 'Product Name', 'Unit', 'Quantity', 'Qty. Kg/Ltr', 'Amount', 'Approved Quantity');
+                        $product_view['count'] = count($product_view['head']);
+                    }
+
+                    $order_id_data = '<input type="hidden" name="order_id" value="' . $order_id . '">';
+
+                    $i = 1;
+                    $k = 0;
+                    foreach ($order_detail['result'] as $od) {
+
+                        if($od['unit'] == 'kg/ltr')
+                        {
+                            $unit = 'Kg/Ltr';
+                        }
+                        elseif($od['unit'] == 'box')
+                        {
+                            $unit = 'Box';
+                        }
+                        elseif($od['unit'] == 'packages')
+                        {
+                            $unit = 'Packages';
+                        }
+                        else{
+                            $unit = '';
+                        }
+
+                        if ($radiochecked == "farmer") {
+
+                            $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $unit, $od['quantity'], $od['quantity_kg_ltr']);
+
+                        } elseif ($radiochecked == "retailer") {
+
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
+
+                            $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
+                            $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
+                            $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $unit . '</span></div>';
+                            $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
+                            $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
+                            $amount = '<div class="amount_' . $od["product_order_id"] . '"><span class="amount">' . $od['amount'] . '</span></div>';
+
+                            $dispatched_quantity = '<div class="dispatched_quantity_' . $od["product_order_id"] . '"><span class="dispatched_quantity">' . $od['dispatched_quantity'] . '</span></div>';
+
+                            $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $unit_data, $qty_data, $quantity_kg_ltr, $amount, $dispatched_quantity);
+
+
+
+                        }
+                        elseif ($radiochecked == "distributor") {
+                            $qty_kg_ltr = '<input id="qty_kg_ltr_' . $od["product_order_id"] . '" type="hidden" name="quantity_kg_ltr['.$k.']" value="' . $od['quantity_kg_ltr'] . '">';
+                            $product_order_id = $order_id_data.'<input type="hidden" name="order_product_id['.$k.']" value="' . $od["product_order_id"] . '">';
+
+                            $product_sku_data = '<input id="sku_' . $od["product_order_id"] . '" name="product_sku_id" type="hidden" value="' . $od['product_sku_id'] . '" />';
+                            $unit_data = $product_order_id . $product_sku_data . '<div class="unit_' . $od["product_order_id"] . '"><span class="unit">' . $unit . '</span></div>';
+                            $qty_data = '<div class="qty_' . $od["product_order_id"] . '"><span class="qty">' . $od['quantity'] . '</span></div>';
+                            $quantity_kg_ltr = $qty_kg_ltr . '<div class="quantity_kg_ltr_' . $od["product_order_id"] . '"><span class="quantity_kg_ltr">' . $od['quantity_kg_ltr'] . '</span></div>';
+                            $amount = '<div class="amount_' . $od["product_order_id"] . '"><span class="amount">' . $od['amount'] . '</span></div>';
+
+                            $dispatched_quantity = '<div class="dispatched_quantity_' . $od["product_order_id"] . '"><span class="dispatched_quantity">' . $od['dispatched_quantity'] . '</span></div>';
+                            $product_view['row'][] = array($i, $od['product_sku_code'], $od['product_sku_name'], $unit_data, $qty_data, $quantity_kg_ltr, $amount, $dispatched_quantity);
+
+                        }
+                        $i++;
+                        $k++;
+                    }
+                    $product_view['eye'] = '';
+
+                }
+                return $product_view;
+            }
+            else{
+                return false;
+            }
+
+
+    }
+
+
+    public function get_cco_data($country_id,$user_id,$role_id)
+    {
+        $this->db->select('id,display_name');
+        $this->db->from('users');
+        $this->db->where('country_id',$country_id);
+        if($role_id != '18'){
+            $this->db->where('id !=',$user_id);
+        }
+        $this->db->where('role_id','19');
+        $this->db->where('active','1');
+        $this->db->where('deleted','0');
+        $cco_data = $this->db->get()->result_array();
+
+        if(isset($cco_data) && !empty($cco_data)){
+            return $cco_data;
+        }
+        else{
+            return array();
+        }
+
+    }
+
+    public function get_designation_data($country_id)
+    {
+        $this->db->select('desigination_country_id,desigination_country_name');
+        $this->db->from('master_designation_country');
+        $this->db->where('country_id',$country_id);
+        $this->db->where('status','1');
+        $this->db->where('deleted','0');
+        $designation = $this->db->get()->result_array();
+
+        if(isset($designation ) && !empty($designation )){
+            return $designation;
+        }
+        else{
+            return array();
+        }
+
+    }
+
+    public function get_employee_data($country_id,$designation_id)
+    {
+        $this->db->select('id,display_name');
+        $this->db->from('users as bu');
+        $this->db->join('master_designation_role as mdr','mdr.user_id = bu.id');
+        $this->db->where('bu.country_id',$country_id);
+        $this->db->where('mdr.desigination_id',$designation_id);
+        $this->db->where('bu.active','1');
+        $this->db->where('bu.deleted','0');
+        $employee = $this->db->get()->result_array();
+
+        if(isset($employee ) && !empty($employee )){
+            return $employee;
+        }
+        else{
+            return array();
+        }
+
+    }
+
+    public function add_cco_transfer_call($user_id,$country_id)
+    {
+
+        $mob_num = $this->input->post("mob_num");
+        $cco_id = $this->input->post("cco_id");
+
+        $cco_transfer_call = array(
+            'number' => $mob_num,
+            'cco_to_id' => $cco_id,
+            'cco_id' => $user_id,
+            'transfer_type' => 'cco_transfer',
+            'call_date' => date('Y-m-d H:i:s'),
+            'country_id' => $country_id,
+            'created_by_user' => $user_id,
+            'created_on' => date('Y-m-d H:i:s'),
+            'modified_by_user' => $user_id,
+            'modified_on' => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('cco_calltransfer', $cco_transfer_call);
+
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+    public function add_emp_transfer_call($user_id,$country_id)
+    {
+        $mob_num = $this->input->post("mob_num");
+        $employee_name = $this->input->post("employee_name");
+
+        $cco_transfer_call = array(
+            'number' => $mob_num,
+            'cco_to_id' => $employee_name,
+            'cco_id' => $user_id,
+            'transfer_type' => 'emp_transfer',
+            'call_date' => date('Y-m-d H:i:s'),
+            'country_id' => $country_id,
+            'created_by_user' => $user_id,
+            'created_on' => date('Y-m-d H:i:s'),
+            'modified_by_user' => $user_id,
+            'modified_on' => date('Y-m-d H:i:s')
+        );
+
+        $this->db->insert('cco_calltransfer', $cco_transfer_call);
+
+        if ($this->db->affected_rows() > 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+
+    }
+
+
+    public function get_call_history_details_data($country_id,$user_id,$customer_id,$phone_no,$local_date=null,$page=null)
+    {
+        $sql = 'SELECT * ';
+        $sql .= 'FROM bf_cco_call_details AS ccd ';
+     //   $sql .= 'JOIN bf_users AS bu ON (bu.id = ips.customer_id) ';
+        $sql .= 'WHERE 1 ';
+        $sql .= 'AND ccd.customer_id =' . $customer_id . ' ';
+        $sql .= 'AND ccd.cco_id =' . $user_id . ' ';
+        $sql .= 'AND ccd.country_id =' . $country_id . ' ';
+        $sql .= 'ORDER BY ccd.call_id DESC ';
+
+
+        $history_details = $this->grid->get_result_res($sql);
+
+        if (isset($history_details['result']) && !empty($history_details['result'])) {
+            $history['head'] = array('Sr. No.', 'Date', 'Time', 'Duration', 'Order Status', 'Complaint Id', 'Complaint Subject', 'Order Tracking No.', 'Feedback','Campaign/Phase Associated With','Comments');
+            $history['count'] = count($history['head']);
+
+
+            if ($page != null || $page != "") {
+                $i = (($page * 10) - 9);
+            } else {
+                $i = 1;
+            }
+
+            foreach ($history_details['result'] as $ps) {
+
+                    if($local_date != null)
+                    {
+                        $date = strtotime($ps['created_on']);
+                        $c_date = date($local_date,$date);
+
+                    }
+                    else{
+                        $c_date = $ps['invoice_date'];
+                    }
+
+                $date = strtotime($ps['created_on']);
+                $c_time = date('H:i:s',$date);
+
+                $history['row'][] = array($i,$c_date, $c_time, $ps['call_duration'], '-', '-', '-', '-',$ps['feedback'],'-','-');
+                    $i++;
+                }
+
+            $history['pagination'] = $history_details['pagination'];
+                return $history;
+            }
+            else{
+                return false;
+            }
+
+    }
+
+
 
 
     /*-----------------------------------------------------------------------------------------*/
@@ -1989,7 +2424,7 @@ class Cco_model extends BF_Model
 
     public function get_personal_general_data($customer_id)
     {
-        $this->db->select("bu.id,bu.email,bu.display_name,
+        $this->db->select("bu.id,bu.role_id,bu.email,bu.display_name,
                            bmucd.primary_mobile_no,bmucd.secondary_mobile_no,bmucd.landline_no,bmucd.house_no,bmucd.address,bmucd.landmark,bmucd.pincode,
                            bmpgd1.political_geography_name as level1,bmpgd2.political_geography_name as level2,bmpgd3.political_geography_name as level3,
 
@@ -2254,28 +2689,18 @@ class Cco_model extends BF_Model
     public function get_missedcall_data($page = null,$local_date=null)
     {
 
-
-        $sql = ' SELECT  * ';
-       // $sql = ' SELECT  bcf.feedback_subject,bcf.feedback_description,bcf.feedback_id,bcf.created_on,bu.display_name,bmctc.customer_type_name,bu1.display_name as entered_by_user ';
-        $sql .= ' FROM bf_cco_missedcall  ';
-        //$sql .= ' JOIN bf_users as bu ON (bu.id = bcf.customer_id) ';
-        //$sql .= ' JOIN bf_users as bu1 ON (bu1.id = bcf.created_by_user) ';
-       // $sql .= ' JOIN bf_master_customer_type_country as bmctc ON (bmctc.customer_type_id = bu.user_type_id AND bmctc.country_id = bu.country_id) ';
-
+        $sql = ' SELECT  bcm.*,bu.display_name,bu.role_id ';
+        $sql .= ' FROM bf_cco_missedcall as bcm ';
+        $sql .= ' LEFT JOIN bf_users as bu ON (bu.id = bcm.customer_id) ';
         $sql .= 'WHERE 1 ';
-        //$sql .= ' AND bcf.deleted =0 ';
-        //$sql .= ' AND bcf.status =1 ';
 
+        $missedcall_data = $this->grid->get_result_res($sql);
 
-        // $sql .= 'ORDER BY bcca.allocation_id DESC ';
-//testdata($sql);
-        $feedback_data = $this->grid->get_result_res($sql);
+        if (isset($missedcall_data['result']) && !empty($missedcall_data['result'])) {
 
-        if (isset($feedback_data['result']) && !empty($feedback_data['result'])) {
+            $missedcall['head'] = array('Sr No.','Name','Mob. Number','Date','Time','Caller Type');
 
-            $feedback['head'] = array('Sr No.','Name','Mob. Number','Date','Time','Type','Caller Type');
-
-            $feedback['count'] = count($feedback['head']);
+            $missedcall['count'] = count($missedcall['head']);
 
             if ($page != null || $page != "") {
                 $i = (($page * 10) - 9);
@@ -2283,22 +2708,66 @@ class Cco_model extends BF_Model
                 $i = 1;
             }
 
-            foreach ($feedback_data['result'] as $rm) {
-                $feedback['row'][] = array($i,$rm['cco_id'],$rm['cco_id'],$rm['cco_id'],$rm['customer_id'],$rm['number'],$rm['missedcall_date']);
+
+            foreach ($missedcall_data['result'] as $rm) {
+
+                if(isset($rm['missedcall_date']) && !empty($rm['missedcall_date'])){
+                $dateandtime = explode(" ",$rm['missedcall_date']);
+                    $date=$dateandtime[0];
+                    $time=$dateandtime[1];
+                }else{
+                    $date="";
+                    $time="";
+                }
+
+                if(isset($rm['role_id']) && !empty($rm['role_id']) ){
+                    if($rm['role_id']=='9') { $customer_type='Distributor'; }
+                    if($rm['role_id']=='10'){ $customer_type='Retailer';    }
+                    if($rm['role_id']=='11'){ $customer_type='Farmer';      }
+                }else{
+                    $customer_type="";
+
+                }
+
+                if(isset($rm['display_name']) && !empty($rm['display_name']) ){
+                    $display_name=$rm['display_name'];
+                }else{
+                    $display_name="";
+
+                }
+
+                $missedcall['row'][] = array($i,$display_name,$rm['number'],$date,$time,$customer_type);
                 $i++;
             }
 
-
-
-            $feedback['pagination'] = $feedback_data['pagination'];
+            $missedcall['pagination'] = $missedcall_data['pagination'];
            // testdata($feedback);
-            return $feedback;
+            return $missedcall;
         }
         else {
             return false;
         }
 
     }
+    public function get_cco_data_bargin($country_id,$logged_in_user)
+    {
+        $this->db->select('id,display_name');
+        $this->db->from('users');
+        $this->db->where('country_id',$country_id);
+        $this->db->where('id !=',$logged_in_user);
+        $this->db->where_in('role_id',array(19,18));
+        $this->db->where('active','1');
+        $this->db->where('deleted','0');
+        $cco_data = $this->db->get()->result_array();
+
+        if(isset($cco_data ) && !empty($cco_data )){
+            return $cco_data;
+        }
+        else{
+            return array();
+        }
+    }
+
     public function get_user_data($customer_id)
     {
         $this->db->select("*");
@@ -2381,44 +2850,118 @@ class Cco_model extends BF_Model
     }
 
     public function add_update_feedback_data()
+{
+    if(!empty($_POST)) {
+        $customer_id = $_POST["customer_id"];
+        $user = $this->auth->user();
+        $logined_user_id = $user->id;
+        $update_array = array();
+
+        $feedback_update_array = array(
+            'customer_id' => $customer_id,
+            'feedback_subject' => $_POST["subject"],
+            'feedback_description' => $_POST["description"],
+            'cco_id' => $logined_user_id,
+            'created_by_user' => $logined_user_id,
+            'modified_by_user' => $logined_user_id,
+            'created_on' => date('Y-m-d H:i:s'),
+            'modified_on' => date('Y-m-d H:i:s')
+        );
+        if($_POST['feedback_edit_id'] == "") {
+            if ($_POST['subject'] != "" && $_POST['description'] != ""){
+                $result = $this->db->insert("bf_cco_feedback", $feedback_update_array);
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
+            }
+        }
+        else
+        {
+            //UPDATE
+            if ($_POST['subject'] != "" && $_POST['description'] != "") {
+                $this->db->where("feedback_id", $_POST['feedback_edit_id']);
+                $this->db->update("bf_cco_feedback", $feedback_update_array);
+
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
+            }
+
+        }
+    }
+    if(in_array(1,$update_array))
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+    public function add_update_upper_dialpad_info()
     {
         if(!empty($_POST)) {
             $customer_id = $_POST["customer_id"];
+            $campaign_id=$_POST["campaign_id"];
             $user = $this->auth->user();
             $logined_user_id = $user->id;
             $update_array = array();
 
             $feedback_update_array = array(
-                'customer_id' => $customer_id,
-                'feedback_subject' => $_POST["subject"],
-                'feedback_description' => $_POST["description"],
-                'cco_id' => $logined_user_id,
-                'created_by_user' => $logined_user_id,
-                'modified_by_user' => $logined_user_id,
-                'created_on' => date('Y-m-d H:i:s'),
-                'modified_on' => date('Y-m-d H:i:s')
+
+                'called_status' => $_POST["call_status"],
+                'remarks' => $_POST["remarks"],
+                'comments' => $_POST["comments"],
             );
-            if($_POST['feedback_edit_id'] == "") {
-                if ($_POST['subject'] != "" && $_POST['description'] != ""){
-                    $result = $this->db->insert("bf_cco_feedback", $feedback_update_array);
-                        if ($this->db->affected_rows() > 0) {
-                            $update_array[] = 1;
-                        }
-                    }
+            if ($_POST['remarks'] != "" && $_POST['comments'] != "") {
+                $this->db->where("campaign_id", $_POST['campaign_id']);
+                $this->db->where("customer_id", $_POST['customer_id']);
+                $this->db->update("bf_cco_campaign_allocation_customers", $feedback_update_array);
+
+                if ($this->db->affected_rows() > 0) {
+                    $update_array[] = 1;
+                }
             }
-            else
-            {
-                //UPDATE
-                if ($_POST['subject'] != "" && $_POST['description'] != "") {
-                    $this->db->where("feedback_id", $_POST['feedback_edit_id']);
-                    $this->db->update("bf_cco_feedback", $feedback_update_array);
+
+        }
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public function add_update_bargin_info($cco_id,$phone_no)
+    {
+        if(!empty($_POST)) {
+
+            $user = $this->auth->user();
+            $logined_user_id = $user->id;
+            $update_array = array();
+
+            $bargin_update_array = array(
+
+                'assigned_cco_id' =>$cco_id,
+                'phone_no' => $phone_no,
+                'assigned_by_cco_id' => $logined_user_id,
+                'created_by' => $logined_user_id,
+                'created_on' => date('Y-m-d H:i:s'),
+
+            );
+
+                if ($cco_id != "" && $phone_no != ""){
+                    $result = $this->db->insert("bf_cco_call_braging", $bargin_update_array);
 
                     if ($this->db->affected_rows() > 0) {
                         $update_array[] = 1;
                     }
                 }
 
-            }
+
         }
         if(in_array(1,$update_array))
         {
@@ -2790,17 +3333,30 @@ class Cco_model extends BF_Model
     public function add_update_general_data()
     {
 
-        $customer_id = $_POST["customer_id"];
+        //$customer_id = $_POST["customer_id"];
+
+        $customer_id = (isset($_POST["customerid"]) && !empty($_POST["customerid"])) ? $_POST["customerid"] : "";
 
         $update_array = array();
 
         $user_update_array = array(
-            'email' => $_POST["email_id"],
-            'display_name' => $_POST["customer_name"]
+            'email' => (isset($_POST["email_id"]) && !empty($_POST["email_id"]))?$_POST["email_id"] :NULL,
+            'display_name' => (isset($_POST["customer_name"]) && !empty($_POST["customer_name"]))?$_POST["customer_name"] :NULL
         );
 
-        $this->db->where("id",$customer_id);
-        $this->db->update("bf_users",$user_update_array);
+        if ($customer_id != "")
+        {
+            $this->db->where("id", $customer_id);
+            $this->db->update("bf_users", $user_update_array);
+        }
+        else
+        {
+
+            $user_update_array["role_id"] = (isset($_POST["role_id"]) && !empty($_POST["role_id"]))?$_POST["role_id"] :4;
+
+            $this->db->insert("bf_users", $user_update_array);
+            $customer_id = $this->db->insert_id();
+        }
 
         if($this->db->affected_rows() > 0){
             $update_array[] = 1;
@@ -2917,7 +3473,17 @@ class Cco_model extends BF_Model
 
         if(in_array(1,$update_array))
         {
-            return 1;
+
+            $caller_data = $this->session->userdata('caller_data');
+
+            if(!empty($caller_data))
+            {
+                return 1;
+            }
+            else
+            {
+                return 2;
+            }
         }
         else
         {
@@ -4088,10 +4654,65 @@ class Cco_model extends BF_Model
         } else {
             return 0;
         }
-
     }
 
+    /* CCO :: REMINDER */
 
+    public function get_reminder()
+    {
+        $user = $this->auth->user();
+
+        /*$this->db->select("*");
+        $this->db->from("cco_reminder");
+        $this->db->where("created_by_user",$user->id);
+        $this->db->order_by("reminder_id","DESC");*/
+
+        $sql = "SELECT * FROM bf_cco_reminder where created_by_user = ".$user->id." order by reminder_id DESC ";
+        $reminder_data = $this->grid->get_result_res($sql);
+
+        if (isset($reminder_data) && !empty($reminder_data)) {
+            return $reminder_data;
+        } else {
+            return array();
+        }
+    }
+
+    public function save_reminder()
+    {
+        $user= $this->auth->user();
+
+        //$reminder_type =
+        $reminder_date = str_replace('/', '-', $this->input->post('reminder_date'));
+        $reminder_time = strtotime($reminder_date.' '.$this->input->post('reminder_time'));
+
+        $data = array(  'reminder_id'=>0,
+            'reminder_call_id'=>0,
+            'reminder_type'=>$this->input->post('reminder_type'),
+            'reminder_datetime'=>date("Y-m-d H:i:s",$reminder_time),
+            'reminder_title'=>$this->input->post('reminder_title'),
+            'reminder_remarks'=>$this->input->post('reminder_remarks'),
+            'created_by_user'=>$user->id,
+            'modified_by_user'=>$user->id,
+            'created_on'=>date("Y-m-d H:i:s"),
+            'modified_on'=>date("Y-m-d H:i:s")
+        );
+
+        $this->db->insert('cco_reminder',$data);
+    }
+
+    public function delete_reminder()
+    {
+        if(isset($_POST['reminder_id']))
+        {
+            $reminder_id = $_POST['reminder_id'];
+            if(is_array($reminder_id) && count($reminder_id)>0)
+            {
+                $sql = 'DELETE FROM bf_cco_reminder WHERE reminder_id in ('.implode(',',$reminder_id).')';
+                $this->db->query($sql);
+            }
+        }
+    }
+    /* CCO :: REMINDER */
 
 
 }

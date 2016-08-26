@@ -4,6 +4,10 @@
     <div class="back_details">
 
         <?php
+        $customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+        ?>
+
+        <?php
         $attributes = array('class' => '', 'id' => 'dialpad_financial_info','name'=>'dialpad_financial_info', 'autocomplete'=>'off');
         echo form_open('cco/add_update_financial_info',$attributes);
         ?>

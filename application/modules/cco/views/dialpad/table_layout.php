@@ -106,14 +106,19 @@
                     ?>
                     <tr>
                         <td><?php echo $i; ?></td>
-                        <td><?php echo $searchdata['disease_name']; ?></td>
-                        <td><?php echo $searchdata['symptoms_country_name']; ?></td>
-                        <td><?php echo $searchdata['product_sku_name']; ?></td>
-                        <td><?php echo $searchdata['crop_name']; ?></td>
-                        <td><?php echo $searchdata['activity_planning_time']; ?></td>
-                        <td><?php echo $searchdata['display_name']; ?></td>
-                        <td><?php echo $searchdata['primary_mobile_no']; ?></td>
-                        <td><?php echo $searchdata['activity_type_country_name']; ?></td>
+                        <td><?php echo (isset($searchdata['disease_name']) && !empty($searchdata['disease_name']))?$searchdata['disease_name'] : ""; ?></td>
+                        <td><?php echo (isset($searchdata['symptoms_country_name']) && !empty($searchdata['symptoms_country_name']))?$searchdata['symptoms_country_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['product_sku_name']) && !empty($searchdata['product_sku_name']))?$searchdata['product_sku_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['crop_name']) && !empty($searchdata['crop_name']))?$searchdata['crop_name'] : ""; ?></td>
+                        <td><?php echo (isset($searchdata['activity_planning_time']) && !empty($searchdata['activity_planning_time']))?$searchdata['activity_planning_time'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['display_name']) && !empty($searchdata['display_name']))?$searchdata['display_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['primary_mobile_no']) && !empty($searchdata['primary_mobile_no']))?$searchdata['primary_mobile_no'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['activity_type_country_name']) && !empty($searchdata['activity_type_country_name']))?$searchdata['activity_type_country_name'] : ""; ?></td>
                     </tr>
                 <?php
                     $i++;
@@ -126,14 +131,23 @@
                    ?>
                     <tr>
                         <td><?php echo $j; ?></td>
-                        <td><?php echo $searchdata['product_sku_name']; ?></td>
-                        <td><?php echo $searchdata['disease_name']; ?></td>
-                        <td><?php echo $searchdata['symptoms_country_name']; ?></td>
-                        <td><?php echo $searchdata['crop_name']; ?></td>
-                        <td><?php echo $searchdata['activity_planning_time']; ?></td>
-                        <td><?php echo $searchdata['display_name']; ?></td>
-                        <td><?php echo $searchdata['primary_mobile_no']; ?></td>
-                        <td><?php echo $searchdata['activity_type_country_name']; ?></td>
+
+                        <td><?php echo (isset($searchdata['product_sku_name']) && !empty($searchdata['product_sku_name']))?$searchdata['product_sku_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['disease_name']) && !empty($searchdata['disease_name']))?$searchdata['disease_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['symptoms_country_name']) && !empty($searchdata['symptoms_country_name']))?$searchdata['symptoms_country_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['crop_name']) && !empty($searchdata['crop_name']))?$searchdata['crop_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['activity_planning_time']) && !empty($searchdata['activity_planning_time']))?$searchdata['activity_planning_time'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['display_name']) && !empty($searchdata['display_name']))?$searchdata['display_name'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['primary_mobile_no']) && !empty($searchdata['primary_mobile_no']))?$searchdata['primary_mobile_no'] : ""; ?></td>
+
+                        <td><?php echo (isset($searchdata['activity_type_country_name']) && !empty($searchdata['activity_type_country_name']))?$searchdata['activity_type_country_name'] : ""; ?></td>
+
                     </tr>
                     <?php
                     $j++;

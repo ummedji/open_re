@@ -36,11 +36,7 @@
             </div>
         </div>
 
-
-
         <div class="clearfix"></div>
-
-
 
         <div id="searched_data">
             <?php

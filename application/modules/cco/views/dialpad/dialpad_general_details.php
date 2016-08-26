@@ -1,4 +1,8 @@
 <?php
+$phone_no = $this->session->userdata('phone_no');
+$caller_status = $this->session->userdata('caller_status');
+?>
+<?php
 //testdata($personal_general_data);
 
 $customer_id = (isset($personal_general_data[0]["id"]) && !empty($personal_general_data[0]["id"]))? $personal_general_data[0]["id"] : "";
@@ -7,8 +11,12 @@ $customer_name = (isset($personal_general_data[0]["display_name"]) && !empty($pe
 
 $customer_email = (isset($personal_general_data[0]["email"]) && !empty($personal_general_data[0]["email"]))? $personal_general_data[0]["email"] : "";
 
-$customer_primary_mobile_no = (isset($personal_general_data[0]["primary_mobile_no"]) && !empty($personal_general_data[0]["primary_mobile_no"]))? $personal_general_data[0]["primary_mobile_no"] : "";
-
+if($caller_status == 'FALSE'){
+    $customer_primary_mobile_no = $phone_no;
+}
+else {
+    $customer_primary_mobile_no = (isset($personal_general_data[0]["primary_mobile_no"]) && !empty($personal_general_data[0]["primary_mobile_no"])) ? $personal_general_data[0]["primary_mobile_no"] : "";
+}
 $customer_secondary_mobile_no = (isset($personal_general_data[0]["secondary_mobile_no"]) && !empty($personal_general_data[0]["secondary_mobile_no"]))? $personal_general_data[0]["secondary_mobile_no"] : "";
 
 $customer_landline_no = (isset($personal_general_data[0]["landline_no"]) && !empty($personal_general_data[0]["landline_no"]))? $personal_general_data[0]["landline_no"] : "";
@@ -50,6 +58,8 @@ $customer_ktp_no = (isset($personal_general_data[0]["ktp_no"]) && !empty($person
 $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"]) && !empty($personal_general_data[0]["aadhaar_card_no"]))? $personal_general_data[0]["aadhaar_card_no"] : "";
 
 
+$customer_role_no = (isset($personal_general_data[0]["role_id"]) && !empty($personal_general_data[0]["role_id"]))? $personal_general_data[0]["role_id"] : "";
+
 //$addres_data = $customer_house_no."\r\n".$customer_address."\r\n".$customer_landmark."\r\n".$level1."\r\n".$level2."\r\n".$level3."\r\n".$customer_pincode;
 
 ?>
@@ -89,6 +99,8 @@ $customer_aadhaar_card_no = (isset($personal_general_data[0]["aadhaar_card_no"])
                             <label for="Farmer Name">Farmer Name</label>
 
                             <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
+
+                            <input type="hidden" class="form-control" name="role_id" id="role_id" placeholder="" value="<?php echo $customer_role_no; ?>" />
 
                             <input type="text" class="form-control" name="customer_name" id="customer_name" placeholder="" value="<?php echo $customer_name; ?>" />
                             <div class="clearfix"></div>

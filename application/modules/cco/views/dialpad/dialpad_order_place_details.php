@@ -4,6 +4,10 @@
     <div class="back_details">
 
         <?php
+        $customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+        ?>
+
+        <?php
         $attributes = array('class' => '', 'id' => 'dialpad_order_place','name'=>'dialpad_order_place', 'autocomplete'=>'off');
         echo form_open('cco/add_order_place',$attributes);
         ?>
@@ -21,6 +25,7 @@
                                         $action_data = $this->session->userdata("action_data");
                                         $selected_type_data = $this->session->userdata("activity_type");
 
+                                    $label = "";
                                         if($action_data == "farmer_dialpad")
                                         {
                                             $label = "Select Retailer";

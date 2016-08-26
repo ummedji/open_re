@@ -1,8 +1,17 @@
 <div class="actv-details-form">
 
     <?php
+    $customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+    ?>
+
+    <?php
 
     $caller_data = $this->session->userdata("caller_data");
+
+    $label_data = "";
+    $select_label_data = "";
+    $option_data = "";
+    $selected_data_label = "";
 
     if(isset($caller_data[0]["role_id"]) && $caller_data[0]["role_id"] == 11)
     {

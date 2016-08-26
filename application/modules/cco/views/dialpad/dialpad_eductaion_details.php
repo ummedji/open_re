@@ -13,7 +13,9 @@ if(!empty($education_qualification_data) && $education_qualification_data != 0)
 }
 
 ?>
-
+<?php
+$customer_id = (isset($customer_id) && !empty($customer_id))? $customer_id : "";
+?>
 <div class="actv-details-form">
 
     <h5 style="margin: 0px 0 20px 0;">Education Details</h5>
@@ -30,6 +32,10 @@ if(!empty($education_qualification_data) && $education_qualification_data != 0)
                 <!--<hr><h6 class="gn-info-tl">Education Details</h6>-->
 
                 <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
+
+                <div class="rotate_data">
+
+                </div>
 
                 <?php
               //  testdata($personal_education_data);
