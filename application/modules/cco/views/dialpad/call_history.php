@@ -1,4 +1,4 @@
-<div class="actv-details-form">
+<div class="actv-details-form order_status-none-zoom">
     <h5 class="title" style="margin: 0px 0 20px 0;">Call History</h5>
     <?php
     if ($this->input->is_ajax_request()) {

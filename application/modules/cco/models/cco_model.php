@@ -65,21 +65,63 @@ class Cco_model extends BF_Model
 
     public function get_campagain_phase_question_data($phaseid,$campagain_id)
     {
-
         $user = $this->auth->user();
 
         $this->db->select("*");
         $this->db->from("bf_cco_campaign_phase_questions as bccpq");
-        $this->db->join("bf_questions_master as bqm","bqm.question_id = bccp.question_id");
+        $this->db->join("bf_questions_master as bqm","bqm.question_id = bccpq.question_id");
 
-        $this->db->where("bccpq.country_id",$user->country_id);
+       // $this->db->join("bf_questions_options as bqo","bqo.question_id = bqm.question_id","left");
+
+        $this->db->where("bqm.country_id",$user->country_id);
         $this->db->where("bccpq.phase_id",$phaseid);
         $this->db->where("bccpq.campagain_or_activity_id",$campagain_id);
         $this->db->where("bccpq.task_type",'campaign');
 
         $campagain_phase_question_data = $this->db->get()->result_array();
 
+        //echo $this->db->last_query();
+
         return $campagain_phase_question_data;
+    }
+
+    public function get_campagain_active_phase_data($campagain_id)
+    {
+        $this->db->select("phase_id");
+        $this->db->from("bf_cco_campaign_phase");
+        $this->db->where("campaign_id",$campagain_id);
+
+        $this->db->where("start_date <=",date("Y-m-d"));
+        $this->db->where("end_date >=",date("Y-m-d"));
+
+        $campagain_active_phase_data = $this->db->get()->row_array();
+
+       // echo $this->db->last_query();
+
+        return $campagain_active_phase_data;
+    }
+
+    public function get_question_options($question_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_questions_options as bqo");
+        $this->db->where("bqo.question_id",$question_id);
+        $this->db->order_by("bqo.optionorder","DESC");
+
+        $question_option_data = $this->db->get()->result_array();
+
+        return $question_option_data;
+    }
+
+    public function get_phase_script_data($phaseid)
+    {
+        $this->db->select("bccp.script as script_data");
+        $this->db->from("bf_cco_campaign_phase as bccp");
+        $this->db->where("bccp.phase_id",$phaseid);
+
+        $script_data = $this->db->get()->row_array();
+
+        return $script_data;
     }
 
     public function get_child_data($political_geo_id)
@@ -111,7 +153,6 @@ class Cco_model extends BF_Model
         {
             $user_role = 9;
         }
-
 
         $geo_query = "SELECT bmpg.political_geo_id, bmpg.political_geography_name,
         SUM(IF(ISNULL(bmucd.user_id),0,1)) AS tot_count,
@@ -241,6 +282,30 @@ class Cco_model extends BF_Model
             return 0;
         }
     }
+
+    public function activity_data($customer_id,$country_id)
+    {
+
+        $this->db->select("beap.*,beapkcd.*,beamc.*");
+        $this->db->from("bf_ecp_activity_planning as beap");
+        $this->db->join("bf_ecp_activity_planning_key_customer_details as beapkcd","beapkcd.activity_planning_id = beap.activity_planning_id");
+        $this->db->join("bf_ecp_activity_master_country as beamc","beamc.activity_type_country_id = beap.activity_type_id");
+
+        $this->db->where("beapkcd.customer_id",$customer_id);
+        $this->db->where("beap.status",'4');
+        $this->db->where("beap.country_id",$country_id);
+
+        $activity_data = $this->db->get()->result_array();
+
+        if (isset($activity_data) && !empty($activity_data)) {
+            return $activity_data;
+        } else
+        {
+            return 0;
+        }
+
+    }
+
     public function call_status_data($campagain_id,$customer_id)
     {
         $this->db->select("*");
@@ -4072,6 +4137,86 @@ class Cco_model extends BF_Model
 
     }
 
+
+    public function add_update_question_detail_data()
+    {
+        //testdata($_POST);
+        $user = $this->auth->user();
+
+        $customer_id = $_POST["customer_id"];
+
+        $update_array = array();
+
+        if(!empty($_POST["question_id"])){
+            foreach($_POST["question_id"] as $question_key => $question_id)
+            {
+
+                if(is_array($_POST["question_answer"][$question_id]))
+                {
+                    $answer = implode(",",$_POST["question_answer"][$question_id]);
+                }
+                else
+                {
+                    $answer = $_POST["question_answer"][$question_id];
+                }
+
+                $data_array = array(
+                    'cco_id' => $user->id,
+                    'customer_id' => $customer_id,
+                    'phase_question_id' => $question_id,
+                    'customer_answer' => $answer,
+                    'created_by_user' => $user->id,
+                    'created_on' => date("Y-m-d H:i:s")
+                );
+
+                //CHECK QUESTION FOR THAT QUESTION CUSTOMER HAVE ALREADY ANSWER THAN UPDATE
+
+                $this->db->select("*");
+                $this->db->from("bf_cco_campaign_questions_user_answer");
+                $this->db->where("phase_question_id",$question_id);
+                $this->db->where("customer_id",$customer_id);
+                $answer_data = $this->db->get()->result_array();
+
+                if(empty($answer_data)){
+                    $this->db->insert("bf_cco_campaign_questions_user_answer",$data_array);
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                }
+                else
+                {
+                    $this->db->where("phase_question_id",$question_id);
+                    $this->db->where("customer_id",$customer_id);
+                    $this->db->update("bf_cco_campaign_questions_user_answer",$data_array);
+                    if ($this->db->affected_rows() > 0) {
+                        $update_array[] = 1;
+                    }
+                }
+
+            }
+        }
+
+        if(in_array(1,$update_array))
+        {
+            return 1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public function get_question_user_answer_data($question_id,$customer_id)
+    {
+        $this->db->select("*");
+        $this->db->from("bf_cco_campaign_questions_user_answer");
+        $this->db->where("phase_question_id",$question_id);
+        $this->db->where("customer_id",$customer_id);
+        $answer_data = $this->db->get()->result_array();
+
+        return $answer_data;
+    }
+
     public function get_search_disease_detail($search_data,$customer_id)
     {
         $user = $this->auth->user();
@@ -4667,7 +4812,14 @@ class Cco_model extends BF_Model
         $this->db->where("created_by_user",$user->id);
         $this->db->order_by("reminder_id","DESC");*/
 
-        $sql = "SELECT * FROM bf_cco_reminder where created_by_user = ".$user->id." order by reminder_id DESC ";
+        $sql = "SELECT cr.*,bu.display_name, ucd.primary_mobile_no
+                FROM bf_cco_reminder as cr
+                LEFT JOIN bf_cco_call_details as ccd on (ccd.call_id = cr.reminder_call_id)
+                LEFT JOIN bf_users as bu on (bu.id = ccd.customer_id)
+                LEFT JOIN bf_master_user_contact_details as ucd on (ucd.user_id = bu.id)
+                WHERE cr.created_by_user = ".$user->id.
+               " AND cr.deleted = 0 ORDER BY cr.reminder_id DESC ";
+
         $reminder_data = $this->grid->get_result_res($sql);
 
         if (isset($reminder_data) && !empty($reminder_data)) {

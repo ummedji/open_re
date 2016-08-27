@@ -19,10 +19,10 @@
 
                         ?>
                         <div class="row">
-                            <div class="col-md-8 col-md-offset-2 cco-form-fl">
+                            <div class="col-md-12 cco-form-fl">
                                 <div class="row tp_form">
                                     <div class="form-group">
-                                        <div class="col-md-6 text-right-cco">
+                                        <div class="col-md-5 text-right-cco">
                                             <input type="text" class="form-control" name="search_by_otn" id="search_by_otn" placeholder="Search By Order No." value="" />
                                         </div>
                                         <div class="clearfix"></div>

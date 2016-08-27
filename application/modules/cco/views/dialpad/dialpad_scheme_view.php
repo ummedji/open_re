@@ -32,9 +32,7 @@
                     <div class="form-group">
                         <label>Geo Level 2<span style="color: red">*</span></label>
                         <div class="inln_fld_top text-left">
-
-
-                            <input readonly type="text" class="form-controls" name="geo_loc_name" id="geo_loc_name" placeholder="" value="<?php echo $get_business_geo_data_to_retailer['business_georaphy_name']; ?>" autocomplete="off" aria-required="true">
+                            <input type="text" class="form-control" name="geo_loc_name" id="geo_loc_name" placeholder="" value="<?php echo $get_business_geo_data_to_retailer['business_georaphy_name']; ?>" autocomplete="off" aria-required="true" readonly>
 
                             <input type= "hidden" name="geo_loc_id" id="geo_loc_id" value="<?php echo $get_business_geo_data_to_retailer['business_geo_id']; ?>">
 
@@ -70,7 +68,7 @@
         echo theme_view('common/middle');
     }
     ?>
-    <div id="middle_container" class="scheme_view_middle_container">
+    <div id="middle_container" class="scheme_view_middle_container order_status-none-zoom">
 
     </div>
 </div>

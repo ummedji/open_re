@@ -47,7 +47,7 @@
                         echo form_open('', $attributes);
                         ?>
                         <input type="hidden" name="mob_num" id="mob_num" value="<?php echo $this->session->userdata('phone_no');?>" />
-                        <div class="default_box_white">
+                        <div style="padding-top: 20px;">
                             <div class="col-md-12 text-center tp_form inline-parent">
                                 <div class="form-group">
                                     <label>Designation <span style="color: red">*</span></label>

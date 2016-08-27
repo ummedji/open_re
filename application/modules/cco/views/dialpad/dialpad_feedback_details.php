@@ -60,19 +60,19 @@
         </div>
         <div class="clearfix"></div>
         <div class="col-md-1 col-md-1-n">
-            <label class="space_llb">&nbsp;</label>
+
             <button type="submit" class="btn btn-default back_details-button">Save</button>
         </div>
         <div class="col-md-1 col-md-1-n">
-            <label class="space_llb">&nbsp;</label>
-            <button type="submit" class="btn btn-default back_details-button" onclick="location.reload();">Cancel</button>
+
+            <button type="submit" class="btn btn-default back_details-button" style="background-color: #ff0000;" onclick="location.reload();">Cancel</button>
         </div>
 
         <?php form_close(); ?>
 
     </div>
     <div class="clearfix"></div>
-    <div id="feedback_data">
+    <div id="feedback_data" class="order_status-none-zoom" style="margin-top: 20px;">
     <?php
     if ($this->input->is_ajax_request()) {
         echo theme_view('common/middle');

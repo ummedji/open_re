@@ -428,26 +428,66 @@ function get_questions_detail_data(customer_id)
         data: {customerid: customer_id,campagain_id:campagain_id},
         success: function (resp) {
             $("div#dialpad_middle_contailner").html(resp);
+
+            setTimeout(function(){
+
+            $.ajax({
+                type: 'POST',
+                url: site_url + "cco/get_active_phase_data",
+                data: {campagain_id: campagain_id},
+                dataType:'json',
+                success: function (resp) {
+
+                  //  $("div.tab-pane").removeClass("active");
+                    $("ul.phase-list li").removeClass("active");
+                   // $("div#phase-"+resp.phase_id).addClass("active");
+
+                    $("ul.phase-list li a#phase_data_"+resp.phase_id).trigger("click");
+                }
+            });
+
+            }, 1000);
             //  get_geo_data(campagain_id,1,num_count);
         }
     });
 
 }
 
-$(document).on("click","#phase_question_data",function(){
+$(document).on("click",".phase_question_data",function(){
 
     var phase_id = $(this).attr("rel");
+
     var campagain_id = $("select#campaign_id").val();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/get_phase_script_data",
+        dataType:'json',
+        data: {phaseid: phase_id,campagain_id:campagain_id},
+        success: function (resp) {
+
+            $("div.script-cont").empty();
+            $("div.script-cont").html(resp.script_data);
+            //  get_geo_data(campagain_id,1,num_count);
+        }
+    });
 
     $.ajax({
         type: 'POST',
         url: site_url + "cco/get_phase_question_data",
         data: {phaseid: phase_id,campagain_id:campagain_id},
+        dataType:'html',
         success: function (resp) {
-            $("div#dialpad_middle_contailner").html(resp);
-            //  get_geo_data(campagain_id,1,num_count);
+            $("div.tab-pane").removeClass("active");
+
+            $("ul#ul-phase-"+phase_id).empty();
+            $("ul#ul-phase-"+phase_id).html(resp);
+
+            $("div#phase-"+phase_id).addClass("active");
         }
     });
+
+
 
 });
 
@@ -524,7 +564,7 @@ $(document).on("change","input.select_customer_type",function(){
     //alert('in');
     var validator = $("#emp_order_status").validate();
 
-    validator.resetForm();
+   // validator.resetForm();
 
     var customer_type_selected = $(this).val();
 
@@ -2504,6 +2544,47 @@ $(document).on("submit","form#dialpad_business_info",function(e){
     return false;
 });
 
+$(document).on("submit","form#dialpad_question_data",function(e){
+
+    e.preventDefault();
+
+    var customer_id = $("input#customer_id").val();
+    var param =  $("form#dialpad_question_data").serializeArray();
+
+    $.ajax({
+        type: 'POST',
+        url: site_url + "cco/add_update_question_data",
+        data:param,
+        success: function (resp) {
+
+            var message = "";
+            if(resp == 1){
+                message += 'Data Added Successfully.';
+            }
+            else{
+                message += 'Data not Added.';
+            }
+            $('<div></div>').appendTo('body')
+                .html('<div><b>'+message+'</b></div>')
+                .dialog({
+                    appendTo: "#success_file_popup",
+                    modal: true,
+                    zIndex: 10000,
+                    autoOpen: true,
+                    width: 'auto',
+                    resizable: true,
+                    close: function (event, ui) {
+                        $(this).remove();
+                        get_questions_detail_data(customer_id);
+                        //location.reload()
+                    }
+                });
+
+        }
+    });
+    return false;
+});
+
 $(document).on('click','tr.activity_details',function(){
    var id =  $(this).attr('id');
 
@@ -2573,29 +2654,14 @@ function save_call_transfer(){
         data: param,
         dataType : 'html',
         success: function (resp) {
-            $('#reminder_container').modal('hide');
-            var message = "";
-            if(resp == 1){
-
-                message += 'Data Inserted successfully.';
+            $('#popup_container').modal('hide');
+            var msg;
+            if(resp == 1) {
+                msg = 'data_inserted';
+            } else{
+                msg = 'data_not_inserted';
             }
-            else{
-
-                message += 'Data not Inserted.';
-            }
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                    }
-                });
+            show_message_popup(msg);
         }
     });
 }
@@ -2613,29 +2679,14 @@ function save_emp_call_transfer(){
         data: param,
         dataType : 'html',
         success: function (resp) {
-            $('#reminder_container').modal('hide');
-            var message = "";
-            if(resp == 1){
-
-                message += 'Data Inserted successfully.';
+            $('#popup_container').modal('hide');
+            var msg;
+            if(resp == 1) {
+                msg = 'data_inserted';
+            } else{
+                msg = 'data_not_inserted';
             }
-            else{
-
-                message += 'Data not Inserted.';
-            }
-            $('<div></div>').appendTo('body')
-                .html('<div><b>'+message+'</b></div>')
-                .dialog({
-                    appendTo: "#success_file_popup",
-                    modal: true,
-                    zIndex: 10000,
-                    autoOpen: true,
-                    width: 'auto',
-                    resizable: true,
-                    close: function (event, ui) {
-                        $(this).remove();
-                    }
-                });
+            show_message_popup(msg);
         }
     });
 
@@ -2672,10 +2723,15 @@ function save_call_reminder()
         type: 'POST',
         url: site_url + "cco/add_reminder",
         data: param,
-        dataType : 'html',
         success: function (resp) {
-            $("#popup_container").html(resp);
-            //$('#reminder_container').modal({show:true});
+            $('#popup_container').modal('hide');
+            var msg;
+            if(resp == 1) {
+                msg = 'data_inserted';
+            } else{
+                msg = 'data_not_inserted';
+            }
+            show_message_popup(msg);
         }
     });
 }
@@ -2691,8 +2747,14 @@ function save_gen_reminder()
         data: param,
         dataType : 'html',
         success: function (resp) {
-            $("#popup_container").html(resp);
-            //$('#reminder_container').modal({show:true});
+            $('#popup_container').modal('hide');
+            var msg;
+            if(resp == 1) {
+                msg = 'data_inserted';
+            } else{
+                msg = 'data_not_inserted';
+            }
+            show_message_popup(msg);
         }
     });
 }
@@ -2706,8 +2768,14 @@ function delete_reminder()
         data: param,
         dataType : 'html',
         success: function (resp) {
-            $("#popup_container").html(resp);
-            //$('#reminder_container').modal({show:true});
+            $('#popup_container').modal('hide');
+            var msg;
+            if(resp == 1) {
+                msg = 'data_deleted';
+            } else{
+                msg = 'data_not_deleted';
+            }
+            show_message_popup(msg);
         }
     });
 }

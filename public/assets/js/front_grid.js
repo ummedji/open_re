@@ -167,3 +167,26 @@ $(document).on('click','#work_allocated_summary',function(){
     });
 });
 /* CCO :: Get Allocated Work Summary */
+
+var message = new Array();
+message['data_inserted'] = "Data Inserted successfully.";
+message['data_not_inserted'] = "Data not Inserted.";
+message['data_deleted'] = "Data Deleted successfully.";
+message['data_not_deleted'] = "Data not Deleted.";
+
+function show_message_popup(msg)
+{
+    $('<div></div>').appendTo('body')
+        .html('<div><b>'+message[msg]+'</b></div>')
+        .dialog({
+            appendTo: "#success_file_popup",
+            modal: true,
+            zIndex: 10000,
+            autoOpen: true,
+            width: 'auto',
+            resizable: true,
+            close: function (event, ui) {
+                $(this).remove();
+            }
+        });
+}

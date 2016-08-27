@@ -155,18 +155,43 @@
                     <div class="row">
                         <div class="company_details_form">
                             <form name="upper_dialpad" id="upper_dialpad">
+
+
                                 <div class="col-md-4 col-sm-4 com_form">
                                     <input type="hidden" class="form-control" name="customer_id" id="customer_id" placeholder="" value="<?php echo $customer_id; ?>" />
                                     <div class="form-group">
                                         <label for="Campaign">Campaign</label>
                                         <div class="inln_fld_top">
-                                        <select class="selectpicker" id="campaign_id" name="campaign_id">
-                                            <option >Campaign Name</option>
+                                            <select class="selectpicker" id="campaign_id" name="campaign_id">
+                                                <option >Campaign Name</option>
+                                                <?php
+                                                if (isset($campagaine_data) && !empty($campagaine_data) && $campagaine_data != 0) {
+                                                    foreach ($campagaine_data as $k => $campagainedata) {
+                                                        ?>
+                                                        <option value="<?php echo $campagainedata['campaign_id']; ?>" <?php if(($selected_campagain_data !="" && $selected_campagain_data == $campagainedata['campaign_id']) ){ echo 'selected="selected"'; } ?>><?php echo $campagainedata['campaign_name']; ?></option>
+                                                    <?php
+                                                    }
+                                                }
+                                                ?>
+
+                                            </select>
+                                        </div>
+                                        <div class="clearfix"></div>
+                                        <label id="Campaign-" class="error" for="Campaign"></label>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4 col-sm-4 com_form">
+                                    <div class="form-group">
+                                        <label for="Activity">Activity</label>
+                                        <div class="inln_fld_top">
+                                        <select class="selectpicker" id="activity_id" name="activity_id">
+                                            <option >Activity Name</option>
                                             <?php
-                                            if (isset($campagaine_data) && !empty($campagaine_data) && $campagaine_data != 0) {
-                                                foreach ($campagaine_data as $k => $campagainedata) {
+                                            if (isset($activity_data) && !empty($activity_data) && $activity_data != 0) {
+                                                foreach ($activity_data as $k => $activitydata) {
                                                     ?>
-                                                    <option value="<?php echo $campagainedata['campaign_id']; ?>" <?php if(($selected_campagain_data !="" && $selected_campagain_data == $campagainedata['campaign_id']) ){ echo 'selected="selected"'; } ?>><?php echo $campagainedata['campaign_name']; ?></option>
+                                                    <option value="<?php echo $activitydata['activity_planning_id']; ?>" <?php //if(($selected_campagain_data !="" && $selected_campagain_data == $activitydata['campaign_id']) ){ echo 'selected="selected"'; } ?>><?php echo $activitydata['activity_type_country_name']."::".$activitydata['execution_date']; ?></option>
                                                     <?php
                                                 }
                                             }
@@ -175,7 +200,7 @@
                                         </select>
                                        </div>
                                         <div class="clearfix"></div>
-                                        <label id="Campaign-" class="error" for="Campaign"></label>
+                                        <label id="Activity-" class="error" for="Activity"></label>
                                     </div>
                                 </div>
                                   <?php $call_status= $call_status_data[0]['called_status'];
@@ -213,8 +238,8 @@
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
-                                <div class="col-md-12 text-right">
-                                    <div class="row save_btn">
+                                <div class="col-md-12 text-right" style="margin-bottom: 15px;">
+                                    <div class="save_btn">
                                         <button type="submit" class="btn btn-primary">Save</button>
 
                                     </div>

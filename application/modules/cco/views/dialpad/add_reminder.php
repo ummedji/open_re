@@ -1,163 +1,83 @@
-<div class="modal-dialog">
-    <div class="modal-content">
-        <div class="modal-header">
-            <button type="button" class="close" data-dismiss="modal">&times;</button>
-            <h4 class="modal-title" id="popup_title">Reminder</h4>
-        </div>
+<div class="modal-dialog modal-lg">
+    <!-- Modal content-->
+    <div class="modal-content rh-popup">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
         <div class="modal-body">
-
-            <div class="col-md-12 text-center plng_sub_nave_cco">
-                <div class="inn_sub_nave">
-                    <ul>
-                        <?php if ($pg == 'dialpad') { ?>
-                            <li class="active"><a data-toggle="tab" href="#call_reminder">Call Reminder</a></li>
-                        <?php } ?>
-                        <li class="<?php if ($pg == 'mainscreen'){ e('active'); } ?>"><a data-toggle="tab" href="#general_reminder">General Reminder</a></li>
-                        <li class=""><a data-toggle="tab" href="#view_reminder">View</a></li>
-                    </ul>
-                    <div class="clearfix"></div>
-                </div>
-            </div>
-
-            <div class="tab-content dialpad-plnd-content">
+            <ul class="filter-menu nav-tabs">
                 <?php if ($pg == 'dialpad') { ?>
-                    <div id="call_reminder" class="tab-pane fade in active">
+                <li class="active"><a data-toggle="tab" href="#call_reminder">Call Reminder</a></li>
+                <?php } ?>
+                <li class="<?php if ($pg == 'mainscreen'){ e('active'); } ?>"><a data-toggle="tab" href="#general_reminder">General Reminder</a></li>
+                <li><a data-toggle="tab" href="#view_reminder">View Reminder</a></li>
+            </ul>
+            <div class="tab-content filter-content">
+                <?php if ($pg == 'dialpad') { ?>
+                <div id="call_reminder" class="tab-pane fade in active">
+                    <?php
+                    $attributes = array('class' => '', 'id' => 'form_call_reminder', 'name' => 'form_call_reminder');
+                    echo form_open('', $attributes);
+                    ?>
+                    <div class="col-md-12 form-inline">
                         <div class="row">
-                            <?php
-                            $attributes = array('class' => '', 'id' => 'form_call_reminder', 'name' => 'form_call_reminder');
-                            echo form_open('', $attributes);
-                            ?>
                             <input type="hidden" id="reminder_type" name="reminder_type" value="call"/>
                             <input type="hidden" id="pg" name="pg" value="<?php e($pg);?>"/>
-                            <div class="col-md-12">
-                                <div class="default_box_white">
-                                    <div class="col-md-12 text-center tp_form inline-parent">
-                                        <div class="form-group">
-                                            <label>Select Date<span style="color: red">*</span></label>
-
-                                            <div class="inln_fld">
-                                                <input type="text" class="form-control" name="reminder_date"
-                                                       id="reminder_call_date" placeholder="" required>
-
-                                                <div class="clearfix"></div>
-                                                <label id="reminder_date-error" class="error"
-                                                       for="reminder_date"></label>
-                                            </div>
-                                        </div>
-                                        <div class="form-group actvt-parent">
-                                            <label>Time<span style="color: red">*</span></label>
-
-                                            <div class="inln_fld">
-                                                <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                                    <input id="reminder_call_time" name="reminder_time" type="text"
-                                                           class="input-group-time form-control input-append" required>
-                                                </div>
-                                                <div class="clearfix"></div>
-                                            </div>
-                                        </div>
-                                        <div class="row form-group">
-                                            <div class="col-md-3 col-sm-3 first_lb"><label>Remarks<span
-                                                        style="color: red">*</span></label></div>
-                                            <div class="col-md-8 col-sm-8">
-                                            <textarea class="form-control" rows="4" name="reminder_remarks"
-                                                      id="reminder_remarks" placeholder="Remarks" required></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-12 table_bottom pln_table_bottom">
-                                        <div class="row">
-                                            <div class="save_btn">
-                                                <button type="submit" class="btn btn-primary" id="save_call_reminder">
-                                                    Save
-                                                </button>
-                                                <input type="reset" class="btn btn-primary" id="clear_call_reminder"
-                                                       value="Clear"/>
-                                                <button type="button" class="btn btn-default close_default_bb"
-                                                        data-dismiss="modal">Close
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="clearfix"></div>
-                                </div>
+                            <div class="col-md-5">
+                                <label>Date</label>
+                                <input type="text" class="form-control h-control" name="reminder_date" id="reminder_call_date" placeholder="" required>
+                                <label id="reminder_call_date-error" style="display: none;" class="error" for="reminder_call_date"></label>
                             </div>
-                            <?php echo form_close(); ?>
+                            <div class="col-md-6">
+                                <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                    <label>Time</label>
+                                    <input type="text" class="form-control h-control input-group-time form-control input-append" id="reminder_call_time" name="reminder_time" placeholder="" required>
+                                    <label>AM/PM</label>
+                                </div>
+                                <label id="reminder_call_time-error" class="error" for="reminder_call_time"></label>
+                            </div>
                         </div>
                     </div>
+                    <textarea class="form-control text-filter" rows="10"  name="reminder_remarks" id="reminder_remarks" placeholder="Remarks" required></textarea>
+                    <div class="clearfix"></div>
+                    <button type="submit" class="btn-filter" id="save_call_reminder">Save</button>
+                    <button type="reset" class="btn-filter">Clear</button>
+                    <?php echo form_close(); ?>
+                </div>
                 <?php } ?>
                 <div id="general_reminder" class="tab-pane fade <?php if ($pg == 'mainscreen'){ e('in active'); } ?>">
-                    <div class="row">
-                        <?php
-                        $attributes = array('class' => '', 'id' => 'form_gen_reminder', 'name' => 'form_gen_reminder');
-                        echo form_open('', $attributes);
-                        ?>
-                        <input type="hidden" id="reminder_type" name="reminder_type" value="general"/>
-                        <input type="hidden" id="pg" name="pg" value="<?php e($pg);?>"/>
-                        <div class="col-md-12">
-                            <div class="default_box_white">
-                                <div class="col-md-12 text-center tp_form inline-parent">
-                                    <div class="form-group">
-                                        <label>Select Date<span style="color: red">*</span></label>
-
-                                        <div class="inln_fld">
-                                            <input type="text" class="form-control" name="reminder_date"
-                                                   id="reminder_gen_date" placeholder="" required>
-
-                                            <div class="clearfix"></div>
-                                            <label id="reminder_date-error" class="error" for="reminder_date"></label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group actvt-parent">
-                                        <label>Time<span style="color: red">*</span></label>
-
-                                        <div class="inln_fld">
-                                            <div class="bootstrap-timepicker bootstrap-timepicker-as">
-                                                <input id="reminder_gen_time" name="reminder_time" type="text"
-                                                       class="input-group-time form-control input-append" required>
-                                            </div>
-                                            <div class="clearfix"></div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="form-group frm_details text-center"
-                                             style="margin-bottom: 0px;">
-                                            <label>Title</label>
-                                            <input type="text" class="form-control" name="reminder_title"
-                                                   id="reminder_title" placeholder="" required>
-                                        </div>
-
-                                    </div>
-
-                                    <div class="row form-group">
-                                        <div class="col-md-3 col-sm-3 first_lb"><label>Remarks<span
-                                                    style="color: red">*</span></label></div>
-                                        <div class="col-md-8 col-sm-8">
-                                                    <textarea class="form-control" rows="4" name="reminder_remarks"
-                                                              id="reminder_remarks" placeholder="Reminder For"
-                                                              required></textarea>
-                                        </div>
-
-                                    </div>
+                    <?php
+                    $attributes = array('class' => '', 'id' => 'form_gen_reminder', 'name' => 'form_gen_reminder');
+                    echo form_open('', $attributes);
+                    ?>
+                    <div class="col-md-12 form-inline">
+                        <div class="row">
+                            <input type="hidden" id="reminder_type" name="reminder_type" value="general"/>
+                            <input type="hidden" id="pg" name="pg" value="<?php e($pg);?>"/>
+                            <div class="col-md-5">
+                                <label>Date</label>
+                                <input type="text" class="form-control h-control" name="reminder_date" id="reminder_gen_date" placeholder="" required>
+                                <label id="reminder_gen_date-error" class="error" for="reminder_gen_date"></label>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="bootstrap-timepicker bootstrap-timepicker-as">
+                                    <label>Time</label>
+                                    <input type="text" class="form-control h-control input-group-time form-control input-append" id="reminder_gen_time" name="reminder_time" placeholder="" required>
+                                    <label>AM/PM</label>
                                 </div>
-                                <div class="col-md-12 table_bottom pln_table_bottom">
-                                    <div class="row">
-                                        <div class="save_btn">
-                                            <button type="submit" class="btn btn-primary" id="save_gen_reminder">Save
-                                            </button>
-                                            <input type="reset" class="btn btn-primary" id="clear_call_reminder"
-                                                   value="Clear"/>
-                                            <button type="button" class="btn btn-default close_default_bb"
-                                                    data-dismiss="modal">Close
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
+                                <label id="reminder_gen_time-error" class="error" for="reminder_gen_time"></label>
+                            </div>
+                            <div class="col-md-12">
+                                <label>Title</label>
+                                <input type="text" class="form-control h-control" name="reminder_title" id="reminder_title" placeholder="" required>
                                 <div class="clearfix"></div>
+                                <label id="reminder_title-error" style="display: none;" class="error" for="reminder_title"></label>
                             </div>
                         </div>
-                        <div class="clearfix"></div>
-                        <?php echo form_close(); ?>
                     </div>
+                    <textarea class="form-control text-filter" rows="10"  name="reminder_remarks" id="reminder_remarks" placeholder="Reminder For" required></textarea>
+                    <div class="clearfix"></div>
+                    <button type="submit" class="btn-filter" id="save_gen_reminder">Save</button>
+                    <button type="reset" class="btn-filter">Clear</button>
+                    <?php echo form_close(); ?>
                 </div>
                 <div id="view_reminder" class="tab-pane fade">
                     <?php
@@ -192,6 +112,8 @@
                                     $rem_date_ts = strtotime($reminder['reminder_datetime']);
                                     $remarks = ($reminder['reminder_type'] == 'call' ? $reminder['reminder_remarks'] : '-');
                                     $rem_for = ($reminder['reminder_type'] == 'call' ? '-' : $reminder['reminder_remarks']);
+                                    $cus_name = (is_null($reminder['display_name']) || trim($reminder['display_name'])=='' ? '-' : $reminder['display_name']);
+                                    $cus_num = (is_null($reminder['primary_mobile_no']) || trim($reminder['primary_mobile_no'])=='' ? '-' : $reminder['primary_mobile_no']);
 
                                     $datediff = $rem_date_ts - mktime();
                                     $hours = floor($datediff / 3600);
@@ -205,18 +127,18 @@
                                                    value="<?php e($reminder['reminder_id']); ?>" required/></td>
                                         <td class="first_th"><?php e(ucfirst($reminder['reminder_type'])); ?><span
                                                 class="rts_bordet"></span></td>
-                                        <td class="numeric"><?php e("--"); ?> <span class="rts_bordet"></span></td>
-                                        <td class="numeric"><?php e("--"); ?><span class="rts_bordet"></span></td>
+                                        <td class="numeric"><?php e($cus_name); ?> <span class="rts_bordet"></span></td>
+                                        <td class="numeric"><?php e($cus_num); ?><span class="rts_bordet"></span></td>
                                         <td class="numeric"><?php e(date($current_user->local_date, $rem_date_ts)); ?>
                                             <span class="rts_bordet"></span></td>
                                         <td class="numeric"><?php e(date("H:i A", $rem_date_ts)); ?><span
                                                 class="rts_bordet"></span></td>
                                         <td class="numeric"><?php e($reminder['reminder_title']); ?><span
                                                 class="rts_bordet"></span></td>
-                                        <td class="numeric"><?php e($remarks); ?><span class="rts_bordet"></span></td>
                                         <td class="numeric"><?php e($rem_for); ?><span class="rts_bordet"></span></td>
+                                        <td class="numeric"><?php e($remarks); ?><span class="rts_bordet"></span></td>
                                         <td class="numeric"><?php e($timeleft); ?><span class="rts_bordet"></span></td>
-                                        <td class="numeric"><?php e("--"); ?><span class="rts_bordet"></span></td>
+                                        <td class="numeric"><?php e("-"); ?><span class="rts_bordet"></span></td>
                                     </tr>
                                 <? }
                             }
@@ -232,7 +154,7 @@
                                     </button>
                                 </div>
                                 <div align="right">
-                                    <?php /*echo $reminder_data_pagination;*/ ?>
+                                    <?php echo $reminder_data_pagination; ?>
                                 </div>
                             </div>
                         </div>
@@ -241,7 +163,6 @@
                     <?php echo form_close(); ?>
                 </div>
             </div>
-            <div class="clearfix"></div>
         </div>
     </div>
 </div>

@@ -1,8 +1,9 @@
-<div class="actv-details-form">
+
 <?php
 if ($this->input->is_ajax_request() && isset($_POST["mode"]) && $_POST["mode"] != "list") {
     ?>
     <!--------------------------------------Filter1-------------------------------------------------->
+<div class="actv-details-form">
     <h5 class="title" style="margin: 0px 0 20px 0;">Order Status</h5>
     <div class="col-md-12">
         <div class="top_form">
@@ -200,7 +201,7 @@ if ($this->input->is_ajax_request()) {
 
 if ($this->input->is_ajax_request()) { ?>
 
-    <div id="middle_container" class="order_status">
+    <div id="middle_container" class="order_status order_status-none-zoom">
 
     </div>
 

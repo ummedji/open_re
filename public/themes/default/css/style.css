@@ -379,9 +379,15 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     top: 0;
     width: 100%;
 }
+.inner_contain-dialpad {
+    margin-top: 35px;
+}
 @media screen and (max-width:767px) {
     .inner_contain {
         margin-top: 220px;
+    }
+    .inner_contain-dialpad {
+        margin-top: 45px;
     }
 }
 .right_contain {
@@ -444,7 +450,8 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     overflow-x: hidden;
 }
 .full-height {min-height: 95.6%;}
-@media (max-width: 1366px) {.full-height {min-height: 93%;}}
+.dialpad-height {min-height: 100% !important;}
+@media (max-width: 1366px) {.full-height {min-height: 94%;}}
 .content{
     overflow: auto;
     position: relative;
@@ -655,6 +662,10 @@ ul.listslider li:hover:after, ul.listslider li.active:after{
     border-top-left-radius: 10px;
     z-index: 0;
 }
+.order_status-none-zoom .zoom_space {display: none;}
+#complaint_data .zoom_space,
+#searched_data .zoom_space
+{display: none;}
 .zoom_space ul {
     margin: 0;
     padding: 0;
@@ -2621,7 +2632,10 @@ ul.in-up-details-list {margin: 0; padding: 0;}
     padding-right: 5px;
     vertical-align: top;
     padding-top: 2px;
+}
 
+@media screen and (min-width: 768px){
+    .com_form .form-group label {width: 87px;}
 }
 .com_form .form-group input, .com_form .form-group textarea {
     display: table-cell;
@@ -3670,3 +3684,139 @@ h6.gn-info-tl{
         margin: 30px auto;
     }
 }
+/*Call Reminder Popup css*/
+.rh-popup .modal-body { padding: 0;}
+.default_popup .modal-content {
+    border-radius: 0;
+    box-shadow: none;
+    /* border: 1px solid #e0e0e0;*/
+    position: relative;
+    background-color: #fff;
+}
+.default_popup .modal-content .modal-body { padding: 0;}
+.default_popup .modal-content .close {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    background-color: #00793a;
+    opacity: 1;
+    color: #fff;
+    text-shadow: none;
+    line-height: inherit;
+    width: 40px;
+    height: 40px;
+    z-index: 10;
+}
+.rh-popup .close {
+    position: absolute;
+    top: -1px;
+    right: -1px;
+    background-color: #00793a;
+    opacity: 1;
+    color: #fff;
+    text-shadow: none;
+    line-height: inherit;
+    width: 40px;
+    height: 40px;
+    z-index: 1000;
+}
+.filter-content label.error {
+    font-size: 12px !important;
+    font-weight: normal !important;
+    font-family: 'Exo2-Regular';
+    height: auto !important;
+    margin-top: -10px !important;
+}
+.filter-menu{
+    /* border: 1px solid #e0e0e0;*/
+    box-shadow: 0 0 0 1px #e0e0e0;
+    padding: 22px 0px 21px 23px;
+    margin-bottom: 0px !important;
+}
+.filter-menu>li.active>a, .filter-menu>li.active>a:focus, .filter-menu>li.active>a:hover{
+    background-color: #00793a;
+    color: #ffffff;
+    border: 1px solid #d0d0d0;
+    border-radius: inherit;
+}
+.filter-menu li{
+    list-style: none;
+    margin-top: -11px;
+}
+.filter-menu li:first-child{
+    margin-left: -21px;
+}
+.filter-menu li a{
+    font-family: Exo2-SemiBold;
+    padding: 10px;
+    color: #4d4e4e;
+    text-decoration: none;
+    border-radius: inherit;
+    border: 1px solid #d0d0d0;
+}
+.filter-menu li a:hover{
+    color: #4d4e4e;
+    text-decoration: none;
+}
+.filter-content{
+    padding: 50px 35px 15px 35px;
+    background-color: #e7ebee;
+    /*border: 1px solid #cfcfcf;*/
+    box-shadow: 0 0 0 1px #cfcfcf;
+}
+.text-filter{
+    border-radius: inherit;
+    resize: none;
+    font-weight: bold;
+}
+.btn-filter{
+    background-color: #00793a;
+    border: none;
+    padding: 4px 20px;
+    color: #ffffff;
+    margin: 6px 10px 0px 0px;
+    border: 1px solid #bcbfc2;
+    font-family: Exo2-Medium;
+}
+.filter-content .form-group{
+    margin-left: -16px;
+}
+.filter-content .form-control{
+    border-radius: 0px;
+    margin-bottom: 10px;
+}
+.filter-content .h-control{
+    height: 25px;
+}
+.filter-content label{
+    font-family: Exo2-SemiBold;
+    height: 25px;
+    padding-right: 15px;
+    color: #4d4e4e;
+    vertical-align: middle;
+}
+.filter-content .form-inline{
+    margin-left: -15px;
+}
+.text-filter::-webkit-input-placeholder {
+    color: #4d4e4e !important;
+    font-family: Exo2-SemiBold;
+}
+@media screen and (max-width: 435px){
+    .filter-menu li:last-child{
+        margin: 30px 0px 0px 4px;
+        float: left !important;
+        left: 0;
+        position: fixed;
+    }
+    .filter-content{
+        margin-top: 42px;
+    }
+    .filter-menu {
+        border: none;
+        box-shadow: none;
+
+    }
+}
+
+/*End Call Reminder Popup css*/

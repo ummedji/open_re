@@ -166,20 +166,30 @@ $segment_data = $this->uri->segment(2);
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <!--  <label>Call Mode</label>-->
+                                <!--<div class="form-group">
+                                      <label>Call Mode</label>
                                     <div class="inln_fld_top">
 
-                                        <input type="text" name="search_by_contact_no" id="search_by_contact_no"
+                                        <input type="text" name="search_by_contact_no" class="form-control" id="search_by_contact_no"
                                                placeholder="Search Distributor By Contact No."/>
 
                                         <div class="clearfix"></div>
+                                    </div>
+                                </div>-->
+                                <div id="custom-search-input">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" name="search_by_contact_no" id="search_by_contact_no" class="form-control input-lg"
+                                               placeholder="Search Distributor By Contact No."/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-lg" type="button"><i
+                                            class="glyphicon glyphicon-search"></i></button>
+                               </span>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>
                             </div>
                             <div class="clearfix"></div>
-                            <div class="col-md-12 text-center tp_form inline-parent sbde-parent">
+                            <div class="col-md-12 text-center tp_form inline-parent sbde-parent" style="margin-top: 15px;">
                                 <div class="form-group">
                                     <label>Campaign</label>
                                     <select class="selectpicker" id="Campaign" name="Campaign">
@@ -244,14 +254,24 @@ $segment_data = $this->uri->segment(2);
                                     </div>
                                 </div>
 
-                                <div class="form-group">
-                                    <!--  <label>Call Mode</label>-->
+                                <!--<div class="form-group">
+                                      <label>Call Mode</label>
                                     <div class="inln_fld_top">
 
-                                        <input type="text" name="search_by_contact_no" id="search_by_contact_no"
+                                        <input type="text" name="search_by_contact_no" class="form-control" id="search_by_contact_no"
                                                placeholder="Search Employee By Contact No."/>
 
                                         <div class="clearfix"></div>
+                                    </div>
+                                </div>-->
+                                <div id="custom-search-input">
+                                    <div class="input-group col-md-12">
+                                        <input type="text" name="search_by_contact_no" id="search_by_contact_no" class="form-control input-lg"
+                                               placeholder="Search Distributor By Contact No."/>
+                                <span class="input-group-btn">
+                                    <button class="btn btn-info btn-lg" type="button"><i
+                                            class="glyphicon glyphicon-search"></i></button>
+                               </span>
                                     </div>
                                 </div>
                                 <div class="clearfix"></div>

@@ -138,6 +138,9 @@ class Cco extends Front_Controller
 
         $campagain_data = $this->cco_model->campagain_data($role_id,$user->country_id);
 
+        $activity_data = $this->cco_model->activity_data($customer_id,$user->country_id);
+
+
         $call_status_data = $this->cco_model->call_status_data($campagain_id,$customer_id);
        // testdata($call_status_data);
 
@@ -146,6 +149,9 @@ class Cco extends Front_Controller
         Template::set('sidebar_selected_customer_data', $get_sidebar_selected_customer_data);
         Template::set('selected_campagain_data', $campagain_id);
         Template::set('campagaine_data', $campagain_data);
+
+        Template::set('activity_data', $activity_data);
+
         Template::set('call_status_data', $call_status_data);
 
         //testdata($cco_data);
@@ -1733,6 +1739,14 @@ if($customer_id != "") {
         die;
     }
 
+    public function add_update_question_data()
+    {
+        $question_update_data = $this->cco_model->add_update_question_detail_data();
+        echo $question_update_data;
+        die;
+    }
+
+
     public function get_address_lat_long_data()
     {
         $address = $_POST["address_data"];
@@ -1940,6 +1954,9 @@ if($customer_id != "") {
        // testdata($campagain_phase_data);
 
         Template::set('campagain_phase_data', $campagain_phase_data);
+
+        Template::set('customer_id', $customer_id);
+
         Template::set_view("cco/dialpad/dialpad_questions_details");
         Template::render();
 
@@ -1950,10 +1967,163 @@ if($customer_id != "") {
         $phaseid = $_POST["phaseid"];
         $campagain_id = $_POST["campagain_id"];
 
+        $customer_id= (isset($this->session->userdata['caller_data']['0']['id']) && !empty($this->session->userdata['caller_data']['0']['id']))? $this->session->userdata['caller_data']['0']['id'] : "";
+
         $campagain_phase_question_data = $this->cco_model->get_campagain_phase_question_data($phaseid,$campagain_id);
 
+      //  testdata($campagain_phase_question_data);
+        $html = "";
+        if(!empty($campagain_phase_question_data))
+        {
+            $i = 1;
+            foreach($campagain_phase_question_data as $ques_key => $question_data)
+            {
+
+                //GET QUESTION ANSWER
+                $question_answer_data = array();
+                $customer_anwer = "";
+
+                if($customer_id != "")
+                {
+                    $question_answer_data = $this->cco_model->get_question_user_answer_data($question_data["question_id"], $customer_id);
+                    if(!empty($question_answer_data)) {
+                        $customer_anwer = $question_answer_data[0]["customer_answer"];
+                    }
+                    else{
+                        $customer_anwer = "";
+                    }
+                }
 
 
+                if($question_data["question_type"] == "text")
+                {
+                    $html .= '<li>';
+                    $html .= '<ul class="fn-ques-ans">';
+                    $html .= '<li class="qsh-txt">Q '.$i.'</li>';
+                    $html .= '<li style="width: auto;"> '.$question_data["question"].'</li>';
+                    $html .= '</ul>';
+                    $html .= '<ul class="fn-ques-ans">';
+                    $html .= '<li class="qsh-txt">Ans.</li>';
+                    $html .= '<li class="ansh-txt"><input type="hidden" name="question_id[]" value="'.$question_data["question_id"].'" /><input class="form-control" name="question_answer['.$question_data["question_id"].']" id="question_answer" placeholder="" type="text" value="'.$customer_anwer.'"></li>';
+                    $html .= '</ul>';
+                    $html .= '<div class="clearfix"></div>';
+                    $html .= '</li>';
+                }
+                else if($question_data["question_type"] == "radio")
+                {
+
+                    $option_data = $this->cco_model->get_question_options($question_data["question_id"]);
+
+                    $html .= '<li>';
+                        $html .= '<ul class="fn-ques-ans">';
+                            $html .= '<li class="qsh-txt">Q '.$i.'</li>';
+                            $html .= '<li style="width: auto;"><input type="hidden" name="question_id[]" value="'.$question_data["question_id"].'" /> '.$question_data["question"].'</li>';
+                        $html .= '</ul>';
+                        $html .= '<ul class="fn-ques-ans">';
+                            $html .= '<li class="qsh-txt">Ans.</li>';
+                            $html .= '<li class="ansh-txt">';
+                                $html .= '<div class="radio_space">';
+
+                                    if(!empty($option_data))
+                                    {
+                                        foreach($option_data as $option_key => $option_data)
+                                        {
+                                            $selected = '';
+                                            if($customer_anwer == $option_data)
+                                            {
+                                                $selected = 'checked="checked"';
+                                            }
+
+                                            $html .= '<div class="radio">';
+                                            $html .= '<input '.$selected.' class="select_customer_type" name="question_answer['.$question_data["question_id"].']" id="radio_'.$option_data["option_id"].'" value="'.$option_data["option_id"].'" type="radio">';
+                                            $html .= '<label for="radio'.$option_data["option_id"].'">'.$option_data["option_data"].'</label>';
+                                            $html .= '</div>';
+                                        }
+                                    }
+
+                                    $html .= '<div class="clearfix"></div>';
+                                $html .= '</div>';
+                                $html .= '<div class="clearfix"></div>';
+                            $html .= '</li>';
+                        $html .= '</ul>';
+                        $html .= '<div class="clearfix"></div>';
+                    $html .= '</li>';
+                }
+                else if($question_data["question_type"] == "checkbox")
+                {
+                    $option_data = $this->cco_model->get_question_options($question_data["question_id"]);
+
+
+                    $html .= '<li>';
+                    $html .= '<ul class="fn-ques-ans">';
+                    $html .= '<li class="qsh-txt">Q '.$i.'</li>';
+                    $html .= '<li style="width: auto;"><input type="hidden" name="question_id[]" value="'.$question_data["question_id"].'" /> '.$question_data["question"].'</li>';
+                    $html .= '</ul>';
+                    $html .= '<ul class="fn-ques-ans">';
+                    $html .= '<li class="qsh-txt">Ans.</li>';
+                    $html .= '<li class="ansh-txt">';
+                    $html .= '<div class="radio_space">';
+
+                    if(!empty($option_data)){
+
+                        foreach($option_data as $option_key => $option_data)
+                        {
+                            $selected1 = "";
+
+                            if($customer_anwer != "")
+                            {
+                                $customer_anwer1 =  explode(",",$customer_anwer);
+                            }
+
+                            if(in_array($option_data["option_id"],$customer_anwer1))
+                            {
+                                $selected1 = 'checked="checked"';
+                            }
+
+                            $html .= '<div class="">';
+                            $html .= '<input '.$selected1.' class="select_customer_type" name="question_answer['.$question_data["question_id"].'][]" id="checkbox_'.$option_data["option_id"].'" value="'.$option_data["option_id"].'" type="checkbox">';
+                            $html .= '<label for="checkbox'.$option_data["option_id"].'">'.$option_data["option_data"].'</label>';
+                            $html .= '</div>';
+                        }
+
+                    }
+
+                    $html .= '<div class="clearfix"></div>';
+                    $html .= '</div>';
+                    $html .= '<div class="clearfix"></div>';
+                    $html .= '</li>';
+                    $html .= '</ul>';
+                    $html .= '<div class="clearfix"></div>';
+                    $html .= '</li>';
+
+                }
+                $i++;
+            }
+        }
+
+        echo $html;
+        die;
+    }
+
+    public function get_phase_script_data()
+    {
+        $phaseid = $_POST["phaseid"];
+        $campagain_id = $_POST["campagain_id"];
+
+        $phase_script_data = $this->cco_model->get_phase_script_data($phaseid);
+
+        echo json_encode($phase_script_data);
+        die;
+    }
+
+    public function get_active_phase_data()
+    {
+        $campagain_id = $_POST["campagain_id"];
+
+        $phase_active_data = $this->cco_model->get_campagain_active_phase_data($campagain_id);
+
+        echo json_encode($phase_active_data);
+        die;
     }
 
     public function get_level_data_for_unkown_no()
@@ -2334,6 +2504,8 @@ if($customer_id != "") {
             } else {
                 $this->cco_model->save_reminder();
             }
+            echo 1;
+            exit;
         }
 
         $reminder_detail = $this->cco_model->get_reminder();
